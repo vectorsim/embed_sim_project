@@ -1,5 +1,178 @@
 
-
+# =============================================================================
+# FMU CO-SIMULATION BLOCK
+# =============================================================================
+#
+# OVERVIEW
+# -----------------------------------------------------------------------------
+# This module implements FMUBlock, a wrapper that integrates a
+# Co-Simulation FMU (Functional Mock-up Unit) into the Vector Simulation
+# Framework.
+#
+# An FMU is a standardized simulation model container defined by the
+# FMI (Functional Mock-up Interface) standard.
+#
+# FMUs allow models created in one tool (Modelica, Simulink, etc.)
+# to be executed in another simulation environment.
+#
+#
+# WHAT IS AN FMU?
+# -----------------------------------------------------------------------------
+# An FMU (.fmu file) is a ZIP archive containing:
+#
+#   modelDescription.xml   → Model metadata (variables, GUID, structure)
+#   binaries/              → Compiled C binaries of the model
+#   resources/             → Optional supporting data
+#
+# There are TWO FMI types:
+#
+# 1) Model Exchange (ME)
+#    - Requires external ODE solver
+#    - Only equations are exported
+#
+# 2) Co-Simulation (CS)  ← Used in this implementation
+#    - FMU contains its own internal solver
+#    - Simulation environment only calls doStep(dt)
+#    - FMU advances its own internal state
+#
+#
+# WHY FMUBLOCK EXISTS
+# -----------------------------------------------------------------------------
+# FMUBlock acts as an adapter between:
+#
+#   VectorSignal-based simulation framework
+#   AND
+#   FMI Co-Simulation runtime (fmpy.FMU2Slave)
+#
+# It abstracts:
+#   - FMU extraction
+#   - Variable reference lookup
+#   - Parameter setting
+#   - Input/output mapping
+#   - Time stepping
+#   - Proper termination and cleanup
+#
+#
+# HIGH-LEVEL ARCHITECTURE
+# -----------------------------------------------------------------------------
+#
+#        +----------------------------------+
+#        |   Vector Simulation Framework    |
+#        +----------------+-----------------+
+#                         |
+#                         v
+#        +----------------------------------+
+#        |            FMUBlock              |
+#        |----------------------------------|
+#        | - maps inputs to FMU             |
+#        | - calls doStep(dt)               |
+#        | - reads outputs from FMU         |
+#        +----------------+-----------------+
+#                         |
+#                         v
+#        +----------------------------------+
+#        |        Co-Simulation FMU         |
+#        |----------------------------------|
+#        | - Internal solver                |
+#        | - Continuous states              |
+#        | - Compiled binary model          |
+#        +----------------------------------+
+#
+#
+# DATA FLOW PER TIME STEP
+# -----------------------------------------------------------------------------
+#
+#   VectorSignal Inputs
+#           │
+#           ▼
+#   FMUBlock.setReal(valueReference, value)
+#           │
+#           ▼
+#   FMU.doStep(currentTime, dt)
+#           │
+#           ▼
+#   FMU.getReal(valueReference)
+#           │
+#           ▼
+#   VectorSignal Outputs
+#
+#
+# FMU LIFECYCLE (MANAGED BY THIS CLASS)
+# -----------------------------------------------------------------------------
+#
+#   1. Extract FMU
+#   2. Read model description
+#   3. Instantiate FMU2Slave
+#   4. Set parameters
+#   5. Setup experiment
+#   6. Enter initialization mode
+#   7. Exit initialization mode
+#   8. Repeated doStep(dt) calls
+#   9. Terminate and free instance
+#
+#
+# STATE MACHINE
+# -----------------------------------------------------------------------------
+#
+#             +----------------------+
+#             |   Not Initialized    |
+#             +----------+-----------+
+#                        |
+#                        v
+#             +----------------------+
+#             |     Initialized      |
+#             +----------+-----------+
+#                        |
+#                        v
+#             +----------------------+
+#             |       Running        |
+#             +----------+-----------+
+#                        |
+#                        v
+#             +----------------------+
+#             |     Terminated       |
+#             +----------------------+
+#
+#
+# VALUE REFERENCES EXPLAINED
+# -----------------------------------------------------------------------------
+# FMI does NOT access variables by string name during simulation.
+# Each variable is assigned an integer ID called a "value reference".
+#
+# Example:
+#   "u"  → valueReference = 12
+#   "w"  → valueReference = 27
+#
+# Runtime calls:
+#   fmu.setReal([12], [value])
+#   fmu.getReal([27])
+#
+# This class caches value references for efficiency.
+#
+#
+# TIME MANAGEMENT
+# -----------------------------------------------------------------------------
+# The FMU maintains internal continuous states.
+# The framework controls time using:
+#
+#   currentCommunicationPoint = current_time
+#   communicationStepSize     = dt
+#
+# After doStep(), the FMU advances its internal state to:
+#
+#   t_new = t_old + dt
+#
+#
+# ERROR HANDLING
+# -----------------------------------------------------------------------------
+# This implementation validates:
+#   - FMU file existence
+#   - Variable name correctness
+#   - Input dimension matching
+#   - Proper initialization before use
+#   - Safe cleanup on termination
+#
+# =============================================================================
 import numpy as np
 from typing import List, Optional, Dict, Any, Tuple
 from fmpy import read_model_description, extract
@@ -34,17 +207,7 @@ class FMUBlock(VectorBlock):
         parameters (Dict): FMU parameters to set
         fmu (FMU2Slave): The instantiated FMU instance
         
-    Example:
-        >>> # Create DC motor FMU block
-        >>> motor = FMUBlock(
-        ...     name="dc_motor",
-        ...     fmu_path="DCMotor.fmu",
-        ...     input_names=["u"],      # Voltage input
-        ...     output_names=["w"],     # Speed output
-        ...     parameters={}
-        ... )
-        >>> # Connect in block diagram
-        >>> controller >> motor >> scope
+
     """
     
     def __init__(self, 
@@ -69,14 +232,7 @@ class FMUBlock(VectorBlock):
             FileNotFoundError: If FMU file doesn't exist
             ValueError: If input/output names are invalid
             
-        Example:
-            >>> motor = FMUBlock(
-            ...     name="motor",
-            ...     fmu_path="DCMotor.fmu",
-            ...     input_names=["u"],
-            ...     output_names=["w", "i"],
-            ...     parameters={"R": 1.0, "L": 0.01}
-            ... )
+
         """
         super().__init__(name)
         
@@ -278,10 +434,7 @@ class FMUBlock(VectorBlock):
             
         Returns:
             float: Current value of the variable
-            
-        Example:
-            >>> motor.compute(t, dt, [voltage_signal])
-            >>> speed = motor.get_output_by_name("w")
+
         """
         if not self._initialized:
             raise RuntimeError(f"{self.name}: FMU not initialized")
