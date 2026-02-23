@@ -1219,8 +1219,14 @@ class VectorSim:
         visible = [b for b in self.blocks if id(b) not in loop_breaker_set]
 
         # ── 1. Lane assignment ────────────────────────────────────────────────
-        lane_of   = {}
-        next_lane = [0]
+        # A block shares a lane with its primary (first normal) input UNLESS
+        # that driver already has another consumer ahead of it on the same
+        # lane, which would place this block BEHIND its driver.  In that case
+        # a new lane is allocated so the block can sit beside (not behind) its
+        # driver, and a fan-out arrow will be drawn in Pass C.
+        lane_of       = {}
+        next_lane     = [0]
+        lane_primary  = {}   # lane → id of the block that "owns" that lane slot
 
         def alloc_lane() -> int:
             l = next_lane[0]; next_lane[0] += 1; return l
@@ -1228,11 +1234,28 @@ class VectorSim:
         for b in visible:
             normal_inps = [i for i in getattr(b, "inputs", [])
                            if id(i) not in loop_breaker_set and id(i) in lane_of]
-            lane_of[id(b)] = lane_of[id(normal_inps[0])] if normal_inps else alloc_lane()
+            if not normal_inps:
+                lane_of[id(b)] = alloc_lane()
+            else:
+                driver     = normal_inps[0]
+                drv_lane   = lane_of[id(driver)]
+                # Check if this lane already has a block that comes AFTER
+                # the driver in execution order — if so, this is a secondary
+                # fan-out consumer and needs its own lane.
+                drv_idx = visible.index(driver)
+                already_used = any(
+                    lane_of[id(v)] == drv_lane and visible.index(v) > drv_idx
+                    for v in visible if id(v) in lane_of and v is not b
+                )
+                if already_used:
+                    lane_of[id(b)] = alloc_lane()
+                else:
+                    lane_of[id(b)] = drv_lane
 
         n_lanes = next_lane[0]
 
         # ── 2. Column assignment ──────────────────────────────────────────────
+        # col_end sized after lane assignment so all lanes are covered.
         col_of  = {}
         col_end = [0] * n_lanes
 
@@ -1244,9 +1267,17 @@ class VectorSim:
                 after = max(col_of[id(i)] + box_vlen(i) + len(ARROW) for i in normal_inps)
                 col   = max(after, col_end[lane])
             else:
-                col = col_end[lane]
-            col_of[id(b)]  = col
-            col_end[lane]  = col + box_vlen(b) + len(ARROW)
+                # Fan-out secondary: align with column just after its driver
+                driver_candidates = [i for i in getattr(b, "inputs", [])
+                                     if id(i) not in loop_breaker_set and id(i) in col_of]
+                if driver_candidates:
+                    drv = driver_candidates[0]
+                    after = col_of[id(drv)] + box_vlen(drv) + len(ARROW)
+                    col = max(after, col_end[lane])
+                else:
+                    col = col_end[lane]
+            col_of[id(b)] = col
+            col_end[lane] = col + box_vlen(b) + len(ARROW)
 
         total_width = max(col_end) + 8
 
@@ -1315,6 +1346,77 @@ class VectorSim:
                     else:                     ch = "│"
                     put(r, merge_col, ch)
 
+        # Pass C — fan-out split arrows
+        # When block b feeds multiple consumers on the SAME lane, the column
+        # assignment places them sequentially. Pass B only draws the arrow to
+        # the FIRST consumer (the one immediately to the right of b).  Every
+        # additional same-lane consumer needs a branch drawn from the tap point
+        # (right edge of b) forward to that consumer's box.
+        #
+        # Strategy: for each visible block b, collect all consumers.
+        # The "primary" consumer is the one whose left edge is closest to
+        # b's right edge (already handled by Pass B).  All others get an
+        # explicit branch: a tap ┬ on the main arrow line, a vertical drop
+        # to a spare row (or same row), then horizontal run ──► to the box.
+        for b in visible:
+            b_row = row_of(lane_of[id(b)])
+            b_end = col_of[id(b)] + box_vlen(b)  # column just after ]
+
+            # All consumers of b that are visible and not loop breakers
+            consumers = [c for c in visible
+                         if b in getattr(c, "inputs", [])
+                         and id(b) not in loop_breaker_set]
+            if len(consumers) <= 1:
+                continue  # single consumer: Pass B already drew the arrow
+
+            # Sort consumers by column so the leftmost (nearest) is primary
+            consumers.sort(key=lambda c: col_of.get(id(c), 0))
+            secondary = consumers[1:]  # skip primary (nearest) consumer
+
+            for c in secondary:
+                if id(c) not in col_of:
+                    continue
+                c_col = col_of[id(c)]
+                c_row = row_of(lane_of[id(c)])
+
+                if c_row != b_row:
+                    # Different lane: draw vertical + horizontal branch
+                    v_col = b_end - 1
+                    run_h = c_col - v_col - 1
+                    if b_row < c_row:
+                        put(b_row, v_col, "┬")
+                        for r in range(b_row + 1, c_row):
+                            put(r, v_col, "│")
+                        put(c_row, v_col, "└")
+                    else:
+                        put(b_row, v_col, "┴")
+                        for r in range(c_row + 1, b_row):
+                            put(r, v_col, "│")
+                        put(c_row, v_col, "┌")
+                    if run_h > 3:
+                        put(c_row, v_col + 1, " " + "─" * (run_h - 3) + "──►")
+                    elif run_h > 0:
+                        put(c_row, v_col + 1, "─" * run_h)
+                else:
+                    # Same lane/row: tap off the arrow between b and primary
+                    # Find a spare inter-lane row below for the branch line
+                    branch_row = b_row + 1 if b_row + 1 < n_rows else b_row - 1
+                    tap_col    = b_end + len(ARROW) // 2  # mid-arrow tap point
+                    run_h      = c_col - tap_col - 1
+                    # Tap down
+                    put(b_row,      tap_col, "┬")
+                    put(branch_row, tap_col, "└")
+                    # Horizontal run on branch row
+                    if run_h > 3:
+                        put(branch_row, tap_col + 1, " " + "─" * (run_h - 3) + "──►")
+                    elif run_h > 0:
+                        put(branch_row, tap_col + 1, "─" * run_h)
+                    # Vertical leg back up (if branch_row != c_row-1)
+                    for r in range(branch_row + 1, c_row):
+                        put(r, c_col - 1, "│")
+                    if branch_row < c_row - 1:
+                        put(c_row - 1, c_col - 1, "└")
+
         # ── 4. Print main canvas ──────────────────────────────────────────────
         print("\n" + "=" * 70)
         print("BLOCK DIAGRAM  (Sources → Sinks)")
@@ -1326,79 +1428,103 @@ class VectorSim:
                 print("  " + line)
 
         # ── 5. Feedback return arcs ───────────────────────────────────────────
-        # For each loop-breaker lb:
-        #   driver   = block whose output feeds INTO lb  (lb.inputs[0])
-        #   receiver = forward-path block that reads lb's output
+        # For each (driver, loop-breaker) pair we collect ALL receivers so
+        # that a loop-breaker which fans out to multiple forward-path blocks
+        # is drawn as ONE arc with multiple ◄ re-entry points, rather than
+        # one separate arc per receiver.
         #
         # Arc geometry (drawn below the main diagram):
-        #   drop_col = right edge of driver's box  → vertical leg drops here
-        #   rise_col = left  edge of receiver's box → ◄ re-entry arrow here
+        #   drop_col  = right edge of driver box    → vertical leg / └ here
+        #   rise_cols = left  edges of all receivers → ◄ re-entry arrows here
         #
-        #   Row 1:  │ at drop_col,  │ at rise_col  (vertical legs)
-        #   Row 2:  └───[lb]───◄  or  ◄───[lb]───┘  (horizontal arc + label)
-        #   Row 3:  lb label centred below arc (only if label didn't fit inline)
+        #   Row 1: │ at drop_col and at every rise_col
+        #   Row 2: └──── lb_label ────◄  with ◄ at every rise_col
+        #   Row 3: lb label below arc (only when it does not fit inline)
 
-        arcs = []
+        # Build grouped arcs: key=(id(driver),id(lb)), value=(d, lb, [receivers])
+        arc_map = {}
         for lb in self.loop_breakers:
             drivers   = [i for i in getattr(lb, "inputs", [])
                          if id(i) not in loop_breaker_set]
             receivers = [b for b in visible
                          if id(lb) in [id(i) for i in getattr(b, "inputs", [])]]
             for d in drivers:
-                for r in receivers:
-                    arcs.append((d, lb, r))
+                key = (id(d), id(lb))
+                if key not in arc_map:
+                    arc_map[key] = (d, lb, [])
+                arc_map[key][2].extend(receivers)
 
-        for (d, lb, r) in arcs:
-            if id(d) not in col_of or id(r) not in col_of:
+        for (d, lb, receivers) in arc_map.values():
+            if id(d) not in col_of:
+                continue
+            valid_rcv = [r for r in receivers if id(r) in col_of]
+            if not valid_rcv:
                 continue
 
-            drop_col = col_of[id(d)] + box_vlen(d)   # just after driver's ']'
-            rise_col = col_of[id(r)]                  # just before receiver's '['
-            lb_label = f" {lb.name} ({type(lb).__name__}) "
+            drop_col  = col_of[id(d)] + box_vlen(d)
+            rise_cols = sorted(set(col_of[id(r)] for r in valid_rcv))
+            lb_label  = f" {lb.name} ({type(lb).__name__}) "
 
-            left  = min(drop_col, rise_col)
-            right = max(drop_col, rise_col)
-            span  = right - left - 1
+            all_cols = [drop_col] + rise_cols
+            left     = min(all_cols)
+            right    = max(all_cols)
+            span     = right - left - 1
 
-            # Row 1 — vertical legs
+            # Row 1: vertical legs
             r1 = list(" " * total_width)
-            r1[drop_col] = "│"
-            if drop_col != rise_col:
-                r1[rise_col] = "│"
+            for c in all_cols:
+                if 0 <= c < total_width:
+                    r1[c] = "│"
             print("  " + "".join(r1).rstrip())
 
-            # Row 2 — horizontal arc
+            # Row 2: horizontal arc
             r2 = list(" " * total_width)
 
-            if drop_col == rise_col:
-                # Degenerate: driver and receiver are the same block
-                r2[drop_col] = "└"
+            if left == right:
+                # Degenerate: all columns coincide
+                if 0 <= drop_col < total_width:
+                    r2[drop_col] = "└"
                 for i, ch in enumerate(lb_label.strip()):
                     if drop_col + 1 + i < total_width:
                         r2[drop_col + 1 + i] = ch
                 print("  " + "".join(r2).rstrip())
                 continue
 
-            # Corners and re-entry arrow
-            r2[drop_col] = "└" if drop_col == left else "┘"
-            r2[rise_col] = "◄"
+            # Dash span
             for c in range(left + 1, right):
                 r2[c] = "─"
 
-            label_fits = span >= len(lb_label)
-            if label_fits:
-                # Embed lb label centred in the dash span
-                s = left + 1 + (span - len(lb_label)) // 2
-                for i, ch in enumerate(lb_label):
-                    r2[s + i] = ch
-                print("  " + "".join(r2).rstrip())
-            else:
-                # Print arc first, then label on a third row below
-                print("  " + "".join(r2).rstrip())
+            # Drop corner
+            r2[drop_col] = "└" if drop_col == left else "┘"
+
+            # Re-entry arrows at every receiver column
+            for rc in rise_cols:
+                if 0 <= rc < total_width:
+                    r2[rc] = "◄"
+
+            # Embed lb label centred between the leftmost and rightmost ◄.
+            # If it would overwrite a ◄ or doesn't fit inline, use row 3.
+            # Centre point is between the two outermost re-entry arrows.
+            inner_left  = rise_cols[0]  + 1   # just right of leftmost  ◄
+            inner_right = rise_cols[-1] - 1   # just left  of rightmost ◄
+            inner_span  = inner_right - inner_left + 1
+
+            need_row3  = True
+            if inner_span >= len(lb_label):
+                s    = inner_left + (inner_span - len(lb_label)) // 2
+                safe = all(0 <= s + i < total_width and r2[s + i] != "◄"
+                           for i in range(len(lb_label)))
+                if safe:
+                    for i, ch in enumerate(lb_label):
+                        r2[s + i] = ch
+                    need_row3 = False
+            print("  " + "".join(r2).rstrip())
+            if need_row3:
                 r3 = list(" " * total_width)
+                # Centre the label in the full arc span on row 3
                 s  = left + max(0, (span + 1 - len(lb_label.strip())) // 2)
                 for i, ch in enumerate(lb_label.strip()):
-                    if s + i < total_width:
+                    if 0 <= s + i < total_width:
                         r3[s + i] = ch
                 print("  " + "".join(r3).rstrip())
 
