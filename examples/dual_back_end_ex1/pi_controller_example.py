@@ -1,0 +1,517 @@
+"""
+EmbedSim — Dual-Backend Example: PI Controller
+===============================================
+
+This file shows how to write ONE block that runs as pure Python during
+development, then flips to a compiled C/Cython backend for production
+with a single flag change.
+
+Block under demonstration: PI (Proportional-Integral) controller
+    u(t) = Kp * e(t) + Ki * integral(e(t))
+
+File layout
+-----------
+This example is self-contained. For the C backend it also shows the three
+files that CodeGenEnd.generate_pyx_stub() would normally auto-generate:
+
+    pi_controller.h              C header  (C developer implements)
+    pi_controller_wrapper.pyx    Cython wrapper  (compile once)
+    pi_controller_simblock.py    SimBlockBase subclass  (use as-is)
+
+Run this file directly to see both backends in action:
+    python pi_controller_example.py
+
+To enable the C backend you must compile the Cython wrapper first —
+instructions are printed at the bottom of this file.
+"""
+
+import sys
+import os
+import numpy as np
+from typing import List, Optional
+
+# ---------------------------------------------------------------------------
+# Make the local embedsim package importable when running from any directory.
+# Adjust this path to match where your embedsim folder lives.
+# ---------------------------------------------------------------------------
+from pathlib import Path
+
+# Lambda to add N-levels parent to sys.path with print
+add_parent_to_syspath = lambda levels=2: (
+    print(f"[EmbedSim] Adding to sys.path: {(p:=Path(__file__).resolve().parent if '__file__' in globals() else Path.cwd()).parents[levels-1]}"),
+    sys.path.insert(0, str((p:=Path(__file__).resolve().parent if '__file__' in globals() else Path.cwd()).parents[levels-1]))
+)[-1]
+add_parent_to_syspath(2)
+
+from embedsim.core_blocks import VectorBlock, VectorSignal, DEFAULT_DTYPE
+from embedsim.source_blocks import VectorStep
+from embedsim.processing_blocks import VectorSum
+from embedsim.dynamic_blocks import VectorEnd
+from embedsim.simulation_engine import EmbedSim, ODESolver
+from embedsim.code_generator import SimBlockBase
+
+
+# =============================================================================
+# Step 1 — Write the PI controller block
+# =============================================================================
+#
+# Rules:
+#   • Subclass SimBlockBase (which is VectorBlock with dual-backend built in).
+#   • Implement compute_py()  — your Python algorithm.
+#   • Implement compute_c()   — pack/call/unpack the Cython wrapper.
+#   • Implement _load_wrapper() — import the compiled .pyx module.
+#   • Never override compute() — the base class handles routing.
+#
+# The block is a scalar PI controller operating on a 1-element signal.
+# =============================================================================
+
+class PIControllerBlock(SimBlockBase):
+    """
+    Proportional-Integral controller:  u = Kp*e + Ki*integral(e)
+
+    Inputs  (1 double):   [0]  error  e(t) = setpoint - measurement
+    Outputs (1 double):   [0]  control_output  u(t)
+
+    Parameters
+    ----------
+    Kp : float   Proportional gain
+    Ki : float   Integral gain
+    dt_init : float   Expected simulation timestep (informational only)
+
+    Backends
+    --------
+    use_c_backend=False  Pure Python, works immediately.
+    use_c_backend=True   Calls compiled Cython wrapper.
+                         Compile first:
+                           python setup_pi_controller.py build_ext --inplace
+    """
+
+    def __init__(self,
+                 name: str,
+                 Kp: float,
+                 Ki: float,
+                 use_c_backend: bool = False,
+                 dtype=None):
+        super().__init__(name, use_c_backend=use_c_backend, dtype=dtype)
+        self.Kp = Kp
+        self.Ki = Ki
+
+        # Internal integrator state  (persists between timesteps)
+        self._integral = np.float32(0.0)
+
+        # Load Cython wrapper immediately if C backend requested
+        if use_c_backend:
+            self._load_wrapper()
+
+    # ── Python backend ────────────────────────────────────────────────────────
+
+    def compute_py(self,
+                   t: float,
+                   dt: float,
+                   input_values: Optional[List[VectorSignal]] = None) -> VectorSignal:
+        """Pure Python PI controller — works with no compilation."""
+
+        # Unpack the single input (error signal, scalar)
+        e = input_values[0].value[0] if input_values else 0.0
+
+        # Accumulate integral (Euler forward method)
+        self._integral += self.Ki * e * dt
+
+        # PI output
+        u = self.Kp * e + self._integral
+
+        self.output = VectorSignal([u], self.name, dtype=self.dtype)
+        return self.output
+
+    # ── C backend ────────────────────────────────────────────────────────────
+
+    def _load_wrapper(self):
+        """
+        Import the compiled Cython wrapper.
+
+        This method is normally auto-generated by CodeGenEnd.generate_pyx_stub().
+        The module 'pi_controller_wrapper' is produced by compiling
+        pi_controller_wrapper.pyx (see generated files section below).
+        """
+        try:
+            from pi_controller_wrapper import PIControllerWrapper
+            self._wrapper = PIControllerWrapper(self.Kp, self.Ki)
+        except ImportError:
+            raise ImportError(
+                "Cython wrapper 'pi_controller_wrapper' not found.\n"
+                "Compile it with:\n"
+                "  python setup_pi_controller.py build_ext --inplace\n"
+                "The generated source files are printed at the end of this script."
+            )
+
+    def compute_c(self,
+                  t: float,
+                  dt: float,
+                  input_values: Optional[List[VectorSignal]] = None) -> VectorSignal:
+        """
+        C backend — zero Python overhead on the hot simulation path.
+
+        Packs input into a flat float64 buffer, calls the C function via
+        Cython (GIL released inside wrapper.compute()), unpacks output.
+        """
+        # Pack flat input buffer  (1 element: error)
+        u_in = np.empty(1, dtype=np.float32)
+        u_in[0] = input_values[0].value[0] if input_values else 0.0
+
+        # Pass timestep so the C function can integrate
+        self._wrapper.set_dt(dt)
+        self._wrapper.set_inputs(u_in)
+        self._wrapper.compute()
+        y = self._wrapper.get_outputs()   # returns np.ndarray shape (1,)
+
+        self.output = VectorSignal(y, self.name, dtype=self.dtype)
+        return self.output
+
+    def reset(self):
+        """Reset integrator state and output between simulation runs."""
+        super().reset()
+        self._integral = np.float32(0.0)
+        if hasattr(self, '_wrapper') and self._wrapper is not None:
+            self._wrapper.reset()
+
+
+# =============================================================================
+# Step 2 — Build the simulation and run it with the Python backend
+# =============================================================================
+
+def run_simulation(use_c_backend: bool = False) -> dict:
+    """
+    Closed-loop step-response simulation.
+
+    Topology:
+        setpoint ──► [sum] ──► [PI controller] ──► [plant (1/s)] ──► [sink]
+                        ▲                                  │
+                        └──────────────── delay ───────────┘  (feedback)
+
+    For simplicity we model the plant as an integrator (pure gain=1 here).
+    The feedback is handled by measuring plant output and subtracting from
+    setpoint in VectorSum.
+
+    Returns timing and output data for comparison.
+    """
+    import time
+
+    backend_label = "C backend (Cython)" if use_c_backend else "Python backend"
+    print(f"\n{'='*55}")
+    print(f"  Running: {backend_label}")
+    print(f"{'='*55}")
+
+    # ── Blocks ────────────────────────────────────────────────────────────────
+    setpoint  = VectorStep("setpoint", step_time=0.0,
+                           before_value=0.0, after_value=1.0, dim=1)
+
+    error_sum = VectorSum("error", signs=[1, -1])   # setpoint - feedback
+
+    pi = PIControllerBlock("PI",
+                           Kp=2.0,
+                           Ki=5.0,
+                           use_c_backend=use_c_backend)
+
+    # Simple first-order plant approximated with a gain here;
+    # in a real system this would be a StateSpaceBlock or FMU
+    from embedsim.processing_blocks import VectorGain, VectorSaturation
+    plant_gain = VectorGain("plant", gain=0.5)
+    sat        = VectorSaturation("sat", lower=-10.0, upper=10.0)
+
+    # Feedback delay (breaks algebraic loop)
+    from embedsim.simulation_engine import VectorDelay
+    feedback   = VectorDelay("feedback", initial=[0.0])
+
+    output_sink = VectorEnd("output")
+
+    # ── Connections ───────────────────────────────────────────────────────────
+    #   setpoint ──► error_sum ──► pi ──► plant_gain ──► sat ──► output_sink
+    #                   ▲                                           │
+    #                   └──────────── feedback ◄────────────────────┘
+
+    setpoint  >> error_sum
+    feedback  >> error_sum      # negative input (sign=-1)
+    error_sum >> pi >> plant_gain >> sat >> output_sink
+    sat       >> feedback       # close the loop
+
+    # ── Simulation ────────────────────────────────────────────────────────────
+    T  = 2.0    # seconds
+    dt = 0.001  # 1 ms timestep
+
+    sim = EmbedSim(sinks=[output_sink],
+                   T=T,
+                   dt=dt,
+                   solver=ODESolver.EULER)
+
+    sim.scope.add(output_sink, indices=[0], label="plant_output")
+    sim.scope.add(pi,          indices=[0], label="control_signal")
+
+    t_start = time.perf_counter()
+    sim.run(verbose=False, progress_bar=False)
+    elapsed = time.perf_counter() - t_start
+
+    steps = len(output_sink.history)
+    final = output_sink.history[-1][0] if output_sink.history else 0.0
+
+    print(f"  Steps completed : {steps}")
+    print(f"  Final output    : {final:.4f}  (setpoint = 1.0)")
+    print(f"  Compute time    : {elapsed*1000:.2f} ms")
+
+    return {
+        "backend":  backend_label,
+        "steps":    steps,
+        "final":    final,
+        "time_ms":  elapsed * 1000,
+        "history":  np.array([h[0] for h in output_sink.history]),
+    }
+
+
+# =============================================================================
+# Step 3 — Compare backends
+# =============================================================================
+
+def compare_backends():
+    print("\n" + "="*55)
+    print("  EmbedSim Dual-Backend Demo: PI Controller")
+    print("="*55)
+
+    # --- Python backend (always available) ---
+    result_py = run_simulation(use_c_backend=False)
+
+    # --- C backend (requires compiled Cython wrapper) ---
+    print("\n  Attempting C backend ...")
+    try:
+        result_c = run_simulation(use_c_backend=True)
+        both_available = True
+    except ImportError as e:
+        print(f"  C backend not available: {e}")
+        print("  (Run the simulation with Python backend only)")
+        both_available = False
+
+    # --- Summary ---
+    print(f"\n{'='*55}")
+    print("  SUMMARY")
+    print(f"{'='*55}")
+    print(f"  {'Backend':<25}  {'Steps':>6}  {'Final':>7}  {'Time (ms)':>10}")
+    print(f"  {'-'*25}  {'-'*6}  {'-'*7}  {'-'*10}")
+    print(f"  {result_py['backend']:<25}  "
+          f"{result_py['steps']:>6}  "
+          f"{result_py['final']:>7.4f}  "
+          f"{result_py['time_ms']:>10.2f}")
+
+    if both_available:
+        print(f"  {result_c['backend']:<25}  "
+              f"{result_c['steps']:>6}  "
+              f"{result_c['final']:>7.4f}  "
+              f"{result_c['time_ms']:>10.2f}")
+
+        speedup = result_py['time_ms'] / result_c['time_ms']
+        print(f"\n  Speedup (C vs Python): {speedup:.1f}×")
+
+        match = np.allclose(result_py['history'],
+                            result_c['history'], atol=1e-5)
+        print(f"  Outputs identical:     {'YES ✓' if match else 'NO — check implementation'}")
+
+    print(f"\n{'='*55}")
+    print("  To switch backend on any block at runtime:")
+    print()
+    print("    pi = PIControllerBlock('PI', Kp=2.0, Ki=5.0)")
+    print("    pi.use_c_backend = False   # Python  (default)")
+    print()
+    print("    pi.switch_backend(True)    # → C  (loads wrapper)")
+    print("    pi.switch_backend(False)   # → Python (always safe)")
+    print(f"{'='*55}\n")
+
+
+# =============================================================================
+# Generated files — printed for reference
+# =============================================================================
+# These three files are what CodeGenEnd.generate_pyx_stub() produces
+# automatically. They are shown here for clarity.
+# =============================================================================
+
+GENERATED_C_HEADER = """\
+/* pi_controller.h
+ * Auto-generated C header for EmbedSim block 'pi_controller'
+ * Implement pi_controller_compute() in pi_controller.c
+ * Compile: gcc -O2 -shared -fPIC -o libpi_controller.so pi_controller.c
+ */
+#ifndef PI_CONTROLLER_H
+#define PI_CONTROLLER_H
+
+typedef struct InputSignals  { float error;          } InputSignals;
+typedef struct OutputSignals { float control_output; } OutputSignals;
+typedef struct StateSignals  { float integral;        } StateSignals;
+
+void pi_controller_init   (float Kp, float Ki);
+void pi_controller_compute(const InputSignals* in,
+                                 OutputSignals* out,
+                                 StateSignals*  state,
+                                 float dt);
+void pi_controller_reset  (StateSignals* state);
+
+#endif /* PI_CONTROLLER_H */
+"""
+
+GENERATED_C_IMPL = """\
+/* pi_controller.c
+ * Hand-written C implementation of the PI controller.
+ * Compile together with the Cython wrapper via setup_pi_controller.py.
+ */
+#include "pi_controller.h"
+
+static float _Kp = 1.0f;
+static float _Ki = 0.0f;
+
+void pi_controller_init(float Kp, float Ki) {
+    _Kp = Kp;
+    _Ki = Ki;
+}
+
+void pi_controller_compute(const InputSignals* in,
+                                 OutputSignals* out,
+                                 StateSignals*  state,
+                                 float dt) {
+    /* Euler integration of the integral term */
+    state->integral      += _Ki * in->error * dt;
+    out->control_output   = _Kp * in->error + state->integral;
+}
+
+void pi_controller_reset(StateSignals* state) {
+    state->integral = 0.0f;
+}
+"""
+
+GENERATED_PYX_WRAPPER = """\
+# pi_controller_wrapper.pyx
+# Auto-generated Cython wrapper for EmbedSim block 'pi_controller'
+# cython: language_level=3
+# cython: boundscheck=False, wraparound=False, cdivision=True
+
+import numpy as np
+cimport numpy as cnp
+
+cdef extern from "pi_controller.h":
+    ctypedef struct InputSignals:
+        float error
+    ctypedef struct OutputSignals:
+        float control_output
+    ctypedef struct StateSignals:
+        float integral
+    void pi_controller_init   (float Kp, float Ki)
+    void pi_controller_compute(const InputSignals* inp,
+                                     OutputSignals* out,
+                                     StateSignals*  state,
+                                     float dt) nogil
+    void pi_controller_reset  (StateSignals* state)
+
+cdef class PIControllerWrapper:
+    cdef InputSignals  _in
+    cdef OutputSignals _out
+    cdef StateSignals  _state
+    cdef float         _dt
+
+    def __cinit__(self, float Kp, float Ki):
+        pi_controller_init(Kp, Ki)
+        self._in.error           = 0.0
+        self._out.control_output = 0.0
+        self._state.integral     = 0.0
+        self._dt                 = 0.001
+
+    cpdef void set_inputs(self, float[::1] u):
+        self._in.error = u[0]
+
+    cpdef void set_dt(self, float dt):
+        self._dt = dt
+
+    cpdef void compute(self):
+        with nogil:
+            pi_controller_compute(&self._in, &self._out, &self._state, self._dt)
+
+    cpdef cnp.ndarray get_outputs(self):
+        cdef cnp.ndarray y = np.empty(1, dtype=np.float32)
+        y[0] = self._out.control_output
+        return y
+
+    cpdef void reset(self):
+        pi_controller_reset(&self._state)
+"""
+
+GENERATED_SETUP_PY = """\
+# setup_pi_controller.py
+# Auto-generated build script for 'pi_controller' Cython wrapper
+#
+# Usage:
+#   python setup_pi_controller.py build_ext --inplace
+#
+# Prerequisite: pi_controller.c must exist in the same directory.
+
+import sys
+from setuptools import setup, Extension
+from Cython.Build import cythonize
+import numpy as np
+
+compile_args = ['/O2'] if sys.platform == 'win32' else ['-O3', '-ffast-math']
+
+ext = Extension(
+    name='pi_controller_wrapper',
+    sources=[
+        'pi_controller_wrapper.pyx',
+        'pi_controller.c',          # your C implementation
+    ],
+    include_dirs=[np.get_include()],
+    extra_compile_args=compile_args,
+)
+
+setup(
+    name='pi_controller_wrapper',
+    ext_modules=cythonize(
+        [ext],
+        compiler_directives={
+            'language_level': '3',
+            'boundscheck':    False,
+            'wraparound':     False,
+            'cdivision':      True,
+        },
+        annotate=True,
+    ),
+)
+"""
+
+
+def print_generated_files():
+    """Print all four generated files to console."""
+    separator = "─" * 55
+    files = [
+        ("pi_controller.h",           GENERATED_C_HEADER,    "C header (interface contract)"),
+        ("pi_controller.c",           GENERATED_C_IMPL,      "C implementation (hand-written)"),
+        ("pi_controller_wrapper.pyx", GENERATED_PYX_WRAPPER, "Cython wrapper (compile once)"),
+        ("setup_pi_controller.py",    GENERATED_SETUP_PY,    "Build script"),
+    ]
+    print("\n" + "="*55)
+    print("  GENERATED FILES")
+    print("  (normally written by CodeGenEnd.generate_pyx_stub())")
+    print("="*55)
+    for filename, content, desc in files:
+        print(f"\n{separator}")
+        print(f"  FILE: {filename}")
+        print(f"  ({desc})")
+        print(separator)
+        for line in content.strip().splitlines():
+            print("  " + line)
+    print(f"\n{separator}")
+    print("\n  To compile and enable the C backend:")
+    print("    1. Save the four files above into the same directory.")
+    print("    2. python setup_pi_controller.py build_ext --inplace")
+    print("    3. In your script: PIControllerBlock('PI', Kp=2.0, Ki=5.0,")
+    print("                                          use_c_backend=True)")
+    print(f"\n{separator}\n")
+
+
+# =============================================================================
+# Entry point
+# =============================================================================
+
+if __name__ == "__main__":
+    compare_backends()
+    #print_generated_files()
