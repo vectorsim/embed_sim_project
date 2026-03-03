@@ -1,0 +1,8 @@
+C:/EmbedSimProject/examples/macro_model_example/modelica/SpiralGalaxyeacd/102.fmutmp/sources/build_cmake/CMakeFiles/102.dir
+C:/EmbedSimProject/examples/macro_model_example/modelica/SpiralGalaxyeacd/102.fmutmp/sources/build_cmake/CMakeFiles/create_fmu.dir
+C:/EmbedSimProject/examples/macro_model_example/modelica/SpiralGalaxyeacd/102.fmutmp/sources/build_cmake/CMakeFiles/edit_cache.dir
+C:/EmbedSimProject/examples/macro_model_example/modelica/SpiralGalaxyeacd/102.fmutmp/sources/build_cmake/CMakeFiles/rebuild_cache.dir
+C:/EmbedSimProject/examples/macro_model_example/modelica/SpiralGalaxyeacd/102.fmutmp/sources/build_cmake/CMakeFiles/list_install_components.dir
+C:/EmbedSimProject/examples/macro_model_example/modelica/SpiralGalaxyeacd/102.fmutmp/sources/build_cmake/CMakeFiles/install.dir
+C:/EmbedSimProject/examples/macro_model_example/modelica/SpiralGalaxyeacd/102.fmutmp/sources/build_cmake/CMakeFiles/install/local.dir
+C:/EmbedSimProject/examples/macro_model_example/modelica/SpiralGalaxyeacd/102.fmutmp/sources/build_cmake/CMakeFiles/install/strip.dir

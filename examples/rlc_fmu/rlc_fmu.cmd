@@ -6,7 +6,7 @@ cls
 echo ====================================
 echo        Python Script Runner
 echo ====================================
-echo 1. rlc_fmu.py
+echo 1. rlc_fmu_nn_pi_control_training.py
 echo 2. rlc_fmu_pi_tuning.py
 echo 3. rlc_fmu_control_training.py
 echo 4. rlc_fmu_nn_training_animation.py
@@ -16,7 +16,7 @@ echo ====================================
 set /p choice="Enter choice (1-6): "
 
 REM Run selected script
-if "%choice%"=="1" python rlc_fmu.py
+if "%choice%"=="1" python rlc_fmu_nn_pi_control_training.py
 if "%choice%"=="2" python rlc_fmu_pi_tuning.py
 if "%choice%"=="3" python rlc_fmu_control_training.py
 if "%choice%"=="4" python rlc_fmu_nn_training_animation.py

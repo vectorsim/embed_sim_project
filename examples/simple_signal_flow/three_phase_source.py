@@ -14,26 +14,18 @@ Key Concepts:
 Author: Vector Simulation Framework
 """
 
-
-# ---------------------------------------------------------------------------
-# Make the local embedsim package importable when running from any directory.
-# Adjust this path to match where your embedsim folder lives.
-
 import sys
 import matplotlib.pyplot as plt
 import numpy as np
-# ---------------------------------------------------------------------------
-from pathlib import Path
-# Lambda to add N-levels parent to sys.path with print
-add_parent_to_syspath = lambda levels=2: (
-    print(f"[EmbedSim] Adding to sys.path: {(p:=Path(__file__).resolve().parent if '__file__' in globals() else Path.cwd()).parents[levels-1]}"),
-    sys.path.insert(0, str((p:=Path(__file__).resolve().parent if '__file__' in globals() else Path.cwd()).parents[levels-1]))
-)[-1]
-add_parent_to_syspath(2)
+# ------------------------------------------------------------------
+# Locate embedsim regardless of working directory
+# ------------------------------------------------------------------
+from _path_utils import get_embedsim_import_path
+sys.path.insert(0, get_embedsim_import_path())
 
-from embedsim.source_blocks import *
-from embedsim.dynamic_blocks import *
-from embedsim.simulation_engine import *
+from embedsim.source_blocks import ThreePhaseGenerator
+from embedsim.dynamic_blocks import VectorEnd
+from embedsim.simulation_engine import EmbedSim, ODESolver
 
 
 def plot_results(sim):
@@ -74,7 +66,7 @@ def plot_results(sim):
 
 def main():
     print("\n" + "="*70)
-    print("EXAMPLE 1: Basic Three-Phase Signal Generation")
+    print("Basic Three-Phase Signal Generation")
     print("="*70)
     
     # Create a 50 Hz three-phase generator

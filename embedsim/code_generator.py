@@ -1,6 +1,6 @@
 # code_generator.py
 # ==================
-# ControlForge code generation support:
+# EmbedSim code generation support:
 #   SimBlockBase      - base class with Python/C backend switch
 #   CodeGenStart      - marks region input boundary, introspects input signals
 #   CodeGenEnd        - marks region output boundary, generates .h / .pyx / SimBlockBase stub
@@ -123,6 +123,19 @@ class CodeGenStart(SimBlockBase):
         result = "\n".join(lines)
         print(f"\nC struct for '{self.name}':\n{result}")
         return result
+
+    def compute_py(self,
+                   t: float,
+                   dt: float,
+                   input_values: Optional[List[VectorSignal]] = None) -> VectorSignal:
+        """Concatenate all upstream outputs into one flat vector."""
+        if not input_values:
+            self.output = VectorSignal([0.0], self.name)
+            return self.output
+        combined = np.concatenate([sig.value for sig in input_values])
+        self.output      = VectorSignal(combined, self.name)
+        self.vector_size = len(combined)
+        return self.output
 
 
 # =============================================================================

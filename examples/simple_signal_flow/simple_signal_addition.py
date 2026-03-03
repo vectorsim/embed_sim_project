@@ -50,14 +50,11 @@ Run:
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
-from pathlib import Path
-
-# Lambda to add N-levels parent to sys.path with print
-add_parent_to_syspath = lambda levels=2: (
-    print(f"[EmbedSim] Adding to sys.path: {(p:=Path(__file__).resolve().parent if '__file__' in globals() else Path.cwd()).parents[levels-1]}"),
-    sys.path.insert(0, str((p:=Path(__file__).resolve().parent if '__file__' in globals() else Path.cwd()).parents[levels-1]))
-)[-1]
-add_parent_to_syspath(2)
+# ------------------------------------------------------------------
+# Locate embedsim regardless of working directory
+# ------------------------------------------------------------------
+from _path_utils import get_embedsim_import_path
+sys.path.insert(0, get_embedsim_import_path())
 
 from embedsim.core_blocks                import VectorSignal
 from embedsim.source_blocks              import VectorConstant, SinusoidalGenerator
@@ -121,7 +118,7 @@ def plot_results(sim):
 if __name__ == "__main__":
 
     print("\n" + "=" * 70)
-    print("EXAMPLE 2: Sine + Cosine + DC  →  Sum  →  Gain  →  Integrator")
+    print("Sine + Cosine + DC  →  Sum  →  Gain  →  Integrator")
     print("=" * 70)
 
     # ── Sources ───────────────────────────────────────────────────────────────

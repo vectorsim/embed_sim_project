@@ -62,18 +62,11 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 
-# ---------------------------------------------------------------------------
-# Make the local embedsim package importable when running from any directory.
-# Adjust this path to match where your embedsim folder lives.
-# ---------------------------------------------------------------------------
-from pathlib import Path
-
-# Lambda to add N-levels parent to sys.path with print
-add_parent_to_syspath = lambda levels=2: (
-    print(f"[EmbedSim] Adding to sys.path: {(p:=Path(__file__).resolve().parent if '__file__' in globals() else Path.cwd()).parents[levels-1]}"),
-    sys.path.insert(0, str((p:=Path(__file__).resolve().parent if '__file__' in globals() else Path.cwd()).parents[levels-1]))
-)[-1]
-add_parent_to_syspath(2)
+# ------------------------------------------------------------------
+# Locate embedsim regardless of working directory
+# ------------------------------------------------------------------
+from _path_utils import get_embedsim_import_path
+sys.path.insert(0, get_embedsim_import_path())
 
 from embedsim.source_blocks import SinusoidalGenerator
 from embedsim.processing_blocks import VectorSum, VectorGain
@@ -120,7 +113,7 @@ def plot_results(sim):
 if __name__ == "__main__":
     # Display example header
     print("\n" + "=" * 70)
-    print("EXAMPLE 1: Two Sine Sources + Gain")
+    print("Two Sine Sources + Gain")
     print("=" * 70)
 
     # ------------------------------------------------------------------------

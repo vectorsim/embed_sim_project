@@ -1,0 +1,26 @@
+<p>C:/EmbedSimProject/examples/macro_model_example/modelica/ThreePhaseMotor/ThreePhaseMotor.exe -port=57082 -logFormat=xmltcp -override=startTime=0,stopTime=2,stepSize=0.0001,tolerance=1e-06,solver=dassl,outputFormat=mat,variableFilter=.* -r=C:/EmbedSimProject/examples/macro_model_example/modelica/ThreePhaseMotor/ThreePhaseMotor_res.mat -w -lv=LOG_STDOUT,LOG_ASSERT,LOG_STATS -inputPath=C:/EmbedSimProject/examples/macro_model_example/modelica/ThreePhaseMotor -outputPath=C:/EmbedSimProject/examples/macro_model_example/modelica/ThreePhaseMotor</p>
+LOG_SUCCESS		| info	 | <p>The initialization finished successfully without homotopy method.</p>
+LOG_STATS		| info	 | <p>### STATISTICS ###</p>
+|		| |	 | | <p>timer</p>
+|		| |	 | | | <p>   0.0018947s          reading init.xml</p>
+|		| |	 | | | <p>    0.000722s          reading info.xml</p>
+|		| |	 | | | <p>   0.0008056s [  0.6%] pre-initialization</p>
+|		| |	 | | | <p>    9.12e-05s [  0.1%] initialization</p>
+|		| |	 | | | <p>     5.5e-06s [  0.0%] steps</p>
+|		| |	 | | | <p>   0.0022875s [  1.7%] solver (excl. callbacks)</p>
+|		| |	 | | | <p>   0.0072416s [  5.5%] creating output-file</p>
+|		| |	 | | | <p>   0.0004662s [  0.4%] event-handling</p>
+|		| |	 | | | <p>   0.0028454s [  2.2%] overhead</p>
+|		| |	 | | | <p>    0.117451s [ 89.5%] simulation</p>
+|		| |	 | | | <p>    0.131194s [100.0%] total</p>
+|		| |	 | | <p>events</p>
+|		| |	 | | | <p>    0 state events</p>
+|		| |	 | | | <p>    0 time events</p>
+|		| |	 | | <p>solver: dassl</p>
+|		| |	 | | | <p>   25 steps taken</p>
+|		| |	 | | | <p>   25 calls of functionODE</p>
+|		| |	 | | | <p>   24 evaluations of jacobian</p>
+|		| |	 | | | <p>    0 error test failures</p>
+|		| |	 | | | <p>    0 convergence test failures</p>
+|		| |	 | | | <p>2.26e-05s time of jacobian evaluation</p>
+LOG_SUCCESS		| info	 | <p>The simulation finished successfully.</p>

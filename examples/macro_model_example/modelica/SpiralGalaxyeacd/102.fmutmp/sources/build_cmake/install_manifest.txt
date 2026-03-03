@@ -1,0 +1,3 @@
+C:/EmbedSimProject/examples/macro_model_example/modelica/SpiralGalaxyeacd/102.fmutmp/sources/../binaries/win64/libSpiralGalaxy.dll.a
+C:/EmbedSimProject/examples/macro_model_example/modelica/SpiralGalaxyeacd/102.fmutmp/sources/../binaries/win64/SpiralGalaxy.dll
+C:/EmbedSimProject/examples/macro_model_example/modelica/SpiralGalaxyeacd/102.fmutmp/sources/../binaries/win64/libwinpthread-1.dll

@@ -1,0 +1,322 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+
+<!-- description of the model interface using an extention of the FMI standard -->
+<fmiModelDescription
+  fmiVersion                          = "1.0"
+
+  modelName                           = "ThreePhaseMotor"
+  modelIdentifier                     = "ThreePhaseMotor"
+
+  OPENMODELICAHOME                    = "C:/Program Files/OpenModelica1.25.7-64bit"
+
+  guid                                = "{70cf5177-18af-4c29-86a2-bcff26e65c12}"
+
+  description                         = "PMSM 3-Phase Motor in dq0 Reference Frame for FMU Co-Simulation"
+  generationTool                      = "OpenModelica Compiler OpenModelica v1.25.7 (64-bit)"
+  generationDateAndTime               = "2026-03-02T15:53:54Z"
+
+  variableNamingConvention            = "structured"
+
+  numberOfEventIndicators             = "0"  cmt_numberOfEventIndicators             = "NG:       number of zero crossings,                           FMI"
+  numberOfTimeEvents                  = "0"  cmt_numberOfTimeEvents                  = "NG_SAM:   number of zero crossings that are samples,          OMC"
+
+  numberOfInputVariables              = "3"  cmt_numberOfInputVariables              = "NI:       number of inputvar on topmodel,                     OMC"
+  numberOfOutputVariables             = "0"  cmt_numberOfOutputVariables             = "NO:       number of outputvar on topmodel,                    OMC"
+
+  numberOfExternalObjects             = "0"  cmt_numberOfExternalObjects             = "NEXT:     number of external objects,                         OMC"
+  numberOfFunctions                   = "0"  cmt_numberOfFunctions                   = "NFUNC:    number of functions used by the simulation,         OMC"
+
+  numberOfContinuousStates            = "4"  cmt_numberOfContinuousStates            = "NX:       number of states,                                   FMI"
+  numberOfRealAlgebraicVariables      = "6"  cmt_numberOfRealAlgebraicVariables      = "NY:       number of real variables,                           OMC"
+  numberOfRealAlgebraicAliasVariables = "0"  cmt_numberOfRealAlgebraicAliasVariables = "NA:       number of alias variables,                          OMC"
+  numberOfRealParameters              = "7"  cmt_numberOfRealParameters              = "NP:       number of parameters,                               OMC"
+
+  numberOfIntegerAlgebraicVariables   = "0"  cmt_numberOfIntegerAlgebraicVariables   = "NYINT:    number of alg. int variables,                       OMC"
+  numberOfIntegerAliasVariables       = "0"  cmt_numberOfIntegerAliasVariables       = "NAINT:    number of alias int variables,                      OMC"
+  numberOfIntegerParameters           = "0"  cmt_numberOfIntegerParameters           = "NPINT:    number of int parameters,                           OMC"
+
+  numberOfStringAlgebraicVariables    = "0"  cmt_numberOfStringAlgebraicVariables    = "NYSTR:    number of alg. string variables,                    OMC"
+  numberOfStringAliasVariables        = "0"  cmt_numberOfStringAliasVariables        = "NASTR:    number of alias string variables,                   OMC"
+  numberOfStringParameters            = "0"  cmt_numberOfStringParameters            = "NPSTR:    number of string parameters,                        OMC"
+
+  numberOfBooleanAlgebraicVariables   = "0"  cmt_numberOfBooleanAlgebraicVariables   = "NYBOOL:   number of alg. bool variables,                      OMC"
+  numberOfBooleanAliasVariables       = "0"  cmt_numberOfBooleanAliasVariables       = "NABOOL:   number of alias bool variables,                     OMC"
+  numberOfBooleanParameters           = "0"  cmt_numberOfBooleanParameters           = "NPBOOL:   number of bool parameters,                          OMC" >
+
+
+  <!-- startTime, stopTime, tolerance are FMI specific, all others are OMC specific -->
+  <DefaultExperiment
+    startTime      = "0"
+    stopTime       = "2"
+    stepSize       = "0.0001"
+    tolerance      = "1e-06"
+    solver         = "dassl"
+    outputFormat   = "mat"
+    variableFilter = ".*" />
+
+  <!-- variables in the model -->
+  <ModelVariables>
+
+  <ScalarVariable
+    name = "i_d"
+    valueReference = "1000"
+    description = "d-axis current [A]"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "0" classType = "rSta"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/elecrical_blocks/modelica/ThreePhaseMotor.mo" startLine = "67" startColumn = "3" endLine = "67" endColumn = "63" fileWritable = "true">
+    <Real start="0.0" fixed="true" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "i_q"
+    valueReference = "1001"
+    description = "q-axis current [A]"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "1" classType = "rSta"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/elecrical_blocks/modelica/ThreePhaseMotor.mo" startLine = "68" startColumn = "3" endLine = "68" endColumn = "63" fileWritable = "true">
+    <Real start="0.0" fixed="true" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "omega_m"
+    valueReference = "1002"
+    description = "Mechanical angular velocity [rad/s]"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "2" classType = "rSta"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/elecrical_blocks/modelica/ThreePhaseMotor.mo" startLine = "69" startColumn = "3" endLine = "69" endColumn = "80" fileWritable = "true">
+    <Real start="0.0" fixed="true" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "theta_e"
+    valueReference = "1003"
+    description = "Electrical rotor angle [rad]"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "3" classType = "rSta"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/elecrical_blocks/modelica/ThreePhaseMotor.mo" startLine = "70" startColumn = "3" endLine = "70" endColumn = "73" fileWritable = "true">
+    <Real start="0.0" fixed="true" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "der(i_d)"
+    valueReference = "1004"
+    description = "der(d-axis current [A])"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "0" classType = "rDer"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/elecrical_blocks/modelica/ThreePhaseMotor.mo" startLine = "67" startColumn = "3" endLine = "67" endColumn = "63" fileWritable = "true">
+    <Real fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "der(i_q)"
+    valueReference = "1005"
+    description = "der(q-axis current [A])"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "1" classType = "rDer"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/elecrical_blocks/modelica/ThreePhaseMotor.mo" startLine = "68" startColumn = "3" endLine = "68" endColumn = "63" fileWritable = "true">
+    <Real fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "der(omega_m)"
+    valueReference = "1006"
+    description = "der(Mechanical angular velocity [rad/s])"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "2" classType = "rDer"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/elecrical_blocks/modelica/ThreePhaseMotor.mo" startLine = "69" startColumn = "3" endLine = "69" endColumn = "80" fileWritable = "true">
+    <Real fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "der(theta_e)"
+    valueReference = "1007"
+    description = "der(Electrical rotor angle [rad])"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "3" classType = "rDer"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/elecrical_blocks/modelica/ThreePhaseMotor.mo" startLine = "70" startColumn = "3" endLine = "70" endColumn = "73" fileWritable = "true">
+    <Real fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "T_em"
+    valueReference = "1008"
+    description = "Electromagnetic torque [N.m]"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "0" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/elecrical_blocks/modelica/ThreePhaseMotor.mo" startLine = "75" startColumn = "3" endLine = "75" endColumn = "48" fileWritable = "true">
+    <Real start="0.0" fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "T_load"
+    valueReference = "1009"
+    description = "Load torque [N.m]"
+    variability = "continuous" isDiscrete = "false"
+    causality = "input" isValueChangeable = "true"
+    inputIndex = "0"
+    alias = "noAlias"
+    classIndex = "1" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/elecrical_blocks/modelica/ThreePhaseMotor.mo" startLine = "62" startColumn = "3" endLine = "62" endColumn = "53" fileWritable = "true">
+    <Real start="0.0" fixed="true" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "omega_e"
+    valueReference = "1010"
+    description = "Electrical angular velocity [rad/s]"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "2" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/elecrical_blocks/modelica/ThreePhaseMotor.mo" startLine = "76" startColumn = "3" endLine = "76" endColumn = "55" fileWritable = "true">
+    <Real start="0.0" fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "speed_rpm"
+    valueReference = "1011"
+    description = "Shaft speed [RPM]"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "3" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/elecrical_blocks/modelica/ThreePhaseMotor.mo" startLine = "77" startColumn = "3" endLine = "77" endColumn = "37" fileWritable = "true">
+    <Real start="0.0" fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "v_d"
+    valueReference = "1012"
+    description = "d-axis stator voltage [V]"
+    variability = "continuous" isDiscrete = "false"
+    causality = "input" isValueChangeable = "true"
+    inputIndex = "1"
+    alias = "noAlias"
+    classIndex = "4" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/elecrical_blocks/modelica/ThreePhaseMotor.mo" startLine = "60" startColumn = "3" endLine = "60" endColumn = "61" fileWritable = "true">
+    <Real start="0.0" fixed="true" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "v_q"
+    valueReference = "1013"
+    description = "q-axis stator voltage [V]"
+    variability = "continuous" isDiscrete = "false"
+    causality = "input" isValueChangeable = "true"
+    inputIndex = "2"
+    alias = "noAlias"
+    classIndex = "5" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/elecrical_blocks/modelica/ThreePhaseMotor.mo" startLine = "61" startColumn = "3" endLine = "61" endColumn = "61" fileWritable = "true">
+    <Real start="0.0" fixed="true" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "B"
+    valueReference = "1014"
+    description = "Viscous friction coefficient [N.m.s/rad]"
+    variability = "parameter" isDiscrete = "true"
+    causality = "parameter" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "0" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/elecrical_blocks/modelica/ThreePhaseMotor.mo" startLine = "54" startColumn = "3" endLine = "54" endColumn = "78" fileWritable = "true">
+    <Real start="0.001" fixed="true" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "J"
+    valueReference = "1015"
+    description = "Rotor inertia [kg.m2]"
+    variability = "parameter" isDiscrete = "true"
+    causality = "parameter" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "1" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/elecrical_blocks/modelica/ThreePhaseMotor.mo" startLine = "53" startColumn = "3" endLine = "53" endColumn = "59" fileWritable = "true">
+    <Real start="0.002" fixed="true" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "L_d"
+    valueReference = "1016"
+    description = "d-axis inductance [H]"
+    variability = "parameter" isDiscrete = "true"
+    causality = "parameter" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "2" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/elecrical_blocks/modelica/ThreePhaseMotor.mo" startLine = "50" startColumn = "3" endLine = "50" endColumn = "59" fileWritable = "true">
+    <Real start="0.005" fixed="true" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "L_q"
+    valueReference = "1017"
+    description = "q-axis inductance [H] (L_q &gt;= L_d for IPMSM)"
+    variability = "parameter" isDiscrete = "true"
+    causality = "parameter" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "3" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/elecrical_blocks/modelica/ThreePhaseMotor.mo" startLine = "51" startColumn = "3" endLine = "51" endColumn = "82" fileWritable = "true">
+    <Real start="0.006" fixed="true" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "R"
+    valueReference = "1018"
+    description = "Stator resistance [Ohm]"
+    variability = "parameter" isDiscrete = "true"
+    causality = "parameter" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "4" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/elecrical_blocks/modelica/ThreePhaseMotor.mo" startLine = "49" startColumn = "3" endLine = "49" endColumn = "61" fileWritable = "true">
+    <Real start="0.5" fixed="true" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "lambda_pm"
+    valueReference = "1019"
+    description = "Permanent magnet flux linkage [Wb]"
+    variability = "parameter" isDiscrete = "true"
+    causality = "parameter" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "5" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/elecrical_blocks/modelica/ThreePhaseMotor.mo" startLine = "52" startColumn = "3" endLine = "52" endColumn = "72" fileWritable = "true">
+    <Real start="0.175" fixed="true" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "p"
+    valueReference = "1020"
+    description = "Number of pole pairs [-]"
+    variability = "parameter" isDiscrete = "true"
+    causality = "parameter" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "6" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/elecrical_blocks/modelica/ThreePhaseMotor.mo" startLine = "55" startColumn = "3" endLine = "55" endColumn = "62" fileWritable = "true">
+    <Real start="2.0" fixed="true" useNominal="false" />
+  </ScalarVariable>
+
+
+
+  </ModelVariables>
+
+
+</fmiModelDescription>
+
