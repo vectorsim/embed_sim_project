@@ -1,0 +1,54 @@
+EXPORTS
+  ;***************************************************
+  ;Common Functions
+  ;****************************************************
+  ThreePhaseMotor_fmiGetTypesPlatform @1
+  ThreePhaseMotor_fmiGetVersion @2
+  ThreePhaseMotor_fmiSetDebugLogging @3
+  ThreePhaseMotor_fmiInstantiate @4
+  ThreePhaseMotor_fmiFreeInstance @5
+  ThreePhaseMotor_fmiSetupExperiment @6
+  ThreePhaseMotor_fmiEnterInitializationMode @7
+  ThreePhaseMotor_fmiExitInitializationMode @8
+  ThreePhaseMotor_fmiTerminate @9
+  ThreePhaseMotor_fmiReset @10
+  ThreePhaseMotor_fmiGetReal @11
+  ThreePhaseMotor_fmiGetInteger @12
+  ThreePhaseMotor_fmiGetBoolean @13
+  ThreePhaseMotor_fmiGetString @14
+  ThreePhaseMotor_fmiSetReal @15
+  ThreePhaseMotor_fmiSetInteger @16
+  ThreePhaseMotor_fmiSetBoolean @17
+  ThreePhaseMotor_fmiSetString @18
+  ThreePhaseMotor_fmiGetFMUstate @19
+  ThreePhaseMotor_fmiSetFMUstate @20
+  ThreePhaseMotor_fmiFreeFMUstate @21
+  ThreePhaseMotor_fmiSerializedFMUstateSize @22
+  ThreePhaseMotor_fmiSerializeFMUstate @23
+  ThreePhaseMotor_fmiDeSerializeFMUstate @24
+  ThreePhaseMotor_fmiGetDirectionalDerivative @25
+  ;***************************************************
+  ;Functions for FMI for Model Exchange
+  ;****************************************************
+  ThreePhaseMotor_fmiEnterEventMode @26
+  ThreePhaseMotor_fmiNewDiscreteStates @27
+  ThreePhaseMotor_fmiEnterContinuousTimeMode @28
+  ThreePhaseMotor_fmiCompletedIntegratorStep @29
+  ThreePhaseMotor_fmiSetTime @30
+  ThreePhaseMotor_fmiSetContinuousStates @31
+  ThreePhaseMotor_fmiGetDerivatives @32
+  ThreePhaseMotor_fmiGetEventIndicators @33
+  ThreePhaseMotor_fmiGetContinuousStates @34
+  ThreePhaseMotor_fmiGetNominalsOfContinuousStates @35
+  ;***************************************************
+  ;Functions for FMI for Co-Simulation
+  ;****************************************************
+  ThreePhaseMotor_fmiSetRealInputDerivatives @36
+  ThreePhaseMotor_fmiGetRealOutputDerivatives @37
+  ThreePhaseMotor_fmiDoStep @38
+  ThreePhaseMotor_fmiCancelStep @39
+  ThreePhaseMotor_fmiGetStatus @40
+  ThreePhaseMotor_fmiGetRealStatus @41
+  ThreePhaseMotor_fmiGetIntegerStatus @42
+  ThreePhaseMotor_fmiGetBooleanStatus @43
+  ThreePhaseMotor_fmiGetStringStatus @44

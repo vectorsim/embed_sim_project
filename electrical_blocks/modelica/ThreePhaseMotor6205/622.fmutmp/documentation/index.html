@@ -1,0 +1,27 @@
+
+<h1>ThreePhaseMotor</h1>
+<p> <i>PMSM 3-Phase Motor in dq0 Reference Frame for FMU Co-Simulation</i> </p> 
+<h4> <u> Information </u> </h4>
+<html>
+<h2>Three-Phase PMSM Motor Model</h2>
+<p>
+  Interior Permanent Magnet Synchronous Motor (IPMSM) modelled
+  in the d-q rotating reference frame. Suitable for Field-Oriented
+  Control (FOC) co-simulation via FMU export.
+</p>
+<h3>Export as FMU</h3>
+<p>
+  In OpenModelica (OMEdit or omc):
+  <pre>
+    loadFile("ThreePhaseMotor.mo");
+    buildModelFMU(ThreePhaseMotor,
+                  version="2.0",
+                  fmuType="cs",
+                  fileNamePrefix="ThreePhaseMotor");
+  </pre>
+  This produces <b>ThreePhaseMotor.fmu</b> ready for use with
+  the EmbedSim FMUBlock.
+</p>
+</html>
+    
+<h4> <u> Revisions </u> </h4>

@@ -43,7 +43,7 @@ class VectorIntegrator(VectorBlock):
     """
 
     def __init__(self, name: str, initial_state: Optional[List[float]] = None,
-                 dim: int = 3, use_c_backend: bool = False, dtype=None) -> None:
+                 dim: int = 3, use_c_backend: bool = False, dtype=None, **kwargs) -> None:
         """
         Initialize a VectorIntegrator block.
 
@@ -54,7 +54,7 @@ class VectorIntegrator(VectorBlock):
             dtype:         Override dtype (default: float32).
         """
         _dtype = dtype if dtype is not None else DEFAULT_DTYPE
-        super().__init__(name, use_c_backend=use_c_backend, dtype=_dtype)
+        super().__init__(name, use_c_backend=use_c_backend, dtype=_dtype, **kwargs)
         self.is_dynamic = True
 
         if initial_state is not None:
@@ -107,8 +107,7 @@ class StateSpaceBlock(VectorBlock):
     def __init__(self, name: str, A: np.ndarray, B: np.ndarray,
                  C: np.ndarray, D: np.ndarray,
                  initial_state: Optional[List[float]] = None,
-                 use_c_backend: bool = False,
-                 dtype=None) -> None:
+                 use_c_backend: bool = False, dtype=None, **kwargs) -> None:
         """
         Initialize a StateSpaceBlock.
 
@@ -119,7 +118,7 @@ class StateSpaceBlock(VectorBlock):
             dtype:         Override dtype (default: float32).
         """
         _dtype = dtype if dtype is not None else DEFAULT_DTYPE
-        super().__init__(name, use_c_backend=use_c_backend, dtype=_dtype)
+        super().__init__(name, use_c_backend=use_c_backend, dtype=_dtype, **kwargs)
         self.is_dynamic = True
 
         self.A: np.ndarray = np.array(A, dtype=_dtype)
@@ -182,8 +181,7 @@ class TransferFunctionBlock(VectorBlock):
     """
 
     def __init__(self, name: str, num: List[float], den: List[float], use_c_backend: bool = False,
-                 dim: int = 3, initial_state: Optional[np.ndarray] = None,
-                 dtype=None) -> None:
+                 dim: int = 3, initial_state: Optional[np.ndarray] = None, dtype=None, **kwargs) -> None:
         """
         Initialize a TransferFunctionBlock.
 
@@ -197,7 +195,7 @@ class TransferFunctionBlock(VectorBlock):
             dtype:         Override dtype (default: float32).
         """
         _dtype = dtype if dtype is not None else DEFAULT_DTYPE
-        super().__init__(name, use_c_backend=use_c_backend, dtype=_dtype)
+        super().__init__(name, use_c_backend=use_c_backend, dtype=_dtype, **kwargs)
         self.is_dynamic = True
         self.dim: int = dim
 
@@ -314,9 +312,9 @@ class VectorEnd(VectorBlock):
         >>> source >> sink
     """
 
-    def __init__(self, name: str, use_c_backend: bool = False, dtype=None) -> None:
+    def __init__(self, name: str, use_c_backend: bool = False, dtype=None, **kwargs) -> None:
         _dtype = dtype if dtype is not None else DEFAULT_DTYPE
-        super().__init__(name, use_c_backend=use_c_backend, dtype=_dtype)
+        super().__init__(name, use_c_backend=use_c_backend, dtype=_dtype, **kwargs)
         self.history: List[np.ndarray] = []
 
     def compute_py(self, t: float, dt: float, input_values: Optional[List[VectorSignal]] = None) -> VectorSignal:

@@ -1196,6 +1196,7 @@ class EmbedSim:
         loop_breaker_set = set(id(b) for b in self.loop_breakers)
         ARROW = " ──► "
 
+
         def vlen(s: str) -> int:
             """Visual terminal width accounting for wide/emoji Unicode glyphs."""
             w = 0
@@ -1283,11 +1284,14 @@ class EmbedSim:
         total_width = max(col_end) + 8
 
         # ── 3. Build canvas ───────────────────────────────────────────────────
-        n_rows = max(1, n_lanes * 2 - 1)
+        # Row 0 is a dedicated label row (signal names above arrows).
+        # Block rows start at index 1: lane 0 → row 1, lane 1 → row 3, etc.
+        LABEL_ROW = 0
+        n_rows = 1 + max(1, n_lanes * 2 - 1)
         rows = [list(" " * total_width) for _ in range(n_rows)]
 
         def row_of(lane: int) -> int:
-            return lane * 2
+            return 1 + lane * 2
 
         def put(r: int, c: int, text: str) -> None:
             for ch in text:
@@ -1314,14 +1318,30 @@ class EmbedSim:
 
             if not side_inps:
                 put(p_row, p_end, ARROW)
+                # Signal label — from output_label if set on the block.
+                # Generic blocks (VectorGain, VectorSum) inherit the label
+                # from their primary input so the signal name propagates
+                # naturally through the chain without hardcoding anything.
+                lbl = getattr(primary, "output_label", "")
+                if lbl:
+                    put(LABEL_ROW, p_end + 1, lbl)
+                    # Propagate to b if b has no label of its own
+                    if not getattr(b, "output_label", ""):
+                        b.output_label = lbl
             else:
                 # Fan-in: vertical bar at (b_col - 1); every source gets ──►
                 merge_col = b_col - 1
 
+                # Primary arrow
                 run = merge_col - p_end
                 put(p_row, p_end,
                     " " + "─" * max(0, run - 4) + "──►" if run >= 4 else ARROW[:run])
+                # Label on LABEL_ROW, right-aligned to just before merge bar
+                lbl_p = getattr(primary, "output_label", "")
+                if lbl_p:
+                    put(LABEL_ROW, merge_col - vlen(lbl_p) - 1, lbl_p)
 
+                # Side input arrows + labels
                 for s in side_inps:
                     if id(s) not in lane_of or id(s) not in col_of:
                         continue
@@ -1332,6 +1352,12 @@ class EmbedSim:
                         put(s_row, s_end, " " + "─" * max(0, run_s - 4) + "──►")
                     elif run_s > 0:
                         put(s_row, s_end, "─" * run_s)
+                    lbl_s = getattr(s, "output_label", "")
+                    if lbl_s:
+                        # Inter-lane row above the side source row
+                        inter = s_row - 1
+                        if inter > LABEL_ROW:
+                            put(inter, merge_col - vlen(lbl_s) - 1, lbl_s)
 
                 involved = sorted(set(
                     [p_row] +
@@ -1352,6 +1378,13 @@ class EmbedSim:
                     else:
                         ch = "│"
                     put(r, merge_col, ch)
+
+                # Propagate common label to b if all inputs share the same label
+                all_lbls = [getattr(x, "output_label", "")
+                            for x in [primary] + side_inps]
+                unique = set(l for l in all_lbls if l)
+                if len(unique) == 1 and not getattr(b, "output_label", ""):
+                    b.output_label = unique.pop()
 
         # Pass C — fan-out split arrows
         # When block b feeds multiple consumers on the SAME lane, the column
@@ -1536,7 +1569,7 @@ class EmbedSim:
                 print("  " + "".join(r3).rstrip())
 
         print()
-        print("  Legend:  ⚡ dynamic block    ┘ signal departs forward path    ◄ signal re-enters forward path")
+        print("  Legend:  ⚡ dynamic block    ┘ signal departs forward path    ◄ signal re-enters forward path    ─Iαβ─► signal label on arrow")
         print("\n" + "=" * 70 + "\n")
 
 

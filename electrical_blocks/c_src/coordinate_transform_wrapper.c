@@ -9,11 +9,12 @@
             "C:\\Users\\paul\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\ndarrayobject.h",
             "C:\\Users\\paul\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\ndarraytypes.h",
             "C:\\Users\\paul\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\ufuncobject.h",
-            "coordinate_transform.h"
+            "Coordinate_Transform.h",
+            "Matrix_Operations.h"
         ],
         "extra_compile_args": [
             "/O2",
-            "/std:c11"
+            "/fp:fast"
         ],
         "include_dirs": [
             "C:\\Users\\paul\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\numpy\\_core\\include",
@@ -22,7 +23,7 @@
         "name": "coordinate_transform_wrapper",
         "sources": [
             "coordinate_transform_wrapper.pyx",
-            "coordinate_transform.c"
+            "Coordinate_Transform.c"
         ]
     },
     "module_name": "coordinate_transform_wrapper"
@@ -1156,7 +1157,8 @@ static int __Pyx_init_co_variables(void) {
 #include "numpy/ndarraytypes.h"
 #include "numpy/arrayscalars.h"
 #include "numpy/ufuncobject.h"
-#include "coordinate_transform.h"
+#include "Matrix_Operations.h"
+#include "Coordinate_Transform.h"
 #ifdef _OPENMP
 #include <omp.h>
 #endif /* _OPENMP */
@@ -1567,20 +1569,8 @@ static const char* const __pyx_f[] = {
 #define __Pyx_END_CRITICAL_SECTION Py_END_CRITICAL_SECTION
 #endif
 
-/* NoFastGil.proto */
-#define __Pyx_PyGILState_Ensure PyGILState_Ensure
-#define __Pyx_PyGILState_Release PyGILState_Release
-#define __Pyx_FastGIL_Remember()
-#define __Pyx_FastGIL_Forget()
-#define __Pyx_FastGilFuncInit()
-
 /* IncludeStructmemberH.proto (used by FixUpExtensionType) */
 #include <structmember.h>
-
-/* ForceInitThreads.proto */
-#ifndef __PYX_FORCE_INIT_THREADS
-  #define __PYX_FORCE_INIT_THREADS 0
-#endif
 
 /* #### Code section: numeric_typedefs ### */
 
@@ -1736,6 +1726,15 @@ typedef npy_double __pyx_t_5numpy_double_t;
  * ctypedef float complex       cfloat_t
 */
 typedef npy_longdouble __pyx_t_5numpy_longdouble_t;
+
+/* "coordinate_transform_wrapper.pyx":20
+ * # Mirror real32_T from sys_types.h
+ * #
+ * ctypedef float real32_T             # <<<<<<<<<<<<<<
+ * 
+ * #
+*/
+typedef float __pyx_t_28coordinate_transform_wrapper_real32_T;
 /* #### Code section: complex_type_declarations ### */
 /* Declarations.proto */
 #if CYTHON_CCOMPLEX && (1) && (!0 || __cplusplus)
@@ -1776,132 +1775,192 @@ static CYTHON_INLINE __pyx_t_long_double_complex __pyx_t_long_double_complex_fro
 /* #### Code section: type_declarations ### */
 
 /*--- Type declarations ---*/
+struct __pyx_obj_28coordinate_transform_wrapper_TransformWrapperBase;
 struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper;
 struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper;
 struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper;
 struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper;
+struct __pyx_obj_28coordinate_transform_wrapper_ClarkeParkTransformWrapper;
 
-/* "coordinate_transform_wrapper.pyx":35
- * # Clarke  abc
- * # =============================================================================
- * cdef class ClarkeTransformWrapper:             # <<<<<<<<<<<<<<
- *     """
- *     Wrapper for clarke_transform_compute_flat.
+/* "coordinate_transform_wrapper.pyx":103
+ * # Base class for all transform wrappers
+ * #
+ * cdef class TransformWrapperBase:             # <<<<<<<<<<<<<<
+ *     cdef ClarkeMatrix_T _clarke_matrix
+ *     cdef Matrix3x2_T _inv_clarke_matrix
+*/
+struct __pyx_obj_28coordinate_transform_wrapper_TransformWrapperBase {
+  PyObject_HEAD
+  struct __pyx_vtabstruct_28coordinate_transform_wrapper_TransformWrapperBase *__pyx_vtab;
+  ClarkeMatrix_T _clarke_matrix;
+  Matrix3x2_T _inv_clarke_matrix;
+};
+
+
+/* "coordinate_transform_wrapper.pyx":131
+ * # Clarke Transform Wrapper  [A, B, C]  ->  [Alpha, Beta]
+ * #
+ * cdef class ClarkeTransformWrapper(TransformWrapperBase):             # <<<<<<<<<<<<<<
+ *     cdef Phase3Signal_T     _in
+ *     cdef AlphaBetaSignal_T  _out
 */
 struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper {
-  PyObject_HEAD
-  struct __pyx_vtabstruct_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_vtab;
-  float _in[3];
-  float _out[2];
+  struct __pyx_obj_28coordinate_transform_wrapper_TransformWrapperBase __pyx_base;
+  Phase3Signal_T _in;
+  AlphaBetaSignal_T _out;
 };
 
 
-/* "coordinate_transform_wrapper.pyx":75
- * # Inverse Clarke    abc
- * # =============================================================================
- * cdef class InvClarkeTransformWrapper:             # <<<<<<<<<<<<<<
- *     """
- *     Wrapper for inv_clarke_transform_compute_flat.
+/* "coordinate_transform_wrapper.pyx":171
+ * # Inverse Clarke Transform Wrapper  [Alpha, Beta]  ->  [A, B, C]
+ * #
+ * cdef class InvClarkeTransformWrapper(TransformWrapperBase):             # <<<<<<<<<<<<<<
+ *     cdef AlphaBetaSignal_T  _in
+ *     cdef Phase3Signal_T     _out
 */
 struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper {
-  PyObject_HEAD
-  struct __pyx_vtabstruct_28coordinate_transform_wrapper_InvClarkeTransformWrapper *__pyx_vtab;
-  float _in[2];
-  float _out[3];
+  struct __pyx_obj_28coordinate_transform_wrapper_TransformWrapperBase __pyx_base;
+  AlphaBetaSignal_T _in;
+  Phase3Signal_T _out;
 };
 
 
-/* "coordinate_transform_wrapper.pyx":108
- * # Park    dq
- * # =============================================================================
- * cdef class ParkTransformWrapper:             # <<<<<<<<<<<<<<
- *     """
- *     Wrapper for park_transform_compute_flat.
+/* "coordinate_transform_wrapper.pyx":208
+ * # Park Transform Wrapper  [Alpha, Beta, Theta]  ->  [D, Q]
+ * #
+ * cdef class ParkTransformWrapper(TransformWrapperBase):             # <<<<<<<<<<<<<<
+ *     cdef AlphaBetaSignal_T  _in
+ *     cdef ParkMatrix_T       _park_matrix
 */
 struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper {
-  PyObject_HEAD
-  struct __pyx_vtabstruct_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_vtab;
-  float _in[2];
-  float _theta;
-  float _out[2];
+  struct __pyx_obj_28coordinate_transform_wrapper_TransformWrapperBase __pyx_base;
+  AlphaBetaSignal_T _in;
+  ParkMatrix_T _park_matrix;
+  DQSignal_T _out;
+  __pyx_t_28coordinate_transform_wrapper_real32_T _theta;
 };
 
 
-/* "coordinate_transform_wrapper.pyx":146
- * # Inverse Park  dq
- * # =============================================================================
- * cdef class InvParkTransformWrapper:             # <<<<<<<<<<<<<<
- *     """
- *     Wrapper for inv_park_transform_compute_flat.
+/* "coordinate_transform_wrapper.pyx":253
+ * # Inverse Park Transform Wrapper  [D, Q, Theta]  ->  [Alpha, Beta]
+ * #
+ * cdef class InvParkTransformWrapper(TransformWrapperBase):             # <<<<<<<<<<<<<<
+ *     cdef DQSignal_T         _in
+ *     cdef ParkMatrix_T       _inv_park_matrix
 */
 struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper {
-  PyObject_HEAD
-  struct __pyx_vtabstruct_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_vtab;
-  float _in[2];
-  float _theta;
-  float _out[2];
+  struct __pyx_obj_28coordinate_transform_wrapper_TransformWrapperBase __pyx_base;
+  DQSignal_T _in;
+  ParkMatrix_T _inv_park_matrix;
+  AlphaBetaSignal_T _out;
+  __pyx_t_28coordinate_transform_wrapper_real32_T _theta;
+};
+
+
+/* "coordinate_transform_wrapper.pyx":298
+ * # Combined Clarke-Park Transform Wrapper  [A, B, C, Theta]  ->  [D, Q]
+ * #
+ * cdef class ClarkeParkTransformWrapper(TransformWrapperBase):             # <<<<<<<<<<<<<<
+ *     cdef Phase3Signal_T     _in
+ *     cdef ParkMatrix_T       _park_matrix
+*/
+struct __pyx_obj_28coordinate_transform_wrapper_ClarkeParkTransformWrapper {
+  struct __pyx_obj_28coordinate_transform_wrapper_TransformWrapperBase __pyx_base;
+  Phase3Signal_T _in;
+  ParkMatrix_T _park_matrix;
+  DQSignal_T _out;
+  __pyx_t_28coordinate_transform_wrapper_real32_T _theta;
 };
 
 
 
-/* "coordinate_transform_wrapper.pyx":35
- * # Clarke  abc
- * # =============================================================================
- * cdef class ClarkeTransformWrapper:             # <<<<<<<<<<<<<<
- *     """
- *     Wrapper for clarke_transform_compute_flat.
+/* "coordinate_transform_wrapper.pyx":103
+ * # Base class for all transform wrappers
+ * #
+ * cdef class TransformWrapperBase:             # <<<<<<<<<<<<<<
+ *     cdef ClarkeMatrix_T _clarke_matrix
+ *     cdef Matrix3x2_T _inv_clarke_matrix
+*/
+
+struct __pyx_vtabstruct_28coordinate_transform_wrapper_TransformWrapperBase {
+  void (*phase3_to_vector)(Phase3Signal_T const *, Vector3_T *);
+  void (*alphabeta_to_vector)(AlphaBetaSignal_T const *, Vector2_T *);
+  void (*dq_to_vector)(DQSignal_T const *, Vector2_T *);
+};
+static struct __pyx_vtabstruct_28coordinate_transform_wrapper_TransformWrapperBase *__pyx_vtabptr_28coordinate_transform_wrapper_TransformWrapperBase;
+static CYTHON_INLINE void __pyx_f_28coordinate_transform_wrapper_20TransformWrapperBase_phase3_to_vector(Phase3Signal_T const *, Vector3_T *);
+static CYTHON_INLINE void __pyx_f_28coordinate_transform_wrapper_20TransformWrapperBase_alphabeta_to_vector(AlphaBetaSignal_T const *, Vector2_T *);
+static CYTHON_INLINE void __pyx_f_28coordinate_transform_wrapper_20TransformWrapperBase_dq_to_vector(DQSignal_T const *, Vector2_T *);
+
+
+/* "coordinate_transform_wrapper.pyx":131
+ * # Clarke Transform Wrapper  [A, B, C]  ->  [Alpha, Beta]
+ * #
+ * cdef class ClarkeTransformWrapper(TransformWrapperBase):             # <<<<<<<<<<<<<<
+ *     cdef Phase3Signal_T     _in
+ *     cdef AlphaBetaSignal_T  _out
 */
 
 struct __pyx_vtabstruct_28coordinate_transform_wrapper_ClarkeTransformWrapper {
-  void (*compute)(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *, int __pyx_skip_dispatch);
-  PyArrayObject *(*get_outputs)(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *, int __pyx_skip_dispatch);
+  struct __pyx_vtabstruct_28coordinate_transform_wrapper_TransformWrapperBase __pyx_base;
 };
 static struct __pyx_vtabstruct_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_vtabptr_28coordinate_transform_wrapper_ClarkeTransformWrapper;
 
 
-/* "coordinate_transform_wrapper.pyx":75
- * # Inverse Clarke    abc
- * # =============================================================================
- * cdef class InvClarkeTransformWrapper:             # <<<<<<<<<<<<<<
- *     """
- *     Wrapper for inv_clarke_transform_compute_flat.
+/* "coordinate_transform_wrapper.pyx":171
+ * # Inverse Clarke Transform Wrapper  [Alpha, Beta]  ->  [A, B, C]
+ * #
+ * cdef class InvClarkeTransformWrapper(TransformWrapperBase):             # <<<<<<<<<<<<<<
+ *     cdef AlphaBetaSignal_T  _in
+ *     cdef Phase3Signal_T     _out
 */
 
 struct __pyx_vtabstruct_28coordinate_transform_wrapper_InvClarkeTransformWrapper {
-  void (*compute)(struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *, int __pyx_skip_dispatch);
-  PyArrayObject *(*get_outputs)(struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *, int __pyx_skip_dispatch);
+  struct __pyx_vtabstruct_28coordinate_transform_wrapper_TransformWrapperBase __pyx_base;
 };
 static struct __pyx_vtabstruct_28coordinate_transform_wrapper_InvClarkeTransformWrapper *__pyx_vtabptr_28coordinate_transform_wrapper_InvClarkeTransformWrapper;
 
 
-/* "coordinate_transform_wrapper.pyx":108
- * # Park    dq
- * # =============================================================================
- * cdef class ParkTransformWrapper:             # <<<<<<<<<<<<<<
- *     """
- *     Wrapper for park_transform_compute_flat.
+/* "coordinate_transform_wrapper.pyx":208
+ * # Park Transform Wrapper  [Alpha, Beta, Theta]  ->  [D, Q]
+ * #
+ * cdef class ParkTransformWrapper(TransformWrapperBase):             # <<<<<<<<<<<<<<
+ *     cdef AlphaBetaSignal_T  _in
+ *     cdef ParkMatrix_T       _park_matrix
 */
 
 struct __pyx_vtabstruct_28coordinate_transform_wrapper_ParkTransformWrapper {
-  void (*compute)(struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *, int __pyx_skip_dispatch);
-  PyArrayObject *(*get_outputs)(struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *, int __pyx_skip_dispatch);
+  struct __pyx_vtabstruct_28coordinate_transform_wrapper_TransformWrapperBase __pyx_base;
 };
 static struct __pyx_vtabstruct_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_vtabptr_28coordinate_transform_wrapper_ParkTransformWrapper;
 
 
-/* "coordinate_transform_wrapper.pyx":146
- * # Inverse Park  dq
- * # =============================================================================
- * cdef class InvParkTransformWrapper:             # <<<<<<<<<<<<<<
- *     """
- *     Wrapper for inv_park_transform_compute_flat.
+/* "coordinate_transform_wrapper.pyx":253
+ * # Inverse Park Transform Wrapper  [D, Q, Theta]  ->  [Alpha, Beta]
+ * #
+ * cdef class InvParkTransformWrapper(TransformWrapperBase):             # <<<<<<<<<<<<<<
+ *     cdef DQSignal_T         _in
+ *     cdef ParkMatrix_T       _inv_park_matrix
 */
 
 struct __pyx_vtabstruct_28coordinate_transform_wrapper_InvParkTransformWrapper {
-  void (*compute)(struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *, int __pyx_skip_dispatch);
-  PyArrayObject *(*get_outputs)(struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *, int __pyx_skip_dispatch);
+  struct __pyx_vtabstruct_28coordinate_transform_wrapper_TransformWrapperBase __pyx_base;
 };
 static struct __pyx_vtabstruct_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_vtabptr_28coordinate_transform_wrapper_InvParkTransformWrapper;
+
+
+/* "coordinate_transform_wrapper.pyx":298
+ * # Combined Clarke-Park Transform Wrapper  [A, B, C, Theta]  ->  [D, Q]
+ * #
+ * cdef class ClarkeParkTransformWrapper(TransformWrapperBase):             # <<<<<<<<<<<<<<
+ *     cdef Phase3Signal_T     _in
+ *     cdef ParkMatrix_T       _park_matrix
+*/
+
+struct __pyx_vtabstruct_28coordinate_transform_wrapper_ClarkeParkTransformWrapper {
+  struct __pyx_vtabstruct_28coordinate_transform_wrapper_TransformWrapperBase __pyx_base;
+};
+static struct __pyx_vtabstruct_28coordinate_transform_wrapper_ClarkeParkTransformWrapper *__pyx_vtabptr_28coordinate_transform_wrapper_ClarkeParkTransformWrapper;
 /* #### Code section: utility_code_proto ### */
 
 /* --- Runtime support code (head) --- */
@@ -2211,6 +2270,9 @@ static int __Pyx_PyDict_NextRef(PyObject *p, Py_ssize_t *ppos, PyObject **pkey, 
 /* RejectKeywords.export */
 static void __Pyx_RejectKeywords(const char* function_name, PyObject *kwds);
 
+/* PyTypeError_Check.proto */
+#define __Pyx_PyExc_TypeError_Check(obj)  __Pyx_TypeCheck(obj, PyExc_TypeError)
+
 /* RaiseDoubleKeywords.proto (used by ParseKeywordsImpl) */
 static void __Pyx_RaiseDoubleKeywordsError(const char* func_name, PyObject* kw_name);
 
@@ -2262,6 +2324,17 @@ static CYTHON_INLINE int __Pyx_ParseKeywords(
     int ignore_unknown_kwargs
 );
 
+/* ArgTypeTestFunc.export */
+static int __Pyx__ArgTypeTest(PyObject *obj, PyTypeObject *type, const char *name, int exact);
+
+/* ArgTypeTest.proto */
+#define __Pyx_ArgTypeTest(obj, type, none_allowed, name, exact)\
+    ((likely(__Pyx_IS_TYPE(obj, type) | (none_allowed && (obj == Py_None)))) ? 1 :\
+        __Pyx__ArgTypeTest(obj, type, name, exact))
+
+/* PyValueError_Check.proto */
+#define __Pyx_PyExc_ValueError_Check(obj)  __Pyx_TypeCheck(obj, PyExc_ValueError)
+
 /* GetItemInt.proto */
 #define __Pyx_GetItemInt(o, i, type, is_signed, to_py_func, is_list, wraparound, boundscheck, has_gil, unsafe_shared)\
     (__Pyx_fits_Py_ssize_t(i, type, is_signed) ?\
@@ -2284,7 +2357,13 @@ static PyObject *__Pyx_GetItemInt_Generic(PyObject *o, PyObject* j);
 static CYTHON_INLINE PyObject *__Pyx_GetItemInt_Fast(PyObject *o, Py_ssize_t i,
                                                      int is_list, int wraparound, int boundscheck, int unsafe_shared);
 
-/* PyDictVersioning.proto */
+/* PyObjectGetAttrStrNoError.proto (used by GetBuiltinName) */
+static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStrNoError(PyObject* obj, PyObject* attr_name);
+
+/* GetBuiltinName.proto (used by GetModuleGlobalName) */
+static PyObject *__Pyx_GetBuiltinName(PyObject *name);
+
+/* PyDictVersioning.proto (used by GetModuleGlobalName) */
 #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
 #define __PYX_DICT_VERSION_INIT  ((PY_UINT64_T) -1)
 #define __PYX_GET_DICT_VERSION(dict)  (((PyDictObject*)(dict))->ma_version_tag)
@@ -2309,15 +2388,6 @@ static CYTHON_INLINE int __Pyx_object_dict_version_matches(PyObject* obj, PY_UIN
 #define __PYX_UPDATE_DICT_CACHE(dict, value, cache_var, version_var)
 #define __PYX_PY_DICT_LOOKUP_IF_MODIFIED(VAR, DICT, LOOKUP)  (VAR) = (LOOKUP);
 #endif
-
-/* ExtTypeTest.proto */
-static CYTHON_INLINE int __Pyx_TypeTest(PyObject *obj, PyTypeObject *type);
-
-/* PyObjectGetAttrStrNoError.proto (used by GetBuiltinName) */
-static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStrNoError(PyObject* obj, PyObject* attr_name);
-
-/* GetBuiltinName.proto (used by GetModuleGlobalName) */
-static PyObject *__Pyx_GetBuiltinName(PyObject *name);
 
 /* GetModuleGlobalName.proto */
 #if CYTHON_USE_DICT_VERSIONS
@@ -2357,19 +2427,6 @@ static int __Pyx_VectorcallBuilder_AddArgStr(const char *key, PyObject *value, P
 #define __Pyx_VectorcallBuilder_AddArg(key, value, builder, args, n) PyDict_SetItem(builder, key, value)
 #define __Pyx_VectorcallBuilder_AddArgStr(key, value, builder, args, n) PyDict_SetItemString(builder, key, value)
 #endif
-
-/* SetItemInt.proto */
-#define __Pyx_SetItemInt(o, i, v, type, is_signed, to_py_func, is_list, wraparound, boundscheck, has_gil, unsafe_shared)\
-    (__Pyx_fits_Py_ssize_t(i, type, is_signed) ?\
-    __Pyx_SetItemInt_Fast(o, (Py_ssize_t)i, v, is_list, wraparound, boundscheck, unsafe_shared) :\
-    (is_list ? (PyErr_SetString(PyExc_IndexError, "list assignment index out of range"), -1) :\
-               __Pyx_SetItemInt_Generic(o, to_py_func(i), v)))
-static int __Pyx_SetItemInt_Generic(PyObject *o, PyObject *j, PyObject *v);
-static CYTHON_INLINE int __Pyx_SetItemInt_Fast(PyObject *o, Py_ssize_t i, PyObject *v,
-                                               int is_list, int wraparound, int boundscheck, int unsafe_shared);
-
-/* PyTypeError_Check.proto */
-#define __Pyx_PyExc_TypeError_Check(obj)  __Pyx_TypeCheck(obj, PyExc_TypeError)
 
 /* AllocateExtensionType.proto */
 static PyObject *__Pyx_AllocateExtensionType(PyTypeObject *t, int is_final);
@@ -2760,9 +2817,6 @@ static void __Pyx_AddTraceback(const char *funcname, int c_line,
     #endif
 #endif
 
-/* CIntFromPy.proto */
-static CYTHON_INLINE long __Pyx_PyLong_As_long(PyObject *);
-
 /* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyLong_From_long(long value);
 
@@ -2782,6 +2836,9 @@ typedef const char *__Pyx_TypeName;
 #define __Pyx_PyType_GetFullyQualifiedName(tp) ((tp)->tp_name)
 #define __Pyx_DECREF_TypeName(obj)
 #endif
+
+/* CIntFromPy.proto */
+static CYTHON_INLINE long __Pyx_PyLong_As_long(PyObject *);
 
 /* CIntFromPy.proto */
 static CYTHON_INLINE int __Pyx_PyLong_As_int(PyObject *);
@@ -2891,14 +2948,9 @@ static CYTHON_INLINE npy_intp *__pyx_f_5numpy_7ndarray_5shape_shape(PyArrayObjec
 static CYTHON_INLINE npy_intp *__pyx_f_5numpy_7ndarray_7strides_strides(PyArrayObject *__pyx_v_self); /* proto*/
 static CYTHON_INLINE npy_intp __pyx_f_5numpy_7ndarray_4size_size(PyArrayObject *__pyx_v_self); /* proto*/
 static CYTHON_INLINE char *__pyx_f_5numpy_7ndarray_4data_data(PyArrayObject *__pyx_v_self); /* proto*/
-static void __pyx_f_28coordinate_transform_wrapper_22ClarkeTransformWrapper_compute(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_v_self, int __pyx_skip_dispatch); /* proto*/
-static PyArrayObject *__pyx_f_28coordinate_transform_wrapper_22ClarkeTransformWrapper_get_outputs(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_v_self, int __pyx_skip_dispatch); /* proto*/
-static void __pyx_f_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_compute(struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *__pyx_v_self, int __pyx_skip_dispatch); /* proto*/
-static PyArrayObject *__pyx_f_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_get_outputs(struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *__pyx_v_self, int __pyx_skip_dispatch); /* proto*/
-static void __pyx_f_28coordinate_transform_wrapper_20ParkTransformWrapper_compute(struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_v_self, int __pyx_skip_dispatch); /* proto*/
-static PyArrayObject *__pyx_f_28coordinate_transform_wrapper_20ParkTransformWrapper_get_outputs(struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_v_self, int __pyx_skip_dispatch); /* proto*/
-static void __pyx_f_28coordinate_transform_wrapper_23InvParkTransformWrapper_compute(struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_v_self, int __pyx_skip_dispatch); /* proto*/
-static PyArrayObject *__pyx_f_28coordinate_transform_wrapper_23InvParkTransformWrapper_get_outputs(struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_v_self, int __pyx_skip_dispatch); /* proto*/
+static CYTHON_INLINE void __pyx_f_28coordinate_transform_wrapper_20TransformWrapperBase_phase3_to_vector(Phase3Signal_T const *__pyx_v_pIn, Vector3_T *__pyx_v_pOut); /* proto*/
+static CYTHON_INLINE void __pyx_f_28coordinate_transform_wrapper_20TransformWrapperBase_alphabeta_to_vector(AlphaBetaSignal_T const *__pyx_v_pIn, Vector2_T *__pyx_v_pOut); /* proto*/
+static CYTHON_INLINE void __pyx_f_28coordinate_transform_wrapper_20TransformWrapperBase_dq_to_vector(DQSignal_T const *__pyx_v_pIn, Vector2_T *__pyx_v_pOut); /* proto*/
 
 /* Module declarations from "libc.string" */
 
@@ -2929,38 +2981,58 @@ int __pyx_module_is_main_coordinate_transform_wrapper = 0;
 /* #### Code section: global_var ### */
 /* #### Code section: string_decls ### */
 /* #### Code section: decls ### */
+static int __pyx_pf_28coordinate_transform_wrapper_20TransformWrapperBase___cinit__(struct __pyx_obj_28coordinate_transform_wrapper_TransformWrapperBase *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_20TransformWrapperBase_2__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_TransformWrapperBase *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_20TransformWrapperBase_4__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_TransformWrapperBase *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
 static int __pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper___cinit__(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_2set_inputs(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_v_self, PyObject *__pyx_v_u); /* proto */
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_4compute(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_6get_outputs(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_5alpha___get__(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_4beta___get__(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_8__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_10__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_2set_inputs_abc(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_v_self, __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_a, __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_b, __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_c); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_4set_inputs(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_v_self, PyArrayObject *__pyx_v_u); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_6compute(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_8get_outputs_alpha_beta(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_10get_outputs(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_12__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_14__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
 static int __pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper___cinit__(struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_2set_inputs(struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *__pyx_v_self, PyObject *__pyx_v_u); /* proto */
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_4compute(struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_6get_outputs(struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_8__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_10__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_2set_inputs_alpha_beta(struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *__pyx_v_self, __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_alpha, __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_beta); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_4set_inputs(struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *__pyx_v_self, PyArrayObject *__pyx_v_u); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_6compute(struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_8get_outputs_abc(struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_10get_outputs(struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_12__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_14__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
 static int __pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper___cinit__(struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_2set_inputs(struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_v_self, PyObject *__pyx_v_u); /* proto */
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_4set_theta(struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_v_self, PyObject *__pyx_v_theta); /* proto */
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_6compute(struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_8get_outputs(struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_10__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_12__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_2set_inputs_alpha_beta(struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_v_self, __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_alpha, __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_beta); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_4set_inputs(struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_v_self, PyArrayObject *__pyx_v_u); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_6set_theta(struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_v_self, __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_theta); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_8compute(struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_10get_outputs_dq(struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_12get_outputs(struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_14__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_16__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
 static int __pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper___cinit__(struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_2set_inputs(struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_v_self, PyObject *__pyx_v_u); /* proto */
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_4set_theta(struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_v_self, PyObject *__pyx_v_theta); /* proto */
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_6compute(struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_8get_outputs(struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_10__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_12__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_2set_inputs_dq(struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_v_self, __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_d, __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_q); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_4set_inputs(struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_v_self, PyArrayObject *__pyx_v_u); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_6set_theta(struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_v_self, __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_theta); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_8compute(struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_10get_outputs_alpha_beta(struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_12get_outputs(struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_14__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_16__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
+static int __pyx_pf_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper___cinit__(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeParkTransformWrapper *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_2set_inputs_abc(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeParkTransformWrapper *__pyx_v_self, __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_a, __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_b, __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_c); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_4set_inputs(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeParkTransformWrapper *__pyx_v_self, PyArrayObject *__pyx_v_u); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_6set_theta(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeParkTransformWrapper *__pyx_v_self, __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_theta); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_8compute(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeParkTransformWrapper *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_10get_outputs_dq(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeParkTransformWrapper *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_12get_outputs(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeParkTransformWrapper *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_14__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_ClarkeParkTransformWrapper *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_16__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_ClarkeParkTransformWrapper *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
+static PyObject *__pyx_tp_new_28coordinate_transform_wrapper_TransformWrapperBase(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_28coordinate_transform_wrapper_ClarkeTransformWrapper(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_28coordinate_transform_wrapper_InvClarkeTransformWrapper(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_28coordinate_transform_wrapper_ParkTransformWrapper(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_28coordinate_transform_wrapper_InvParkTransformWrapper(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
+static PyObject *__pyx_tp_new_28coordinate_transform_wrapper_ClarkeParkTransformWrapper(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 /* #### Code section: late_includes ### */
 /* #### Code section: module_state ### */
 /* SmallCodeConfig */
@@ -2997,20 +3069,23 @@ typedef struct {
   PyTypeObject *__pyx_ptype_5numpy_flexible;
   PyTypeObject *__pyx_ptype_5numpy_character;
   PyTypeObject *__pyx_ptype_5numpy_ufunc;
+  PyObject *__pyx_type_28coordinate_transform_wrapper_TransformWrapperBase;
   PyObject *__pyx_type_28coordinate_transform_wrapper_ClarkeTransformWrapper;
   PyObject *__pyx_type_28coordinate_transform_wrapper_InvClarkeTransformWrapper;
   PyObject *__pyx_type_28coordinate_transform_wrapper_ParkTransformWrapper;
   PyObject *__pyx_type_28coordinate_transform_wrapper_InvParkTransformWrapper;
+  PyObject *__pyx_type_28coordinate_transform_wrapper_ClarkeParkTransformWrapper;
+  PyTypeObject *__pyx_ptype_28coordinate_transform_wrapper_TransformWrapperBase;
   PyTypeObject *__pyx_ptype_28coordinate_transform_wrapper_ClarkeTransformWrapper;
   PyTypeObject *__pyx_ptype_28coordinate_transform_wrapper_InvClarkeTransformWrapper;
   PyTypeObject *__pyx_ptype_28coordinate_transform_wrapper_ParkTransformWrapper;
   PyTypeObject *__pyx_ptype_28coordinate_transform_wrapper_InvParkTransformWrapper;
+  PyTypeObject *__pyx_ptype_28coordinate_transform_wrapper_ClarkeParkTransformWrapper;
   __Pyx_CachedCFunction __pyx_umethod_PyDict_Type_items;
   __Pyx_CachedCFunction __pyx_umethod_PyDict_Type_pop;
   __Pyx_CachedCFunction __pyx_umethod_PyDict_Type_values;
-  PyObject *__pyx_codeobj_tab[22];
-  PyObject *__pyx_string_tab[82];
-  PyObject *__pyx_number_tab[2];
+  PyObject *__pyx_codeobj_tab[40];
+  PyObject *__pyx_string_tab[129];
 /* #### Code section: module_state_contents ### */
 /* CommonTypesMetaclass.module_state_decls */
 PyTypeObject *__pyx_CommonTypesMetaclassType;
@@ -3052,89 +3127,134 @@ static __pyx_mstatetype * const __pyx_mstate_global = &__pyx_mstate_global_stati
 #endif
 /* #### Code section: constant_name_defines ### */
 #define __pyx_kp_u_ __pyx_string_tab[0]
-#define __pyx_kp_u_coordinate_transform_wrapper_pyx __pyx_string_tab[1]
-#define __pyx_kp_u_disable __pyx_string_tab[2]
-#define __pyx_kp_u_enable __pyx_string_tab[3]
-#define __pyx_kp_u_gc __pyx_string_tab[4]
-#define __pyx_kp_u_isenabled __pyx_string_tab[5]
-#define __pyx_kp_u_no_default___reduce___due_to_non __pyx_string_tab[6]
-#define __pyx_kp_u_numpy__core_multiarray_failed_to __pyx_string_tab[7]
-#define __pyx_kp_u_numpy__core_umath_failed_to_impo __pyx_string_tab[8]
-#define __pyx_kp_u_stringsource __pyx_string_tab[9]
-#define __pyx_n_u_ClarkeTransformWrapper __pyx_string_tab[10]
-#define __pyx_n_u_ClarkeTransformWrapper___reduce __pyx_string_tab[11]
-#define __pyx_n_u_ClarkeTransformWrapper___setstat __pyx_string_tab[12]
-#define __pyx_n_u_ClarkeTransformWrapper_compute __pyx_string_tab[13]
-#define __pyx_n_u_ClarkeTransformWrapper_get_outpu __pyx_string_tab[14]
-#define __pyx_n_u_ClarkeTransformWrapper_set_input __pyx_string_tab[15]
-#define __pyx_n_u_InvClarkeTransformWrapper __pyx_string_tab[16]
-#define __pyx_n_u_InvClarkeTransformWrapper___redu __pyx_string_tab[17]
-#define __pyx_n_u_InvClarkeTransformWrapper___sets __pyx_string_tab[18]
-#define __pyx_n_u_InvClarkeTransformWrapper_comput __pyx_string_tab[19]
-#define __pyx_n_u_InvClarkeTransformWrapper_get_ou __pyx_string_tab[20]
-#define __pyx_n_u_InvClarkeTransformWrapper_set_in __pyx_string_tab[21]
-#define __pyx_n_u_InvParkTransformWrapper __pyx_string_tab[22]
-#define __pyx_n_u_InvParkTransformWrapper___reduce __pyx_string_tab[23]
-#define __pyx_n_u_InvParkTransformWrapper___setsta __pyx_string_tab[24]
-#define __pyx_n_u_InvParkTransformWrapper_compute __pyx_string_tab[25]
-#define __pyx_n_u_InvParkTransformWrapper_get_outp __pyx_string_tab[26]
-#define __pyx_n_u_InvParkTransformWrapper_set_inpu __pyx_string_tab[27]
-#define __pyx_n_u_InvParkTransformWrapper_set_thet __pyx_string_tab[28]
-#define __pyx_n_u_ParkTransformWrapper __pyx_string_tab[29]
-#define __pyx_n_u_ParkTransformWrapper___reduce_cy __pyx_string_tab[30]
-#define __pyx_n_u_ParkTransformWrapper___setstate __pyx_string_tab[31]
-#define __pyx_n_u_ParkTransformWrapper_compute __pyx_string_tab[32]
-#define __pyx_n_u_ParkTransformWrapper_get_outputs __pyx_string_tab[33]
-#define __pyx_n_u_ParkTransformWrapper_set_inputs __pyx_string_tab[34]
-#define __pyx_n_u_ParkTransformWrapper_set_theta __pyx_string_tab[35]
-#define __pyx_n_u_Pyx_PyDict_NextRef __pyx_string_tab[36]
-#define __pyx_n_u_asyncio_coroutines __pyx_string_tab[37]
-#define __pyx_n_u_cline_in_traceback __pyx_string_tab[38]
-#define __pyx_n_u_compute __pyx_string_tab[39]
-#define __pyx_n_u_coordinate_transform_wrapper __pyx_string_tab[40]
-#define __pyx_n_u_dtype __pyx_string_tab[41]
-#define __pyx_n_u_empty __pyx_string_tab[42]
-#define __pyx_n_u_float32 __pyx_string_tab[43]
-#define __pyx_n_u_func __pyx_string_tab[44]
-#define __pyx_n_u_get_outputs __pyx_string_tab[45]
-#define __pyx_n_u_getstate __pyx_string_tab[46]
-#define __pyx_n_u_is_coroutine __pyx_string_tab[47]
-#define __pyx_n_u_items __pyx_string_tab[48]
-#define __pyx_n_u_main __pyx_string_tab[49]
-#define __pyx_n_u_module __pyx_string_tab[50]
-#define __pyx_n_u_name __pyx_string_tab[51]
-#define __pyx_n_u_np __pyx_string_tab[52]
-#define __pyx_n_u_numpy __pyx_string_tab[53]
-#define __pyx_n_u_pop __pyx_string_tab[54]
-#define __pyx_n_u_pyx_state __pyx_string_tab[55]
-#define __pyx_n_u_pyx_vtable __pyx_string_tab[56]
-#define __pyx_n_u_qualname __pyx_string_tab[57]
-#define __pyx_n_u_reduce __pyx_string_tab[58]
-#define __pyx_n_u_reduce_cython __pyx_string_tab[59]
-#define __pyx_n_u_reduce_ex __pyx_string_tab[60]
-#define __pyx_n_u_self __pyx_string_tab[61]
-#define __pyx_n_u_set_inputs __pyx_string_tab[62]
-#define __pyx_n_u_set_name __pyx_string_tab[63]
-#define __pyx_n_u_set_theta __pyx_string_tab[64]
-#define __pyx_n_u_setdefault __pyx_string_tab[65]
-#define __pyx_n_u_setstate __pyx_string_tab[66]
-#define __pyx_n_u_setstate_cython __pyx_string_tab[67]
-#define __pyx_n_u_test __pyx_string_tab[68]
-#define __pyx_n_u_theta __pyx_string_tab[69]
-#define __pyx_n_u_u __pyx_string_tab[70]
-#define __pyx_n_u_values __pyx_string_tab[71]
-#define __pyx_kp_b_iso88591_A_1D_d_4q __pyx_string_tab[72]
-#define __pyx_kp_b_iso88591_A_D_haq_D_haq __pyx_string_tab[73]
-#define __pyx_kp_b_iso88591_A_D_haq_D_haq_D_haq __pyx_string_tab[74]
-#define __pyx_kp_b_iso88591_A_Jha __pyx_string_tab[75]
-#define __pyx_kp_b_iso88591_A_Qd_A __pyx_string_tab[76]
-#define __pyx_kp_b_iso88591_A_RvQc_r_t5_t5_q __pyx_string_tab[77]
-#define __pyx_kp_b_iso88591_A_RvQc_r_t5_t5_t5_q __pyx_string_tab[78]
-#define __pyx_kp_b_iso88591_A_fD __pyx_string_tab[79]
-#define __pyx_kp_b_iso88591_A_q_F_it1 __pyx_string_tab[80]
-#define __pyx_kp_b_iso88591_Q __pyx_string_tab[81]
-#define __pyx_int_2 __pyx_number_tab[0]
-#define __pyx_int_3 __pyx_number_tab[1]
+#define __pyx_kp_u_Input_array_must_have_at_least_2 __pyx_string_tab[1]
+#define __pyx_kp_u_Input_array_must_have_at_least_3 __pyx_string_tab[2]
+#define __pyx_kp_u_Note_that_Cython_is_deliberately __pyx_string_tab[3]
+#define __pyx_kp_u_add_note __pyx_string_tab[4]
+#define __pyx_kp_u_coordinate_transform_wrapper_pyx __pyx_string_tab[5]
+#define __pyx_kp_u_disable __pyx_string_tab[6]
+#define __pyx_kp_u_enable __pyx_string_tab[7]
+#define __pyx_kp_u_gc __pyx_string_tab[8]
+#define __pyx_kp_u_isenabled __pyx_string_tab[9]
+#define __pyx_kp_u_no_default___reduce___due_to_non __pyx_string_tab[10]
+#define __pyx_kp_u_numpy__core_multiarray_failed_to __pyx_string_tab[11]
+#define __pyx_kp_u_numpy__core_umath_failed_to_impo __pyx_string_tab[12]
+#define __pyx_kp_u_stringsource __pyx_string_tab[13]
+#define __pyx_n_u_ClarkeParkTransformWrapper __pyx_string_tab[14]
+#define __pyx_n_u_ClarkeParkTransformWrapper___red __pyx_string_tab[15]
+#define __pyx_n_u_ClarkeParkTransformWrapper___set __pyx_string_tab[16]
+#define __pyx_n_u_ClarkeParkTransformWrapper_compu __pyx_string_tab[17]
+#define __pyx_n_u_ClarkeParkTransformWrapper_get_o __pyx_string_tab[18]
+#define __pyx_n_u_ClarkeParkTransformWrapper_get_o_2 __pyx_string_tab[19]
+#define __pyx_n_u_ClarkeParkTransformWrapper_set_i __pyx_string_tab[20]
+#define __pyx_n_u_ClarkeParkTransformWrapper_set_i_2 __pyx_string_tab[21]
+#define __pyx_n_u_ClarkeParkTransformWrapper_set_t __pyx_string_tab[22]
+#define __pyx_n_u_ClarkeTransformWrapper __pyx_string_tab[23]
+#define __pyx_n_u_ClarkeTransformWrapper___reduce __pyx_string_tab[24]
+#define __pyx_n_u_ClarkeTransformWrapper___setstat __pyx_string_tab[25]
+#define __pyx_n_u_ClarkeTransformWrapper_compute __pyx_string_tab[26]
+#define __pyx_n_u_ClarkeTransformWrapper_get_outpu __pyx_string_tab[27]
+#define __pyx_n_u_ClarkeTransformWrapper_get_outpu_2 __pyx_string_tab[28]
+#define __pyx_n_u_ClarkeTransformWrapper_set_input __pyx_string_tab[29]
+#define __pyx_n_u_ClarkeTransformWrapper_set_input_2 __pyx_string_tab[30]
+#define __pyx_n_u_InvClarkeTransformWrapper __pyx_string_tab[31]
+#define __pyx_n_u_InvClarkeTransformWrapper___redu __pyx_string_tab[32]
+#define __pyx_n_u_InvClarkeTransformWrapper___sets __pyx_string_tab[33]
+#define __pyx_n_u_InvClarkeTransformWrapper_comput __pyx_string_tab[34]
+#define __pyx_n_u_InvClarkeTransformWrapper_get_ou __pyx_string_tab[35]
+#define __pyx_n_u_InvClarkeTransformWrapper_get_ou_2 __pyx_string_tab[36]
+#define __pyx_n_u_InvClarkeTransformWrapper_set_in __pyx_string_tab[37]
+#define __pyx_n_u_InvClarkeTransformWrapper_set_in_2 __pyx_string_tab[38]
+#define __pyx_n_u_InvParkTransformWrapper __pyx_string_tab[39]
+#define __pyx_n_u_InvParkTransformWrapper___reduce __pyx_string_tab[40]
+#define __pyx_n_u_InvParkTransformWrapper___setsta __pyx_string_tab[41]
+#define __pyx_n_u_InvParkTransformWrapper_compute __pyx_string_tab[42]
+#define __pyx_n_u_InvParkTransformWrapper_get_outp __pyx_string_tab[43]
+#define __pyx_n_u_InvParkTransformWrapper_get_outp_2 __pyx_string_tab[44]
+#define __pyx_n_u_InvParkTransformWrapper_set_inpu __pyx_string_tab[45]
+#define __pyx_n_u_InvParkTransformWrapper_set_inpu_2 __pyx_string_tab[46]
+#define __pyx_n_u_InvParkTransformWrapper_set_thet __pyx_string_tab[47]
+#define __pyx_n_u_ParkTransformWrapper __pyx_string_tab[48]
+#define __pyx_n_u_ParkTransformWrapper___reduce_cy __pyx_string_tab[49]
+#define __pyx_n_u_ParkTransformWrapper___setstate __pyx_string_tab[50]
+#define __pyx_n_u_ParkTransformWrapper_compute __pyx_string_tab[51]
+#define __pyx_n_u_ParkTransformWrapper_get_outputs __pyx_string_tab[52]
+#define __pyx_n_u_ParkTransformWrapper_get_outputs_2 __pyx_string_tab[53]
+#define __pyx_n_u_ParkTransformWrapper_set_inputs __pyx_string_tab[54]
+#define __pyx_n_u_ParkTransformWrapper_set_inputs_2 __pyx_string_tab[55]
+#define __pyx_n_u_ParkTransformWrapper_set_theta __pyx_string_tab[56]
+#define __pyx_n_u_Pyx_PyDict_NextRef __pyx_string_tab[57]
+#define __pyx_n_u_TransformWrapperBase __pyx_string_tab[58]
+#define __pyx_n_u_TransformWrapperBase___reduce_cy __pyx_string_tab[59]
+#define __pyx_n_u_TransformWrapperBase___setstate __pyx_string_tab[60]
+#define __pyx_n_u_a __pyx_string_tab[61]
+#define __pyx_n_u_alpha __pyx_string_tab[62]
+#define __pyx_n_u_array __pyx_string_tab[63]
+#define __pyx_n_u_asyncio_coroutines __pyx_string_tab[64]
+#define __pyx_n_u_b __pyx_string_tab[65]
+#define __pyx_n_u_beta __pyx_string_tab[66]
+#define __pyx_n_u_c __pyx_string_tab[67]
+#define __pyx_n_u_cline_in_traceback __pyx_string_tab[68]
+#define __pyx_n_u_compute __pyx_string_tab[69]
+#define __pyx_n_u_coordinate_transform_wrapper __pyx_string_tab[70]
+#define __pyx_n_u_d __pyx_string_tab[71]
+#define __pyx_n_u_dtype __pyx_string_tab[72]
+#define __pyx_n_u_float32 __pyx_string_tab[73]
+#define __pyx_n_u_func __pyx_string_tab[74]
+#define __pyx_n_u_get_outputs __pyx_string_tab[75]
+#define __pyx_n_u_get_outputs_abc __pyx_string_tab[76]
+#define __pyx_n_u_get_outputs_alpha_beta __pyx_string_tab[77]
+#define __pyx_n_u_get_outputs_dq __pyx_string_tab[78]
+#define __pyx_n_u_getstate __pyx_string_tab[79]
+#define __pyx_n_u_is_coroutine __pyx_string_tab[80]
+#define __pyx_n_u_items __pyx_string_tab[81]
+#define __pyx_n_u_main __pyx_string_tab[82]
+#define __pyx_n_u_module __pyx_string_tab[83]
+#define __pyx_n_u_name __pyx_string_tab[84]
+#define __pyx_n_u_np __pyx_string_tab[85]
+#define __pyx_n_u_numpy __pyx_string_tab[86]
+#define __pyx_n_u_pop __pyx_string_tab[87]
+#define __pyx_n_u_pyx_state __pyx_string_tab[88]
+#define __pyx_n_u_pyx_vtable __pyx_string_tab[89]
+#define __pyx_n_u_q __pyx_string_tab[90]
+#define __pyx_n_u_qualname __pyx_string_tab[91]
+#define __pyx_n_u_reduce __pyx_string_tab[92]
+#define __pyx_n_u_reduce_cython __pyx_string_tab[93]
+#define __pyx_n_u_reduce_ex __pyx_string_tab[94]
+#define __pyx_n_u_self __pyx_string_tab[95]
+#define __pyx_n_u_set_inputs __pyx_string_tab[96]
+#define __pyx_n_u_set_inputs_abc __pyx_string_tab[97]
+#define __pyx_n_u_set_inputs_alpha_beta __pyx_string_tab[98]
+#define __pyx_n_u_set_inputs_dq __pyx_string_tab[99]
+#define __pyx_n_u_set_name __pyx_string_tab[100]
+#define __pyx_n_u_set_theta __pyx_string_tab[101]
+#define __pyx_n_u_setdefault __pyx_string_tab[102]
+#define __pyx_n_u_setstate __pyx_string_tab[103]
+#define __pyx_n_u_setstate_cython __pyx_string_tab[104]
+#define __pyx_n_u_test __pyx_string_tab[105]
+#define __pyx_n_u_theta __pyx_string_tab[106]
+#define __pyx_n_u_u __pyx_string_tab[107]
+#define __pyx_n_u_values __pyx_string_tab[108]
+#define __pyx_kp_b_iso88591_A_1AT_6at6_a __pyx_string_tab[109]
+#define __pyx_kp_b_iso88591_A_1F_3b_AQ_D_AQa_D_1AQ __pyx_string_tab[110]
+#define __pyx_kp_b_iso88591_A_1F_3b_AQ_D_D __pyx_string_tab[111]
+#define __pyx_kp_b_iso88591_A_1F_3b_AQ_D_D_D __pyx_string_tab[112]
+#define __pyx_kp_b_iso88591_A_4_2_4vQd __pyx_string_tab[113]
+#define __pyx_kp_b_iso88591_A_AQd_a_d_Q __pyx_string_tab[114]
+#define __pyx_kp_b_iso88591_A_D_D __pyx_string_tab[115]
+#define __pyx_kp_b_iso88591_A_D_Q_D_Q __pyx_string_tab[116]
+#define __pyx_kp_b_iso88591_A_D_Q_D_Q_D_Q __pyx_string_tab[117]
+#define __pyx_kp_b_iso88591_A_E_T_a __pyx_string_tab[118]
+#define __pyx_kp_b_iso88591_A_E_T_d_e1 __pyx_string_tab[119]
+#define __pyx_kp_b_iso88591_A_E_U __pyx_string_tab[120]
+#define __pyx_kp_b_iso88591_A_Ja_1D_34q __pyx_string_tab[121]
+#define __pyx_kp_b_iso88591_A_Ja_q__D __pyx_string_tab[122]
+#define __pyx_kp_b_iso88591_A_aq_O1D_at1 __pyx_string_tab[123]
+#define __pyx_kp_b_iso88591_A_q_F_4q __pyx_string_tab[124]
+#define __pyx_kp_b_iso88591_A_r_q_U_d_t4uE_r __pyx_string_tab[125]
+#define __pyx_kp_b_iso88591_A_r_q_U_d_uF_A __pyx_string_tab[126]
+#define __pyx_kp_b_iso88591_A_r_q_U_e86_1 __pyx_string_tab[127]
+#define __pyx_kp_b_iso88591_Q __pyx_string_tab[128]
 /* #### Code section: module_state_clear ### */
 #if CYTHON_USE_MODULE_STATE
 static CYTHON_SMALL_CODE int __pyx_m_clear(PyObject *m) {
@@ -3165,6 +3285,8 @@ static CYTHON_SMALL_CODE int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_ptype_5numpy_flexible);
   Py_CLEAR(clear_module_state->__pyx_ptype_5numpy_character);
   Py_CLEAR(clear_module_state->__pyx_ptype_5numpy_ufunc);
+  Py_CLEAR(clear_module_state->__pyx_ptype_28coordinate_transform_wrapper_TransformWrapperBase);
+  Py_CLEAR(clear_module_state->__pyx_type_28coordinate_transform_wrapper_TransformWrapperBase);
   Py_CLEAR(clear_module_state->__pyx_ptype_28coordinate_transform_wrapper_ClarkeTransformWrapper);
   Py_CLEAR(clear_module_state->__pyx_type_28coordinate_transform_wrapper_ClarkeTransformWrapper);
   Py_CLEAR(clear_module_state->__pyx_ptype_28coordinate_transform_wrapper_InvClarkeTransformWrapper);
@@ -3173,9 +3295,10 @@ static CYTHON_SMALL_CODE int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_type_28coordinate_transform_wrapper_ParkTransformWrapper);
   Py_CLEAR(clear_module_state->__pyx_ptype_28coordinate_transform_wrapper_InvParkTransformWrapper);
   Py_CLEAR(clear_module_state->__pyx_type_28coordinate_transform_wrapper_InvParkTransformWrapper);
-  for (int i=0; i<22; ++i) { Py_CLEAR(clear_module_state->__pyx_codeobj_tab[i]); }
-  for (int i=0; i<82; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
-  for (int i=0; i<2; ++i) { Py_CLEAR(clear_module_state->__pyx_number_tab[i]); }
+  Py_CLEAR(clear_module_state->__pyx_ptype_28coordinate_transform_wrapper_ClarkeParkTransformWrapper);
+  Py_CLEAR(clear_module_state->__pyx_type_28coordinate_transform_wrapper_ClarkeParkTransformWrapper);
+  for (int i=0; i<40; ++i) { Py_CLEAR(clear_module_state->__pyx_codeobj_tab[i]); }
+  for (int i=0; i<129; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
 /* #### Code section: module_state_clear_contents ### */
 /* CommonTypesMetaclass.module_state_clear */
 Py_CLEAR(clear_module_state->__pyx_CommonTypesMetaclassType);
@@ -3214,6 +3337,8 @@ static CYTHON_SMALL_CODE int __pyx_m_traverse(PyObject *m, visitproc visit, void
   Py_VISIT(traverse_module_state->__pyx_ptype_5numpy_flexible);
   Py_VISIT(traverse_module_state->__pyx_ptype_5numpy_character);
   Py_VISIT(traverse_module_state->__pyx_ptype_5numpy_ufunc);
+  Py_VISIT(traverse_module_state->__pyx_ptype_28coordinate_transform_wrapper_TransformWrapperBase);
+  Py_VISIT(traverse_module_state->__pyx_type_28coordinate_transform_wrapper_TransformWrapperBase);
   Py_VISIT(traverse_module_state->__pyx_ptype_28coordinate_transform_wrapper_ClarkeTransformWrapper);
   Py_VISIT(traverse_module_state->__pyx_type_28coordinate_transform_wrapper_ClarkeTransformWrapper);
   Py_VISIT(traverse_module_state->__pyx_ptype_28coordinate_transform_wrapper_InvClarkeTransformWrapper);
@@ -3222,9 +3347,10 @@ static CYTHON_SMALL_CODE int __pyx_m_traverse(PyObject *m, visitproc visit, void
   Py_VISIT(traverse_module_state->__pyx_type_28coordinate_transform_wrapper_ParkTransformWrapper);
   Py_VISIT(traverse_module_state->__pyx_ptype_28coordinate_transform_wrapper_InvParkTransformWrapper);
   Py_VISIT(traverse_module_state->__pyx_type_28coordinate_transform_wrapper_InvParkTransformWrapper);
-  for (int i=0; i<22; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_codeobj_tab[i]); }
-  for (int i=0; i<82; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
-  for (int i=0; i<2; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_number_tab[i]); }
+  Py_VISIT(traverse_module_state->__pyx_ptype_28coordinate_transform_wrapper_ClarkeParkTransformWrapper);
+  Py_VISIT(traverse_module_state->__pyx_type_28coordinate_transform_wrapper_ClarkeParkTransformWrapper);
+  for (int i=0; i<40; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_codeobj_tab[i]); }
+  for (int i=0; i<129; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
 /* #### Code section: module_state_traverse_contents ### */
 /* CommonTypesMetaclass.module_state_traverse */
 Py_VISIT(traverse_module_state->__pyx_CommonTypesMetaclassType);
@@ -4958,12 +5084,419 @@ static CYTHON_INLINE NPY_DATETIMEUNIT __pyx_f_5numpy_get_datetime64_unit(PyObjec
   return __pyx_r;
 }
 
-/* "coordinate_transform_wrapper.pyx":46
- *     cdef float[2] _out
+/* "coordinate_transform_wrapper.pyx":107
+ *     cdef Matrix3x2_T _inv_clarke_matrix
  * 
  *     def __cinit__(self):             # <<<<<<<<<<<<<<
- *         for i in range(3): self._in[i] = 0.0
- *         for i in range(2): self._out[i] = 0.0
+ *         # Initialize constant matrices once
+ *         Clarke_InitMatrix(&self._clarke_matrix)
+*/
+
+/* Python wrapper */
+static int __pyx_pw_28coordinate_transform_wrapper_20TransformWrapperBase_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static int __pyx_pw_28coordinate_transform_wrapper_20TransformWrapperBase_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__cinit__ (wrapper)", 0);
+  #if CYTHON_ASSUME_SAFE_SIZE
+  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #else
+  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return -1;
+  #endif
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  if (unlikely(__pyx_nargs > 0)) { __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 0, 0, __pyx_nargs); return -1; }
+  const Py_ssize_t __pyx_kwds_len = unlikely(__pyx_kwds) ? __Pyx_NumKwargs_VARARGS(__pyx_kwds) : 0;
+  if (unlikely(__pyx_kwds_len < 0)) return -1;
+  if (unlikely(__pyx_kwds_len > 0)) {__Pyx_RejectKeywords("__cinit__", __pyx_kwds); return -1;}
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_20TransformWrapperBase___cinit__(((struct __pyx_obj_28coordinate_transform_wrapper_TransformWrapperBase *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_28coordinate_transform_wrapper_20TransformWrapperBase___cinit__(struct __pyx_obj_28coordinate_transform_wrapper_TransformWrapperBase *__pyx_v_self) {
+  int __pyx_r;
+
+  /* "coordinate_transform_wrapper.pyx":109
+ *     def __cinit__(self):
+ *         # Initialize constant matrices once
+ *         Clarke_InitMatrix(&self._clarke_matrix)             # <<<<<<<<<<<<<<
+ *         InvClarke_InitMatrix(&self._inv_clarke_matrix)
+ * 
+*/
+  Clarke_InitMatrix((&__pyx_v_self->_clarke_matrix));
+
+  /* "coordinate_transform_wrapper.pyx":110
+ *         # Initialize constant matrices once
+ *         Clarke_InitMatrix(&self._clarke_matrix)
+ *         InvClarke_InitMatrix(&self._inv_clarke_matrix)             # <<<<<<<<<<<<<<
+ * 
+ *     @staticmethod
+*/
+  InvClarke_InitMatrix((&__pyx_v_self->_inv_clarke_matrix));
+
+  /* "coordinate_transform_wrapper.pyx":107
+ *     cdef Matrix3x2_T _inv_clarke_matrix
+ * 
+ *     def __cinit__(self):             # <<<<<<<<<<<<<<
+ *         # Initialize constant matrices once
+ *         Clarke_InitMatrix(&self._clarke_matrix)
+*/
+
+  /* function exit code */
+  __pyx_r = 0;
+  return __pyx_r;
+}
+
+/* "coordinate_transform_wrapper.pyx":112
+ *         InvClarke_InitMatrix(&self._inv_clarke_matrix)
+ * 
+ *     @staticmethod             # <<<<<<<<<<<<<<
+ *     cdef inline void phase3_to_vector(const Phase3Signal_T* pIn, Vector3_T* pOut):
+ *         pOut.V[0] = pIn.A
+*/
+
+static CYTHON_INLINE void __pyx_f_28coordinate_transform_wrapper_20TransformWrapperBase_phase3_to_vector(Phase3Signal_T const *__pyx_v_pIn, Vector3_T *__pyx_v_pOut) {
+  __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_t_1;
+
+  /* "coordinate_transform_wrapper.pyx":114
+ *     @staticmethod
+ *     cdef inline void phase3_to_vector(const Phase3Signal_T* pIn, Vector3_T* pOut):
+ *         pOut.V[0] = pIn.A             # <<<<<<<<<<<<<<
+ *         pOut.V[1] = pIn.B
+ *         pOut.V[2] = pIn.C
+*/
+  __pyx_t_1 = __pyx_v_pIn->A;
+  (__pyx_v_pOut->V[0]) = __pyx_t_1;
+
+  /* "coordinate_transform_wrapper.pyx":115
+ *     cdef inline void phase3_to_vector(const Phase3Signal_T* pIn, Vector3_T* pOut):
+ *         pOut.V[0] = pIn.A
+ *         pOut.V[1] = pIn.B             # <<<<<<<<<<<<<<
+ *         pOut.V[2] = pIn.C
+ * 
+*/
+  __pyx_t_1 = __pyx_v_pIn->B;
+  (__pyx_v_pOut->V[1]) = __pyx_t_1;
+
+  /* "coordinate_transform_wrapper.pyx":116
+ *         pOut.V[0] = pIn.A
+ *         pOut.V[1] = pIn.B
+ *         pOut.V[2] = pIn.C             # <<<<<<<<<<<<<<
+ * 
+ *     @staticmethod
+*/
+  __pyx_t_1 = __pyx_v_pIn->C;
+  (__pyx_v_pOut->V[2]) = __pyx_t_1;
+
+  /* "coordinate_transform_wrapper.pyx":112
+ *         InvClarke_InitMatrix(&self._inv_clarke_matrix)
+ * 
+ *     @staticmethod             # <<<<<<<<<<<<<<
+ *     cdef inline void phase3_to_vector(const Phase3Signal_T* pIn, Vector3_T* pOut):
+ *         pOut.V[0] = pIn.A
+*/
+
+  /* function exit code */
+}
+
+/* "coordinate_transform_wrapper.pyx":118
+ *         pOut.V[2] = pIn.C
+ * 
+ *     @staticmethod             # <<<<<<<<<<<<<<
+ *     cdef inline void alphabeta_to_vector(const AlphaBetaSignal_T* pIn, Vector2_T* pOut):
+ *         pOut.V[0] = pIn.Alpha
+*/
+
+static CYTHON_INLINE void __pyx_f_28coordinate_transform_wrapper_20TransformWrapperBase_alphabeta_to_vector(AlphaBetaSignal_T const *__pyx_v_pIn, Vector2_T *__pyx_v_pOut) {
+  __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_t_1;
+
+  /* "coordinate_transform_wrapper.pyx":120
+ *     @staticmethod
+ *     cdef inline void alphabeta_to_vector(const AlphaBetaSignal_T* pIn, Vector2_T* pOut):
+ *         pOut.V[0] = pIn.Alpha             # <<<<<<<<<<<<<<
+ *         pOut.V[1] = pIn.Beta
+ * 
+*/
+  __pyx_t_1 = __pyx_v_pIn->Alpha;
+  (__pyx_v_pOut->V[0]) = __pyx_t_1;
+
+  /* "coordinate_transform_wrapper.pyx":121
+ *     cdef inline void alphabeta_to_vector(const AlphaBetaSignal_T* pIn, Vector2_T* pOut):
+ *         pOut.V[0] = pIn.Alpha
+ *         pOut.V[1] = pIn.Beta             # <<<<<<<<<<<<<<
+ * 
+ *     @staticmethod
+*/
+  __pyx_t_1 = __pyx_v_pIn->Beta;
+  (__pyx_v_pOut->V[1]) = __pyx_t_1;
+
+  /* "coordinate_transform_wrapper.pyx":118
+ *         pOut.V[2] = pIn.C
+ * 
+ *     @staticmethod             # <<<<<<<<<<<<<<
+ *     cdef inline void alphabeta_to_vector(const AlphaBetaSignal_T* pIn, Vector2_T* pOut):
+ *         pOut.V[0] = pIn.Alpha
+*/
+
+  /* function exit code */
+}
+
+/* "coordinate_transform_wrapper.pyx":123
+ *         pOut.V[1] = pIn.Beta
+ * 
+ *     @staticmethod             # <<<<<<<<<<<<<<
+ *     cdef inline void dq_to_vector(const DQSignal_T* pIn, Vector2_T* pOut):
+ *         pOut.V[0] = pIn.D
+*/
+
+static CYTHON_INLINE void __pyx_f_28coordinate_transform_wrapper_20TransformWrapperBase_dq_to_vector(DQSignal_T const *__pyx_v_pIn, Vector2_T *__pyx_v_pOut) {
+  __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_t_1;
+
+  /* "coordinate_transform_wrapper.pyx":125
+ *     @staticmethod
+ *     cdef inline void dq_to_vector(const DQSignal_T* pIn, Vector2_T* pOut):
+ *         pOut.V[0] = pIn.D             # <<<<<<<<<<<<<<
+ *         pOut.V[1] = pIn.Q
+ * 
+*/
+  __pyx_t_1 = __pyx_v_pIn->D;
+  (__pyx_v_pOut->V[0]) = __pyx_t_1;
+
+  /* "coordinate_transform_wrapper.pyx":126
+ *     cdef inline void dq_to_vector(const DQSignal_T* pIn, Vector2_T* pOut):
+ *         pOut.V[0] = pIn.D
+ *         pOut.V[1] = pIn.Q             # <<<<<<<<<<<<<<
+ * 
+ * #
+*/
+  __pyx_t_1 = __pyx_v_pIn->Q;
+  (__pyx_v_pOut->V[1]) = __pyx_t_1;
+
+  /* "coordinate_transform_wrapper.pyx":123
+ *         pOut.V[1] = pIn.Beta
+ * 
+ *     @staticmethod             # <<<<<<<<<<<<<<
+ *     cdef inline void dq_to_vector(const DQSignal_T* pIn, Vector2_T* pOut):
+ *         pOut.V[0] = pIn.D
+*/
+
+  /* function exit code */
+}
+
+/* "(tree fragment)":1
+ * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+ * def __setstate_cython__(self, __pyx_state):
+*/
+
+/* Python wrapper */
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_20TransformWrapperBase_3__reduce_cython__(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_20TransformWrapperBase_3__reduce_cython__ = {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_20TransformWrapperBase_3__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_20TransformWrapperBase_3__reduce_cython__(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__reduce_cython__ (wrapper)", 0);
+  #if !CYTHON_METH_FASTCALL
+  #if CYTHON_ASSUME_SAFE_SIZE
+  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #else
+  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
+  #endif
+  #endif
+  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+  if (unlikely(__pyx_nargs > 0)) { __Pyx_RaiseArgtupleInvalid("__reduce_cython__", 1, 0, 0, __pyx_nargs); return NULL; }
+  const Py_ssize_t __pyx_kwds_len = unlikely(__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
+  if (unlikely(__pyx_kwds_len < 0)) return NULL;
+  if (unlikely(__pyx_kwds_len > 0)) {__Pyx_RejectKeywords("__reduce_cython__", __pyx_kwds); return NULL;}
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_20TransformWrapperBase_2__reduce_cython__(((struct __pyx_obj_28coordinate_transform_wrapper_TransformWrapperBase *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_20TransformWrapperBase_2__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_TransformWrapperBase *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__reduce_cython__", 0);
+
+  /* "(tree fragment)":2
+ * def __reduce_cython__(self):
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"             # <<<<<<<<<<<<<<
+ * def __setstate_cython__(self, __pyx_state):
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+*/
+  __Pyx_Raise(((PyObject *)(((PyTypeObject*)PyExc_TypeError))), __pyx_mstate_global->__pyx_kp_u_no_default___reduce___due_to_non, 0, 0);
+  __PYX_ERR(2, 2, __pyx_L1_error)
+
+  /* "(tree fragment)":1
+ * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+ * def __setstate_cython__(self, __pyx_state):
+*/
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("coordinate_transform_wrapper.TransformWrapperBase.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "(tree fragment)":3
+ * def __reduce_cython__(self):
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+ * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+*/
+
+/* Python wrapper */
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_20TransformWrapperBase_5__setstate_cython__(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_20TransformWrapperBase_5__setstate_cython__ = {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_20TransformWrapperBase_5__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_20TransformWrapperBase_5__setstate_cython__(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  CYTHON_UNUSED PyObject *__pyx_v___pyx_state = 0;
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject* values[1] = {0};
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__setstate_cython__ (wrapper)", 0);
+  #if !CYTHON_METH_FASTCALL
+  #if CYTHON_ASSUME_SAFE_SIZE
+  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #else
+  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
+  #endif
+  #endif
+  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+  {
+    PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_pyx_state,0};
+    const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(2, 3, __pyx_L3_error)
+    if (__pyx_kwds_len > 0) {
+      switch (__pyx_nargs) {
+        case  1:
+        values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(2, 3, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      const Py_ssize_t kwd_pos_args = __pyx_nargs;
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "__setstate_cython__", 0) < (0)) __PYX_ERR(2, 3, __pyx_L3_error)
+      for (Py_ssize_t i = __pyx_nargs; i < 1; i++) {
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("__setstate_cython__", 1, 1, 1, i); __PYX_ERR(2, 3, __pyx_L3_error) }
+      }
+    } else if (unlikely(__pyx_nargs != 1)) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(2, 3, __pyx_L3_error)
+    }
+    __pyx_v___pyx_state = values[0];
+  }
+  goto __pyx_L6_skip;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("__setstate_cython__", 1, 1, 1, __pyx_nargs); __PYX_ERR(2, 3, __pyx_L3_error)
+  __pyx_L6_skip:;
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L3_error:;
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __Pyx_AddTraceback("coordinate_transform_wrapper.TransformWrapperBase.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_20TransformWrapperBase_4__setstate_cython__(((struct __pyx_obj_28coordinate_transform_wrapper_TransformWrapperBase *)__pyx_v_self), __pyx_v___pyx_state);
+
+  /* function exit code */
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_20TransformWrapperBase_4__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_TransformWrapperBase *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__setstate_cython__", 0);
+
+  /* "(tree fragment)":4
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+ * def __setstate_cython__(self, __pyx_state):
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"             # <<<<<<<<<<<<<<
+*/
+  __Pyx_Raise(((PyObject *)(((PyTypeObject*)PyExc_TypeError))), __pyx_mstate_global->__pyx_kp_u_no_default___reduce___due_to_non, 0, 0);
+  __PYX_ERR(2, 4, __pyx_L1_error)
+
+  /* "(tree fragment)":3
+ * def __reduce_cython__(self):
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+ * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+*/
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("coordinate_transform_wrapper.TransformWrapperBase.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "coordinate_transform_wrapper.pyx":135
+ *     cdef AlphaBetaSignal_T  _out
+ * 
+ *     def __cinit__(self):             # <<<<<<<<<<<<<<
+ *         # Initialize structs to zero
+ *         self._in.A = 0.0
 */
 
 /* Python wrapper */
@@ -4992,40 +5525,59 @@ static int __pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_1__c
 }
 
 static int __pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper___cinit__(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_v_self) {
-  long __pyx_v_i;
   int __pyx_r;
-  long __pyx_t_1;
 
-  /* "coordinate_transform_wrapper.pyx":47
- * 
+  /* "coordinate_transform_wrapper.pyx":137
  *     def __cinit__(self):
- *         for i in range(3): self._in[i] = 0.0             # <<<<<<<<<<<<<<
- *         for i in range(2): self._out[i] = 0.0
+ *         # Initialize structs to zero
+ *         self._in.A = 0.0             # <<<<<<<<<<<<<<
+ *         self._in.B = 0.0
+ *         self._in.C = 0.0
+*/
+  __pyx_v_self->_in.A = 0.0;
+
+  /* "coordinate_transform_wrapper.pyx":138
+ *         # Initialize structs to zero
+ *         self._in.A = 0.0
+ *         self._in.B = 0.0             # <<<<<<<<<<<<<<
+ *         self._in.C = 0.0
+ *         self._out.Alpha = 0.0
+*/
+  __pyx_v_self->_in.B = 0.0;
+
+  /* "coordinate_transform_wrapper.pyx":139
+ *         self._in.A = 0.0
+ *         self._in.B = 0.0
+ *         self._in.C = 0.0             # <<<<<<<<<<<<<<
+ *         self._out.Alpha = 0.0
+ *         self._out.Beta = 0.0
+*/
+  __pyx_v_self->_in.C = 0.0;
+
+  /* "coordinate_transform_wrapper.pyx":140
+ *         self._in.B = 0.0
+ *         self._in.C = 0.0
+ *         self._out.Alpha = 0.0             # <<<<<<<<<<<<<<
+ *         self._out.Beta = 0.0
  * 
 */
-  for (__pyx_t_1 = 0; __pyx_t_1 < 3; __pyx_t_1+=1) {
-    __pyx_v_i = __pyx_t_1;
-    (__pyx_v_self->_in[__pyx_v_i]) = 0.0;
-  }
+  __pyx_v_self->_out.Alpha = 0.0;
 
-  /* "coordinate_transform_wrapper.pyx":48
- *     def __cinit__(self):
- *         for i in range(3): self._in[i] = 0.0
- *         for i in range(2): self._out[i] = 0.0             # <<<<<<<<<<<<<<
+  /* "coordinate_transform_wrapper.pyx":141
+ *         self._in.C = 0.0
+ *         self._out.Alpha = 0.0
+ *         self._out.Beta = 0.0             # <<<<<<<<<<<<<<
  * 
- *     def set_inputs(self, u):
+ *     def set_inputs_abc(self, real32_T a, real32_T b, real32_T c):
 */
-  for (__pyx_t_1 = 0; __pyx_t_1 < 2; __pyx_t_1+=1) {
-    __pyx_v_i = __pyx_t_1;
-    (__pyx_v_self->_out[__pyx_v_i]) = 0.0;
-  }
+  __pyx_v_self->_out.Beta = 0.0;
 
-  /* "coordinate_transform_wrapper.pyx":46
- *     cdef float[2] _out
+  /* "coordinate_transform_wrapper.pyx":135
+ *     cdef AlphaBetaSignal_T  _out
  * 
  *     def __cinit__(self):             # <<<<<<<<<<<<<<
- *         for i in range(3): self._in[i] = 0.0
- *         for i in range(2): self._out[i] = 0.0
+ *         # Initialize structs to zero
+ *         self._in.A = 0.0
 */
 
   /* function exit code */
@@ -5033,31 +5585,188 @@ static int __pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper___ci
   return __pyx_r;
 }
 
-/* "coordinate_transform_wrapper.pyx":50
- *         for i in range(2): self._out[i] = 0.0
+/* "coordinate_transform_wrapper.pyx":143
+ *         self._out.Beta = 0.0
  * 
- *     def set_inputs(self, u):             # <<<<<<<<<<<<<<
- *         self._in[0] = <float> u[0]
- *         self._in[1] = <float> u[1]
+ *     def set_inputs_abc(self, real32_T a, real32_T b, real32_T c):             # <<<<<<<<<<<<<<
+ *         self._in.A = a
+ *         self._in.B = b
 */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_3set_inputs(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_3set_inputs_abc(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_22ClarkeTransformWrapper_3set_inputs = {"set_inputs", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_3set_inputs, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_3set_inputs(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_22ClarkeTransformWrapper_3set_inputs_abc = {"set_inputs_abc", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_3set_inputs_abc, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_3set_inputs_abc(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ) {
-  PyObject *__pyx_v_u = 0;
+  __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_a;
+  __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_b;
+  __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_c;
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject* values[3] = {0,0,0};
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("set_inputs_abc (wrapper)", 0);
+  #if !CYTHON_METH_FASTCALL
+  #if CYTHON_ASSUME_SAFE_SIZE
+  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #else
+  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
+  #endif
+  #endif
+  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+  {
+    PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_a,&__pyx_mstate_global->__pyx_n_u_b,&__pyx_mstate_global->__pyx_n_u_c,0};
+    const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 143, __pyx_L3_error)
+    if (__pyx_kwds_len > 0) {
+      switch (__pyx_nargs) {
+        case  3:
+        values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 143, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  2:
+        values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 143, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  1:
+        values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 143, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      const Py_ssize_t kwd_pos_args = __pyx_nargs;
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "set_inputs_abc", 0) < (0)) __PYX_ERR(0, 143, __pyx_L3_error)
+      for (Py_ssize_t i = __pyx_nargs; i < 3; i++) {
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("set_inputs_abc", 1, 3, 3, i); __PYX_ERR(0, 143, __pyx_L3_error) }
+      }
+    } else if (unlikely(__pyx_nargs != 3)) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 143, __pyx_L3_error)
+      values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 143, __pyx_L3_error)
+      values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 143, __pyx_L3_error)
+    }
+    __pyx_v_a = __Pyx_PyFloat_AsFloat(values[0]); if (unlikely((__pyx_v_a == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 143, __pyx_L3_error)
+    __pyx_v_b = __Pyx_PyFloat_AsFloat(values[1]); if (unlikely((__pyx_v_b == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 143, __pyx_L3_error)
+    __pyx_v_c = __Pyx_PyFloat_AsFloat(values[2]); if (unlikely((__pyx_v_c == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 143, __pyx_L3_error)
+  }
+  goto __pyx_L6_skip;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("set_inputs_abc", 1, 3, 3, __pyx_nargs); __PYX_ERR(0, 143, __pyx_L3_error)
+  __pyx_L6_skip:;
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L3_error:;
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __Pyx_AddTraceback("coordinate_transform_wrapper.ClarkeTransformWrapper.set_inputs_abc", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_2set_inputs_abc(((struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *)__pyx_v_self), __pyx_v_a, __pyx_v_b, __pyx_v_c);
+
+  /* function exit code */
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_2set_inputs_abc(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_v_self, __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_a, __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_b, __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_c) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("set_inputs_abc", 0);
+
+  /* "coordinate_transform_wrapper.pyx":144
+ * 
+ *     def set_inputs_abc(self, real32_T a, real32_T b, real32_T c):
+ *         self._in.A = a             # <<<<<<<<<<<<<<
+ *         self._in.B = b
+ *         self._in.C = c
+*/
+  __pyx_v_self->_in.A = __pyx_v_a;
+
+  /* "coordinate_transform_wrapper.pyx":145
+ *     def set_inputs_abc(self, real32_T a, real32_T b, real32_T c):
+ *         self._in.A = a
+ *         self._in.B = b             # <<<<<<<<<<<<<<
+ *         self._in.C = c
+ * 
+*/
+  __pyx_v_self->_in.B = __pyx_v_b;
+
+  /* "coordinate_transform_wrapper.pyx":146
+ *         self._in.A = a
+ *         self._in.B = b
+ *         self._in.C = c             # <<<<<<<<<<<<<<
+ * 
+ *     def set_inputs(self, cnp.ndarray u):
+*/
+  __pyx_v_self->_in.C = __pyx_v_c;
+
+  /* "coordinate_transform_wrapper.pyx":143
+ *         self._out.Beta = 0.0
+ * 
+ *     def set_inputs_abc(self, real32_T a, real32_T b, real32_T c):             # <<<<<<<<<<<<<<
+ *         self._in.A = a
+ *         self._in.B = b
+*/
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "coordinate_transform_wrapper.pyx":148
+ *         self._in.C = c
+ * 
+ *     def set_inputs(self, cnp.ndarray u):             # <<<<<<<<<<<<<<
+ *         """Set inputs from numpy array [a, b, c]"""
+ *         if u.shape[0] < 3:
+*/
+
+/* Python wrapper */
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_5set_inputs(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+PyDoc_STRVAR(__pyx_doc_28coordinate_transform_wrapper_22ClarkeTransformWrapper_4set_inputs, "Set inputs from numpy array [a, b, c]");
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_22ClarkeTransformWrapper_5set_inputs = {"set_inputs", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_5set_inputs, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_22ClarkeTransformWrapper_4set_inputs};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_5set_inputs(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  PyArrayObject *__pyx_v_u = 0;
   #if !CYTHON_METH_FASTCALL
   CYTHON_UNUSED Py_ssize_t __pyx_nargs;
   #endif
@@ -5080,32 +5789,32 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_u,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 50, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 148, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 50, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 148, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "set_inputs", 0) < (0)) __PYX_ERR(0, 50, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "set_inputs", 0) < (0)) __PYX_ERR(0, 148, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 1; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("set_inputs", 1, 1, 1, i); __PYX_ERR(0, 50, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("set_inputs", 1, 1, 1, i); __PYX_ERR(0, 148, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 1)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 50, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 148, __pyx_L3_error)
     }
-    __pyx_v_u = values[0];
+    __pyx_v_u = ((PyArrayObject *)values[0]);
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("set_inputs", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 50, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("set_inputs", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 148, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -5116,78 +5825,131 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_2set_inputs(((struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *)__pyx_v_self), __pyx_v_u);
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_u), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "u", 0))) __PYX_ERR(0, 148, __pyx_L1_error)
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_4set_inputs(((struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *)__pyx_v_self), __pyx_v_u);
 
   /* function exit code */
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __pyx_r = NULL;
   for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
     Py_XDECREF(values[__pyx_temp]);
   }
+  goto __pyx_L7_cleaned_up;
+  __pyx_L0:;
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __pyx_L7_cleaned_up:;
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_2set_inputs(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_v_self, PyObject *__pyx_v_u) {
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_4set_inputs(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_v_self, PyArrayObject *__pyx_v_u) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  float __pyx_t_2;
+  int __pyx_t_1;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  size_t __pyx_t_4;
+  __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_t_5;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("set_inputs", 0);
 
-  /* "coordinate_transform_wrapper.pyx":51
- * 
- *     def set_inputs(self, u):
- *         self._in[0] = <float> u[0]             # <<<<<<<<<<<<<<
- *         self._in[1] = <float> u[1]
- *         self._in[2] = <float> u[2]
+  /* "coordinate_transform_wrapper.pyx":150
+ *     def set_inputs(self, cnp.ndarray u):
+ *         """Set inputs from numpy array [a, b, c]"""
+ *         if u.shape[0] < 3:             # <<<<<<<<<<<<<<
+ *             raise ValueError("Input array must have at least 3 elements")
+ *         self._in.A = <real32_T> u[0]
 */
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_u, 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 51, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 51, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  (__pyx_v_self->_in[0]) = ((float)__pyx_t_2);
+  __pyx_t_1 = ((__pyx_f_5numpy_7ndarray_5shape_shape(__pyx_v_u)[0]) < 3);
+  if (unlikely(__pyx_t_1)) {
 
-  /* "coordinate_transform_wrapper.pyx":52
- *     def set_inputs(self, u):
- *         self._in[0] = <float> u[0]
- *         self._in[1] = <float> u[1]             # <<<<<<<<<<<<<<
- *         self._in[2] = <float> u[2]
+    /* "coordinate_transform_wrapper.pyx":151
+ *         """Set inputs from numpy array [a, b, c]"""
+ *         if u.shape[0] < 3:
+ *             raise ValueError("Input array must have at least 3 elements")             # <<<<<<<<<<<<<<
+ *         self._in.A = <real32_T> u[0]
+ *         self._in.B = <real32_T> u[1]
+*/
+    __pyx_t_3 = NULL;
+    __pyx_t_4 = 1;
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_3, __pyx_mstate_global->__pyx_kp_u_Input_array_must_have_at_least_3};
+      __pyx_t_2 = __Pyx_PyObject_FastCall((PyObject*)(((PyTypeObject*)PyExc_ValueError)), __pyx_callargs+__pyx_t_4, (2-__pyx_t_4) | (__pyx_t_4*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 151, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_2);
+    }
+    __Pyx_Raise(__pyx_t_2, 0, 0, 0);
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __PYX_ERR(0, 151, __pyx_L1_error)
+
+    /* "coordinate_transform_wrapper.pyx":150
+ *     def set_inputs(self, cnp.ndarray u):
+ *         """Set inputs from numpy array [a, b, c]"""
+ *         if u.shape[0] < 3:             # <<<<<<<<<<<<<<
+ *             raise ValueError("Input array must have at least 3 elements")
+ *         self._in.A = <real32_T> u[0]
+*/
+  }
+
+  /* "coordinate_transform_wrapper.pyx":152
+ *         if u.shape[0] < 3:
+ *             raise ValueError("Input array must have at least 3 elements")
+ *         self._in.A = <real32_T> u[0]             # <<<<<<<<<<<<<<
+ *         self._in.B = <real32_T> u[1]
+ *         self._in.C = <real32_T> u[2]
+*/
+  __pyx_t_2 = __Pyx_GetItemInt(((PyObject *)__pyx_v_u), 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 152, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_5 = __Pyx_PyFloat_AsFloat(__pyx_t_2); if (unlikely((__pyx_t_5 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 152, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_v_self->_in.A = ((__pyx_t_28coordinate_transform_wrapper_real32_T)__pyx_t_5);
+
+  /* "coordinate_transform_wrapper.pyx":153
+ *             raise ValueError("Input array must have at least 3 elements")
+ *         self._in.A = <real32_T> u[0]
+ *         self._in.B = <real32_T> u[1]             # <<<<<<<<<<<<<<
+ *         self._in.C = <real32_T> u[2]
  * 
 */
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_u, 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 52, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 52, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  (__pyx_v_self->_in[1]) = ((float)__pyx_t_2);
+  __pyx_t_2 = __Pyx_GetItemInt(((PyObject *)__pyx_v_u), 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 153, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_5 = __Pyx_PyFloat_AsFloat(__pyx_t_2); if (unlikely((__pyx_t_5 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 153, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_v_self->_in.B = ((__pyx_t_28coordinate_transform_wrapper_real32_T)__pyx_t_5);
 
-  /* "coordinate_transform_wrapper.pyx":53
- *         self._in[0] = <float> u[0]
- *         self._in[1] = <float> u[1]
- *         self._in[2] = <float> u[2]             # <<<<<<<<<<<<<<
+  /* "coordinate_transform_wrapper.pyx":154
+ *         self._in.A = <real32_T> u[0]
+ *         self._in.B = <real32_T> u[1]
+ *         self._in.C = <real32_T> u[2]             # <<<<<<<<<<<<<<
  * 
- *     cpdef void compute(self):
+ *     def compute(self):
 */
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_u, 2, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 53, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 53, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  (__pyx_v_self->_in[2]) = ((float)__pyx_t_2);
+  __pyx_t_2 = __Pyx_GetItemInt(((PyObject *)__pyx_v_u), 2, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 154, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_5 = __Pyx_PyFloat_AsFloat(__pyx_t_2); if (unlikely((__pyx_t_5 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 154, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_v_self->_in.C = ((__pyx_t_28coordinate_transform_wrapper_real32_T)__pyx_t_5);
 
-  /* "coordinate_transform_wrapper.pyx":50
- *         for i in range(2): self._out[i] = 0.0
+  /* "coordinate_transform_wrapper.pyx":148
+ *         self._in.C = c
  * 
- *     def set_inputs(self, u):             # <<<<<<<<<<<<<<
- *         self._in[0] = <float> u[0]
- *         self._in[1] = <float> u[1]
+ *     def set_inputs(self, cnp.ndarray u):             # <<<<<<<<<<<<<<
+ *         """Set inputs from numpy array [a, b, c]"""
+ *         if u.shape[0] < 3:
 */
 
   /* function exit code */
   __pyx_r = Py_None; __Pyx_INCREF(Py_None);
   goto __pyx_L0;
   __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
   __Pyx_AddTraceback("coordinate_transform_wrapper.ClarkeTransformWrapper.set_inputs", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
@@ -5196,161 +5958,25 @@ static PyObject *__pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrappe
   return __pyx_r;
 }
 
-/* "coordinate_transform_wrapper.pyx":55
- *         self._in[2] = <float> u[2]
+/* "coordinate_transform_wrapper.pyx":156
+ *         self._in.C = <real32_T> u[2]
  * 
- *     cpdef void compute(self):             # <<<<<<<<<<<<<<
- *         with nogil:
- *             clarke_transform_compute_flat(self._in, self._out)
+ *     def compute(self):             # <<<<<<<<<<<<<<
+ *         """Execute the Clarke transform using matrix multiplication"""
+ *         Clarke_Transform(&self._clarke_matrix, &self._in, &self._out)
 */
-
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_5compute(PyObject *__pyx_v_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-); /*proto*/
-static void __pyx_f_28coordinate_transform_wrapper_22ClarkeTransformWrapper_compute(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_v_self, int __pyx_skip_dispatch) {
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  PyObject *__pyx_t_4 = NULL;
-  size_t __pyx_t_5;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("compute", 0);
-  /* Check if called by wrapper */
-  if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overridden in Python */
-  else if (
-  #if !CYTHON_USE_TYPE_SLOTS
-  unlikely(Py_TYPE(((PyObject *)__pyx_v_self)) != __pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_ClarkeTransformWrapper &&
-  __Pyx_PyType_HasFeature(Py_TYPE(((PyObject *)__pyx_v_self)), Py_TPFLAGS_HAVE_GC))
-  #else
-  unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0 || __Pyx_PyType_HasFeature(Py_TYPE(((PyObject *)__pyx_v_self)), (Py_TPFLAGS_IS_ABSTRACT | Py_TPFLAGS_HEAPTYPE)))
-  #endif
-  ) {
-    #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    static PY_UINT64_T __pyx_tp_dict_version = __PYX_DICT_VERSION_INIT, __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-    if (unlikely(!__Pyx_object_dict_version_matches(((PyObject *)__pyx_v_self), __pyx_tp_dict_version, __pyx_obj_dict_version))) {
-      PY_UINT64_T __pyx_typedict_guard = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_mstate_global->__pyx_n_u_compute); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 55, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      if (!__Pyx_IsSameCFunction(__pyx_t_1, (void(*)(void)) __pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_5compute)) {
-        __pyx_t_3 = NULL;
-        __Pyx_INCREF(__pyx_t_1);
-        __pyx_t_4 = __pyx_t_1; 
-        __pyx_t_5 = 1;
-        #if CYTHON_UNPACK_METHODS
-        if (unlikely(PyMethod_Check(__pyx_t_4))) {
-          __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_4);
-          assert(__pyx_t_3);
-          PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_4);
-          __Pyx_INCREF(__pyx_t_3);
-          __Pyx_INCREF(__pyx__function);
-          __Pyx_DECREF_SET(__pyx_t_4, __pyx__function);
-          __pyx_t_5 = 0;
-        }
-        #endif
-        {
-          PyObject *__pyx_callargs[2] = {__pyx_t_3, NULL};
-          __pyx_t_2 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_4, __pyx_callargs+__pyx_t_5, (1-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-          __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-          __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 55, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_2);
-        }
-        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        goto __pyx_L0;
-      }
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-      __pyx_tp_dict_version = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      __pyx_obj_dict_version = __Pyx_get_object_dict_version(((PyObject *)__pyx_v_self));
-      if (unlikely(__pyx_typedict_guard != __pyx_tp_dict_version)) {
-        __pyx_tp_dict_version = __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-      }
-      #endif
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    }
-    #endif
-  }
-
-  /* "coordinate_transform_wrapper.pyx":56
- * 
- *     cpdef void compute(self):
- *         with nogil:             # <<<<<<<<<<<<<<
- *             clarke_transform_compute_flat(self._in, self._out)
- * 
-*/
-  {
-      PyThreadState * _save;
-      _save = PyEval_SaveThread();
-      __Pyx_FastGIL_Remember();
-      /*try:*/ {
-
-        /* "coordinate_transform_wrapper.pyx":57
- *     cpdef void compute(self):
- *         with nogil:
- *             clarke_transform_compute_flat(self._in, self._out)             # <<<<<<<<<<<<<<
- * 
- *     cpdef cnp.ndarray get_outputs(self):
-*/
-        clarke_transform_compute_flat(__pyx_v_self->_in, __pyx_v_self->_out);
-      }
-
-      /* "coordinate_transform_wrapper.pyx":56
- * 
- *     cpdef void compute(self):
- *         with nogil:             # <<<<<<<<<<<<<<
- *             clarke_transform_compute_flat(self._in, self._out)
- * 
-*/
-      /*finally:*/ {
-        /*normal exit:*/{
-          __Pyx_FastGIL_Forget();
-          PyEval_RestoreThread(_save);
-          goto __pyx_L5;
-        }
-        __pyx_L5:;
-      }
-  }
-
-  /* "coordinate_transform_wrapper.pyx":55
- *         self._in[2] = <float> u[2]
- * 
- *     cpdef void compute(self):             # <<<<<<<<<<<<<<
- *         with nogil:
- *             clarke_transform_compute_flat(self._in, self._out)
-*/
-
-  /* function exit code */
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_AddTraceback("coordinate_transform_wrapper.ClarkeTransformWrapper.compute", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_L0:;
-  __Pyx_RefNannyFinishContext();
-}
 
 /* Python wrapper */
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_5compute(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_7compute(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_22ClarkeTransformWrapper_5compute = {"compute", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_5compute, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_5compute(PyObject *__pyx_v_self, 
+PyDoc_STRVAR(__pyx_doc_28coordinate_transform_wrapper_22ClarkeTransformWrapper_6compute, "Execute the Clarke transform using matrix multiplication");
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_22ClarkeTransformWrapper_7compute = {"compute", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_7compute, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_22ClarkeTransformWrapper_6compute};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_7compute(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -5376,220 +6002,134 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   const Py_ssize_t __pyx_kwds_len = unlikely(__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
   if (unlikely(__pyx_kwds_len < 0)) return NULL;
   if (unlikely(__pyx_kwds_len > 0)) {__Pyx_RejectKeywords("compute", __pyx_kwds); return NULL;}
-  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_4compute(((struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *)__pyx_v_self));
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_6compute(((struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_4compute(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_v_self) {
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_6compute(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("compute", 0);
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_f_28coordinate_transform_wrapper_22ClarkeTransformWrapper_compute(__pyx_v_self, 1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 55, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_void_to_None(NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 55, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
+
+  /* "coordinate_transform_wrapper.pyx":158
+ *     def compute(self):
+ *         """Execute the Clarke transform using matrix multiplication"""
+ *         Clarke_Transform(&self._clarke_matrix, &self._in, &self._out)             # <<<<<<<<<<<<<<
+ * 
+ *     def get_outputs_alpha_beta(self):
+*/
+  Clarke_Transform((&__pyx_v_self->__pyx_base._clarke_matrix), (&__pyx_v_self->_in), (&__pyx_v_self->_out));
+
+  /* "coordinate_transform_wrapper.pyx":156
+ *         self._in.C = <real32_T> u[2]
+ * 
+ *     def compute(self):             # <<<<<<<<<<<<<<
+ *         """Execute the Clarke transform using matrix multiplication"""
+ *         Clarke_Transform(&self._clarke_matrix, &self._in, &self._out)
+*/
 
   /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("coordinate_transform_wrapper.ClarkeTransformWrapper.compute", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "coordinate_transform_wrapper.pyx":59
- *             clarke_transform_compute_flat(self._in, self._out)
+/* "coordinate_transform_wrapper.pyx":160
+ *         Clarke_Transform(&self._clarke_matrix, &self._in, &self._out)
  * 
- *     cpdef cnp.ndarray get_outputs(self):             # <<<<<<<<<<<<<<
- *         cdef cnp.ndarray y = np.empty(2, dtype=np.float32)
- *         y[0] = self._out[0]
+ *     def get_outputs_alpha_beta(self):             # <<<<<<<<<<<<<<
+ *         """Return outputs as tuple (alpha, beta)"""
+ *         return (self._out.Alpha, self._out.Beta)
 */
 
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_7get_outputs(PyObject *__pyx_v_self, 
+/* Python wrapper */
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_9get_outputs_alpha_beta(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyArrayObject *__pyx_f_28coordinate_transform_wrapper_22ClarkeTransformWrapper_get_outputs(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_v_self, int __pyx_skip_dispatch) {
-  PyArrayObject *__pyx_v_y = 0;
-  PyArrayObject *__pyx_r = NULL;
+PyDoc_STRVAR(__pyx_doc_28coordinate_transform_wrapper_22ClarkeTransformWrapper_8get_outputs_alpha_beta, "Return outputs as tuple (alpha, beta)");
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_22ClarkeTransformWrapper_9get_outputs_alpha_beta = {"get_outputs_alpha_beta", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_9get_outputs_alpha_beta, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_22ClarkeTransformWrapper_8get_outputs_alpha_beta};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_9get_outputs_alpha_beta(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("get_outputs_alpha_beta (wrapper)", 0);
+  #if !CYTHON_METH_FASTCALL
+  #if CYTHON_ASSUME_SAFE_SIZE
+  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #else
+  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
+  #endif
+  #endif
+  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+  if (unlikely(__pyx_nargs > 0)) { __Pyx_RaiseArgtupleInvalid("get_outputs_alpha_beta", 1, 0, 0, __pyx_nargs); return NULL; }
+  const Py_ssize_t __pyx_kwds_len = unlikely(__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
+  if (unlikely(__pyx_kwds_len < 0)) return NULL;
+  if (unlikely(__pyx_kwds_len > 0)) {__Pyx_RejectKeywords("get_outputs_alpha_beta", __pyx_kwds); return NULL;}
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_8get_outputs_alpha_beta(((struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_8get_outputs_alpha_beta(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   PyObject *__pyx_t_2 = NULL;
   PyObject *__pyx_t_3 = NULL;
-  PyObject *__pyx_t_4 = NULL;
-  size_t __pyx_t_5;
-  PyObject *__pyx_t_6 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("get_outputs", 0);
-  /* Check if called by wrapper */
-  if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overridden in Python */
-  else if (
-  #if !CYTHON_USE_TYPE_SLOTS
-  unlikely(Py_TYPE(((PyObject *)__pyx_v_self)) != __pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_ClarkeTransformWrapper &&
-  __Pyx_PyType_HasFeature(Py_TYPE(((PyObject *)__pyx_v_self)), Py_TPFLAGS_HAVE_GC))
-  #else
-  unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0 || __Pyx_PyType_HasFeature(Py_TYPE(((PyObject *)__pyx_v_self)), (Py_TPFLAGS_IS_ABSTRACT | Py_TPFLAGS_HEAPTYPE)))
-  #endif
-  ) {
-    #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    static PY_UINT64_T __pyx_tp_dict_version = __PYX_DICT_VERSION_INIT, __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-    if (unlikely(!__Pyx_object_dict_version_matches(((PyObject *)__pyx_v_self), __pyx_tp_dict_version, __pyx_obj_dict_version))) {
-      PY_UINT64_T __pyx_typedict_guard = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_mstate_global->__pyx_n_u_get_outputs); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 59, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      if (!__Pyx_IsSameCFunction(__pyx_t_1, (void(*)(void)) __pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_7get_outputs)) {
-        __Pyx_XDECREF((PyObject *)__pyx_r);
-        __pyx_t_3 = NULL;
-        __Pyx_INCREF(__pyx_t_1);
-        __pyx_t_4 = __pyx_t_1; 
-        __pyx_t_5 = 1;
-        #if CYTHON_UNPACK_METHODS
-        if (unlikely(PyMethod_Check(__pyx_t_4))) {
-          __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_4);
-          assert(__pyx_t_3);
-          PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_4);
-          __Pyx_INCREF(__pyx_t_3);
-          __Pyx_INCREF(__pyx__function);
-          __Pyx_DECREF_SET(__pyx_t_4, __pyx__function);
-          __pyx_t_5 = 0;
-        }
-        #endif
-        {
-          PyObject *__pyx_callargs[2] = {__pyx_t_3, NULL};
-          __pyx_t_2 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_4, __pyx_callargs+__pyx_t_5, (1-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-          __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-          __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 59, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_2);
-        }
-        if (!(likely(((__pyx_t_2) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_2, __pyx_mstate_global->__pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 59, __pyx_L1_error)
-        __pyx_r = ((PyArrayObject *)__pyx_t_2);
-        __pyx_t_2 = 0;
-        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        goto __pyx_L0;
-      }
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-      __pyx_tp_dict_version = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      __pyx_obj_dict_version = __Pyx_get_object_dict_version(((PyObject *)__pyx_v_self));
-      if (unlikely(__pyx_typedict_guard != __pyx_tp_dict_version)) {
-        __pyx_tp_dict_version = __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-      }
-      #endif
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    }
-    #endif
-  }
+  __Pyx_RefNannySetupContext("get_outputs_alpha_beta", 0);
 
-  /* "coordinate_transform_wrapper.pyx":60
+  /* "coordinate_transform_wrapper.pyx":162
+ *     def get_outputs_alpha_beta(self):
+ *         """Return outputs as tuple (alpha, beta)"""
+ *         return (self._out.Alpha, self._out.Beta)             # <<<<<<<<<<<<<<
  * 
- *     cpdef cnp.ndarray get_outputs(self):
- *         cdef cnp.ndarray y = np.empty(2, dtype=np.float32)             # <<<<<<<<<<<<<<
- *         y[0] = self._out[0]
- *         y[1] = self._out[1]
+ *     def get_outputs(self):
 */
-  __pyx_t_2 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 60, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 60, __pyx_L1_error)
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->_out.Alpha); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 162, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_self->_out.Beta); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 162, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 162, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 60, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_float32); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 60, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_6);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_5 = 1;
-  #if CYTHON_UNPACK_METHODS
-  if (unlikely(PyMethod_Check(__pyx_t_3))) {
-    __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_3);
-    assert(__pyx_t_2);
-    PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_3);
-    __Pyx_INCREF(__pyx_t_2);
-    __Pyx_INCREF(__pyx__function);
-    __Pyx_DECREF_SET(__pyx_t_3, __pyx__function);
-    __pyx_t_5 = 0;
-  }
-  #endif
-  {
-    PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_2, __pyx_mstate_global->__pyx_int_2};
-    __pyx_t_4 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 60, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_4, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 60, __pyx_L1_error)
-    __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder((PyObject*)__pyx_t_3, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_4);
-    __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 60, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-  }
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_mstate_global->__pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 60, __pyx_L1_error)
-  __pyx_v_y = ((PyArrayObject *)__pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1) != (0)) __PYX_ERR(0, 162, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_2);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_t_2) != (0)) __PYX_ERR(0, 162, __pyx_L1_error);
   __pyx_t_1 = 0;
-
-  /* "coordinate_transform_wrapper.pyx":61
- *     cpdef cnp.ndarray get_outputs(self):
- *         cdef cnp.ndarray y = np.empty(2, dtype=np.float32)
- *         y[0] = self._out[0]             # <<<<<<<<<<<<<<
- *         y[1] = self._out[1]
- *         return y
-*/
-  __pyx_t_1 = PyFloat_FromDouble((__pyx_v_self->_out[0])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 61, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_y), 0, __pyx_t_1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_OwnStrongReference) < 0))) __PYX_ERR(0, 61, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "coordinate_transform_wrapper.pyx":62
- *         cdef cnp.ndarray y = np.empty(2, dtype=np.float32)
- *         y[0] = self._out[0]
- *         y[1] = self._out[1]             # <<<<<<<<<<<<<<
- *         return y
- * 
-*/
-  __pyx_t_1 = PyFloat_FromDouble((__pyx_v_self->_out[1])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 62, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_y), 1, __pyx_t_1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_OwnStrongReference) < 0))) __PYX_ERR(0, 62, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "coordinate_transform_wrapper.pyx":63
- *         y[0] = self._out[0]
- *         y[1] = self._out[1]
- *         return y             # <<<<<<<<<<<<<<
- * 
- *     @property
-*/
-  __Pyx_XDECREF((PyObject *)__pyx_r);
-  __Pyx_INCREF((PyObject *)__pyx_v_y);
-  __pyx_r = __pyx_v_y;
+  __pyx_t_2 = 0;
+  __pyx_r = __pyx_t_3;
+  __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "coordinate_transform_wrapper.pyx":59
- *             clarke_transform_compute_flat(self._in, self._out)
+  /* "coordinate_transform_wrapper.pyx":160
+ *         Clarke_Transform(&self._clarke_matrix, &self._in, &self._out)
  * 
- *     cpdef cnp.ndarray get_outputs(self):             # <<<<<<<<<<<<<<
- *         cdef cnp.ndarray y = np.empty(2, dtype=np.float32)
- *         y[0] = self._out[0]
+ *     def get_outputs_alpha_beta(self):             # <<<<<<<<<<<<<<
+ *         """Return outputs as tuple (alpha, beta)"""
+ *         return (self._out.Alpha, self._out.Beta)
 */
 
   /* function exit code */
@@ -5597,27 +6137,33 @@ static PyArrayObject *__pyx_f_28coordinate_transform_wrapper_22ClarkeTransformWr
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_XDECREF(__pyx_t_6);
-  __Pyx_AddTraceback("coordinate_transform_wrapper.ClarkeTransformWrapper.get_outputs", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = 0;
+  __Pyx_AddTraceback("coordinate_transform_wrapper.ClarkeTransformWrapper.get_outputs_alpha_beta", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
   __pyx_L0:;
-  __Pyx_XDECREF((PyObject *)__pyx_v_y);
-  __Pyx_XGIVEREF((PyObject *)__pyx_r);
+  __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
+/* "coordinate_transform_wrapper.pyx":164
+ *         return (self._out.Alpha, self._out.Beta)
+ * 
+ *     def get_outputs(self):             # <<<<<<<<<<<<<<
+ *         """Return outputs as numpy array [alpha, beta]"""
+ *         return np.array([self._out.Alpha, self._out.Beta], dtype=np.float32)
+*/
+
 /* Python wrapper */
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_7get_outputs(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_11get_outputs(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_22ClarkeTransformWrapper_7get_outputs = {"get_outputs", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_7get_outputs, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_7get_outputs(PyObject *__pyx_v_self, 
+PyDoc_STRVAR(__pyx_doc_28coordinate_transform_wrapper_22ClarkeTransformWrapper_10get_outputs, "Return outputs as numpy array [alpha, beta]");
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_22ClarkeTransformWrapper_11get_outputs = {"get_outputs", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_11get_outputs, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_22ClarkeTransformWrapper_10get_outputs};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_11get_outputs(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -5643,162 +6189,106 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   const Py_ssize_t __pyx_kwds_len = unlikely(__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
   if (unlikely(__pyx_kwds_len < 0)) return NULL;
   if (unlikely(__pyx_kwds_len > 0)) {__Pyx_RejectKeywords("get_outputs", __pyx_kwds); return NULL;}
-  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_6get_outputs(((struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *)__pyx_v_self));
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_10get_outputs(((struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_6get_outputs(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_v_self) {
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_10get_outputs(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  PyObject *__pyx_t_4 = NULL;
+  PyObject *__pyx_t_5 = NULL;
+  PyObject *__pyx_t_6 = NULL;
+  size_t __pyx_t_7;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("get_outputs", 0);
+
+  /* "coordinate_transform_wrapper.pyx":166
+ *     def get_outputs(self):
+ *         """Return outputs as numpy array [alpha, beta]"""
+ *         return np.array([self._out.Alpha, self._out.Beta], dtype=np.float32)             # <<<<<<<<<<<<<<
+ * 
+ * #
+*/
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = ((PyObject *)__pyx_f_28coordinate_transform_wrapper_22ClarkeTransformWrapper_get_outputs(__pyx_v_self, 1)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 59, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = NULL;
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 166, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_array); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 166, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_3 = PyFloat_FromDouble(__pyx_v_self->_out.Alpha); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 166, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_5 = PyFloat_FromDouble(__pyx_v_self->_out.Beta); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 166, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_6 = PyList_New(2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 166, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __Pyx_GIVEREF(__pyx_t_3);
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_6, 0, __pyx_t_3) != (0)) __PYX_ERR(0, 166, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_5);
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_6, 1, __pyx_t_5) != (0)) __PYX_ERR(0, 166, __pyx_L1_error);
+  __pyx_t_3 = 0;
+  __pyx_t_5 = 0;
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 166, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float32); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 166, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_7 = 1;
+  #if CYTHON_UNPACK_METHODS
+  if (unlikely(PyMethod_Check(__pyx_t_4))) {
+    __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_4);
+    assert(__pyx_t_2);
+    PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_4);
+    __Pyx_INCREF(__pyx_t_2);
+    __Pyx_INCREF(__pyx__function);
+    __Pyx_DECREF_SET(__pyx_t_4, __pyx__function);
+    __pyx_t_7 = 0;
+  }
+  #endif
+  {
+    PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_2, __pyx_t_6};
+    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 166, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_3, __pyx_t_5, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 166, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder((PyObject*)__pyx_t_4, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_5);
+    __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 166, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+  }
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
+  /* "coordinate_transform_wrapper.pyx":164
+ *         return (self._out.Alpha, self._out.Beta)
+ * 
+ *     def get_outputs(self):             # <<<<<<<<<<<<<<
+ *         """Return outputs as numpy array [alpha, beta]"""
+ *         return np.array([self._out.Alpha, self._out.Beta], dtype=np.float32)
+*/
+
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_XDECREF(__pyx_t_6);
   __Pyx_AddTraceback("coordinate_transform_wrapper.ClarkeTransformWrapper.get_outputs", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "coordinate_transform_wrapper.pyx":65
- *         return y
- * 
- *     @property             # <<<<<<<<<<<<<<
- *     def alpha(self) -> float:
- *         return self._out[0]
-*/
-
-/* Python wrapper */
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_5alpha_1__get__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_5alpha_1__get__(PyObject *__pyx_v_self) {
-  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
-  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
-  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_5alpha___get__(((struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *)__pyx_v_self));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_5alpha___get__(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_v_self) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("__get__", 0);
-
-  /* "coordinate_transform_wrapper.pyx":67
- *     @property
- *     def alpha(self) -> float:
- *         return self._out[0]             # <<<<<<<<<<<<<<
- *     @property
- *     def beta(self)  -> float:
-*/
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble((__pyx_v_self->_out[0])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 67, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* "coordinate_transform_wrapper.pyx":65
- *         return y
- * 
- *     @property             # <<<<<<<<<<<<<<
- *     def alpha(self) -> float:
- *         return self._out[0]
-*/
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("coordinate_transform_wrapper.ClarkeTransformWrapper.alpha.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "coordinate_transform_wrapper.pyx":68
- *     def alpha(self) -> float:
- *         return self._out[0]
- *     @property             # <<<<<<<<<<<<<<
- *     def beta(self)  -> float:
- *         return self._out[1]
-*/
-
-/* Python wrapper */
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_4beta_1__get__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_4beta_1__get__(PyObject *__pyx_v_self) {
-  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
-  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
-  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_4beta___get__(((struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *)__pyx_v_self));
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_4beta___get__(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_v_self) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("__get__", 0);
-
-  /* "coordinate_transform_wrapper.pyx":70
- *     @property
- *     def beta(self)  -> float:
- *         return self._out[1]             # <<<<<<<<<<<<<<
- * 
- * # =============================================================================
-*/
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble((__pyx_v_self->_out[1])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 70, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* "coordinate_transform_wrapper.pyx":68
- *     def alpha(self) -> float:
- *         return self._out[0]
- *     @property             # <<<<<<<<<<<<<<
- *     def beta(self)  -> float:
- *         return self._out[1]
-*/
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("coordinate_transform_wrapper.ClarkeTransformWrapper.beta.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -5813,15 +6303,15 @@ static PyObject *__pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrappe
 */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_9__reduce_cython__(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_13__reduce_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_22ClarkeTransformWrapper_9__reduce_cython__ = {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_9__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_9__reduce_cython__(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_22ClarkeTransformWrapper_13__reduce_cython__ = {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_13__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_13__reduce_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -5847,14 +6337,14 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   const Py_ssize_t __pyx_kwds_len = unlikely(__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
   if (unlikely(__pyx_kwds_len < 0)) return NULL;
   if (unlikely(__pyx_kwds_len > 0)) {__Pyx_RejectKeywords("__reduce_cython__", __pyx_kwds); return NULL;}
-  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_8__reduce_cython__(((struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *)__pyx_v_self));
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_12__reduce_cython__(((struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_8__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_v_self) {
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_12__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_lineno = 0;
@@ -5894,15 +6384,15 @@ static PyObject *__pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrappe
 */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_11__setstate_cython__(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_15__setstate_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_22ClarkeTransformWrapper_11__setstate_cython__ = {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_11__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_11__setstate_cython__(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_22ClarkeTransformWrapper_15__setstate_cython__ = {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_15__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_15__setstate_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -5968,7 +6458,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_10__setstate_cython__(((struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *)__pyx_v_self), __pyx_v___pyx_state);
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_14__setstate_cython__(((struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *)__pyx_v_self), __pyx_v___pyx_state);
 
   /* function exit code */
   for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
@@ -5978,7 +6468,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_10__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrapper_14__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_lineno = 0;
@@ -6010,12 +6500,12 @@ static PyObject *__pyx_pf_28coordinate_transform_wrapper_22ClarkeTransformWrappe
   return __pyx_r;
 }
 
-/* "coordinate_transform_wrapper.pyx":86
- *     cdef float[3] _out
+/* "coordinate_transform_wrapper.pyx":175
+ *     cdef Phase3Signal_T     _out
  * 
  *     def __cinit__(self):             # <<<<<<<<<<<<<<
- *         for i in range(2): self._in[i] = 0.0
- *         for i in range(3): self._out[i] = 0.0
+ *         self._in.Alpha = 0.0
+ *         self._in.Beta = 0.0
 */
 
 /* Python wrapper */
@@ -6044,40 +6534,59 @@ static int __pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_1
 }
 
 static int __pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper___cinit__(struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *__pyx_v_self) {
-  long __pyx_v_i;
   int __pyx_r;
-  long __pyx_t_1;
 
-  /* "coordinate_transform_wrapper.pyx":87
+  /* "coordinate_transform_wrapper.pyx":176
  * 
  *     def __cinit__(self):
- *         for i in range(2): self._in[i] = 0.0             # <<<<<<<<<<<<<<
- *         for i in range(3): self._out[i] = 0.0
- * 
+ *         self._in.Alpha = 0.0             # <<<<<<<<<<<<<<
+ *         self._in.Beta = 0.0
+ *         self._out.A = 0.0
 */
-  for (__pyx_t_1 = 0; __pyx_t_1 < 2; __pyx_t_1+=1) {
-    __pyx_v_i = __pyx_t_1;
-    (__pyx_v_self->_in[__pyx_v_i]) = 0.0;
-  }
+  __pyx_v_self->_in.Alpha = 0.0;
 
-  /* "coordinate_transform_wrapper.pyx":88
+  /* "coordinate_transform_wrapper.pyx":177
  *     def __cinit__(self):
- *         for i in range(2): self._in[i] = 0.0
- *         for i in range(3): self._out[i] = 0.0             # <<<<<<<<<<<<<<
- * 
- *     def set_inputs(self, u):
+ *         self._in.Alpha = 0.0
+ *         self._in.Beta = 0.0             # <<<<<<<<<<<<<<
+ *         self._out.A = 0.0
+ *         self._out.B = 0.0
 */
-  for (__pyx_t_1 = 0; __pyx_t_1 < 3; __pyx_t_1+=1) {
-    __pyx_v_i = __pyx_t_1;
-    (__pyx_v_self->_out[__pyx_v_i]) = 0.0;
-  }
+  __pyx_v_self->_in.Beta = 0.0;
 
-  /* "coordinate_transform_wrapper.pyx":86
- *     cdef float[3] _out
+  /* "coordinate_transform_wrapper.pyx":178
+ *         self._in.Alpha = 0.0
+ *         self._in.Beta = 0.0
+ *         self._out.A = 0.0             # <<<<<<<<<<<<<<
+ *         self._out.B = 0.0
+ *         self._out.C = 0.0
+*/
+  __pyx_v_self->_out.A = 0.0;
+
+  /* "coordinate_transform_wrapper.pyx":179
+ *         self._in.Beta = 0.0
+ *         self._out.A = 0.0
+ *         self._out.B = 0.0             # <<<<<<<<<<<<<<
+ *         self._out.C = 0.0
+ * 
+*/
+  __pyx_v_self->_out.B = 0.0;
+
+  /* "coordinate_transform_wrapper.pyx":180
+ *         self._out.A = 0.0
+ *         self._out.B = 0.0
+ *         self._out.C = 0.0             # <<<<<<<<<<<<<<
+ * 
+ *     def set_inputs_alpha_beta(self, real32_T alpha, real32_T beta):
+*/
+  __pyx_v_self->_out.C = 0.0;
+
+  /* "coordinate_transform_wrapper.pyx":175
+ *     cdef Phase3Signal_T     _out
  * 
  *     def __cinit__(self):             # <<<<<<<<<<<<<<
- *         for i in range(2): self._in[i] = 0.0
- *         for i in range(3): self._out[i] = 0.0
+ *         self._in.Alpha = 0.0
+ *         self._in.Beta = 0.0
 */
 
   /* function exit code */
@@ -6085,31 +6594,171 @@ static int __pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper__
   return __pyx_r;
 }
 
-/* "coordinate_transform_wrapper.pyx":90
- *         for i in range(3): self._out[i] = 0.0
+/* "coordinate_transform_wrapper.pyx":182
+ *         self._out.C = 0.0
  * 
- *     def set_inputs(self, u):             # <<<<<<<<<<<<<<
- *         self._in[0] = <float> u[0]
- *         self._in[1] = <float> u[1]
+ *     def set_inputs_alpha_beta(self, real32_T alpha, real32_T beta):             # <<<<<<<<<<<<<<
+ *         self._in.Alpha = alpha
+ *         self._in.Beta = beta
 */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_3set_inputs(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_3set_inputs_alpha_beta(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_3set_inputs = {"set_inputs", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_3set_inputs, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_3set_inputs(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_3set_inputs_alpha_beta = {"set_inputs_alpha_beta", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_3set_inputs_alpha_beta, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_3set_inputs_alpha_beta(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ) {
-  PyObject *__pyx_v_u = 0;
+  __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_alpha;
+  __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_beta;
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject* values[2] = {0,0};
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("set_inputs_alpha_beta (wrapper)", 0);
+  #if !CYTHON_METH_FASTCALL
+  #if CYTHON_ASSUME_SAFE_SIZE
+  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #else
+  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
+  #endif
+  #endif
+  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+  {
+    PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_alpha,&__pyx_mstate_global->__pyx_n_u_beta,0};
+    const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 182, __pyx_L3_error)
+    if (__pyx_kwds_len > 0) {
+      switch (__pyx_nargs) {
+        case  2:
+        values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 182, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  1:
+        values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 182, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      const Py_ssize_t kwd_pos_args = __pyx_nargs;
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "set_inputs_alpha_beta", 0) < (0)) __PYX_ERR(0, 182, __pyx_L3_error)
+      for (Py_ssize_t i = __pyx_nargs; i < 2; i++) {
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("set_inputs_alpha_beta", 1, 2, 2, i); __PYX_ERR(0, 182, __pyx_L3_error) }
+      }
+    } else if (unlikely(__pyx_nargs != 2)) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 182, __pyx_L3_error)
+      values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 182, __pyx_L3_error)
+    }
+    __pyx_v_alpha = __Pyx_PyFloat_AsFloat(values[0]); if (unlikely((__pyx_v_alpha == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 182, __pyx_L3_error)
+    __pyx_v_beta = __Pyx_PyFloat_AsFloat(values[1]); if (unlikely((__pyx_v_beta == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 182, __pyx_L3_error)
+  }
+  goto __pyx_L6_skip;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("set_inputs_alpha_beta", 1, 2, 2, __pyx_nargs); __PYX_ERR(0, 182, __pyx_L3_error)
+  __pyx_L6_skip:;
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L3_error:;
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __Pyx_AddTraceback("coordinate_transform_wrapper.InvClarkeTransformWrapper.set_inputs_alpha_beta", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_2set_inputs_alpha_beta(((struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *)__pyx_v_self), __pyx_v_alpha, __pyx_v_beta);
+
+  /* function exit code */
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_2set_inputs_alpha_beta(struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *__pyx_v_self, __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_alpha, __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_beta) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("set_inputs_alpha_beta", 0);
+
+  /* "coordinate_transform_wrapper.pyx":183
+ * 
+ *     def set_inputs_alpha_beta(self, real32_T alpha, real32_T beta):
+ *         self._in.Alpha = alpha             # <<<<<<<<<<<<<<
+ *         self._in.Beta = beta
+ * 
+*/
+  __pyx_v_self->_in.Alpha = __pyx_v_alpha;
+
+  /* "coordinate_transform_wrapper.pyx":184
+ *     def set_inputs_alpha_beta(self, real32_T alpha, real32_T beta):
+ *         self._in.Alpha = alpha
+ *         self._in.Beta = beta             # <<<<<<<<<<<<<<
+ * 
+ *     def set_inputs(self, cnp.ndarray u):
+*/
+  __pyx_v_self->_in.Beta = __pyx_v_beta;
+
+  /* "coordinate_transform_wrapper.pyx":182
+ *         self._out.C = 0.0
+ * 
+ *     def set_inputs_alpha_beta(self, real32_T alpha, real32_T beta):             # <<<<<<<<<<<<<<
+ *         self._in.Alpha = alpha
+ *         self._in.Beta = beta
+*/
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "coordinate_transform_wrapper.pyx":186
+ *         self._in.Beta = beta
+ * 
+ *     def set_inputs(self, cnp.ndarray u):             # <<<<<<<<<<<<<<
+ *         """Set inputs from numpy array [alpha, beta]"""
+ *         if u.shape[0] < 2:
+*/
+
+/* Python wrapper */
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_5set_inputs(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+PyDoc_STRVAR(__pyx_doc_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_4set_inputs, "Set inputs from numpy array [alpha, beta]");
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_5set_inputs = {"set_inputs", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_5set_inputs, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_4set_inputs};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_5set_inputs(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  PyArrayObject *__pyx_v_u = 0;
   #if !CYTHON_METH_FASTCALL
   CYTHON_UNUSED Py_ssize_t __pyx_nargs;
   #endif
@@ -6132,32 +6781,32 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_u,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 90, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 186, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 90, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 186, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "set_inputs", 0) < (0)) __PYX_ERR(0, 90, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "set_inputs", 0) < (0)) __PYX_ERR(0, 186, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 1; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("set_inputs", 1, 1, 1, i); __PYX_ERR(0, 90, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("set_inputs", 1, 1, 1, i); __PYX_ERR(0, 186, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 1)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 90, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 186, __pyx_L3_error)
     }
-    __pyx_v_u = values[0];
+    __pyx_v_u = ((PyArrayObject *)values[0]);
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("set_inputs", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 90, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("set_inputs", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 186, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -6168,65 +6817,118 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_2set_inputs(((struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *)__pyx_v_self), __pyx_v_u);
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_u), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "u", 0))) __PYX_ERR(0, 186, __pyx_L1_error)
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_4set_inputs(((struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *)__pyx_v_self), __pyx_v_u);
 
   /* function exit code */
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __pyx_r = NULL;
   for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
     Py_XDECREF(values[__pyx_temp]);
   }
+  goto __pyx_L7_cleaned_up;
+  __pyx_L0:;
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __pyx_L7_cleaned_up:;
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_2set_inputs(struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *__pyx_v_self, PyObject *__pyx_v_u) {
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_4set_inputs(struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *__pyx_v_self, PyArrayObject *__pyx_v_u) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  float __pyx_t_2;
+  int __pyx_t_1;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  size_t __pyx_t_4;
+  __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_t_5;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("set_inputs", 0);
 
-  /* "coordinate_transform_wrapper.pyx":91
- * 
- *     def set_inputs(self, u):
- *         self._in[0] = <float> u[0]             # <<<<<<<<<<<<<<
- *         self._in[1] = <float> u[1]
+  /* "coordinate_transform_wrapper.pyx":188
+ *     def set_inputs(self, cnp.ndarray u):
+ *         """Set inputs from numpy array [alpha, beta]"""
+ *         if u.shape[0] < 2:             # <<<<<<<<<<<<<<
+ *             raise ValueError("Input array must have at least 2 elements")
+ *         self._in.Alpha = <real32_T> u[0]
+*/
+  __pyx_t_1 = ((__pyx_f_5numpy_7ndarray_5shape_shape(__pyx_v_u)[0]) < 2);
+  if (unlikely(__pyx_t_1)) {
+
+    /* "coordinate_transform_wrapper.pyx":189
+ *         """Set inputs from numpy array [alpha, beta]"""
+ *         if u.shape[0] < 2:
+ *             raise ValueError("Input array must have at least 2 elements")             # <<<<<<<<<<<<<<
+ *         self._in.Alpha = <real32_T> u[0]
+ *         self._in.Beta = <real32_T> u[1]
+*/
+    __pyx_t_3 = NULL;
+    __pyx_t_4 = 1;
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_3, __pyx_mstate_global->__pyx_kp_u_Input_array_must_have_at_least_2};
+      __pyx_t_2 = __Pyx_PyObject_FastCall((PyObject*)(((PyTypeObject*)PyExc_ValueError)), __pyx_callargs+__pyx_t_4, (2-__pyx_t_4) | (__pyx_t_4*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 189, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_2);
+    }
+    __Pyx_Raise(__pyx_t_2, 0, 0, 0);
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __PYX_ERR(0, 189, __pyx_L1_error)
+
+    /* "coordinate_transform_wrapper.pyx":188
+ *     def set_inputs(self, cnp.ndarray u):
+ *         """Set inputs from numpy array [alpha, beta]"""
+ *         if u.shape[0] < 2:             # <<<<<<<<<<<<<<
+ *             raise ValueError("Input array must have at least 2 elements")
+ *         self._in.Alpha = <real32_T> u[0]
+*/
+  }
+
+  /* "coordinate_transform_wrapper.pyx":190
+ *         if u.shape[0] < 2:
+ *             raise ValueError("Input array must have at least 2 elements")
+ *         self._in.Alpha = <real32_T> u[0]             # <<<<<<<<<<<<<<
+ *         self._in.Beta = <real32_T> u[1]
  * 
 */
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_u, 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 91, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 91, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  (__pyx_v_self->_in[0]) = ((float)__pyx_t_2);
+  __pyx_t_2 = __Pyx_GetItemInt(((PyObject *)__pyx_v_u), 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 190, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_5 = __Pyx_PyFloat_AsFloat(__pyx_t_2); if (unlikely((__pyx_t_5 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 190, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_v_self->_in.Alpha = ((__pyx_t_28coordinate_transform_wrapper_real32_T)__pyx_t_5);
 
-  /* "coordinate_transform_wrapper.pyx":92
- *     def set_inputs(self, u):
- *         self._in[0] = <float> u[0]
- *         self._in[1] = <float> u[1]             # <<<<<<<<<<<<<<
+  /* "coordinate_transform_wrapper.pyx":191
+ *             raise ValueError("Input array must have at least 2 elements")
+ *         self._in.Alpha = <real32_T> u[0]
+ *         self._in.Beta = <real32_T> u[1]             # <<<<<<<<<<<<<<
  * 
- *     cpdef void compute(self):
+ *     def compute(self):
 */
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_u, 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 92, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 92, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  (__pyx_v_self->_in[1]) = ((float)__pyx_t_2);
+  __pyx_t_2 = __Pyx_GetItemInt(((PyObject *)__pyx_v_u), 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 191, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_5 = __Pyx_PyFloat_AsFloat(__pyx_t_2); if (unlikely((__pyx_t_5 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 191, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_v_self->_in.Beta = ((__pyx_t_28coordinate_transform_wrapper_real32_T)__pyx_t_5);
 
-  /* "coordinate_transform_wrapper.pyx":90
- *         for i in range(3): self._out[i] = 0.0
+  /* "coordinate_transform_wrapper.pyx":186
+ *         self._in.Beta = beta
  * 
- *     def set_inputs(self, u):             # <<<<<<<<<<<<<<
- *         self._in[0] = <float> u[0]
- *         self._in[1] = <float> u[1]
+ *     def set_inputs(self, cnp.ndarray u):             # <<<<<<<<<<<<<<
+ *         """Set inputs from numpy array [alpha, beta]"""
+ *         if u.shape[0] < 2:
 */
 
   /* function exit code */
   __pyx_r = Py_None; __Pyx_INCREF(Py_None);
   goto __pyx_L0;
   __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
   __Pyx_AddTraceback("coordinate_transform_wrapper.InvClarkeTransformWrapper.set_inputs", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
@@ -6235,161 +6937,25 @@ static PyObject *__pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWra
   return __pyx_r;
 }
 
-/* "coordinate_transform_wrapper.pyx":94
- *         self._in[1] = <float> u[1]
+/* "coordinate_transform_wrapper.pyx":193
+ *         self._in.Beta = <real32_T> u[1]
  * 
- *     cpdef void compute(self):             # <<<<<<<<<<<<<<
- *         with nogil:
- *             inv_clarke_transform_compute_flat(self._in, self._out)
+ *     def compute(self):             # <<<<<<<<<<<<<<
+ *         """Execute the inverse Clarke transform using matrix multiplication"""
+ *         InvClarke_Transform(&self._inv_clarke_matrix, &self._in, &self._out)
 */
-
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_5compute(PyObject *__pyx_v_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-); /*proto*/
-static void __pyx_f_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_compute(struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *__pyx_v_self, int __pyx_skip_dispatch) {
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  PyObject *__pyx_t_4 = NULL;
-  size_t __pyx_t_5;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("compute", 0);
-  /* Check if called by wrapper */
-  if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overridden in Python */
-  else if (
-  #if !CYTHON_USE_TYPE_SLOTS
-  unlikely(Py_TYPE(((PyObject *)__pyx_v_self)) != __pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_InvClarkeTransformWrapper &&
-  __Pyx_PyType_HasFeature(Py_TYPE(((PyObject *)__pyx_v_self)), Py_TPFLAGS_HAVE_GC))
-  #else
-  unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0 || __Pyx_PyType_HasFeature(Py_TYPE(((PyObject *)__pyx_v_self)), (Py_TPFLAGS_IS_ABSTRACT | Py_TPFLAGS_HEAPTYPE)))
-  #endif
-  ) {
-    #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    static PY_UINT64_T __pyx_tp_dict_version = __PYX_DICT_VERSION_INIT, __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-    if (unlikely(!__Pyx_object_dict_version_matches(((PyObject *)__pyx_v_self), __pyx_tp_dict_version, __pyx_obj_dict_version))) {
-      PY_UINT64_T __pyx_typedict_guard = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_mstate_global->__pyx_n_u_compute); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 94, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      if (!__Pyx_IsSameCFunction(__pyx_t_1, (void(*)(void)) __pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_5compute)) {
-        __pyx_t_3 = NULL;
-        __Pyx_INCREF(__pyx_t_1);
-        __pyx_t_4 = __pyx_t_1; 
-        __pyx_t_5 = 1;
-        #if CYTHON_UNPACK_METHODS
-        if (unlikely(PyMethod_Check(__pyx_t_4))) {
-          __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_4);
-          assert(__pyx_t_3);
-          PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_4);
-          __Pyx_INCREF(__pyx_t_3);
-          __Pyx_INCREF(__pyx__function);
-          __Pyx_DECREF_SET(__pyx_t_4, __pyx__function);
-          __pyx_t_5 = 0;
-        }
-        #endif
-        {
-          PyObject *__pyx_callargs[2] = {__pyx_t_3, NULL};
-          __pyx_t_2 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_4, __pyx_callargs+__pyx_t_5, (1-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-          __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-          __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 94, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_2);
-        }
-        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        goto __pyx_L0;
-      }
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-      __pyx_tp_dict_version = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      __pyx_obj_dict_version = __Pyx_get_object_dict_version(((PyObject *)__pyx_v_self));
-      if (unlikely(__pyx_typedict_guard != __pyx_tp_dict_version)) {
-        __pyx_tp_dict_version = __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-      }
-      #endif
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    }
-    #endif
-  }
-
-  /* "coordinate_transform_wrapper.pyx":95
- * 
- *     cpdef void compute(self):
- *         with nogil:             # <<<<<<<<<<<<<<
- *             inv_clarke_transform_compute_flat(self._in, self._out)
- * 
-*/
-  {
-      PyThreadState * _save;
-      _save = PyEval_SaveThread();
-      __Pyx_FastGIL_Remember();
-      /*try:*/ {
-
-        /* "coordinate_transform_wrapper.pyx":96
- *     cpdef void compute(self):
- *         with nogil:
- *             inv_clarke_transform_compute_flat(self._in, self._out)             # <<<<<<<<<<<<<<
- * 
- *     cpdef cnp.ndarray get_outputs(self):
-*/
-        inv_clarke_transform_compute_flat(__pyx_v_self->_in, __pyx_v_self->_out);
-      }
-
-      /* "coordinate_transform_wrapper.pyx":95
- * 
- *     cpdef void compute(self):
- *         with nogil:             # <<<<<<<<<<<<<<
- *             inv_clarke_transform_compute_flat(self._in, self._out)
- * 
-*/
-      /*finally:*/ {
-        /*normal exit:*/{
-          __Pyx_FastGIL_Forget();
-          PyEval_RestoreThread(_save);
-          goto __pyx_L5;
-        }
-        __pyx_L5:;
-      }
-  }
-
-  /* "coordinate_transform_wrapper.pyx":94
- *         self._in[1] = <float> u[1]
- * 
- *     cpdef void compute(self):             # <<<<<<<<<<<<<<
- *         with nogil:
- *             inv_clarke_transform_compute_flat(self._in, self._out)
-*/
-
-  /* function exit code */
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_AddTraceback("coordinate_transform_wrapper.InvClarkeTransformWrapper.compute", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_L0:;
-  __Pyx_RefNannyFinishContext();
-}
 
 /* Python wrapper */
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_5compute(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_7compute(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_5compute = {"compute", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_5compute, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_5compute(PyObject *__pyx_v_self, 
+PyDoc_STRVAR(__pyx_doc_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_6compute, "Execute the inverse Clarke transform using matrix multiplication");
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_7compute = {"compute", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_7compute, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_6compute};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_7compute(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -6415,232 +6981,140 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   const Py_ssize_t __pyx_kwds_len = unlikely(__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
   if (unlikely(__pyx_kwds_len < 0)) return NULL;
   if (unlikely(__pyx_kwds_len > 0)) {__Pyx_RejectKeywords("compute", __pyx_kwds); return NULL;}
-  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_4compute(((struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *)__pyx_v_self));
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_6compute(((struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_4compute(struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *__pyx_v_self) {
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_6compute(struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("compute", 0);
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_f_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_compute(__pyx_v_self, 1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 94, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_void_to_None(NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 94, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
+
+  /* "coordinate_transform_wrapper.pyx":195
+ *     def compute(self):
+ *         """Execute the inverse Clarke transform using matrix multiplication"""
+ *         InvClarke_Transform(&self._inv_clarke_matrix, &self._in, &self._out)             # <<<<<<<<<<<<<<
+ * 
+ *     def get_outputs_abc(self):
+*/
+  InvClarke_Transform((&__pyx_v_self->__pyx_base._inv_clarke_matrix), (&__pyx_v_self->_in), (&__pyx_v_self->_out));
+
+  /* "coordinate_transform_wrapper.pyx":193
+ *         self._in.Beta = <real32_T> u[1]
+ * 
+ *     def compute(self):             # <<<<<<<<<<<<<<
+ *         """Execute the inverse Clarke transform using matrix multiplication"""
+ *         InvClarke_Transform(&self._inv_clarke_matrix, &self._in, &self._out)
+*/
 
   /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("coordinate_transform_wrapper.InvClarkeTransformWrapper.compute", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "coordinate_transform_wrapper.pyx":98
- *             inv_clarke_transform_compute_flat(self._in, self._out)
+/* "coordinate_transform_wrapper.pyx":197
+ *         InvClarke_Transform(&self._inv_clarke_matrix, &self._in, &self._out)
  * 
- *     cpdef cnp.ndarray get_outputs(self):             # <<<<<<<<<<<<<<
- *         cdef cnp.ndarray y = np.empty(3, dtype=np.float32)
- *         y[0] = self._out[0]
+ *     def get_outputs_abc(self):             # <<<<<<<<<<<<<<
+ *         """Return outputs as tuple (a, b, c)"""
+ *         return (self._out.A, self._out.B, self._out.C)
 */
 
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_7get_outputs(PyObject *__pyx_v_self, 
+/* Python wrapper */
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_9get_outputs_abc(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyArrayObject *__pyx_f_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_get_outputs(struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *__pyx_v_self, int __pyx_skip_dispatch) {
-  PyArrayObject *__pyx_v_y = 0;
-  PyArrayObject *__pyx_r = NULL;
+PyDoc_STRVAR(__pyx_doc_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_8get_outputs_abc, "Return outputs as tuple (a, b, c)");
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_9get_outputs_abc = {"get_outputs_abc", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_9get_outputs_abc, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_8get_outputs_abc};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_9get_outputs_abc(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("get_outputs_abc (wrapper)", 0);
+  #if !CYTHON_METH_FASTCALL
+  #if CYTHON_ASSUME_SAFE_SIZE
+  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #else
+  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
+  #endif
+  #endif
+  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+  if (unlikely(__pyx_nargs > 0)) { __Pyx_RaiseArgtupleInvalid("get_outputs_abc", 1, 0, 0, __pyx_nargs); return NULL; }
+  const Py_ssize_t __pyx_kwds_len = unlikely(__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
+  if (unlikely(__pyx_kwds_len < 0)) return NULL;
+  if (unlikely(__pyx_kwds_len > 0)) {__Pyx_RejectKeywords("get_outputs_abc", __pyx_kwds); return NULL;}
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_8get_outputs_abc(((struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_8get_outputs_abc(struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   PyObject *__pyx_t_2 = NULL;
   PyObject *__pyx_t_3 = NULL;
   PyObject *__pyx_t_4 = NULL;
-  size_t __pyx_t_5;
-  PyObject *__pyx_t_6 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("get_outputs", 0);
-  /* Check if called by wrapper */
-  if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overridden in Python */
-  else if (
-  #if !CYTHON_USE_TYPE_SLOTS
-  unlikely(Py_TYPE(((PyObject *)__pyx_v_self)) != __pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_InvClarkeTransformWrapper &&
-  __Pyx_PyType_HasFeature(Py_TYPE(((PyObject *)__pyx_v_self)), Py_TPFLAGS_HAVE_GC))
-  #else
-  unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0 || __Pyx_PyType_HasFeature(Py_TYPE(((PyObject *)__pyx_v_self)), (Py_TPFLAGS_IS_ABSTRACT | Py_TPFLAGS_HEAPTYPE)))
-  #endif
-  ) {
-    #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    static PY_UINT64_T __pyx_tp_dict_version = __PYX_DICT_VERSION_INIT, __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-    if (unlikely(!__Pyx_object_dict_version_matches(((PyObject *)__pyx_v_self), __pyx_tp_dict_version, __pyx_obj_dict_version))) {
-      PY_UINT64_T __pyx_typedict_guard = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_mstate_global->__pyx_n_u_get_outputs); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 98, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      if (!__Pyx_IsSameCFunction(__pyx_t_1, (void(*)(void)) __pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_7get_outputs)) {
-        __Pyx_XDECREF((PyObject *)__pyx_r);
-        __pyx_t_3 = NULL;
-        __Pyx_INCREF(__pyx_t_1);
-        __pyx_t_4 = __pyx_t_1; 
-        __pyx_t_5 = 1;
-        #if CYTHON_UNPACK_METHODS
-        if (unlikely(PyMethod_Check(__pyx_t_4))) {
-          __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_4);
-          assert(__pyx_t_3);
-          PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_4);
-          __Pyx_INCREF(__pyx_t_3);
-          __Pyx_INCREF(__pyx__function);
-          __Pyx_DECREF_SET(__pyx_t_4, __pyx__function);
-          __pyx_t_5 = 0;
-        }
-        #endif
-        {
-          PyObject *__pyx_callargs[2] = {__pyx_t_3, NULL};
-          __pyx_t_2 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_4, __pyx_callargs+__pyx_t_5, (1-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-          __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-          __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 98, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_2);
-        }
-        if (!(likely(((__pyx_t_2) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_2, __pyx_mstate_global->__pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 98, __pyx_L1_error)
-        __pyx_r = ((PyArrayObject *)__pyx_t_2);
-        __pyx_t_2 = 0;
-        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        goto __pyx_L0;
-      }
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-      __pyx_tp_dict_version = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      __pyx_obj_dict_version = __Pyx_get_object_dict_version(((PyObject *)__pyx_v_self));
-      if (unlikely(__pyx_typedict_guard != __pyx_tp_dict_version)) {
-        __pyx_tp_dict_version = __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-      }
-      #endif
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    }
-    #endif
-  }
+  __Pyx_RefNannySetupContext("get_outputs_abc", 0);
 
-  /* "coordinate_transform_wrapper.pyx":99
+  /* "coordinate_transform_wrapper.pyx":199
+ *     def get_outputs_abc(self):
+ *         """Return outputs as tuple (a, b, c)"""
+ *         return (self._out.A, self._out.B, self._out.C)             # <<<<<<<<<<<<<<
  * 
- *     cpdef cnp.ndarray get_outputs(self):
- *         cdef cnp.ndarray y = np.empty(3, dtype=np.float32)             # <<<<<<<<<<<<<<
- *         y[0] = self._out[0]
- *         y[1] = self._out[1]
+ *     def get_outputs(self):
 */
-  __pyx_t_2 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 99, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 99, __pyx_L1_error)
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->_out.A); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 199, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_self->_out.B); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 199, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = PyFloat_FromDouble(__pyx_v_self->_out.C); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 199, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 99, __pyx_L1_error)
+  __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 199, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_float32); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 99, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_6);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_5 = 1;
-  #if CYTHON_UNPACK_METHODS
-  if (unlikely(PyMethod_Check(__pyx_t_3))) {
-    __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_3);
-    assert(__pyx_t_2);
-    PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_3);
-    __Pyx_INCREF(__pyx_t_2);
-    __Pyx_INCREF(__pyx__function);
-    __Pyx_DECREF_SET(__pyx_t_3, __pyx__function);
-    __pyx_t_5 = 0;
-  }
-  #endif
-  {
-    PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_2, __pyx_mstate_global->__pyx_int_3};
-    __pyx_t_4 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 99, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_4, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 99, __pyx_L1_error)
-    __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder((PyObject*)__pyx_t_3, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_4);
-    __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 99, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-  }
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_mstate_global->__pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 99, __pyx_L1_error)
-  __pyx_v_y = ((PyArrayObject *)__pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_1) != (0)) __PYX_ERR(0, 199, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_2);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_t_2) != (0)) __PYX_ERR(0, 199, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_3);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_4, 2, __pyx_t_3) != (0)) __PYX_ERR(0, 199, __pyx_L1_error);
   __pyx_t_1 = 0;
-
-  /* "coordinate_transform_wrapper.pyx":100
- *     cpdef cnp.ndarray get_outputs(self):
- *         cdef cnp.ndarray y = np.empty(3, dtype=np.float32)
- *         y[0] = self._out[0]             # <<<<<<<<<<<<<<
- *         y[1] = self._out[1]
- *         y[2] = self._out[2]
-*/
-  __pyx_t_1 = PyFloat_FromDouble((__pyx_v_self->_out[0])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 100, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_y), 0, __pyx_t_1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_OwnStrongReference) < 0))) __PYX_ERR(0, 100, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "coordinate_transform_wrapper.pyx":101
- *         cdef cnp.ndarray y = np.empty(3, dtype=np.float32)
- *         y[0] = self._out[0]
- *         y[1] = self._out[1]             # <<<<<<<<<<<<<<
- *         y[2] = self._out[2]
- *         return y
-*/
-  __pyx_t_1 = PyFloat_FromDouble((__pyx_v_self->_out[1])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 101, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_y), 1, __pyx_t_1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_OwnStrongReference) < 0))) __PYX_ERR(0, 101, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "coordinate_transform_wrapper.pyx":102
- *         y[0] = self._out[0]
- *         y[1] = self._out[1]
- *         y[2] = self._out[2]             # <<<<<<<<<<<<<<
- *         return y
- * 
-*/
-  __pyx_t_1 = PyFloat_FromDouble((__pyx_v_self->_out[2])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 102, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_y), 2, __pyx_t_1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_OwnStrongReference) < 0))) __PYX_ERR(0, 102, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "coordinate_transform_wrapper.pyx":103
- *         y[1] = self._out[1]
- *         y[2] = self._out[2]
- *         return y             # <<<<<<<<<<<<<<
- * 
- * # =============================================================================
-*/
-  __Pyx_XDECREF((PyObject *)__pyx_r);
-  __Pyx_INCREF((PyObject *)__pyx_v_y);
-  __pyx_r = __pyx_v_y;
+  __pyx_t_2 = 0;
+  __pyx_t_3 = 0;
+  __pyx_r = __pyx_t_4;
+  __pyx_t_4 = 0;
   goto __pyx_L0;
 
-  /* "coordinate_transform_wrapper.pyx":98
- *             inv_clarke_transform_compute_flat(self._in, self._out)
+  /* "coordinate_transform_wrapper.pyx":197
+ *         InvClarke_Transform(&self._inv_clarke_matrix, &self._in, &self._out)
  * 
- *     cpdef cnp.ndarray get_outputs(self):             # <<<<<<<<<<<<<<
- *         cdef cnp.ndarray y = np.empty(3, dtype=np.float32)
- *         y[0] = self._out[0]
+ *     def get_outputs_abc(self):             # <<<<<<<<<<<<<<
+ *         """Return outputs as tuple (a, b, c)"""
+ *         return (self._out.A, self._out.B, self._out.C)
 */
 
   /* function exit code */
@@ -6649,26 +7123,33 @@ static PyArrayObject *__pyx_f_28coordinate_transform_wrapper_25InvClarkeTransfor
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_XDECREF(__pyx_t_6);
-  __Pyx_AddTraceback("coordinate_transform_wrapper.InvClarkeTransformWrapper.get_outputs", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = 0;
+  __Pyx_AddTraceback("coordinate_transform_wrapper.InvClarkeTransformWrapper.get_outputs_abc", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
   __pyx_L0:;
-  __Pyx_XDECREF((PyObject *)__pyx_v_y);
-  __Pyx_XGIVEREF((PyObject *)__pyx_r);
+  __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
+/* "coordinate_transform_wrapper.pyx":201
+ *         return (self._out.A, self._out.B, self._out.C)
+ * 
+ *     def get_outputs(self):             # <<<<<<<<<<<<<<
+ *         """Return outputs as numpy array [a, b, c]"""
+ *         return np.array([self._out.A, self._out.B, self._out.C], dtype=np.float32)
+*/
+
 /* Python wrapper */
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_7get_outputs(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_11get_outputs(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_7get_outputs = {"get_outputs", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_7get_outputs, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_7get_outputs(PyObject *__pyx_v_self, 
+PyDoc_STRVAR(__pyx_doc_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_10get_outputs, "Return outputs as numpy array [a, b, c]");
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_11get_outputs = {"get_outputs", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_11get_outputs, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_10get_outputs};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_11get_outputs(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -6694,31 +7175,112 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   const Py_ssize_t __pyx_kwds_len = unlikely(__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
   if (unlikely(__pyx_kwds_len < 0)) return NULL;
   if (unlikely(__pyx_kwds_len > 0)) {__Pyx_RejectKeywords("get_outputs", __pyx_kwds); return NULL;}
-  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_6get_outputs(((struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *)__pyx_v_self));
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_10get_outputs(((struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_6get_outputs(struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *__pyx_v_self) {
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_10get_outputs(struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  PyObject *__pyx_t_4 = NULL;
+  PyObject *__pyx_t_5 = NULL;
+  PyObject *__pyx_t_6 = NULL;
+  PyObject *__pyx_t_7 = NULL;
+  size_t __pyx_t_8;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("get_outputs", 0);
+
+  /* "coordinate_transform_wrapper.pyx":203
+ *     def get_outputs(self):
+ *         """Return outputs as numpy array [a, b, c]"""
+ *         return np.array([self._out.A, self._out.B, self._out.C], dtype=np.float32)             # <<<<<<<<<<<<<<
+ * 
+ * #
+*/
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = ((PyObject *)__pyx_f_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_get_outputs(__pyx_v_self, 1)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 98, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = NULL;
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 203, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_array); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 203, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_3 = PyFloat_FromDouble(__pyx_v_self->_out.A); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 203, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_5 = PyFloat_FromDouble(__pyx_v_self->_out.B); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 203, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_6 = PyFloat_FromDouble(__pyx_v_self->_out.C); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 203, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __pyx_t_7 = PyList_New(3); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 203, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
+  __Pyx_GIVEREF(__pyx_t_3);
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_7, 0, __pyx_t_3) != (0)) __PYX_ERR(0, 203, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_5);
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_7, 1, __pyx_t_5) != (0)) __PYX_ERR(0, 203, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_6);
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_7, 2, __pyx_t_6) != (0)) __PYX_ERR(0, 203, __pyx_L1_error);
+  __pyx_t_3 = 0;
+  __pyx_t_5 = 0;
+  __pyx_t_6 = 0;
+  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 203, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_float32); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 203, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __pyx_t_8 = 1;
+  #if CYTHON_UNPACK_METHODS
+  if (unlikely(PyMethod_Check(__pyx_t_4))) {
+    __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_4);
+    assert(__pyx_t_2);
+    PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_4);
+    __Pyx_INCREF(__pyx_t_2);
+    __Pyx_INCREF(__pyx__function);
+    __Pyx_DECREF_SET(__pyx_t_4, __pyx__function);
+    __pyx_t_8 = 0;
+  }
+  #endif
+  {
+    PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_2, __pyx_t_7};
+    __pyx_t_6 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 203, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_6);
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_5, __pyx_t_6, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 203, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder((PyObject*)__pyx_t_4, __pyx_callargs+__pyx_t_8, (2-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_6);
+    __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 203, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+  }
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
+  /* "coordinate_transform_wrapper.pyx":201
+ *         return (self._out.A, self._out.B, self._out.C)
+ * 
+ *     def get_outputs(self):             # <<<<<<<<<<<<<<
+ *         """Return outputs as numpy array [a, b, c]"""
+ *         return np.array([self._out.A, self._out.B, self._out.C], dtype=np.float32)
+*/
+
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_XDECREF(__pyx_t_6);
+  __Pyx_XDECREF(__pyx_t_7);
   __Pyx_AddTraceback("coordinate_transform_wrapper.InvClarkeTransformWrapper.get_outputs", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
@@ -6734,15 +7296,15 @@ static PyObject *__pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWra
 */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_9__reduce_cython__(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_13__reduce_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_9__reduce_cython__ = {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_9__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_9__reduce_cython__(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_13__reduce_cython__ = {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_13__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_13__reduce_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -6768,14 +7330,14 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   const Py_ssize_t __pyx_kwds_len = unlikely(__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
   if (unlikely(__pyx_kwds_len < 0)) return NULL;
   if (unlikely(__pyx_kwds_len > 0)) {__Pyx_RejectKeywords("__reduce_cython__", __pyx_kwds); return NULL;}
-  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_8__reduce_cython__(((struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *)__pyx_v_self));
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_12__reduce_cython__(((struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_8__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *__pyx_v_self) {
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_12__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_lineno = 0;
@@ -6815,15 +7377,15 @@ static PyObject *__pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWra
 */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_11__setstate_cython__(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_15__setstate_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_11__setstate_cython__ = {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_11__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_11__setstate_cython__(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_15__setstate_cython__ = {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_15__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_15__setstate_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -6889,7 +7451,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_10__setstate_cython__(((struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *)__pyx_v_self), __pyx_v___pyx_state);
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_14__setstate_cython__(((struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *)__pyx_v_self), __pyx_v___pyx_state);
 
   /* function exit code */
   for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
@@ -6899,7 +7461,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_10__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_14__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_lineno = 0;
@@ -6931,12 +7493,12 @@ static PyObject *__pyx_pf_28coordinate_transform_wrapper_25InvClarkeTransformWra
   return __pyx_r;
 }
 
-/* "coordinate_transform_wrapper.pyx":121
- *     cdef float[2] _out
+/* "coordinate_transform_wrapper.pyx":214
+ *     cdef real32_T           _theta
  * 
  *     def __cinit__(self):             # <<<<<<<<<<<<<<
- *         for i in range(2): self._in[i] = 0.0
- *         self._theta = 0.0
+ *         self._in.Alpha = 0.0
+ *         self._in.Beta = 0.0
 */
 
 /* Python wrapper */
@@ -6965,49 +7527,68 @@ static int __pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_1__cin
 }
 
 static int __pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper___cinit__(struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_v_self) {
-  long __pyx_v_i;
   int __pyx_r;
-  long __pyx_t_1;
 
-  /* "coordinate_transform_wrapper.pyx":122
+  /* "coordinate_transform_wrapper.pyx":215
  * 
  *     def __cinit__(self):
- *         for i in range(2): self._in[i] = 0.0             # <<<<<<<<<<<<<<
- *         self._theta = 0.0
- *         for i in range(2): self._out[i] = 0.0
+ *         self._in.Alpha = 0.0             # <<<<<<<<<<<<<<
+ *         self._in.Beta = 0.0
+ *         self._out.D = 0.0
 */
-  for (__pyx_t_1 = 0; __pyx_t_1 < 2; __pyx_t_1+=1) {
-    __pyx_v_i = __pyx_t_1;
-    (__pyx_v_self->_in[__pyx_v_i]) = 0.0;
-  }
+  __pyx_v_self->_in.Alpha = 0.0;
 
-  /* "coordinate_transform_wrapper.pyx":123
+  /* "coordinate_transform_wrapper.pyx":216
  *     def __cinit__(self):
- *         for i in range(2): self._in[i] = 0.0
+ *         self._in.Alpha = 0.0
+ *         self._in.Beta = 0.0             # <<<<<<<<<<<<<<
+ *         self._out.D = 0.0
+ *         self._out.Q = 0.0
+*/
+  __pyx_v_self->_in.Beta = 0.0;
+
+  /* "coordinate_transform_wrapper.pyx":217
+ *         self._in.Alpha = 0.0
+ *         self._in.Beta = 0.0
+ *         self._out.D = 0.0             # <<<<<<<<<<<<<<
+ *         self._out.Q = 0.0
+ *         self._theta = 0.0
+*/
+  __pyx_v_self->_out.D = 0.0;
+
+  /* "coordinate_transform_wrapper.pyx":218
+ *         self._in.Beta = 0.0
+ *         self._out.D = 0.0
+ *         self._out.Q = 0.0             # <<<<<<<<<<<<<<
+ *         self._theta = 0.0
+ *         Park_InitMatrix(&self._park_matrix, self._theta)
+*/
+  __pyx_v_self->_out.Q = 0.0;
+
+  /* "coordinate_transform_wrapper.pyx":219
+ *         self._out.D = 0.0
+ *         self._out.Q = 0.0
  *         self._theta = 0.0             # <<<<<<<<<<<<<<
- *         for i in range(2): self._out[i] = 0.0
+ *         Park_InitMatrix(&self._park_matrix, self._theta)
  * 
 */
   __pyx_v_self->_theta = 0.0;
 
-  /* "coordinate_transform_wrapper.pyx":124
- *         for i in range(2): self._in[i] = 0.0
+  /* "coordinate_transform_wrapper.pyx":220
+ *         self._out.Q = 0.0
  *         self._theta = 0.0
- *         for i in range(2): self._out[i] = 0.0             # <<<<<<<<<<<<<<
+ *         Park_InitMatrix(&self._park_matrix, self._theta)             # <<<<<<<<<<<<<<
  * 
- *     def set_inputs(self, u):
+ *     def set_inputs_alpha_beta(self, real32_T alpha, real32_T beta):
 */
-  for (__pyx_t_1 = 0; __pyx_t_1 < 2; __pyx_t_1+=1) {
-    __pyx_v_i = __pyx_t_1;
-    (__pyx_v_self->_out[__pyx_v_i]) = 0.0;
-  }
+  Park_InitMatrix((&__pyx_v_self->_park_matrix), __pyx_v_self->_theta);
 
-  /* "coordinate_transform_wrapper.pyx":121
- *     cdef float[2] _out
+  /* "coordinate_transform_wrapper.pyx":214
+ *     cdef real32_T           _theta
  * 
  *     def __cinit__(self):             # <<<<<<<<<<<<<<
- *         for i in range(2): self._in[i] = 0.0
- *         self._theta = 0.0
+ *         self._in.Alpha = 0.0
+ *         self._in.Beta = 0.0
 */
 
   /* function exit code */
@@ -7015,31 +7596,171 @@ static int __pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper___cini
   return __pyx_r;
 }
 
-/* "coordinate_transform_wrapper.pyx":126
- *         for i in range(2): self._out[i] = 0.0
+/* "coordinate_transform_wrapper.pyx":222
+ *         Park_InitMatrix(&self._park_matrix, self._theta)
  * 
- *     def set_inputs(self, u):             # <<<<<<<<<<<<<<
- *         self._in[0] = <float> u[0]
- *         self._in[1] = <float> u[1]
+ *     def set_inputs_alpha_beta(self, real32_T alpha, real32_T beta):             # <<<<<<<<<<<<<<
+ *         self._in.Alpha = alpha
+ *         self._in.Beta = beta
 */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_3set_inputs(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_3set_inputs_alpha_beta(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_20ParkTransformWrapper_3set_inputs = {"set_inputs", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_3set_inputs, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_3set_inputs(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_20ParkTransformWrapper_3set_inputs_alpha_beta = {"set_inputs_alpha_beta", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_3set_inputs_alpha_beta, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_3set_inputs_alpha_beta(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ) {
-  PyObject *__pyx_v_u = 0;
+  __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_alpha;
+  __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_beta;
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject* values[2] = {0,0};
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("set_inputs_alpha_beta (wrapper)", 0);
+  #if !CYTHON_METH_FASTCALL
+  #if CYTHON_ASSUME_SAFE_SIZE
+  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #else
+  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
+  #endif
+  #endif
+  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+  {
+    PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_alpha,&__pyx_mstate_global->__pyx_n_u_beta,0};
+    const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 222, __pyx_L3_error)
+    if (__pyx_kwds_len > 0) {
+      switch (__pyx_nargs) {
+        case  2:
+        values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 222, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  1:
+        values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 222, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      const Py_ssize_t kwd_pos_args = __pyx_nargs;
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "set_inputs_alpha_beta", 0) < (0)) __PYX_ERR(0, 222, __pyx_L3_error)
+      for (Py_ssize_t i = __pyx_nargs; i < 2; i++) {
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("set_inputs_alpha_beta", 1, 2, 2, i); __PYX_ERR(0, 222, __pyx_L3_error) }
+      }
+    } else if (unlikely(__pyx_nargs != 2)) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 222, __pyx_L3_error)
+      values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 222, __pyx_L3_error)
+    }
+    __pyx_v_alpha = __Pyx_PyFloat_AsFloat(values[0]); if (unlikely((__pyx_v_alpha == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 222, __pyx_L3_error)
+    __pyx_v_beta = __Pyx_PyFloat_AsFloat(values[1]); if (unlikely((__pyx_v_beta == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 222, __pyx_L3_error)
+  }
+  goto __pyx_L6_skip;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("set_inputs_alpha_beta", 1, 2, 2, __pyx_nargs); __PYX_ERR(0, 222, __pyx_L3_error)
+  __pyx_L6_skip:;
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L3_error:;
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __Pyx_AddTraceback("coordinate_transform_wrapper.ParkTransformWrapper.set_inputs_alpha_beta", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_2set_inputs_alpha_beta(((struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *)__pyx_v_self), __pyx_v_alpha, __pyx_v_beta);
+
+  /* function exit code */
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_2set_inputs_alpha_beta(struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_v_self, __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_alpha, __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_beta) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("set_inputs_alpha_beta", 0);
+
+  /* "coordinate_transform_wrapper.pyx":223
+ * 
+ *     def set_inputs_alpha_beta(self, real32_T alpha, real32_T beta):
+ *         self._in.Alpha = alpha             # <<<<<<<<<<<<<<
+ *         self._in.Beta = beta
+ * 
+*/
+  __pyx_v_self->_in.Alpha = __pyx_v_alpha;
+
+  /* "coordinate_transform_wrapper.pyx":224
+ *     def set_inputs_alpha_beta(self, real32_T alpha, real32_T beta):
+ *         self._in.Alpha = alpha
+ *         self._in.Beta = beta             # <<<<<<<<<<<<<<
+ * 
+ *     def set_inputs(self, cnp.ndarray u):
+*/
+  __pyx_v_self->_in.Beta = __pyx_v_beta;
+
+  /* "coordinate_transform_wrapper.pyx":222
+ *         Park_InitMatrix(&self._park_matrix, self._theta)
+ * 
+ *     def set_inputs_alpha_beta(self, real32_T alpha, real32_T beta):             # <<<<<<<<<<<<<<
+ *         self._in.Alpha = alpha
+ *         self._in.Beta = beta
+*/
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "coordinate_transform_wrapper.pyx":226
+ *         self._in.Beta = beta
+ * 
+ *     def set_inputs(self, cnp.ndarray u):             # <<<<<<<<<<<<<<
+ *         """Set alpha-beta inputs from numpy array [alpha, beta]"""
+ *         if u.shape[0] < 2:
+*/
+
+/* Python wrapper */
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_5set_inputs(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+PyDoc_STRVAR(__pyx_doc_28coordinate_transform_wrapper_20ParkTransformWrapper_4set_inputs, "Set alpha-beta inputs from numpy array [alpha, beta]");
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_20ParkTransformWrapper_5set_inputs = {"set_inputs", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_5set_inputs, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_20ParkTransformWrapper_4set_inputs};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_5set_inputs(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  PyArrayObject *__pyx_v_u = 0;
   #if !CYTHON_METH_FASTCALL
   CYTHON_UNUSED Py_ssize_t __pyx_nargs;
   #endif
@@ -7062,32 +7783,32 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_u,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 126, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 226, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 126, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 226, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "set_inputs", 0) < (0)) __PYX_ERR(0, 126, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "set_inputs", 0) < (0)) __PYX_ERR(0, 226, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 1; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("set_inputs", 1, 1, 1, i); __PYX_ERR(0, 126, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("set_inputs", 1, 1, 1, i); __PYX_ERR(0, 226, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 1)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 126, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 226, __pyx_L3_error)
     }
-    __pyx_v_u = values[0];
+    __pyx_v_u = ((PyArrayObject *)values[0]);
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("set_inputs", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 126, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("set_inputs", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 226, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -7098,65 +7819,118 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_2set_inputs(((struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *)__pyx_v_self), __pyx_v_u);
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_u), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "u", 0))) __PYX_ERR(0, 226, __pyx_L1_error)
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_4set_inputs(((struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *)__pyx_v_self), __pyx_v_u);
 
   /* function exit code */
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __pyx_r = NULL;
   for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
     Py_XDECREF(values[__pyx_temp]);
   }
+  goto __pyx_L7_cleaned_up;
+  __pyx_L0:;
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __pyx_L7_cleaned_up:;
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_2set_inputs(struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_v_self, PyObject *__pyx_v_u) {
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_4set_inputs(struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_v_self, PyArrayObject *__pyx_v_u) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  float __pyx_t_2;
+  int __pyx_t_1;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  size_t __pyx_t_4;
+  __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_t_5;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("set_inputs", 0);
 
-  /* "coordinate_transform_wrapper.pyx":127
- * 
- *     def set_inputs(self, u):
- *         self._in[0] = <float> u[0]             # <<<<<<<<<<<<<<
- *         self._in[1] = <float> u[1]
+  /* "coordinate_transform_wrapper.pyx":228
+ *     def set_inputs(self, cnp.ndarray u):
+ *         """Set alpha-beta inputs from numpy array [alpha, beta]"""
+ *         if u.shape[0] < 2:             # <<<<<<<<<<<<<<
+ *             raise ValueError("Input array must have at least 2 elements")
+ *         self._in.Alpha = <real32_T> u[0]
+*/
+  __pyx_t_1 = ((__pyx_f_5numpy_7ndarray_5shape_shape(__pyx_v_u)[0]) < 2);
+  if (unlikely(__pyx_t_1)) {
+
+    /* "coordinate_transform_wrapper.pyx":229
+ *         """Set alpha-beta inputs from numpy array [alpha, beta]"""
+ *         if u.shape[0] < 2:
+ *             raise ValueError("Input array must have at least 2 elements")             # <<<<<<<<<<<<<<
+ *         self._in.Alpha = <real32_T> u[0]
+ *         self._in.Beta = <real32_T> u[1]
+*/
+    __pyx_t_3 = NULL;
+    __pyx_t_4 = 1;
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_3, __pyx_mstate_global->__pyx_kp_u_Input_array_must_have_at_least_2};
+      __pyx_t_2 = __Pyx_PyObject_FastCall((PyObject*)(((PyTypeObject*)PyExc_ValueError)), __pyx_callargs+__pyx_t_4, (2-__pyx_t_4) | (__pyx_t_4*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 229, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_2);
+    }
+    __Pyx_Raise(__pyx_t_2, 0, 0, 0);
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __PYX_ERR(0, 229, __pyx_L1_error)
+
+    /* "coordinate_transform_wrapper.pyx":228
+ *     def set_inputs(self, cnp.ndarray u):
+ *         """Set alpha-beta inputs from numpy array [alpha, beta]"""
+ *         if u.shape[0] < 2:             # <<<<<<<<<<<<<<
+ *             raise ValueError("Input array must have at least 2 elements")
+ *         self._in.Alpha = <real32_T> u[0]
+*/
+  }
+
+  /* "coordinate_transform_wrapper.pyx":230
+ *         if u.shape[0] < 2:
+ *             raise ValueError("Input array must have at least 2 elements")
+ *         self._in.Alpha = <real32_T> u[0]             # <<<<<<<<<<<<<<
+ *         self._in.Beta = <real32_T> u[1]
  * 
 */
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_u, 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 127, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 127, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  (__pyx_v_self->_in[0]) = ((float)__pyx_t_2);
+  __pyx_t_2 = __Pyx_GetItemInt(((PyObject *)__pyx_v_u), 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 230, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_5 = __Pyx_PyFloat_AsFloat(__pyx_t_2); if (unlikely((__pyx_t_5 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 230, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_v_self->_in.Alpha = ((__pyx_t_28coordinate_transform_wrapper_real32_T)__pyx_t_5);
 
-  /* "coordinate_transform_wrapper.pyx":128
- *     def set_inputs(self, u):
- *         self._in[0] = <float> u[0]
- *         self._in[1] = <float> u[1]             # <<<<<<<<<<<<<<
+  /* "coordinate_transform_wrapper.pyx":231
+ *             raise ValueError("Input array must have at least 2 elements")
+ *         self._in.Alpha = <real32_T> u[0]
+ *         self._in.Beta = <real32_T> u[1]             # <<<<<<<<<<<<<<
  * 
- *     def set_theta(self, theta):
+ *     def set_theta(self, real32_T theta):
 */
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_u, 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 128, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 128, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  (__pyx_v_self->_in[1]) = ((float)__pyx_t_2);
+  __pyx_t_2 = __Pyx_GetItemInt(((PyObject *)__pyx_v_u), 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 231, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_5 = __Pyx_PyFloat_AsFloat(__pyx_t_2); if (unlikely((__pyx_t_5 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 231, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_v_self->_in.Beta = ((__pyx_t_28coordinate_transform_wrapper_real32_T)__pyx_t_5);
 
-  /* "coordinate_transform_wrapper.pyx":126
- *         for i in range(2): self._out[i] = 0.0
+  /* "coordinate_transform_wrapper.pyx":226
+ *         self._in.Beta = beta
  * 
- *     def set_inputs(self, u):             # <<<<<<<<<<<<<<
- *         self._in[0] = <float> u[0]
- *         self._in[1] = <float> u[1]
+ *     def set_inputs(self, cnp.ndarray u):             # <<<<<<<<<<<<<<
+ *         """Set alpha-beta inputs from numpy array [alpha, beta]"""
+ *         if u.shape[0] < 2:
 */
 
   /* function exit code */
   __pyx_r = Py_None; __Pyx_INCREF(Py_None);
   goto __pyx_L0;
   __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
   __Pyx_AddTraceback("coordinate_transform_wrapper.ParkTransformWrapper.set_inputs", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
@@ -7165,31 +7939,32 @@ static PyObject *__pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_
   return __pyx_r;
 }
 
-/* "coordinate_transform_wrapper.pyx":130
- *         self._in[1] = <float> u[1]
+/* "coordinate_transform_wrapper.pyx":233
+ *         self._in.Beta = <real32_T> u[1]
  * 
- *     def set_theta(self, theta):             # <<<<<<<<<<<<<<
- *         self._theta = <float> theta
- * 
+ *     def set_theta(self, real32_T theta):             # <<<<<<<<<<<<<<
+ *         """Set rotor angle in radians and update Park matrix"""
+ *         self._theta = theta
 */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_5set_theta(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_7set_theta(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_20ParkTransformWrapper_5set_theta = {"set_theta", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_5set_theta, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_5set_theta(PyObject *__pyx_v_self, 
+PyDoc_STRVAR(__pyx_doc_28coordinate_transform_wrapper_20ParkTransformWrapper_6set_theta, "Set rotor angle in radians and update Park matrix");
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_20ParkTransformWrapper_7set_theta = {"set_theta", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_7set_theta, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_20ParkTransformWrapper_6set_theta};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_7set_theta(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ) {
-  PyObject *__pyx_v_theta = 0;
+  __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_theta;
   #if !CYTHON_METH_FASTCALL
   CYTHON_UNUSED Py_ssize_t __pyx_nargs;
   #endif
@@ -7212,32 +7987,32 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_theta,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 130, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 233, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 130, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 233, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "set_theta", 0) < (0)) __PYX_ERR(0, 130, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "set_theta", 0) < (0)) __PYX_ERR(0, 233, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 1; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("set_theta", 1, 1, 1, i); __PYX_ERR(0, 130, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("set_theta", 1, 1, 1, i); __PYX_ERR(0, 233, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 1)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 130, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 233, __pyx_L3_error)
     }
-    __pyx_v_theta = values[0];
+    __pyx_v_theta = __Pyx_PyFloat_AsFloat(values[0]); if (unlikely((__pyx_v_theta == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 233, __pyx_L3_error)
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("set_theta", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 130, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("set_theta", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 233, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -7248,7 +8023,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_4set_theta(((struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *)__pyx_v_self), __pyx_v_theta);
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_6set_theta(((struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *)__pyx_v_self), __pyx_v_theta);
 
   /* function exit code */
   for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
@@ -7258,200 +8033,63 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_4set_theta(struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_v_self, PyObject *__pyx_v_theta) {
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_6set_theta(struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_v_self, __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_theta) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
-  float __pyx_t_1;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("set_theta", 0);
 
-  /* "coordinate_transform_wrapper.pyx":131
+  /* "coordinate_transform_wrapper.pyx":235
+ *     def set_theta(self, real32_T theta):
+ *         """Set rotor angle in radians and update Park matrix"""
+ *         self._theta = theta             # <<<<<<<<<<<<<<
+ *         Park_InitMatrix(&self._park_matrix, self._theta)
  * 
- *     def set_theta(self, theta):
- *         self._theta = <float> theta             # <<<<<<<<<<<<<<
- * 
- *     cpdef void compute(self):
 */
-  __pyx_t_1 = __Pyx_PyFloat_AsFloat(__pyx_v_theta); if (unlikely((__pyx_t_1 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 131, __pyx_L1_error)
-  __pyx_v_self->_theta = ((float)__pyx_t_1);
+  __pyx_v_self->_theta = __pyx_v_theta;
 
-  /* "coordinate_transform_wrapper.pyx":130
- *         self._in[1] = <float> u[1]
+  /* "coordinate_transform_wrapper.pyx":236
+ *         """Set rotor angle in radians and update Park matrix"""
+ *         self._theta = theta
+ *         Park_InitMatrix(&self._park_matrix, self._theta)             # <<<<<<<<<<<<<<
  * 
- *     def set_theta(self, theta):             # <<<<<<<<<<<<<<
- *         self._theta = <float> theta
+ *     def compute(self):
+*/
+  Park_InitMatrix((&__pyx_v_self->_park_matrix), __pyx_v_self->_theta);
+
+  /* "coordinate_transform_wrapper.pyx":233
+ *         self._in.Beta = <real32_T> u[1]
  * 
+ *     def set_theta(self, real32_T theta):             # <<<<<<<<<<<<<<
+ *         """Set rotor angle in radians and update Park matrix"""
+ *         self._theta = theta
 */
 
   /* function exit code */
   __pyx_r = Py_None; __Pyx_INCREF(Py_None);
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  __Pyx_AddTraceback("coordinate_transform_wrapper.ParkTransformWrapper.set_theta", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "coordinate_transform_wrapper.pyx":133
- *         self._theta = <float> theta
+/* "coordinate_transform_wrapper.pyx":238
+ *         Park_InitMatrix(&self._park_matrix, self._theta)
  * 
- *     cpdef void compute(self):             # <<<<<<<<<<<<<<
- *         with nogil:
- *             park_transform_compute_flat(self._in, self._theta, self._out)
+ *     def compute(self):             # <<<<<<<<<<<<<<
+ *         """Execute the Park transform using matrix multiplication"""
+ *         Park_Transform(&self._park_matrix, &self._in, &self._out)
 */
-
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_7compute(PyObject *__pyx_v_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-); /*proto*/
-static void __pyx_f_28coordinate_transform_wrapper_20ParkTransformWrapper_compute(struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_v_self, int __pyx_skip_dispatch) {
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  PyObject *__pyx_t_4 = NULL;
-  size_t __pyx_t_5;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("compute", 0);
-  /* Check if called by wrapper */
-  if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overridden in Python */
-  else if (
-  #if !CYTHON_USE_TYPE_SLOTS
-  unlikely(Py_TYPE(((PyObject *)__pyx_v_self)) != __pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_ParkTransformWrapper &&
-  __Pyx_PyType_HasFeature(Py_TYPE(((PyObject *)__pyx_v_self)), Py_TPFLAGS_HAVE_GC))
-  #else
-  unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0 || __Pyx_PyType_HasFeature(Py_TYPE(((PyObject *)__pyx_v_self)), (Py_TPFLAGS_IS_ABSTRACT | Py_TPFLAGS_HEAPTYPE)))
-  #endif
-  ) {
-    #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    static PY_UINT64_T __pyx_tp_dict_version = __PYX_DICT_VERSION_INIT, __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-    if (unlikely(!__Pyx_object_dict_version_matches(((PyObject *)__pyx_v_self), __pyx_tp_dict_version, __pyx_obj_dict_version))) {
-      PY_UINT64_T __pyx_typedict_guard = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_mstate_global->__pyx_n_u_compute); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 133, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      if (!__Pyx_IsSameCFunction(__pyx_t_1, (void(*)(void)) __pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_7compute)) {
-        __pyx_t_3 = NULL;
-        __Pyx_INCREF(__pyx_t_1);
-        __pyx_t_4 = __pyx_t_1; 
-        __pyx_t_5 = 1;
-        #if CYTHON_UNPACK_METHODS
-        if (unlikely(PyMethod_Check(__pyx_t_4))) {
-          __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_4);
-          assert(__pyx_t_3);
-          PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_4);
-          __Pyx_INCREF(__pyx_t_3);
-          __Pyx_INCREF(__pyx__function);
-          __Pyx_DECREF_SET(__pyx_t_4, __pyx__function);
-          __pyx_t_5 = 0;
-        }
-        #endif
-        {
-          PyObject *__pyx_callargs[2] = {__pyx_t_3, NULL};
-          __pyx_t_2 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_4, __pyx_callargs+__pyx_t_5, (1-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-          __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-          __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 133, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_2);
-        }
-        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        goto __pyx_L0;
-      }
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-      __pyx_tp_dict_version = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      __pyx_obj_dict_version = __Pyx_get_object_dict_version(((PyObject *)__pyx_v_self));
-      if (unlikely(__pyx_typedict_guard != __pyx_tp_dict_version)) {
-        __pyx_tp_dict_version = __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-      }
-      #endif
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    }
-    #endif
-  }
-
-  /* "coordinate_transform_wrapper.pyx":134
- * 
- *     cpdef void compute(self):
- *         with nogil:             # <<<<<<<<<<<<<<
- *             park_transform_compute_flat(self._in, self._theta, self._out)
- * 
-*/
-  {
-      PyThreadState * _save;
-      _save = PyEval_SaveThread();
-      __Pyx_FastGIL_Remember();
-      /*try:*/ {
-
-        /* "coordinate_transform_wrapper.pyx":135
- *     cpdef void compute(self):
- *         with nogil:
- *             park_transform_compute_flat(self._in, self._theta, self._out)             # <<<<<<<<<<<<<<
- * 
- *     cpdef cnp.ndarray get_outputs(self):
-*/
-        park_transform_compute_flat(__pyx_v_self->_in, __pyx_v_self->_theta, __pyx_v_self->_out);
-      }
-
-      /* "coordinate_transform_wrapper.pyx":134
- * 
- *     cpdef void compute(self):
- *         with nogil:             # <<<<<<<<<<<<<<
- *             park_transform_compute_flat(self._in, self._theta, self._out)
- * 
-*/
-      /*finally:*/ {
-        /*normal exit:*/{
-          __Pyx_FastGIL_Forget();
-          PyEval_RestoreThread(_save);
-          goto __pyx_L5;
-        }
-        __pyx_L5:;
-      }
-  }
-
-  /* "coordinate_transform_wrapper.pyx":133
- *         self._theta = <float> theta
- * 
- *     cpdef void compute(self):             # <<<<<<<<<<<<<<
- *         with nogil:
- *             park_transform_compute_flat(self._in, self._theta, self._out)
-*/
-
-  /* function exit code */
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_AddTraceback("coordinate_transform_wrapper.ParkTransformWrapper.compute", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_L0:;
-  __Pyx_RefNannyFinishContext();
-}
 
 /* Python wrapper */
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_7compute(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_9compute(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_20ParkTransformWrapper_7compute = {"compute", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_7compute, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_7compute(PyObject *__pyx_v_self, 
+PyDoc_STRVAR(__pyx_doc_28coordinate_transform_wrapper_20ParkTransformWrapper_8compute, "Execute the Park transform using matrix multiplication");
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_20ParkTransformWrapper_9compute = {"compute", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_9compute, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_20ParkTransformWrapper_8compute};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_9compute(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -7477,220 +8115,134 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   const Py_ssize_t __pyx_kwds_len = unlikely(__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
   if (unlikely(__pyx_kwds_len < 0)) return NULL;
   if (unlikely(__pyx_kwds_len > 0)) {__Pyx_RejectKeywords("compute", __pyx_kwds); return NULL;}
-  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_6compute(((struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *)__pyx_v_self));
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_8compute(((struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_6compute(struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_v_self) {
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_8compute(struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("compute", 0);
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_f_28coordinate_transform_wrapper_20ParkTransformWrapper_compute(__pyx_v_self, 1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 133, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_void_to_None(NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 133, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
+
+  /* "coordinate_transform_wrapper.pyx":240
+ *     def compute(self):
+ *         """Execute the Park transform using matrix multiplication"""
+ *         Park_Transform(&self._park_matrix, &self._in, &self._out)             # <<<<<<<<<<<<<<
+ * 
+ *     def get_outputs_dq(self):
+*/
+  Park_Transform((&__pyx_v_self->_park_matrix), (&__pyx_v_self->_in), (&__pyx_v_self->_out));
+
+  /* "coordinate_transform_wrapper.pyx":238
+ *         Park_InitMatrix(&self._park_matrix, self._theta)
+ * 
+ *     def compute(self):             # <<<<<<<<<<<<<<
+ *         """Execute the Park transform using matrix multiplication"""
+ *         Park_Transform(&self._park_matrix, &self._in, &self._out)
+*/
 
   /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("coordinate_transform_wrapper.ParkTransformWrapper.compute", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "coordinate_transform_wrapper.pyx":137
- *             park_transform_compute_flat(self._in, self._theta, self._out)
+/* "coordinate_transform_wrapper.pyx":242
+ *         Park_Transform(&self._park_matrix, &self._in, &self._out)
  * 
- *     cpdef cnp.ndarray get_outputs(self):             # <<<<<<<<<<<<<<
- *         cdef cnp.ndarray y = np.empty(2, dtype=np.float32)
- *         y[0] = self._out[0]
+ *     def get_outputs_dq(self):             # <<<<<<<<<<<<<<
+ *         """Return outputs as tuple (d, q)"""
+ *         return (self._out.D, self._out.Q)
 */
 
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_9get_outputs(PyObject *__pyx_v_self, 
+/* Python wrapper */
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_11get_outputs_dq(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyArrayObject *__pyx_f_28coordinate_transform_wrapper_20ParkTransformWrapper_get_outputs(struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_v_self, int __pyx_skip_dispatch) {
-  PyArrayObject *__pyx_v_y = 0;
-  PyArrayObject *__pyx_r = NULL;
+PyDoc_STRVAR(__pyx_doc_28coordinate_transform_wrapper_20ParkTransformWrapper_10get_outputs_dq, "Return outputs as tuple (d, q)");
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_20ParkTransformWrapper_11get_outputs_dq = {"get_outputs_dq", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_11get_outputs_dq, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_20ParkTransformWrapper_10get_outputs_dq};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_11get_outputs_dq(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("get_outputs_dq (wrapper)", 0);
+  #if !CYTHON_METH_FASTCALL
+  #if CYTHON_ASSUME_SAFE_SIZE
+  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #else
+  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
+  #endif
+  #endif
+  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+  if (unlikely(__pyx_nargs > 0)) { __Pyx_RaiseArgtupleInvalid("get_outputs_dq", 1, 0, 0, __pyx_nargs); return NULL; }
+  const Py_ssize_t __pyx_kwds_len = unlikely(__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
+  if (unlikely(__pyx_kwds_len < 0)) return NULL;
+  if (unlikely(__pyx_kwds_len > 0)) {__Pyx_RejectKeywords("get_outputs_dq", __pyx_kwds); return NULL;}
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_10get_outputs_dq(((struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_10get_outputs_dq(struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   PyObject *__pyx_t_2 = NULL;
   PyObject *__pyx_t_3 = NULL;
-  PyObject *__pyx_t_4 = NULL;
-  size_t __pyx_t_5;
-  PyObject *__pyx_t_6 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("get_outputs", 0);
-  /* Check if called by wrapper */
-  if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overridden in Python */
-  else if (
-  #if !CYTHON_USE_TYPE_SLOTS
-  unlikely(Py_TYPE(((PyObject *)__pyx_v_self)) != __pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_ParkTransformWrapper &&
-  __Pyx_PyType_HasFeature(Py_TYPE(((PyObject *)__pyx_v_self)), Py_TPFLAGS_HAVE_GC))
-  #else
-  unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0 || __Pyx_PyType_HasFeature(Py_TYPE(((PyObject *)__pyx_v_self)), (Py_TPFLAGS_IS_ABSTRACT | Py_TPFLAGS_HEAPTYPE)))
-  #endif
-  ) {
-    #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    static PY_UINT64_T __pyx_tp_dict_version = __PYX_DICT_VERSION_INIT, __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-    if (unlikely(!__Pyx_object_dict_version_matches(((PyObject *)__pyx_v_self), __pyx_tp_dict_version, __pyx_obj_dict_version))) {
-      PY_UINT64_T __pyx_typedict_guard = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_mstate_global->__pyx_n_u_get_outputs); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 137, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      if (!__Pyx_IsSameCFunction(__pyx_t_1, (void(*)(void)) __pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_9get_outputs)) {
-        __Pyx_XDECREF((PyObject *)__pyx_r);
-        __pyx_t_3 = NULL;
-        __Pyx_INCREF(__pyx_t_1);
-        __pyx_t_4 = __pyx_t_1; 
-        __pyx_t_5 = 1;
-        #if CYTHON_UNPACK_METHODS
-        if (unlikely(PyMethod_Check(__pyx_t_4))) {
-          __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_4);
-          assert(__pyx_t_3);
-          PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_4);
-          __Pyx_INCREF(__pyx_t_3);
-          __Pyx_INCREF(__pyx__function);
-          __Pyx_DECREF_SET(__pyx_t_4, __pyx__function);
-          __pyx_t_5 = 0;
-        }
-        #endif
-        {
-          PyObject *__pyx_callargs[2] = {__pyx_t_3, NULL};
-          __pyx_t_2 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_4, __pyx_callargs+__pyx_t_5, (1-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-          __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-          __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 137, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_2);
-        }
-        if (!(likely(((__pyx_t_2) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_2, __pyx_mstate_global->__pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 137, __pyx_L1_error)
-        __pyx_r = ((PyArrayObject *)__pyx_t_2);
-        __pyx_t_2 = 0;
-        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        goto __pyx_L0;
-      }
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-      __pyx_tp_dict_version = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      __pyx_obj_dict_version = __Pyx_get_object_dict_version(((PyObject *)__pyx_v_self));
-      if (unlikely(__pyx_typedict_guard != __pyx_tp_dict_version)) {
-        __pyx_tp_dict_version = __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-      }
-      #endif
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    }
-    #endif
-  }
+  __Pyx_RefNannySetupContext("get_outputs_dq", 0);
 
-  /* "coordinate_transform_wrapper.pyx":138
+  /* "coordinate_transform_wrapper.pyx":244
+ *     def get_outputs_dq(self):
+ *         """Return outputs as tuple (d, q)"""
+ *         return (self._out.D, self._out.Q)             # <<<<<<<<<<<<<<
  * 
- *     cpdef cnp.ndarray get_outputs(self):
- *         cdef cnp.ndarray y = np.empty(2, dtype=np.float32)             # <<<<<<<<<<<<<<
- *         y[0] = self._out[0]
- *         y[1] = self._out[1]
+ *     def get_outputs(self):
 */
-  __pyx_t_2 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 138, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 138, __pyx_L1_error)
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->_out.D); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 244, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_self->_out.Q); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 244, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 244, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 138, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_float32); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 138, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_6);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_5 = 1;
-  #if CYTHON_UNPACK_METHODS
-  if (unlikely(PyMethod_Check(__pyx_t_3))) {
-    __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_3);
-    assert(__pyx_t_2);
-    PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_3);
-    __Pyx_INCREF(__pyx_t_2);
-    __Pyx_INCREF(__pyx__function);
-    __Pyx_DECREF_SET(__pyx_t_3, __pyx__function);
-    __pyx_t_5 = 0;
-  }
-  #endif
-  {
-    PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_2, __pyx_mstate_global->__pyx_int_2};
-    __pyx_t_4 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 138, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_4, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 138, __pyx_L1_error)
-    __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder((PyObject*)__pyx_t_3, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_4);
-    __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 138, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-  }
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_mstate_global->__pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 138, __pyx_L1_error)
-  __pyx_v_y = ((PyArrayObject *)__pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1) != (0)) __PYX_ERR(0, 244, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_2);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_t_2) != (0)) __PYX_ERR(0, 244, __pyx_L1_error);
   __pyx_t_1 = 0;
-
-  /* "coordinate_transform_wrapper.pyx":139
- *     cpdef cnp.ndarray get_outputs(self):
- *         cdef cnp.ndarray y = np.empty(2, dtype=np.float32)
- *         y[0] = self._out[0]             # <<<<<<<<<<<<<<
- *         y[1] = self._out[1]
- *         return y
-*/
-  __pyx_t_1 = PyFloat_FromDouble((__pyx_v_self->_out[0])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 139, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_y), 0, __pyx_t_1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_OwnStrongReference) < 0))) __PYX_ERR(0, 139, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "coordinate_transform_wrapper.pyx":140
- *         cdef cnp.ndarray y = np.empty(2, dtype=np.float32)
- *         y[0] = self._out[0]
- *         y[1] = self._out[1]             # <<<<<<<<<<<<<<
- *         return y
- * 
-*/
-  __pyx_t_1 = PyFloat_FromDouble((__pyx_v_self->_out[1])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 140, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_y), 1, __pyx_t_1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_OwnStrongReference) < 0))) __PYX_ERR(0, 140, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "coordinate_transform_wrapper.pyx":141
- *         y[0] = self._out[0]
- *         y[1] = self._out[1]
- *         return y             # <<<<<<<<<<<<<<
- * 
- * # =============================================================================
-*/
-  __Pyx_XDECREF((PyObject *)__pyx_r);
-  __Pyx_INCREF((PyObject *)__pyx_v_y);
-  __pyx_r = __pyx_v_y;
+  __pyx_t_2 = 0;
+  __pyx_r = __pyx_t_3;
+  __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "coordinate_transform_wrapper.pyx":137
- *             park_transform_compute_flat(self._in, self._theta, self._out)
+  /* "coordinate_transform_wrapper.pyx":242
+ *         Park_Transform(&self._park_matrix, &self._in, &self._out)
  * 
- *     cpdef cnp.ndarray get_outputs(self):             # <<<<<<<<<<<<<<
- *         cdef cnp.ndarray y = np.empty(2, dtype=np.float32)
- *         y[0] = self._out[0]
+ *     def get_outputs_dq(self):             # <<<<<<<<<<<<<<
+ *         """Return outputs as tuple (d, q)"""
+ *         return (self._out.D, self._out.Q)
 */
 
   /* function exit code */
@@ -7698,27 +8250,33 @@ static PyArrayObject *__pyx_f_28coordinate_transform_wrapper_20ParkTransformWrap
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_XDECREF(__pyx_t_6);
-  __Pyx_AddTraceback("coordinate_transform_wrapper.ParkTransformWrapper.get_outputs", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = 0;
+  __Pyx_AddTraceback("coordinate_transform_wrapper.ParkTransformWrapper.get_outputs_dq", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
   __pyx_L0:;
-  __Pyx_XDECREF((PyObject *)__pyx_v_y);
-  __Pyx_XGIVEREF((PyObject *)__pyx_r);
+  __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
+/* "coordinate_transform_wrapper.pyx":246
+ *         return (self._out.D, self._out.Q)
+ * 
+ *     def get_outputs(self):             # <<<<<<<<<<<<<<
+ *         """Return outputs as numpy array [d, q]"""
+ *         return np.array([self._out.D, self._out.Q], dtype=np.float32)
+*/
+
 /* Python wrapper */
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_9get_outputs(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_13get_outputs(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_20ParkTransformWrapper_9get_outputs = {"get_outputs", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_9get_outputs, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_9get_outputs(PyObject *__pyx_v_self, 
+PyDoc_STRVAR(__pyx_doc_28coordinate_transform_wrapper_20ParkTransformWrapper_12get_outputs, "Return outputs as numpy array [d, q]");
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_20ParkTransformWrapper_13get_outputs = {"get_outputs", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_13get_outputs, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_20ParkTransformWrapper_12get_outputs};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_13get_outputs(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -7744,31 +8302,105 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   const Py_ssize_t __pyx_kwds_len = unlikely(__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
   if (unlikely(__pyx_kwds_len < 0)) return NULL;
   if (unlikely(__pyx_kwds_len > 0)) {__Pyx_RejectKeywords("get_outputs", __pyx_kwds); return NULL;}
-  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_8get_outputs(((struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *)__pyx_v_self));
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_12get_outputs(((struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_8get_outputs(struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_v_self) {
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_12get_outputs(struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  PyObject *__pyx_t_4 = NULL;
+  PyObject *__pyx_t_5 = NULL;
+  PyObject *__pyx_t_6 = NULL;
+  size_t __pyx_t_7;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("get_outputs", 0);
+
+  /* "coordinate_transform_wrapper.pyx":248
+ *     def get_outputs(self):
+ *         """Return outputs as numpy array [d, q]"""
+ *         return np.array([self._out.D, self._out.Q], dtype=np.float32)             # <<<<<<<<<<<<<<
+ * 
+ * #
+*/
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = ((PyObject *)__pyx_f_28coordinate_transform_wrapper_20ParkTransformWrapper_get_outputs(__pyx_v_self, 1)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 137, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = NULL;
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 248, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_array); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 248, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_3 = PyFloat_FromDouble(__pyx_v_self->_out.D); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 248, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_5 = PyFloat_FromDouble(__pyx_v_self->_out.Q); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 248, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_6 = PyList_New(2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 248, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __Pyx_GIVEREF(__pyx_t_3);
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_6, 0, __pyx_t_3) != (0)) __PYX_ERR(0, 248, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_5);
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_6, 1, __pyx_t_5) != (0)) __PYX_ERR(0, 248, __pyx_L1_error);
+  __pyx_t_3 = 0;
+  __pyx_t_5 = 0;
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 248, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float32); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 248, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_7 = 1;
+  #if CYTHON_UNPACK_METHODS
+  if (unlikely(PyMethod_Check(__pyx_t_4))) {
+    __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_4);
+    assert(__pyx_t_2);
+    PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_4);
+    __Pyx_INCREF(__pyx_t_2);
+    __Pyx_INCREF(__pyx__function);
+    __Pyx_DECREF_SET(__pyx_t_4, __pyx__function);
+    __pyx_t_7 = 0;
+  }
+  #endif
+  {
+    PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_2, __pyx_t_6};
+    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 248, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_3, __pyx_t_5, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 248, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder((PyObject*)__pyx_t_4, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_5);
+    __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 248, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+  }
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
+  /* "coordinate_transform_wrapper.pyx":246
+ *         return (self._out.D, self._out.Q)
+ * 
+ *     def get_outputs(self):             # <<<<<<<<<<<<<<
+ *         """Return outputs as numpy array [d, q]"""
+ *         return np.array([self._out.D, self._out.Q], dtype=np.float32)
+*/
+
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_XDECREF(__pyx_t_6);
   __Pyx_AddTraceback("coordinate_transform_wrapper.ParkTransformWrapper.get_outputs", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
@@ -7784,15 +8416,15 @@ static PyObject *__pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_
 */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_11__reduce_cython__(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_15__reduce_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_20ParkTransformWrapper_11__reduce_cython__ = {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_11__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_11__reduce_cython__(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_20ParkTransformWrapper_15__reduce_cython__ = {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_15__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_15__reduce_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -7818,14 +8450,14 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   const Py_ssize_t __pyx_kwds_len = unlikely(__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
   if (unlikely(__pyx_kwds_len < 0)) return NULL;
   if (unlikely(__pyx_kwds_len > 0)) {__Pyx_RejectKeywords("__reduce_cython__", __pyx_kwds); return NULL;}
-  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_10__reduce_cython__(((struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *)__pyx_v_self));
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_14__reduce_cython__(((struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_10__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_v_self) {
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_14__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_lineno = 0;
@@ -7865,15 +8497,15 @@ static PyObject *__pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_
 */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_13__setstate_cython__(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_17__setstate_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_20ParkTransformWrapper_13__setstate_cython__ = {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_13__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_13__setstate_cython__(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_20ParkTransformWrapper_17__setstate_cython__ = {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_17__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_17__setstate_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -7939,7 +8571,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_12__setstate_cython__(((struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *)__pyx_v_self), __pyx_v___pyx_state);
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_16__setstate_cython__(((struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *)__pyx_v_self), __pyx_v___pyx_state);
 
   /* function exit code */
   for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
@@ -7949,7 +8581,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_12__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_16__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_lineno = 0;
@@ -7981,12 +8613,12 @@ static PyObject *__pyx_pf_28coordinate_transform_wrapper_20ParkTransformWrapper_
   return __pyx_r;
 }
 
-/* "coordinate_transform_wrapper.pyx":159
- *     cdef float[2] _out
+/* "coordinate_transform_wrapper.pyx":259
+ *     cdef real32_T           _theta
  * 
  *     def __cinit__(self):             # <<<<<<<<<<<<<<
- *         for i in range(2): self._in[i] = 0.0
- *         self._theta = 0.0
+ *         self._in.D = 0.0
+ *         self._in.Q = 0.0
 */
 
 /* Python wrapper */
@@ -8015,49 +8647,68 @@ static int __pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_1__
 }
 
 static int __pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper___cinit__(struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_v_self) {
-  long __pyx_v_i;
   int __pyx_r;
-  long __pyx_t_1;
 
-  /* "coordinate_transform_wrapper.pyx":160
+  /* "coordinate_transform_wrapper.pyx":260
  * 
  *     def __cinit__(self):
- *         for i in range(2): self._in[i] = 0.0             # <<<<<<<<<<<<<<
- *         self._theta = 0.0
- *         for i in range(2): self._out[i] = 0.0
+ *         self._in.D = 0.0             # <<<<<<<<<<<<<<
+ *         self._in.Q = 0.0
+ *         self._out.Alpha = 0.0
 */
-  for (__pyx_t_1 = 0; __pyx_t_1 < 2; __pyx_t_1+=1) {
-    __pyx_v_i = __pyx_t_1;
-    (__pyx_v_self->_in[__pyx_v_i]) = 0.0;
-  }
+  __pyx_v_self->_in.D = 0.0;
 
-  /* "coordinate_transform_wrapper.pyx":161
+  /* "coordinate_transform_wrapper.pyx":261
  *     def __cinit__(self):
- *         for i in range(2): self._in[i] = 0.0
+ *         self._in.D = 0.0
+ *         self._in.Q = 0.0             # <<<<<<<<<<<<<<
+ *         self._out.Alpha = 0.0
+ *         self._out.Beta = 0.0
+*/
+  __pyx_v_self->_in.Q = 0.0;
+
+  /* "coordinate_transform_wrapper.pyx":262
+ *         self._in.D = 0.0
+ *         self._in.Q = 0.0
+ *         self._out.Alpha = 0.0             # <<<<<<<<<<<<<<
+ *         self._out.Beta = 0.0
+ *         self._theta = 0.0
+*/
+  __pyx_v_self->_out.Alpha = 0.0;
+
+  /* "coordinate_transform_wrapper.pyx":263
+ *         self._in.Q = 0.0
+ *         self._out.Alpha = 0.0
+ *         self._out.Beta = 0.0             # <<<<<<<<<<<<<<
+ *         self._theta = 0.0
+ *         InvPark_InitMatrix(&self._inv_park_matrix, self._theta)
+*/
+  __pyx_v_self->_out.Beta = 0.0;
+
+  /* "coordinate_transform_wrapper.pyx":264
+ *         self._out.Alpha = 0.0
+ *         self._out.Beta = 0.0
  *         self._theta = 0.0             # <<<<<<<<<<<<<<
- *         for i in range(2): self._out[i] = 0.0
+ *         InvPark_InitMatrix(&self._inv_park_matrix, self._theta)
  * 
 */
   __pyx_v_self->_theta = 0.0;
 
-  /* "coordinate_transform_wrapper.pyx":162
- *         for i in range(2): self._in[i] = 0.0
+  /* "coordinate_transform_wrapper.pyx":265
+ *         self._out.Beta = 0.0
  *         self._theta = 0.0
- *         for i in range(2): self._out[i] = 0.0             # <<<<<<<<<<<<<<
+ *         InvPark_InitMatrix(&self._inv_park_matrix, self._theta)             # <<<<<<<<<<<<<<
  * 
- *     def set_inputs(self, u):
+ *     def set_inputs_dq(self, real32_T d, real32_T q):
 */
-  for (__pyx_t_1 = 0; __pyx_t_1 < 2; __pyx_t_1+=1) {
-    __pyx_v_i = __pyx_t_1;
-    (__pyx_v_self->_out[__pyx_v_i]) = 0.0;
-  }
+  InvPark_InitMatrix((&__pyx_v_self->_inv_park_matrix), __pyx_v_self->_theta);
 
-  /* "coordinate_transform_wrapper.pyx":159
- *     cdef float[2] _out
+  /* "coordinate_transform_wrapper.pyx":259
+ *     cdef real32_T           _theta
  * 
  *     def __cinit__(self):             # <<<<<<<<<<<<<<
- *         for i in range(2): self._in[i] = 0.0
- *         self._theta = 0.0
+ *         self._in.D = 0.0
+ *         self._in.Q = 0.0
 */
 
   /* function exit code */
@@ -8065,31 +8716,171 @@ static int __pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper___c
   return __pyx_r;
 }
 
-/* "coordinate_transform_wrapper.pyx":164
- *         for i in range(2): self._out[i] = 0.0
+/* "coordinate_transform_wrapper.pyx":267
+ *         InvPark_InitMatrix(&self._inv_park_matrix, self._theta)
  * 
- *     def set_inputs(self, u):             # <<<<<<<<<<<<<<
- *         self._in[0] = <float> u[0]
- *         self._in[1] = <float> u[1]
+ *     def set_inputs_dq(self, real32_T d, real32_T q):             # <<<<<<<<<<<<<<
+ *         self._in.D = d
+ *         self._in.Q = q
 */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_3set_inputs(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_3set_inputs_dq(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_23InvParkTransformWrapper_3set_inputs = {"set_inputs", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_3set_inputs, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_3set_inputs(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_23InvParkTransformWrapper_3set_inputs_dq = {"set_inputs_dq", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_3set_inputs_dq, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_3set_inputs_dq(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ) {
-  PyObject *__pyx_v_u = 0;
+  __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_d;
+  __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_q;
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject* values[2] = {0,0};
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("set_inputs_dq (wrapper)", 0);
+  #if !CYTHON_METH_FASTCALL
+  #if CYTHON_ASSUME_SAFE_SIZE
+  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #else
+  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
+  #endif
+  #endif
+  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+  {
+    PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_d,&__pyx_mstate_global->__pyx_n_u_q,0};
+    const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 267, __pyx_L3_error)
+    if (__pyx_kwds_len > 0) {
+      switch (__pyx_nargs) {
+        case  2:
+        values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 267, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  1:
+        values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 267, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      const Py_ssize_t kwd_pos_args = __pyx_nargs;
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "set_inputs_dq", 0) < (0)) __PYX_ERR(0, 267, __pyx_L3_error)
+      for (Py_ssize_t i = __pyx_nargs; i < 2; i++) {
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("set_inputs_dq", 1, 2, 2, i); __PYX_ERR(0, 267, __pyx_L3_error) }
+      }
+    } else if (unlikely(__pyx_nargs != 2)) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 267, __pyx_L3_error)
+      values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 267, __pyx_L3_error)
+    }
+    __pyx_v_d = __Pyx_PyFloat_AsFloat(values[0]); if (unlikely((__pyx_v_d == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 267, __pyx_L3_error)
+    __pyx_v_q = __Pyx_PyFloat_AsFloat(values[1]); if (unlikely((__pyx_v_q == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 267, __pyx_L3_error)
+  }
+  goto __pyx_L6_skip;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("set_inputs_dq", 1, 2, 2, __pyx_nargs); __PYX_ERR(0, 267, __pyx_L3_error)
+  __pyx_L6_skip:;
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L3_error:;
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __Pyx_AddTraceback("coordinate_transform_wrapper.InvParkTransformWrapper.set_inputs_dq", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_2set_inputs_dq(((struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *)__pyx_v_self), __pyx_v_d, __pyx_v_q);
+
+  /* function exit code */
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_2set_inputs_dq(struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_v_self, __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_d, __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_q) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("set_inputs_dq", 0);
+
+  /* "coordinate_transform_wrapper.pyx":268
+ * 
+ *     def set_inputs_dq(self, real32_T d, real32_T q):
+ *         self._in.D = d             # <<<<<<<<<<<<<<
+ *         self._in.Q = q
+ * 
+*/
+  __pyx_v_self->_in.D = __pyx_v_d;
+
+  /* "coordinate_transform_wrapper.pyx":269
+ *     def set_inputs_dq(self, real32_T d, real32_T q):
+ *         self._in.D = d
+ *         self._in.Q = q             # <<<<<<<<<<<<<<
+ * 
+ *     def set_inputs(self, cnp.ndarray u):
+*/
+  __pyx_v_self->_in.Q = __pyx_v_q;
+
+  /* "coordinate_transform_wrapper.pyx":267
+ *         InvPark_InitMatrix(&self._inv_park_matrix, self._theta)
+ * 
+ *     def set_inputs_dq(self, real32_T d, real32_T q):             # <<<<<<<<<<<<<<
+ *         self._in.D = d
+ *         self._in.Q = q
+*/
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "coordinate_transform_wrapper.pyx":271
+ *         self._in.Q = q
+ * 
+ *     def set_inputs(self, cnp.ndarray u):             # <<<<<<<<<<<<<<
+ *         """Set d-q inputs from numpy array [d, q]"""
+ *         if u.shape[0] < 2:
+*/
+
+/* Python wrapper */
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_5set_inputs(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+PyDoc_STRVAR(__pyx_doc_28coordinate_transform_wrapper_23InvParkTransformWrapper_4set_inputs, "Set d-q inputs from numpy array [d, q]");
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_23InvParkTransformWrapper_5set_inputs = {"set_inputs", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_5set_inputs, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_23InvParkTransformWrapper_4set_inputs};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_5set_inputs(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  PyArrayObject *__pyx_v_u = 0;
   #if !CYTHON_METH_FASTCALL
   CYTHON_UNUSED Py_ssize_t __pyx_nargs;
   #endif
@@ -8112,32 +8903,32 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_u,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 164, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 271, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 164, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 271, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "set_inputs", 0) < (0)) __PYX_ERR(0, 164, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "set_inputs", 0) < (0)) __PYX_ERR(0, 271, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 1; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("set_inputs", 1, 1, 1, i); __PYX_ERR(0, 164, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("set_inputs", 1, 1, 1, i); __PYX_ERR(0, 271, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 1)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 164, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 271, __pyx_L3_error)
     }
-    __pyx_v_u = values[0];
+    __pyx_v_u = ((PyArrayObject *)values[0]);
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("set_inputs", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 164, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("set_inputs", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 271, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -8148,65 +8939,118 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_2set_inputs(((struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *)__pyx_v_self), __pyx_v_u);
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_u), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "u", 0))) __PYX_ERR(0, 271, __pyx_L1_error)
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_4set_inputs(((struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *)__pyx_v_self), __pyx_v_u);
 
   /* function exit code */
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __pyx_r = NULL;
   for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
     Py_XDECREF(values[__pyx_temp]);
   }
+  goto __pyx_L7_cleaned_up;
+  __pyx_L0:;
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __pyx_L7_cleaned_up:;
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_2set_inputs(struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_v_self, PyObject *__pyx_v_u) {
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_4set_inputs(struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_v_self, PyArrayObject *__pyx_v_u) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  float __pyx_t_2;
+  int __pyx_t_1;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  size_t __pyx_t_4;
+  __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_t_5;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("set_inputs", 0);
 
-  /* "coordinate_transform_wrapper.pyx":165
- * 
- *     def set_inputs(self, u):
- *         self._in[0] = <float> u[0]             # <<<<<<<<<<<<<<
- *         self._in[1] = <float> u[1]
+  /* "coordinate_transform_wrapper.pyx":273
+ *     def set_inputs(self, cnp.ndarray u):
+ *         """Set d-q inputs from numpy array [d, q]"""
+ *         if u.shape[0] < 2:             # <<<<<<<<<<<<<<
+ *             raise ValueError("Input array must have at least 2 elements")
+ *         self._in.D = <real32_T> u[0]
+*/
+  __pyx_t_1 = ((__pyx_f_5numpy_7ndarray_5shape_shape(__pyx_v_u)[0]) < 2);
+  if (unlikely(__pyx_t_1)) {
+
+    /* "coordinate_transform_wrapper.pyx":274
+ *         """Set d-q inputs from numpy array [d, q]"""
+ *         if u.shape[0] < 2:
+ *             raise ValueError("Input array must have at least 2 elements")             # <<<<<<<<<<<<<<
+ *         self._in.D = <real32_T> u[0]
+ *         self._in.Q = <real32_T> u[1]
+*/
+    __pyx_t_3 = NULL;
+    __pyx_t_4 = 1;
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_3, __pyx_mstate_global->__pyx_kp_u_Input_array_must_have_at_least_2};
+      __pyx_t_2 = __Pyx_PyObject_FastCall((PyObject*)(((PyTypeObject*)PyExc_ValueError)), __pyx_callargs+__pyx_t_4, (2-__pyx_t_4) | (__pyx_t_4*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 274, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_2);
+    }
+    __Pyx_Raise(__pyx_t_2, 0, 0, 0);
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __PYX_ERR(0, 274, __pyx_L1_error)
+
+    /* "coordinate_transform_wrapper.pyx":273
+ *     def set_inputs(self, cnp.ndarray u):
+ *         """Set d-q inputs from numpy array [d, q]"""
+ *         if u.shape[0] < 2:             # <<<<<<<<<<<<<<
+ *             raise ValueError("Input array must have at least 2 elements")
+ *         self._in.D = <real32_T> u[0]
+*/
+  }
+
+  /* "coordinate_transform_wrapper.pyx":275
+ *         if u.shape[0] < 2:
+ *             raise ValueError("Input array must have at least 2 elements")
+ *         self._in.D = <real32_T> u[0]             # <<<<<<<<<<<<<<
+ *         self._in.Q = <real32_T> u[1]
  * 
 */
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_u, 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 165, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 165, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  (__pyx_v_self->_in[0]) = ((float)__pyx_t_2);
+  __pyx_t_2 = __Pyx_GetItemInt(((PyObject *)__pyx_v_u), 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 275, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_5 = __Pyx_PyFloat_AsFloat(__pyx_t_2); if (unlikely((__pyx_t_5 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 275, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_v_self->_in.D = ((__pyx_t_28coordinate_transform_wrapper_real32_T)__pyx_t_5);
 
-  /* "coordinate_transform_wrapper.pyx":166
- *     def set_inputs(self, u):
- *         self._in[0] = <float> u[0]
- *         self._in[1] = <float> u[1]             # <<<<<<<<<<<<<<
+  /* "coordinate_transform_wrapper.pyx":276
+ *             raise ValueError("Input array must have at least 2 elements")
+ *         self._in.D = <real32_T> u[0]
+ *         self._in.Q = <real32_T> u[1]             # <<<<<<<<<<<<<<
  * 
- *     def set_theta(self, theta):
+ *     def set_theta(self, real32_T theta):
 */
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_u, 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 166, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 166, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  (__pyx_v_self->_in[1]) = ((float)__pyx_t_2);
+  __pyx_t_2 = __Pyx_GetItemInt(((PyObject *)__pyx_v_u), 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 276, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_5 = __Pyx_PyFloat_AsFloat(__pyx_t_2); if (unlikely((__pyx_t_5 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 276, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_v_self->_in.Q = ((__pyx_t_28coordinate_transform_wrapper_real32_T)__pyx_t_5);
 
-  /* "coordinate_transform_wrapper.pyx":164
- *         for i in range(2): self._out[i] = 0.0
+  /* "coordinate_transform_wrapper.pyx":271
+ *         self._in.Q = q
  * 
- *     def set_inputs(self, u):             # <<<<<<<<<<<<<<
- *         self._in[0] = <float> u[0]
- *         self._in[1] = <float> u[1]
+ *     def set_inputs(self, cnp.ndarray u):             # <<<<<<<<<<<<<<
+ *         """Set d-q inputs from numpy array [d, q]"""
+ *         if u.shape[0] < 2:
 */
 
   /* function exit code */
   __pyx_r = Py_None; __Pyx_INCREF(Py_None);
   goto __pyx_L0;
   __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
   __Pyx_AddTraceback("coordinate_transform_wrapper.InvParkTransformWrapper.set_inputs", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
@@ -8215,31 +9059,32 @@ static PyObject *__pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapp
   return __pyx_r;
 }
 
-/* "coordinate_transform_wrapper.pyx":168
- *         self._in[1] = <float> u[1]
+/* "coordinate_transform_wrapper.pyx":278
+ *         self._in.Q = <real32_T> u[1]
  * 
- *     def set_theta(self, theta):             # <<<<<<<<<<<<<<
- *         self._theta = <float> theta
- * 
+ *     def set_theta(self, real32_T theta):             # <<<<<<<<<<<<<<
+ *         """Set rotor angle in radians and update inverse Park matrix"""
+ *         self._theta = theta
 */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_5set_theta(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_7set_theta(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_23InvParkTransformWrapper_5set_theta = {"set_theta", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_5set_theta, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_5set_theta(PyObject *__pyx_v_self, 
+PyDoc_STRVAR(__pyx_doc_28coordinate_transform_wrapper_23InvParkTransformWrapper_6set_theta, "Set rotor angle in radians and update inverse Park matrix");
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_23InvParkTransformWrapper_7set_theta = {"set_theta", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_7set_theta, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_23InvParkTransformWrapper_6set_theta};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_7set_theta(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ) {
-  PyObject *__pyx_v_theta = 0;
+  __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_theta;
   #if !CYTHON_METH_FASTCALL
   CYTHON_UNUSED Py_ssize_t __pyx_nargs;
   #endif
@@ -8262,32 +9107,32 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_theta,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 168, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 278, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 168, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 278, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "set_theta", 0) < (0)) __PYX_ERR(0, 168, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "set_theta", 0) < (0)) __PYX_ERR(0, 278, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 1; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("set_theta", 1, 1, 1, i); __PYX_ERR(0, 168, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("set_theta", 1, 1, 1, i); __PYX_ERR(0, 278, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 1)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 168, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 278, __pyx_L3_error)
     }
-    __pyx_v_theta = values[0];
+    __pyx_v_theta = __Pyx_PyFloat_AsFloat(values[0]); if (unlikely((__pyx_v_theta == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 278, __pyx_L3_error)
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("set_theta", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 168, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("set_theta", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 278, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -8298,7 +9143,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_4set_theta(((struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *)__pyx_v_self), __pyx_v_theta);
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_6set_theta(((struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *)__pyx_v_self), __pyx_v_theta);
 
   /* function exit code */
   for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
@@ -8308,200 +9153,63 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_4set_theta(struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_v_self, PyObject *__pyx_v_theta) {
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_6set_theta(struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_v_self, __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_theta) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
-  float __pyx_t_1;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("set_theta", 0);
 
-  /* "coordinate_transform_wrapper.pyx":169
+  /* "coordinate_transform_wrapper.pyx":280
+ *     def set_theta(self, real32_T theta):
+ *         """Set rotor angle in radians and update inverse Park matrix"""
+ *         self._theta = theta             # <<<<<<<<<<<<<<
+ *         InvPark_InitMatrix(&self._inv_park_matrix, self._theta)
  * 
- *     def set_theta(self, theta):
- *         self._theta = <float> theta             # <<<<<<<<<<<<<<
- * 
- *     cpdef void compute(self):
 */
-  __pyx_t_1 = __Pyx_PyFloat_AsFloat(__pyx_v_theta); if (unlikely((__pyx_t_1 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 169, __pyx_L1_error)
-  __pyx_v_self->_theta = ((float)__pyx_t_1);
+  __pyx_v_self->_theta = __pyx_v_theta;
 
-  /* "coordinate_transform_wrapper.pyx":168
- *         self._in[1] = <float> u[1]
+  /* "coordinate_transform_wrapper.pyx":281
+ *         """Set rotor angle in radians and update inverse Park matrix"""
+ *         self._theta = theta
+ *         InvPark_InitMatrix(&self._inv_park_matrix, self._theta)             # <<<<<<<<<<<<<<
  * 
- *     def set_theta(self, theta):             # <<<<<<<<<<<<<<
- *         self._theta = <float> theta
+ *     def compute(self):
+*/
+  InvPark_InitMatrix((&__pyx_v_self->_inv_park_matrix), __pyx_v_self->_theta);
+
+  /* "coordinate_transform_wrapper.pyx":278
+ *         self._in.Q = <real32_T> u[1]
  * 
+ *     def set_theta(self, real32_T theta):             # <<<<<<<<<<<<<<
+ *         """Set rotor angle in radians and update inverse Park matrix"""
+ *         self._theta = theta
 */
 
   /* function exit code */
   __pyx_r = Py_None; __Pyx_INCREF(Py_None);
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  __Pyx_AddTraceback("coordinate_transform_wrapper.InvParkTransformWrapper.set_theta", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "coordinate_transform_wrapper.pyx":171
- *         self._theta = <float> theta
+/* "coordinate_transform_wrapper.pyx":283
+ *         InvPark_InitMatrix(&self._inv_park_matrix, self._theta)
  * 
- *     cpdef void compute(self):             # <<<<<<<<<<<<<<
- *         with nogil:
- *             inv_park_transform_compute_flat(self._in, self._theta, self._out)
+ *     def compute(self):             # <<<<<<<<<<<<<<
+ *         """Execute the inverse Park transform using matrix multiplication"""
+ *         InvPark_Transform(&self._inv_park_matrix, &self._in, &self._out)
 */
-
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_7compute(PyObject *__pyx_v_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-); /*proto*/
-static void __pyx_f_28coordinate_transform_wrapper_23InvParkTransformWrapper_compute(struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_v_self, int __pyx_skip_dispatch) {
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  PyObject *__pyx_t_4 = NULL;
-  size_t __pyx_t_5;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("compute", 0);
-  /* Check if called by wrapper */
-  if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overridden in Python */
-  else if (
-  #if !CYTHON_USE_TYPE_SLOTS
-  unlikely(Py_TYPE(((PyObject *)__pyx_v_self)) != __pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_InvParkTransformWrapper &&
-  __Pyx_PyType_HasFeature(Py_TYPE(((PyObject *)__pyx_v_self)), Py_TPFLAGS_HAVE_GC))
-  #else
-  unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0 || __Pyx_PyType_HasFeature(Py_TYPE(((PyObject *)__pyx_v_self)), (Py_TPFLAGS_IS_ABSTRACT | Py_TPFLAGS_HEAPTYPE)))
-  #endif
-  ) {
-    #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    static PY_UINT64_T __pyx_tp_dict_version = __PYX_DICT_VERSION_INIT, __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-    if (unlikely(!__Pyx_object_dict_version_matches(((PyObject *)__pyx_v_self), __pyx_tp_dict_version, __pyx_obj_dict_version))) {
-      PY_UINT64_T __pyx_typedict_guard = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_mstate_global->__pyx_n_u_compute); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 171, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      if (!__Pyx_IsSameCFunction(__pyx_t_1, (void(*)(void)) __pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_7compute)) {
-        __pyx_t_3 = NULL;
-        __Pyx_INCREF(__pyx_t_1);
-        __pyx_t_4 = __pyx_t_1; 
-        __pyx_t_5 = 1;
-        #if CYTHON_UNPACK_METHODS
-        if (unlikely(PyMethod_Check(__pyx_t_4))) {
-          __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_4);
-          assert(__pyx_t_3);
-          PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_4);
-          __Pyx_INCREF(__pyx_t_3);
-          __Pyx_INCREF(__pyx__function);
-          __Pyx_DECREF_SET(__pyx_t_4, __pyx__function);
-          __pyx_t_5 = 0;
-        }
-        #endif
-        {
-          PyObject *__pyx_callargs[2] = {__pyx_t_3, NULL};
-          __pyx_t_2 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_4, __pyx_callargs+__pyx_t_5, (1-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-          __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-          __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 171, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_2);
-        }
-        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        goto __pyx_L0;
-      }
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-      __pyx_tp_dict_version = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      __pyx_obj_dict_version = __Pyx_get_object_dict_version(((PyObject *)__pyx_v_self));
-      if (unlikely(__pyx_typedict_guard != __pyx_tp_dict_version)) {
-        __pyx_tp_dict_version = __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-      }
-      #endif
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    }
-    #endif
-  }
-
-  /* "coordinate_transform_wrapper.pyx":172
- * 
- *     cpdef void compute(self):
- *         with nogil:             # <<<<<<<<<<<<<<
- *             inv_park_transform_compute_flat(self._in, self._theta, self._out)
- * 
-*/
-  {
-      PyThreadState * _save;
-      _save = PyEval_SaveThread();
-      __Pyx_FastGIL_Remember();
-      /*try:*/ {
-
-        /* "coordinate_transform_wrapper.pyx":173
- *     cpdef void compute(self):
- *         with nogil:
- *             inv_park_transform_compute_flat(self._in, self._theta, self._out)             # <<<<<<<<<<<<<<
- * 
- *     cpdef cnp.ndarray get_outputs(self):
-*/
-        inv_park_transform_compute_flat(__pyx_v_self->_in, __pyx_v_self->_theta, __pyx_v_self->_out);
-      }
-
-      /* "coordinate_transform_wrapper.pyx":172
- * 
- *     cpdef void compute(self):
- *         with nogil:             # <<<<<<<<<<<<<<
- *             inv_park_transform_compute_flat(self._in, self._theta, self._out)
- * 
-*/
-      /*finally:*/ {
-        /*normal exit:*/{
-          __Pyx_FastGIL_Forget();
-          PyEval_RestoreThread(_save);
-          goto __pyx_L5;
-        }
-        __pyx_L5:;
-      }
-  }
-
-  /* "coordinate_transform_wrapper.pyx":171
- *         self._theta = <float> theta
- * 
- *     cpdef void compute(self):             # <<<<<<<<<<<<<<
- *         with nogil:
- *             inv_park_transform_compute_flat(self._in, self._theta, self._out)
-*/
-
-  /* function exit code */
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_AddTraceback("coordinate_transform_wrapper.InvParkTransformWrapper.compute", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_L0:;
-  __Pyx_RefNannyFinishContext();
-}
 
 /* Python wrapper */
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_7compute(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_9compute(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_23InvParkTransformWrapper_7compute = {"compute", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_7compute, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_7compute(PyObject *__pyx_v_self, 
+PyDoc_STRVAR(__pyx_doc_28coordinate_transform_wrapper_23InvParkTransformWrapper_8compute, "Execute the inverse Park transform using matrix multiplication");
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_23InvParkTransformWrapper_9compute = {"compute", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_9compute, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_23InvParkTransformWrapper_8compute};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_9compute(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -8527,220 +9235,134 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   const Py_ssize_t __pyx_kwds_len = unlikely(__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
   if (unlikely(__pyx_kwds_len < 0)) return NULL;
   if (unlikely(__pyx_kwds_len > 0)) {__Pyx_RejectKeywords("compute", __pyx_kwds); return NULL;}
-  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_6compute(((struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *)__pyx_v_self));
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_8compute(((struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_6compute(struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_v_self) {
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_8compute(struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("compute", 0);
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_f_28coordinate_transform_wrapper_23InvParkTransformWrapper_compute(__pyx_v_self, 1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 171, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_void_to_None(NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 171, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
+
+  /* "coordinate_transform_wrapper.pyx":285
+ *     def compute(self):
+ *         """Execute the inverse Park transform using matrix multiplication"""
+ *         InvPark_Transform(&self._inv_park_matrix, &self._in, &self._out)             # <<<<<<<<<<<<<<
+ * 
+ *     def get_outputs_alpha_beta(self):
+*/
+  InvPark_Transform((&__pyx_v_self->_inv_park_matrix), (&__pyx_v_self->_in), (&__pyx_v_self->_out));
+
+  /* "coordinate_transform_wrapper.pyx":283
+ *         InvPark_InitMatrix(&self._inv_park_matrix, self._theta)
+ * 
+ *     def compute(self):             # <<<<<<<<<<<<<<
+ *         """Execute the inverse Park transform using matrix multiplication"""
+ *         InvPark_Transform(&self._inv_park_matrix, &self._in, &self._out)
+*/
 
   /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("coordinate_transform_wrapper.InvParkTransformWrapper.compute", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "coordinate_transform_wrapper.pyx":175
- *             inv_park_transform_compute_flat(self._in, self._theta, self._out)
+/* "coordinate_transform_wrapper.pyx":287
+ *         InvPark_Transform(&self._inv_park_matrix, &self._in, &self._out)
  * 
- *     cpdef cnp.ndarray get_outputs(self):             # <<<<<<<<<<<<<<
- *         cdef cnp.ndarray y = np.empty(2, dtype=np.float32)
- *         y[0] = self._out[0]
+ *     def get_outputs_alpha_beta(self):             # <<<<<<<<<<<<<<
+ *         """Return outputs as tuple (alpha, beta)"""
+ *         return (self._out.Alpha, self._out.Beta)
 */
 
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_9get_outputs(PyObject *__pyx_v_self, 
+/* Python wrapper */
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_11get_outputs_alpha_beta(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyArrayObject *__pyx_f_28coordinate_transform_wrapper_23InvParkTransformWrapper_get_outputs(struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_v_self, int __pyx_skip_dispatch) {
-  PyArrayObject *__pyx_v_y = 0;
-  PyArrayObject *__pyx_r = NULL;
+PyDoc_STRVAR(__pyx_doc_28coordinate_transform_wrapper_23InvParkTransformWrapper_10get_outputs_alpha_beta, "Return outputs as tuple (alpha, beta)");
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_23InvParkTransformWrapper_11get_outputs_alpha_beta = {"get_outputs_alpha_beta", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_11get_outputs_alpha_beta, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_23InvParkTransformWrapper_10get_outputs_alpha_beta};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_11get_outputs_alpha_beta(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("get_outputs_alpha_beta (wrapper)", 0);
+  #if !CYTHON_METH_FASTCALL
+  #if CYTHON_ASSUME_SAFE_SIZE
+  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #else
+  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
+  #endif
+  #endif
+  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+  if (unlikely(__pyx_nargs > 0)) { __Pyx_RaiseArgtupleInvalid("get_outputs_alpha_beta", 1, 0, 0, __pyx_nargs); return NULL; }
+  const Py_ssize_t __pyx_kwds_len = unlikely(__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
+  if (unlikely(__pyx_kwds_len < 0)) return NULL;
+  if (unlikely(__pyx_kwds_len > 0)) {__Pyx_RejectKeywords("get_outputs_alpha_beta", __pyx_kwds); return NULL;}
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_10get_outputs_alpha_beta(((struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_10get_outputs_alpha_beta(struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   PyObject *__pyx_t_2 = NULL;
   PyObject *__pyx_t_3 = NULL;
-  PyObject *__pyx_t_4 = NULL;
-  size_t __pyx_t_5;
-  PyObject *__pyx_t_6 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("get_outputs", 0);
-  /* Check if called by wrapper */
-  if (unlikely(__pyx_skip_dispatch)) ;
-  /* Check if overridden in Python */
-  else if (
-  #if !CYTHON_USE_TYPE_SLOTS
-  unlikely(Py_TYPE(((PyObject *)__pyx_v_self)) != __pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_InvParkTransformWrapper &&
-  __Pyx_PyType_HasFeature(Py_TYPE(((PyObject *)__pyx_v_self)), Py_TPFLAGS_HAVE_GC))
-  #else
-  unlikely(Py_TYPE(((PyObject *)__pyx_v_self))->tp_dictoffset != 0 || __Pyx_PyType_HasFeature(Py_TYPE(((PyObject *)__pyx_v_self)), (Py_TPFLAGS_IS_ABSTRACT | Py_TPFLAGS_HEAPTYPE)))
-  #endif
-  ) {
-    #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    static PY_UINT64_T __pyx_tp_dict_version = __PYX_DICT_VERSION_INIT, __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-    if (unlikely(!__Pyx_object_dict_version_matches(((PyObject *)__pyx_v_self), __pyx_tp_dict_version, __pyx_obj_dict_version))) {
-      PY_UINT64_T __pyx_typedict_guard = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_mstate_global->__pyx_n_u_get_outputs); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 175, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      if (!__Pyx_IsSameCFunction(__pyx_t_1, (void(*)(void)) __pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_9get_outputs)) {
-        __Pyx_XDECREF((PyObject *)__pyx_r);
-        __pyx_t_3 = NULL;
-        __Pyx_INCREF(__pyx_t_1);
-        __pyx_t_4 = __pyx_t_1; 
-        __pyx_t_5 = 1;
-        #if CYTHON_UNPACK_METHODS
-        if (unlikely(PyMethod_Check(__pyx_t_4))) {
-          __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_4);
-          assert(__pyx_t_3);
-          PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_4);
-          __Pyx_INCREF(__pyx_t_3);
-          __Pyx_INCREF(__pyx__function);
-          __Pyx_DECREF_SET(__pyx_t_4, __pyx__function);
-          __pyx_t_5 = 0;
-        }
-        #endif
-        {
-          PyObject *__pyx_callargs[2] = {__pyx_t_3, NULL};
-          __pyx_t_2 = __Pyx_PyObject_FastCall((PyObject*)__pyx_t_4, __pyx_callargs+__pyx_t_5, (1-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-          __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-          __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 175, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_2);
-        }
-        if (!(likely(((__pyx_t_2) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_2, __pyx_mstate_global->__pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 175, __pyx_L1_error)
-        __pyx_r = ((PyArrayObject *)__pyx_t_2);
-        __pyx_t_2 = 0;
-        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        goto __pyx_L0;
-      }
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-      __pyx_tp_dict_version = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
-      __pyx_obj_dict_version = __Pyx_get_object_dict_version(((PyObject *)__pyx_v_self));
-      if (unlikely(__pyx_typedict_guard != __pyx_tp_dict_version)) {
-        __pyx_tp_dict_version = __pyx_obj_dict_version = __PYX_DICT_VERSION_INIT;
-      }
-      #endif
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-    }
-    #endif
-  }
+  __Pyx_RefNannySetupContext("get_outputs_alpha_beta", 0);
 
-  /* "coordinate_transform_wrapper.pyx":176
+  /* "coordinate_transform_wrapper.pyx":289
+ *     def get_outputs_alpha_beta(self):
+ *         """Return outputs as tuple (alpha, beta)"""
+ *         return (self._out.Alpha, self._out.Beta)             # <<<<<<<<<<<<<<
  * 
- *     cpdef cnp.ndarray get_outputs(self):
- *         cdef cnp.ndarray y = np.empty(2, dtype=np.float32)             # <<<<<<<<<<<<<<
- *         y[0] = self._out[0]
- *         y[1] = self._out[1]
+ *     def get_outputs(self):
 */
-  __pyx_t_2 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 176, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_empty); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 176, __pyx_L1_error)
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->_out.Alpha); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 289, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_self->_out.Beta); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 289, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 289, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 176, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_float32); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 176, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_6);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_5 = 1;
-  #if CYTHON_UNPACK_METHODS
-  if (unlikely(PyMethod_Check(__pyx_t_3))) {
-    __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_3);
-    assert(__pyx_t_2);
-    PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_3);
-    __Pyx_INCREF(__pyx_t_2);
-    __Pyx_INCREF(__pyx__function);
-    __Pyx_DECREF_SET(__pyx_t_3, __pyx__function);
-    __pyx_t_5 = 0;
-  }
-  #endif
-  {
-    PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_2, __pyx_mstate_global->__pyx_int_2};
-    __pyx_t_4 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 176, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_6, __pyx_t_4, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 176, __pyx_L1_error)
-    __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder((PyObject*)__pyx_t_3, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_4);
-    __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 176, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-  }
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_mstate_global->__pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 176, __pyx_L1_error)
-  __pyx_v_y = ((PyArrayObject *)__pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1) != (0)) __PYX_ERR(0, 289, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_2);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_t_2) != (0)) __PYX_ERR(0, 289, __pyx_L1_error);
   __pyx_t_1 = 0;
-
-  /* "coordinate_transform_wrapper.pyx":177
- *     cpdef cnp.ndarray get_outputs(self):
- *         cdef cnp.ndarray y = np.empty(2, dtype=np.float32)
- *         y[0] = self._out[0]             # <<<<<<<<<<<<<<
- *         y[1] = self._out[1]
- *         return y
-*/
-  __pyx_t_1 = PyFloat_FromDouble((__pyx_v_self->_out[0])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 177, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_y), 0, __pyx_t_1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_OwnStrongReference) < 0))) __PYX_ERR(0, 177, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "coordinate_transform_wrapper.pyx":178
- *         cdef cnp.ndarray y = np.empty(2, dtype=np.float32)
- *         y[0] = self._out[0]
- *         y[1] = self._out[1]             # <<<<<<<<<<<<<<
- *         return y
- * 
-*/
-  __pyx_t_1 = PyFloat_FromDouble((__pyx_v_self->_out[1])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 178, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (unlikely((__Pyx_SetItemInt(((PyObject *)__pyx_v_y), 1, __pyx_t_1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_OwnStrongReference) < 0))) __PYX_ERR(0, 178, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "coordinate_transform_wrapper.pyx":179
- *         y[0] = self._out[0]
- *         y[1] = self._out[1]
- *         return y             # <<<<<<<<<<<<<<
- * 
- * 
-*/
-  __Pyx_XDECREF((PyObject *)__pyx_r);
-  __Pyx_INCREF((PyObject *)__pyx_v_y);
-  __pyx_r = __pyx_v_y;
+  __pyx_t_2 = 0;
+  __pyx_r = __pyx_t_3;
+  __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "coordinate_transform_wrapper.pyx":175
- *             inv_park_transform_compute_flat(self._in, self._theta, self._out)
+  /* "coordinate_transform_wrapper.pyx":287
+ *         InvPark_Transform(&self._inv_park_matrix, &self._in, &self._out)
  * 
- *     cpdef cnp.ndarray get_outputs(self):             # <<<<<<<<<<<<<<
- *         cdef cnp.ndarray y = np.empty(2, dtype=np.float32)
- *         y[0] = self._out[0]
+ *     def get_outputs_alpha_beta(self):             # <<<<<<<<<<<<<<
+ *         """Return outputs as tuple (alpha, beta)"""
+ *         return (self._out.Alpha, self._out.Beta)
 */
 
   /* function exit code */
@@ -8748,27 +9370,33 @@ static PyArrayObject *__pyx_f_28coordinate_transform_wrapper_23InvParkTransformW
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_XDECREF(__pyx_t_6);
-  __Pyx_AddTraceback("coordinate_transform_wrapper.InvParkTransformWrapper.get_outputs", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = 0;
+  __Pyx_AddTraceback("coordinate_transform_wrapper.InvParkTransformWrapper.get_outputs_alpha_beta", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
   __pyx_L0:;
-  __Pyx_XDECREF((PyObject *)__pyx_v_y);
-  __Pyx_XGIVEREF((PyObject *)__pyx_r);
+  __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
+/* "coordinate_transform_wrapper.pyx":291
+ *         return (self._out.Alpha, self._out.Beta)
+ * 
+ *     def get_outputs(self):             # <<<<<<<<<<<<<<
+ *         """Return outputs as numpy array [alpha, beta]"""
+ *         return np.array([self._out.Alpha, self._out.Beta], dtype=np.float32)
+*/
+
 /* Python wrapper */
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_9get_outputs(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_13get_outputs(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_23InvParkTransformWrapper_9get_outputs = {"get_outputs", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_9get_outputs, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_9get_outputs(PyObject *__pyx_v_self, 
+PyDoc_STRVAR(__pyx_doc_28coordinate_transform_wrapper_23InvParkTransformWrapper_12get_outputs, "Return outputs as numpy array [alpha, beta]");
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_23InvParkTransformWrapper_13get_outputs = {"get_outputs", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_13get_outputs, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_23InvParkTransformWrapper_12get_outputs};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_13get_outputs(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -8794,31 +9422,105 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   const Py_ssize_t __pyx_kwds_len = unlikely(__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
   if (unlikely(__pyx_kwds_len < 0)) return NULL;
   if (unlikely(__pyx_kwds_len > 0)) {__Pyx_RejectKeywords("get_outputs", __pyx_kwds); return NULL;}
-  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_8get_outputs(((struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *)__pyx_v_self));
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_12get_outputs(((struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_8get_outputs(struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_v_self) {
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_12get_outputs(struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  PyObject *__pyx_t_4 = NULL;
+  PyObject *__pyx_t_5 = NULL;
+  PyObject *__pyx_t_6 = NULL;
+  size_t __pyx_t_7;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("get_outputs", 0);
+
+  /* "coordinate_transform_wrapper.pyx":293
+ *     def get_outputs(self):
+ *         """Return outputs as numpy array [alpha, beta]"""
+ *         return np.array([self._out.Alpha, self._out.Beta], dtype=np.float32)             # <<<<<<<<<<<<<<
+ * 
+ * #
+*/
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = ((PyObject *)__pyx_f_28coordinate_transform_wrapper_23InvParkTransformWrapper_get_outputs(__pyx_v_self, 1)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 175, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = NULL;
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 293, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_array); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 293, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_3 = PyFloat_FromDouble(__pyx_v_self->_out.Alpha); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 293, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_5 = PyFloat_FromDouble(__pyx_v_self->_out.Beta); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 293, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_6 = PyList_New(2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 293, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __Pyx_GIVEREF(__pyx_t_3);
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_6, 0, __pyx_t_3) != (0)) __PYX_ERR(0, 293, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_5);
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_6, 1, __pyx_t_5) != (0)) __PYX_ERR(0, 293, __pyx_L1_error);
+  __pyx_t_3 = 0;
+  __pyx_t_5 = 0;
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 293, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float32); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 293, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_7 = 1;
+  #if CYTHON_UNPACK_METHODS
+  if (unlikely(PyMethod_Check(__pyx_t_4))) {
+    __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_4);
+    assert(__pyx_t_2);
+    PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_4);
+    __Pyx_INCREF(__pyx_t_2);
+    __Pyx_INCREF(__pyx__function);
+    __Pyx_DECREF_SET(__pyx_t_4, __pyx__function);
+    __pyx_t_7 = 0;
+  }
+  #endif
+  {
+    PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_2, __pyx_t_6};
+    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 293, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_3, __pyx_t_5, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 293, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder((PyObject*)__pyx_t_4, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_5);
+    __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 293, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+  }
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
+  /* "coordinate_transform_wrapper.pyx":291
+ *         return (self._out.Alpha, self._out.Beta)
+ * 
+ *     def get_outputs(self):             # <<<<<<<<<<<<<<
+ *         """Return outputs as numpy array [alpha, beta]"""
+ *         return np.array([self._out.Alpha, self._out.Beta], dtype=np.float32)
+*/
+
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_XDECREF(__pyx_t_6);
   __Pyx_AddTraceback("coordinate_transform_wrapper.InvParkTransformWrapper.get_outputs", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
@@ -8834,15 +9536,15 @@ static PyObject *__pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapp
 */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_11__reduce_cython__(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_15__reduce_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_23InvParkTransformWrapper_11__reduce_cython__ = {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_11__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_11__reduce_cython__(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_23InvParkTransformWrapper_15__reduce_cython__ = {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_15__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_15__reduce_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -8868,14 +9570,14 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   const Py_ssize_t __pyx_kwds_len = unlikely(__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
   if (unlikely(__pyx_kwds_len < 0)) return NULL;
   if (unlikely(__pyx_kwds_len > 0)) {__Pyx_RejectKeywords("__reduce_cython__", __pyx_kwds); return NULL;}
-  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_10__reduce_cython__(((struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *)__pyx_v_self));
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_14__reduce_cython__(((struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_10__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_v_self) {
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_14__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_lineno = 0;
@@ -8915,15 +9617,15 @@ static PyObject *__pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapp
 */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_13__setstate_cython__(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_17__setstate_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_23InvParkTransformWrapper_13__setstate_cython__ = {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_13__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_13__setstate_cython__(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_23InvParkTransformWrapper_17__setstate_cython__ = {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_17__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_17__setstate_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -8989,7 +9691,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_12__setstate_cython__(((struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *)__pyx_v_self), __pyx_v___pyx_state);
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_16__setstate_cython__(((struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *)__pyx_v_self), __pyx_v___pyx_state);
 
   /* function exit code */
   for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
@@ -8999,7 +9701,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_12__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapper_16__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_lineno = 0;
@@ -9030,27 +9732,1184 @@ static PyObject *__pyx_pf_28coordinate_transform_wrapper_23InvParkTransformWrapp
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
-/* #### Code section: module_exttypes ### */
-static struct __pyx_vtabstruct_28coordinate_transform_wrapper_ClarkeTransformWrapper __pyx_vtable_28coordinate_transform_wrapper_ClarkeTransformWrapper;
 
-static PyObject *__pyx_tp_new_28coordinate_transform_wrapper_ClarkeTransformWrapper(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
-  struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *p;
+/* "coordinate_transform_wrapper.pyx":304
+ *     cdef real32_T           _theta
+ * 
+ *     def __cinit__(self):             # <<<<<<<<<<<<<<
+ *         self._in.A = 0.0
+ *         self._in.B = 0.0
+*/
+
+/* Python wrapper */
+static int __pyx_pw_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static int __pyx_pw_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_1__cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__cinit__ (wrapper)", 0);
+  #if CYTHON_ASSUME_SAFE_SIZE
+  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #else
+  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return -1;
+  #endif
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  if (unlikely(__pyx_nargs > 0)) { __Pyx_RaiseArgtupleInvalid("__cinit__", 1, 0, 0, __pyx_nargs); return -1; }
+  const Py_ssize_t __pyx_kwds_len = unlikely(__pyx_kwds) ? __Pyx_NumKwargs_VARARGS(__pyx_kwds) : 0;
+  if (unlikely(__pyx_kwds_len < 0)) return -1;
+  if (unlikely(__pyx_kwds_len > 0)) {__Pyx_RejectKeywords("__cinit__", __pyx_kwds); return -1;}
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper___cinit__(((struct __pyx_obj_28coordinate_transform_wrapper_ClarkeParkTransformWrapper *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper___cinit__(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeParkTransformWrapper *__pyx_v_self) {
+  int __pyx_r;
+
+  /* "coordinate_transform_wrapper.pyx":305
+ * 
+ *     def __cinit__(self):
+ *         self._in.A = 0.0             # <<<<<<<<<<<<<<
+ *         self._in.B = 0.0
+ *         self._in.C = 0.0
+*/
+  __pyx_v_self->_in.A = 0.0;
+
+  /* "coordinate_transform_wrapper.pyx":306
+ *     def __cinit__(self):
+ *         self._in.A = 0.0
+ *         self._in.B = 0.0             # <<<<<<<<<<<<<<
+ *         self._in.C = 0.0
+ *         self._out.D = 0.0
+*/
+  __pyx_v_self->_in.B = 0.0;
+
+  /* "coordinate_transform_wrapper.pyx":307
+ *         self._in.A = 0.0
+ *         self._in.B = 0.0
+ *         self._in.C = 0.0             # <<<<<<<<<<<<<<
+ *         self._out.D = 0.0
+ *         self._out.Q = 0.0
+*/
+  __pyx_v_self->_in.C = 0.0;
+
+  /* "coordinate_transform_wrapper.pyx":308
+ *         self._in.B = 0.0
+ *         self._in.C = 0.0
+ *         self._out.D = 0.0             # <<<<<<<<<<<<<<
+ *         self._out.Q = 0.0
+ *         self._theta = 0.0
+*/
+  __pyx_v_self->_out.D = 0.0;
+
+  /* "coordinate_transform_wrapper.pyx":309
+ *         self._in.C = 0.0
+ *         self._out.D = 0.0
+ *         self._out.Q = 0.0             # <<<<<<<<<<<<<<
+ *         self._theta = 0.0
+ *         Park_InitMatrix(&self._park_matrix, self._theta)
+*/
+  __pyx_v_self->_out.Q = 0.0;
+
+  /* "coordinate_transform_wrapper.pyx":310
+ *         self._out.D = 0.0
+ *         self._out.Q = 0.0
+ *         self._theta = 0.0             # <<<<<<<<<<<<<<
+ *         Park_InitMatrix(&self._park_matrix, self._theta)
+ * 
+*/
+  __pyx_v_self->_theta = 0.0;
+
+  /* "coordinate_transform_wrapper.pyx":311
+ *         self._out.Q = 0.0
+ *         self._theta = 0.0
+ *         Park_InitMatrix(&self._park_matrix, self._theta)             # <<<<<<<<<<<<<<
+ * 
+ *     def set_inputs_abc(self, real32_T a, real32_T b, real32_T c):
+*/
+  Park_InitMatrix((&__pyx_v_self->_park_matrix), __pyx_v_self->_theta);
+
+  /* "coordinate_transform_wrapper.pyx":304
+ *     cdef real32_T           _theta
+ * 
+ *     def __cinit__(self):             # <<<<<<<<<<<<<<
+ *         self._in.A = 0.0
+ *         self._in.B = 0.0
+*/
+
+  /* function exit code */
+  __pyx_r = 0;
+  return __pyx_r;
+}
+
+/* "coordinate_transform_wrapper.pyx":313
+ *         Park_InitMatrix(&self._park_matrix, self._theta)
+ * 
+ *     def set_inputs_abc(self, real32_T a, real32_T b, real32_T c):             # <<<<<<<<<<<<<<
+ *         self._in.A = a
+ *         self._in.B = b
+*/
+
+/* Python wrapper */
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_3set_inputs_abc(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_3set_inputs_abc = {"set_inputs_abc", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_3set_inputs_abc, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_3set_inputs_abc(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_a;
+  __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_b;
+  __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_c;
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject* values[3] = {0,0,0};
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("set_inputs_abc (wrapper)", 0);
+  #if !CYTHON_METH_FASTCALL
+  #if CYTHON_ASSUME_SAFE_SIZE
+  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #else
+  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
+  #endif
+  #endif
+  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+  {
+    PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_a,&__pyx_mstate_global->__pyx_n_u_b,&__pyx_mstate_global->__pyx_n_u_c,0};
+    const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 313, __pyx_L3_error)
+    if (__pyx_kwds_len > 0) {
+      switch (__pyx_nargs) {
+        case  3:
+        values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 313, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  2:
+        values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 313, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  1:
+        values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 313, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      const Py_ssize_t kwd_pos_args = __pyx_nargs;
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "set_inputs_abc", 0) < (0)) __PYX_ERR(0, 313, __pyx_L3_error)
+      for (Py_ssize_t i = __pyx_nargs; i < 3; i++) {
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("set_inputs_abc", 1, 3, 3, i); __PYX_ERR(0, 313, __pyx_L3_error) }
+      }
+    } else if (unlikely(__pyx_nargs != 3)) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 313, __pyx_L3_error)
+      values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 313, __pyx_L3_error)
+      values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 313, __pyx_L3_error)
+    }
+    __pyx_v_a = __Pyx_PyFloat_AsFloat(values[0]); if (unlikely((__pyx_v_a == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 313, __pyx_L3_error)
+    __pyx_v_b = __Pyx_PyFloat_AsFloat(values[1]); if (unlikely((__pyx_v_b == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 313, __pyx_L3_error)
+    __pyx_v_c = __Pyx_PyFloat_AsFloat(values[2]); if (unlikely((__pyx_v_c == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 313, __pyx_L3_error)
+  }
+  goto __pyx_L6_skip;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("set_inputs_abc", 1, 3, 3, __pyx_nargs); __PYX_ERR(0, 313, __pyx_L3_error)
+  __pyx_L6_skip:;
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L3_error:;
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __Pyx_AddTraceback("coordinate_transform_wrapper.ClarkeParkTransformWrapper.set_inputs_abc", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_2set_inputs_abc(((struct __pyx_obj_28coordinate_transform_wrapper_ClarkeParkTransformWrapper *)__pyx_v_self), __pyx_v_a, __pyx_v_b, __pyx_v_c);
+
+  /* function exit code */
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_2set_inputs_abc(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeParkTransformWrapper *__pyx_v_self, __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_a, __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_b, __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_c) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("set_inputs_abc", 0);
+
+  /* "coordinate_transform_wrapper.pyx":314
+ * 
+ *     def set_inputs_abc(self, real32_T a, real32_T b, real32_T c):
+ *         self._in.A = a             # <<<<<<<<<<<<<<
+ *         self._in.B = b
+ *         self._in.C = c
+*/
+  __pyx_v_self->_in.A = __pyx_v_a;
+
+  /* "coordinate_transform_wrapper.pyx":315
+ *     def set_inputs_abc(self, real32_T a, real32_T b, real32_T c):
+ *         self._in.A = a
+ *         self._in.B = b             # <<<<<<<<<<<<<<
+ *         self._in.C = c
+ * 
+*/
+  __pyx_v_self->_in.B = __pyx_v_b;
+
+  /* "coordinate_transform_wrapper.pyx":316
+ *         self._in.A = a
+ *         self._in.B = b
+ *         self._in.C = c             # <<<<<<<<<<<<<<
+ * 
+ *     def set_inputs(self, cnp.ndarray u):
+*/
+  __pyx_v_self->_in.C = __pyx_v_c;
+
+  /* "coordinate_transform_wrapper.pyx":313
+ *         Park_InitMatrix(&self._park_matrix, self._theta)
+ * 
+ *     def set_inputs_abc(self, real32_T a, real32_T b, real32_T c):             # <<<<<<<<<<<<<<
+ *         self._in.A = a
+ *         self._in.B = b
+*/
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "coordinate_transform_wrapper.pyx":318
+ *         self._in.C = c
+ * 
+ *     def set_inputs(self, cnp.ndarray u):             # <<<<<<<<<<<<<<
+ *         """Set three-phase inputs from numpy array [a, b, c]"""
+ *         if u.shape[0] < 3:
+*/
+
+/* Python wrapper */
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_5set_inputs(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+PyDoc_STRVAR(__pyx_doc_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_4set_inputs, "Set three-phase inputs from numpy array [a, b, c]");
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_5set_inputs = {"set_inputs", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_5set_inputs, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_4set_inputs};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_5set_inputs(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  PyArrayObject *__pyx_v_u = 0;
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject* values[1] = {0};
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("set_inputs (wrapper)", 0);
+  #if !CYTHON_METH_FASTCALL
+  #if CYTHON_ASSUME_SAFE_SIZE
+  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #else
+  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
+  #endif
+  #endif
+  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+  {
+    PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_u,0};
+    const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 318, __pyx_L3_error)
+    if (__pyx_kwds_len > 0) {
+      switch (__pyx_nargs) {
+        case  1:
+        values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 318, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      const Py_ssize_t kwd_pos_args = __pyx_nargs;
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "set_inputs", 0) < (0)) __PYX_ERR(0, 318, __pyx_L3_error)
+      for (Py_ssize_t i = __pyx_nargs; i < 1; i++) {
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("set_inputs", 1, 1, 1, i); __PYX_ERR(0, 318, __pyx_L3_error) }
+      }
+    } else if (unlikely(__pyx_nargs != 1)) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 318, __pyx_L3_error)
+    }
+    __pyx_v_u = ((PyArrayObject *)values[0]);
+  }
+  goto __pyx_L6_skip;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("set_inputs", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 318, __pyx_L3_error)
+  __pyx_L6_skip:;
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L3_error:;
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __Pyx_AddTraceback("coordinate_transform_wrapper.ClarkeParkTransformWrapper.set_inputs", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_u), __pyx_mstate_global->__pyx_ptype_5numpy_ndarray, 1, "u", 0))) __PYX_ERR(0, 318, __pyx_L1_error)
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_4set_inputs(((struct __pyx_obj_28coordinate_transform_wrapper_ClarkeParkTransformWrapper *)__pyx_v_self), __pyx_v_u);
+
+  /* function exit code */
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __pyx_r = NULL;
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  goto __pyx_L7_cleaned_up;
+  __pyx_L0:;
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __pyx_L7_cleaned_up:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_4set_inputs(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeParkTransformWrapper *__pyx_v_self, PyArrayObject *__pyx_v_u) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  size_t __pyx_t_4;
+  __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_t_5;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("set_inputs", 0);
+
+  /* "coordinate_transform_wrapper.pyx":320
+ *     def set_inputs(self, cnp.ndarray u):
+ *         """Set three-phase inputs from numpy array [a, b, c]"""
+ *         if u.shape[0] < 3:             # <<<<<<<<<<<<<<
+ *             raise ValueError("Input array must have at least 3 elements")
+ *         self._in.A = <real32_T> u[0]
+*/
+  __pyx_t_1 = ((__pyx_f_5numpy_7ndarray_5shape_shape(__pyx_v_u)[0]) < 3);
+  if (unlikely(__pyx_t_1)) {
+
+    /* "coordinate_transform_wrapper.pyx":321
+ *         """Set three-phase inputs from numpy array [a, b, c]"""
+ *         if u.shape[0] < 3:
+ *             raise ValueError("Input array must have at least 3 elements")             # <<<<<<<<<<<<<<
+ *         self._in.A = <real32_T> u[0]
+ *         self._in.B = <real32_T> u[1]
+*/
+    __pyx_t_3 = NULL;
+    __pyx_t_4 = 1;
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_3, __pyx_mstate_global->__pyx_kp_u_Input_array_must_have_at_least_3};
+      __pyx_t_2 = __Pyx_PyObject_FastCall((PyObject*)(((PyTypeObject*)PyExc_ValueError)), __pyx_callargs+__pyx_t_4, (2-__pyx_t_4) | (__pyx_t_4*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 321, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_2);
+    }
+    __Pyx_Raise(__pyx_t_2, 0, 0, 0);
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __PYX_ERR(0, 321, __pyx_L1_error)
+
+    /* "coordinate_transform_wrapper.pyx":320
+ *     def set_inputs(self, cnp.ndarray u):
+ *         """Set three-phase inputs from numpy array [a, b, c]"""
+ *         if u.shape[0] < 3:             # <<<<<<<<<<<<<<
+ *             raise ValueError("Input array must have at least 3 elements")
+ *         self._in.A = <real32_T> u[0]
+*/
+  }
+
+  /* "coordinate_transform_wrapper.pyx":322
+ *         if u.shape[0] < 3:
+ *             raise ValueError("Input array must have at least 3 elements")
+ *         self._in.A = <real32_T> u[0]             # <<<<<<<<<<<<<<
+ *         self._in.B = <real32_T> u[1]
+ *         self._in.C = <real32_T> u[2]
+*/
+  __pyx_t_2 = __Pyx_GetItemInt(((PyObject *)__pyx_v_u), 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 322, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_5 = __Pyx_PyFloat_AsFloat(__pyx_t_2); if (unlikely((__pyx_t_5 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 322, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_v_self->_in.A = ((__pyx_t_28coordinate_transform_wrapper_real32_T)__pyx_t_5);
+
+  /* "coordinate_transform_wrapper.pyx":323
+ *             raise ValueError("Input array must have at least 3 elements")
+ *         self._in.A = <real32_T> u[0]
+ *         self._in.B = <real32_T> u[1]             # <<<<<<<<<<<<<<
+ *         self._in.C = <real32_T> u[2]
+ * 
+*/
+  __pyx_t_2 = __Pyx_GetItemInt(((PyObject *)__pyx_v_u), 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 323, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_5 = __Pyx_PyFloat_AsFloat(__pyx_t_2); if (unlikely((__pyx_t_5 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 323, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_v_self->_in.B = ((__pyx_t_28coordinate_transform_wrapper_real32_T)__pyx_t_5);
+
+  /* "coordinate_transform_wrapper.pyx":324
+ *         self._in.A = <real32_T> u[0]
+ *         self._in.B = <real32_T> u[1]
+ *         self._in.C = <real32_T> u[2]             # <<<<<<<<<<<<<<
+ * 
+ *     def set_theta(self, real32_T theta):
+*/
+  __pyx_t_2 = __Pyx_GetItemInt(((PyObject *)__pyx_v_u), 2, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_FunctionArgument); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 324, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_5 = __Pyx_PyFloat_AsFloat(__pyx_t_2); if (unlikely((__pyx_t_5 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 324, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_v_self->_in.C = ((__pyx_t_28coordinate_transform_wrapper_real32_T)__pyx_t_5);
+
+  /* "coordinate_transform_wrapper.pyx":318
+ *         self._in.C = c
+ * 
+ *     def set_inputs(self, cnp.ndarray u):             # <<<<<<<<<<<<<<
+ *         """Set three-phase inputs from numpy array [a, b, c]"""
+ *         if u.shape[0] < 3:
+*/
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_AddTraceback("coordinate_transform_wrapper.ClarkeParkTransformWrapper.set_inputs", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "coordinate_transform_wrapper.pyx":326
+ *         self._in.C = <real32_T> u[2]
+ * 
+ *     def set_theta(self, real32_T theta):             # <<<<<<<<<<<<<<
+ *         """Set rotor angle in radians and update Park matrix"""
+ *         self._theta = theta
+*/
+
+/* Python wrapper */
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_7set_theta(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+PyDoc_STRVAR(__pyx_doc_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_6set_theta, "Set rotor angle in radians and update Park matrix");
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_7set_theta = {"set_theta", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_7set_theta, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_6set_theta};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_7set_theta(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_theta;
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject* values[1] = {0};
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("set_theta (wrapper)", 0);
+  #if !CYTHON_METH_FASTCALL
+  #if CYTHON_ASSUME_SAFE_SIZE
+  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #else
+  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
+  #endif
+  #endif
+  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+  {
+    PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_theta,0};
+    const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 326, __pyx_L3_error)
+    if (__pyx_kwds_len > 0) {
+      switch (__pyx_nargs) {
+        case  1:
+        values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 326, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      const Py_ssize_t kwd_pos_args = __pyx_nargs;
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "set_theta", 0) < (0)) __PYX_ERR(0, 326, __pyx_L3_error)
+      for (Py_ssize_t i = __pyx_nargs; i < 1; i++) {
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("set_theta", 1, 1, 1, i); __PYX_ERR(0, 326, __pyx_L3_error) }
+      }
+    } else if (unlikely(__pyx_nargs != 1)) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 326, __pyx_L3_error)
+    }
+    __pyx_v_theta = __Pyx_PyFloat_AsFloat(values[0]); if (unlikely((__pyx_v_theta == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 326, __pyx_L3_error)
+  }
+  goto __pyx_L6_skip;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("set_theta", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 326, __pyx_L3_error)
+  __pyx_L6_skip:;
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L3_error:;
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __Pyx_AddTraceback("coordinate_transform_wrapper.ClarkeParkTransformWrapper.set_theta", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_6set_theta(((struct __pyx_obj_28coordinate_transform_wrapper_ClarkeParkTransformWrapper *)__pyx_v_self), __pyx_v_theta);
+
+  /* function exit code */
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_6set_theta(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeParkTransformWrapper *__pyx_v_self, __pyx_t_28coordinate_transform_wrapper_real32_T __pyx_v_theta) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("set_theta", 0);
+
+  /* "coordinate_transform_wrapper.pyx":328
+ *     def set_theta(self, real32_T theta):
+ *         """Set rotor angle in radians and update Park matrix"""
+ *         self._theta = theta             # <<<<<<<<<<<<<<
+ *         Park_InitMatrix(&self._park_matrix, self._theta)
+ * 
+*/
+  __pyx_v_self->_theta = __pyx_v_theta;
+
+  /* "coordinate_transform_wrapper.pyx":329
+ *         """Set rotor angle in radians and update Park matrix"""
+ *         self._theta = theta
+ *         Park_InitMatrix(&self._park_matrix, self._theta)             # <<<<<<<<<<<<<<
+ * 
+ *     def compute(self):
+*/
+  Park_InitMatrix((&__pyx_v_self->_park_matrix), __pyx_v_self->_theta);
+
+  /* "coordinate_transform_wrapper.pyx":326
+ *         self._in.C = <real32_T> u[2]
+ * 
+ *     def set_theta(self, real32_T theta):             # <<<<<<<<<<<<<<
+ *         """Set rotor angle in radians and update Park matrix"""
+ *         self._theta = theta
+*/
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "coordinate_transform_wrapper.pyx":331
+ *         Park_InitMatrix(&self._park_matrix, self._theta)
+ * 
+ *     def compute(self):             # <<<<<<<<<<<<<<
+ *         """Execute combined Clarke-Park transform using matrix multiplication"""
+ *         ClarkePark_Transform(&self._park_matrix, &self._clarke_matrix,
+*/
+
+/* Python wrapper */
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_9compute(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+PyDoc_STRVAR(__pyx_doc_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_8compute, "Execute combined Clarke-Park transform using matrix multiplication");
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_9compute = {"compute", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_9compute, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_8compute};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_9compute(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("compute (wrapper)", 0);
+  #if !CYTHON_METH_FASTCALL
+  #if CYTHON_ASSUME_SAFE_SIZE
+  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #else
+  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
+  #endif
+  #endif
+  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+  if (unlikely(__pyx_nargs > 0)) { __Pyx_RaiseArgtupleInvalid("compute", 1, 0, 0, __pyx_nargs); return NULL; }
+  const Py_ssize_t __pyx_kwds_len = unlikely(__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
+  if (unlikely(__pyx_kwds_len < 0)) return NULL;
+  if (unlikely(__pyx_kwds_len > 0)) {__Pyx_RejectKeywords("compute", __pyx_kwds); return NULL;}
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_8compute(((struct __pyx_obj_28coordinate_transform_wrapper_ClarkeParkTransformWrapper *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_8compute(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeParkTransformWrapper *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("compute", 0);
+
+  /* "coordinate_transform_wrapper.pyx":333
+ *     def compute(self):
+ *         """Execute combined Clarke-Park transform using matrix multiplication"""
+ *         ClarkePark_Transform(&self._park_matrix, &self._clarke_matrix,             # <<<<<<<<<<<<<<
+ *                              &self._in, &self._out)
+ * 
+*/
+  ClarkePark_Transform((&__pyx_v_self->_park_matrix), (&__pyx_v_self->__pyx_base._clarke_matrix), (&__pyx_v_self->_in), (&__pyx_v_self->_out));
+
+  /* "coordinate_transform_wrapper.pyx":331
+ *         Park_InitMatrix(&self._park_matrix, self._theta)
+ * 
+ *     def compute(self):             # <<<<<<<<<<<<<<
+ *         """Execute combined Clarke-Park transform using matrix multiplication"""
+ *         ClarkePark_Transform(&self._park_matrix, &self._clarke_matrix,
+*/
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "coordinate_transform_wrapper.pyx":336
+ *                              &self._in, &self._out)
+ * 
+ *     def get_outputs_dq(self):             # <<<<<<<<<<<<<<
+ *         """Return outputs as tuple (d, q)"""
+ *         return (self._out.D, self._out.Q)
+*/
+
+/* Python wrapper */
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_11get_outputs_dq(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+PyDoc_STRVAR(__pyx_doc_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_10get_outputs_dq, "Return outputs as tuple (d, q)");
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_11get_outputs_dq = {"get_outputs_dq", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_11get_outputs_dq, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_10get_outputs_dq};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_11get_outputs_dq(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("get_outputs_dq (wrapper)", 0);
+  #if !CYTHON_METH_FASTCALL
+  #if CYTHON_ASSUME_SAFE_SIZE
+  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #else
+  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
+  #endif
+  #endif
+  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+  if (unlikely(__pyx_nargs > 0)) { __Pyx_RaiseArgtupleInvalid("get_outputs_dq", 1, 0, 0, __pyx_nargs); return NULL; }
+  const Py_ssize_t __pyx_kwds_len = unlikely(__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
+  if (unlikely(__pyx_kwds_len < 0)) return NULL;
+  if (unlikely(__pyx_kwds_len > 0)) {__Pyx_RejectKeywords("get_outputs_dq", __pyx_kwds); return NULL;}
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_10get_outputs_dq(((struct __pyx_obj_28coordinate_transform_wrapper_ClarkeParkTransformWrapper *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_10get_outputs_dq(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeParkTransformWrapper *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("get_outputs_dq", 0);
+
+  /* "coordinate_transform_wrapper.pyx":338
+ *     def get_outputs_dq(self):
+ *         """Return outputs as tuple (d, q)"""
+ *         return (self._out.D, self._out.Q)             # <<<<<<<<<<<<<<
+ * 
+ *     def get_outputs(self):
+*/
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->_out.D); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 338, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_self->_out.Q); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 338, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 338, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_GIVEREF(__pyx_t_1);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1) != (0)) __PYX_ERR(0, 338, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_2);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_t_2) != (0)) __PYX_ERR(0, 338, __pyx_L1_error);
+  __pyx_t_1 = 0;
+  __pyx_t_2 = 0;
+  __pyx_r = __pyx_t_3;
+  __pyx_t_3 = 0;
+  goto __pyx_L0;
+
+  /* "coordinate_transform_wrapper.pyx":336
+ *                              &self._in, &self._out)
+ * 
+ *     def get_outputs_dq(self):             # <<<<<<<<<<<<<<
+ *         """Return outputs as tuple (d, q)"""
+ *         return (self._out.D, self._out.Q)
+*/
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_AddTraceback("coordinate_transform_wrapper.ClarkeParkTransformWrapper.get_outputs_dq", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "coordinate_transform_wrapper.pyx":340
+ *         return (self._out.D, self._out.Q)
+ * 
+ *     def get_outputs(self):             # <<<<<<<<<<<<<<
+ *         """Return outputs as numpy array [d, q]"""
+ *         return np.array([self._out.D, self._out.Q], dtype=np.float32)
+*/
+
+/* Python wrapper */
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_13get_outputs(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+PyDoc_STRVAR(__pyx_doc_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_12get_outputs, "Return outputs as numpy array [d, q]");
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_13get_outputs = {"get_outputs", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_13get_outputs, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_12get_outputs};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_13get_outputs(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("get_outputs (wrapper)", 0);
+  #if !CYTHON_METH_FASTCALL
+  #if CYTHON_ASSUME_SAFE_SIZE
+  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #else
+  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
+  #endif
+  #endif
+  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+  if (unlikely(__pyx_nargs > 0)) { __Pyx_RaiseArgtupleInvalid("get_outputs", 1, 0, 0, __pyx_nargs); return NULL; }
+  const Py_ssize_t __pyx_kwds_len = unlikely(__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
+  if (unlikely(__pyx_kwds_len < 0)) return NULL;
+  if (unlikely(__pyx_kwds_len > 0)) {__Pyx_RejectKeywords("get_outputs", __pyx_kwds); return NULL;}
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_12get_outputs(((struct __pyx_obj_28coordinate_transform_wrapper_ClarkeParkTransformWrapper *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_12get_outputs(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeParkTransformWrapper *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  PyObject *__pyx_t_4 = NULL;
+  PyObject *__pyx_t_5 = NULL;
+  PyObject *__pyx_t_6 = NULL;
+  size_t __pyx_t_7;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("get_outputs", 0);
+
+  /* "coordinate_transform_wrapper.pyx":342
+ *     def get_outputs(self):
+ *         """Return outputs as numpy array [d, q]"""
+ *         return np.array([self._out.D, self._out.Q], dtype=np.float32)             # <<<<<<<<<<<<<<
+*/
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_2 = NULL;
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 342, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_array); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 342, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_3 = PyFloat_FromDouble(__pyx_v_self->_out.D); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 342, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_5 = PyFloat_FromDouble(__pyx_v_self->_out.Q); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 342, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_6 = PyList_New(2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 342, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __Pyx_GIVEREF(__pyx_t_3);
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_6, 0, __pyx_t_3) != (0)) __PYX_ERR(0, 342, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_5);
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_6, 1, __pyx_t_5) != (0)) __PYX_ERR(0, 342, __pyx_L1_error);
+  __pyx_t_3 = 0;
+  __pyx_t_5 = 0;
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 342, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_mstate_global->__pyx_n_u_float32); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 342, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_7 = 1;
+  #if CYTHON_UNPACK_METHODS
+  if (unlikely(PyMethod_Check(__pyx_t_4))) {
+    __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_4);
+    assert(__pyx_t_2);
+    PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_4);
+    __Pyx_INCREF(__pyx_t_2);
+    __Pyx_INCREF(__pyx__function);
+    __Pyx_DECREF_SET(__pyx_t_4, __pyx__function);
+    __pyx_t_7 = 0;
+  }
+  #endif
+  {
+    PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_2, __pyx_t_6};
+    __pyx_t_5 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 342, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_dtype, __pyx_t_3, __pyx_t_5, __pyx_callargs+2, 0) < (0)) __PYX_ERR(0, 342, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_Object_Vectorcall_CallFromBuilder((PyObject*)__pyx_t_4, __pyx_callargs+__pyx_t_7, (2-__pyx_t_7) | (__pyx_t_7*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_5);
+    __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 342, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+  }
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "coordinate_transform_wrapper.pyx":340
+ *         return (self._out.D, self._out.Q)
+ * 
+ *     def get_outputs(self):             # <<<<<<<<<<<<<<
+ *         """Return outputs as numpy array [d, q]"""
+ *         return np.array([self._out.D, self._out.Q], dtype=np.float32)
+*/
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_XDECREF(__pyx_t_6);
+  __Pyx_AddTraceback("coordinate_transform_wrapper.ClarkeParkTransformWrapper.get_outputs", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "(tree fragment)":1
+ * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+ * def __setstate_cython__(self, __pyx_state):
+*/
+
+/* Python wrapper */
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_15__reduce_cython__(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_15__reduce_cython__ = {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_15__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_15__reduce_cython__(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__reduce_cython__ (wrapper)", 0);
+  #if !CYTHON_METH_FASTCALL
+  #if CYTHON_ASSUME_SAFE_SIZE
+  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #else
+  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
+  #endif
+  #endif
+  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+  if (unlikely(__pyx_nargs > 0)) { __Pyx_RaiseArgtupleInvalid("__reduce_cython__", 1, 0, 0, __pyx_nargs); return NULL; }
+  const Py_ssize_t __pyx_kwds_len = unlikely(__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
+  if (unlikely(__pyx_kwds_len < 0)) return NULL;
+  if (unlikely(__pyx_kwds_len > 0)) {__Pyx_RejectKeywords("__reduce_cython__", __pyx_kwds); return NULL;}
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_14__reduce_cython__(((struct __pyx_obj_28coordinate_transform_wrapper_ClarkeParkTransformWrapper *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_14__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_ClarkeParkTransformWrapper *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__reduce_cython__", 0);
+
+  /* "(tree fragment)":2
+ * def __reduce_cython__(self):
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"             # <<<<<<<<<<<<<<
+ * def __setstate_cython__(self, __pyx_state):
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+*/
+  __Pyx_Raise(((PyObject *)(((PyTypeObject*)PyExc_TypeError))), __pyx_mstate_global->__pyx_kp_u_no_default___reduce___due_to_non, 0, 0);
+  __PYX_ERR(2, 2, __pyx_L1_error)
+
+  /* "(tree fragment)":1
+ * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+ * def __setstate_cython__(self, __pyx_state):
+*/
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("coordinate_transform_wrapper.ClarkeParkTransformWrapper.__reduce_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "(tree fragment)":3
+ * def __reduce_cython__(self):
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+ * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+*/
+
+/* Python wrapper */
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_17__setstate_cython__(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+static PyMethodDef __pyx_mdef_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_17__setstate_cython__ = {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_17__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_17__setstate_cython__(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  CYTHON_UNUSED PyObject *__pyx_v___pyx_state = 0;
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject* values[1] = {0};
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__setstate_cython__ (wrapper)", 0);
+  #if !CYTHON_METH_FASTCALL
+  #if CYTHON_ASSUME_SAFE_SIZE
+  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #else
+  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
+  #endif
+  #endif
+  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+  {
+    PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_pyx_state,0};
+    const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(2, 3, __pyx_L3_error)
+    if (__pyx_kwds_len > 0) {
+      switch (__pyx_nargs) {
+        case  1:
+        values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(2, 3, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      const Py_ssize_t kwd_pos_args = __pyx_nargs;
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "__setstate_cython__", 0) < (0)) __PYX_ERR(2, 3, __pyx_L3_error)
+      for (Py_ssize_t i = __pyx_nargs; i < 1; i++) {
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("__setstate_cython__", 1, 1, 1, i); __PYX_ERR(2, 3, __pyx_L3_error) }
+      }
+    } else if (unlikely(__pyx_nargs != 1)) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(2, 3, __pyx_L3_error)
+    }
+    __pyx_v___pyx_state = values[0];
+  }
+  goto __pyx_L6_skip;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("__setstate_cython__", 1, 1, 1, __pyx_nargs); __PYX_ERR(2, 3, __pyx_L3_error)
+  __pyx_L6_skip:;
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L3_error:;
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __Pyx_AddTraceback("coordinate_transform_wrapper.ClarkeParkTransformWrapper.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_16__setstate_cython__(((struct __pyx_obj_28coordinate_transform_wrapper_ClarkeParkTransformWrapper *)__pyx_v_self), __pyx_v___pyx_state);
+
+  /* function exit code */
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_16__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_28coordinate_transform_wrapper_ClarkeParkTransformWrapper *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__setstate_cython__", 0);
+
+  /* "(tree fragment)":4
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+ * def __setstate_cython__(self, __pyx_state):
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"             # <<<<<<<<<<<<<<
+*/
+  __Pyx_Raise(((PyObject *)(((PyTypeObject*)PyExc_TypeError))), __pyx_mstate_global->__pyx_kp_u_no_default___reduce___due_to_non, 0, 0);
+  __PYX_ERR(2, 4, __pyx_L1_error)
+
+  /* "(tree fragment)":3
+ * def __reduce_cython__(self):
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+ * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+*/
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_AddTraceback("coordinate_transform_wrapper.ClarkeParkTransformWrapper.__setstate_cython__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+/* #### Code section: module_exttypes ### */
+static struct __pyx_vtabstruct_28coordinate_transform_wrapper_TransformWrapperBase __pyx_vtable_28coordinate_transform_wrapper_TransformWrapperBase;
+
+static PyObject *__pyx_tp_new_28coordinate_transform_wrapper_TransformWrapperBase(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
+  struct __pyx_obj_28coordinate_transform_wrapper_TransformWrapperBase *p;
   PyObject *o;
   o = __Pyx_AllocateExtensionType(t, 0);
   if (unlikely(!o)) return 0;
-  p = ((struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *)o);
-  p->__pyx_vtab = __pyx_vtabptr_28coordinate_transform_wrapper_ClarkeTransformWrapper;
-  if (unlikely(__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_1__cinit__(o, __pyx_mstate_global->__pyx_empty_tuple, NULL) < 0)) goto bad;
+  p = ((struct __pyx_obj_28coordinate_transform_wrapper_TransformWrapperBase *)o);
+  p->__pyx_vtab = __pyx_vtabptr_28coordinate_transform_wrapper_TransformWrapperBase;
+  if (unlikely(__pyx_pw_28coordinate_transform_wrapper_20TransformWrapperBase_1__cinit__(o, __pyx_mstate_global->__pyx_empty_tuple, NULL) < 0)) goto bad;
   return o;
   bad:
   Py_DECREF(o); o = 0;
   return NULL;
 }
 
-static void __pyx_tp_dealloc_28coordinate_transform_wrapper_ClarkeTransformWrapper(PyObject *o) {
+static void __pyx_tp_dealloc_28coordinate_transform_wrapper_TransformWrapperBase(PyObject *o) {
   #if CYTHON_USE_TP_FINALIZE
   if (unlikely(__Pyx_PyObject_GetSlot(o, tp_finalize, destructor)) && (!PyType_IS_GC(Py_TYPE(o)) || !__Pyx_PyObject_GC_IsFinalized(o))) {
-    if (__Pyx_PyObject_GetSlot(o, tp_dealloc, destructor) == __pyx_tp_dealloc_28coordinate_transform_wrapper_ClarkeTransformWrapper) {
+    if (__Pyx_PyObject_GetSlot(o, tp_dealloc, destructor) == __pyx_tp_dealloc_28coordinate_transform_wrapper_TransformWrapperBase) {
       if (PyObject_CallFinalizerFromDealloc(o)) return;
     }
   }
@@ -9069,32 +10928,128 @@ static void __pyx_tp_dealloc_28coordinate_transform_wrapper_ClarkeTransformWrapp
   #endif
 }
 
-static PyObject *__pyx_getprop_28coordinate_transform_wrapper_22ClarkeTransformWrapper_alpha(PyObject *o, CYTHON_UNUSED void *x) {
-  return __pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_5alpha_1__get__(o);
-}
+static PyMethodDef __pyx_methods_28coordinate_transform_wrapper_TransformWrapperBase[] = {
+  {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_20TransformWrapperBase_3__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_20TransformWrapperBase_5__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {0, 0, 0, 0}
+};
+#if CYTHON_USE_TYPE_SPECS
+static PyType_Slot __pyx_type_28coordinate_transform_wrapper_TransformWrapperBase_slots[] = {
+  {Py_tp_dealloc, (void *)__pyx_tp_dealloc_28coordinate_transform_wrapper_TransformWrapperBase},
+  {Py_tp_methods, (void *)__pyx_methods_28coordinate_transform_wrapper_TransformWrapperBase},
+  {Py_tp_new, (void *)__pyx_tp_new_28coordinate_transform_wrapper_TransformWrapperBase},
+  {0, 0},
+};
+static PyType_Spec __pyx_type_28coordinate_transform_wrapper_TransformWrapperBase_spec = {
+  "coordinate_transform_wrapper.TransformWrapperBase",
+  sizeof(struct __pyx_obj_28coordinate_transform_wrapper_TransformWrapperBase),
+  0,
+  Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE,
+  __pyx_type_28coordinate_transform_wrapper_TransformWrapperBase_slots,
+};
+#else
 
-static PyObject *__pyx_getprop_28coordinate_transform_wrapper_22ClarkeTransformWrapper_beta(PyObject *o, CYTHON_UNUSED void *x) {
-  return __pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_4beta_1__get__(o);
+static PyTypeObject __pyx_type_28coordinate_transform_wrapper_TransformWrapperBase = {
+  PyVarObject_HEAD_INIT(0, 0)
+  "coordinate_transform_wrapper.""TransformWrapperBase", /*tp_name*/
+  sizeof(struct __pyx_obj_28coordinate_transform_wrapper_TransformWrapperBase), /*tp_basicsize*/
+  0, /*tp_itemsize*/
+  __pyx_tp_dealloc_28coordinate_transform_wrapper_TransformWrapperBase, /*tp_dealloc*/
+  0, /*tp_vectorcall_offset*/
+  0, /*tp_getattr*/
+  0, /*tp_setattr*/
+  0, /*tp_as_async*/
+  0, /*tp_repr*/
+  0, /*tp_as_number*/
+  0, /*tp_as_sequence*/
+  0, /*tp_as_mapping*/
+  0, /*tp_hash*/
+  0, /*tp_call*/
+  0, /*tp_str*/
+  0, /*tp_getattro*/
+  0, /*tp_setattro*/
+  0, /*tp_as_buffer*/
+  Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE, /*tp_flags*/
+  0, /*tp_doc*/
+  0, /*tp_traverse*/
+  0, /*tp_clear*/
+  0, /*tp_richcompare*/
+  0, /*tp_weaklistoffset*/
+  0, /*tp_iter*/
+  0, /*tp_iternext*/
+  __pyx_methods_28coordinate_transform_wrapper_TransformWrapperBase, /*tp_methods*/
+  0, /*tp_members*/
+  0, /*tp_getset*/
+  0, /*tp_base*/
+  0, /*tp_dict*/
+  0, /*tp_descr_get*/
+  0, /*tp_descr_set*/
+  #if !CYTHON_USE_TYPE_SPECS
+  0, /*tp_dictoffset*/
+  #endif
+  0, /*tp_init*/
+  0, /*tp_alloc*/
+  __pyx_tp_new_28coordinate_transform_wrapper_TransformWrapperBase, /*tp_new*/
+  0, /*tp_free*/
+  0, /*tp_is_gc*/
+  0, /*tp_bases*/
+  0, /*tp_mro*/
+  0, /*tp_cache*/
+  0, /*tp_subclasses*/
+  0, /*tp_weaklist*/
+  0, /*tp_del*/
+  0, /*tp_version_tag*/
+  #if CYTHON_USE_TP_FINALIZE
+  0, /*tp_finalize*/
+  #else
+  NULL, /*tp_finalize*/
+  #endif
+  #if !CYTHON_COMPILING_IN_PYPY || PYPY_VERSION_NUM >= 0x07030800
+  0, /*tp_vectorcall*/
+  #endif
+  #if __PYX_NEED_TP_PRINT_SLOT == 1
+  0, /*tp_print*/
+  #endif
+  #if PY_VERSION_HEX >= 0x030C0000
+  0, /*tp_watched*/
+  #endif
+  #if PY_VERSION_HEX >= 0x030d00A4
+  0, /*tp_versions_used*/
+  #endif
+  #if CYTHON_COMPILING_IN_PYPY && PY_VERSION_HEX >= 0x03090000 && PY_VERSION_HEX < 0x030a0000
+  0, /*tp_pypy_flags*/
+  #endif
+};
+#endif
+static struct __pyx_vtabstruct_28coordinate_transform_wrapper_ClarkeTransformWrapper __pyx_vtable_28coordinate_transform_wrapper_ClarkeTransformWrapper;
+
+static PyObject *__pyx_tp_new_28coordinate_transform_wrapper_ClarkeTransformWrapper(PyTypeObject *t, PyObject *a, PyObject *k) {
+  struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *p;
+  PyObject *o = __pyx_tp_new_28coordinate_transform_wrapper_TransformWrapperBase(t, a, k);
+  if (unlikely(!o)) return 0;
+  p = ((struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *)o);
+  p->__pyx_base.__pyx_vtab = (struct __pyx_vtabstruct_28coordinate_transform_wrapper_TransformWrapperBase*)__pyx_vtabptr_28coordinate_transform_wrapper_ClarkeTransformWrapper;
+  if (unlikely(__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_1__cinit__(o, __pyx_mstate_global->__pyx_empty_tuple, NULL) < 0)) goto bad;
+  return o;
+  bad:
+  Py_DECREF(o); o = 0;
+  return NULL;
 }
 
 static PyMethodDef __pyx_methods_28coordinate_transform_wrapper_ClarkeTransformWrapper[] = {
-  {"set_inputs", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_3set_inputs, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
-  {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_9__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
-  {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_11__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"set_inputs_abc", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_3set_inputs_abc, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"set_inputs", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_5set_inputs, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_22ClarkeTransformWrapper_4set_inputs},
+  {"compute", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_7compute, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_22ClarkeTransformWrapper_6compute},
+  {"get_outputs_alpha_beta", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_9get_outputs_alpha_beta, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_22ClarkeTransformWrapper_8get_outputs_alpha_beta},
+  {"get_outputs", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_11get_outputs, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_22ClarkeTransformWrapper_10get_outputs},
+  {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_13__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_22ClarkeTransformWrapper_15__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
   {0, 0, 0, 0}
-};
-
-static struct PyGetSetDef __pyx_getsets_28coordinate_transform_wrapper_ClarkeTransformWrapper[] = {
-  {"alpha", __pyx_getprop_28coordinate_transform_wrapper_22ClarkeTransformWrapper_alpha, 0, 0, 0},
-  {"beta", __pyx_getprop_28coordinate_transform_wrapper_22ClarkeTransformWrapper_beta, 0, 0, 0},
-  {0, 0, 0, 0, 0}
 };
 #if CYTHON_USE_TYPE_SPECS
 static PyType_Slot __pyx_type_28coordinate_transform_wrapper_ClarkeTransformWrapper_slots[] = {
-  {Py_tp_dealloc, (void *)__pyx_tp_dealloc_28coordinate_transform_wrapper_ClarkeTransformWrapper},
-  {Py_tp_doc, (void *)PyDoc_STR("\n    Wrapper for clarke_transform_compute_flat.\n\n    set_inputs(u)  \342\200\224 u = [ia, ib, ic]\n    compute()\n    get_outputs()  \342\200\224 [alpha, beta]\n    ")},
+  {Py_tp_dealloc, (void *)__pyx_tp_dealloc_28coordinate_transform_wrapper_TransformWrapperBase},
   {Py_tp_methods, (void *)__pyx_methods_28coordinate_transform_wrapper_ClarkeTransformWrapper},
-  {Py_tp_getset, (void *)__pyx_getsets_28coordinate_transform_wrapper_ClarkeTransformWrapper},
   {Py_tp_new, (void *)__pyx_tp_new_28coordinate_transform_wrapper_ClarkeTransformWrapper},
   {0, 0},
 };
@@ -9112,7 +11067,7 @@ static PyTypeObject __pyx_type_28coordinate_transform_wrapper_ClarkeTransformWra
   "coordinate_transform_wrapper.""ClarkeTransformWrapper", /*tp_name*/
   sizeof(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper), /*tp_basicsize*/
   0, /*tp_itemsize*/
-  __pyx_tp_dealloc_28coordinate_transform_wrapper_ClarkeTransformWrapper, /*tp_dealloc*/
+  __pyx_tp_dealloc_28coordinate_transform_wrapper_TransformWrapperBase, /*tp_dealloc*/
   0, /*tp_vectorcall_offset*/
   0, /*tp_getattr*/
   0, /*tp_setattr*/
@@ -9128,7 +11083,7 @@ static PyTypeObject __pyx_type_28coordinate_transform_wrapper_ClarkeTransformWra
   0, /*tp_setattro*/
   0, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE, /*tp_flags*/
-  PyDoc_STR("\n    Wrapper for clarke_transform_compute_flat.\n\n    set_inputs(u)  \342\200\224 u = [ia, ib, ic]\n    compute()\n    get_outputs()  \342\200\224 [alpha, beta]\n    "), /*tp_doc*/
+  0, /*tp_doc*/
   0, /*tp_traverse*/
   0, /*tp_clear*/
   0, /*tp_richcompare*/
@@ -9137,7 +11092,7 @@ static PyTypeObject __pyx_type_28coordinate_transform_wrapper_ClarkeTransformWra
   0, /*tp_iternext*/
   __pyx_methods_28coordinate_transform_wrapper_ClarkeTransformWrapper, /*tp_methods*/
   0, /*tp_members*/
-  __pyx_getsets_28coordinate_transform_wrapper_ClarkeTransformWrapper, /*tp_getset*/
+  0, /*tp_getset*/
   0, /*tp_base*/
   0, /*tp_dict*/
   0, /*tp_descr_get*/
@@ -9181,13 +11136,12 @@ static PyTypeObject __pyx_type_28coordinate_transform_wrapper_ClarkeTransformWra
 #endif
 static struct __pyx_vtabstruct_28coordinate_transform_wrapper_InvClarkeTransformWrapper __pyx_vtable_28coordinate_transform_wrapper_InvClarkeTransformWrapper;
 
-static PyObject *__pyx_tp_new_28coordinate_transform_wrapper_InvClarkeTransformWrapper(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
+static PyObject *__pyx_tp_new_28coordinate_transform_wrapper_InvClarkeTransformWrapper(PyTypeObject *t, PyObject *a, PyObject *k) {
   struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *p;
-  PyObject *o;
-  o = __Pyx_AllocateExtensionType(t, 0);
+  PyObject *o = __pyx_tp_new_28coordinate_transform_wrapper_TransformWrapperBase(t, a, k);
   if (unlikely(!o)) return 0;
   p = ((struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *)o);
-  p->__pyx_vtab = __pyx_vtabptr_28coordinate_transform_wrapper_InvClarkeTransformWrapper;
+  p->__pyx_base.__pyx_vtab = (struct __pyx_vtabstruct_28coordinate_transform_wrapper_TransformWrapperBase*)__pyx_vtabptr_28coordinate_transform_wrapper_InvClarkeTransformWrapper;
   if (unlikely(__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_1__cinit__(o, __pyx_mstate_global->__pyx_empty_tuple, NULL) < 0)) goto bad;
   return o;
   bad:
@@ -9195,38 +11149,19 @@ static PyObject *__pyx_tp_new_28coordinate_transform_wrapper_InvClarkeTransformW
   return NULL;
 }
 
-static void __pyx_tp_dealloc_28coordinate_transform_wrapper_InvClarkeTransformWrapper(PyObject *o) {
-  #if CYTHON_USE_TP_FINALIZE
-  if (unlikely(__Pyx_PyObject_GetSlot(o, tp_finalize, destructor)) && (!PyType_IS_GC(Py_TYPE(o)) || !__Pyx_PyObject_GC_IsFinalized(o))) {
-    if (__Pyx_PyObject_GetSlot(o, tp_dealloc, destructor) == __pyx_tp_dealloc_28coordinate_transform_wrapper_InvClarkeTransformWrapper) {
-      if (PyObject_CallFinalizerFromDealloc(o)) return;
-    }
-  }
-  #endif
-  PyTypeObject *tp = Py_TYPE(o);
-  #if CYTHON_USE_TYPE_SLOTS
-  (*tp->tp_free)(o);
-  #else
-  {
-    freefunc tp_free = (freefunc)PyType_GetSlot(tp, Py_tp_free);
-    if (tp_free) tp_free(o);
-  }
-  #endif
-  #if CYTHON_USE_TYPE_SPECS
-  Py_DECREF(tp);
-  #endif
-}
-
 static PyMethodDef __pyx_methods_28coordinate_transform_wrapper_InvClarkeTransformWrapper[] = {
-  {"set_inputs", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_3set_inputs, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
-  {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_9__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
-  {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_11__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"set_inputs_alpha_beta", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_3set_inputs_alpha_beta, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"set_inputs", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_5set_inputs, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_4set_inputs},
+  {"compute", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_7compute, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_6compute},
+  {"get_outputs_abc", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_9get_outputs_abc, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_8get_outputs_abc},
+  {"get_outputs", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_11get_outputs, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_10get_outputs},
+  {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_13__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_15__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
   {0, 0, 0, 0}
 };
 #if CYTHON_USE_TYPE_SPECS
 static PyType_Slot __pyx_type_28coordinate_transform_wrapper_InvClarkeTransformWrapper_slots[] = {
-  {Py_tp_dealloc, (void *)__pyx_tp_dealloc_28coordinate_transform_wrapper_InvClarkeTransformWrapper},
-  {Py_tp_doc, (void *)PyDoc_STR("\n    Wrapper for inv_clarke_transform_compute_flat.\n\n    set_inputs(u)  \342\200\224 u = [alpha, beta]\n    compute()\n    get_outputs()  \342\200\224 [a, b, c]\n    ")},
+  {Py_tp_dealloc, (void *)__pyx_tp_dealloc_28coordinate_transform_wrapper_TransformWrapperBase},
   {Py_tp_methods, (void *)__pyx_methods_28coordinate_transform_wrapper_InvClarkeTransformWrapper},
   {Py_tp_new, (void *)__pyx_tp_new_28coordinate_transform_wrapper_InvClarkeTransformWrapper},
   {0, 0},
@@ -9245,7 +11180,7 @@ static PyTypeObject __pyx_type_28coordinate_transform_wrapper_InvClarkeTransform
   "coordinate_transform_wrapper.""InvClarkeTransformWrapper", /*tp_name*/
   sizeof(struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper), /*tp_basicsize*/
   0, /*tp_itemsize*/
-  __pyx_tp_dealloc_28coordinate_transform_wrapper_InvClarkeTransformWrapper, /*tp_dealloc*/
+  __pyx_tp_dealloc_28coordinate_transform_wrapper_TransformWrapperBase, /*tp_dealloc*/
   0, /*tp_vectorcall_offset*/
   0, /*tp_getattr*/
   0, /*tp_setattr*/
@@ -9261,7 +11196,7 @@ static PyTypeObject __pyx_type_28coordinate_transform_wrapper_InvClarkeTransform
   0, /*tp_setattro*/
   0, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE, /*tp_flags*/
-  PyDoc_STR("\n    Wrapper for inv_clarke_transform_compute_flat.\n\n    set_inputs(u)  \342\200\224 u = [alpha, beta]\n    compute()\n    get_outputs()  \342\200\224 [a, b, c]\n    "), /*tp_doc*/
+  0, /*tp_doc*/
   0, /*tp_traverse*/
   0, /*tp_clear*/
   0, /*tp_richcompare*/
@@ -9314,13 +11249,12 @@ static PyTypeObject __pyx_type_28coordinate_transform_wrapper_InvClarkeTransform
 #endif
 static struct __pyx_vtabstruct_28coordinate_transform_wrapper_ParkTransformWrapper __pyx_vtable_28coordinate_transform_wrapper_ParkTransformWrapper;
 
-static PyObject *__pyx_tp_new_28coordinate_transform_wrapper_ParkTransformWrapper(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
+static PyObject *__pyx_tp_new_28coordinate_transform_wrapper_ParkTransformWrapper(PyTypeObject *t, PyObject *a, PyObject *k) {
   struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *p;
-  PyObject *o;
-  o = __Pyx_AllocateExtensionType(t, 0);
+  PyObject *o = __pyx_tp_new_28coordinate_transform_wrapper_TransformWrapperBase(t, a, k);
   if (unlikely(!o)) return 0;
   p = ((struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *)o);
-  p->__pyx_vtab = __pyx_vtabptr_28coordinate_transform_wrapper_ParkTransformWrapper;
+  p->__pyx_base.__pyx_vtab = (struct __pyx_vtabstruct_28coordinate_transform_wrapper_TransformWrapperBase*)__pyx_vtabptr_28coordinate_transform_wrapper_ParkTransformWrapper;
   if (unlikely(__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_1__cinit__(o, __pyx_mstate_global->__pyx_empty_tuple, NULL) < 0)) goto bad;
   return o;
   bad:
@@ -9328,39 +11262,20 @@ static PyObject *__pyx_tp_new_28coordinate_transform_wrapper_ParkTransformWrappe
   return NULL;
 }
 
-static void __pyx_tp_dealloc_28coordinate_transform_wrapper_ParkTransformWrapper(PyObject *o) {
-  #if CYTHON_USE_TP_FINALIZE
-  if (unlikely(__Pyx_PyObject_GetSlot(o, tp_finalize, destructor)) && (!PyType_IS_GC(Py_TYPE(o)) || !__Pyx_PyObject_GC_IsFinalized(o))) {
-    if (__Pyx_PyObject_GetSlot(o, tp_dealloc, destructor) == __pyx_tp_dealloc_28coordinate_transform_wrapper_ParkTransformWrapper) {
-      if (PyObject_CallFinalizerFromDealloc(o)) return;
-    }
-  }
-  #endif
-  PyTypeObject *tp = Py_TYPE(o);
-  #if CYTHON_USE_TYPE_SLOTS
-  (*tp->tp_free)(o);
-  #else
-  {
-    freefunc tp_free = (freefunc)PyType_GetSlot(tp, Py_tp_free);
-    if (tp_free) tp_free(o);
-  }
-  #endif
-  #if CYTHON_USE_TYPE_SPECS
-  Py_DECREF(tp);
-  #endif
-}
-
 static PyMethodDef __pyx_methods_28coordinate_transform_wrapper_ParkTransformWrapper[] = {
-  {"set_inputs", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_3set_inputs, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
-  {"set_theta", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_5set_theta, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
-  {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_11__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
-  {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_13__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"set_inputs_alpha_beta", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_3set_inputs_alpha_beta, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"set_inputs", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_5set_inputs, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_20ParkTransformWrapper_4set_inputs},
+  {"set_theta", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_7set_theta, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_20ParkTransformWrapper_6set_theta},
+  {"compute", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_9compute, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_20ParkTransformWrapper_8compute},
+  {"get_outputs_dq", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_11get_outputs_dq, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_20ParkTransformWrapper_10get_outputs_dq},
+  {"get_outputs", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_13get_outputs, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_20ParkTransformWrapper_12get_outputs},
+  {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_15__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_20ParkTransformWrapper_17__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
   {0, 0, 0, 0}
 };
 #if CYTHON_USE_TYPE_SPECS
 static PyType_Slot __pyx_type_28coordinate_transform_wrapper_ParkTransformWrapper_slots[] = {
-  {Py_tp_dealloc, (void *)__pyx_tp_dealloc_28coordinate_transform_wrapper_ParkTransformWrapper},
-  {Py_tp_doc, (void *)PyDoc_STR("\n    Wrapper for park_transform_compute_flat.\n\n    set_inputs(u)  \342\200\224 u = [alpha, beta]\n    set_theta(th)  \342\200\224 electrical angle [rad]\n    compute()\n    get_outputs()  \342\200\224 [d, q]\n    ")},
+  {Py_tp_dealloc, (void *)__pyx_tp_dealloc_28coordinate_transform_wrapper_TransformWrapperBase},
   {Py_tp_methods, (void *)__pyx_methods_28coordinate_transform_wrapper_ParkTransformWrapper},
   {Py_tp_new, (void *)__pyx_tp_new_28coordinate_transform_wrapper_ParkTransformWrapper},
   {0, 0},
@@ -9379,7 +11294,7 @@ static PyTypeObject __pyx_type_28coordinate_transform_wrapper_ParkTransformWrapp
   "coordinate_transform_wrapper.""ParkTransformWrapper", /*tp_name*/
   sizeof(struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper), /*tp_basicsize*/
   0, /*tp_itemsize*/
-  __pyx_tp_dealloc_28coordinate_transform_wrapper_ParkTransformWrapper, /*tp_dealloc*/
+  __pyx_tp_dealloc_28coordinate_transform_wrapper_TransformWrapperBase, /*tp_dealloc*/
   0, /*tp_vectorcall_offset*/
   0, /*tp_getattr*/
   0, /*tp_setattr*/
@@ -9395,7 +11310,7 @@ static PyTypeObject __pyx_type_28coordinate_transform_wrapper_ParkTransformWrapp
   0, /*tp_setattro*/
   0, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE, /*tp_flags*/
-  PyDoc_STR("\n    Wrapper for park_transform_compute_flat.\n\n    set_inputs(u)  \342\200\224 u = [alpha, beta]\n    set_theta(th)  \342\200\224 electrical angle [rad]\n    compute()\n    get_outputs()  \342\200\224 [d, q]\n    "), /*tp_doc*/
+  0, /*tp_doc*/
   0, /*tp_traverse*/
   0, /*tp_clear*/
   0, /*tp_richcompare*/
@@ -9448,13 +11363,12 @@ static PyTypeObject __pyx_type_28coordinate_transform_wrapper_ParkTransformWrapp
 #endif
 static struct __pyx_vtabstruct_28coordinate_transform_wrapper_InvParkTransformWrapper __pyx_vtable_28coordinate_transform_wrapper_InvParkTransformWrapper;
 
-static PyObject *__pyx_tp_new_28coordinate_transform_wrapper_InvParkTransformWrapper(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
+static PyObject *__pyx_tp_new_28coordinate_transform_wrapper_InvParkTransformWrapper(PyTypeObject *t, PyObject *a, PyObject *k) {
   struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *p;
-  PyObject *o;
-  o = __Pyx_AllocateExtensionType(t, 0);
+  PyObject *o = __pyx_tp_new_28coordinate_transform_wrapper_TransformWrapperBase(t, a, k);
   if (unlikely(!o)) return 0;
   p = ((struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *)o);
-  p->__pyx_vtab = __pyx_vtabptr_28coordinate_transform_wrapper_InvParkTransformWrapper;
+  p->__pyx_base.__pyx_vtab = (struct __pyx_vtabstruct_28coordinate_transform_wrapper_TransformWrapperBase*)__pyx_vtabptr_28coordinate_transform_wrapper_InvParkTransformWrapper;
   if (unlikely(__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_1__cinit__(o, __pyx_mstate_global->__pyx_empty_tuple, NULL) < 0)) goto bad;
   return o;
   bad:
@@ -9462,39 +11376,20 @@ static PyObject *__pyx_tp_new_28coordinate_transform_wrapper_InvParkTransformWra
   return NULL;
 }
 
-static void __pyx_tp_dealloc_28coordinate_transform_wrapper_InvParkTransformWrapper(PyObject *o) {
-  #if CYTHON_USE_TP_FINALIZE
-  if (unlikely(__Pyx_PyObject_GetSlot(o, tp_finalize, destructor)) && (!PyType_IS_GC(Py_TYPE(o)) || !__Pyx_PyObject_GC_IsFinalized(o))) {
-    if (__Pyx_PyObject_GetSlot(o, tp_dealloc, destructor) == __pyx_tp_dealloc_28coordinate_transform_wrapper_InvParkTransformWrapper) {
-      if (PyObject_CallFinalizerFromDealloc(o)) return;
-    }
-  }
-  #endif
-  PyTypeObject *tp = Py_TYPE(o);
-  #if CYTHON_USE_TYPE_SLOTS
-  (*tp->tp_free)(o);
-  #else
-  {
-    freefunc tp_free = (freefunc)PyType_GetSlot(tp, Py_tp_free);
-    if (tp_free) tp_free(o);
-  }
-  #endif
-  #if CYTHON_USE_TYPE_SPECS
-  Py_DECREF(tp);
-  #endif
-}
-
 static PyMethodDef __pyx_methods_28coordinate_transform_wrapper_InvParkTransformWrapper[] = {
-  {"set_inputs", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_3set_inputs, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
-  {"set_theta", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_5set_theta, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
-  {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_11__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
-  {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_13__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"set_inputs_dq", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_3set_inputs_dq, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"set_inputs", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_5set_inputs, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_23InvParkTransformWrapper_4set_inputs},
+  {"set_theta", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_7set_theta, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_23InvParkTransformWrapper_6set_theta},
+  {"compute", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_9compute, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_23InvParkTransformWrapper_8compute},
+  {"get_outputs_alpha_beta", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_11get_outputs_alpha_beta, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_23InvParkTransformWrapper_10get_outputs_alpha_beta},
+  {"get_outputs", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_13get_outputs, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_23InvParkTransformWrapper_12get_outputs},
+  {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_15__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_23InvParkTransformWrapper_17__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
   {0, 0, 0, 0}
 };
 #if CYTHON_USE_TYPE_SPECS
 static PyType_Slot __pyx_type_28coordinate_transform_wrapper_InvParkTransformWrapper_slots[] = {
-  {Py_tp_dealloc, (void *)__pyx_tp_dealloc_28coordinate_transform_wrapper_InvParkTransformWrapper},
-  {Py_tp_doc, (void *)PyDoc_STR("\n    Wrapper for inv_park_transform_compute_flat.\n\n    set_inputs(u)  \342\200\224 u = [d, q]\n    set_theta(th)  \342\200\224 electrical angle [rad]\n    compute()\n    get_outputs()  \342\200\224 [alpha, beta]\n    ")},
+  {Py_tp_dealloc, (void *)__pyx_tp_dealloc_28coordinate_transform_wrapper_TransformWrapperBase},
   {Py_tp_methods, (void *)__pyx_methods_28coordinate_transform_wrapper_InvParkTransformWrapper},
   {Py_tp_new, (void *)__pyx_tp_new_28coordinate_transform_wrapper_InvParkTransformWrapper},
   {0, 0},
@@ -9513,7 +11408,7 @@ static PyTypeObject __pyx_type_28coordinate_transform_wrapper_InvParkTransformWr
   "coordinate_transform_wrapper.""InvParkTransformWrapper", /*tp_name*/
   sizeof(struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper), /*tp_basicsize*/
   0, /*tp_itemsize*/
-  __pyx_tp_dealloc_28coordinate_transform_wrapper_InvParkTransformWrapper, /*tp_dealloc*/
+  __pyx_tp_dealloc_28coordinate_transform_wrapper_TransformWrapperBase, /*tp_dealloc*/
   0, /*tp_vectorcall_offset*/
   0, /*tp_getattr*/
   0, /*tp_setattr*/
@@ -9529,7 +11424,7 @@ static PyTypeObject __pyx_type_28coordinate_transform_wrapper_InvParkTransformWr
   0, /*tp_setattro*/
   0, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE, /*tp_flags*/
-  PyDoc_STR("\n    Wrapper for inv_park_transform_compute_flat.\n\n    set_inputs(u)  \342\200\224 u = [d, q]\n    set_theta(th)  \342\200\224 electrical angle [rad]\n    compute()\n    get_outputs()  \342\200\224 [alpha, beta]\n    "), /*tp_doc*/
+  0, /*tp_doc*/
   0, /*tp_traverse*/
   0, /*tp_clear*/
   0, /*tp_richcompare*/
@@ -9549,6 +11444,120 @@ static PyTypeObject __pyx_type_28coordinate_transform_wrapper_InvParkTransformWr
   0, /*tp_init*/
   0, /*tp_alloc*/
   __pyx_tp_new_28coordinate_transform_wrapper_InvParkTransformWrapper, /*tp_new*/
+  0, /*tp_free*/
+  0, /*tp_is_gc*/
+  0, /*tp_bases*/
+  0, /*tp_mro*/
+  0, /*tp_cache*/
+  0, /*tp_subclasses*/
+  0, /*tp_weaklist*/
+  0, /*tp_del*/
+  0, /*tp_version_tag*/
+  #if CYTHON_USE_TP_FINALIZE
+  0, /*tp_finalize*/
+  #else
+  NULL, /*tp_finalize*/
+  #endif
+  #if !CYTHON_COMPILING_IN_PYPY || PYPY_VERSION_NUM >= 0x07030800
+  0, /*tp_vectorcall*/
+  #endif
+  #if __PYX_NEED_TP_PRINT_SLOT == 1
+  0, /*tp_print*/
+  #endif
+  #if PY_VERSION_HEX >= 0x030C0000
+  0, /*tp_watched*/
+  #endif
+  #if PY_VERSION_HEX >= 0x030d00A4
+  0, /*tp_versions_used*/
+  #endif
+  #if CYTHON_COMPILING_IN_PYPY && PY_VERSION_HEX >= 0x03090000 && PY_VERSION_HEX < 0x030a0000
+  0, /*tp_pypy_flags*/
+  #endif
+};
+#endif
+static struct __pyx_vtabstruct_28coordinate_transform_wrapper_ClarkeParkTransformWrapper __pyx_vtable_28coordinate_transform_wrapper_ClarkeParkTransformWrapper;
+
+static PyObject *__pyx_tp_new_28coordinate_transform_wrapper_ClarkeParkTransformWrapper(PyTypeObject *t, PyObject *a, PyObject *k) {
+  struct __pyx_obj_28coordinate_transform_wrapper_ClarkeParkTransformWrapper *p;
+  PyObject *o = __pyx_tp_new_28coordinate_transform_wrapper_TransformWrapperBase(t, a, k);
+  if (unlikely(!o)) return 0;
+  p = ((struct __pyx_obj_28coordinate_transform_wrapper_ClarkeParkTransformWrapper *)o);
+  p->__pyx_base.__pyx_vtab = (struct __pyx_vtabstruct_28coordinate_transform_wrapper_TransformWrapperBase*)__pyx_vtabptr_28coordinate_transform_wrapper_ClarkeParkTransformWrapper;
+  if (unlikely(__pyx_pw_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_1__cinit__(o, __pyx_mstate_global->__pyx_empty_tuple, NULL) < 0)) goto bad;
+  return o;
+  bad:
+  Py_DECREF(o); o = 0;
+  return NULL;
+}
+
+static PyMethodDef __pyx_methods_28coordinate_transform_wrapper_ClarkeParkTransformWrapper[] = {
+  {"set_inputs_abc", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_3set_inputs_abc, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"set_inputs", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_5set_inputs, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_4set_inputs},
+  {"set_theta", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_7set_theta, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_6set_theta},
+  {"compute", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_9compute, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_8compute},
+  {"get_outputs_dq", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_11get_outputs_dq, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_10get_outputs_dq},
+  {"get_outputs", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_13get_outputs, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_12get_outputs},
+  {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_15__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_17__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {0, 0, 0, 0}
+};
+#if CYTHON_USE_TYPE_SPECS
+static PyType_Slot __pyx_type_28coordinate_transform_wrapper_ClarkeParkTransformWrapper_slots[] = {
+  {Py_tp_dealloc, (void *)__pyx_tp_dealloc_28coordinate_transform_wrapper_TransformWrapperBase},
+  {Py_tp_methods, (void *)__pyx_methods_28coordinate_transform_wrapper_ClarkeParkTransformWrapper},
+  {Py_tp_new, (void *)__pyx_tp_new_28coordinate_transform_wrapper_ClarkeParkTransformWrapper},
+  {0, 0},
+};
+static PyType_Spec __pyx_type_28coordinate_transform_wrapper_ClarkeParkTransformWrapper_spec = {
+  "coordinate_transform_wrapper.ClarkeParkTransformWrapper",
+  sizeof(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeParkTransformWrapper),
+  0,
+  Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE,
+  __pyx_type_28coordinate_transform_wrapper_ClarkeParkTransformWrapper_slots,
+};
+#else
+
+static PyTypeObject __pyx_type_28coordinate_transform_wrapper_ClarkeParkTransformWrapper = {
+  PyVarObject_HEAD_INIT(0, 0)
+  "coordinate_transform_wrapper.""ClarkeParkTransformWrapper", /*tp_name*/
+  sizeof(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeParkTransformWrapper), /*tp_basicsize*/
+  0, /*tp_itemsize*/
+  __pyx_tp_dealloc_28coordinate_transform_wrapper_TransformWrapperBase, /*tp_dealloc*/
+  0, /*tp_vectorcall_offset*/
+  0, /*tp_getattr*/
+  0, /*tp_setattr*/
+  0, /*tp_as_async*/
+  0, /*tp_repr*/
+  0, /*tp_as_number*/
+  0, /*tp_as_sequence*/
+  0, /*tp_as_mapping*/
+  0, /*tp_hash*/
+  0, /*tp_call*/
+  0, /*tp_str*/
+  0, /*tp_getattro*/
+  0, /*tp_setattro*/
+  0, /*tp_as_buffer*/
+  Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE, /*tp_flags*/
+  0, /*tp_doc*/
+  0, /*tp_traverse*/
+  0, /*tp_clear*/
+  0, /*tp_richcompare*/
+  0, /*tp_weaklistoffset*/
+  0, /*tp_iter*/
+  0, /*tp_iternext*/
+  __pyx_methods_28coordinate_transform_wrapper_ClarkeParkTransformWrapper, /*tp_methods*/
+  0, /*tp_members*/
+  0, /*tp_getset*/
+  0, /*tp_base*/
+  0, /*tp_dict*/
+  0, /*tp_descr_get*/
+  0, /*tp_descr_set*/
+  #if !CYTHON_USE_TYPE_SPECS
+  0, /*tp_dictoffset*/
+  #endif
+  0, /*tp_init*/
+  0, /*tp_alloc*/
+  __pyx_tp_new_28coordinate_transform_wrapper_ClarkeParkTransformWrapper, /*tp_new*/
   0, /*tp_free*/
   0, /*tp_is_gc*/
   0, /*tp_bases*/
@@ -9629,24 +11638,56 @@ static int __Pyx_modinit_function_export_code(__pyx_mstatetype *__pyx_mstate) {
 static int __Pyx_modinit_type_init_code(__pyx_mstatetype *__pyx_mstate) {
   __Pyx_RefNannyDeclarations
   CYTHON_UNUSED_VAR(__pyx_mstate);
+  PyObject *__pyx_t_1 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__Pyx_modinit_type_init_code", 0);
   /*--- Type init code ---*/
-  __pyx_vtabptr_28coordinate_transform_wrapper_ClarkeTransformWrapper = &__pyx_vtable_28coordinate_transform_wrapper_ClarkeTransformWrapper;
-  __pyx_vtable_28coordinate_transform_wrapper_ClarkeTransformWrapper.compute = (void (*)(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *, int __pyx_skip_dispatch))__pyx_f_28coordinate_transform_wrapper_22ClarkeTransformWrapper_compute;
-  __pyx_vtable_28coordinate_transform_wrapper_ClarkeTransformWrapper.get_outputs = (PyArrayObject *(*)(struct __pyx_obj_28coordinate_transform_wrapper_ClarkeTransformWrapper *, int __pyx_skip_dispatch))__pyx_f_28coordinate_transform_wrapper_22ClarkeTransformWrapper_get_outputs;
+  __pyx_vtabptr_28coordinate_transform_wrapper_TransformWrapperBase = &__pyx_vtable_28coordinate_transform_wrapper_TransformWrapperBase;
+  __pyx_vtable_28coordinate_transform_wrapper_TransformWrapperBase.phase3_to_vector = (void (*)(Phase3Signal_T const *, Vector3_T *))__pyx_f_28coordinate_transform_wrapper_20TransformWrapperBase_phase3_to_vector;
+  __pyx_vtable_28coordinate_transform_wrapper_TransformWrapperBase.alphabeta_to_vector = (void (*)(AlphaBetaSignal_T const *, Vector2_T *))__pyx_f_28coordinate_transform_wrapper_20TransformWrapperBase_alphabeta_to_vector;
+  __pyx_vtable_28coordinate_transform_wrapper_TransformWrapperBase.dq_to_vector = (void (*)(DQSignal_T const *, Vector2_T *))__pyx_f_28coordinate_transform_wrapper_20TransformWrapperBase_dq_to_vector;
   #if CYTHON_USE_TYPE_SPECS
-  __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ClarkeTransformWrapper = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_28coordinate_transform_wrapper_ClarkeTransformWrapper_spec, NULL); if (unlikely(!__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ClarkeTransformWrapper)) __PYX_ERR(0, 35, __pyx_L1_error)
-  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_28coordinate_transform_wrapper_ClarkeTransformWrapper_spec, __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ClarkeTransformWrapper) < (0)) __PYX_ERR(0, 35, __pyx_L1_error)
+  __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_TransformWrapperBase = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_28coordinate_transform_wrapper_TransformWrapperBase_spec, NULL); if (unlikely(!__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_TransformWrapperBase)) __PYX_ERR(0, 103, __pyx_L1_error)
+  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_28coordinate_transform_wrapper_TransformWrapperBase_spec, __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_TransformWrapperBase) < (0)) __PYX_ERR(0, 103, __pyx_L1_error)
   #else
-  __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ClarkeTransformWrapper = &__pyx_type_28coordinate_transform_wrapper_ClarkeTransformWrapper;
+  __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_TransformWrapperBase = &__pyx_type_28coordinate_transform_wrapper_TransformWrapperBase;
   #endif
   #if !CYTHON_COMPILING_IN_LIMITED_API
   #endif
   #if !CYTHON_USE_TYPE_SPECS
-  if (__Pyx_PyType_Ready(__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ClarkeTransformWrapper) < (0)) __PYX_ERR(0, 35, __pyx_L1_error)
+  if (__Pyx_PyType_Ready(__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_TransformWrapperBase) < (0)) __PYX_ERR(0, 103, __pyx_L1_error)
+  #endif
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount((PyObject*)__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_TransformWrapperBase);
+  #endif
+  #if !CYTHON_COMPILING_IN_LIMITED_API
+  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_TransformWrapperBase->tp_dictoffset && __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_TransformWrapperBase->tp_getattro == PyObject_GenericGetAttr)) {
+    __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_TransformWrapperBase->tp_getattro = PyObject_GenericGetAttr;
+  }
+  #endif
+  if (__Pyx_SetVtable(__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_TransformWrapperBase, __pyx_vtabptr_28coordinate_transform_wrapper_TransformWrapperBase) < (0)) __PYX_ERR(0, 103, __pyx_L1_error)
+  if (__Pyx_MergeVtables(__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_TransformWrapperBase) < (0)) __PYX_ERR(0, 103, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_mstate_global->__pyx_n_u_TransformWrapperBase, (PyObject *) __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_TransformWrapperBase) < (0)) __PYX_ERR(0, 103, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject *) __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_TransformWrapperBase) < (0)) __PYX_ERR(0, 103, __pyx_L1_error)
+  __pyx_vtabptr_28coordinate_transform_wrapper_ClarkeTransformWrapper = &__pyx_vtable_28coordinate_transform_wrapper_ClarkeTransformWrapper;
+  __pyx_vtable_28coordinate_transform_wrapper_ClarkeTransformWrapper.__pyx_base = *__pyx_vtabptr_28coordinate_transform_wrapper_TransformWrapperBase;
+  #if CYTHON_USE_TYPE_SPECS
+  __pyx_t_1 = PyTuple_Pack(1, (PyObject *)__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_TransformWrapperBase); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 131, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ClarkeTransformWrapper = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_28coordinate_transform_wrapper_ClarkeTransformWrapper_spec, __pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
+  if (unlikely(!__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ClarkeTransformWrapper)) __PYX_ERR(0, 131, __pyx_L1_error)
+  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_28coordinate_transform_wrapper_ClarkeTransformWrapper_spec, __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ClarkeTransformWrapper) < (0)) __PYX_ERR(0, 131, __pyx_L1_error)
+  #else
+  __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ClarkeTransformWrapper = &__pyx_type_28coordinate_transform_wrapper_ClarkeTransformWrapper;
+  #endif
+  #if !CYTHON_COMPILING_IN_LIMITED_API
+  __pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_ClarkeTransformWrapper->tp_base = __pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_TransformWrapperBase;
+  #endif
+  #if !CYTHON_USE_TYPE_SPECS
+  if (__Pyx_PyType_Ready(__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ClarkeTransformWrapper) < (0)) __PYX_ERR(0, 131, __pyx_L1_error)
   #endif
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount((PyObject*)__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ClarkeTransformWrapper);
@@ -9656,23 +11697,27 @@ static int __Pyx_modinit_type_init_code(__pyx_mstatetype *__pyx_mstate) {
     __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ClarkeTransformWrapper->tp_getattro = PyObject_GenericGetAttr;
   }
   #endif
-  if (__Pyx_SetVtable(__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ClarkeTransformWrapper, __pyx_vtabptr_28coordinate_transform_wrapper_ClarkeTransformWrapper) < (0)) __PYX_ERR(0, 35, __pyx_L1_error)
-  if (__Pyx_MergeVtables(__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ClarkeTransformWrapper) < (0)) __PYX_ERR(0, 35, __pyx_L1_error)
-  if (PyObject_SetAttr(__pyx_m, __pyx_mstate_global->__pyx_n_u_ClarkeTransformWrapper, (PyObject *) __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ClarkeTransformWrapper) < (0)) __PYX_ERR(0, 35, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject *) __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ClarkeTransformWrapper) < (0)) __PYX_ERR(0, 35, __pyx_L1_error)
+  if (__Pyx_SetVtable(__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ClarkeTransformWrapper, __pyx_vtabptr_28coordinate_transform_wrapper_ClarkeTransformWrapper) < (0)) __PYX_ERR(0, 131, __pyx_L1_error)
+  if (__Pyx_MergeVtables(__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ClarkeTransformWrapper) < (0)) __PYX_ERR(0, 131, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_mstate_global->__pyx_n_u_ClarkeTransformWrapper, (PyObject *) __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ClarkeTransformWrapper) < (0)) __PYX_ERR(0, 131, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject *) __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ClarkeTransformWrapper) < (0)) __PYX_ERR(0, 131, __pyx_L1_error)
   __pyx_vtabptr_28coordinate_transform_wrapper_InvClarkeTransformWrapper = &__pyx_vtable_28coordinate_transform_wrapper_InvClarkeTransformWrapper;
-  __pyx_vtable_28coordinate_transform_wrapper_InvClarkeTransformWrapper.compute = (void (*)(struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *, int __pyx_skip_dispatch))__pyx_f_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_compute;
-  __pyx_vtable_28coordinate_transform_wrapper_InvClarkeTransformWrapper.get_outputs = (PyArrayObject *(*)(struct __pyx_obj_28coordinate_transform_wrapper_InvClarkeTransformWrapper *, int __pyx_skip_dispatch))__pyx_f_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_get_outputs;
+  __pyx_vtable_28coordinate_transform_wrapper_InvClarkeTransformWrapper.__pyx_base = *__pyx_vtabptr_28coordinate_transform_wrapper_TransformWrapperBase;
   #if CYTHON_USE_TYPE_SPECS
-  __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvClarkeTransformWrapper = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_28coordinate_transform_wrapper_InvClarkeTransformWrapper_spec, NULL); if (unlikely(!__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvClarkeTransformWrapper)) __PYX_ERR(0, 75, __pyx_L1_error)
-  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_28coordinate_transform_wrapper_InvClarkeTransformWrapper_spec, __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvClarkeTransformWrapper) < (0)) __PYX_ERR(0, 75, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_Pack(1, (PyObject *)__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_TransformWrapperBase); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 171, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvClarkeTransformWrapper = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_28coordinate_transform_wrapper_InvClarkeTransformWrapper_spec, __pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
+  if (unlikely(!__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvClarkeTransformWrapper)) __PYX_ERR(0, 171, __pyx_L1_error)
+  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_28coordinate_transform_wrapper_InvClarkeTransformWrapper_spec, __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvClarkeTransformWrapper) < (0)) __PYX_ERR(0, 171, __pyx_L1_error)
   #else
   __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvClarkeTransformWrapper = &__pyx_type_28coordinate_transform_wrapper_InvClarkeTransformWrapper;
   #endif
   #if !CYTHON_COMPILING_IN_LIMITED_API
+  __pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_InvClarkeTransformWrapper->tp_base = __pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_TransformWrapperBase;
   #endif
   #if !CYTHON_USE_TYPE_SPECS
-  if (__Pyx_PyType_Ready(__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvClarkeTransformWrapper) < (0)) __PYX_ERR(0, 75, __pyx_L1_error)
+  if (__Pyx_PyType_Ready(__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvClarkeTransformWrapper) < (0)) __PYX_ERR(0, 171, __pyx_L1_error)
   #endif
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount((PyObject*)__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvClarkeTransformWrapper);
@@ -9682,23 +11727,27 @@ static int __Pyx_modinit_type_init_code(__pyx_mstatetype *__pyx_mstate) {
     __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvClarkeTransformWrapper->tp_getattro = PyObject_GenericGetAttr;
   }
   #endif
-  if (__Pyx_SetVtable(__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvClarkeTransformWrapper, __pyx_vtabptr_28coordinate_transform_wrapper_InvClarkeTransformWrapper) < (0)) __PYX_ERR(0, 75, __pyx_L1_error)
-  if (__Pyx_MergeVtables(__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvClarkeTransformWrapper) < (0)) __PYX_ERR(0, 75, __pyx_L1_error)
-  if (PyObject_SetAttr(__pyx_m, __pyx_mstate_global->__pyx_n_u_InvClarkeTransformWrapper, (PyObject *) __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvClarkeTransformWrapper) < (0)) __PYX_ERR(0, 75, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject *) __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvClarkeTransformWrapper) < (0)) __PYX_ERR(0, 75, __pyx_L1_error)
+  if (__Pyx_SetVtable(__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvClarkeTransformWrapper, __pyx_vtabptr_28coordinate_transform_wrapper_InvClarkeTransformWrapper) < (0)) __PYX_ERR(0, 171, __pyx_L1_error)
+  if (__Pyx_MergeVtables(__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvClarkeTransformWrapper) < (0)) __PYX_ERR(0, 171, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_mstate_global->__pyx_n_u_InvClarkeTransformWrapper, (PyObject *) __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvClarkeTransformWrapper) < (0)) __PYX_ERR(0, 171, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject *) __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvClarkeTransformWrapper) < (0)) __PYX_ERR(0, 171, __pyx_L1_error)
   __pyx_vtabptr_28coordinate_transform_wrapper_ParkTransformWrapper = &__pyx_vtable_28coordinate_transform_wrapper_ParkTransformWrapper;
-  __pyx_vtable_28coordinate_transform_wrapper_ParkTransformWrapper.compute = (void (*)(struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *, int __pyx_skip_dispatch))__pyx_f_28coordinate_transform_wrapper_20ParkTransformWrapper_compute;
-  __pyx_vtable_28coordinate_transform_wrapper_ParkTransformWrapper.get_outputs = (PyArrayObject *(*)(struct __pyx_obj_28coordinate_transform_wrapper_ParkTransformWrapper *, int __pyx_skip_dispatch))__pyx_f_28coordinate_transform_wrapper_20ParkTransformWrapper_get_outputs;
+  __pyx_vtable_28coordinate_transform_wrapper_ParkTransformWrapper.__pyx_base = *__pyx_vtabptr_28coordinate_transform_wrapper_TransformWrapperBase;
   #if CYTHON_USE_TYPE_SPECS
-  __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ParkTransformWrapper = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_28coordinate_transform_wrapper_ParkTransformWrapper_spec, NULL); if (unlikely(!__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ParkTransformWrapper)) __PYX_ERR(0, 108, __pyx_L1_error)
-  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_28coordinate_transform_wrapper_ParkTransformWrapper_spec, __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ParkTransformWrapper) < (0)) __PYX_ERR(0, 108, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_Pack(1, (PyObject *)__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_TransformWrapperBase); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 208, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ParkTransformWrapper = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_28coordinate_transform_wrapper_ParkTransformWrapper_spec, __pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
+  if (unlikely(!__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ParkTransformWrapper)) __PYX_ERR(0, 208, __pyx_L1_error)
+  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_28coordinate_transform_wrapper_ParkTransformWrapper_spec, __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ParkTransformWrapper) < (0)) __PYX_ERR(0, 208, __pyx_L1_error)
   #else
   __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ParkTransformWrapper = &__pyx_type_28coordinate_transform_wrapper_ParkTransformWrapper;
   #endif
   #if !CYTHON_COMPILING_IN_LIMITED_API
+  __pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_ParkTransformWrapper->tp_base = __pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_TransformWrapperBase;
   #endif
   #if !CYTHON_USE_TYPE_SPECS
-  if (__Pyx_PyType_Ready(__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ParkTransformWrapper) < (0)) __PYX_ERR(0, 108, __pyx_L1_error)
+  if (__Pyx_PyType_Ready(__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ParkTransformWrapper) < (0)) __PYX_ERR(0, 208, __pyx_L1_error)
   #endif
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount((PyObject*)__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ParkTransformWrapper);
@@ -9708,23 +11757,27 @@ static int __Pyx_modinit_type_init_code(__pyx_mstatetype *__pyx_mstate) {
     __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ParkTransformWrapper->tp_getattro = PyObject_GenericGetAttr;
   }
   #endif
-  if (__Pyx_SetVtable(__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ParkTransformWrapper, __pyx_vtabptr_28coordinate_transform_wrapper_ParkTransformWrapper) < (0)) __PYX_ERR(0, 108, __pyx_L1_error)
-  if (__Pyx_MergeVtables(__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ParkTransformWrapper) < (0)) __PYX_ERR(0, 108, __pyx_L1_error)
-  if (PyObject_SetAttr(__pyx_m, __pyx_mstate_global->__pyx_n_u_ParkTransformWrapper, (PyObject *) __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ParkTransformWrapper) < (0)) __PYX_ERR(0, 108, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject *) __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ParkTransformWrapper) < (0)) __PYX_ERR(0, 108, __pyx_L1_error)
+  if (__Pyx_SetVtable(__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ParkTransformWrapper, __pyx_vtabptr_28coordinate_transform_wrapper_ParkTransformWrapper) < (0)) __PYX_ERR(0, 208, __pyx_L1_error)
+  if (__Pyx_MergeVtables(__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ParkTransformWrapper) < (0)) __PYX_ERR(0, 208, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_mstate_global->__pyx_n_u_ParkTransformWrapper, (PyObject *) __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ParkTransformWrapper) < (0)) __PYX_ERR(0, 208, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject *) __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ParkTransformWrapper) < (0)) __PYX_ERR(0, 208, __pyx_L1_error)
   __pyx_vtabptr_28coordinate_transform_wrapper_InvParkTransformWrapper = &__pyx_vtable_28coordinate_transform_wrapper_InvParkTransformWrapper;
-  __pyx_vtable_28coordinate_transform_wrapper_InvParkTransformWrapper.compute = (void (*)(struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *, int __pyx_skip_dispatch))__pyx_f_28coordinate_transform_wrapper_23InvParkTransformWrapper_compute;
-  __pyx_vtable_28coordinate_transform_wrapper_InvParkTransformWrapper.get_outputs = (PyArrayObject *(*)(struct __pyx_obj_28coordinate_transform_wrapper_InvParkTransformWrapper *, int __pyx_skip_dispatch))__pyx_f_28coordinate_transform_wrapper_23InvParkTransformWrapper_get_outputs;
+  __pyx_vtable_28coordinate_transform_wrapper_InvParkTransformWrapper.__pyx_base = *__pyx_vtabptr_28coordinate_transform_wrapper_TransformWrapperBase;
   #if CYTHON_USE_TYPE_SPECS
-  __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvParkTransformWrapper = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_28coordinate_transform_wrapper_InvParkTransformWrapper_spec, NULL); if (unlikely(!__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvParkTransformWrapper)) __PYX_ERR(0, 146, __pyx_L1_error)
-  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_28coordinate_transform_wrapper_InvParkTransformWrapper_spec, __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvParkTransformWrapper) < (0)) __PYX_ERR(0, 146, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_Pack(1, (PyObject *)__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_TransformWrapperBase); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 253, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvParkTransformWrapper = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_28coordinate_transform_wrapper_InvParkTransformWrapper_spec, __pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
+  if (unlikely(!__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvParkTransformWrapper)) __PYX_ERR(0, 253, __pyx_L1_error)
+  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_28coordinate_transform_wrapper_InvParkTransformWrapper_spec, __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvParkTransformWrapper) < (0)) __PYX_ERR(0, 253, __pyx_L1_error)
   #else
   __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvParkTransformWrapper = &__pyx_type_28coordinate_transform_wrapper_InvParkTransformWrapper;
   #endif
   #if !CYTHON_COMPILING_IN_LIMITED_API
+  __pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_InvParkTransformWrapper->tp_base = __pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_TransformWrapperBase;
   #endif
   #if !CYTHON_USE_TYPE_SPECS
-  if (__Pyx_PyType_Ready(__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvParkTransformWrapper) < (0)) __PYX_ERR(0, 146, __pyx_L1_error)
+  if (__Pyx_PyType_Ready(__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvParkTransformWrapper) < (0)) __PYX_ERR(0, 253, __pyx_L1_error)
   #endif
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount((PyObject*)__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvParkTransformWrapper);
@@ -9734,13 +11787,44 @@ static int __Pyx_modinit_type_init_code(__pyx_mstatetype *__pyx_mstate) {
     __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvParkTransformWrapper->tp_getattro = PyObject_GenericGetAttr;
   }
   #endif
-  if (__Pyx_SetVtable(__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvParkTransformWrapper, __pyx_vtabptr_28coordinate_transform_wrapper_InvParkTransformWrapper) < (0)) __PYX_ERR(0, 146, __pyx_L1_error)
-  if (__Pyx_MergeVtables(__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvParkTransformWrapper) < (0)) __PYX_ERR(0, 146, __pyx_L1_error)
-  if (PyObject_SetAttr(__pyx_m, __pyx_mstate_global->__pyx_n_u_InvParkTransformWrapper, (PyObject *) __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvParkTransformWrapper) < (0)) __PYX_ERR(0, 146, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject *) __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvParkTransformWrapper) < (0)) __PYX_ERR(0, 146, __pyx_L1_error)
+  if (__Pyx_SetVtable(__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvParkTransformWrapper, __pyx_vtabptr_28coordinate_transform_wrapper_InvParkTransformWrapper) < (0)) __PYX_ERR(0, 253, __pyx_L1_error)
+  if (__Pyx_MergeVtables(__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvParkTransformWrapper) < (0)) __PYX_ERR(0, 253, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_mstate_global->__pyx_n_u_InvParkTransformWrapper, (PyObject *) __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvParkTransformWrapper) < (0)) __PYX_ERR(0, 253, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject *) __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_InvParkTransformWrapper) < (0)) __PYX_ERR(0, 253, __pyx_L1_error)
+  __pyx_vtabptr_28coordinate_transform_wrapper_ClarkeParkTransformWrapper = &__pyx_vtable_28coordinate_transform_wrapper_ClarkeParkTransformWrapper;
+  __pyx_vtable_28coordinate_transform_wrapper_ClarkeParkTransformWrapper.__pyx_base = *__pyx_vtabptr_28coordinate_transform_wrapper_TransformWrapperBase;
+  #if CYTHON_USE_TYPE_SPECS
+  __pyx_t_1 = PyTuple_Pack(1, (PyObject *)__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_TransformWrapperBase); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 298, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ClarkeParkTransformWrapper = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_28coordinate_transform_wrapper_ClarkeParkTransformWrapper_spec, __pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
+  if (unlikely(!__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ClarkeParkTransformWrapper)) __PYX_ERR(0, 298, __pyx_L1_error)
+  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_28coordinate_transform_wrapper_ClarkeParkTransformWrapper_spec, __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ClarkeParkTransformWrapper) < (0)) __PYX_ERR(0, 298, __pyx_L1_error)
+  #else
+  __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ClarkeParkTransformWrapper = &__pyx_type_28coordinate_transform_wrapper_ClarkeParkTransformWrapper;
+  #endif
+  #if !CYTHON_COMPILING_IN_LIMITED_API
+  __pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_ClarkeParkTransformWrapper->tp_base = __pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_TransformWrapperBase;
+  #endif
+  #if !CYTHON_USE_TYPE_SPECS
+  if (__Pyx_PyType_Ready(__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ClarkeParkTransformWrapper) < (0)) __PYX_ERR(0, 298, __pyx_L1_error)
+  #endif
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount((PyObject*)__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ClarkeParkTransformWrapper);
+  #endif
+  #if !CYTHON_COMPILING_IN_LIMITED_API
+  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ClarkeParkTransformWrapper->tp_dictoffset && __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ClarkeParkTransformWrapper->tp_getattro == PyObject_GenericGetAttr)) {
+    __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ClarkeParkTransformWrapper->tp_getattro = PyObject_GenericGetAttr;
+  }
+  #endif
+  if (__Pyx_SetVtable(__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ClarkeParkTransformWrapper, __pyx_vtabptr_28coordinate_transform_wrapper_ClarkeParkTransformWrapper) < (0)) __PYX_ERR(0, 298, __pyx_L1_error)
+  if (__Pyx_MergeVtables(__pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ClarkeParkTransformWrapper) < (0)) __PYX_ERR(0, 298, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_mstate_global->__pyx_n_u_ClarkeParkTransformWrapper, (PyObject *) __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ClarkeParkTransformWrapper) < (0)) __PYX_ERR(0, 298, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject *) __pyx_mstate->__pyx_ptype_28coordinate_transform_wrapper_ClarkeParkTransformWrapper) < (0)) __PYX_ERR(0, 298, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
   __Pyx_RefNannyFinishContext();
   return -1;
 }
@@ -10196,62 +12280,17 @@ __Pyx_RefNannySetupContext("PyInit_coordinate_transform_wrapper", 0);
   (void)__Pyx_modinit_function_import_code(__pyx_mstate);
   /*--- Execution code ---*/
 
-  /* "coordinate_transform_wrapper.pyx":12
- * # =============================================================================
+  /* "coordinate_transform_wrapper.pyx":14
+ * # Version: 2.0.0
  * 
  * import numpy as np             # <<<<<<<<<<<<<<
  * cimport numpy as cnp
  * 
 */
-  __pyx_t_1 = __Pyx_Import(__pyx_mstate_global->__pyx_n_u_numpy, 0, 0, NULL, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 12, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_Import(__pyx_mstate_global->__pyx_n_u_numpy, 0, 0, NULL, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 14, __pyx_L1_error)
   __pyx_t_2 = __pyx_t_1;
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_np, __pyx_t_2) < (0)) __PYX_ERR(0, 12, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "coordinate_transform_wrapper.pyx":50
- *         for i in range(2): self._out[i] = 0.0
- * 
- *     def set_inputs(self, u):             # <<<<<<<<<<<<<<
- *         self._in[0] = <float> u[0]
- *         self._in[1] = <float> u[1]
-*/
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_22ClarkeTransformWrapper_3set_inputs, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_ClarkeTransformWrapper_set_input, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[0])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 50, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
-  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
-  #endif
-  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_ClarkeTransformWrapper, __pyx_mstate_global->__pyx_n_u_set_inputs, __pyx_t_2) < (0)) __PYX_ERR(0, 50, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "coordinate_transform_wrapper.pyx":55
- *         self._in[2] = <float> u[2]
- * 
- *     cpdef void compute(self):             # <<<<<<<<<<<<<<
- *         with nogil:
- *             clarke_transform_compute_flat(self._in, self._out)
-*/
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_22ClarkeTransformWrapper_5compute, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_ClarkeTransformWrapper_compute, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[1])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 55, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
-  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
-  #endif
-  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_ClarkeTransformWrapper, __pyx_mstate_global->__pyx_n_u_compute, __pyx_t_2) < (0)) __PYX_ERR(0, 55, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "coordinate_transform_wrapper.pyx":59
- *             clarke_transform_compute_flat(self._in, self._out)
- * 
- *     cpdef cnp.ndarray get_outputs(self):             # <<<<<<<<<<<<<<
- *         cdef cnp.ndarray y = np.empty(2, dtype=np.float32)
- *         y[0] = self._out[0]
-*/
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_22ClarkeTransformWrapper_7get_outputs, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_ClarkeTransformWrapper_get_outpu, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[2])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 59, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
-  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
-  #endif
-  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_ClarkeTransformWrapper, __pyx_mstate_global->__pyx_n_u_get_outputs, __pyx_t_2) < (0)) __PYX_ERR(0, 59, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_np, __pyx_t_2) < (0)) __PYX_ERR(0, 14, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "(tree fragment)":1
@@ -10259,7 +12298,7 @@ __Pyx_RefNannySetupContext("PyInit_coordinate_transform_wrapper", 0);
  *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
  * def __setstate_cython__(self, __pyx_state):
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_22ClarkeTransformWrapper_9__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_ClarkeTransformWrapper___reduce, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[3])); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 1, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_20TransformWrapperBase_3__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_TransformWrapperBase___reduce_cy, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[0])); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
@@ -10273,7 +12312,7 @@ __Pyx_RefNannySetupContext("PyInit_coordinate_transform_wrapper", 0);
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
  *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_22ClarkeTransformWrapper_11__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_ClarkeTransformWrapper___setstat, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[4])); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 3, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_20TransformWrapperBase_5__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_TransformWrapperBase___setstate, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[1])); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 3, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
@@ -10281,223 +12320,79 @@ __Pyx_RefNannySetupContext("PyInit_coordinate_transform_wrapper", 0);
   if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_setstate_cython, __pyx_t_2) < (0)) __PYX_ERR(2, 3, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "coordinate_transform_wrapper.pyx":90
- *         for i in range(3): self._out[i] = 0.0
+  /* "coordinate_transform_wrapper.pyx":143
+ *         self._out.Beta = 0.0
  * 
- *     def set_inputs(self, u):             # <<<<<<<<<<<<<<
- *         self._in[0] = <float> u[0]
- *         self._in[1] = <float> u[1]
+ *     def set_inputs_abc(self, real32_T a, real32_T b, real32_T c):             # <<<<<<<<<<<<<<
+ *         self._in.A = a
+ *         self._in.B = b
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_3set_inputs, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_InvClarkeTransformWrapper_set_in, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[5])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 90, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_22ClarkeTransformWrapper_3set_inputs_abc, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_ClarkeTransformWrapper_set_input, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[2])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 143, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
   #endif
-  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_InvClarkeTransformWrapper, __pyx_mstate_global->__pyx_n_u_set_inputs, __pyx_t_2) < (0)) __PYX_ERR(0, 90, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_ClarkeTransformWrapper, __pyx_mstate_global->__pyx_n_u_set_inputs_abc, __pyx_t_2) < (0)) __PYX_ERR(0, 143, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "coordinate_transform_wrapper.pyx":94
- *         self._in[1] = <float> u[1]
+  /* "coordinate_transform_wrapper.pyx":148
+ *         self._in.C = c
  * 
- *     cpdef void compute(self):             # <<<<<<<<<<<<<<
- *         with nogil:
- *             inv_clarke_transform_compute_flat(self._in, self._out)
+ *     def set_inputs(self, cnp.ndarray u):             # <<<<<<<<<<<<<<
+ *         """Set inputs from numpy array [a, b, c]"""
+ *         if u.shape[0] < 3:
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_5compute, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_InvClarkeTransformWrapper_comput, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[6])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 94, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_22ClarkeTransformWrapper_5set_inputs, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_ClarkeTransformWrapper_set_input_2, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[3])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 148, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
   #endif
-  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_InvClarkeTransformWrapper, __pyx_mstate_global->__pyx_n_u_compute, __pyx_t_2) < (0)) __PYX_ERR(0, 94, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_ClarkeTransformWrapper, __pyx_mstate_global->__pyx_n_u_set_inputs, __pyx_t_2) < (0)) __PYX_ERR(0, 148, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "coordinate_transform_wrapper.pyx":98
- *             inv_clarke_transform_compute_flat(self._in, self._out)
+  /* "coordinate_transform_wrapper.pyx":156
+ *         self._in.C = <real32_T> u[2]
  * 
- *     cpdef cnp.ndarray get_outputs(self):             # <<<<<<<<<<<<<<
- *         cdef cnp.ndarray y = np.empty(3, dtype=np.float32)
- *         y[0] = self._out[0]
+ *     def compute(self):             # <<<<<<<<<<<<<<
+ *         """Execute the Clarke transform using matrix multiplication"""
+ *         Clarke_Transform(&self._clarke_matrix, &self._in, &self._out)
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_7get_outputs, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_InvClarkeTransformWrapper_get_ou, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[7])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 98, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_22ClarkeTransformWrapper_7compute, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_ClarkeTransformWrapper_compute, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[4])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 156, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
   #endif
-  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_InvClarkeTransformWrapper, __pyx_mstate_global->__pyx_n_u_get_outputs, __pyx_t_2) < (0)) __PYX_ERR(0, 98, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_ClarkeTransformWrapper, __pyx_mstate_global->__pyx_n_u_compute, __pyx_t_2) < (0)) __PYX_ERR(0, 156, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "(tree fragment)":1
- * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
- *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
- * def __setstate_cython__(self, __pyx_state):
-*/
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_9__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_InvClarkeTransformWrapper___redu, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[8])); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
-  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
-  #endif
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_reduce_cython, __pyx_t_2) < (0)) __PYX_ERR(2, 1, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "(tree fragment)":3
- * def __reduce_cython__(self):
- *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
- * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
- *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
-*/
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_11__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_InvClarkeTransformWrapper___sets, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[9])); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 3, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
-  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
-  #endif
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_setstate_cython, __pyx_t_2) < (0)) __PYX_ERR(2, 3, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "coordinate_transform_wrapper.pyx":126
- *         for i in range(2): self._out[i] = 0.0
+  /* "coordinate_transform_wrapper.pyx":160
+ *         Clarke_Transform(&self._clarke_matrix, &self._in, &self._out)
  * 
- *     def set_inputs(self, u):             # <<<<<<<<<<<<<<
- *         self._in[0] = <float> u[0]
- *         self._in[1] = <float> u[1]
+ *     def get_outputs_alpha_beta(self):             # <<<<<<<<<<<<<<
+ *         """Return outputs as tuple (alpha, beta)"""
+ *         return (self._out.Alpha, self._out.Beta)
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_20ParkTransformWrapper_3set_inputs, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_ParkTransformWrapper_set_inputs, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[10])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 126, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_22ClarkeTransformWrapper_9get_outputs_alpha_beta, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_ClarkeTransformWrapper_get_outpu, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[5])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 160, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
   #endif
-  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_ParkTransformWrapper, __pyx_mstate_global->__pyx_n_u_set_inputs, __pyx_t_2) < (0)) __PYX_ERR(0, 126, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "coordinate_transform_wrapper.pyx":130
- *         self._in[1] = <float> u[1]
- * 
- *     def set_theta(self, theta):             # <<<<<<<<<<<<<<
- *         self._theta = <float> theta
- * 
-*/
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_20ParkTransformWrapper_5set_theta, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_ParkTransformWrapper_set_theta, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[11])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 130, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
-  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
-  #endif
-  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_ParkTransformWrapper, __pyx_mstate_global->__pyx_n_u_set_theta, __pyx_t_2) < (0)) __PYX_ERR(0, 130, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "coordinate_transform_wrapper.pyx":133
- *         self._theta = <float> theta
- * 
- *     cpdef void compute(self):             # <<<<<<<<<<<<<<
- *         with nogil:
- *             park_transform_compute_flat(self._in, self._theta, self._out)
-*/
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_20ParkTransformWrapper_7compute, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_ParkTransformWrapper_compute, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[12])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 133, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
-  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
-  #endif
-  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_ParkTransformWrapper, __pyx_mstate_global->__pyx_n_u_compute, __pyx_t_2) < (0)) __PYX_ERR(0, 133, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "coordinate_transform_wrapper.pyx":137
- *             park_transform_compute_flat(self._in, self._theta, self._out)
- * 
- *     cpdef cnp.ndarray get_outputs(self):             # <<<<<<<<<<<<<<
- *         cdef cnp.ndarray y = np.empty(2, dtype=np.float32)
- *         y[0] = self._out[0]
-*/
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_20ParkTransformWrapper_9get_outputs, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_ParkTransformWrapper_get_outputs, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[13])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 137, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
-  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
-  #endif
-  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_ParkTransformWrapper, __pyx_mstate_global->__pyx_n_u_get_outputs, __pyx_t_2) < (0)) __PYX_ERR(0, 137, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "(tree fragment)":1
- * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
- *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
- * def __setstate_cython__(self, __pyx_state):
-*/
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_20ParkTransformWrapper_11__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_ParkTransformWrapper___reduce_cy, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[14])); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
-  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
-  #endif
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_reduce_cython, __pyx_t_2) < (0)) __PYX_ERR(2, 1, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "(tree fragment)":3
- * def __reduce_cython__(self):
- *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
- * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
- *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
-*/
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_20ParkTransformWrapper_13__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_ParkTransformWrapper___setstate, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[15])); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 3, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
-  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
-  #endif
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_setstate_cython, __pyx_t_2) < (0)) __PYX_ERR(2, 3, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_ClarkeTransformWrapper, __pyx_mstate_global->__pyx_n_u_get_outputs_alpha_beta, __pyx_t_2) < (0)) __PYX_ERR(0, 160, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "coordinate_transform_wrapper.pyx":164
- *         for i in range(2): self._out[i] = 0.0
+ *         return (self._out.Alpha, self._out.Beta)
  * 
- *     def set_inputs(self, u):             # <<<<<<<<<<<<<<
- *         self._in[0] = <float> u[0]
- *         self._in[1] = <float> u[1]
+ *     def get_outputs(self):             # <<<<<<<<<<<<<<
+ *         """Return outputs as numpy array [alpha, beta]"""
+ *         return np.array([self._out.Alpha, self._out.Beta], dtype=np.float32)
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_23InvParkTransformWrapper_3set_inputs, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_InvParkTransformWrapper_set_inpu, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[16])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 164, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_22ClarkeTransformWrapper_11get_outputs, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_ClarkeTransformWrapper_get_outpu_2, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[6])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 164, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
   #endif
-  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_InvParkTransformWrapper, __pyx_mstate_global->__pyx_n_u_set_inputs, __pyx_t_2) < (0)) __PYX_ERR(0, 164, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "coordinate_transform_wrapper.pyx":168
- *         self._in[1] = <float> u[1]
- * 
- *     def set_theta(self, theta):             # <<<<<<<<<<<<<<
- *         self._theta = <float> theta
- * 
-*/
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_23InvParkTransformWrapper_5set_theta, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_InvParkTransformWrapper_set_thet, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[17])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 168, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
-  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
-  #endif
-  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_InvParkTransformWrapper, __pyx_mstate_global->__pyx_n_u_set_theta, __pyx_t_2) < (0)) __PYX_ERR(0, 168, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "coordinate_transform_wrapper.pyx":171
- *         self._theta = <float> theta
- * 
- *     cpdef void compute(self):             # <<<<<<<<<<<<<<
- *         with nogil:
- *             inv_park_transform_compute_flat(self._in, self._theta, self._out)
-*/
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_23InvParkTransformWrapper_7compute, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_InvParkTransformWrapper_compute, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[18])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 171, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
-  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
-  #endif
-  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_InvParkTransformWrapper, __pyx_mstate_global->__pyx_n_u_compute, __pyx_t_2) < (0)) __PYX_ERR(0, 171, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "coordinate_transform_wrapper.pyx":175
- *             inv_park_transform_compute_flat(self._in, self._theta, self._out)
- * 
- *     cpdef cnp.ndarray get_outputs(self):             # <<<<<<<<<<<<<<
- *         cdef cnp.ndarray y = np.empty(2, dtype=np.float32)
- *         y[0] = self._out[0]
-*/
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_23InvParkTransformWrapper_9get_outputs, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_InvParkTransformWrapper_get_outp, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[19])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 175, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
-  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
-  #endif
-  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_InvParkTransformWrapper, __pyx_mstate_global->__pyx_n_u_get_outputs, __pyx_t_2) < (0)) __PYX_ERR(0, 175, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_ClarkeTransformWrapper, __pyx_mstate_global->__pyx_n_u_get_outputs, __pyx_t_2) < (0)) __PYX_ERR(0, 164, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "(tree fragment)":1
@@ -10505,7 +12400,7 @@ __Pyx_RefNannySetupContext("PyInit_coordinate_transform_wrapper", 0);
  *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
  * def __setstate_cython__(self, __pyx_state):
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_23InvParkTransformWrapper_11__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_InvParkTransformWrapper___reduce, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[20])); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 1, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_22ClarkeTransformWrapper_13__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_ClarkeTransformWrapper___reduce, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[7])); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
@@ -10519,7 +12414,460 @@ __Pyx_RefNannySetupContext("PyInit_coordinate_transform_wrapper", 0);
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
  *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_23InvParkTransformWrapper_13__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_InvParkTransformWrapper___setsta, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[21])); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 3, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_22ClarkeTransformWrapper_15__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_ClarkeTransformWrapper___setstat, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[8])); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 3, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_setstate_cython, __pyx_t_2) < (0)) __PYX_ERR(2, 3, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "coordinate_transform_wrapper.pyx":182
+ *         self._out.C = 0.0
+ * 
+ *     def set_inputs_alpha_beta(self, real32_T alpha, real32_T beta):             # <<<<<<<<<<<<<<
+ *         self._in.Alpha = alpha
+ *         self._in.Beta = beta
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_3set_inputs_alpha_beta, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_InvClarkeTransformWrapper_set_in, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[9])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 182, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_InvClarkeTransformWrapper, __pyx_mstate_global->__pyx_n_u_set_inputs_alpha_beta, __pyx_t_2) < (0)) __PYX_ERR(0, 182, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "coordinate_transform_wrapper.pyx":186
+ *         self._in.Beta = beta
+ * 
+ *     def set_inputs(self, cnp.ndarray u):             # <<<<<<<<<<<<<<
+ *         """Set inputs from numpy array [alpha, beta]"""
+ *         if u.shape[0] < 2:
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_5set_inputs, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_InvClarkeTransformWrapper_set_in_2, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[10])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 186, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_InvClarkeTransformWrapper, __pyx_mstate_global->__pyx_n_u_set_inputs, __pyx_t_2) < (0)) __PYX_ERR(0, 186, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "coordinate_transform_wrapper.pyx":193
+ *         self._in.Beta = <real32_T> u[1]
+ * 
+ *     def compute(self):             # <<<<<<<<<<<<<<
+ *         """Execute the inverse Clarke transform using matrix multiplication"""
+ *         InvClarke_Transform(&self._inv_clarke_matrix, &self._in, &self._out)
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_7compute, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_InvClarkeTransformWrapper_comput, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[11])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 193, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_InvClarkeTransformWrapper, __pyx_mstate_global->__pyx_n_u_compute, __pyx_t_2) < (0)) __PYX_ERR(0, 193, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "coordinate_transform_wrapper.pyx":197
+ *         InvClarke_Transform(&self._inv_clarke_matrix, &self._in, &self._out)
+ * 
+ *     def get_outputs_abc(self):             # <<<<<<<<<<<<<<
+ *         """Return outputs as tuple (a, b, c)"""
+ *         return (self._out.A, self._out.B, self._out.C)
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_9get_outputs_abc, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_InvClarkeTransformWrapper_get_ou, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[12])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 197, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_InvClarkeTransformWrapper, __pyx_mstate_global->__pyx_n_u_get_outputs_abc, __pyx_t_2) < (0)) __PYX_ERR(0, 197, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "coordinate_transform_wrapper.pyx":201
+ *         return (self._out.A, self._out.B, self._out.C)
+ * 
+ *     def get_outputs(self):             # <<<<<<<<<<<<<<
+ *         """Return outputs as numpy array [a, b, c]"""
+ *         return np.array([self._out.A, self._out.B, self._out.C], dtype=np.float32)
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_11get_outputs, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_InvClarkeTransformWrapper_get_ou_2, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[13])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 201, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_InvClarkeTransformWrapper, __pyx_mstate_global->__pyx_n_u_get_outputs, __pyx_t_2) < (0)) __PYX_ERR(0, 201, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "(tree fragment)":1
+ * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+ * def __setstate_cython__(self, __pyx_state):
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_13__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_InvClarkeTransformWrapper___redu, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[14])); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_reduce_cython, __pyx_t_2) < (0)) __PYX_ERR(2, 1, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "(tree fragment)":3
+ * def __reduce_cython__(self):
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+ * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_25InvClarkeTransformWrapper_15__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_InvClarkeTransformWrapper___sets, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[15])); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 3, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_setstate_cython, __pyx_t_2) < (0)) __PYX_ERR(2, 3, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "coordinate_transform_wrapper.pyx":222
+ *         Park_InitMatrix(&self._park_matrix, self._theta)
+ * 
+ *     def set_inputs_alpha_beta(self, real32_T alpha, real32_T beta):             # <<<<<<<<<<<<<<
+ *         self._in.Alpha = alpha
+ *         self._in.Beta = beta
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_20ParkTransformWrapper_3set_inputs_alpha_beta, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_ParkTransformWrapper_set_inputs, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[16])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 222, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_ParkTransformWrapper, __pyx_mstate_global->__pyx_n_u_set_inputs_alpha_beta, __pyx_t_2) < (0)) __PYX_ERR(0, 222, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "coordinate_transform_wrapper.pyx":226
+ *         self._in.Beta = beta
+ * 
+ *     def set_inputs(self, cnp.ndarray u):             # <<<<<<<<<<<<<<
+ *         """Set alpha-beta inputs from numpy array [alpha, beta]"""
+ *         if u.shape[0] < 2:
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_20ParkTransformWrapper_5set_inputs, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_ParkTransformWrapper_set_inputs_2, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[17])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 226, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_ParkTransformWrapper, __pyx_mstate_global->__pyx_n_u_set_inputs, __pyx_t_2) < (0)) __PYX_ERR(0, 226, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "coordinate_transform_wrapper.pyx":233
+ *         self._in.Beta = <real32_T> u[1]
+ * 
+ *     def set_theta(self, real32_T theta):             # <<<<<<<<<<<<<<
+ *         """Set rotor angle in radians and update Park matrix"""
+ *         self._theta = theta
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_20ParkTransformWrapper_7set_theta, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_ParkTransformWrapper_set_theta, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[18])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 233, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_ParkTransformWrapper, __pyx_mstate_global->__pyx_n_u_set_theta, __pyx_t_2) < (0)) __PYX_ERR(0, 233, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "coordinate_transform_wrapper.pyx":238
+ *         Park_InitMatrix(&self._park_matrix, self._theta)
+ * 
+ *     def compute(self):             # <<<<<<<<<<<<<<
+ *         """Execute the Park transform using matrix multiplication"""
+ *         Park_Transform(&self._park_matrix, &self._in, &self._out)
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_20ParkTransformWrapper_9compute, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_ParkTransformWrapper_compute, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[19])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 238, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_ParkTransformWrapper, __pyx_mstate_global->__pyx_n_u_compute, __pyx_t_2) < (0)) __PYX_ERR(0, 238, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "coordinate_transform_wrapper.pyx":242
+ *         Park_Transform(&self._park_matrix, &self._in, &self._out)
+ * 
+ *     def get_outputs_dq(self):             # <<<<<<<<<<<<<<
+ *         """Return outputs as tuple (d, q)"""
+ *         return (self._out.D, self._out.Q)
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_20ParkTransformWrapper_11get_outputs_dq, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_ParkTransformWrapper_get_outputs, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[20])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 242, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_ParkTransformWrapper, __pyx_mstate_global->__pyx_n_u_get_outputs_dq, __pyx_t_2) < (0)) __PYX_ERR(0, 242, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "coordinate_transform_wrapper.pyx":246
+ *         return (self._out.D, self._out.Q)
+ * 
+ *     def get_outputs(self):             # <<<<<<<<<<<<<<
+ *         """Return outputs as numpy array [d, q]"""
+ *         return np.array([self._out.D, self._out.Q], dtype=np.float32)
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_20ParkTransformWrapper_13get_outputs, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_ParkTransformWrapper_get_outputs_2, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[21])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 246, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_ParkTransformWrapper, __pyx_mstate_global->__pyx_n_u_get_outputs, __pyx_t_2) < (0)) __PYX_ERR(0, 246, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "(tree fragment)":1
+ * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+ * def __setstate_cython__(self, __pyx_state):
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_20ParkTransformWrapper_15__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_ParkTransformWrapper___reduce_cy, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[22])); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_reduce_cython, __pyx_t_2) < (0)) __PYX_ERR(2, 1, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "(tree fragment)":3
+ * def __reduce_cython__(self):
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+ * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_20ParkTransformWrapper_17__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_ParkTransformWrapper___setstate, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[23])); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 3, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_setstate_cython, __pyx_t_2) < (0)) __PYX_ERR(2, 3, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "coordinate_transform_wrapper.pyx":267
+ *         InvPark_InitMatrix(&self._inv_park_matrix, self._theta)
+ * 
+ *     def set_inputs_dq(self, real32_T d, real32_T q):             # <<<<<<<<<<<<<<
+ *         self._in.D = d
+ *         self._in.Q = q
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_23InvParkTransformWrapper_3set_inputs_dq, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_InvParkTransformWrapper_set_inpu, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[24])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 267, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_InvParkTransformWrapper, __pyx_mstate_global->__pyx_n_u_set_inputs_dq, __pyx_t_2) < (0)) __PYX_ERR(0, 267, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "coordinate_transform_wrapper.pyx":271
+ *         self._in.Q = q
+ * 
+ *     def set_inputs(self, cnp.ndarray u):             # <<<<<<<<<<<<<<
+ *         """Set d-q inputs from numpy array [d, q]"""
+ *         if u.shape[0] < 2:
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_23InvParkTransformWrapper_5set_inputs, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_InvParkTransformWrapper_set_inpu_2, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[25])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 271, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_InvParkTransformWrapper, __pyx_mstate_global->__pyx_n_u_set_inputs, __pyx_t_2) < (0)) __PYX_ERR(0, 271, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "coordinate_transform_wrapper.pyx":278
+ *         self._in.Q = <real32_T> u[1]
+ * 
+ *     def set_theta(self, real32_T theta):             # <<<<<<<<<<<<<<
+ *         """Set rotor angle in radians and update inverse Park matrix"""
+ *         self._theta = theta
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_23InvParkTransformWrapper_7set_theta, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_InvParkTransformWrapper_set_thet, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[26])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 278, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_InvParkTransformWrapper, __pyx_mstate_global->__pyx_n_u_set_theta, __pyx_t_2) < (0)) __PYX_ERR(0, 278, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "coordinate_transform_wrapper.pyx":283
+ *         InvPark_InitMatrix(&self._inv_park_matrix, self._theta)
+ * 
+ *     def compute(self):             # <<<<<<<<<<<<<<
+ *         """Execute the inverse Park transform using matrix multiplication"""
+ *         InvPark_Transform(&self._inv_park_matrix, &self._in, &self._out)
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_23InvParkTransformWrapper_9compute, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_InvParkTransformWrapper_compute, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[27])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 283, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_InvParkTransformWrapper, __pyx_mstate_global->__pyx_n_u_compute, __pyx_t_2) < (0)) __PYX_ERR(0, 283, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "coordinate_transform_wrapper.pyx":287
+ *         InvPark_Transform(&self._inv_park_matrix, &self._in, &self._out)
+ * 
+ *     def get_outputs_alpha_beta(self):             # <<<<<<<<<<<<<<
+ *         """Return outputs as tuple (alpha, beta)"""
+ *         return (self._out.Alpha, self._out.Beta)
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_23InvParkTransformWrapper_11get_outputs_alpha_beta, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_InvParkTransformWrapper_get_outp, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[28])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 287, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_InvParkTransformWrapper, __pyx_mstate_global->__pyx_n_u_get_outputs_alpha_beta, __pyx_t_2) < (0)) __PYX_ERR(0, 287, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "coordinate_transform_wrapper.pyx":291
+ *         return (self._out.Alpha, self._out.Beta)
+ * 
+ *     def get_outputs(self):             # <<<<<<<<<<<<<<
+ *         """Return outputs as numpy array [alpha, beta]"""
+ *         return np.array([self._out.Alpha, self._out.Beta], dtype=np.float32)
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_23InvParkTransformWrapper_13get_outputs, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_InvParkTransformWrapper_get_outp_2, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[29])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 291, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_InvParkTransformWrapper, __pyx_mstate_global->__pyx_n_u_get_outputs, __pyx_t_2) < (0)) __PYX_ERR(0, 291, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "(tree fragment)":1
+ * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+ * def __setstate_cython__(self, __pyx_state):
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_23InvParkTransformWrapper_15__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_InvParkTransformWrapper___reduce, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[30])); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_reduce_cython, __pyx_t_2) < (0)) __PYX_ERR(2, 1, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "(tree fragment)":3
+ * def __reduce_cython__(self):
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+ * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_23InvParkTransformWrapper_17__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_InvParkTransformWrapper___setsta, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[31])); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 3, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_setstate_cython, __pyx_t_2) < (0)) __PYX_ERR(2, 3, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "coordinate_transform_wrapper.pyx":313
+ *         Park_InitMatrix(&self._park_matrix, self._theta)
+ * 
+ *     def set_inputs_abc(self, real32_T a, real32_T b, real32_T c):             # <<<<<<<<<<<<<<
+ *         self._in.A = a
+ *         self._in.B = b
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_3set_inputs_abc, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_ClarkeParkTransformWrapper_set_i, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[32])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 313, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_ClarkeParkTransformWrapper, __pyx_mstate_global->__pyx_n_u_set_inputs_abc, __pyx_t_2) < (0)) __PYX_ERR(0, 313, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "coordinate_transform_wrapper.pyx":318
+ *         self._in.C = c
+ * 
+ *     def set_inputs(self, cnp.ndarray u):             # <<<<<<<<<<<<<<
+ *         """Set three-phase inputs from numpy array [a, b, c]"""
+ *         if u.shape[0] < 3:
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_5set_inputs, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_ClarkeParkTransformWrapper_set_i_2, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[33])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 318, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_ClarkeParkTransformWrapper, __pyx_mstate_global->__pyx_n_u_set_inputs, __pyx_t_2) < (0)) __PYX_ERR(0, 318, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "coordinate_transform_wrapper.pyx":326
+ *         self._in.C = <real32_T> u[2]
+ * 
+ *     def set_theta(self, real32_T theta):             # <<<<<<<<<<<<<<
+ *         """Set rotor angle in radians and update Park matrix"""
+ *         self._theta = theta
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_7set_theta, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_ClarkeParkTransformWrapper_set_t, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[34])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 326, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_ClarkeParkTransformWrapper, __pyx_mstate_global->__pyx_n_u_set_theta, __pyx_t_2) < (0)) __PYX_ERR(0, 326, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "coordinate_transform_wrapper.pyx":331
+ *         Park_InitMatrix(&self._park_matrix, self._theta)
+ * 
+ *     def compute(self):             # <<<<<<<<<<<<<<
+ *         """Execute combined Clarke-Park transform using matrix multiplication"""
+ *         ClarkePark_Transform(&self._park_matrix, &self._clarke_matrix,
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_9compute, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_ClarkeParkTransformWrapper_compu, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[35])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 331, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_ClarkeParkTransformWrapper, __pyx_mstate_global->__pyx_n_u_compute, __pyx_t_2) < (0)) __PYX_ERR(0, 331, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "coordinate_transform_wrapper.pyx":336
+ *                              &self._in, &self._out)
+ * 
+ *     def get_outputs_dq(self):             # <<<<<<<<<<<<<<
+ *         """Return outputs as tuple (d, q)"""
+ *         return (self._out.D, self._out.Q)
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_11get_outputs_dq, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_ClarkeParkTransformWrapper_get_o, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[36])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 336, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_ClarkeParkTransformWrapper, __pyx_mstate_global->__pyx_n_u_get_outputs_dq, __pyx_t_2) < (0)) __PYX_ERR(0, 336, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "coordinate_transform_wrapper.pyx":340
+ *         return (self._out.D, self._out.Q)
+ * 
+ *     def get_outputs(self):             # <<<<<<<<<<<<<<
+ *         """Return outputs as numpy array [d, q]"""
+ *         return np.array([self._out.D, self._out.Q], dtype=np.float32)
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_13get_outputs, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_ClarkeParkTransformWrapper_get_o_2, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[37])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 340, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_28coordinate_transform_wrapper_ClarkeParkTransformWrapper, __pyx_mstate_global->__pyx_n_u_get_outputs, __pyx_t_2) < (0)) __PYX_ERR(0, 340, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "(tree fragment)":1
+ * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+ * def __setstate_cython__(self, __pyx_state):
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_15__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_ClarkeParkTransformWrapper___red, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[38])); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_reduce_cython, __pyx_t_2) < (0)) __PYX_ERR(2, 1, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "(tree fragment)":3
+ * def __reduce_cython__(self):
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+ * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
+ *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_28coordinate_transform_wrapper_26ClarkeParkTransformWrapper_17__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_ClarkeParkTransformWrapper___set, NULL, __pyx_mstate_global->__pyx_n_u_coordinate_transform_wrapper, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[39])); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 3, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
@@ -10529,8 +12877,8 @@ __Pyx_RefNannySetupContext("PyInit_coordinate_transform_wrapper", 0);
 
   /* "coordinate_transform_wrapper.pyx":1
  * # coordinate_transform_wrapper.pyx             # <<<<<<<<<<<<<<
- * # =============================================================================
- * # Cython wrappers for coordinate_transform.c
+ * # =================================
+ * #
 */
   __pyx_t_2 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
@@ -10597,34 +12945,34 @@ static int __Pyx_InitCachedConstants(__pyx_mstatetype *__pyx_mstate) {
 static int __Pyx_InitConstants(__pyx_mstatetype *__pyx_mstate) {
   CYTHON_UNUSED_VAR(__pyx_mstate);
   {
-    const struct { const unsigned int length: 7; } index[] = {{1},{32},{7},{6},{2},{9},{50},{39},{34},{14},{22},{40},{42},{30},{34},{33},{25},{43},{45},{33},{37},{36},{23},{41},{43},{31},{35},{34},{33},{20},{38},{40},{28},{32},{31},{30},{20},{18},{18},{7},{28},{5},{5},{7},{8},{11},{12},{13},{5},{8},{10},{8},{2},{5},{3},{11},{14},{12},{10},{17},{13},{4},{10},{12},{9},{10},{12},{19},{8},{5},{1},{6},{22},{36},{53},{11},{18},{54},{69},{18},{22},{9}};
-    #if (CYTHON_COMPRESS_STRINGS) == 2 /* compression: bz2 (698 bytes) */
-const char* const cstring = "BZh91AY&SY=Y\366\371\000\000O\377\376ew\243\002G\253>\005\2551t\200\277\357\377\340@@@@@@@@@\000\000@@\002\275a\266\246\331\254\204\222B\031\006\2234\231\251\3524\000\031\000\003A\210i\223dA\"A\010\001\252yM\224\375Q\241\246\2004\000\000\001\202=C\206\232db0\232`!\200M0\214\023\023!\246F\206\200IS#)\223)\247\240\232\033Q\352\r4\000\3104\000\000\332\215\244\344\002\243=H\375EP\255\031\335[RS\"V\003\005\000N\014+C\334H\212\250x\200\311\243\362<\232\236_&8kWCJZy\331\233@\021\014\0210B\3116\374\\\231\345\251\021O\226]\250.\376\336\333\253\351~\267\237R3\336\356\270\272\342R%%Y[G\r\272:6\377\0233\365\313\264n.9\2061\214c\033m1\234\342\025\251*3{AM\240c\220\021 m\277\037\263\227E].\351\213=\241\216\263\254\301\331\004\346\221$\346\210\033\032\032J\220\243\024\311\344(\247W\17779_\352\357\275<\004\263\tb\004\3531\356\260\007\222B6\305\361Z\324\007\3030\r\236\032\036\330\266\027\276\242\250\237\262\341\023\017\227c\260]}\314\003\366\346\277j\2214!\030']:\2612\033\210m\266\333z\340\2075P:\321\321\337\"\315\232-\210\260\022\234\362PW\220\313\234\030s\"\346\231\010\227\014\000\225jRA(<W\256\222\340\026\363\263\3372\216\313\314\2255\354\242\033\244c\313M\254Jl\025\334\240\266qp\215[e{uQh%\222R^{\213xQE\032\344\202lr4\326\331\226pB4\337I#\030$\313\224T\205y\251\322\323q\021l\210abq\205\320J\001\245\027\211\220\351\342\004\241tD`\223\n\300\3730\314\314\345L\271&\036c\221\034r\244(\247\020\230\240\003{\020\365ayc3e`\313M\"\024\304\223g\021$\032^\342\333cPpJ\007sF.\240%\307m\305\032:,\236\021\243\301\206ja`\007\033\200\031t#\021\003\2556`\240Dn%\332LDJO\306\210\262\225;\224\243\036\206\240\310\363\033\266\355[\260\306\206\223\021Y\241e\327\247\2643^\226\235\226\234\230kr\334\"n_\322b\032\207:\244?\010\312\214x\205\224\375Gr\"E\224i\327\231\032\221\0024\035\342\215\030\213H\300d'z\211\213\221\313\237\0143\316l\366\032\372pON\226\250*\364nZ\3275\2641\306\331\0037\203\017\370\273\222)\302\204\201\352\317\267\310";
-    PyObject *data = __Pyx_DecompressString(cstring, 698, 2);
+    const struct { const unsigned int length: 8; } index[] = {{1},{41},{41},{179},{8},{32},{7},{6},{2},{9},{50},{39},{34},{14},{26},{44},{46},{34},{41},{38},{41},{37},{36},{22},{40},{42},{30},{45},{34},{37},{33},{25},{43},{45},{33},{41},{37},{47},{36},{23},{41},{43},{31},{46},{35},{37},{34},{33},{20},{38},{40},{28},{35},{32},{42},{31},{30},{20},{20},{38},{40},{1},{5},{5},{18},{1},{4},{1},{18},{7},{28},{1},{5},{7},{8},{11},{15},{22},{14},{12},{13},{5},{8},{10},{8},{2},{5},{3},{11},{14},{1},{12},{10},{17},{13},{4},{10},{14},{21},{13},{12},{9},{10},{12},{19},{8},{5},{1},{6},{26},{56},{56},{71},{26},{32},{20},{20},{29},{17},{23},{17},{25},{24},{25},{26},{37},{31},{31},{9}};
+    #if (CYTHON_COMPRESS_STRINGS) == 2 /* compression: bz2 (1159 bytes) */
+const char* const cstring = "BZh91AY&SY\217\231\3263\000\000\240\177\377g|\367\377\367\333\275E\2771\366\210\277\377\377\340@@@@@@@@@@@@@\000P\004y\353\220\262\331\211\214n\0142E5='\224\362\006\246CM4h\323CCM\0324\323@\0004\323\0204\321\243M2mA$\223\0054\365\030\243L\215M\251\232\215\001\240\000\006\200\000\000\000\031\014\200\221$\322i\251\212l\004\232zCC\324\r\000\000\000\000\0004\006\206M\036\325\016\000\032\003@\320\000\323L\200\003F\231\000\0322`\200\304\000\000\222Bd)\2622j\217S\364\324\207\250\032\000=@\003@\000\000\001\240i\352\003\276\227\353q\243m\033\237\271-\037\305\024\300\207b\240I\240ll\220i^T\315@\221\242Eh\253D\261(\201Qq\226\253S\202m7n\316\033\367\355\220\366\272[_\212;,H\370Ko\241\177_g\347\374\244\234\251\303\315P\245\266\2434\rU\316\367Df\215v\337\235\257\316\263\231\254\232l\244\2253\221G\347\257\025+6n\351\340E\366\207\204p\214LD1'\326\256\313n\242\270\205\326\351\365\335\223E;\307\340\242\245\376\313\215w\336\273\343\t\"\303e \304\031\315\331\355\345=\021\336\2233m\261):L\366\305\233(\226R\315mE\241(\255!\336\272[ie\266\300\234\311Q\202j\262q{gJ\326\n\342-DDE\267\t\327\026\345\016\"%3x_\307\027\"\374\224\226]\332\306\230\323\032c\030\301\266\3064:\263\312C&*\277\242H\251\026\200*e\215\005Y\304]rI\3116\333\301\261\223\r8mW\242\t\325\315\025\311QM\002uT\221pQA)\21149'1(\036\304\020$\310D\334\016\301\001\237atR\344\212L\310to3\264\367iV2\275\356]b\267\357\253\211Wv\234`\002\337\244.j\005\212b\235\245\220\276&c\205\212sL\204VU\225\367\r\"\001\314\321\243\2069\303\252\302\320\274k\257\014\030x[B\202\262\025N!\320\224\334\347\274\317\231\034\034$\325P\300<x\225\347,\367\251\207\0238l\361\232$\341\017\323\316i.&\246\271q\343\312\257\030\346\030\320\330\202\206K[4L\207(\224\233m\266\330\303\\\342\003\334K\373\002\306x\210\273VSC\3415\305Q\246#d\2055\020\245$\213\332a\265\241\222\000\030\t0F\206L2a\303\331,\337\236!~\335v\014\244\000\255\236\027\357\305\0061\261\232$n\320I\212\306\0225\032\376\346K\306\224\210\325^Bo+\236\010\2113\3437\271\364\2622s$'\262\005^\342\005QL\227\315q""\312a\tl0\022Qt/\000,\020zy\334\211\214PO\305BP|\\\t\23138\266z&(\330\235\3642\035k\355\221\230\210\224@\026\261\014\267E\000\3510J\255zr\213^L%\027\224X8\270\0010\36285\231\367&A*1M8\002j\322u;\306\000\005\"\005\247\014m\215\2466\333m\2666\341[2b\010o>\276to\365\000\025{\242Hg\371\002\261\241\016\214A\2321\206\255\335f&e\255b\004*D\t\2039\353\223U\272u`\200Y\032E\r\016S5\032\217\221\177\"NcU\243\232U&\251\205ce\000T\330\202s\032\006\032\210\262T\375\261\030`\035d\312\212\207\266-\233n\234\244\0028l\016\021\215\303V\212\3019\316\224\356\252\201b5\222T&BXd\207\211IP\352\305\353E\220\314\010\302\203D\363\356\364\026i\304I#\036\303\262\030g\306\260\246\007\000\007\0000%\032\252\222\000\211\000H\020\330A\0362\024`\303hP\\W\263K\032\222\001,\254\337\354\250j\267%Ic\003\0142\3122\352W\361=\240\226\n\013\006\311\244\t\232xM\242\321\256o\331\004z\341\025\212\215\267\255{\346\001@\242\356e\333\357\n\001\025\361,|\306\027\177L\241\036`\027B \036\332O\221\010\207\272C\244>*\242i\271\021\300\345\347\022\370\300\353m\341@\3757\033\307\030\261\t\371\350\273\217T\235NZ\345q\177>\355\355`\202\210i\244\374}\252\322\340\266'\311\213J\025\035\325A\312\2353 MD\214\024\210\336L\005\2500Q`\037\361w$S\205\t\010\371\235c0";
+    PyObject *data = __Pyx_DecompressString(cstring, 1159, 2);
     if (unlikely(!data)) __PYX_ERR(0, 1, __pyx_L1_error)
     const char* const bytes = __Pyx_PyBytes_AsString(data);
     #if !CYTHON_ASSUME_SAFE_MACROS
     if (likely(bytes)); else { Py_DECREF(data); __PYX_ERR(0, 1, __pyx_L1_error) }
     #endif
-    #elif (CYTHON_COMPRESS_STRINGS) != 0 /* compression: zlib (587 bytes) */
-const char* const cstring = "x\332\235\224\277\213\3330\024\307\t\204r-\327\226\014\355V\360pm9\216\013\\\177l\245\345h(\264Ci\216B\307\207N\226/\342l\311\221\236r\361v\243\307\214\0363z\364\2301\177F\376\234J\211\233\344\260\235\204\032lK\357}\236\336\373\352\301\373B\245T>\027\004\031\240\"B\007REp\247H\0343\325\215\223\261\3175\271\016\031\023\356{C\271^\255|!=\237\005\304\204\350\001(\346\033\312\000<\3370\017\245'\2448G\305G\234\204\326K\271\340\010 L\024']\240R\261nd\3438Q\212$^@\270=\316E\361(\226\n\2671\023\021\034T\210O\332\236-n\2644\212\262\317_C\242n\331\357\177\265\377Y\225^o\355\256K\245\t\016\244\000h\3444C\215\356V\366\220TF\261A\326\340\275a\010\322\240%t\003a\363\000\027\016\370.F\365L\243\243*g\027ZQ\324\014\227\242\232\201-]\315\320\003i\277,R#\254\316\\+\253\001\254\023U\213n$\325\272\037\n\252E\366\312Y\0228`H\352\274\207)=T\346.\215\373\004\356Q\267[\232M\235\214\355\333\343\024\341'\033\343\225\235\002:\021\224K\233_\331\024\\0MC\373\265\347\271\231B\3315\241\267em\273\306\215\217I\314X\024c\022\204\222\340\373w\000\201\021\024`\253\366\345fu\025\000\\\303:%G\026YoDlR\373D\3227\241c@\220\310\376E\274\234+\261\214\001\354T\203\362\010\267\034\241\033h\016\035\032\022\256\360\315H\253thm`c\327\2270\330\334\334\262Oe\302\365\205\331E9(\267\332\0105-\005@\246-\264\2142#\022\032\246\357/\027O\237-\216\317\362\213\274W<*\374\331\351\374\303|h\255G\307io\322\232\274\230\0142\222\r\247\255\212\341\020\246!\350\207\333\226\231\317\363~\356\027of\355\331\245s\276\312\256\262\321\264?\245\371\313\\\025\235\305\321\343\264\223\276Nq\3621ke\325\355\363t\370\037Q\265\207\270bN\363N~\222\007Eo\326*-o\247\303\274\235\177+N\n>\303\371\305}k\321~\222\236M\372\177\001\203\317\276t";
-    PyObject *data = __Pyx_DecompressString(cstring, 587, 1);
+    #elif (CYTHON_COMPRESS_STRINGS) != 0 /* compression: zlib (1016 bytes) */
+const char* const cstring = "x\332\235\226\261o\333F\024\207!\300)\334\306@\253\300u\322\246MO\205\332\024-\242@\266\020d(Z\270\261\r\270Cj\025\016:t8\034\311'\353\022\362\216\342\035Uk\313\250\221#G\216\0349j\324\330\321\243\307\374)}\244dY\262H\212\250\000Iw\357}\367\370\336\357\356x\367\353\251p}M\230\347\261\021q|\245I\237\r\2010Ml`\330\333'`\203\003B\253\r\340\301\002|-5\020\335G\317\253\221\356KA\270\"\026\330\334\000\217i\260GDi\217\233\032\274\024\022\344\354\370\354Y\347e\2070a\021\017\336\202\251\025Q\276a\332L)PD\366\210\341s[sA\364\310\005\325\"\247=2\222>\021\000\026\321\222\270\310-\017\320}\020D\201N\033\344)\023Bj\246\271\024\024\207sq\361\224X\334\303\207pL\036G\2370[A\213Y\026E\016L)=\213\013L\223j\217\t\325\223\236C\377\361\230\353\202\327rG\227\026W\314\260\001D\372{ar5kYBb\205=\346\333\232P\352\201\345\233@)\261\374\354\021B\212gX\361\2203\033\275&\027\\S*|\307\035\265\250)=h98\216\317\204\3551n\317\312\342\216+=\275\214\371\016\323\3755\342\347TMq\241\244\357\231\360\313+\233y\357\340\014\177\316o\362\377k\226~\261\247\265H\331\314\346\213\322R\026\245U:U\250\002mJ\007\027\r\224\020\027\240\251\3645R\212Z\203j`\t\205\311Q.\262h\3140+\201\033 \\E\232\315\230|I\253\312Y]\312r\031K%d\266\333g\324(Ly]\306J\022\226@\247b\230\317\024:\326\005*C\3274*\206\3472\025\003+J\031f%\260\030Z\026j!{\025\034\231\274\345V`\316\225\253\352\336,Bo\245\332\270+Wj\333D\027!KZY\203\315P\031\221m\310<o5\361\252*W&[\2057\331&d\343\333k\241\372\006\262\\'\254ct\211\337#<p\351k\270\324\177B\357.\375\033S\220g[\327\256\200Z\323\216e\331g'\032S#ar\211\312yX9\027\240\214\264(\323\264\261\215%\244\347\254\t\0063\337\315\265-;\202-+\275\002\364l\311\364\301>\245=_\230\224.\211zg\177\347\257\342\325y\312\306\317\262\247\224+\272\310\223kp\024\245\016\303\034\361\343H\313\267S\206\n\346\340\277p\263\243\331\225.\245x1\240\363\020is\250\323;\001\245\030{\3403{\306\337^\013\326T]\030\3402\325\322\356\335N\356\352\2738wy\254\354\254l.\346\031.\326\0006\346\227\223\245\251\2429\323F\251\006\205P6\312\0372""\333\007\365\376\360\303\366\343\260\035\036\206\347W\215\027\tK\364\344\305\264>mNY\352\271?n\217O\202Fp\020\030a\355z\347A\360#\202\335\353\355\235\361Q\360q\3708:\214\272\021\233u\267\303\373Q;5l\032w/\370;\252E\365\250q\247\373\177\307\345\204\371\"\254\207\215\260s\365\315~\322H:\311p\322\235X\323\314\363U\032/\264\242\347I=i&\354\372\353'\330\371>\256\305\2731&~SX\375\246\244\332\215\355^\260\310\242\233g[r~\330\376,\330\n\216\303\335\360<\372<bw\rV\334\214!i\337\232\037E\273\321\2338\313ng\374{\200r~\211\311\267\303\243+r\200\311\017\226\034\017\203AX\30384>Jj\251}/`h\332\n\377\210\333h\372(\233\276,\364#\344\352a\363\352\311\363x\220l%'\223\306\2443\311B}:\366\202\275y\2347Q\023\363\371.\326\370\034\177r<\335\233z\377\326\213 \037\243|;9\\w\377\220U\364\022\327\315\203i\373}\355z\353\223\361OA\367?U\304\370\010";
+    PyObject *data = __Pyx_DecompressString(cstring, 1016, 1);
     if (unlikely(!data)) __PYX_ERR(0, 1, __pyx_L1_error)
     const char* const bytes = __Pyx_PyBytes_AsString(data);
     #if !CYTHON_ASSUME_SAFE_MACROS
     if (likely(bytes)); else { Py_DECREF(data); __PYX_ERR(0, 1, __pyx_L1_error) }
     #endif
-    #else /* compression: none (1751 bytes) */
-const char* const bytes = "?coordinate_transform_wrapper.pyxdisableenablegcisenabledno default __reduce__ due to non-trivial __cinit__numpy._core.multiarray failed to importnumpy._core.umath failed to import<stringsource>ClarkeTransformWrapperClarkeTransformWrapper.__reduce_cython__ClarkeTransformWrapper.__setstate_cython__ClarkeTransformWrapper.computeClarkeTransformWrapper.get_outputsClarkeTransformWrapper.set_inputsInvClarkeTransformWrapperInvClarkeTransformWrapper.__reduce_cython__InvClarkeTransformWrapper.__setstate_cython__InvClarkeTransformWrapper.computeInvClarkeTransformWrapper.get_outputsInvClarkeTransformWrapper.set_inputsInvParkTransformWrapperInvParkTransformWrapper.__reduce_cython__InvParkTransformWrapper.__setstate_cython__InvParkTransformWrapper.computeInvParkTransformWrapper.get_outputsInvParkTransformWrapper.set_inputsInvParkTransformWrapper.set_thetaParkTransformWrapperParkTransformWrapper.__reduce_cython__ParkTransformWrapper.__setstate_cython__ParkTransformWrapper.computeParkTransformWrapper.get_outputsParkTransformWrapper.set_inputsParkTransformWrapper.set_theta__Pyx_PyDict_NextRefasyncio.coroutinescline_in_tracebackcomputecoordinate_transform_wrapperdtypeemptyfloat32__func__get_outputs__getstate___is_coroutineitems__main____module____name__npnumpypop__pyx_state__pyx_vtable____qualname____reduce____reduce_cython____reduce_ex__selfset_inputs__set_name__set_thetasetdefault__setstate____setstate_cython____test__thetauvalues\200A\330\r\016\330\014+\2501\250D\260\006\260d\270)\3004\300q\200A\330\010\014\210D\220\001\220\025\220h\230a\230q\240\001\330\010\014\210D\220\001\220\025\220h\230a\230q\240\001\200A\330\010\014\210D\220\001\220\025\220h\230a\230q\240\001\330\010\014\210D\220\001\220\025\220h\230a\230q\240\001\330\010\014\210D\220\001\220\025\220h\230a\230q\240\001\200A\330\010\014\210J\220h\230a\200A\330\r\016\330\014-\250Q\250d\260&\270\004\270A\200A\330\010\035\230R\230v\240Q\240c\250\026\250r\260\021\330\010\t\210\021\210%\210t\2205\230\001\230\021\330\010\t\210""\021\210%\210t\2205\230\001\230\021\330\010\017\210q\200A\330\010\035\230R\230v\240Q\240c\250\026\250r\260\021\330\010\t\210\021\210%\210t\2205\230\001\230\021\330\010\t\210\021\210%\210t\2205\230\001\230\021\330\010\t\210\021\210%\210t\2205\230\001\230\021\330\010\017\210q\200A\330\r\016\330\014)\250\021\250$\250f\260D\270\001\200A\330\r\016\330\014'\240q\250\004\250F\260$\260i\270t\3001\200\001\330\004\n\210+\220Q";
+    #else /* compression: none (3193 bytes) */
+const char* const bytes = "?Input array must have at least 2 elementsInput array must have at least 3 elementsNote that Cython is deliberately stricter than PEP-484 and rejects subclasses of builtin types. If you need to pass subclasses then set the 'annotation_typing' directive to False.add_notecoordinate_transform_wrapper.pyxdisableenablegcisenabledno default __reduce__ due to non-trivial __cinit__numpy._core.multiarray failed to importnumpy._core.umath failed to import<stringsource>ClarkeParkTransformWrapperClarkeParkTransformWrapper.__reduce_cython__ClarkeParkTransformWrapper.__setstate_cython__ClarkeParkTransformWrapper.computeClarkeParkTransformWrapper.get_outputs_dqClarkeParkTransformWrapper.get_outputsClarkeParkTransformWrapper.set_inputs_abcClarkeParkTransformWrapper.set_inputsClarkeParkTransformWrapper.set_thetaClarkeTransformWrapperClarkeTransformWrapper.__reduce_cython__ClarkeTransformWrapper.__setstate_cython__ClarkeTransformWrapper.computeClarkeTransformWrapper.get_outputs_alpha_betaClarkeTransformWrapper.get_outputsClarkeTransformWrapper.set_inputs_abcClarkeTransformWrapper.set_inputsInvClarkeTransformWrapperInvClarkeTransformWrapper.__reduce_cython__InvClarkeTransformWrapper.__setstate_cython__InvClarkeTransformWrapper.computeInvClarkeTransformWrapper.get_outputs_abcInvClarkeTransformWrapper.get_outputsInvClarkeTransformWrapper.set_inputs_alpha_betaInvClarkeTransformWrapper.set_inputsInvParkTransformWrapperInvParkTransformWrapper.__reduce_cython__InvParkTransformWrapper.__setstate_cython__InvParkTransformWrapper.computeInvParkTransformWrapper.get_outputs_alpha_betaInvParkTransformWrapper.get_outputsInvParkTransformWrapper.set_inputs_dqInvParkTransformWrapper.set_inputsInvParkTransformWrapper.set_thetaParkTransformWrapperParkTransformWrapper.__reduce_cython__ParkTransformWrapper.__setstate_cython__ParkTransformWrapper.computeParkTransformWrapper.get_outputs_dqParkTransformWrapper.get_outputsParkTransformWrapper.set_inputs_alpha_betaParkTransformWrapper.set_inputsParkTransformWr""apper.set_theta__Pyx_PyDict_NextRefTransformWrapperBaseTransformWrapperBase.__reduce_cython__TransformWrapperBase.__setstate_cython__aalphaarrayasyncio.coroutinesbbetaccline_in_tracebackcomputecoordinate_transform_wrapperddtypefloat32__func__get_outputsget_outputs_abcget_outputs_alpha_betaget_outputs_dq__getstate___is_coroutineitems__main____module____name__npnumpypop__pyx_state__pyx_vtable__q__qualname____reduce____reduce_cython____reduce_ex__selfset_inputsset_inputs_abcset_inputs_alpha_betaset_inputs_dq__set_name__set_thetasetdefault__setstate____setstate_cython____test__thetauvalues\200A\340\010\033\2301\230A\230T\320!6\260a\260t\2706\300\021\300$\300a\200A\340\010\013\2101\210F\220!\2203\220b\230\001\330\014\022\220*\230A\230Q\330\010\014\210D\220\t\230\033\240A\240Q\240a\330\010\014\210D\220\010\230\013\2401\240A\240Q\200A\340\010\013\2101\210F\220!\2203\220b\230\001\330\014\022\220*\230A\230Q\330\010\014\210D\220\005\220[\240\001\240\021\240!\330\010\014\210D\220\005\220[\240\001\240\021\240!\200A\340\010\013\2101\210F\220!\2203\220b\230\001\330\014\022\220*\230A\230Q\330\010\014\210D\220\005\220[\240\001\240\021\240!\330\010\014\210D\220\005\220[\240\001\240\021\240!\330\010\014\210D\220\005\220[\240\001\240\021\240!\200A\340\010\031\230\021\230!\2304\320\0372\260!\2604\260v\270Q\270d\300!\200A\340\010\034\230A\230Q\230d\240/\260\021\260$\260a\330\035\036\230d\240&\250\001\250\024\250Q\200A\330\010\014\210D\220\t\230\021\330\010\014\210D\220\010\230\001\200A\330\010\014\210D\220\005\220Q\330\010\014\210D\220\005\220Q\200A\330\010\014\210D\220\005\220Q\330\010\014\210D\220\005\220Q\330\010\014\210D\220\005\220Q\200A\340\010\020\220\004\220E\230\024\230T\240\025\240a\200A\340\010\020\220\004\220E\230\024\230T\240\025\240d\250$\250e\2601\200A\340\010\020\220\004\220E\230\030\240\024\240U\250!\200A\340\010\014\210J\220a\330\010\032\230!\2301\230D\320 3\2604\260q\200A\340\010\014\210J\220a\330\010\027\220q\230\001\230\024\230_\250D\260\001\200A\340\010\026\220a""\220q\230\004\230O\2501\250D\260\006\260a\260t\2701\200A\340\010\030\230\001\230\021\230$\320\036/\250q\260\004\260F\270!\2704\270q\200A\340\010\017\210r\220\026\220q\230\001\230\024\230U\240$\240d\250%\250t\2604\260u\270E\300\026\300r\310\021\200A\340\010\017\210r\220\026\220q\230\001\230\024\230U\240$\240d\250%\250u\260F\270\"\270A\200A\340\010\017\210r\220\026\220q\230\001\230\024\230U\240(\250$\250e\2608\2706\300\022\3001\200\001\330\004\n\210+\220Q";
     PyObject *data = NULL;
     CYTHON_UNUSED_VAR(__Pyx_DecompressString);
     #endif
     PyObject **stringtab = __pyx_mstate->__pyx_string_tab;
     Py_ssize_t pos = 0;
-    for (int i = 0; i < 72; i++) {
+    for (int i = 0; i < 109; i++) {
       Py_ssize_t bytes_length = index[i].length;
       PyObject *string = PyUnicode_DecodeUTF8(bytes + pos, bytes_length, NULL);
-      if (likely(string) && i >= 10) PyUnicode_InternInPlace(&string);
+      if (likely(string) && i >= 14) PyUnicode_InternInPlace(&string);
       if (unlikely(!string)) {
         Py_XDECREF(data);
         __PYX_ERR(0, 1, __pyx_L1_error)
@@ -10632,7 +12980,7 @@ const char* const bytes = "?coordinate_transform_wrapper.pyxdisableenablegcisena
       stringtab[i] = string;
       pos += bytes_length;
     }
-    for (int i = 72; i < 82; i++) {
+    for (int i = 109; i < 129; i++) {
       Py_ssize_t bytes_length = index[i].length;
       PyObject *string = PyBytes_FromStringAndSize(bytes + pos, bytes_length);
       stringtab[i] = string;
@@ -10643,15 +12991,15 @@ const char* const bytes = "?coordinate_transform_wrapper.pyxdisableenablegcisena
       }
     }
     Py_XDECREF(data);
-    for (Py_ssize_t i = 0; i < 82; i++) {
+    for (Py_ssize_t i = 0; i < 129; i++) {
       if (unlikely(PyObject_Hash(stringtab[i]) == -1)) {
         __PYX_ERR(0, 1, __pyx_L1_error)
       }
     }
     #if CYTHON_IMMORTAL_CONSTANTS
     {
-      PyObject **table = stringtab + 72;
-      for (Py_ssize_t i=0; i<10; ++i) {
+      PyObject **table = stringtab + 109;
+      for (Py_ssize_t i=0; i<20; ++i) {
         #if CYTHON_COMPILING_IN_CPYTHON_FREETHREADING
         #if PY_VERSION_HEX < 0x030E0000
         if (_Py_IsOwnedByCurrentThread(table[i]) && Py_REFCNT(table[i]) == 1)
@@ -10668,45 +13016,18 @@ const char* const bytes = "?coordinate_transform_wrapper.pyxdisableenablegcisena
     }
     #endif
   }
-  {
-    PyObject **numbertab = __pyx_mstate->__pyx_number_tab + 0;
-    int8_t const cint_constants_1[] = {2,3};
-    for (int i = 0; i < 2; i++) {
-      numbertab[i] = PyLong_FromLong(cint_constants_1[i - 0]);
-      if (unlikely(!numbertab[i])) __PYX_ERR(0, 1, __pyx_L1_error)
-    }
-  }
-  #if CYTHON_IMMORTAL_CONSTANTS
-  {
-    PyObject **table = __pyx_mstate->__pyx_number_tab;
-    for (Py_ssize_t i=0; i<2; ++i) {
-      #if CYTHON_COMPILING_IN_CPYTHON_FREETHREADING
-      #if PY_VERSION_HEX < 0x030E0000
-      if (_Py_IsOwnedByCurrentThread(table[i]) && Py_REFCNT(table[i]) == 1)
-      #else
-      if (PyUnstable_Object_IsUniquelyReferenced(table[i]))
-      #endif
-      {
-        Py_SET_REFCNT(table[i], _Py_IMMORTAL_REFCNT_LOCAL);
-      }
-      #else
-      Py_SET_REFCNT(table[i], _Py_IMMORTAL_INITIAL_REFCNT);
-      #endif
-    }
-  }
-  #endif
   return 0;
   __pyx_L1_error:;
   return -1;
 }
 /* #### Code section: init_codeobjects ### */
 typedef struct {
-    unsigned int argcount : 2;
+    unsigned int argcount : 3;
     unsigned int num_posonly_args : 1;
     unsigned int num_kwonly_args : 1;
-    unsigned int nlocals : 2;
+    unsigned int nlocals : 3;
     unsigned int flags : 10;
-    unsigned int first_line : 8;
+    unsigned int first_line : 9;
 } __Pyx_PyCode_New_function_description;
 /* NewCodeObj.proto */
 static PyObject* __Pyx_PyCode_New(
@@ -10723,74 +13044,74 @@ static int __Pyx_CreateCodeObjects(__pyx_mstatetype *__pyx_mstate) {
   PyObject* tuple_dedup_map = PyDict_New();
   if (unlikely(!tuple_dedup_map)) return -1;
   {
-    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 50};
-    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_u};
-    __pyx_mstate_global->__pyx_codeobj_tab[0] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_set_inputs, __pyx_mstate->__pyx_kp_b_iso88591_A_D_haq_D_haq_D_haq, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[0])) goto bad;
-  }
-  {
-    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 55};
-    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
-    __pyx_mstate_global->__pyx_codeobj_tab[1] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_compute, __pyx_mstate->__pyx_kp_b_iso88591_A_fD, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[1])) goto bad;
-  }
-  {
-    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 59};
-    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
-    __pyx_mstate_global->__pyx_codeobj_tab[2] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_get_outputs, __pyx_mstate->__pyx_kp_b_iso88591_A_RvQc_r_t5_t5_q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[2])) goto bad;
-  }
-  {
     const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 1};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
-    __pyx_mstate_global->__pyx_codeobj_tab[3] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_reduce_cython, __pyx_mstate->__pyx_kp_b_iso88591_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[3])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[0] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_reduce_cython, __pyx_mstate->__pyx_kp_b_iso88591_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[0])) goto bad;
   }
   {
     const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 3};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_pyx_state};
-    __pyx_mstate_global->__pyx_codeobj_tab[4] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_setstate_cython, __pyx_mstate->__pyx_kp_b_iso88591_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[4])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[1] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_setstate_cython, __pyx_mstate->__pyx_kp_b_iso88591_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[1])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 90};
+    const __Pyx_PyCode_New_function_description descr = {4, 0, 0, 4, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 143};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_a, __pyx_mstate->__pyx_n_u_b, __pyx_mstate->__pyx_n_u_c};
+    __pyx_mstate_global->__pyx_codeobj_tab[2] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_set_inputs_abc, __pyx_mstate->__pyx_kp_b_iso88591_A_D_Q_D_Q_D_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[2])) goto bad;
+  }
+  {
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 148};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_u};
-    __pyx_mstate_global->__pyx_codeobj_tab[5] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_set_inputs, __pyx_mstate->__pyx_kp_b_iso88591_A_D_haq_D_haq, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[5])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[3] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_set_inputs, __pyx_mstate->__pyx_kp_b_iso88591_A_1F_3b_AQ_D_D_D, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[3])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 94};
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 156};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
-    __pyx_mstate_global->__pyx_codeobj_tab[6] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_compute, __pyx_mstate->__pyx_kp_b_iso88591_A_Qd_A, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[6])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[4] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_compute, __pyx_mstate->__pyx_kp_b_iso88591_A_q_F_4q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[4])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 98};
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 160};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
-    __pyx_mstate_global->__pyx_codeobj_tab[7] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_get_outputs, __pyx_mstate->__pyx_kp_b_iso88591_A_RvQc_r_t5_t5_t5_q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[7])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[5] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_get_outputs_alpha_beta, __pyx_mstate->__pyx_kp_b_iso88591_A_E_U, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[5])) goto bad;
+  }
+  {
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 164};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
+    __pyx_mstate_global->__pyx_codeobj_tab[6] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_get_outputs, __pyx_mstate->__pyx_kp_b_iso88591_A_r_q_U_e86_1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[6])) goto bad;
   }
   {
     const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 1};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
-    __pyx_mstate_global->__pyx_codeobj_tab[8] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_reduce_cython, __pyx_mstate->__pyx_kp_b_iso88591_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[8])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[7] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_reduce_cython, __pyx_mstate->__pyx_kp_b_iso88591_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[7])) goto bad;
   }
   {
     const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 3};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_pyx_state};
-    __pyx_mstate_global->__pyx_codeobj_tab[9] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_setstate_cython, __pyx_mstate->__pyx_kp_b_iso88591_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[9])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[8] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_setstate_cython, __pyx_mstate->__pyx_kp_b_iso88591_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[8])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 126};
+    const __Pyx_PyCode_New_function_description descr = {3, 0, 0, 3, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 182};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_alpha, __pyx_mstate->__pyx_n_u_beta};
+    __pyx_mstate_global->__pyx_codeobj_tab[9] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_set_inputs_alpha_beta, __pyx_mstate->__pyx_kp_b_iso88591_A_D_D, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[9])) goto bad;
+  }
+  {
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 186};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_u};
-    __pyx_mstate_global->__pyx_codeobj_tab[10] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_set_inputs, __pyx_mstate->__pyx_kp_b_iso88591_A_D_haq_D_haq, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[10])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[10] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_set_inputs, __pyx_mstate->__pyx_kp_b_iso88591_A_1F_3b_AQ_D_AQa_D_1AQ, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[10])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 130};
-    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_theta};
-    __pyx_mstate_global->__pyx_codeobj_tab[11] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_set_theta, __pyx_mstate->__pyx_kp_b_iso88591_A_Jha, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[11])) goto bad;
-  }
-  {
-    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 133};
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 193};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
-    __pyx_mstate_global->__pyx_codeobj_tab[12] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_compute, __pyx_mstate->__pyx_kp_b_iso88591_A_q_F_it1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[12])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[11] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_compute, __pyx_mstate->__pyx_kp_b_iso88591_A_1AT_6at6_a, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[11])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 137};
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 197};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
-    __pyx_mstate_global->__pyx_codeobj_tab[13] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_get_outputs, __pyx_mstate->__pyx_kp_b_iso88591_A_RvQc_r_t5_t5_q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[13])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[12] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_get_outputs_abc, __pyx_mstate->__pyx_kp_b_iso88591_A_E_T_d_e1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[12])) goto bad;
+  }
+  {
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 201};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
+    __pyx_mstate_global->__pyx_codeobj_tab[13] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_get_outputs, __pyx_mstate->__pyx_kp_b_iso88591_A_r_q_U_d_t4uE_r, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[13])) goto bad;
   }
   {
     const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 1};
@@ -10803,34 +13124,124 @@ static int __Pyx_CreateCodeObjects(__pyx_mstatetype *__pyx_mstate) {
     __pyx_mstate_global->__pyx_codeobj_tab[15] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_setstate_cython, __pyx_mstate->__pyx_kp_b_iso88591_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[15])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 164};
+    const __Pyx_PyCode_New_function_description descr = {3, 0, 0, 3, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 222};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_alpha, __pyx_mstate->__pyx_n_u_beta};
+    __pyx_mstate_global->__pyx_codeobj_tab[16] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_set_inputs_alpha_beta, __pyx_mstate->__pyx_kp_b_iso88591_A_D_D, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[16])) goto bad;
+  }
+  {
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 226};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_u};
-    __pyx_mstate_global->__pyx_codeobj_tab[16] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_set_inputs, __pyx_mstate->__pyx_kp_b_iso88591_A_D_haq_D_haq, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[16])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[17] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_set_inputs, __pyx_mstate->__pyx_kp_b_iso88591_A_1F_3b_AQ_D_AQa_D_1AQ, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[17])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 168};
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 233};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_theta};
-    __pyx_mstate_global->__pyx_codeobj_tab[17] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_set_theta, __pyx_mstate->__pyx_kp_b_iso88591_A_Jha, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[17])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[18] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_set_theta, __pyx_mstate->__pyx_kp_b_iso88591_A_Ja_q__D, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[18])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 171};
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 238};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
-    __pyx_mstate_global->__pyx_codeobj_tab[18] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_compute, __pyx_mstate->__pyx_kp_b_iso88591_A_1D_d_4q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[18])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[19] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_compute, __pyx_mstate->__pyx_kp_b_iso88591_A_aq_O1D_at1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[19])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 175};
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 242};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
-    __pyx_mstate_global->__pyx_codeobj_tab[19] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_get_outputs, __pyx_mstate->__pyx_kp_b_iso88591_A_RvQc_r_t5_t5_q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[19])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[20] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_get_outputs_dq, __pyx_mstate->__pyx_kp_b_iso88591_A_E_T_a, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[20])) goto bad;
+  }
+  {
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 246};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
+    __pyx_mstate_global->__pyx_codeobj_tab[21] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_get_outputs, __pyx_mstate->__pyx_kp_b_iso88591_A_r_q_U_d_uF_A, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[21])) goto bad;
   }
   {
     const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 1};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
-    __pyx_mstate_global->__pyx_codeobj_tab[20] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_reduce_cython, __pyx_mstate->__pyx_kp_b_iso88591_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[20])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[22] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_reduce_cython, __pyx_mstate->__pyx_kp_b_iso88591_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[22])) goto bad;
   }
   {
     const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 3};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_pyx_state};
-    __pyx_mstate_global->__pyx_codeobj_tab[21] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_setstate_cython, __pyx_mstate->__pyx_kp_b_iso88591_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[21])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[23] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_setstate_cython, __pyx_mstate->__pyx_kp_b_iso88591_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[23])) goto bad;
+  }
+  {
+    const __Pyx_PyCode_New_function_description descr = {3, 0, 0, 3, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 267};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_d, __pyx_mstate->__pyx_n_u_q};
+    __pyx_mstate_global->__pyx_codeobj_tab[24] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_set_inputs_dq, __pyx_mstate->__pyx_kp_b_iso88591_A_D_Q_D_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[24])) goto bad;
+  }
+  {
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 271};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_u};
+    __pyx_mstate_global->__pyx_codeobj_tab[25] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_set_inputs, __pyx_mstate->__pyx_kp_b_iso88591_A_1F_3b_AQ_D_D, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[25])) goto bad;
+  }
+  {
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 278};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_theta};
+    __pyx_mstate_global->__pyx_codeobj_tab[26] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_set_theta, __pyx_mstate->__pyx_kp_b_iso88591_A_Ja_1D_34q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[26])) goto bad;
+  }
+  {
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 283};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
+    __pyx_mstate_global->__pyx_codeobj_tab[27] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_compute, __pyx_mstate->__pyx_kp_b_iso88591_A_4_2_4vQd, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[27])) goto bad;
+  }
+  {
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 287};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
+    __pyx_mstate_global->__pyx_codeobj_tab[28] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_get_outputs_alpha_beta, __pyx_mstate->__pyx_kp_b_iso88591_A_E_U, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[28])) goto bad;
+  }
+  {
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 291};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
+    __pyx_mstate_global->__pyx_codeobj_tab[29] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_get_outputs, __pyx_mstate->__pyx_kp_b_iso88591_A_r_q_U_e86_1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[29])) goto bad;
+  }
+  {
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 1};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
+    __pyx_mstate_global->__pyx_codeobj_tab[30] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_reduce_cython, __pyx_mstate->__pyx_kp_b_iso88591_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[30])) goto bad;
+  }
+  {
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 3};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_pyx_state};
+    __pyx_mstate_global->__pyx_codeobj_tab[31] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_setstate_cython, __pyx_mstate->__pyx_kp_b_iso88591_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[31])) goto bad;
+  }
+  {
+    const __Pyx_PyCode_New_function_description descr = {4, 0, 0, 4, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 313};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_a, __pyx_mstate->__pyx_n_u_b, __pyx_mstate->__pyx_n_u_c};
+    __pyx_mstate_global->__pyx_codeobj_tab[32] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_set_inputs_abc, __pyx_mstate->__pyx_kp_b_iso88591_A_D_Q_D_Q_D_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[32])) goto bad;
+  }
+  {
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 318};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_u};
+    __pyx_mstate_global->__pyx_codeobj_tab[33] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_set_inputs, __pyx_mstate->__pyx_kp_b_iso88591_A_1F_3b_AQ_D_D_D, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[33])) goto bad;
+  }
+  {
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 326};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_theta};
+    __pyx_mstate_global->__pyx_codeobj_tab[34] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_set_theta, __pyx_mstate->__pyx_kp_b_iso88591_A_Ja_q__D, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[34])) goto bad;
+  }
+  {
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 331};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
+    __pyx_mstate_global->__pyx_codeobj_tab[35] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_compute, __pyx_mstate->__pyx_kp_b_iso88591_A_AQd_a_d_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[35])) goto bad;
+  }
+  {
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 336};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
+    __pyx_mstate_global->__pyx_codeobj_tab[36] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_get_outputs_dq, __pyx_mstate->__pyx_kp_b_iso88591_A_E_T_a, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[36])) goto bad;
+  }
+  {
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 340};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
+    __pyx_mstate_global->__pyx_codeobj_tab[37] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_coordinate_transform_wrapper_pyx, __pyx_mstate->__pyx_n_u_get_outputs, __pyx_mstate->__pyx_kp_b_iso88591_A_r_q_U_d_uF_A, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[37])) goto bad;
+  }
+  {
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 1};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
+    __pyx_mstate_global->__pyx_codeobj_tab[38] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_reduce_cython, __pyx_mstate->__pyx_kp_b_iso88591_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[38])) goto bad;
+  }
+  {
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 3};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_pyx_state};
+    __pyx_mstate_global->__pyx_codeobj_tab[39] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_setstate_cython, __pyx_mstate->__pyx_kp_b_iso88591_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[39])) goto bad;
   }
   Py_DECREF(tuple_dedup_map);
   return 0;
@@ -12387,6 +14798,54 @@ static int __Pyx_ParseKeywords(
         return __Pyx_ParseKeywordDict(kwds, argnames, values, num_pos_args, num_kwargs, function_name, ignore_unknown_kwargs);
 }
 
+/* ArgTypeTestFunc (used by ArgTypeTest) */
+static int __Pyx__ArgTypeTest(PyObject *obj, PyTypeObject *type, const char *name, int exact)
+{
+    __Pyx_TypeName type_name;
+    __Pyx_TypeName obj_type_name;
+    PyObject *extra_info = __pyx_mstate_global->__pyx_empty_unicode;
+    int from_annotation_subclass = 0;
+    if (unlikely(!type)) {
+        PyErr_SetString(PyExc_SystemError, "Missing type object");
+        return 0;
+    }
+    else if (!exact) {
+        if (likely(__Pyx_TypeCheck(obj, type))) return 1;
+    } else if (exact == 2) {
+        if (__Pyx_TypeCheck(obj, type)) {
+            from_annotation_subclass = 1;
+            extra_info = __pyx_mstate_global->__pyx_kp_u_Note_that_Cython_is_deliberately;
+        }
+    }
+    type_name = __Pyx_PyType_GetFullyQualifiedName(type);
+    obj_type_name = __Pyx_PyType_GetFullyQualifiedName(Py_TYPE(obj));
+    PyErr_Format(PyExc_TypeError,
+        "Argument '%.200s' has incorrect type (expected " __Pyx_FMT_TYPENAME
+        ", got " __Pyx_FMT_TYPENAME ")"
+#if __PYX_LIMITED_VERSION_HEX < 0x030C0000
+        "%s%U"
+#endif
+        , name, type_name, obj_type_name
+#if __PYX_LIMITED_VERSION_HEX < 0x030C0000
+        , (from_annotation_subclass ? ". " : ""), extra_info
+#endif
+        );
+#if __PYX_LIMITED_VERSION_HEX >= 0x030C0000
+    if (exact == 2 && from_annotation_subclass) {
+        PyObject *res;
+        PyObject *vargs[2];
+        vargs[0] = PyErr_GetRaisedException();
+        vargs[1] = extra_info;
+        res = PyObject_VectorcallMethod(__pyx_mstate_global->__pyx_kp_u_add_note, vargs, 2, NULL);
+        Py_XDECREF(res);
+        PyErr_SetRaisedException(vargs[0]);
+    }
+#endif
+    __Pyx_DECREF_TypeName(type_name);
+    __Pyx_DECREF_TypeName(obj_type_name);
+    return 0;
+}
+
 /* GetItemInt */
 static PyObject *__Pyx_GetItemInt_Generic(PyObject *o, PyObject* j) {
     PyObject *r;
@@ -12490,52 +14949,6 @@ static CYTHON_INLINE PyObject *__Pyx_GetItemInt_Fast(PyObject *o, Py_ssize_t i, 
     return __Pyx_GetItemInt_Generic(o, PyLong_FromSsize_t(i));
 }
 
-/* PyDictVersioning */
-#if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
-static CYTHON_INLINE PY_UINT64_T __Pyx_get_tp_dict_version(PyObject *obj) {
-    PyObject *dict = Py_TYPE(obj)->tp_dict;
-    return likely(dict) ? __PYX_GET_DICT_VERSION(dict) : 0;
-}
-static CYTHON_INLINE PY_UINT64_T __Pyx_get_object_dict_version(PyObject *obj) {
-    PyObject **dictptr = NULL;
-    Py_ssize_t offset = Py_TYPE(obj)->tp_dictoffset;
-    if (offset) {
-#if CYTHON_COMPILING_IN_CPYTHON
-        dictptr = (likely(offset > 0)) ? (PyObject **) ((char *)obj + offset) : _PyObject_GetDictPtr(obj);
-#else
-        dictptr = _PyObject_GetDictPtr(obj);
-#endif
-    }
-    return (dictptr && *dictptr) ? __PYX_GET_DICT_VERSION(*dictptr) : 0;
-}
-static CYTHON_INLINE int __Pyx_object_dict_version_matches(PyObject* obj, PY_UINT64_T tp_dict_version, PY_UINT64_T obj_dict_version) {
-    PyObject *dict = Py_TYPE(obj)->tp_dict;
-    if (unlikely(!dict) || unlikely(tp_dict_version != __PYX_GET_DICT_VERSION(dict)))
-        return 0;
-    return obj_dict_version == __Pyx_get_object_dict_version(obj);
-}
-#endif
-
-/* ExtTypeTest */
-static CYTHON_INLINE int __Pyx_TypeTest(PyObject *obj, PyTypeObject *type) {
-    __Pyx_TypeName obj_type_name;
-    __Pyx_TypeName type_name;
-    if (unlikely(!type)) {
-        PyErr_SetString(PyExc_SystemError, "Missing type object");
-        return 0;
-    }
-    if (likely(__Pyx_TypeCheck(obj, type)))
-        return 1;
-    obj_type_name = __Pyx_PyType_GetFullyQualifiedName(Py_TYPE(obj));
-    type_name = __Pyx_PyType_GetFullyQualifiedName(type);
-    PyErr_Format(PyExc_TypeError,
-                 "Cannot convert " __Pyx_FMT_TYPENAME " to " __Pyx_FMT_TYPENAME,
-                 obj_type_name, type_name);
-    __Pyx_DECREF_TypeName(obj_type_name);
-    __Pyx_DECREF_TypeName(type_name);
-    return 0;
-}
-
 /* PyObjectGetAttrStrNoError (used by GetBuiltinName) */
 #if __PYX_LIMITED_VERSION_HEX < 0x030d0000
 static void __Pyx_PyObject_GetAttrStr_ClearAttributeError(void) {
@@ -12574,6 +14987,32 @@ static PyObject *__Pyx_GetBuiltinName(PyObject *name) {
     }
     return result;
 }
+
+/* PyDictVersioning (used by GetModuleGlobalName) */
+#if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
+static CYTHON_INLINE PY_UINT64_T __Pyx_get_tp_dict_version(PyObject *obj) {
+    PyObject *dict = Py_TYPE(obj)->tp_dict;
+    return likely(dict) ? __PYX_GET_DICT_VERSION(dict) : 0;
+}
+static CYTHON_INLINE PY_UINT64_T __Pyx_get_object_dict_version(PyObject *obj) {
+    PyObject **dictptr = NULL;
+    Py_ssize_t offset = Py_TYPE(obj)->tp_dictoffset;
+    if (offset) {
+#if CYTHON_COMPILING_IN_CPYTHON
+        dictptr = (likely(offset > 0)) ? (PyObject **) ((char *)obj + offset) : _PyObject_GetDictPtr(obj);
+#else
+        dictptr = _PyObject_GetDictPtr(obj);
+#endif
+    }
+    return (dictptr && *dictptr) ? __PYX_GET_DICT_VERSION(*dictptr) : 0;
+}
+static CYTHON_INLINE int __Pyx_object_dict_version_matches(PyObject* obj, PY_UINT64_T tp_dict_version, PY_UINT64_T obj_dict_version) {
+    PyObject *dict = Py_TYPE(obj)->tp_dict;
+    if (unlikely(!dict) || unlikely(tp_dict_version != __PYX_GET_DICT_VERSION(dict)))
+        return 0;
+    return obj_dict_version == __Pyx_get_object_dict_version(obj);
+}
+#endif
 
 /* GetModuleGlobalName */
 #if CYTHON_USE_DICT_VERSIONS
@@ -12642,69 +15081,6 @@ CYTHON_UNUSED static int __Pyx_VectorcallBuilder_AddArg_Check(PyObject *key, PyO
     return PyDict_SetItem(builder, key, value);
 }
 #endif
-
-/* SetItemInt */
-static int __Pyx_SetItemInt_Generic(PyObject *o, PyObject *j, PyObject *v) {
-    int r;
-    if (unlikely(!j)) return -1;
-    r = PyObject_SetItem(o, j, v);
-    Py_DECREF(j);
-    return r;
-}
-static CYTHON_INLINE int __Pyx_SetItemInt_Fast(PyObject *o, Py_ssize_t i, PyObject *v, int is_list,
-                                               int wraparound, int boundscheck, int unsafe_shared) {
-    CYTHON_MAYBE_UNUSED_VAR(unsafe_shared);
-#if CYTHON_ASSUME_SAFE_MACROS && CYTHON_ASSUME_SAFE_SIZE && !CYTHON_AVOID_BORROWED_REFS
-    if (is_list || PyList_CheckExact(o)) {
-        Py_ssize_t n = (!wraparound) ? i : ((likely(i >= 0)) ? i : i + PyList_GET_SIZE(o));
-        if ((CYTHON_AVOID_THREAD_UNSAFE_BORROWED_REFS && !__Pyx_IS_UNIQUELY_REFERENCED(o, unsafe_shared))) {
-            Py_INCREF(v);
-            return PyList_SetItem(o, n, v);
-        } else if ((!boundscheck) || likely(__Pyx_is_valid_index(n, PyList_GET_SIZE(o)))) {
-            PyObject* old;
-            Py_INCREF(v);
-            old = PyList_GET_ITEM(o, n);
-            PyList_SET_ITEM(o, n, v);
-            Py_DECREF(old);
-            return 0;
-        }
-    } else
-#endif
-#if CYTHON_USE_TYPE_SLOTS && !CYTHON_COMPILING_IN_PYPY
-    {
-        PyMappingMethods *mm = Py_TYPE(o)->tp_as_mapping;
-        PySequenceMethods *sm = Py_TYPE(o)->tp_as_sequence;
-        if (!is_list && mm && mm->mp_ass_subscript) {
-            int r;
-            PyObject *key = PyLong_FromSsize_t(i);
-            if (unlikely(!key)) return -1;
-            r = mm->mp_ass_subscript(o, key, v);
-            Py_DECREF(key);
-            return r;
-        }
-        if (is_list || likely(sm && sm->sq_ass_item)) {
-            if (wraparound && unlikely(i < 0) && likely(sm->sq_length)) {
-                Py_ssize_t l = sm->sq_length(o);
-                if (likely(l >= 0)) {
-                    i += l;
-                } else {
-                    if (!PyErr_ExceptionMatches(PyExc_OverflowError))
-                        return -1;
-                    PyErr_Clear();
-                }
-            }
-            return sm->sq_ass_item(o, i, v);
-        }
-    }
-#else
-    if (is_list || !PyMapping_Check(o)) {
-        return PySequence_SetItem(o, i, v);
-    }
-#endif
-    (void)wraparound;
-    (void)boundscheck;
-    return __Pyx_SetItemInt_Generic(o, PyLong_FromSsize_t(i), v);
-}
 
 /* AllocateExtensionType */
 static PyObject *__Pyx_AllocateExtensionType(PyTypeObject *t, int is_final) {
@@ -15329,28 +17705,6 @@ bad:
 }
 #endif
 
-/* CIntFromPyVerify */
-#define __PYX_VERIFY_RETURN_INT(target_type, func_type, func_value)\
-    __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 0)
-#define __PYX_VERIFY_RETURN_INT_EXC(target_type, func_type, func_value)\
-    __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 1)
-#define __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, exc)\
-    {\
-        func_type value = func_value;\
-        if (sizeof(target_type) < sizeof(func_type)) {\
-            if (unlikely(value != (func_type) (target_type) value)) {\
-                func_type zero = 0;\
-                if (exc && unlikely(value == (func_type)-1 && PyErr_Occurred()))\
-                    return (target_type) -1;\
-                if (is_unsigned && unlikely(value < zero))\
-                    goto raise_neg_overflow;\
-                else\
-                    goto raise_overflow;\
-            }\
-        }\
-        return (target_type) value;\
-    }
-
 /* Declarations */
 #if CYTHON_CCOMPLEX && (1) && (!0 || __cplusplus)
   #ifdef __cplusplus
@@ -15813,6 +18167,136 @@ bad:
     #endif
 #endif
 
+/* CIntToPy */
+static CYTHON_INLINE PyObject* __Pyx_PyLong_From_long(long value) {
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#endif
+    const long neg_one = (long) -1, const_zero = (long) 0;
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic pop
+#endif
+    const int is_unsigned = neg_one > const_zero;
+    if (is_unsigned) {
+        if (sizeof(long) < sizeof(long)) {
+            return PyLong_FromLong((long) value);
+        } else if (sizeof(long) <= sizeof(unsigned long)) {
+            return PyLong_FromUnsignedLong((unsigned long) value);
+#if !CYTHON_COMPILING_IN_PYPY
+        } else if (sizeof(long) <= sizeof(unsigned PY_LONG_LONG)) {
+            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
+#endif
+        }
+    } else {
+        if (sizeof(long) <= sizeof(long)) {
+            return PyLong_FromLong((long) value);
+        } else if (sizeof(long) <= sizeof(PY_LONG_LONG)) {
+            return PyLong_FromLongLong((PY_LONG_LONG) value);
+        }
+    }
+    {
+        unsigned char *bytes = (unsigned char *)&value;
+#if !CYTHON_COMPILING_IN_LIMITED_API && PY_VERSION_HEX >= 0x030d00A4
+        if (is_unsigned) {
+            return PyLong_FromUnsignedNativeBytes(bytes, sizeof(value), -1);
+        } else {
+            return PyLong_FromNativeBytes(bytes, sizeof(value), -1);
+        }
+#elif !CYTHON_COMPILING_IN_LIMITED_API && PY_VERSION_HEX < 0x030d0000
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        return _PyLong_FromByteArray(bytes, sizeof(long),
+                                     little, !is_unsigned);
+#else
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        PyObject *from_bytes, *result = NULL, *kwds = NULL;
+        PyObject *py_bytes = NULL, *order_str = NULL;
+        from_bytes = PyObject_GetAttrString((PyObject*)&PyLong_Type, "from_bytes");
+        if (!from_bytes) return NULL;
+        py_bytes = PyBytes_FromStringAndSize((char*)bytes, sizeof(long));
+        if (!py_bytes) goto limited_bad;
+        order_str = PyUnicode_FromString(little ? "little" : "big");
+        if (!order_str) goto limited_bad;
+        {
+            PyObject *args[3+(CYTHON_VECTORCALL ? 1 : 0)] = { NULL, py_bytes, order_str };
+            if (!is_unsigned) {
+                kwds = __Pyx_MakeVectorcallBuilderKwds(1);
+                if (!kwds) goto limited_bad;
+                if (__Pyx_VectorcallBuilder_AddArgStr("signed", __Pyx_NewRef(Py_True), kwds, args+3, 0) < 0) goto limited_bad;
+            }
+            result = __Pyx_Object_Vectorcall_CallFromBuilder(from_bytes, args+1, 2 | __Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET, kwds);
+        }
+        limited_bad:
+        Py_XDECREF(kwds);
+        Py_XDECREF(order_str);
+        Py_XDECREF(py_bytes);
+        Py_XDECREF(from_bytes);
+        return result;
+#endif
+    }
+}
+
+/* FormatTypeName */
+#if CYTHON_COMPILING_IN_LIMITED_API && __PYX_LIMITED_VERSION_HEX < 0x030d0000
+static __Pyx_TypeName
+__Pyx_PyType_GetFullyQualifiedName(PyTypeObject* tp)
+{
+    PyObject *module = NULL, *name = NULL, *result = NULL;
+    #if __PYX_LIMITED_VERSION_HEX < 0x030b0000
+    name = __Pyx_PyObject_GetAttrStr((PyObject *)tp,
+                                               __pyx_mstate_global->__pyx_n_u_qualname);
+    #else
+    name = PyType_GetQualName(tp);
+    #endif
+    if (unlikely(name == NULL) || unlikely(!PyUnicode_Check(name))) goto bad;
+    module = __Pyx_PyObject_GetAttrStr((PyObject *)tp,
+                                               __pyx_mstate_global->__pyx_n_u_module);
+    if (unlikely(module == NULL) || unlikely(!PyUnicode_Check(module))) goto bad;
+    if (PyUnicode_CompareWithASCIIString(module, "builtins") == 0) {
+        result = name;
+        name = NULL;
+        goto done;
+    }
+    result = PyUnicode_FromFormat("%U.%U", module, name);
+    if (unlikely(result == NULL)) goto bad;
+  done:
+    Py_XDECREF(name);
+    Py_XDECREF(module);
+    return result;
+  bad:
+    PyErr_Clear();
+    if (name) {
+        result = name;
+        name = NULL;
+    } else {
+        result = __Pyx_NewRef(__pyx_mstate_global->__pyx_kp_u_);
+    }
+    goto done;
+}
+#endif
+
+/* CIntFromPyVerify (used by CIntFromPy) */
+#define __PYX_VERIFY_RETURN_INT(target_type, func_type, func_value)\
+    __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 0)
+#define __PYX_VERIFY_RETURN_INT_EXC(target_type, func_type, func_value)\
+    __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 1)
+#define __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, exc)\
+    {\
+        func_type value = func_value;\
+        if (sizeof(target_type) < sizeof(func_type)) {\
+            if (unlikely(value != (func_type) (target_type) value)) {\
+                func_type zero = 0;\
+                if (exc && unlikely(value == (func_type)-1 && PyErr_Occurred()))\
+                    return (target_type) -1;\
+                if (is_unsigned && unlikely(value < zero))\
+                    goto raise_neg_overflow;\
+                else\
+                    goto raise_overflow;\
+            }\
+        }\
+        return (target_type) value;\
+    }
+
 /* CIntFromPy */
 static CYTHON_INLINE long __Pyx_PyLong_As_long(PyObject *x) {
 #ifdef __Pyx_HAS_GCC_DIAGNOSTIC
@@ -16062,114 +18546,6 @@ raise_neg_overflow:
         "can't convert negative value to long");
     return (long) -1;
 }
-
-/* CIntToPy */
-static CYTHON_INLINE PyObject* __Pyx_PyLong_From_long(long value) {
-#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wconversion"
-#endif
-    const long neg_one = (long) -1, const_zero = (long) 0;
-#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
-#pragma GCC diagnostic pop
-#endif
-    const int is_unsigned = neg_one > const_zero;
-    if (is_unsigned) {
-        if (sizeof(long) < sizeof(long)) {
-            return PyLong_FromLong((long) value);
-        } else if (sizeof(long) <= sizeof(unsigned long)) {
-            return PyLong_FromUnsignedLong((unsigned long) value);
-#if !CYTHON_COMPILING_IN_PYPY
-        } else if (sizeof(long) <= sizeof(unsigned PY_LONG_LONG)) {
-            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
-#endif
-        }
-    } else {
-        if (sizeof(long) <= sizeof(long)) {
-            return PyLong_FromLong((long) value);
-        } else if (sizeof(long) <= sizeof(PY_LONG_LONG)) {
-            return PyLong_FromLongLong((PY_LONG_LONG) value);
-        }
-    }
-    {
-        unsigned char *bytes = (unsigned char *)&value;
-#if !CYTHON_COMPILING_IN_LIMITED_API && PY_VERSION_HEX >= 0x030d00A4
-        if (is_unsigned) {
-            return PyLong_FromUnsignedNativeBytes(bytes, sizeof(value), -1);
-        } else {
-            return PyLong_FromNativeBytes(bytes, sizeof(value), -1);
-        }
-#elif !CYTHON_COMPILING_IN_LIMITED_API && PY_VERSION_HEX < 0x030d0000
-        int one = 1; int little = (int)*(unsigned char *)&one;
-        return _PyLong_FromByteArray(bytes, sizeof(long),
-                                     little, !is_unsigned);
-#else
-        int one = 1; int little = (int)*(unsigned char *)&one;
-        PyObject *from_bytes, *result = NULL, *kwds = NULL;
-        PyObject *py_bytes = NULL, *order_str = NULL;
-        from_bytes = PyObject_GetAttrString((PyObject*)&PyLong_Type, "from_bytes");
-        if (!from_bytes) return NULL;
-        py_bytes = PyBytes_FromStringAndSize((char*)bytes, sizeof(long));
-        if (!py_bytes) goto limited_bad;
-        order_str = PyUnicode_FromString(little ? "little" : "big");
-        if (!order_str) goto limited_bad;
-        {
-            PyObject *args[3+(CYTHON_VECTORCALL ? 1 : 0)] = { NULL, py_bytes, order_str };
-            if (!is_unsigned) {
-                kwds = __Pyx_MakeVectorcallBuilderKwds(1);
-                if (!kwds) goto limited_bad;
-                if (__Pyx_VectorcallBuilder_AddArgStr("signed", __Pyx_NewRef(Py_True), kwds, args+3, 0) < 0) goto limited_bad;
-            }
-            result = __Pyx_Object_Vectorcall_CallFromBuilder(from_bytes, args+1, 2 | __Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET, kwds);
-        }
-        limited_bad:
-        Py_XDECREF(kwds);
-        Py_XDECREF(order_str);
-        Py_XDECREF(py_bytes);
-        Py_XDECREF(from_bytes);
-        return result;
-#endif
-    }
-}
-
-/* FormatTypeName */
-#if CYTHON_COMPILING_IN_LIMITED_API && __PYX_LIMITED_VERSION_HEX < 0x030d0000
-static __Pyx_TypeName
-__Pyx_PyType_GetFullyQualifiedName(PyTypeObject* tp)
-{
-    PyObject *module = NULL, *name = NULL, *result = NULL;
-    #if __PYX_LIMITED_VERSION_HEX < 0x030b0000
-    name = __Pyx_PyObject_GetAttrStr((PyObject *)tp,
-                                               __pyx_mstate_global->__pyx_n_u_qualname);
-    #else
-    name = PyType_GetQualName(tp);
-    #endif
-    if (unlikely(name == NULL) || unlikely(!PyUnicode_Check(name))) goto bad;
-    module = __Pyx_PyObject_GetAttrStr((PyObject *)tp,
-                                               __pyx_mstate_global->__pyx_n_u_module);
-    if (unlikely(module == NULL) || unlikely(!PyUnicode_Check(module))) goto bad;
-    if (PyUnicode_CompareWithASCIIString(module, "builtins") == 0) {
-        result = name;
-        name = NULL;
-        goto done;
-    }
-    result = PyUnicode_FromFormat("%U.%U", module, name);
-    if (unlikely(result == NULL)) goto bad;
-  done:
-    Py_XDECREF(name);
-    Py_XDECREF(module);
-    return result;
-  bad:
-    PyErr_Clear();
-    if (name) {
-        result = name;
-        name = NULL;
-    } else {
-        result = __Pyx_NewRef(__pyx_mstate_global->__pyx_kp_u_);
-    }
-    goto done;
-}
-#endif
 
 /* CIntFromPy */
 static CYTHON_INLINE int __Pyx_PyLong_As_int(PyObject *x) {

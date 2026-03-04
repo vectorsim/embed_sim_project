@@ -1,3 +1,0 @@
-C:/EmbedSimProject/examples/whirlpool/modelica/WhirlpoolDiskStars6fc2/190.fmutmp/sources/../binaries/win64/libWhirlpoolDiskStars.dll.a
-C:/EmbedSimProject/examples/whirlpool/modelica/WhirlpoolDiskStars6fc2/190.fmutmp/sources/../binaries/win64/WhirlpoolDiskStars.dll
-C:/EmbedSimProject/examples/whirlpool/modelica/WhirlpoolDiskStars6fc2/190.fmutmp/sources/../binaries/win64/libwinpthread-1.dll

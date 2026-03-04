@@ -44,7 +44,7 @@ class VectorConstant(VectorBlock):
     """
 
     def __init__(self, name: str, value: Union[List[float], np.ndarray],
-                 use_c_backend: bool = False, dtype=None) -> None:
+                 use_c_backend: bool = False, dtype=None, **kwargs) -> None:
         """
         Initialize a VectorConstant block.
 
@@ -57,7 +57,7 @@ class VectorConstant(VectorBlock):
             >>> const1 = VectorConstant("setpoint", [5.0, 5.0, 5.0])
             >>> const2 = VectorConstant("bias", np.array([1.0, 2.0, 3.0]))
         """
-        super().__init__(name, use_c_backend=use_c_backend, dtype=dtype)
+        super().__init__(name, use_c_backend=use_c_backend, dtype=dtype, **kwargs)
         self.value: np.ndarray = np.array(value, dtype=float)
 
     def compute_py(self, t: float, dt: float, input_values: Optional[List[VectorSignal]] = None) -> VectorSignal:
@@ -106,7 +106,7 @@ class VectorStep(VectorBlock):
 
     def __init__(self, name: str, step_time: float = 0.0,
                  before_value: float = 0.0, after_value: float = 1.0,
-                 dim: int = 3, use_c_backend: bool = False, dtype=None) -> None:
+                 dim: int = 3, use_c_backend: bool = False, dtype=None, **kwargs) -> None:
         """
         Initialize a VectorStep block.
 
@@ -131,7 +131,7 @@ class VectorStep(VectorBlock):
             >>> step2 = VectorStep("disturbance", step_time=0.1,
             ...                    before_value=-5.0, after_value=5.0, dim=2)
         """
-        super().__init__(name, use_c_backend=use_c_backend, dtype=dtype)
+        super().__init__(name, use_c_backend=use_c_backend, dtype=dtype, **kwargs)
         self.step_time: float = step_time
         self.before_value: np.ndarray = np.array([before_value] * dim, dtype=float)
         self.after_value: np.ndarray = np.array([after_value] * dim, dtype=float)
@@ -190,7 +190,7 @@ class SinusoidalGenerator(VectorBlock):
 
     def __init__(self, name: str, amplitude: float = 1.0,
                  freq: float = 50.0, phase: float = 0.0,
-                 use_c_backend: bool = False, dtype=None) -> None:
+                 use_c_backend: bool = False, dtype=None, **kwargs) -> None:
         """
         Initialize a ThreePhaseGenerator block.
 
@@ -215,7 +215,7 @@ class SinusoidalGenerator(VectorBlock):
             >>> gen_shifted = SinusoidalGenerator("shifted", amplitude=1.0,
             ...                                    freq=50.0, phase=np.pi/6)
         """
-        super().__init__(name, use_c_backend=use_c_backend, dtype=dtype)
+        super().__init__(name, use_c_backend=use_c_backend, dtype=dtype, **kwargs)
         self.amplitude: float = amplitude
         self.freq: float = freq
         self.phase: float = phase
@@ -280,7 +280,7 @@ class ThreePhaseGenerator(VectorBlock):
 
     def __init__(self, name: str, amplitude: float = 1.0,
                  freq: float = 50.0, phase: float = 0.0,
-                 use_c_backend: bool = False, dtype=None) -> None:
+                 use_c_backend: bool = False, dtype=None, **kwargs) -> None:
         """
         Initialize a ThreePhaseGenerator block.
 
@@ -305,10 +305,11 @@ class ThreePhaseGenerator(VectorBlock):
             >>> gen_shifted = ThreePhaseGenerator("shifted", amplitude=1.0,
             ...                                    freq=50.0, phase=np.pi/6)
         """
-        super().__init__(name, use_c_backend=use_c_backend, dtype=dtype)
+        super().__init__(name, use_c_backend=use_c_backend, dtype=dtype, **kwargs)
         self.amplitude: float = amplitude
         self.freq: float = freq
         self.phase: float = phase
+        self.output_label: str = "[a,b,c]"
 
     def compute_py(self, t: float, dt: float, input_values: Optional[List[VectorSignal]] = None) -> VectorSignal:
         """
@@ -366,7 +367,7 @@ class VectorRamp(VectorBlock):
 
     def __init__(self, name: str, slope: float = 1.0,
                  initial_value: float = 0.0, start_time: float = 0.0,
-                 dim: int = 3, use_c_backend: bool = False, dtype=None) -> None:
+                 dim: int = 3, use_c_backend: bool = False, dtype=None, **kwargs) -> None:
         """
         Initialize a VectorRamp block.
 
@@ -387,7 +388,7 @@ class VectorRamp(VectorBlock):
             >>> ramp2 = VectorRamp("decreasing", slope=-10.0, initial_value=100.0,
             ...                    start_time=0.0, dim=2)
         """
-        super().__init__(name, use_c_backend=use_c_backend, dtype=dtype)
+        super().__init__(name, use_c_backend=use_c_backend, dtype=dtype, **kwargs)
         self.slope: float = slope
         self.initial_value: np.ndarray = np.array([initial_value] * dim, dtype=float)
         self.start_time: float = start_time

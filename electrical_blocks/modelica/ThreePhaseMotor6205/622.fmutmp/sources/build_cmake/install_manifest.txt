@@ -1,0 +1,3 @@
+C:/EmbedSimProject/electrical_blocks/modelica/ThreePhaseMotor6205/622.fmutmp/sources/../binaries/win64/libThreePhaseMotor.dll.a
+C:/EmbedSimProject/electrical_blocks/modelica/ThreePhaseMotor6205/622.fmutmp/sources/../binaries/win64/ThreePhaseMotor.dll
+C:/EmbedSimProject/electrical_blocks/modelica/ThreePhaseMotor6205/622.fmutmp/sources/../binaries/win64/libwinpthread-1.dll

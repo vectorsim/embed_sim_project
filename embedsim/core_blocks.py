@@ -138,7 +138,8 @@ class VectorBlock:
     def __init__(self,
                  name: str = "",
                  use_c_backend: bool = False,
-                 dtype=None) -> None:
+                 dtype=None,
+                 output_label: str = "") -> None:
         self.name:          str                    = name
         self.use_c_backend: bool                   = use_c_backend
         self.dtype                                 = dtype if dtype is not None else DEFAULT_DTYPE
@@ -146,6 +147,7 @@ class VectorBlock:
         self.output:        Optional[VectorSignal] = None
         self.last_output:   Optional[VectorSignal] = None
         self.is_dynamic:    bool                   = False
+        self.output_label:  str                    = output_label  # signal label shown on topology arrows
 
     # ── Connection ───────────────────────────────────────────────────────────
 

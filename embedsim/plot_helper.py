@@ -135,7 +135,7 @@ class PlotHelper:
         print(f"\n📊 Blocks and signals:")
         for block, signals in sorted(blocks.items()):
             n_comp = len(signals)
-            comp_indices = [s.split('[')[1].rstrip(']') for s in signals]
+            comp_indices = [s.rsplit('[', 1)[1].rstrip(']') for s in signals]
             comp_str = ', '.join(comp_indices)
             print(f"\n   📦 {block}: {n_comp} component(s) [{comp_str}]")
 
@@ -182,22 +182,25 @@ class PlotHelper:
             return list(self.sim.scope.data.keys())
 
         if isinstance(signals, str):
-            if signals.endswith(']'):
-                # Direct component specification
-                if signals in self.sim.scope.data:
-                    return [signals]
-                else:
-                    print(f"⚠ Signal '{signals}' not found")
-                    return []
+            # Direct component key: last segment is a numeric index e.g. "...[0]"
+            # Detect by checking if last bracketed part is a digit
+            last_bracket = signals.rsplit('[', 1)[-1].rstrip(']')
+            is_component_key = last_bracket.isdigit() and signals in self.sim.scope.data
+
+            if is_component_key:
+                return [signals]
+            elif signals in self.sim.scope.data:
+                # Exact match (non-numeric suffix) — return as-is
+                return [signals]
             else:
-                # Block name - find all its components
+                # Treat as label prefix — find all component keys that start with it
                 pattern = f"{signals}["
                 found = [key for key in self.sim.scope.data.keys()
                         if key.startswith(pattern)]
                 if found:
                     return sorted(found)
                 else:
-                    print(f"⚠ No signals found for block '{signals}'")
+                    print(f"⚠ No signals found for '{signals}'")
                     return []
 
         if isinstance(signals, list):
@@ -221,7 +224,8 @@ class PlotHelper:
                  legend: bool = True,
                  grid: bool = True,
                  linewidth: float = 1.5,
-                 alpha: float = 0.8) -> Tuple[Optional[Figure], Optional[Axes]]:
+                 alpha: float = 0.8,
+                 ax: Optional[Axes] = None) -> Tuple[Optional[Figure], Optional[Axes]]:
         """
         Easy plotting function for quick visualization of recorded signals.
 
@@ -284,8 +288,11 @@ class PlotHelper:
 
         # Apply style
         with plt.style.context(style):
-            # Create figure
-            fig, ax = plt.subplots(figsize=figsize)
+            # Use injected ax if provided (for subplots), else create own figure
+            if ax is not None:
+                fig = ax.get_figure()
+            else:
+                fig, ax = plt.subplots(figsize=figsize)
 
             # Apply time range
             mask = self._get_time_mask(time_range)
@@ -314,9 +321,9 @@ class PlotHelper:
 
                 # Create nice label
                 if '[' in sig_name:
-                    block, comp = sig_name.split('[')
-                    comp = comp.rstrip(']')
-                    label = f"{block} (comp {comp})"
+                    block = sig_name.rsplit('[', 1)[0]
+                    comp  = sig_name.rsplit('[', 1)[1].rstrip(']')
+                    label = f"{block} [{comp}]"
                 else:
                     label = sig_name
 
@@ -344,14 +351,15 @@ class PlotHelper:
             elif len(signals_to_plot) > 10:
                 print(f"ℹ Too many signals ({len(signals_to_plot)}) to show legend")
 
-            plt.tight_layout()
-
-            # Save if requested
-            if save_path:
-                plt.savefig(save_path, dpi=150, bbox_inches='tight')
-                print(f"✅ Plot saved to: {save_path}")
-
-            plt.show()
+            # Only manage figure lifecycle when we created the figure.
+            # If ax was injected externally the caller handles show/save/layout.
+            _owns_figure = (ax is None)
+            if _owns_figure:
+                plt.tight_layout()
+                if save_path:
+                    fig.savefig(save_path, dpi=150, bbox_inches='tight')
+                    print(f"✅ Plot saved to: {save_path}")
+                plt.show()
 
             return fig, ax
 
@@ -456,7 +464,7 @@ class PlotHelper:
                 data = data[mask]
 
             # Extract component index for title
-            comp_idx = comp_name.split('[')[1].rstrip(']')
+            comp_idx = comp_name.rsplit('[', 1)[1].rstrip(']')
 
             axes_flat[i].plot(t_plot, data, linewidth=1.5,
                             color=colors[i % len(colors)] if isinstance(colors, list) else colors[i])

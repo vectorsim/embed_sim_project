@@ -44,7 +44,7 @@ class VectorGain(VectorBlock):
     """
 
     def __init__(self, name: str, gain: Union[float, np.ndarray],
-                 use_c_backend: bool = False, dtype=None) -> None:
+                 use_c_backend: bool = False, dtype=None, **kwargs) -> None:
         """
         Initialize a VectorGain block.
 
@@ -55,7 +55,7 @@ class VectorGain(VectorBlock):
             dtype:         Override dtype (default: float32).
         """
         _dtype = dtype if dtype is not None else DEFAULT_DTYPE
-        super().__init__(name, use_c_backend=use_c_backend, dtype=_dtype)
+        super().__init__(name, use_c_backend=use_c_backend, dtype=_dtype, **kwargs)
         if np.isscalar(gain):
             self.gain: Union[float, np.ndarray] = gain
         else:
@@ -82,7 +82,7 @@ class VectorSum(VectorBlock):
     """
 
     def __init__(self, name: str, signs: Optional[List[float]] = None,
-                 use_c_backend: bool = False, dtype=None) -> None:
+                 use_c_backend: bool = False, dtype=None, **kwargs) -> None:
         """
         Initialize a VectorSum block.
 
@@ -92,7 +92,7 @@ class VectorSum(VectorBlock):
             dtype: Override dtype (default: float32).
         """
         _dtype = dtype if dtype is not None else DEFAULT_DTYPE
-        super().__init__(name, use_c_backend=use_c_backend, dtype=_dtype)
+        super().__init__(name, use_c_backend=use_c_backend, dtype=_dtype, **kwargs)
         self.signs: Optional[List[float]] = signs
 
     def compute_py(self, t: float, dt: float, input_values: Optional[List[VectorSignal]] = None) -> VectorSignal:
@@ -123,7 +123,7 @@ class VectorDelay(VectorBlock):
     """
 
     def __init__(self, name: str, initial: Optional[List[float]] = None,
-                 use_c_backend: bool = False, dtype=None) -> None:
+                 use_c_backend: bool = False, dtype=None, **kwargs) -> None:
         """
         Initialize a VectorDelay block.
 
@@ -133,7 +133,7 @@ class VectorDelay(VectorBlock):
             dtype:   Override dtype (default: float32).
         """
         _dtype = dtype if dtype is not None else DEFAULT_DTYPE
-        super().__init__(name, use_c_backend=use_c_backend, dtype=_dtype)
+        super().__init__(name, use_c_backend=use_c_backend, dtype=_dtype, **kwargs)
         if initial is not None:
             self.last_output = VectorSignal(np.array(initial, dtype=_dtype))
         else:
@@ -166,9 +166,9 @@ class VectorProduct(VectorBlock):
         >>> current >> product
     """
 
-    def __init__(self, name: str, use_c_backend: bool = False, dtype=None) -> None:
+    def __init__(self, name: str, use_c_backend: bool = False, dtype=None, **kwargs) -> None:
         _dtype = dtype if dtype is not None else DEFAULT_DTYPE
-        super().__init__(name, use_c_backend=use_c_backend, dtype=_dtype)
+        super().__init__(name, use_c_backend=use_c_backend, dtype=_dtype, **kwargs)
 
     def compute_py(self, t: float, dt: float, input_values: Optional[List[VectorSignal]] = None) -> VectorSignal:
         validate_inputs_exist(input_values, self.name, min_inputs=2)
@@ -188,9 +188,9 @@ class VectorAbs(VectorBlock):
     Computes: output[i] = |input[i]|
     """
 
-    def __init__(self, name: str, use_c_backend: bool = False, dtype=None) -> None:
+    def __init__(self, name: str, use_c_backend: bool = False, dtype=None, **kwargs) -> None:
         _dtype = dtype if dtype is not None else DEFAULT_DTYPE
-        super().__init__(name, use_c_backend=use_c_backend, dtype=_dtype)
+        super().__init__(name, use_c_backend=use_c_backend, dtype=_dtype, **kwargs)
 
     def compute_py(self, t: float, dt: float, input_values: Optional[List[VectorSignal]] = None) -> VectorSignal:
         validate_inputs_exist(input_values, self.name, min_inputs=1)
@@ -220,7 +220,7 @@ class VectorSaturation(VectorBlock):
     """
 
     def __init__(self, name: str, lower: float = -1.0, upper: float = 1.0,
-                 use_c_backend: bool = False, dtype=None) -> None:
+                 use_c_backend: bool = False, dtype=None, **kwargs) -> None:
         """
         Initialize a VectorSaturation block.
 
@@ -234,7 +234,7 @@ class VectorSaturation(VectorBlock):
             ValueError: If lower >= upper
         """
         _dtype = dtype if dtype is not None else DEFAULT_DTYPE
-        super().__init__(name, use_c_backend=use_c_backend, dtype=_dtype)
+        super().__init__(name, use_c_backend=use_c_backend, dtype=_dtype, **kwargs)
         if lower >= upper:
             raise ValueError(f"{name}: lower limit must be < upper limit")
         self.lower: float = lower

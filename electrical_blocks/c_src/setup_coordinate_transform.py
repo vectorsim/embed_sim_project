@@ -1,41 +1,58 @@
 """
-setup_transforms.py
-===================
-Compile all four transform Cython wrappers (Clarke, Park, etc.)
-from a single transforms_wrapper.pyx + transforms.c pair.
+setup_coordinate_transform.py
+==============================
+Compile the coordinate transform Cython wrapper with matrix operations.
+
+Wraps:
+    Coordinate_Transform.c     — Matrix-based Clarke/Park math
+    coordinate_transform_wrapper.pyx  — Cython bridge
 
 Usage:
-    cd pmsm_blocks/c_src
-    python setup_transforms.py build_ext --inplace
+    cd electrical_blocks/c_src
+    python setup_coordinate_transform.py build_ext --inplace
 """
+
 import sys
 from setuptools import setup, Extension
 from Cython.Build import cythonize
 import numpy as np
 
-compile_args = ['/O2', '/std:c11'] if sys.platform == 'win32' else ['-O3', '-ffast-math', '-std=c11']
+# ── Compiler flags ────────────────────────────────────────────────────────────
+if sys.platform == 'win32':
+    # MSVC — /O2 optimise, /fp:fast for FPU-friendly float maths
+    compile_args = ['/O2', '/fp:fast']
+    link_args    = []
+    libraries    = []
+else:
+    # GCC / Clang
+    compile_args = ['-O3', '-ffast-math', '-std=c11']
+    link_args    = []
+    libraries    = ['m']   # libm for cosf/sinf
 
+# ── Extension definition ──────────────────────────────────────────────────────
 ext = Extension(
     name    = 'coordinate_transform_wrapper',
     sources = [
-        'coordinate_transform_wrapper.pyx',
-        'coordinate_transform.c',
+        'coordinate_transform_wrapper.pyx',   # Cython bridge
+        'Coordinate_Transform.c',             # Matrix-based transforms
     ],
     include_dirs       = [np.get_include(), '.'],
     extra_compile_args = compile_args,
-    libraries          = ['m'] if sys.platform != 'win32' else [],
+    extra_link_args    = link_args,
+    libraries          = libraries,
 )
 
+# ── Build ─────────────────────────────────────────────────────────────────────
 setup(
-    name       = 'coordinate_transform_wrapper',
+    name        = 'coordinate_transform_wrapper',
     ext_modules = cythonize(
         [ext],
         compiler_directives = {
             'language_level': '3',
-            'boundscheck'   : False,
+            'boundscheck'   : False,   # no index checks — MCU-style
             'wraparound'    : False,
-            'cdivision'     : True,
+            'cdivision'     : True,    # no Python ZeroDivisionError overhead
         },
-        annotate = True,
+        annotate = True,               # generates .html annotation file
     ),
 )

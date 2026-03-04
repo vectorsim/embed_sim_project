@@ -1,136 +1,142 @@
+"""
+eb_test.py
+==========
+
+Showcase: three-phase generator → Clarke transform → sink.
+
+Author : EmbedSim Framework
+"""
+
+# =============================================================================
+# Signal flow
+# =============================================================================
+#
+#   ThreePhaseGenerator       ClarkeTransformBlock      VectorEnd
+#   block name: "gen"         block name: "clarke"      "sink"
+#   scope label: "gen[a,b,c]" scope label: "clarke[alpha,beta]"
+#        │                          │
+#        ▼                          ▼
+#   Phase3Signal         ──►  AlphaBetaSignal       ──►  (recorded)
+#   [a, b, c]                 [alpha, beta]
+#        Iabc                      Iαβ
+#
+#   PlotHelper keys:          PlotHelper keys:
+#   "gen[a,b,c][0]"  = a      "clarke[alpha,beta][0]" = alpha
+#   "gen[a,b,c][1]"  = b      "clarke[alpha,beta][1]" = beta
+#   "gen[a,b,c][2]"  = c
+#
+#   NOTE: block name must be a simple identifier (no brackets).
+#         Brackets belong only in the scope label.
+# =============================================================================
+
 import sys
 import matplotlib.pyplot as plt
-import numpy as np
-# ------------------------------------------------------------------
-# Locate embedsim regardless of working directory
-# ------------------------------------------------------------------
-from _path_utils import get_embedsim_import_path
 
+from _path_utils import get_embedsim_import_path
 sys.path.insert(0, get_embedsim_import_path())
 
-from embedsim.source_blocks import ThreePhaseGenerator
-from embedsim.dynamic_blocks import VectorEnd
+from embedsim.source_blocks     import ThreePhaseGenerator
+from embedsim.dynamic_blocks    import VectorEnd
 from embedsim.simulation_engine import EmbedSim, ODESolver
+from embedsim.plot_helper       import create_plotter
 
 from coordinate_transform_blocks import ClarkeTransformBlock
-from embedsim.plot_helper import create_plotter
 
+
+# =============================================================================
+# Build simulation
+# =============================================================================
+
+def build_sim():
+
+    # ── Source: 50 Hz, amplitude 10 V ────────────────────────────────────────
+    generator = ThreePhaseGenerator(
+        "gen",
+        amplitude     = 10.0,
+        freq          = 50.0,
+        use_c_backend = False,
+    )
+
+    # ── Clarke: Phase3Signal [a,b,c] → AlphaBetaSignal [alpha,beta] ──────────
+    try:
+        clarke = ClarkeTransformBlock("clarke", use_c_backend=True)
+        print("✅ Clarke: C backend (Cython wrapper)")
+    except ImportError:
+        clarke = ClarkeTransformBlock("clarke", use_c_backend=False)
+        print("⚠️  Clarke: Python backend  (run build_all.bat to compile C)")
+
+    # ── Sink ──────────────────────────────────────────────────────────────────
+    sink = VectorEnd("sink")
+
+    # ── Connect: generator → clarke → sink ───────────────────────────────────
+    generator >> clarke >> sink
+
+    # ── Simulation: 2 cycles of 50 Hz = 40 ms, dt = 0.1 ms ──────────────────
+    sim = EmbedSim(
+        sinks  = [sink],
+        T      = 0.04,
+        dt     = 0.0001,
+        solver = ODESolver.RK4,
+    )
+
+    # ── Scope ─────────────────────────────────────────────────────────────────
+    sim.scope.add(generator, label="gen[a,b,c]")
+    sim.scope.add(clarke,    label="clarke[alpha,beta]")
+
+    return sim
+
+
+# =============================================================================
+# Run + plot
+# =============================================================================
 
 def main():
-    print("\n" + "=" * 70)
-    print("Clarke Transform Test with PlotHelper")
-    print("=" * 70)
+    print("\n" + "=" * 60)
+    print("  EmbedSim — Three-phase  →  Clarke Transform")
+    print("=" * 60)
 
-    # Create a 50 Hz three-phase generator
-    generator = ThreePhaseGenerator("3phase_gen",
-                                    amplitude=10.0,
-                                    freq=50.0,
-                                    use_c_backend=False)
+    sim = build_sim()
 
-    # Create Clarke transform block
-    try:
-        ct = ClarkeTransformBlock(name="clark_transform_block", use_c_backend=True)
-        print("✅ Using C backend for Clarke transform")
-    except ImportError:
-        print("⚠️ C backend not available, falling back to Python")
-        ct = ClarkeTransformBlock(name="clark_transform_block", use_c_backend=False)
-
-    # Create ONE sink for Clarke output
-    output = VectorEnd("output")
-
-    # Connect blocks: generator → ct → output
-    generator >> ct >> output
-
-    # Create simulation with ONE sink
-    sim = EmbedSim(sinks=[output],
-                   T=0.04,  # 40 ms (2 cycles)
-                   dt=0.0001,
-                   solver=ODESolver.RK4)
-
-    # Print topology
-    print("\n📊 Block Topology:")
-    sim.print_topology_tree()
+    # Topology — signal labels come from block.output_label automatically
+    print("\n📊 Topology:")
     sim.print_topology_sources2sink()
 
-    # Add signals to scope for monitoring
-    sim.scope.add(generator, label="3Phase Input")
-    sim.scope.add(ct, label="Clarke Output")
-
-    # Run simulation
-    print("\n⚙️ Running simulation...")
+    # Run
+    print("\n⚙️  Running ...")
     sim.run()
-    print("✅ Simulation complete!")
+    print(f"✅ Done — {len(sim.scope.t)} samples over "
+          f"{sim.scope.t[-1]*1000:.1f} ms")
 
-    # Check if we have data
-    if len(sim.scope.t) == 0:
-        print("❌ No data collected! Check scope configuration.")
-        return
-
-    print(f"\n📊 Data collected: {len(sim.scope.t)} samples over {sim.scope.t[-1] * 1000:.1f} ms")
-
-    # ======================================================
-    # USE THE PLOTHELPER CLASS
-    # ======================================================
-
-    # Create plotter
+    # ── PlotHelper ────────────────────────────────────────────────────────────
     plotter = create_plotter(sim)
-
-    # 1. Show information about recorded signals
     plotter.info()
 
-    # 2. List all available signals
-    plotter.list_signals()
+    # Plot 1: three-phase [a,b,c] top, Clarke [alpha,beta] bottom
+    fig, (ax_top, ax_bot) = plt.subplots(2, 1, figsize=(12, 7), sharex=True)
+    fig.suptitle("Three-phase  →  Clarke Transform", fontsize=13, fontweight="bold")
 
-    # 3. Quick plot of all signals
-    print("\n📈 Plotting all signals...")
-    plotter.easyplot(title="All Signals - Clarke Transform Test")
+    plotter.easyplot(signals="gen[a,b,c]",        title="Input  [a, b, c]",      ax=ax_top)
+    plotter.easyplot(signals="clarke[alpha,beta]", title="Clarke  [alpha, beta]", ax=ax_bot)
 
-    # # 4. Plot Clarke output (both components)
-    # print("\n📈 Plotting Clarke Output...")
-    # plotter.easyplot('Clarke Output', title="Clarke Transform Output (αβ)")
+    ax_bot.set_xlabel("Time [s]")
+    plt.tight_layout()
+    fig.savefig("clarke_time_traces.png", dpi=120, bbox_inches="tight")
+    print("💾  Saved: clarke_time_traces.png")
+    plt.show()
 
-    # # 5. Plot specific components
-    # print("\n📈 Plotting Alpha component only...")
-    # plotter.easyplot('Clarke Output[0]', title="Alpha Component")
+    # Plot 2: Clarke locus
+    fig2, _ = plotter.xy_plot(
+        x_signal   = "clarke[alpha,beta][0]",
+        y_signal   = "clarke[alpha,beta][1]",
+        title      = "Clarke Locus  (alpha vs beta) — balanced → circle",
+        color      = "tab:purple",
+        equal_axes = True,
+    )
+    if fig2:
+        fig2.savefig("clarke_locus.png", dpi=120, bbox_inches="tight")
+        print("💾  Saved: clarke_locus.png")
 
-    # print("\n📈 Plotting Beta component only...")
-    # plotter.easyplot('Clarke Output[1]', title="Beta Component")
-
-    # # 6. Plot all three phases in separate subplots
-    # print("\n📈 Plotting three-phase components...")
-    # plotter.plot_components('3Phase Input', title="Three-Phase Input Components")
-
-    # # 7. Compare Phase A vs Alpha
-    # print("\n📈 Comparing Phase A and Alpha...")
-    # plotter.compare('3Phase Input[0]', 'Clarke Output[0]',
-                    # titles=['Phase A (Input)', 'Alpha (Output)'],
-                    # colors=['blue', 'red'])
-
-    # # 8. XY plot (Alpha vs Beta) - should show a circle
-    # print("\n📈 Creating XY plot (Lissajous figure)...")
-    # plotter.xy_plot('Clarke Output[0]', 'Clarke Output[1]',
-                    # title='Alpha vs Beta (Should be a circle)',
-                    # color='purple')
-
-    # # 9. FFT analysis of Alpha component
-    # print("\n📈 FFT analysis of Alpha component...")
-    # plotter.fft_plot('Clarke Output[0]', max_freq=200,
-                     # title='Frequency Spectrum of Alpha')
-
-    # # 10. Zoomed view of first cycle
-    # print("\n📈 Zoomed view (first cycle)...")
-    # plotter.easyplot(['3Phase Input[0]', 'Clarke Output[0]'],
-                     # time_range=(0, 0.02),  # First cycle only
-                     # title='First Cycle - Phase A and Alpha',
-                     # save_path='first_cycle.png')
-
-    # 11. Save all plots to files
-    print("\n💾 Saving all plots...")
-    #plotter.save_all_plots(prefix='clarke_test', format='png')
-
-    print("\n" + "=" * 70)
-    print("✅ All plots generated successfully!")
-    print("=" * 70)
+    print("=" * 60)
 
 
 if __name__ == "__main__":
