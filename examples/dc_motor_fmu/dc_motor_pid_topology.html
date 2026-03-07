@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EmbedSim Topology</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;600&family=Syne:wght@400;700;800&display=swap');
+:root{
+  --bg:#07090f;--panel:#0d1220;--border:#1a2a40;--text:#c0d4f0;--dim:#3a5070;
+  --source:#00cfff;--sink:#00cfff;--codegen:#f0d030;--control:#00e5a0;
+  --transform:#ff9f40;--plant:#b085ff;--delay:#ff5f5f;
+  --processing:#60d0ff;--generic:#607090;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;height:100%;background:var(--bg);color:var(--text);
+  font-family:'IBM Plex Mono',monospace;overflow:hidden;}
+header{display:flex;align-items:center;justify-content:space-between;
+  padding:10px 20px;border-bottom:1px solid var(--border);background:var(--panel);}
+header h1{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;
+  color:#e8f0ff;letter-spacing:.06em;}
+header p{font-size:.65rem;color:var(--dim);margin-top:2px;}
+.hdr-r{display:flex;gap:8px;align-items:center;}
+.badge{font-size:.58rem;padding:2px 8px;border-radius:3px;
+  background:#0a1828;border:1px solid var(--border);color:var(--dim);}
+#main{display:flex;width:100%;height:calc(100vh - 50px);}
+#cw{flex:1;overflow:auto;position:relative;}
+canvas{display:block;}
+#insp{width:260px;min-width:260px;background:var(--panel);
+  border-left:1px solid var(--border);display:flex;flex-direction:column;transition:width .2s;}
+#insp.collapsed{width:0;min-width:0;overflow:hidden;}
+#ih{padding:12px 14px 8px;border-bottom:1px solid var(--border);
+  font-family:'Syne',sans-serif;font-size:.75rem;font-weight:700;color:#e8f0ff;
+  letter-spacing:.08em;display:flex;justify-content:space-between;align-items:center;}
+#ic{padding:14px;overflow-y:auto;flex:1;font-size:.68rem;line-height:1.7;}
+.ir{display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid #111c2a;}
+.ik{color:var(--dim);} .iv{color:var(--text);text-align:right;max-width:140px;word-break:break-all;}
+.is{font-size:.6rem;color:var(--dim);margin:8px 0 4px;letter-spacing:.1em;}
+#leg{position:absolute;bottom:14px;left:14px;background:rgba(7,9,15,.9);
+  border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:.62rem;
+  display:grid;grid-template-columns:1fr 1fr;gap:4px 18px;}
+.lg{display:flex;align-items:center;gap:5px;color:var(--dim);}
+.ld{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
+#tip{position:fixed;background:#0d1828;border:1px solid var(--border);
+  border-radius:6px;padding:8px 12px;font-size:.63rem;line-height:1.6;
+  pointer-events:none;opacity:0;transition:opacity .12s;z-index:999;max-width:240px;}
+#tip.show{opacity:1;}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>⬡ EmbedSim — Block Topology</h1>
+    <p>Hover to inspect connections · click for parameters</p>
+  </div>
+  <div class="hdr-r">
+    <span class="badge" id="bt">— blocks</span>
+    <span class="badge" id="bd">— dynamic</span>
+    <span class="badge" id="bl">— loop-breakers</span>
+    <span class="badge" id="bc">— C-backend</span>
+  </div>
+</header>
+<div id="main">
+  <div id="cw">
+    <canvas id="c"></canvas>
+    <div id="leg">
+      <div class="lg"><div class="ld" style="background:var(--source)"></div>Source / Sink</div>
+      <div class="lg"><div class="ld" style="background:var(--control)"></div>Controller ⚡</div>
+      <div class="lg"><div class="ld" style="background:var(--codegen)"></div>CodeGen</div>
+      <div class="lg"><div class="ld" style="background:var(--transform)"></div>Transform</div>
+      <div class="lg"><div class="ld" style="background:var(--plant)"></div>Plant / FMU</div>
+      <div class="lg"><div class="ld" style="background:var(--delay)"></div>z⁻¹ Delay</div>
+    </div>
+  </div>
+  <div id="insp">
+    <div id="ih">INSPECTOR
+      <span style="cursor:pointer;color:var(--dim)" onclick="document.getElementById('insp').classList.toggle('collapsed')">✕</span>
+    </div>
+    <div id="ic">
+      <div style="color:var(--dim);font-size:.65rem;padding-top:24px;text-align:center">
+        Click any block to inspect
+      </div>
+    </div>
+  </div>
+</div>
+<div id="tip"></div>
+<script>
+const NODES=[{"id": "reference", "x": 30, "y": 87, "w": 124, "h": 46, "cat": "source", "cls": "StepReference", "dyn": false, "lb": false, "c": false, "lbl": "ω_ref (rad/s)", "attrs": {}}, {"id": "error", "x": 180, "y": 87, "w": 124, "h": 46, "cat": "processing", "cls": "VectorSum", "dyn": false, "lb": false, "c": false, "lbl": "e (rad/s)", "attrs": {}}, {"id": "pid", "x": 330, "y": 87, "w": 124, "h": 46, "cat": "control", "cls": "PIDController", "dyn": false, "lb": false, "c": false, "lbl": "u (V)", "attrs": {"Kp": "0.8", "Ki": "3"}}, {"id": "output", "x": 480, "y": 87, "w": 124, "h": 46, "cat": "sink", "cls": "VectorEnd", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {}}, {"id": "feedback", "x": 180, "y": 272, "w": 124, "h": 46, "cat": "delay", "cls": "VectorDelay", "dyn": false, "lb": true, "c": false, "lbl": "ω_fb (rad/s)", "attrs": {}}, {"id": "dc_motor", "x": 330, "y": 427, "w": 124, "h": 46, "cat": "plant", "cls": "DCMotorFMU", "dyn": false, "lb": false, "c": false, "lbl": "ω (rad/s)", "attrs": {"fmu_path": "DCMotor.fmu"}}];
+const EDGES=[{"src": "dc_motor", "dst": "feedback", "lb": false}, {"src": "dc_motor", "dst": "output", "lb": false}, {"src": "reference", "dst": "error", "lb": false}, {"src": "feedback", "dst": "error", "lb": true}, {"src": "error", "dst": "pid", "lb": false}, {"src": "pid", "dst": "dc_motor", "lb": false}];
+const CC={source:'#00cfff',sink:'#00cfff',codegen:'#f0d030',
+  control:'#00e5a0',transform:'#ff9f40',plant:'#b085ff',
+  delay:'#ff5f5f',processing:'#60d0ff',generic:'#607090'};
+const BANDS=[
+  {y:68, h:92,  lbl:'FORWARD PATH',       col:'rgba(18,50,90,0.5)'},
+  {y:258,h:84,  lbl:'FEEDBACK  z⁻¹', col:'rgba(55,12,12,0.5)'},
+  {y:410,h:92,  lbl:'PLANT',              col:'rgba(18,8,48,0.5)'},
+];
+const canvas=document.getElementById('c');
+const ctx=canvas.getContext('2d');
+const wrap=document.getElementById('cw');
+const nm={};
+NODES.forEach(n=>nm[n.id]=n);
+let hov=null;
+const BW=684, BH=573;
+
+function resize(){
+  canvas.width=Math.max(wrap.clientWidth,BW);
+  canvas.height=Math.max(wrap.clientHeight,BH);
+  draw();
+}
+
+function rr(x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);
+  ctx.arcTo(x,y,x+w,y,r);ctx.closePath();
+}
+
+function ah(x,y,ang,sz,col){
+  ctx.save();ctx.fillStyle=col;
+  ctx.translate(x,y);ctx.rotate(ang);
+  ctx.beginPath();ctx.moveTo(0,0);
+  ctx.lineTo(-sz,-sz*.42);ctx.lineTo(-sz,sz*.42);
+  ctx.closePath();ctx.fill();ctx.restore();
+}
+
+function drawEdge(e){
+  const s=nm[e.src],d=nm[e.dst];
+  if(!s||!d)return;
+  const col=e.lb?CC.delay:'#2a5a8a';
+  const alp=e.lb?0.55:0.75;
+  const lw=e.lb?1.1:1.6;
+  ctx.save();
+  ctx.strokeStyle=col;ctx.lineWidth=lw;ctx.globalAlpha=alp;
+  ctx.setLineDash(e.lb?[5,4]:[]);ctx.lineJoin='round';
+  const sx=s.x+s.w, sy=s.y+s.h/2;
+  const dx=d.x,     dy=d.y+d.h/2;
+  let midLblX=0, midLblY=0;
+  if(sx>dx+20){
+    const by=Math.max(s.y+s.h,d.y+d.h)+30;
+    const x1=s.x+s.w/2, x2=d.x+d.w/2;
+    ctx.beginPath();ctx.moveTo(x1,s.y+s.h);
+    ctx.lineTo(x1,by);ctx.lineTo(x2,by);ctx.lineTo(x2,d.y+d.h);
+    ctx.stroke();ah(x2,d.y+d.h,Math.PI/2,7,col);
+    midLblX=(x1+x2)/2; midLblY=by;
+  }else if(Math.abs(sy-dy)<6){
+    ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(dx,dy);ctx.stroke();
+    ah(dx,dy,0,7,col);
+    midLblX=(sx+dx)/2; midLblY=sy-10;
+  }else{
+    const mx=(sx+dx)/2;
+    ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(mx,sy);
+    ctx.lineTo(mx,dy);ctx.lineTo(dx,dy);ctx.stroke();
+    ah(dx,dy,0,7,col);
+    midLblX=mx; midLblY=(sy+dy)/2;
+  }
+  // Draw output_label of source block on the wire
+  const lbl=s.lbl;
+  if(lbl&&!e.lb){
+    ctx.globalAlpha=0.75;
+    ctx.font='italic 7.5px "IBM Plex Mono"';
+    ctx.fillStyle='#4a8ab0';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    // small pill background
+    const tw=ctx.measureText(lbl).width+6;
+    ctx.fillStyle='rgba(7,9,15,0.75)';
+    ctx.fillRect(midLblX-tw/2,midLblY-7,tw,13);
+    ctx.fillStyle='#5aaad0';
+    ctx.fillText(lbl,midLblX,midLblY);
+  }
+  ctx.restore();
+}
+
+function drawNode(n,hvr){
+  const col=CC[n.cat]||CC.generic;
+  const{x,y,w,h}=n;
+  if(hvr||n.dyn){
+    ctx.save();ctx.shadowColor=col;ctx.shadowBlur=hvr?22:10;
+    rr(x,y,w,h,7);ctx.strokeStyle=col;ctx.lineWidth=.1;ctx.stroke();ctx.restore();
+  }
+  ctx.save();rr(x,y,w,h,7);
+  ctx.fillStyle=hvr?'#0f1e38':'#080f1e';ctx.fill();
+  ctx.strokeStyle=col;ctx.lineWidth=n.dyn?2:(hvr?2:1.3);
+  ctx.setLineDash(n.lb?[4,3]:[]);ctx.stroke();ctx.restore();
+  const icon=n.dyn?'⚡':n.lb?'z⁻¹':'';
+  const cf=n.c?'·C':'';
+  const lbl=(icon?icon+' ':'')+n.id+cf;
+  ctx.save();
+  ctx.fillStyle=col;ctx.font='600 9px "IBM Plex Mono"';
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  const mw=w-12;let disp=lbl;
+  while(ctx.measureText(disp).width>mw&&disp.length>4)disp=disp.slice(0,-1);
+  if(disp!==lbl)disp=disp.slice(0,-2)+'…';
+  ctx.fillText(disp,x+w/2,y+h/2-7);
+  ctx.fillStyle='rgba(90,140,200,0.65)';ctx.font='7.5px "IBM Plex Mono"';
+  let cls=n.cls;
+  while(ctx.measureText(cls).width>mw&&cls.length>4)cls=cls.slice(0,-1);
+  if(cls!==n.cls)cls=cls.slice(0,-2)+'…';
+  ctx.fillText(cls,x+w/2,y+h/2+7);
+  ctx.restore();
+}
+
+function drawBands(){
+  BANDS.forEach(b=>{
+    ctx.save();ctx.fillStyle=b.col;ctx.fillRect(0,b.y,canvas.width,b.h);
+    ctx.fillStyle='rgba(140,180,220,0.32)';ctx.font='8px "IBM Plex Mono"';
+    ctx.textBaseline='top';ctx.fillText(b.lbl,12,b.y+5);ctx.restore();
+  });
+}
+
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle='#07090f';ctx.fillRect(0,0,canvas.width,canvas.height);
+  drawBands();
+  EDGES.forEach(drawEdge);
+  NODES.forEach(n=>drawNode(n,n.id===hov));
+}
+
+function hit(mx,my){
+  return NODES.find(n=>mx>=n.x&&mx<=n.x+n.w&&my>=n.y&&my<=n.y+n.h)||null;
+}
+
+const tip=document.getElementById('tip');
+canvas.addEventListener('mousemove',e=>{
+  const r=canvas.getBoundingClientRect();
+  const h=hit(e.clientX-r.left,e.clientY-r.top);
+  if(h){
+    canvas.style.cursor='pointer';
+    if(hov!==h.id){hov=h.id;draw();}
+    const inc=EDGES.filter(ev=>ev.dst===h.id).map(ev=>ev.src);
+    const out=EDGES.filter(ev=>ev.src===h.id).map(ev=>ev.dst);
+    const L=[`<strong style="color:${CC[h.cat]}">${h.id}</strong>`,
+             `<span style="color:#3a6080">${h.cls}</span>`];
+    if(h.lbl)L.push(`<span style="color:#5aaad0">↣ ${h.lbl}</span>`);
+    if(inc.length)L.push(`← ${inc.join(', ')}`);
+    if(out.length)L.push(`→ ${out.join(', ')}`);
+    if(h.dyn)L.push('⚡ dynamic');
+    if(h.lb)L.push('z⁻¹ loop-breaker');
+    if(h.c)L.push('C backend');
+    tip.innerHTML=L.join('<br>');
+    tip.style.left=(e.clientX+14)+'px';tip.style.top=(e.clientY+8)+'px';
+    tip.classList.add('show');
+  }else{
+    canvas.style.cursor='default';
+    if(hov!==null){hov=null;draw();}
+    tip.classList.remove('show');
+  }
+});
+
+canvas.addEventListener('click',e=>{
+  const r=canvas.getBoundingClientRect();
+  const h=hit(e.clientX-r.left,e.clientY-r.top);
+  if(!h)return;
+  const col=CC[h.cat];
+  let html=`<div style="font-size:.9rem;font-weight:600;color:${col};margin-bottom:2px">${h.id}</div>`;
+  html+=`<div style="color:var(--dim);margin-bottom:6px">${h.cls}</div>`;
+  if(h.lbl)html+=`<div style="color:#5aaad0;font-size:.72rem;margin-bottom:8px">↣&nbsp;${h.lbl}</div>`;
+  const fl=[];if(h.dyn)fl.push('⚡ dynamic');if(h.lb)fl.push('z⁻¹ loop-breaker');if(h.c)fl.push('C backend');
+  if(fl.length)html+=`<div class="is">${fl.join('  ·  ')}</div>`;
+  const inc=EDGES.filter(ev=>ev.dst===h.id).map(ev=>ev.src);
+  const out=EDGES.filter(ev=>ev.src===h.id).map(ev=>ev.dst);
+  html+='<div class="is">CONNECTIONS</div>';
+  if(inc.length)html+=`<div class="ir"><span class="ik">inputs</span><span class="iv">${inc.join(', ')}</span></div>`;
+  if(out.length)html+=`<div class="ir"><span class="ik">outputs to</span><span class="iv">${out.join(', ')}</span></div>`;
+  if(Object.keys(h.attrs).length){
+    html+='<div class="is">PARAMETERS</div>';
+    for(const[k,v]of Object.entries(h.attrs))
+      html+=`<div class="ir"><span class="ik">${k}</span><span class="iv">${v}</span></div>`;
+  }
+  document.getElementById('ic').innerHTML=html;
+  document.getElementById('insp').classList.remove('collapsed');
+});
+
+canvas.addEventListener('mouseleave',()=>{hov=null;tip.classList.remove('show');draw();});
+
+document.getElementById('bt').textContent=NODES.length+' blocks';
+document.getElementById('bd').textContent=NODES.filter(n=>n.dyn).length+' dynamic';
+document.getElementById('bl').textContent=NODES.filter(n=>n.lb).length+' loop-breakers';
+document.getElementById('bc').textContent=NODES.filter(n=>n.c).length+' C-backend';
+
+window.addEventListener('resize',resize);
+resize();
+</script>
+</body>
+</html>

@@ -1,143 +1,293 @@
-# EmbedSim — Embedded Block-Diagram Simulation Framework
-# Lightweight, float32-first simulation for 32-bit embedded platforms.
-#
-# Usage:
-#   from embedsim import EmbedSim, VectorSignal, VectorGain, ...
-#
-# Precision:
-#   All blocks default to float32. Override per-block with dtype=np.float64.
-#   Change embedsim.core_blocks.DEFAULT_DTYPE = np.float64 to switch globally.
+"""
+embedsim/__init__.py
+====================
 
-# Core blocks
-from .core_blocks import (
-    DEFAULT_DTYPE,
-    VectorSignal,
-    VectorBlock,
-    validate_vector_dimension,
-    validate_inputs_exist
-)
+EmbedSim — Embedded Simulation Framework
+An open-source Python/C control-systems simulation framework.
 
-# Source blocks
-from .source_blocks import (
-    VectorConstant,
-    VectorStep,
-    ThreePhaseGenerator,
-    SinusoidalGenerator,
-    VectorRamp
-)
+Positioned as an affordable alternative to MATLAB/Simulink.
+Targets embedded deployment on Aurix TriCore and Cortex-M4.
+MISRA C:2012 / ASIL-D compatible C code generation.
 
-# Processing blocks
-from .processing_blocks import (
-    VectorGain,
-    VectorSum,
-    VectorDelay,
-    VectorProduct,
-    VectorAbs,
-    VectorSaturation
-)
+Write control logic once in C — validate in Python, deploy to hardware.
 
-# Dynamic blocks
-from .dynamic_blocks import (
-    VectorIntegrator,
-    StateSpaceBlock,
-    TransferFunctionBlock,
-    VectorEnd
-)
+--------------------------------------------------------------------------------
+QUICK START
+--------------------------------------------------------------------------------
 
-# Simulation engine
-from .simulation_engine import (
-    LoopBreaker,
-    VectorDelay as SimVectorDelay,  # Note: VectorDelay is also in processing_blocks
-    VectorScope,
-    EmbedSim,
-    traverse_blocks_from_sinks_with_loops,
-    ODESolver
-)
-
-# Code generator
-from .code_generator import (
-    SimBlockBase,
-    CodeGenStart,
-    CodeGenEnd,
-    MCUTarget
-)
-
-# Script blocks (optional)
-try:
-    from .script_blocks import ScriptBlock
-
-    _has_script_blocks = True
-except ImportError:
-    _has_script_blocks = False
-
-# FMU blocks (optional)
-try:
-    from .fmu_blocks import FMUBlock
-
-    _has_fmu_blocks = True
-except ImportError:
-    _has_fmu_blocks = False
-
-# Version info
-__version__ = '1.0.0'
-__author__ = 'EmbedSim Framework'
-
-# Define __all__ to control what's exported with "from embedsim import *"
-__all__ = [
-    # Core
-    'DEFAULT_DTYPE',
-    'VectorSignal',
-    'VectorBlock',
-    'validate_vector_dimension',
-    'validate_inputs_exist',
+    import embedsim as es
 
     # Sources
-    'VectorConstant',
-    'VectorStep',
-    'ThreePhaseGenerator',
-    'SinusoidalGenerator',
-    'VectorRamp',
+    ref = es.VectorStep("ref", step_time=0.05, after_value=100.0, dim=1)
+    k   = es.VectorConstant("gain", value=[2.0])
 
     # Processing
-    'VectorGain',
-    'VectorSum',
-    'VectorDelay',  # From processing_blocks
-    'VectorProduct',
-    'VectorAbs',
-    'VectorSaturation',
+    out = es.VectorEnd("out")
+    ref >> out
+
+    sim = es.EmbedSim(sinks=[out], T=1.0, dt=1e-4, solver=es.ODESolver.RK4)
+    sim.topo.print_console()   # topology diagram in terminal
+    sim.topo.show_gui()        # interactive browser GUI
+    sim.run()
+
+--------------------------------------------------------------------------------
+PUBLIC API  (importable directly from `embedsim`)
+--------------------------------------------------------------------------------
+
+SIMULATION ENGINE
+    EmbedSim          — main simulation runner
+    ODESolver         — enum: RK4 | EULER
+    VectorDelay       — generic one-step delay block
+    LoopBreaker       — mixin for algebraic loop breaking
+
+CORE BLOCKS
+    VectorBlock       — base class for all blocks
+    VectorSignal      — typed signal container (float32)
+
+SOURCE BLOCKS
+    VectorStep        — step signal source
+    VectorConstant    — constant vector source
+    VectorRamp        — ramp signal source
+    VectorSine        — sinusoidal source
+
+DYNAMIC BLOCKS
+    VectorEnd         — terminal sink
+    VectorIntegrator  — continuous integrator (RK4/Euler)
+
+PROCESSING BLOCKS
+    VectorGain        — element-wise or matrix gain
+    VectorSum         — multi-input summation
+    VectorSplit       — extract sub-vector by index
+    VectorMux         — concatenate vectors
+
+CODE GENERATION
+    CodeGenStart      — marks start of C codegen region
+    CodeGenEnd        — marks end of C codegen region
+    SimBlockBase      — base for Cython-wrapped C blocks
+
+FMU INTEGRATION
+    FMUBlock          — generic FMI 2.0 co-simulation block
+
+TOPOLOGY VISUALIZER
+    TopologyPrinter   — console + browser GUI topology viewer
+    print_topology    — convenience function: TopologyPrinter(sim).print_console()
+
+UTILITIES
+    create_plotter    — matplotlib scope helper
+
+--------------------------------------------------------------------------------
+INTEGRATION WITH EmbedSim INSTANCES
+--------------------------------------------------------------------------------
+
+A TopologyPrinter is automatically attached to every EmbedSim instance as
+``sim.topo`` after construction.  This replaces the old
+``sim.print_topology_sources2sink()`` call:
+
+    sim = EmbedSim(sinks=[...], T=1.0, dt=1e-4)
+    sim.topo.print_console()    # replaces sim.print_topology_sources2sink()
+    sim.topo.show_gui()         # opens browser with interactive SVG diagram
+    sim.topo.export_html("diagram.html")
+
+--------------------------------------------------------------------------------
+"""
+
+# ── Version ──────────────────────────────────────────────────────────────────
+
+__version__   = "0.4.0"
+__author__    = "EmbedSim Project"
+__license__   = "MIT"
+__url__       = "https://github.com/embedsim/embedsim"
+
+# ── Simulation engine ─────────────────────────────────────────────────────────
+
+from embedsim.simulation_engine import (
+    EmbedSim,
+    ODESolver,
+    VectorDelay,
+    LoopBreaker,
+)
+
+# ── Core blocks ───────────────────────────────────────────────────────────────
+
+from embedsim.core_blocks import (
+    VectorBlock,
+    VectorSignal,
+)
+
+# ── Source blocks ─────────────────────────────────────────────────────────────
+
+from embedsim.source_blocks import (
+    VectorStep,
+    VectorConstant,
+)
+
+# Ramp and Sine are optional — only exported if they exist in source_blocks
+try:
+    from embedsim.source_blocks import VectorRamp
+except ImportError:
+    VectorRamp = None  # type: ignore[assignment,misc]
+
+try:
+    from embedsim.source_blocks import VectorSine
+except ImportError:
+    VectorSine = None  # type: ignore[assignment,misc]
+
+# ── Dynamic blocks ────────────────────────────────────────────────────────────
+
+from embedsim.dynamic_blocks import (
+    VectorEnd,
+    VectorIntegrator,
+)
+
+# ── Processing blocks ─────────────────────────────────────────────────────────
+
+from embedsim.processing_blocks import (
+    VectorGain,
+    VectorSum,
+)
+
+try:
+    from embedsim.processing_blocks import VectorSplit
+except ImportError:
+    VectorSplit = None  # type: ignore[assignment,misc]
+
+try:
+    from embedsim.processing_blocks import VectorMux
+except ImportError:
+    VectorMux = None  # type: ignore[assignment,misc]
+
+# ── Code generation ───────────────────────────────────────────────────────────
+
+from embedsim.code_generator import (
+    CodeGenStart,
+    CodeGenEnd,
+    SimBlockBase,
+)
+
+# ── FMU integration ───────────────────────────────────────────────────────────
+
+try:
+    from embedsim.fmu_blocks import FMUBlock
+except ImportError:
+    FMUBlock = None  # type: ignore[assignment,misc]
+
+# ── Plot helper ───────────────────────────────────────────────────────────────
+
+try:
+    from embedsim.plot_helper import create_plotter
+except ImportError:
+    create_plotter = None  # type: ignore[assignment,misc]
+
+# ── Topology printer ──────────────────────────────────────────────────────────
+
+from embedsim.topology_printer import TopologyPrinter, attach
+
+
+def print_topology(sim) -> None:
+    """
+    Print a clean multi-lane console topology diagram for *sim*.
+
+    Convenience wrapper around ``TopologyPrinter(sim).print_console()``.
+    Identical to calling ``sim.topo.print_console()`` if you used
+    ``attach(sim)`` or constructed via ``EmbedSim``.
+
+    Parameters
+    ----------
+    sim : EmbedSim
+        A built simulation object.
+
+    Example
+    -------
+    >>> import embedsim as es
+    >>> sim = build_my_sim()
+    >>> es.print_topology(sim)
+    """
+    TopologyPrinter(sim).print_console()
+
+
+# ── Monkey-patch EmbedSim to auto-attach TopologyPrinter ─────────────────────
+#
+# We wrap EmbedSim.__init__ so that every new instance automatically gets:
+#   sim.topo                          — TopologyPrinter instance
+#   sim.print_topology_sources2sink   — replaced with printer.print_console
+#
+# This is done with a clean __init_subclass__-safe wrapper rather than
+# mutating the class directly, so subclasses are unaffected.
+
+import functools as _functools
+
+_original_EmbedSim_init = EmbedSim.__init__
+
+
+@_functools.wraps(_original_EmbedSim_init)
+def _patched_EmbedSim_init(self, *args, **kwargs):
+    _original_EmbedSim_init(self, *args, **kwargs)
+    # Attach topology printer after sim is fully constructed
+    try:
+        _attach_topo(self)
+    except Exception:
+        # Never break the sim — topology is a nice-to-have
+        pass
+
+
+def _attach_topo(sim_instance):
+    """Attach TopologyPrinter to a live EmbedSim instance."""
+    printer = TopologyPrinter(sim_instance)
+    sim_instance.topo = printer
+    # Backwards-compatible replacement for the old broken renderer
+    sim_instance.print_topology_sources2sink = printer.print_console
+
+
+EmbedSim.__init__ = _patched_EmbedSim_init
+
+# ── Public namespace (__all__) ────────────────────────────────────────────────
+
+__all__ = [
+    # Engine
+    "EmbedSim",
+    "ODESolver",
+    "VectorDelay",
+    "LoopBreaker",
+
+    # Core
+    "VectorBlock",
+    "VectorSignal",
+
+    # Sources
+    "VectorStep",
+    "VectorConstant",
+    "VectorRamp",
+    "VectorSine",
 
     # Dynamic
-    'VectorIntegrator',
-    'StateSpaceBlock',
-    'TransferFunctionBlock',
-    'VectorEnd',
+    "VectorEnd",
+    "VectorIntegrator",
 
-    # Simulation Engine
-    'LoopBreaker',
-    'VectorScope',
-    'EmbedSim',
-    'traverse_blocks_from_sinks_with_loops',
-    'ODESolver',
+    # Processing
+    "VectorGain",
+    "VectorSum",
+    "VectorSplit",
+    "VectorMux",
 
-    # Code Generation
-    'SimBlockBase',
-    'CodeGenStart',
-    'CodeGenEnd',
-    'MCUTarget',
+    # Code generation
+    "CodeGenStart",
+    "CodeGenEnd",
+    "SimBlockBase",
 
-    # Plot Helper
-    'PlotHelper',
-    'create_plotter'
+    # FMU
+    "FMUBlock",
+
+    # Topology
+    "TopologyPrinter",
+    "attach",
+    "print_topology",
+
+    # Utilities
+    "create_plotter",
+
+    # Meta
+    "__version__",
+    "__author__",
+    "__license__",
+    "__url__",
 ]
-
-# Add optional modules to __all__ if available
-if _has_script_blocks:
-    __all__.append('ScriptBlock')
-
-if _has_fmu_blocks:
-    __all__.append('FMUBlock')
-
-# Note: There are two VectorDelay classes (in processing_blocks and simulation_engine)
-# The one from processing_blocks is exported by default as it's more commonly used
-# If you need the LoopBreaker version, import it directly:
-# from embedsim.simulation_engine import VectorDelay as LoopBreakingDelay

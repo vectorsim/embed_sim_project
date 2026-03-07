@@ -110,7 +110,15 @@ Typical Workflow:
 5. Use `print_topology*()` or `plot()` to visualize results.
 
 Author: EmbedSim Framework - Enhanced Edition
-Version: 3.0.0
+Version: 3.1.0
+
+Changelog v3.1.0:
+  - TopologyPrinter auto-attached to every EmbedSim instance as sim.topo
+  - sim.topo.print_console()  — clean multi-lane ASCII diagram (replaces broken renderer)
+  - sim.topo.show_gui()       — opens interactive browser SVG diagram
+  - sim.topo.export_html(p)  — save standalone HTML topology file
+  - print_topology_sources2sink() now delegates to TopologyPrinter (backwards compat)
+  - Fixed plot() referencing self.data instead of self.scope.data
 """
 import numpy as np
 import matplotlib.pyplot as plt
@@ -120,6 +128,18 @@ from dataclasses import dataclass
 import time
 
 from .core_blocks import (VectorBlock, VectorSignal, DEFAULT_DTYPE)
+
+# ---------------------------------------------------------------------------
+# Topology printer — imported lazily to avoid circular imports.
+# The actual attach happens at the end of EmbedSim.__init__.
+# ---------------------------------------------------------------------------
+def _get_topology_printer():
+    """Lazy import of TopologyPrinter to avoid circular dependency."""
+    try:
+        from .topology_printer import TopologyPrinter
+        return TopologyPrinter
+    except ImportError:
+        return None
 
 
 # =========================
@@ -684,6 +704,18 @@ class EmbedSim:
         # Detect feedback loops
         self._detect_feedback_loops()
 
+        # ── Attach TopologyPrinter ──────────────────────────────────────────
+        # sim.topo gives access to both console and GUI topology rendering.
+        # print_topology_sources2sink() is kept for backwards compatibility
+        # but now delegates to the clean printer instead of the old renderer.
+        TopologyPrinter = _get_topology_printer()
+        if TopologyPrinter is not None:
+            self.topo = TopologyPrinter(self)
+            self.print_topology_sources2sink = self.topo.print_console
+        else:
+            # Fallback: keep the legacy method as-is if module not found
+            self.topo = None
+
     def _detect_feedback_loops(self) -> None:
         """
         Count feedback loops present in the block diagram.
@@ -858,15 +890,17 @@ class EmbedSim:
         """
         if verbose:
             print(f"\n{'=' * 70}")
-            print(f"EmbedSim")
+            print(f"EmbedSim v3.1.0")
             print(f"{'=' * 70}")
             print(f"  Duration:       {self.T} s")
-            print(f"  Time step:      {self.dt} s")
-            print(f"  Solver:         {self.solver}")
+            print(f"  Time step:      {self.dt} s  ({1.0/self.dt:.0f} Hz)")
+            print(f"  Solver:         {self.solver.upper()}")
             print(f"  Total blocks:   {len(self.blocks)}")
             print(f"  Dynamic:        {len(self.dynamic_blocks)}")
             print(f"  Loop breakers:  {len(self.loop_breakers)}")
             print(f"  Feedback loops: {self.stats.feedback_loops_count}")
+            if self.topo is not None:
+                print(f"  Topology:       sim.topo.print_console() | sim.topo.show_gui()")
             print(f"{'=' * 70}\n")
 
         # Reset all blocks
@@ -998,23 +1032,28 @@ class EmbedSim:
             >>> sim.plot(title="Motor Response", signals=["speed[0]"],
             ...          time_range=(0.5, 2.0))
         """
-        if not self.data:
+        if not self.scope.data:
             print("⚠ No signals to plot. Use scope.add(block) to add signals.")
             return
 
         # Determine time range
+        t_arr = self.scope.t
         if time_range:
-            start_idx, end_idx = self.get_time_range(time_range[0], time_range[1])
-            t_plot = self.t[start_idx:end_idx]
+            t0, t1 = time_range
+            indices = [i for i, tv in enumerate(t_arr) if t0 <= tv <= t1]
+            start_idx = indices[0] if indices else 0
+            end_idx   = indices[-1] + 1 if indices else len(t_arr)
         else:
-            start_idx, end_idx = 0, len(self.t)
-            t_plot = self.t
+            start_idx, end_idx = 0, len(t_arr)
+
+        t_plot = t_arr[start_idx:end_idx]
 
         # Determine which signals to plot
         if signals is None:
-            plot_signals = self.data.items()
+            plot_signals = list(self.scope.data.items())
         else:
-            plot_signals = [(name, self.data[name]) for name in signals if name in self.data]
+            plot_signals = [(name, self.scope.data[name])
+                            for name in signals if name in self.scope.data]
 
         plt.figure(figsize=figsize)
 
@@ -1141,55 +1180,36 @@ class EmbedSim:
 
     def print_topology_sources2sink(self) -> None:
         """
-        Render a horizontal ASCII flow diagram: Sources → Sinks.
+        Render a horizontal block diagram: Sources → Sinks.
 
-        Every block box shows instance name and class type::
+        .. deprecated::
+            This method is kept for backwards compatibility.
+            Prefer ``sim.topo.print_console()`` for the clean multi-lane renderer
+            or ``sim.topo.show_gui()`` to open the interactive browser diagram.
 
-            [gain (VectorGain)]
-            [⚡integrator (VectorIntegrator)]
+        If ``topology_printer`` is available (it is in normal EmbedSim installs)
+        this delegates to ``TopologyPrinter.print_console()`` which correctly
+        handles fan-in, fan-out, and z⁻¹ feedback paths without colliding labels.
 
-        Every fan-in source gets its own ──► arrow into the merge bar.
+        If the topology printer module is missing, falls back to the legacy
+        ASCII canvas renderer (see ``_print_topology_legacy()``).
 
-        Feedback loops are drawn as return arcs BELOW the main diagram.
-        The arc shows the complete path — driver, loop-breaker, receiver —
-        so the signal flow is unambiguous:
+        Example::
 
-            [sin] ──► [sum] ──► [gain] ──► [output]
-                               │          │
-                               ◄──────────┘
-                               delay (VectorDelay)
+            sim.print_topology_sources2sink()   # legacy call — still works
+            sim.topo.print_console()            # preferred — cleaner output
+            sim.topo.show_gui()                 # opens browser GUI
+        """
+        if self.topo is not None:
+            self.topo.print_console()
+        else:
+            self._print_topology_legacy()
 
-        The ◄ tip marks exactly where the delayed signal re-enters.
-        If the lb label fits in the dash span it is embedded inline;
-        otherwise it is printed on a third row below the arc.
-
-        Example outputs
-        ---------------
-        Pure chain::
-
-            [3phase_gen (ThreePhaseGenerator)] ──► [output (VectorEnd)]
-
-        3-source fan-in::
-
-            [cosine_source (SinusoidalGenerator)] ──►┐[source_sum (VectorSum)] ──► ...
-                                                     │
-            [sin_source (SinusoidalGenerator)] ─────►┤
-                                                     │
-            [const_1 (VectorConstant)] ─────────────►┘
-
-        Self-feedback (sum drives delay, delay feeds back into sum)::
-
-            [sin] ──► [sum] ──► [gain] ──► [output]
-                      │       │
-                      ◄───────┘
-                      delay (VectorDelay)
-
-        Cross-feedback (controller drives delay, delay feeds into plant)::
-
-            [source] ──► [controller] ──► [plant] ──► [sink]
-                                      │   │
-                                      └───◄
-                                      delay (VectorDelay)
+    def _print_topology_legacy(self) -> None:
+        """
+        Legacy ASCII canvas topology renderer (fallback when topology_printer
+        module is not available).  Retained for backwards compatibility.
+        Use ``sim.topo.print_console()`` in preference to this method.
         """
         import unicodedata
 
@@ -1578,7 +1598,8 @@ __all__ = [
     'LoopBreaker',
     'VectorDelay',
     'VectorScope',
+    'SimulationStats',
     'EmbedSim',
     'traverse_blocks_from_sinks_with_loops',
-    'ODESolver'
+    'ODESolver',
 ]

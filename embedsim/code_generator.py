@@ -652,6 +652,47 @@ class CodeGenEnd(SimBlockBase):
         ]
         return "\n".join(L)
 
+    # =========================================================================
+    # generate_loop  (feature 05121967)
+    # =========================================================================
+
+    def generate_loop(self,
+                      cg_start: "CodeGenStart",
+                      output_dir: Union[str, Path, None] = None,
+                      dt_hz: float = 0.0,
+                      write_files: bool = True) -> dict:
+        """
+        Walk every block between *cg_start* and this CodeGenEnd and emit
+        a single C file pair that calls each block's C function in the
+        correct topological order.
+
+        Output files (written into ``<output_dir>/embedsim_gen/``)
+        -----------------------------------------------------------
+        embedsim_loop.c     — one ``embedsim_loop_step()`` function that
+                              calls every block in sequence
+        embedsim_loop.h     — extern declarations + prototype
+
+        Parameters
+        ----------
+        cg_start   : CodeGenStart
+            The start marker of the code-gen region.
+        output_dir : str | Path | None
+            Root directory.  ``embedsim_gen/`` is created inside it.
+            Defaults to the current working directory.
+        dt_hz      : float
+            If > 0, emits ``#define EMBEDSIM_DT  <value>f`` in the header.
+        write_files: bool
+            False → return dict only, no disk writes.
+
+        Returns
+        -------
+        dict with keys "c" and "h" (file text strings).
+        """
+        gen = LoopGenerator(cg_start, self)
+        return gen.generate(output_dir=output_dir,
+                            dt_hz=dt_hz,
+                            write_files=write_files)
+
     def _print_compile_hint(self, safe_name, out_dir):
         print(f"\n  Next steps:")
         print(f"  1. Implement {safe_name}_compute() in {safe_name}.c")
@@ -673,6 +714,446 @@ class MCUTarget:
     CORTEX_M4     = 'CORTEX_M4'
 
 
-__all__ = ['SimBlockBase', 'CodeGenStart', 'CodeGenEnd', 'MCUTarget']
-__version__ = '1.5.0'
-__author__ = 'ControlForge'
+# =============================================================================
+# LoopGenerator  (feature 05121967)
+# =============================================================================
+
+class LoopGenerator:
+    """
+    Walks the block graph between CodeGenStart and CodeGenEnd (inclusive)
+    and emits ``embedsim_loop.c`` / ``embedsim_loop.h``.
+
+    The generated ``embedsim_loop_step()`` function calls every block's
+    C step function in topological (DFS) order — the same order the Python
+    simulation engine uses.
+
+    Each block is emitted via ``_emit_block()``.  Blocks that don't have
+    CodeGen metadata (no C_SOURCES / step_func) are emitted as a
+    ``/* [pass-through] */`` comment so the file still compiles and the
+    developer knows what's there.
+
+    Usage (via CodeGenEnd):
+        cg_end.generate_loop(cg_start, output_dir=".", dt_hz=10000.0)
+
+    Or directly:
+        gen = LoopGenerator(cg_start, cg_end)
+        result = gen.generate(output_dir=".", dt_hz=0.0, write_files=False)
+        print(result["c"])
+    """
+
+    def __init__(self, cg_start: CodeGenStart, cg_end: CodeGenEnd) -> None:
+        self.cg_start = cg_start
+        self.cg_end   = cg_end
+
+    # ──────────────────────────────────────────────────────────────────────────
+    # Public entry point
+    # ──────────────────────────────────────────────────────────────────────────
+
+    def generate(self,
+                 output_dir: Union[str, Path, None] = None,
+                 dt_hz: float = 0.0,
+                 write_files: bool = True) -> dict:
+        """
+        Build the two files and optionally write them to
+        ``<output_dir>/embedsim_gen/``.
+
+        Returns dict with keys "c" and "h".
+        """
+        blocks = self._collect_region_blocks()
+
+        c_text = self._gen_c(blocks)
+        h_text = self._gen_h(blocks, dt_hz)
+
+        if write_files:
+            root    = Path(output_dir) if output_dir else Path.cwd()
+            gen_dir = root / "embedsim_gen"
+            gen_dir.mkdir(parents=True, exist_ok=True)
+            (gen_dir / "embedsim_loop.c").write_text(c_text, encoding='utf-8')
+            (gen_dir / "embedsim_loop.h").write_text(h_text, encoding='utf-8')
+            print(f"\n[LoopGenerator] Files written to '{gen_dir}/':")
+            print(f"  embedsim_loop.c")
+            print(f"  embedsim_loop.h")
+            print(f"  ({len(blocks)} block(s) in region)")
+
+        return {"c": c_text, "h": h_text}
+
+    # ──────────────────────────────────────────────────────────────────────────
+    # Block graph traversal
+    # ──────────────────────────────────────────────────────────────────────────
+
+    def _collect_region_blocks(self) -> list:
+        """
+        DFS from cg_end backwards to cg_start, collect all blocks
+        in the bounded region (exclusive of the start/end markers themselves).
+
+        Returns blocks in forward execution order (sources → sinks).
+        """
+        visited:  set  = set()
+        ordered:  list = []
+        boundary: set  = {id(self.cg_start), id(self.cg_end)}
+
+        def dfs(block):
+            if id(block) in visited:
+                return
+            visited.add(id(block))
+            if id(block) in boundary:
+                return
+            for upstream in block.inputs:
+                dfs(upstream)
+            ordered.append(block)
+
+        # Walk backwards from cg_end's direct inputs (not cg_end itself)
+        for blk in self.cg_end.inputs:
+            dfs(blk)
+
+        return ordered   # already in topological order
+
+    # ──────────────────────────────────────────────────────────────────────────
+    # Per-block C emission
+    # ──────────────────────────────────────────────────────────────────────────
+
+    def _emit_block(self, block) -> str:
+        """
+        Emit the C call snippet for one block.
+
+        Checks (in order):
+          0. Block has IS_UNIT_DELAY=True → emit as a z⁻¹ register read.
+          1. Block has a ``step_func`` attribute (set by PYXInspector) → emit
+             the real C function call with typed local variables.
+          2. Block has C_SOURCES but no step_func → emit a TODO comment.
+          3. No CodeGen metadata → emit a pass-through comment.
+
+        The snippet is indented with 4 spaces (fits inside a function body).
+
+        Variable naming convention for local buffers:
+            u_<safe_name>[N]   — flat input array
+            y_<safe_name>[N]   — flat output array
+        """
+        sn = _sanitize(block.name or block.__class__.__name__)
+
+        # ── Unit delay (z⁻¹) blocks ──────────────────────────────────────────
+        # These are LoopBreaker blocks that output the previous-step value of
+        # a shared register (e.g. motor output).  In C they are simply a
+        # memcpy from the shared static array — no step function needed.
+        if getattr(block, 'IS_UNIT_DELAY', False) or \
+                getattr(block.__class__, 'IS_UNIT_DELAY', False):
+            n_out    = (getattr(block, 'OUTPUT_SIZE', None) or
+                        getattr(block.__class__, 'OUTPUT_SIZE', 0))
+            if n_out == 0 and block.output is not None:
+                n_out = len(block.output.value)
+            reg_name = (getattr(block, 'C_REG_NAME', None) or
+                        getattr(block.__class__, 'C_REG_NAME', 'motor_reg'))
+            lines = [
+                f"    /* --- {sn} (z\u207b\u00b9 unit delay) --- */",
+                f"    real32_T y_{sn}[{n_out}];",
+                f"    memcpy(y_{sn}, {reg_name}, sizeof(y_{sn}));",
+                f"    /* {reg_name}[] is updated by the sensor/motor interface "
+                f"before each call to embedsim_loop_step() */",
+                "",
+            ]
+            return "\n".join(lines) + "\n"
+
+        # ── Try to pull metadata set by PYXInspector ─────────────────────────
+        step_func   = getattr(block, 'step_func',   None)
+        n_inputs    = getattr(block, 'NUM_INPUTS',  0)
+        n_outputs   = getattr(block, 'OUTPUT_SIZE', 0)
+        c_sources   = getattr(block, 'C_SOURCES',   [])
+        init_func   = getattr(block, 'init_func',   None)
+
+        # Fallback: check class-level attrs (set by hand in block definition)
+        if not step_func:
+            step_func = getattr(block.__class__, 'step_func', None)
+        if not n_inputs:
+            n_inputs  = getattr(block.__class__, 'NUM_INPUTS', 0)
+        if not n_outputs:
+            n_outputs = getattr(block.__class__, 'OUTPUT_SIZE', 0)
+        if not c_sources:
+            c_sources = getattr(block.__class__, 'C_SOURCES', [])
+
+        # ── On-demand PYXInspector: run now if step_func still missing ────────
+        # This covers the case where __init_subclass__ could not auto-populate
+        # (e.g. relative PYX_FILE path failed) but PYX_FILE is now findable.
+        if not step_func:
+            pyx_file = getattr(block.__class__, 'PYX_FILE', None)
+            if pyx_file:
+                try:
+                    from .pyx_inspector import PYXInspector
+                except ImportError:
+                    try:
+                        from pyx_inspector import PYXInspector
+                    except ImportError:
+                        PYXInspector = None
+                if PYXInspector is not None:
+                    try:
+                        meta = PYXInspector().inspect(pyx_file)
+                        step_func    = meta.step_func    or step_func
+                        init_func    = meta.init_func    or init_func
+                        if not n_inputs:  n_inputs  = meta.n_inputs
+                        if not n_outputs: n_outputs = meta.n_outputs
+                        if not c_sources: c_sources = meta.c_sources
+                        # Cache on the class so next block of same type is free
+                        if meta.step_func:
+                            block.__class__.step_func    = meta.step_func
+                        if meta.state_struct:
+                            block.__class__.state_struct = meta.state_struct
+                    except Exception:
+                        pass
+
+        if not step_func and not c_sources:
+            # Pure Python block inside a region — no C equivalent known
+            return (
+                f"    /* [{sn}] Python-only block — no C step function. "
+                f"Replace with hand-written C or add C_SOURCES + step_func. */\n"
+            )
+
+        if not step_func:
+            # Has C sources but no step function signature deduced
+            return (
+                f"    /* TODO [{sn}] C_SOURCES={c_sources} — "
+                f"set step_func or run PYXInspector to auto-detect. */\n"
+            )
+
+        # ── Determine input wiring ────────────────────────────────────────────
+        # Prefer explicit C_INPUT_MAP if declared on the block:
+        #   C_INPUT_MAP = [("source_name", src_index), ...]
+        #   one entry per element of u[], matching the C function signature.
+        # Fall back to auto-wiring from block.inputs (may be imprecise for
+        # multi-port blocks where some ports are LoopBreakers).
+        c_input_map = (getattr(block, 'C_INPUT_MAP', None) or
+                       getattr(block.__class__, 'C_INPUT_MAP', None))
+
+        total_out = n_outputs if n_outputs > 0 else 1
+        lines = []
+        lines.append(f"    /* --- {sn} ({block.__class__.__name__}) --- */")
+
+        if c_input_map:
+            # Explicit port mapping — precise, handles LoopBreaker inputs
+            total_in = len(c_input_map)
+            lines.append(f"    real32_T u_{sn}[{total_in}];")
+            for k, (src_name, src_idx) in enumerate(c_input_map):
+                src_sn = _sanitize(src_name)
+                lines.append(f"    u_{sn}[{k}] = y_{src_sn}[{src_idx}];")
+        else:
+            # Auto-wiring: pack outputs of all input blocks sequentially
+            in_vars = []
+            for inp_block in block.inputs:
+                inp_sn = _sanitize(inp_block.name or inp_block.__class__.__name__)
+                inp_n_out = getattr(inp_block, 'OUTPUT_SIZE',
+                            getattr(inp_block.__class__, 'OUTPUT_SIZE', 0))
+                if inp_n_out == 0 and inp_block.output is not None:
+                    inp_n_out = len(inp_block.output.value)
+                in_vars.append((inp_sn, inp_n_out))
+
+            total_in = n_inputs if n_inputs > 0 else sum(s for _, s in in_vars)
+
+            if total_in > 0:
+                lines.append(f"    real32_T u_{sn}[{total_in}];")
+                offset = 0
+                for inp_sn, inp_sz in in_vars:
+                    if inp_sz == 1:
+                        lines.append(f"    u_{sn}[{offset}] = y_{inp_sn}[0];")
+                        offset += 1
+                    else:
+                        for k in range(inp_sz):
+                            if offset + k < total_in:
+                                lines.append(
+                                    f"    u_{sn}[{offset + k}] = y_{inp_sn}[{k}];"
+                                )
+                        offset += inp_sz
+
+        # Output buffer
+        lines.append(f"    real32_T y_{sn}[{total_out}];")
+
+        # State struct pointer (if stateful — PYXInspector sets state_struct)
+        state_struct = getattr(block, 'state_struct',
+                       getattr(block.__class__, 'state_struct', ''))
+        if state_struct:
+            lines.append(f"    /* State: {state_struct} {sn}_state; "
+                         f"(declare as file-scope static) */")
+
+        # The actual C call
+        if state_struct:
+            # Stateful: signature typically (Block*, Input*, dt, Output*)
+            lines.append(
+                f"    {step_func}(&{sn}_state, u_{sn}, dt, y_{sn});"
+            )
+        else:
+            # Stateless: (Input*, Output*)
+            lines.append(
+                f"    {step_func}(u_{sn}, y_{sn});"
+            )
+
+        lines.append("")   # blank line between blocks
+        return "\n".join(lines) + "\n"
+
+    # ──────────────────────────────────────────────────────────────────────────
+    # File assembly
+    # ──────────────────────────────────────────────────────────────────────────
+
+    def _gather_headers(self, blocks: list) -> list:
+        """Collect unique header files from all blocks in the region."""
+        seen:    set  = set()
+        headers: list = []
+        for blk in blocks:
+            for src in (getattr(blk, 'C_HEADERS', None) or
+                        getattr(blk.__class__, 'C_HEADERS', [])):
+                if src not in seen:
+                    seen.add(src)
+                    headers.append(src)
+        return headers
+
+    def _gen_c(self, blocks: list) -> str:
+        """Build embedsim_loop.c text."""
+        headers = self._gather_headers(blocks)
+
+        L = [
+            "/* embedsim_loop.c",
+            " * Auto-generated by EmbedSim LoopGenerator (feature 05121967)",
+            " * DO NOT EDIT — re-generate with cg_end.generate_loop()",
+            " */",
+            "",
+            '#include <string.h>   /* memcpy */',
+            '#include "embedsim_loop.h"',
+        ]
+        for h in headers:
+            L.append(f'#include "{h}"')
+
+        L += [
+            "",
+            "",
+            "/* ================================================================",
+            " * embedsim_loop_step",
+            " *",
+            " * Execute one control loop step.  Call at fixed sample rate.",
+            " *",
+            " * Parameters",
+            " * ----------",
+            " * dt  : sample period in seconds  (e.g. 1.0f/10000.0f for 10 kHz)",
+            " * ================================================================",
+            " */",
+            "void embedsim_loop_step(real32_T dt)",
+            "{",
+        ]
+
+        for blk in blocks:
+            L.append(self._emit_block(blk))
+
+        L += [
+            "}",
+            "",
+        ]
+        return "\n".join(L)
+
+    def _gen_h(self, blocks: list, dt_hz: float) -> str:
+        """Build embedsim_loop.h text."""
+        headers = self._gather_headers(blocks)
+
+        L = [
+            "/* embedsim_loop.h",
+            " * Auto-generated by EmbedSim LoopGenerator (feature 05121967)",
+            " * DO NOT EDIT — re-generate with cg_end.generate_loop()",
+            " */",
+            "",
+            "#ifndef EMBEDSIM_LOOP_H",
+            "#define EMBEDSIM_LOOP_H",
+            "",
+            '#include "Sys_Types.h"   /* real32_T */',
+            "",
+        ]
+
+        if dt_hz > 0.0:
+            dt_val = 1.0 / dt_hz
+            L += [
+                f"/* Sample period for a {dt_hz:.0f} Hz control loop */",
+                f"#define EMBEDSIM_DT  ({dt_val:.10f}f)",
+                "",
+            ]
+
+        if headers:
+            L.append("/* Block headers */")
+            for h in headers:
+                L.append(f'#include "{h}"')
+            L.append("")
+
+        # Forward-declare static state structs for stateful blocks
+        statics = []
+        for blk in blocks:
+            state_struct = (getattr(blk, 'state_struct', None) or
+                            getattr(blk.__class__, 'state_struct', ''))
+            if state_struct:
+                sn = _sanitize(blk.name or blk.__class__.__name__)
+                statics.append(f"static {state_struct} {sn}_state;")
+
+        if statics:
+            L.append("/* Persistent state (file-scope statics — one per stateful block) */")
+            L += statics
+            L.append("")
+
+        # Collect unique motor_reg declarations for unit-delay blocks
+        reg_names: set = set()
+        block_names = {_sanitize(blk.name or blk.__class__.__name__) for blk in blocks}
+
+        for blk in blocks:
+            if getattr(blk, 'IS_UNIT_DELAY', False) or \
+                    getattr(blk.__class__, 'IS_UNIT_DELAY', False):
+                n_out    = (getattr(blk, 'OUTPUT_SIZE', None) or
+                            getattr(blk.__class__, 'OUTPUT_SIZE', 0))
+                reg_name = (getattr(blk, 'C_REG_NAME', None) or
+                            getattr(blk.__class__, 'C_REG_NAME', 'motor_reg'))
+                reg_names.add((reg_name, n_out))
+
+            # Also collect extern regs referenced in C_INPUT_MAP
+            c_input_map = (getattr(blk, 'C_INPUT_MAP', None) or
+                           getattr(blk.__class__, 'C_INPUT_MAP', None))
+            if c_input_map:
+                for src_name, src_idx in c_input_map:
+                    src_sn = _sanitize(src_name)
+                    if src_sn not in block_names:
+                        # Not a block — must be an extern register
+                        # Infer size as max index + 1
+                        current = next((n for nm, n in reg_names if nm == src_name), 0)
+                        needed  = src_idx + 1
+                        reg_names.discard((src_name, current))
+                        reg_names.add((src_name, max(current, needed)))
+
+        if reg_names:
+            L.append("/* Shared sensor/motor register — filled by integration layer */")
+            L.append("/* before each call to embedsim_loop_step().                  */")
+            for reg_name, n_out in sorted(reg_names):
+                L.append(f"extern real32_T {reg_name}[{n_out}];")
+            L.append("")
+
+        L += [
+            "/* ── Public API ─────────────────────────────────────────────── */",
+            "",
+            "/**",
+            " * embedsim_loop_init",
+            " * Call once at startup to zero all block states.",
+            " */",
+            "void embedsim_loop_init(void);",
+            "",
+            "/**",
+            " * embedsim_loop_step",
+            " * Call every sample period.  dt = sample period [seconds].",
+            " */",
+            "void embedsim_loop_step(real32_T dt);",
+            "",
+            "#endif /* EMBEDSIM_LOOP_H */",
+            "",
+        ]
+        return "\n".join(L)
+
+
+# =============================================================================
+# MCU target metadata
+# =============================================================================
+
+class MCUTarget:
+    AURIX_TRICORE = 'tricore'
+    CORTEX_M4     = 'CORTEX_M4'
+
+
+__all__ = ['SimBlockBase', 'CodeGenStart', 'CodeGenEnd', 'MCUTarget',
+           'LoopGenerator']
+__version__ = '1.6.0'
+__author__ = 'EmbedSim'

@@ -135,6 +135,46 @@ class VectorBlock:
         >>> g_c  = ScalarGain("g", gain=2.0, use_c_backend=True)  # C
     """
 
+    # ── PYXInspector auto-population hook ────────────────────────────────────
+
+    def __init_subclass__(cls, **kwargs):
+        """
+        Called automatically by Python when any subclass of VectorBlock is
+        defined.  If the subclass declares a PYX_FILE class attribute,
+        PYXInspector is invoked to auto-populate CodeGen metadata:
+            NUM_INPUTS  — total scalar inputs to the C function
+            OUTPUT_SIZE — total scalar outputs from the C function
+            C_SOURCES   — C source file(s) required
+            C_HEADERS   — C header file(s) required
+
+        The attribute is only set if the subclass has not already declared
+        it manually (manual declarations always win).
+
+        Example::
+
+            class SMCBlock(VectorBlock):
+                PYX_FILE = "electrical_blocks/c_src/smc_wrapper.pyx"
+                # NUM_INPUTS, OUTPUT_SIZE etc. are filled in automatically
+
+        If PYX_FILE is not declared the hook is a no-op.
+        If the .pyx file cannot be found, a warning is issued and import
+        continues normally.
+        """
+        super().__init_subclass__(**kwargs)
+        pyx_file = getattr(cls, 'PYX_FILE', None)
+        if pyx_file is not None:
+            try:
+                # Import lazily so pyx_inspector is not a hard dependency
+                # for users who never use CodeGen.
+                from .pyx_inspector import auto_populate_from_pyx
+            except ImportError:
+                try:
+                    # Fallback for scripts that import core_blocks directly
+                    from pyx_inspector import auto_populate_from_pyx
+                except ImportError:
+                    return
+            auto_populate_from_pyx(cls, pyx_file)
+
     def __init__(self,
                  name: str = "",
                  use_c_backend: bool = False,
