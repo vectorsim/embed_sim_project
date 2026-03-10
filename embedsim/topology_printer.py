@@ -95,14 +95,15 @@ def _block_info(block) -> Dict[str, Any]:
 
 def _classify(cls: str, name: str) -> str:
     token = (cls + ' ' + name).lower()
+    # codegen MUST be checked before sink — 'codegenend' contains 'end'
+    if any(x in token for x in ('codegen', 'codegenstart', 'codegenend')):
+        return 'codegen'
     if any(x in token for x in ('step', 'constant', 'source', 'ramp',
                                   'vectorconstant', 'vectorstep')):
         return 'source'
     if any(x in token for x in ('end', 'sink', 'capture',
                                   'vectorend', 'motorcapturesink')):
         return 'sink'
-    if any(x in token for x in ('codegen', 'codegenstart', 'codegenend')):
-        return 'codegen'
     if any(x in token for x in ('delay', 'loopbreaker', 'regdelay',
                                   'unitdelay', 'vectordelay')):
         return 'delay'
@@ -519,11 +520,11 @@ def _render_console(nodes: List[Any], edges: Dict[str, List[str]]) -> str:
 # =============================================================================
 
 # Lane Y centres for the three horizontal bands
-_LANE_Y = {'forward': 110, 'delay': 295, 'plant': 450}
-_NODE_W  = 124
-_NODE_H  = 46
-_H_GAP   = 26
-_MARGIN  = 30
+_LANE_Y = {'forward': 130, 'delay': 340, 'plant': 530}
+_NODE_W  = 160
+_NODE_H  = 60
+_H_GAP   = 40
+_MARGIN  = 40
 
 
 def _layout_nodes(nodes: List[Any],
@@ -589,8 +590,9 @@ def _layout_nodes(nodes: List[Any],
         result[n] = _node_dict(n, recv_x, 'delay')
         delay_fallback_x = recv_x + _NODE_W + _H_GAP
 
-    # Plant — align under their primary forward-path driver
-    plant_x = _MARGIN + (_NODE_W + _H_GAP) * 3   # roughly under smc
+    # Plant — align under their primary forward-path driver, no collisions
+    plant_x = _MARGIN
+    used_plant_x: Set[int] = set()
     for b in plant:
         n = getattr(b, 'name', '')
         driver_names = [src for src, dsts in edges.items() if n in dsts]
@@ -600,6 +602,10 @@ def _layout_nodes(nodes: List[Any],
                 drv_x = result[d]['x']
                 break
         x = drv_x if drv_x is not None else plant_x
+        # Avoid plant node collisions
+        while x in used_plant_x:
+            x += _NODE_W + _H_GAP
+        used_plant_x.add(x)
         result[n] = _node_dict(n, x, 'plant')
         plant_x = x + _NODE_W + _H_GAP
 
@@ -633,8 +639,50 @@ def _render_html(nodes: List[Any],
     canvas_w = max((n['x'] + n['w'] for n in nodes_data), default=800) + 80
     canvas_h = max((n['y'] + n['h'] for n in nodes_data), default=500) + 100
 
+    # ── Compute CodeGen region bounding box ─────────────────────────────────
+    cg_nodes = [n for n in nodes_data if n['cat'] == 'codegen']
+    cg_region = None
+    if len(cg_nodes) >= 2:
+        cg_start_n = min(cg_nodes, key=lambda n: n['x'])
+        cg_end_n   = max(cg_nodes, key=lambda n: n['x'])
+        fwd_y = _LANE_Y['forward'] - _NODE_H // 2
+        pad = 14
+        cg_region = {
+            'x': cg_start_n['x'] - pad,
+            'y': fwd_y - pad - 22,
+            'w': (cg_end_n['x'] + cg_end_n['w']) - cg_start_n['x'] + pad * 2,
+            'h': _NODE_H + pad * 2 + 22,
+        }
+    rj = json.dumps(cg_region, ensure_ascii=False)
+
     nj = json.dumps(nodes_data, ensure_ascii=False)
     ej = json.dumps(edges_data, ensure_ascii=False)
+
+    # ── Vivid light theme — all colours defined here in Python ───────────────
+    # Change these constants to restyle all future exports. No HTML editing.
+    C = dict(
+        bg          = "#ffffff",        # pure white page background
+        panel       = "#ffffff",        # header / inspector panel
+        border      = "#7090c0",        # panel borders — clearly visible
+        text        = "#0a1020",        # near-black primary text
+        text_dim    = "#1a3060",        # dark secondary text
+        canvas_bg   = "#f0f6ff",        # diagram background — faint blue tint
+        # Block category colours — deep, fully saturated
+        col_source  = "#0055cc",        # strong blue    — VectorConstant
+        col_sink    = "#0055cc",        # strong blue    — VectorEnd
+        col_control = "#007020",        # deep green     — PI, SMC
+        col_xform   = "#b03800",        # deep orange    — Clarke, Park
+        col_plant   = "#6600aa",        # deep purple    — PMSM FMU
+        col_delay   = "#cc0000",        # pure red       — z⁻¹ loop breaker
+        col_codegen = "#806000",        # deep gold      — CodeGen markers
+        col_generic = "#1a3a5c",        # deep slate     — everything else
+        col_proc    = "#1a3a5c",        # deep slate     — processing
+        col_noise   = "#005588",        # deep teal-blue — NoisySensorBlock
+        # Band background tints
+        band_fwd    = "rgba(0,60,200,0.08)",
+        band_fb     = "rgba(180,0,0,0.08)",
+        band_plant  = "rgba(80,0,160,0.08)",
+    )
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -642,45 +690,78 @@ def _render_html(nodes: List[Any],
 <meta charset="UTF-8">
 <title>{title}</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;600&family=Syne:wght@400;700;800&display=swap');
+/* ═══════════════════════════════════════════════════════════════
+   EmbedSim Topology Viewer — Vivid light theme
+   All colours come from topology_printer.py Python constants.
+   Change them there; re-run; new HTML is automatically updated.
+   ═══════════════════════════════════════════════════════════════ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
 :root{{
-  --bg:#07090f;--panel:#0d1220;--border:#1a2a40;--text:#c0d4f0;--dim:#3a5070;
-  --source:#00cfff;--sink:#00cfff;--codegen:#f0d030;--control:#00e5a0;
-  --transform:#ff9f40;--plant:#b085ff;--delay:#ff5f5f;
-  --processing:#60d0ff;--generic:#607090;
+  --bg:{C['bg']};
+  --panel:{C['panel']};
+  --border:{C['border']};
+  --text:{C['text']};
+  --dim:{C['text_dim']};
+  --source:{C['col_source']};
+  --sink:{C['col_sink']};
+  --control:{C['col_control']};
+  --transform:{C['col_xform']};
+  --plant:{C['col_plant']};
+  --delay:{C['col_delay']};
+  --codegen:{C['col_codegen']};
+  --processing:{C['col_proc']};
+  --generic:{C['col_generic']};
 }}
 *{{box-sizing:border-box;margin:0;padding:0;}}
 html,body{{width:100%;height:100%;background:var(--bg);color:var(--text);
-  font-family:'IBM Plex Mono',monospace;overflow:hidden;}}
+  font-family:'Inter',sans-serif;font-size:16px;overflow:hidden;}}
 header{{display:flex;align-items:center;justify-content:space-between;
-  padding:10px 20px;border-bottom:1px solid var(--border);background:var(--panel);}}
-header h1{{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;
-  color:#e8f0ff;letter-spacing:.06em;}}
-header p{{font-size:.65rem;color:var(--dim);margin-top:2px;}}
-.hdr-r{{display:flex;gap:8px;align-items:center;}}
-.badge{{font-size:.58rem;padding:2px 8px;border-radius:3px;
-  background:#0a1828;border:1px solid var(--border);color:var(--dim);}}
-#main{{display:flex;width:100%;height:calc(100vh - 50px);}}
-#cw{{flex:1;overflow:auto;position:relative;}}
+  padding:14px 24px;border-bottom:3px solid var(--border);background:var(--panel);
+  box-shadow:0 2px 8px rgba(0,0,0,0.10);}}
+header h1{{font-size:1.3rem;font-weight:700;color:var(--text);letter-spacing:.02em;}}
+header p{{font-size:14px;color:var(--dim);margin-top:3px;}}
+.hdr-r{{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}}
+.badge{{font-family:'JetBrains Mono',monospace;font-size:13px;padding:4px 12px;
+  border-radius:4px;background:var(--bg);border:2px solid var(--border);
+  color:var(--dim);font-weight:700;}}
+/* Zoom buttons */
+.zoom-bar{{display:flex;gap:6px;align-items:center;margin-left:16px;}}
+.zbtn{{width:36px;height:36px;border:2px solid var(--border);border-radius:6px;
+  background:var(--panel);color:var(--text);font-size:1.1rem;font-weight:700;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:background .15s;user-select:none;}}
+.zbtn:hover{{background:#e8f0ff;border-color:var(--control);}}
+#zoom-label{{font-family:'JetBrains Mono',monospace;font-size:13px;
+  color:var(--dim);min-width:44px;text-align:center;font-weight:700;}}
+#main{{display:flex;width:100%;height:calc(100vh - 64px);}}
+#cw{{flex:1;overflow:hidden;position:relative;cursor:grab;background:{C['canvas_bg']};}}
+#cw:active{{cursor:grabbing;}}
 canvas{{display:block;}}
-#insp{{width:260px;min-width:260px;background:var(--panel);
-  border-left:1px solid var(--border);display:flex;flex-direction:column;transition:width .2s;}}
+#insp{{width:300px;min-width:300px;background:var(--panel);
+  border-left:3px solid var(--border);display:flex;flex-direction:column;
+  transition:width .2s,min-width .2s;box-shadow:-2px 0 8px rgba(0,0,0,0.08);}}
 #insp.collapsed{{width:0;min-width:0;overflow:hidden;}}
-#ih{{padding:12px 14px 8px;border-bottom:1px solid var(--border);
-  font-family:'Syne',sans-serif;font-size:.75rem;font-weight:700;color:#e8f0ff;
-  letter-spacing:.08em;display:flex;justify-content:space-between;align-items:center;}}
-#ic{{padding:14px;overflow-y:auto;flex:1;font-size:.68rem;line-height:1.7;}}
-.ir{{display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid #111c2a;}}
-.ik{{color:var(--dim);}} .iv{{color:var(--text);text-align:right;max-width:140px;word-break:break-all;}}
-.is{{font-size:.6rem;color:var(--dim);margin:8px 0 4px;letter-spacing:.1em;}}
-#leg{{position:absolute;bottom:14px;left:14px;background:rgba(7,9,15,.9);
-  border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:.62rem;
-  display:grid;grid-template-columns:1fr 1fr;gap:4px 18px;}}
-.lg{{display:flex;align-items:center;gap:5px;color:var(--dim);}}
-.ld{{width:8px;height:8px;border-radius:2px;flex-shrink:0;}}
-#tip{{position:fixed;background:#0d1828;border:1px solid var(--border);
-  border-radius:6px;padding:8px 12px;font-size:.63rem;line-height:1.6;
-  pointer-events:none;opacity:0;transition:opacity .12s;z-index:999;max-width:240px;}}
+#ih{{padding:16px 18px 12px;border-bottom:2px solid var(--border);
+  font-size:15px;font-weight:700;color:var(--text);letter-spacing:.07em;
+  display:flex;justify-content:space-between;align-items:center;}}
+#ic{{padding:16px 18px;overflow-y:auto;flex:1;font-size:14px;line-height:1.9;}}
+.ir{{display:flex;justify-content:space-between;padding:5px 0;
+  border-bottom:1px solid #d0dff0;font-size:14px;}}
+.ik{{color:var(--dim);font-weight:700;}}
+.iv{{color:var(--text);text-align:right;max-width:170px;word-break:break-all;
+  font-family:'JetBrains Mono',monospace;font-size:13px;}}
+.is{{font-size:12px;color:var(--dim);font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;margin:12px 0 4px;}}
+#leg{{position:absolute;bottom:16px;left:16px;background:rgba(255,255,255,0.97);
+  border:2px solid var(--border);border-radius:10px;padding:12px 18px;font-size:13px;
+  display:grid;grid-template-columns:1fr 1fr;gap:7px 22px;
+  box-shadow:0 2px 12px rgba(0,0,0,0.12);}}
+.lg{{display:flex;align-items:center;gap:8px;color:var(--dim);font-weight:700;}}
+.ld{{width:16px;height:16px;border-radius:4px;flex-shrink:0;}}
+#tip{{position:fixed;background:var(--panel);border:2px solid var(--border);
+  border-radius:8px;padding:10px 16px;font-size:14px;line-height:1.7;
+  pointer-events:none;opacity:0;transition:opacity .12s;z-index:999;max-width:280px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.14);color:var(--text);}}
 #tip.show{{opacity:1;}}
 </style>
 </head>
@@ -688,13 +769,19 @@ canvas{{display:block;}}
 <header>
   <div>
     <h1>⬡ EmbedSim — Block Topology</h1>
-    <p>Hover to inspect connections · click for parameters</p>
+    <p>Scroll to zoom · drag to pan · click any block for details</p>
   </div>
   <div class="hdr-r">
     <span class="badge" id="bt">— blocks</span>
     <span class="badge" id="bd">— dynamic</span>
     <span class="badge" id="bl">— loop-breakers</span>
     <span class="badge" id="bc">— C-backend</span>
+    <div class="zoom-bar">
+      <button class="zbtn" id="z-out" title="Zoom out">−</button>
+      <span id="zoom-label">100%</span>
+      <button class="zbtn" id="z-in" title="Zoom in">+</button>
+      <button class="zbtn" id="z-fit" style="width:auto;padding:0 10px;font-size:.8rem" title="Fit all">Fit</button>
+    </div>
   </div>
 </header>
 <div id="main">
@@ -702,205 +789,281 @@ canvas{{display:block;}}
     <canvas id="c"></canvas>
     <div id="leg">
       <div class="lg"><div class="ld" style="background:var(--source)"></div>Source / Sink</div>
-      <div class="lg"><div class="ld" style="background:var(--control)"></div>Controller ⚡</div>
-      <div class="lg"><div class="ld" style="background:var(--codegen)"></div>CodeGen</div>
+      <div class="lg"><div class="ld" style="background:var(--control)"></div>Controller</div>
+      <div class="lg"><div class="ld" style="background:var(--codegen);border:2px dashed var(--codegen)"></div>CodeGen Region</div>
       <div class="lg"><div class="ld" style="background:var(--transform)"></div>Transform</div>
       <div class="lg"><div class="ld" style="background:var(--plant)"></div>Plant / FMU</div>
       <div class="lg"><div class="ld" style="background:var(--delay)"></div>z⁻¹ Delay</div>
     </div>
   </div>
   <div id="insp">
-    <div id="ih">INSPECTOR
-      <span style="cursor:pointer;color:var(--dim)" onclick="document.getElementById('insp').classList.toggle('collapsed')">✕</span>
+    <div id="ih">BLOCK INSPECTOR
+      <span style="cursor:pointer;color:var(--dim);font-size:1.2rem"
+            onclick="document.getElementById('insp').classList.toggle('collapsed')">✕</span>
     </div>
     <div id="ic">
-      <div style="color:var(--dim);font-size:.65rem;padding-top:24px;text-align:center">
-        Click any block to inspect
+      <div style="color:var(--dim);font-size:14px;padding-top:32px;text-align:center;line-height:2.2">
+        Click any block<br>to inspect connections<br>and parameters
       </div>
     </div>
   </div>
 </div>
 <div id="tip"></div>
 <script>
+/* ── Data ── */
 const NODES={nj};
 const EDGES={ej};
-const CC={{source:'#00cfff',sink:'#00cfff',codegen:'#f0d030',
-  control:'#00e5a0',transform:'#ff9f40',plant:'#b085ff',
-  delay:'#ff5f5f',processing:'#60d0ff',generic:'#607090'}};
+const CG_REGION={rj};
+
+/* ── Category colours — vivid, fully saturated ── */
+const CC={{
+  source:'{C['col_source']}',sink:'{C['col_sink']}',
+  codegen:'{C['col_codegen']}',control:'{C['col_control']}',
+  transform:'{C['col_xform']}',plant:'{C['col_plant']}',
+  delay:'{C['col_delay']}',processing:'{C['col_proc']}',
+  generic:'{C['col_generic']}',noise:'{C['col_noise']}',
+}};
+
+/* Mark NoisySensorBlock as noise category */
+NODES.forEach(n=>{{ if(n.cls==='NoisySensorBlock')n.cat='noise'; }});
+
+/* ── Swim-lane bands ── */
 const BANDS=[
-  {{y:68, h:92,  lbl:'FORWARD PATH',       col:'rgba(18,50,90,0.5)'}},
-  {{y:258,h:84,  lbl:'FEEDBACK  z\u207B\u00B9', col:'rgba(55,12,12,0.5)'}},
-  {{y:410,h:92,  lbl:'PLANT',              col:'rgba(18,8,48,0.5)'}},
+  {{y:84,  h:112, lbl:'FORWARD PATH', col:'{C['band_fwd']}'}},
+  {{y:305, h:100, lbl:'FEEDBACK  z\u207B\u00B9', col:'{C['band_fb']}'}},
+  {{y:494, h:112, lbl:'PLANT', col:'{C['band_plant']}'}},
 ];
+
 const canvas=document.getElementById('c');
 const ctx=canvas.getContext('2d');
 const wrap=document.getElementById('cw');
 const nm={{}};
 NODES.forEach(n=>nm[n.id]=n);
-let hov=null;
 const BW={canvas_w}, BH={canvas_h};
 
-function resize(){{
-  canvas.width=Math.max(wrap.clientWidth,BW);
-  canvas.height=Math.max(wrap.clientHeight,BH);
+/* ── Viewport state ── */
+let scale=1, originX=0, originY=0;
+let isPanning=false, panX=0, panY=0, panOX=0, panOY=0;
+let hov=null;
+
+function toDiag(sx,sy){{return{{x:(sx-originX)/scale,y:(sy-originY)/scale}};}}
+
+function fitToView(){{
+  const vw=wrap.clientWidth-40, vh=wrap.clientHeight-40;
+  scale=Math.min(vw/BW,vh/BH,1.5);
+  originX=(wrap.clientWidth-BW*scale)/2;
+  originY=(wrap.clientHeight-BH*scale)/2;
+  document.getElementById('zoom-label').textContent=Math.round(scale*100)+'%';
   draw();
 }}
 
-function rr(x,y,w,h,r){{
-  ctx.beginPath();
-  ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);
-  ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);
-  ctx.arcTo(x,y,x+w,y,r);ctx.closePath();
+function zoom(factor,cx,cy){{
+  cx=cx??wrap.clientWidth/2; cy=cy??wrap.clientHeight/2;
+  originX=cx-(cx-originX)*factor;
+  originY=cy-(cy-originY)*factor;
+  scale=Math.max(0.15,Math.min(scale*factor,5));
+  document.getElementById('zoom-label').textContent=Math.round(scale*100)+'%';
+  draw();
 }}
 
+/* ── Helpers ── */
+function rr(x,y,w,h,r){{
+  ctx.beginPath();ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();
+}}
 function ah(x,y,ang,sz,col){{
-  ctx.save();ctx.fillStyle=col;
-  ctx.translate(x,y);ctx.rotate(ang);
-  ctx.beginPath();ctx.moveTo(0,0);
-  ctx.lineTo(-sz,-sz*.42);ctx.lineTo(-sz,sz*.42);
+  ctx.save();ctx.fillStyle=col;ctx.translate(x,y);ctx.rotate(ang);
+  ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(-sz,-sz*.42);ctx.lineTo(-sz,sz*.42);
   ctx.closePath();ctx.fill();ctx.restore();
 }}
 
+/* ── Draw edge ── */
 function drawEdge(e){{
-  const s=nm[e.src],d=nm[e.dst];
-  if(!s||!d)return;
-  const col=e.lb?CC.delay:'#2a5a8a';
-  const alp=e.lb?0.55:0.75;
-  const lw=e.lb?1.1:1.6;
+  const s=nm[e.src],d=nm[e.dst];if(!s||!d)return;
+  const col=e.lb?'{C['col_delay']}':'#2255bb';
+  const lw=e.lb?2.5:2.0;
   ctx.save();
-  ctx.strokeStyle=col;ctx.lineWidth=lw;ctx.globalAlpha=alp;
-  ctx.setLineDash(e.lb?[5,4]:[]);ctx.lineJoin='round';
-  const sx=s.x+s.w, sy=s.y+s.h/2;
-  const dx=d.x,     dy=d.y+d.h/2;
-  let midLblX=0, midLblY=0;
+  ctx.strokeStyle=col;ctx.lineWidth=lw;ctx.globalAlpha=e.lb?1.0:0.85;
+  ctx.setLineDash(e.lb?[8,5]:[]);ctx.lineJoin='round';
+  const sx=s.x+s.w,sy=s.y+s.h/2,dx=d.x,dy=d.y+d.h/2;
+  let mlx=0,mly=0;
   if(sx>dx+20){{
     const by=Math.max(s.y+s.h,d.y+d.h)+30;
-    const x1=s.x+s.w/2, x2=d.x+d.w/2;
-    ctx.beginPath();ctx.moveTo(x1,s.y+s.h);
-    ctx.lineTo(x1,by);ctx.lineTo(x2,by);ctx.lineTo(x2,d.y+d.h);
-    ctx.stroke();ah(x2,d.y+d.h,Math.PI/2,7,col);
-    midLblX=(x1+x2)/2; midLblY=by;
+    const x1=s.x+s.w/2,x2=d.x+d.w/2;
+    ctx.beginPath();ctx.moveTo(x1,s.y+s.h);ctx.lineTo(x1,by);
+    ctx.lineTo(x2,by);ctx.lineTo(x2,d.y+d.h);ctx.stroke();
+    ah(x2,d.y+d.h,Math.PI/2,9,col);
+    mlx=(x1+x2)/2;mly=by;
   }}else if(Math.abs(sy-dy)<6){{
     ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(dx,dy);ctx.stroke();
-    ah(dx,dy,0,7,col);
-    midLblX=(sx+dx)/2; midLblY=sy-10;
+    ah(dx,dy,0,9,col);mlx=(sx+dx)/2;mly=sy-12;
   }}else{{
     const mx=(sx+dx)/2;
     ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(mx,sy);
     ctx.lineTo(mx,dy);ctx.lineTo(dx,dy);ctx.stroke();
-    ah(dx,dy,0,7,col);
-    midLblX=mx; midLblY=(sy+dy)/2;
+    ah(dx,dy,0,9,col);mlx=mx;mly=(sy+dy)/2;
   }}
-  // Draw output_label of source block on the wire
+  /* Signal label on wire */
   const lbl=s.lbl;
   if(lbl&&!e.lb){{
-    ctx.globalAlpha=0.75;
-    ctx.font='italic 7.5px "IBM Plex Mono"';
-    ctx.fillStyle='#4a8ab0';
+    ctx.globalAlpha=0.95;
+    ctx.font='bold 11px "JetBrains Mono",monospace';
+    const tw=ctx.measureText(lbl).width+8;
+    ctx.fillStyle='rgba(255,255,255,0.92)';
+    ctx.fillRect(mlx-tw/2,mly-8,tw,16);
+    ctx.fillStyle=CC[s.cat]||CC.generic;
     ctx.textAlign='center';ctx.textBaseline='middle';
-    // small pill background
-    const tw=ctx.measureText(lbl).width+6;
-    ctx.fillStyle='rgba(7,9,15,0.75)';
-    ctx.fillRect(midLblX-tw/2,midLblY-7,tw,13);
-    ctx.fillStyle='#5aaad0';
-    ctx.fillText(lbl,midLblX,midLblY);
+    ctx.fillText(lbl,mlx,mly);
   }}
   ctx.restore();
 }}
 
+/* ── Draw node ── */
 function drawNode(n,hvr){{
   const col=CC[n.cat]||CC.generic;
   const{{x,y,w,h}}=n;
+  /* Glow for hover/dynamic */
   if(hvr||n.dyn){{
-    ctx.save();ctx.shadowColor=col;ctx.shadowBlur=hvr?22:10;
-    rr(x,y,w,h,7);ctx.strokeStyle=col;ctx.lineWidth=.1;ctx.stroke();ctx.restore();
+    ctx.save();ctx.shadowColor=col;ctx.shadowBlur=hvr?18:8;
+    rr(x,y,w,h,8);ctx.strokeStyle=col;ctx.lineWidth=.5;ctx.stroke();ctx.restore();
   }}
-  ctx.save();rr(x,y,w,h,7);
-  ctx.fillStyle=hvr?'#0f1e38':'#080f1e';ctx.fill();
-  ctx.strokeStyle=col;ctx.lineWidth=n.dyn?2:(hvr?2:1.3);
-  ctx.setLineDash(n.lb?[4,3]:[]);ctx.stroke();ctx.restore();
-  const icon=n.dyn?'\u26A1':n.lb?'z\u207B\u00B9':'';
-  const cf=n.c?'\u00B7C':'';
-  const lbl=(icon?icon+' ':'')+n.id+cf;
+  /* Fill — white with category tint strip at top */
+  ctx.save();rr(x,y,w,h,8);
+  ctx.fillStyle=hvr?'#ddeeff':'#ffffff';ctx.fill();
+  /* Top colour stripe */
+  ctx.beginPath();ctx.rect(x+2,y+2,w-4,13);
+  ctx.fillStyle=col;ctx.globalAlpha=0.22;ctx.fill();ctx.globalAlpha=1;
+  /* Border — thick, vivid */
+  ctx.setLineDash(n.lb?[6,4]:[]);
+  ctx.strokeStyle=col;ctx.lineWidth=n.dyn?4.5:3.5;ctx.stroke();ctx.restore();
+  /* Block name + class — proportional vertical positioning */
+  const icon=n.dyn?'\u26A1 ':n.lb?'z\u207B\u00B9 ':'';
+  const cBadge=n.c?' \u00B7C':'';
+  const nameStr=icon+n.id+cBadge;
+  const mw=w-16;
   ctx.save();
-  ctx.fillStyle=col;ctx.font='600 9px "IBM Plex Mono"';
   ctx.textAlign='center';ctx.textBaseline='middle';
-  const mw=w-12;let disp=lbl;
+  /* Name row — 38% down */
+  ctx.fillStyle=col;ctx.font='bold 13px "JetBrains Mono",monospace';
+  let disp=nameStr;
   while(ctx.measureText(disp).width>mw&&disp.length>4)disp=disp.slice(0,-1);
-  if(disp!==lbl)disp=disp.slice(0,-2)+'\u2026';
-  ctx.fillText(disp,x+w/2,y+h/2-7);
-  ctx.fillStyle='rgba(90,140,200,0.65)';ctx.font='7.5px "IBM Plex Mono"';
+  if(disp!==nameStr)disp=disp.slice(0,-1)+'\u2026';
+  ctx.fillText(disp,x+w/2,y+h*0.37);
+  /* Divider line */
+  ctx.strokeStyle=col;ctx.globalAlpha=0.18;ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(x+10,y+h*0.55);ctx.lineTo(x+w-10,y+h*0.55);ctx.stroke();
+  ctx.globalAlpha=1;
+  /* Class row — 72% down */
+  ctx.fillStyle='{C['text_dim']}';ctx.font='10px "JetBrains Mono",monospace';
   let cls=n.cls;
   while(ctx.measureText(cls).width>mw&&cls.length>4)cls=cls.slice(0,-1);
-  if(cls!==n.cls)cls=cls.slice(0,-2)+'\u2026';
-  ctx.fillText(cls,x+w/2,y+h/2+7);
+  if(cls!==n.cls)cls=cls.slice(0,-1)+'\u2026';
+  ctx.fillText(cls,x+w/2,y+h*0.72);
   ctx.restore();
 }}
 
+/* ── Draw CodeGen region highlight ── */
+function drawCodeGenRegion(){{
+  if(!CG_REGION)return;
+  const{{x,y,w,h}}=CG_REGION;
+  const col='{C['col_codegen']}';
+  ctx.save();
+  /* Filled background */
+  ctx.fillStyle='rgba(184,120,0,0.07)';
+  ctx.beginPath();ctx.roundRect(x,y,w,h,12);ctx.fill();
+  /* Dashed border */
+  ctx.strokeStyle=col;ctx.lineWidth=2.5;ctx.setLineDash([10,6]);
+  ctx.beginPath();ctx.roundRect(x,y,w,h,12);ctx.stroke();
+  ctx.setLineDash([]);
+  /* Label pill top-left */
+  ctx.font='bold 11px "JetBrains Mono",monospace';
+  const lbl='\u2B21 CodeGen Region \u2014 Aurix TriCore';
+  const tw=ctx.measureText(lbl).width+16;
+  ctx.fillStyle='rgba(255,248,220,0.97)';
+  ctx.beginPath();ctx.roundRect(x+10,y+5,tw,20,6);ctx.fill();
+  ctx.strokeStyle=col;ctx.lineWidth=1.5;ctx.setLineDash([]);
+  ctx.beginPath();ctx.roundRect(x+10,y+5,tw,20,6);ctx.stroke();
+  ctx.fillStyle=col;ctx.textAlign='left';ctx.textBaseline='middle';
+  ctx.fillText(lbl,x+18,y+15);
+  ctx.restore();
+}}
+
+/* ── Draw swim-lane bands ── */
 function drawBands(){{
   BANDS.forEach(b=>{{
-    ctx.save();ctx.fillStyle=b.col;ctx.fillRect(0,b.y,canvas.width,b.h);
-    ctx.fillStyle='rgba(140,180,220,0.32)';ctx.font='8px "IBM Plex Mono"';
-    ctx.textBaseline='top';ctx.fillText(b.lbl,12,b.y+5);ctx.restore();
+    ctx.save();ctx.fillStyle=b.col;ctx.fillRect(0,b.y,BW+80,b.h);
+    ctx.fillStyle='rgba(10,20,60,0.55)';
+    ctx.font='bold 14px "Inter",sans-serif';
+    ctx.textBaseline='top';ctx.fillText(b.lbl,14,b.y+6);ctx.restore();
   }});
 }}
 
+/* ── Main draw ── */
 function draw(){{
+  canvas.width=wrap.clientWidth;canvas.height=wrap.clientHeight;
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.fillStyle='#07090f';ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle='{C['canvas_bg']}';ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.save();ctx.translate(originX,originY);ctx.scale(scale,scale);
   drawBands();
+  drawCodeGenRegion();
   EDGES.forEach(drawEdge);
   NODES.forEach(n=>drawNode(n,n.id===hov));
+  ctx.restore();
 }}
 
+/* ── Hit test ── */
 function hit(mx,my){{
-  return NODES.find(n=>mx>=n.x&&mx<=n.x+n.w&&my>=n.y&&my<=n.y+n.h)||null;
+  const d=toDiag(mx,my);
+  return NODES.find(n=>d.x>=n.x&&d.x<=n.x+n.w&&d.y>=n.y&&d.y<=n.y+n.h)||null;
 }}
 
+/* ── Tooltip ── */
 const tip=document.getElementById('tip');
 canvas.addEventListener('mousemove',e=>{{
   const r=canvas.getBoundingClientRect();
-  const h=hit(e.clientX-r.left,e.clientY-r.top);
+  const h=isPanning?null:hit(e.clientX-r.left,e.clientY-r.top);
   if(h){{
     canvas.style.cursor='pointer';
     if(hov!==h.id){{hov=h.id;draw();}}
     const inc=EDGES.filter(ev=>ev.dst===h.id).map(ev=>ev.src);
     const out=EDGES.filter(ev=>ev.src===h.id).map(ev=>ev.dst);
-    const L=[`<strong style="color:${{CC[h.cat]}}">${{h.id}}</strong>`,
-             `<span style="color:#3a6080">${{h.cls}}</span>`];
-    if(h.lbl)L.push(`<span style="color:#5aaad0">\u21a3 ${{h.lbl}}</span>`);
-    if(inc.length)L.push(`\u2190 ${{inc.join(', ')}}`);
-    if(out.length)L.push(`\u2192 ${{out.join(', ')}}`);
+    const col=CC[h.cat]||CC.generic;
+    const L=[`<strong style="color:${{col}};font-size:15px">${{h.id}}</strong>`,
+             `<span style="color:{C['text_dim']};font-size:13px">${{h.cls}}</span>`];
+    if(h.lbl)L.push(`<span style="color:${{col}}">&#8611; ${{h.lbl}}</span>`);
+    if(inc.length)L.push(`<span style="color:{C['text_dim']}">&#8592; ${{inc.join(', ')}}</span>`);
+    if(out.length)L.push(`<span style="color:{C['text_dim']}">&#8594; ${{out.join(', ')}}</span>`);
     if(h.dyn)L.push('\u26A1 dynamic');
     if(h.lb)L.push('z\u207B\u00B9 loop-breaker');
     if(h.c)L.push('C backend');
     tip.innerHTML=L.join('<br>');
-    tip.style.left=(e.clientX+14)+'px';tip.style.top=(e.clientY+8)+'px';
+    tip.style.left=(e.clientX+16)+'px';tip.style.top=(e.clientY+10)+'px';
     tip.classList.add('show');
   }}else{{
-    canvas.style.cursor='default';
+    canvas.style.cursor=isPanning?'grabbing':'grab';
     if(hov!==null){{hov=null;draw();}}
     tip.classList.remove('show');
   }}
 }});
 
+/* ── Inspector panel (click) ── */
 canvas.addEventListener('click',e=>{{
   const r=canvas.getBoundingClientRect();
-  const h=hit(e.clientX-r.left,e.clientY-r.top);
-  if(!h)return;
-  const col=CC[h.cat];
-  let html=`<div style="font-size:.9rem;font-weight:600;color:${{col}};margin-bottom:2px">${{h.id}}</div>`;
-  html+=`<div style="color:var(--dim);margin-bottom:6px">${{h.cls}}</div>`;
-  if(h.lbl)html+=`<div style="color:#5aaad0;font-size:.72rem;margin-bottom:8px">\u21a3&nbsp;${{h.lbl}}</div>`;
-  const fl=[];if(h.dyn)fl.push('\u26A1 dynamic');if(h.lb)fl.push('z\u207B\u00B9 loop-breaker');if(h.c)fl.push('C backend');
-  if(fl.length)html+=`<div class="is">${{fl.join('  \u00B7  ')}}</div>`;
+  const h=hit(e.clientX-r.left,e.clientY-r.top);if(!h)return;
+  const col=CC[h.cat]||CC.generic;
   const inc=EDGES.filter(ev=>ev.dst===h.id).map(ev=>ev.src);
   const out=EDGES.filter(ev=>ev.src===h.id).map(ev=>ev.dst);
-  html+='<div class="is">CONNECTIONS</div>';
-  if(inc.length)html+=`<div class="ir"><span class="ik">inputs</span><span class="iv">${{inc.join(', ')}}</span></div>`;
-  if(out.length)html+=`<div class="ir"><span class="ik">outputs to</span><span class="iv">${{out.join(', ')}}</span></div>`;
+  let html=`<div style="font-size:1.15rem;font-weight:700;color:${{col}};margin-bottom:4px">${{h.id}}</div>`;
+  html+=`<div style="color:{C['text_dim']};margin-bottom:8px;font-family:'JetBrains Mono',monospace;font-size:13px">${{h.cls}}</div>`;
+  if(h.lbl)html+=`<div style="color:${{col}};font-family:'JetBrains Mono',monospace;font-size:13px;margin-bottom:10px">&#8611; ${{h.lbl}}</div>`;
+  const fl=[];if(h.dyn)fl.push('\u26A1 dynamic');if(h.lb)fl.push('z\u207B\u00B9 loop-breaker');if(h.c)fl.push('C backend');
+  if(fl.length)html+=`<div class="is">${{fl.join(' &middot; ')}}</div>`;
+  html+='<div class="is">Connections</div>';
+  if(inc.length)html+=`<div class="ir"><span class="ik">inputs from</span><span class="iv">${{inc.join('<br>')}}</span></div>`;
+  if(out.length)html+=`<div class="ir"><span class="ik">outputs to</span><span class="iv">${{out.join('<br>')}}</span></div>`;
   if(Object.keys(h.attrs).length){{
-    html+='<div class="is">PARAMETERS</div>';
+    html+='<div class="is">Parameters</div>';
     for(const[k,v]of Object.entries(h.attrs))
       html+=`<div class="ir"><span class="ik">${{k}}</span><span class="iv">${{v}}</span></div>`;
   }}
@@ -910,13 +1073,37 @@ canvas.addEventListener('click',e=>{{
 
 canvas.addEventListener('mouseleave',()=>{{hov=null;tip.classList.remove('show');draw();}});
 
+/* ── Pan ── */
+canvas.addEventListener('mousedown',e=>{{
+  isPanning=true;panX=e.clientX;panY=e.clientY;panOX=originX;panOY=originY;
+  canvas.style.cursor='grabbing';
+}});
+window.addEventListener('mousemove',e=>{{
+  if(!isPanning)return;
+  originX=panOX+(e.clientX-panX);originY=panOY+(e.clientY-panY);draw();
+}});
+window.addEventListener('mouseup',()=>{{isPanning=false;canvas.style.cursor='grab';}});
+
+/* ── Scroll zoom ── */
+wrap.addEventListener('wheel',e=>{{
+  e.preventDefault();
+  const r=canvas.getBoundingClientRect();
+  zoom(e.deltaY<0?1.12:0.89,e.clientX-r.left,e.clientY-r.top);
+}},{{passive:false}});
+
+/* ── Zoom buttons ── */
+document.getElementById('z-in').addEventListener('click',()=>zoom(1.25));
+document.getElementById('z-out').addEventListener('click',()=>zoom(0.80));
+document.getElementById('z-fit').addEventListener('click',fitToView);
+
+/* ── Badge counters ── */
 document.getElementById('bt').textContent=NODES.length+' blocks';
 document.getElementById('bd').textContent=NODES.filter(n=>n.dyn).length+' dynamic';
 document.getElementById('bl').textContent=NODES.filter(n=>n.lb).length+' loop-breakers';
 document.getElementById('bc').textContent=NODES.filter(n=>n.c).length+' C-backend';
 
-window.addEventListener('resize',resize);
-resize();
+window.addEventListener('resize',fitToView);
+fitToView();
 </script>
 </body>
 </html>"""

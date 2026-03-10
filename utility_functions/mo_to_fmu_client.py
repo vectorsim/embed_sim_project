@@ -108,12 +108,38 @@ class MoParser:
     _RE_START = re.compile(r'start\s*=\s*([0-9eE+\-\.]+)')
     _RE_UNIT  = re.compile(r'\[([^\]]+)\]')
 
+    # Track protected sections
+    _RE_PROTECTED_START = re.compile(r'^\s*protected\s*$', re.MULTILINE)
+    _RE_END = re.compile(r'^\s*end\s+\w+\s*;?\s*$', re.MULTILINE)
+
     def __init__(self, mo_path: str):
         if not os.path.exists(mo_path):
             raise FileNotFoundError(f"File not found: {mo_path}")
         self.mo_path = mo_path
         with open(mo_path, "r", encoding="utf-8") as f:
             self._src = f.read()
+
+    def _is_in_protected_section(self, match_start: int) -> bool:
+        """
+        Check if the position is within a protected section.
+        Returns True if there's a 'protected' keyword before this position
+        and no subsequent 'end' keyword before this position.
+        """
+        src_before = self._src[:match_start]
+
+        # Find the last 'protected' before this position
+        protected_positions = [m.end() for m in self._RE_PROTECTED_START.finditer(src_before)]
+        if not protected_positions:
+            return False
+
+        last_protected = max(protected_positions)
+
+        # Check if there's an 'end' after this protected but before our position
+        end_before = [m.start() for m in self._RE_END.finditer(src_before)
+                     if m.start() > last_protected]
+
+        # If we're after protected and no end before us, we're in protected section
+        return not end_before
 
     def parse(self) -> ModelInfo:
         src = self._src
@@ -152,13 +178,18 @@ class MoParser:
             info.outputs.append(ModelVariable(name, desc, unit, default))
 
         # ── State/algebraic variables → also outputs ─────────────────
-        # (only add if not already in outputs)
+        # (only add if not already in outputs and not in protected section)
         existing_out_names = {v.name for v in info.outputs}
         input_names        = {v.name for v in info.inputs}
         param_names        = {v.name for v in info.parameters}
 
         for sm in self._RE_STATE.finditer(src):
             name = sm.group(1)
+
+            # Skip if in protected section
+            if self._is_in_protected_section(sm.start()):
+                continue
+
             if name in existing_out_names or name in input_names or name in param_names:
                 continue
             annot   = sm.group(2) or ""
@@ -248,8 +279,6 @@ class ClientGenerator:
             "",
         ]
 
-
-
     def _imports(self) -> List[str]:
         return [
             "from __future__ import annotations",
@@ -332,7 +361,7 @@ class ClientGenerator:
                 L.append(f'            {repr(p.name)}: {p.name},')
             L.append('        }')
         else:
-            L.append('        _params = {}')
+            L.append('        _params = {{}}')
 
         # Call FMUBlock.__init__ — wires everything
         L.append('        super().__init__(')
@@ -572,7 +601,4 @@ def main_cli() -> None:
 
 
 if __name__ == "__main__":
-    # When run directly, use the CLI
-    #main_cli()
-    output_path = mo_to_fmu_block("ThreePhaseMotor.mo", "ThreePhaseFmuPmsm.py")
-    print(output_path)
+    main_cli()

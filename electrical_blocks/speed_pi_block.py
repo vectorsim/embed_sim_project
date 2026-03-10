@@ -126,6 +126,7 @@ class SpeedPIBlock(SimBlockBase):
         Kp:            float = 0.5,
         Ki:            float = 5.0,
         i_max:         float = 10.0,
+        t_enable:      float = 0.0,
         use_c_backend: bool  = False,
         dtype                = None,
     ) -> None:
@@ -135,9 +136,10 @@ class SpeedPIBlock(SimBlockBase):
         self.vector_size  = 2
         self.is_dynamic   = True          # has integrator state → RK4
 
-        self._Kp    = float(Kp)
-        self._Ki    = float(Ki)
-        self._i_max = float(i_max)
+        self._Kp      = float(Kp)
+        self._Ki      = float(Ki)
+        self._i_max   = float(i_max)
+        self._t_enable = float(t_enable)
 
         # ── RK4-compatible state: [integrator] ────────────────────────────────
         self.state = np.zeros(1, dtype=np.float32)
@@ -167,12 +169,23 @@ class SpeedPIBlock(SimBlockBase):
     # ── Input helpers ─────────────────────────────────────────────────────────
 
     def _get_omega(self, input_values):
-        # port 0: [omega_ref]  — scalar from VectorStep (index 0)
-        # port 1: full 7-element motor vector from delay_omega — index [2] = omega_m
-        omega_ref  = float(input_values[0].value[0]) \
-                     if input_values else 0.0
-        omega_meas = float(input_values[1].value[2]) \
-                     if input_values and len(input_values) > 1 else 0.0
+        # port 0: [omega_ref]  — scalar from VectorConstant (index 0)
+        # port 1: speed feedback vector — omega_m at index [2] if len>=3,
+        #         else index [0] (handles both the 7-vec SpeedFeedbackBlock
+        #         output and any direct 1-element wiring during RK4 sub-steps)
+        omega_ref = 0.0
+        omega_meas = 0.0
+        if not input_values:
+            return omega_ref, omega_meas
+        if input_values[0] is not None:
+            v = input_values[0].value
+            omega_ref = float(v[0]) if len(v) >= 1 else 0.0
+        if len(input_values) > 1 and input_values[1] is not None:
+            v = input_values[1].value
+            if len(v) >= 3:
+                omega_meas = float(v[2])   # 7-vec from SpeedFeedbackBlock
+            elif len(v) >= 1:
+                omega_meas = float(v[0])   # direct 1-element fallback
         return omega_ref, omega_meas
 
     # ── RK4 interface ─────────────────────────────────────────────────────────
@@ -180,7 +193,10 @@ class SpeedPIBlock(SimBlockBase):
     def get_derivative(self, t: float,
                        input_values: Optional[List[VectorSignal]] = None
                        ) -> np.ndarray:
-        """dx/dt = [error]  — RK4 engine integrates the accumulator."""
+        """dx/dt = [error]  — frozen at zero while t < t_enable."""
+        if t < self._t_enable:
+            self.state[0] = 0.0
+            return np.zeros(1, dtype=np.float32)
         omega_ref, omega_meas = self._get_omega(input_values)
         e = np.float32(omega_ref - omega_meas)
         return np.array([e], dtype=np.float32)
@@ -200,6 +216,11 @@ class SpeedPIBlock(SimBlockBase):
         dt: float,
         input_values: Optional[List[VectorSignal]] = None,
     ) -> VectorSignal:
+        if t < self._t_enable:
+            self.output = VectorSignal(
+                np.array([0.0, 0.0], dtype=np.float32), self.name, dtype=self.dtype
+            )
+            return self.output
         omega_ref, omega_meas = self._get_omega(input_values)
         # Use RK4-integrated state[0] as the authoritative integrator
         lim    = np.float32(self._i_max / max(self._Ki, 1e-9))

@@ -1,0 +1,29 @@
+{"format":"Transformational debugger info","version":1,
+"info":{"name":"BuckConverter","description":"Simple buck converter plant model"},
+"variables":{
+"I_L":{"comment":"Inductor current [A]","kind":"state","type":"Real","unit":"","displayUnit":"","source":{"info":{"file":"aa","lineStart":16,"lineEnd":16,"colStart":3,"colEnd":41}}},
+"V_out":{"comment":"Output voltage [V]","kind":"state","type":"Real","unit":"","displayUnit":"","source":{"info":{"file":"aa","lineStart":15,"lineEnd":15,"colStart":3,"colEnd":41}}},
+"der(I_L)":{"comment":"der(Inductor current [A])","kind":"derivative","type":"Real","unit":"","displayUnit":"","source":{"info":{"file":"aa","lineStart":16,"lineEnd":16,"colStart":3,"colEnd":41}}},
+"der(V_out)":{"comment":"der(Output voltage [V])","kind":"derivative","type":"Real","unit":"","displayUnit":"","source":{"info":{"file":"aa","lineStart":15,"lineEnd":15,"colStart":3,"colEnd":41}}},
+"I_load":{"comment":"Load current [A]","kind":"variable","type":"Real","unit":"","displayUnit":"","source":{"info":{"file":"aa","lineStart":17,"lineEnd":17,"colStart":3,"colEnd":40}}},
+"duty":{"comment":"PWM duty cycle [0-1]","kind":"variable","type":"Real","unit":"","displayUnit":"","source":{"info":{"file":"aa","lineStart":12,"lineEnd":12,"colStart":3,"colEnd":41}}},
+"duty":{"comment":"PWM duty cycle [0-1]","kind":"variable","type":"Real","unit":"","displayUnit":"","source":{"info":{"file":"aa","lineStart":12,"lineEnd":12,"colStart":3,"colEnd":41}}},
+"C":{"comment":"Capacitance [F]","kind":"parameter","type":"Real","unit":"","displayUnit":"","source":{"info":{"file":"aa","lineStart":6,"lineEnd":6,"colStart":3,"colEnd":46}}},
+"L":{"comment":"Inductance [H]","kind":"parameter","type":"Real","unit":"","displayUnit":"","source":{"info":{"file":"aa","lineStart":5,"lineEnd":5,"colStart":3,"colEnd":45}}},
+"R_load":{"comment":"Load resistance [\uffffffce\uffffffa9]","kind":"parameter","type":"Real","unit":"","displayUnit":"","source":{"info":{"file":"aa","lineStart":7,"lineEnd":7,"colStart":3,"colEnd":52}}},
+"V_in":{"comment":"Input voltage [V]","kind":"parameter","type":"Real","unit":"","displayUnit":"","source":{"info":{"file":"aa","lineStart":8,"lineEnd":8,"colStart":3,"colEnd":47}}},
+"f_sw":{"comment":"Switching frequency [Hz]","kind":"parameter","type":"Real","unit":"","displayUnit":"","source":{"info":{"file":"aa","lineStart":9,"lineEnd":9,"colStart":3,"colEnd":57}}}
+},
+"equations":[{"eqIndex":0,"tag":"dummy"},
+{"eqIndex":1,"section":"initial","tag":"assign","defines":["V_out"],"uses":[],"equation":["0.0"],"source":{"info":{"file":"aa","lineStart":38,"lineEnd":38,"colStart":5,"colEnd":14}}},
+{"eqIndex":2,"tag":"alias","equation":[6],"section":"initial"},
+{"eqIndex":3,"tag":"alias","equation":[7],"section":"initial"},
+{"eqIndex":4,"section":"initial","tag":"assign","defines":["I_L"],"uses":[],"equation":["0.0"],"source":{"info":{"file":"aa","lineStart":37,"lineEnd":37,"colStart":5,"colEnd":12}}},
+{"eqIndex":5,"tag":"alias","equation":[8],"section":"initial"},
+{"eqIndex":6,"section":"regular","tag":"assign","defines":["der(I_L)"],"uses":["L","V_in","duty","V_out"],"equation":["(duty * V_in - V_out) / L"],"source":{"info":{"file":"aa","lineStart":27,"lineEnd":27,"colStart":3,"colEnd":45}}},
+{"eqIndex":7,"section":"regular","tag":"assign","defines":["I_load"],"uses":["R_load","V_out"],"equation":["V_out / R_load"],"source":{"info":{"file":"aa","lineStart":33,"lineEnd":33,"colStart":3,"colEnd":26}}},
+{"eqIndex":8,"section":"regular","tag":"assign","defines":["der(V_out)"],"uses":["C","I_load","I_L"],"equation":["(I_L - I_load) / C"],"source":{"info":{"file":"aa","lineStart":30,"lineEnd":30,"colStart":3,"colEnd":40}}}
+],
+"functions":[
+]
+}

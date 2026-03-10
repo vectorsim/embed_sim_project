@@ -2,47 +2,7 @@
 smc_block.py
 ============
 
-Sliding Mode Controller (SMC) block for EmbedSim.
-
-Operates on the **d-q rotating reference frame** — receives d-q current
-references and measurements, outputs d-q voltage commands.
-
-Typical position in a PMSM FOC chain
---------------------------------------
-
-  Speed   →  [SpeedController]  →  iq_ref
-                                   id_ref = 0 (MTPA)
-                                        │
-                    id_meas ────────────┤
-                    iq_meas ────────────┤
-                    (from Park block)   ▼
-                               [SMCBlock]
-                                   │
-                              [v_d, v_q]
-                                   │
-                            [InvParkBlock]
-                                   │
-                              [v_α, v_β]
-                                   │
-                           [InvClarkeBlock]
-                                   │
-                            [va, vb, vc]  → PWM
-
-
-Ports
------
-    port 0 : [id_ref, iq_ref]   — d/q current references   [A]
-    port 1 : [id_meas, iq_meas] — d/q measured currents     [A]
-
-Output : [v_d, v_q]             — voltage commands           [V]
-
-Backends
---------
-    Python  : Pure-Python SMC (always available, for simulation)
-    C       : Cython-compiled smc_wrapper.pyd (matches embedded firmware)
-
-Author : EmbedSim Framework
-Version: 1.0.0
+Sliding Mode Controller (SMC) block for EmbedSim with debug output.
 """
 
 import sys
@@ -54,6 +14,9 @@ sys.path.insert(0, get_embedsim_import_path())
 
 from embedsim.code_generator import SimBlockBase
 from embedsim.core_blocks    import VectorSignal
+
+# Debug flag
+DEBUG = False
 
 
 # ==============================================================================
@@ -74,7 +37,8 @@ class _PySMC:
                  K_sw_q:    float = 24.0,
                  phi_q:     float = 5.0,
                  out_min:   float = -24.0,
-                 out_max:   float =  24.0):
+                 out_max:   float =  24.0,
+                 t_enable:  float = 0.0):
 
         self.params = [
             dict(lam=lambda_d, K=K_sw_d, phi=max(phi_d, 1e-9),
@@ -82,6 +46,7 @@ class _PySMC:
             dict(lam=lambda_q, K=K_sw_q, phi=max(phi_q, 1e-9),
                  lo=out_min, hi=out_max),
         ]
+        self.t_enable = float(t_enable)
         self.state = [
             dict(integral=0.0, surface=0.0, output=0.0),
             dict(integral=0.0, surface=0.0, output=0.0),
@@ -111,7 +76,11 @@ class _PySMC:
         s['output'] = clamped
         return clamped
 
-    def compute(self, ref_d, ref_q, meas_d, meas_q, dt):
+    def compute(self, ref_d, ref_q, meas_d, meas_q, dt, t=0.0):
+        # Hold integrators at zero and output zero until t_enable
+        if t < self.t_enable:
+            self.reset()
+            return 0.0, 0.0
         v_d = self._channel(0, ref_d, meas_d, dt)
         v_q = self._channel(1, ref_q, meas_q, dt)
         return float(v_d), float(v_q)
@@ -133,44 +102,16 @@ class _PySMC:
 class SMCBlock(SimBlockBase):
     """
     Sliding Mode Controller block for PMSM FOC d-q axis inner loop.
-
-    Parameters
-    ----------
-    name        : str   — unique block identifier
-    lambda_d    : float — d-axis surface slope     (default 500)
-    K_sw_d      : float — d-axis switching gain    (default 24 V)
-    phi_d       : float — d-axis boundary layer    (default 5 A)
-    lambda_q    : float — q-axis surface slope     (default 500)
-    K_sw_q      : float — q-axis switching gain    (default 24 V)
-    phi_q       : float — q-axis boundary layer    (default 5 A)
-    out_min     : float — output clamp low  [V]    (default -24)
-    out_max     : float — output clamp high [V]    (default +24)
-    use_c_backend: bool — use compiled smc_wrapper.pyd
-
-    Ports
-    -----
-    port 0 : [id_ref, iq_ref]    — current references  [A]
-    port 1 : [id_meas, iq_meas]  — measured currents   [A]
-
-    Output
-    ------
-    [v_d, v_q]  — voltage commands  [V]
     """
 
-    # ── CodeGen marker attributes (read by PYXInspector feature 05121967) ────
+    # ── CodeGen marker attributes ─────────────────────────────────────────
     import pathlib as _pl
-    #: Absolute path to .pyx — works regardless of working directory
     PYX_FILE:    str  = str(_pl.Path(__file__).parent / 'c_src' / 'smc_wrapper.pyx')
-    #: step_func / state_struct filled by PYXInspector via __init_subclass__
     step_func:   str  = 'SMC_Compute'
     state_struct: str = 'SMC_Block_T'
-    #: Input port count
     NUM_INPUTS:  int  = 2
-    #: Output vector size
     OUTPUT_SIZE: int  = 2
-    #: C source files required by this block
     C_SOURCES:   list = ['sliding_mode_controller.c']
-    #: C header files
     C_HEADERS:   list = ['sliding_mode_controller.h', 'Sys_Types.h']
 
     def __init__(
@@ -184,19 +125,22 @@ class SMCBlock(SimBlockBase):
         phi_q:         float = 5.0,
         out_min:       float = -24.0,
         out_max:       float =  24.0,
+        t_enable:      float = 0.0,
         use_c_backend: bool  = False,
         dtype                = None,
     ) -> None:
         super().__init__(name, use_c_backend=use_c_backend, dtype=dtype)
 
         self.output_label = "[v_d,v_q]"
-        self.is_dynamic   = False         # state managed internally by C wrapper / _PySMC
+        self.is_dynamic   = False
         self.vector_size  = 2
-        # RK4 guard: engine checks b.state on all is_dynamic blocks
-        # SMC state is owned by _impl (C wrapper or _PySMC) — not by RK4
         self.state = None
+        
+        # Debug counter
+        self._debug_count = 0
 
         # Store tuning params for reset/repr
+        self._t_enable = float(t_enable)
         self._params = dict(
             lambda_d=lambda_d, K_sw_d=K_sw_d, phi_d=phi_d,
             lambda_q=lambda_q, K_sw_q=K_sw_q, phi_q=phi_q,
@@ -214,9 +158,10 @@ class SMCBlock(SimBlockBase):
                 lambda_d, K_sw_d, phi_d,
                 lambda_q, K_sw_q, phi_q,
                 out_min, out_max,
+                t_enable=t_enable,
             )
 
-    # ── C loader ─────────────────────────────────────────────────────────────
+    # ── C loader ─────────────────────────────────────────────────────────
 
     @staticmethod
     def _load_c_wrapper(ld, Kd, pd, lq, Kq, pq, lo, hi):
@@ -233,7 +178,7 @@ class SMCBlock(SimBlockBase):
                 "Or set use_c_backend=False to use the Python backend."
             )
 
-    # ── Compute dispatch ──────────────────────────────────────────────────────
+    # ── Compute dispatch ─────────────────────────────────────────────────
 
     def compute(self, t, dt, input_values=None):
         if self.use_c_backend:
@@ -261,8 +206,20 @@ class SMCBlock(SimBlockBase):
         dt: float,
         input_values: Optional[List[VectorSignal]] = None,
     ) -> VectorSignal:
+        self._debug_count += 1
         id_ref, iq_ref, id_meas, iq_meas = self._parse_inputs(input_values)
-        v_d, v_q = self._impl.compute(id_ref, iq_ref, id_meas, iq_meas, dt)
+        
+        # Debug output every 1000 steps
+        if DEBUG and self._debug_count % 1000 == 0:
+            print(f"SMC t={t:.3f}: ref=({id_ref:.2f}, {iq_ref:.2f}), "
+                  f"meas=({id_meas:.2f}, {iq_meas:.2f})")
+        
+        v_d, v_q = self._impl.compute(id_ref, iq_ref, id_meas, iq_meas, dt, t=t)
+        
+        # Debug output for outputs
+        if DEBUG and self._debug_count % 1000 == 0:
+            print(f"SMC t={t:.3f}: out=({v_d:.2f}, {v_q:.2f})")
+            
         self.output = VectorSignal(
             np.array([v_d, v_q], dtype=np.float32), self.name, dtype=self.dtype
         )
@@ -276,47 +233,54 @@ class SMCBlock(SimBlockBase):
         dt: float,
         input_values: Optional[List[VectorSignal]] = None,
     ) -> VectorSignal:
+        self._debug_count += 1
         id_ref, iq_ref, id_meas, iq_meas = self._parse_inputs(input_values)
+        
+        # Debug output every 1000 steps
+        if DEBUG and self._debug_count % 1000 == 0:
+            print(f"SMC t={t:.3f}: ref=({id_ref:.2f}, {iq_ref:.2f}), "
+                  f"meas=({id_meas:.2f}, {iq_meas:.2f})")
+        
         v_d, v_q = self._impl.compute(
             id_ref, iq_ref, id_meas, iq_meas, float(dt)
         )
+        
+        # Debug output for outputs
+        if DEBUG and self._debug_count % 1000 == 0:
+            print(f"SMC t={t:.3f}: out=({v_d:.2f}, {v_q:.2f})")
+            
         self.output = VectorSignal(
             np.array([v_d, v_q], dtype=np.float32), self.name, dtype=self.dtype
         )
         return self.output
 
-    # ── Block lifecycle (EmbedSim engine hooks) ───────────────────────────────
+    # ── Block lifecycle ─────────────────────────────────────────────────
 
     def reset(self) -> None:
-        """Reset SMC integrators (called by EmbedSim at sim start)."""
         super().reset()
         self._impl.reset()
+        self._debug_count = 0
 
-    # ── Diagnostics ──────────────────────────────────────────────────────────
+    # ── Diagnostics ─────────────────────────────────────────────────────
 
     @property
     def surface_d(self) -> float:
-        """Current d-axis sliding surface value s(e_d)."""
         return self._impl.get_surface(0)
 
     @property
     def surface_q(self) -> float:
-        """Current q-axis sliding surface value s(e_q)."""
         return self._impl.get_surface(1)
 
     @property
     def integral_d(self) -> float:
-        """Current d-axis integrator state."""
         return self._impl.get_integral(0)
 
     @property
     def integral_q(self) -> float:
-        """Current q-axis integrator state."""
         return self._impl.get_integral(1)
 
     def set_params_d(self, lambda_=None, K_sw=None, phi=None,
                      out_min=None, out_max=None) -> None:
-        """Update d-axis SMC parameters at runtime."""
         p = self._params
         lam = lambda_  if lambda_  is not None else p['lambda_d']
         K   = K_sw     if K_sw     is not None else p['K_sw_d']
@@ -330,7 +294,6 @@ class SMCBlock(SimBlockBase):
 
     def set_params_q(self, lambda_=None, K_sw=None, phi=None,
                      out_min=None, out_max=None) -> None:
-        """Update q-axis SMC parameters at runtime."""
         p = self._params
         lam = lambda_  if lambda_  is not None else p['lambda_q']
         K   = K_sw     if K_sw     is not None else p['K_sw_q']

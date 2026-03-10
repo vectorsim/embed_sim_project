@@ -23,7 +23,7 @@ Scenario:
 
   PART 2 — Loop broken by VectorDelayEnhanced (working diagram)
   ──────────────────────────────────────────────────────────────
-  Insert VectorDelay in the feedback path.nt
+  Insert VectorDelay in the feedback path.
   The delay block outputs the PREVIOUS step's value, breaking the
   circular dependency. Now the execution order is well-defined:
     delay(k-1) → sum(k) → gain(k) → delay stores for step k+1
@@ -65,6 +65,8 @@ add_parent_to_syspath = lambda levels=2: (
     sys.path.insert(0, str((p:=Path(__file__).resolve().parent if '__file__' in globals() else Path.cwd()).parents[levels-1]))
 )[-1]
 add_parent_to_syspath(2)
+
+_HERE = Path(__file__).resolve().parent
 
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -191,7 +193,7 @@ loop_gain >> fb_delay >> loop_sum
 
 
 # ── Simulation ────────────────────────────────────────────────────────────────
-sim = VectorSim(
+sim = EmbedSim(
     sinks  = [loop_out],
     T      = T_SIM,
     dt     = DT,

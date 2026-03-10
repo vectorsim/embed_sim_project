@@ -1,0 +1,54 @@
+EXPORTS
+  ;***************************************************
+  ;Common Functions
+  ;****************************************************
+  BuckConverter_fmiGetTypesPlatform @1
+  BuckConverter_fmiGetVersion @2
+  BuckConverter_fmiSetDebugLogging @3
+  BuckConverter_fmiInstantiate @4
+  BuckConverter_fmiFreeInstance @5
+  BuckConverter_fmiSetupExperiment @6
+  BuckConverter_fmiEnterInitializationMode @7
+  BuckConverter_fmiExitInitializationMode @8
+  BuckConverter_fmiTerminate @9
+  BuckConverter_fmiReset @10
+  BuckConverter_fmiGetReal @11
+  BuckConverter_fmiGetInteger @12
+  BuckConverter_fmiGetBoolean @13
+  BuckConverter_fmiGetString @14
+  BuckConverter_fmiSetReal @15
+  BuckConverter_fmiSetInteger @16
+  BuckConverter_fmiSetBoolean @17
+  BuckConverter_fmiSetString @18
+  BuckConverter_fmiGetFMUstate @19
+  BuckConverter_fmiSetFMUstate @20
+  BuckConverter_fmiFreeFMUstate @21
+  BuckConverter_fmiSerializedFMUstateSize @22
+  BuckConverter_fmiSerializeFMUstate @23
+  BuckConverter_fmiDeSerializeFMUstate @24
+  BuckConverter_fmiGetDirectionalDerivative @25
+  ;***************************************************
+  ;Functions for FMI for Model Exchange
+  ;****************************************************
+  BuckConverter_fmiEnterEventMode @26
+  BuckConverter_fmiNewDiscreteStates @27
+  BuckConverter_fmiEnterContinuousTimeMode @28
+  BuckConverter_fmiCompletedIntegratorStep @29
+  BuckConverter_fmiSetTime @30
+  BuckConverter_fmiSetContinuousStates @31
+  BuckConverter_fmiGetDerivatives @32
+  BuckConverter_fmiGetEventIndicators @33
+  BuckConverter_fmiGetContinuousStates @34
+  BuckConverter_fmiGetNominalsOfContinuousStates @35
+  ;***************************************************
+  ;Functions for FMI for Co-Simulation
+  ;****************************************************
+  BuckConverter_fmiSetRealInputDerivatives @36
+  BuckConverter_fmiGetRealOutputDerivatives @37
+  BuckConverter_fmiDoStep @38
+  BuckConverter_fmiCancelStep @39
+  BuckConverter_fmiGetStatus @40
+  BuckConverter_fmiGetRealStatus @41
+  BuckConverter_fmiGetIntegerStatus @42
+  BuckConverter_fmiGetBooleanStatus @43
+  BuckConverter_fmiGetStringStatus @44

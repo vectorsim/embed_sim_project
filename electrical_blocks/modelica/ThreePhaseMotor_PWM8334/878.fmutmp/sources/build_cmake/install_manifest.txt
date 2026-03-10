@@ -1,0 +1,3 @@
+C:/EmbedSimProject/electrical_blocks/modelica/ThreePhaseMotor_PWM8334/878.fmutmp/sources/../binaries/win64/libThreePhaseMotor_PWM.dll.a
+C:/EmbedSimProject/electrical_blocks/modelica/ThreePhaseMotor_PWM8334/878.fmutmp/sources/../binaries/win64/ThreePhaseMotor_PWM.dll
+C:/EmbedSimProject/electrical_blocks/modelica/ThreePhaseMotor_PWM8334/878.fmutmp/sources/../binaries/win64/libwinpthread-1.dll

@@ -132,7 +132,7 @@ class CodeGenStart(SimBlockBase):
         if not input_values:
             self.output = VectorSignal([0.0], self.name)
             return self.output
-        combined = np.concatenate([sig.value for sig in input_values])
+        combined = np.concatenate([np.atleast_1d(sig.value) for sig in input_values])
         self.output      = VectorSignal(combined, self.name)
         self.vector_size = len(combined)
         return self.output
@@ -173,7 +173,7 @@ class CodeGenEnd(SimBlockBase):
         if not input_values:
             self.output = VectorSignal([0.0], self.name)
             return self.output
-        combined = np.concatenate([sig.value for sig in input_values])
+        combined = np.concatenate([np.atleast_1d(sig.value) for sig in input_values])
         self.output      = VectorSignal(combined, self.name)
         self.vector_size = len(combined)
         return self.output
@@ -765,8 +765,13 @@ class LoopGenerator:
         h_text = self._gen_h(blocks, dt_hz)
 
         if write_files:
-            root    = Path(output_dir) if output_dir else Path.cwd()
-            gen_dir = root / "embedsim_gen"
+            root = Path(output_dir) if output_dir else Path.cwd()
+            # Normalise: if caller already passed a path ending in
+            # embedsim_gen do NOT nest again — write directly into root.
+            if root.name == "embedsim_gen":
+                gen_dir = root
+            else:
+                gen_dir = root / "embedsim_gen"
             gen_dir.mkdir(parents=True, exist_ok=True)
             (gen_dir / "embedsim_loop.c").write_text(c_text, encoding='utf-8')
             (gen_dir / "embedsim_loop.h").write_text(h_text, encoding='utf-8')
@@ -830,6 +835,16 @@ class LoopGenerator:
             y_<safe_name>[N]   — flat output array
         """
         sn = _sanitize(block.name or block.__class__.__name__)
+
+        # ── C_CUSTOM_EMIT escape hatch ────────────────────────────────────────
+        # If the block (or its class) declares C_CUSTOM_EMIT, emit that verbatim
+        # and skip all auto-generation logic.  Use this for blocks whose C
+        # signature doesn't fit the standard (state*, u, dt, y) pattern —
+        # e.g. coordinate transforms that pass a matrix pointer.
+        custom = (getattr(block, 'C_CUSTOM_EMIT', None) or
+                  getattr(block.__class__, 'C_CUSTOM_EMIT', None))
+        if custom is not None:
+            return custom + "\n"
 
         # ── Unit delay (z⁻¹) blocks ──────────────────────────────────────────
         # These are LoopBreaker blocks that output the previous-step value of

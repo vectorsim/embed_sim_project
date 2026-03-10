@@ -1,0 +1,3 @@
+C:/EmbedSimProject/electrical_blocks/modelica/PMSM_Motor_WithSensorscb7c/188.fmutmp/sources/../binaries/win64/libPMSM_Motor_WithSensors.dll.a
+C:/EmbedSimProject/electrical_blocks/modelica/PMSM_Motor_WithSensorscb7c/188.fmutmp/sources/../binaries/win64/PMSM_Motor_WithSensors.dll
+C:/EmbedSimProject/electrical_blocks/modelica/PMSM_Motor_WithSensorscb7c/188.fmutmp/sources/../binaries/win64/libwinpthread-1.dll

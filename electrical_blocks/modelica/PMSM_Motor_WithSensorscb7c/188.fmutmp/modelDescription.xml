@@ -1,0 +1,683 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmiModelDescription
+  fmiVersion="2.0"
+  modelName="PMSM_Motor_WithSensors"
+  guid="{33f30a05-f53c-4141-abb4-ba15d014c8ce}"
+  description="PMSM with realistic sensor outputs - currents, position, back-EMF"
+  version=""
+  generationTool="OpenModelica Compiler OpenModelica v1.25.7 (64-bit)"
+  generationDateAndTime="2026-03-09T14:55:15Z"
+  variableNamingConvention="structured"
+  numberOfEventIndicators="0">
+  <ModelExchange
+    modelIdentifier="PMSM_Motor_WithSensors"
+    needsExecutionTool="false"
+    completedIntegratorStepNotNeeded="false"
+    canBeInstantiatedOnlyOncePerProcess="false"
+    canNotUseMemoryManagementFunctions="false"
+    canGetAndSetFMUstate="false"
+    canSerializeFMUstate="false"
+    providesDirectionalDerivative="false">
+    <SourceFiles>
+      <File name="PMSM_Motor_WithSensors.c" />
+      <File name="PMSM_Motor_WithSensors_functions.c" />
+      <File name="PMSM_Motor_WithSensors_records.c" />
+      <File name="PMSM_Motor_WithSensors_01exo.c" />
+      <File name="PMSM_Motor_WithSensors_02nls.c" />
+      <File name="PMSM_Motor_WithSensors_03lsy.c" />
+      <File name="PMSM_Motor_WithSensors_04set.c" />
+      <File name="PMSM_Motor_WithSensors_05evt.c" />
+      <File name="PMSM_Motor_WithSensors_06inz.c" />
+      <File name="PMSM_Motor_WithSensors_07dly.c" />
+      <File name="PMSM_Motor_WithSensors_08bnd.c" />
+      <File name="PMSM_Motor_WithSensors_09alg.c" />
+      <File name="PMSM_Motor_WithSensors_10asr.c" />
+      <File name="PMSM_Motor_WithSensors_11mix.c" />
+      <File name="PMSM_Motor_WithSensors_12jac.c" />
+      <File name="PMSM_Motor_WithSensors_13opt.c" />
+      <File name="PMSM_Motor_WithSensors_14lnz.c" />
+      <File name="PMSM_Motor_WithSensors_15syn.c" />
+      <File name="PMSM_Motor_WithSensors_16dae.c" />
+      <File name="PMSM_Motor_WithSensors_17inl.c" />
+      <File name="PMSM_Motor_WithSensors_18spd.c" />
+      <File name="PMSM_Motor_WithSensors_init_fmu.c" />
+      <File name="PMSM_Motor_WithSensors_FMU.c" />
+      <File name="./gc/memory_pool.c" />
+      <File name="./gc/omc_gc.c" />
+      <File name="./util/base_array.c" />
+      <File name="./util/boolean_array.c" />
+      <File name="./util/context.c" />
+      <File name="./util/division.c" />
+      <File name="./util/doubleEndedList.c" />
+      <File name="./util/generic_array.c" />
+      <File name="./util/index_spec.c" />
+      <File name="./util/integer_array.c" />
+      <File name="./util/list.c" />
+      <File name="./util/modelica_string_lit.c" />
+      <File name="./util/modelica_string.c" />
+      <File name="./util/ModelicaUtilities.c" />
+      <File name="./util/omc_error.c" />
+      <File name="./util/omc_file.c" />
+      <File name="./util/omc_init.c" />
+      <File name="./util/omc_mmap.c" />
+      <File name="./util/omc_msvc.c" />
+      <File name="./util/omc_numbers.c" />
+      <File name="./util/parallel_helper.c" />
+      <File name="./util/rational.c" />
+      <File name="./util/real_array.c" />
+      <File name="./util/ringbuffer.c" />
+      <File name="./util/simulation_options.c" />
+      <File name="./util/string_array.c" />
+      <File name="./util/utility.c" />
+      <File name="./util/varinfo.c" />
+      <File name="./math-support/pivot.c" />
+      <File name="./simulation/jacobian_util.c" />
+      <File name="./simulation/omc_simulation_util.c" />
+      <File name="./simulation/options.c" />
+      <File name="./simulation/simulation_info_json.c" />
+      <File name="./simulation/simulation_omc_assert.c" />
+      <File name="./simulation/solver/delay.c" />
+      <File name="./simulation/solver/fmi_events.c" />
+      <File name="./simulation/solver/model_help.c" />
+      <File name="./simulation/solver/omc_math.c" />
+      <File name="./simulation/solver/spatialDistribution.c" />
+      <File name="./simulation/solver/stateset.c" />
+      <File name="./simulation/solver/synchronous.c" />
+      <File name="./simulation/solver/initialization/initialization.c" />
+      <File name="./meta/meta_modelica_catch.c" />
+      <File name="./external_solvers/dgesv.c" />
+      <File name="./external_solvers/dgetrf.c" />
+      <File name="./external_solvers/dgetri.c" />
+      <File name="./external_solvers/dtrtri.c" />
+      <File name="./external_solvers/dtrti2.c" />
+      <File name="./external_solvers/dlamch.c" />
+      <File name="./external_solvers/ilaenv.c" />
+      <File name="./external_solvers/xerbla.c" />
+      <File name="./external_solvers/dgetf2.c" />
+      <File name="./external_solvers/dgetrs.c" />
+      <File name="./external_solvers/dlaswp.c" />
+      <File name="./external_solvers/ieeeck.c" />
+      <File name="./external_solvers/iparmq.c" />
+      <File name="./external_solvers/dgemm.c" />
+      <File name="./external_solvers/dger.c" />
+      <File name="./external_solvers/dgemv.c" />
+      <File name="./external_solvers/dscal.c" />
+      <File name="./external_solvers/dswap.c" />
+      <File name="./external_solvers/dtrsm.c" />
+      <File name="./external_solvers/dtrmm.c" />
+      <File name="./external_solvers/dtrmv.c" />
+      <File name="./external_solvers/idamax.c" />
+      <File name="./external_solvers/lsame.c" />
+      <File name="./external_solvers/i_nint.c" />
+      <File name="./external_solvers/pow_di.c" />
+      <File name="./external_solvers/s_cmp.c" />
+      <File name="./external_solvers/s_copy.c" />
+      <File name="./external_solvers/s_cat.c" />
+      <File name="./external_solvers/F77_aloc.c" />
+      <File name="./external_solvers/exit_.c" />
+      <File name="./external_solvers/enorm_.c" />
+      <File name="./external_solvers/hybrj_.c" />
+      <File name="./external_solvers/dpmpar_.c" />
+      <File name="./external_solvers/qrfac_.c" />
+      <File name="./external_solvers/qform_.c" />
+      <File name="./external_solvers/dogleg_.c" />
+      <File name="./external_solvers/r1updt_.c" />
+      <File name="./external_solvers/r1mpyq_.c" />
+      <File name="ModelicaExternalC/ModelicaStandardTables.c" />
+      <File name="ModelicaExternalC/ModelicaMatIO.c" />
+      <File name="ModelicaExternalC/ModelicaIO.c" />
+      <File name="ModelicaExternalC/ModelicaStandardTablesDummyUsertab.c" />
+      <File name="ModelicaExternalC/snprintf.c" />
+    </SourceFiles>
+  </ModelExchange>
+  <CoSimulation
+    modelIdentifier="PMSM_Motor_WithSensors"
+    needsExecutionTool="false"
+    canHandleVariableCommunicationStepSize="true"
+    canInterpolateInputs="true"
+    maxOutputDerivativeOrder="1"
+    canRunAsynchronuously = "false"
+    canBeInstantiatedOnlyOncePerProcess="false"
+    canNotUseMemoryManagementFunctions="false"
+    canGetAndSetFMUstate="false"
+    canSerializeFMUstate="false"
+    providesDirectionalDerivative="false">
+    <SourceFiles>
+      <File name="PMSM_Motor_WithSensors.c" />
+      <File name="PMSM_Motor_WithSensors_functions.c" />
+      <File name="PMSM_Motor_WithSensors_records.c" />
+      <File name="PMSM_Motor_WithSensors_01exo.c" />
+      <File name="PMSM_Motor_WithSensors_02nls.c" />
+      <File name="PMSM_Motor_WithSensors_03lsy.c" />
+      <File name="PMSM_Motor_WithSensors_04set.c" />
+      <File name="PMSM_Motor_WithSensors_05evt.c" />
+      <File name="PMSM_Motor_WithSensors_06inz.c" />
+      <File name="PMSM_Motor_WithSensors_07dly.c" />
+      <File name="PMSM_Motor_WithSensors_08bnd.c" />
+      <File name="PMSM_Motor_WithSensors_09alg.c" />
+      <File name="PMSM_Motor_WithSensors_10asr.c" />
+      <File name="PMSM_Motor_WithSensors_11mix.c" />
+      <File name="PMSM_Motor_WithSensors_12jac.c" />
+      <File name="PMSM_Motor_WithSensors_13opt.c" />
+      <File name="PMSM_Motor_WithSensors_14lnz.c" />
+      <File name="PMSM_Motor_WithSensors_15syn.c" />
+      <File name="PMSM_Motor_WithSensors_16dae.c" />
+      <File name="PMSM_Motor_WithSensors_17inl.c" />
+      <File name="PMSM_Motor_WithSensors_18spd.c" />
+      <File name="PMSM_Motor_WithSensors_init_fmu.c" />
+      <File name="PMSM_Motor_WithSensors_FMU.c" />
+      <File name="./gc/memory_pool.c" />
+      <File name="./gc/omc_gc.c" />
+      <File name="./util/base_array.c" />
+      <File name="./util/boolean_array.c" />
+      <File name="./util/context.c" />
+      <File name="./util/division.c" />
+      <File name="./util/doubleEndedList.c" />
+      <File name="./util/generic_array.c" />
+      <File name="./util/index_spec.c" />
+      <File name="./util/integer_array.c" />
+      <File name="./util/list.c" />
+      <File name="./util/modelica_string_lit.c" />
+      <File name="./util/modelica_string.c" />
+      <File name="./util/ModelicaUtilities.c" />
+      <File name="./util/omc_error.c" />
+      <File name="./util/omc_file.c" />
+      <File name="./util/omc_init.c" />
+      <File name="./util/omc_mmap.c" />
+      <File name="./util/omc_msvc.c" />
+      <File name="./util/omc_numbers.c" />
+      <File name="./util/parallel_helper.c" />
+      <File name="./util/rational.c" />
+      <File name="./util/real_array.c" />
+      <File name="./util/ringbuffer.c" />
+      <File name="./util/simulation_options.c" />
+      <File name="./util/string_array.c" />
+      <File name="./util/utility.c" />
+      <File name="./util/varinfo.c" />
+      <File name="./math-support/pivot.c" />
+      <File name="./simulation/jacobian_util.c" />
+      <File name="./simulation/omc_simulation_util.c" />
+      <File name="./simulation/options.c" />
+      <File name="./simulation/simulation_info_json.c" />
+      <File name="./simulation/simulation_omc_assert.c" />
+      <File name="./simulation/solver/delay.c" />
+      <File name="./simulation/solver/fmi_events.c" />
+      <File name="./simulation/solver/model_help.c" />
+      <File name="./simulation/solver/omc_math.c" />
+      <File name="./simulation/solver/spatialDistribution.c" />
+      <File name="./simulation/solver/stateset.c" />
+      <File name="./simulation/solver/synchronous.c" />
+      <File name="./simulation/solver/initialization/initialization.c" />
+      <File name="./meta/meta_modelica_catch.c" />
+      <File name="./external_solvers/dgesv.c" />
+      <File name="./external_solvers/dgetrf.c" />
+      <File name="./external_solvers/dgetri.c" />
+      <File name="./external_solvers/dtrtri.c" />
+      <File name="./external_solvers/dtrti2.c" />
+      <File name="./external_solvers/dlamch.c" />
+      <File name="./external_solvers/ilaenv.c" />
+      <File name="./external_solvers/xerbla.c" />
+      <File name="./external_solvers/dgetf2.c" />
+      <File name="./external_solvers/dgetrs.c" />
+      <File name="./external_solvers/dlaswp.c" />
+      <File name="./external_solvers/ieeeck.c" />
+      <File name="./external_solvers/iparmq.c" />
+      <File name="./external_solvers/dgemm.c" />
+      <File name="./external_solvers/dger.c" />
+      <File name="./external_solvers/dgemv.c" />
+      <File name="./external_solvers/dscal.c" />
+      <File name="./external_solvers/dswap.c" />
+      <File name="./external_solvers/dtrsm.c" />
+      <File name="./external_solvers/dtrmm.c" />
+      <File name="./external_solvers/dtrmv.c" />
+      <File name="./external_solvers/idamax.c" />
+      <File name="./external_solvers/lsame.c" />
+      <File name="./external_solvers/i_nint.c" />
+      <File name="./external_solvers/pow_di.c" />
+      <File name="./external_solvers/s_cmp.c" />
+      <File name="./external_solvers/s_copy.c" />
+      <File name="./external_solvers/s_cat.c" />
+      <File name="./external_solvers/F77_aloc.c" />
+      <File name="./external_solvers/exit_.c" />
+      <File name="./external_solvers/enorm_.c" />
+      <File name="./external_solvers/hybrj_.c" />
+      <File name="./external_solvers/dpmpar_.c" />
+      <File name="./external_solvers/qrfac_.c" />
+      <File name="./external_solvers/qform_.c" />
+      <File name="./external_solvers/dogleg_.c" />
+      <File name="./external_solvers/r1updt_.c" />
+      <File name="./external_solvers/r1mpyq_.c" />
+      <File name="ModelicaExternalC/ModelicaStandardTables.c" />
+      <File name="ModelicaExternalC/ModelicaMatIO.c" />
+      <File name="ModelicaExternalC/ModelicaIO.c" />
+      <File name="ModelicaExternalC/ModelicaStandardTablesDummyUsertab.c" />
+      <File name="ModelicaExternalC/snprintf.c" />
+    </SourceFiles>
+  </CoSimulation>
+  <LogCategories>
+    <Category name="logEvents" />
+    <Category name="logSingularLinearSystems" />
+    <Category name="logNonlinearSystems" />
+    <Category name="logDynamicStateSelection" />
+    <Category name="logStatusWarning" />
+    <Category name="logStatusDiscard" />
+    <Category name="logStatusError" />
+    <Category name="logStatusFatal" />
+    <Category name="logStatusPending" />
+    <Category name="logAll" />
+    <Category name="logFmi2Call" />
+  </LogCategories>
+  <DefaultExperiment startTime="0.0" stopTime="2.0" tolerance="1e-6" stepSize="1e-4"/>
+  <ModelVariables>
+  <!-- Index of variable = "1" -->
+  <ScalarVariable
+    name="i_d"
+    valueReference="0"
+    description="d-axis current [A]"
+    initial="exact">
+    <Real start="0.0"/>
+  </ScalarVariable>
+  <!-- Index of variable = "2" -->
+  <ScalarVariable
+    name="i_q"
+    valueReference="1"
+    description="q-axis current [A]"
+    initial="exact">
+    <Real start="0.0"/>
+  </ScalarVariable>
+  <!-- Index of variable = "3" -->
+  <ScalarVariable
+    name="omega_m"
+    valueReference="2"
+    description="Actual mechanical speed [rad/s]"
+    initial="exact">
+    <Real start="0.0"/>
+  </ScalarVariable>
+  <!-- Index of variable = "4" -->
+  <ScalarVariable
+    name="theta_e"
+    valueReference="3"
+    description="Actual electrical angle [rad]"
+    initial="exact">
+    <Real start="0.0"/>
+  </ScalarVariable>
+  <!-- Index of variable = "5" -->
+  <ScalarVariable
+    name="der(i_d)"
+    valueReference="4"
+    description="der(d-axis current [A])"
+    >
+    <Real derivative="1"/>
+  </ScalarVariable>
+  <!-- Index of variable = "6" -->
+  <ScalarVariable
+    name="der(i_q)"
+    valueReference="5"
+    description="der(q-axis current [A])"
+    >
+    <Real derivative="2"/>
+  </ScalarVariable>
+  <!-- Index of variable = "7" -->
+  <ScalarVariable
+    name="der(omega_m)"
+    valueReference="6"
+    description="der(Actual mechanical speed [rad/s])"
+    >
+    <Real derivative="3"/>
+  </ScalarVariable>
+  <!-- Index of variable = "8" -->
+  <ScalarVariable
+    name="der(theta_e)"
+    valueReference="7"
+    description="der(Actual electrical angle [rad])"
+    >
+    <Real derivative="4"/>
+  </ScalarVariable>
+  <!-- Index of variable = "9" -->
+  <ScalarVariable
+    name="T_em_out"
+    valueReference="12"
+    description="Electromagnetic torque [N.m] - ACTUAL"
+    causality="output"
+    >
+    <Real/>
+  </ScalarVariable>
+  <!-- Index of variable = "10" -->
+  <ScalarVariable
+    name="T_load"
+    valueReference="13"
+    description="Load torque [N.m]"
+    causality="input"
+    >
+    <Real start="0.0"/>
+  </ScalarVariable>
+  <!-- Index of variable = "11" -->
+  <ScalarVariable
+    name="duty_a"
+    valueReference="14"
+    description="PWM duty cycle phase A [0..1]"
+    causality="input"
+    >
+    <Real start="0.5"/>
+  </ScalarVariable>
+  <!-- Index of variable = "12" -->
+  <ScalarVariable
+    name="duty_b"
+    valueReference="15"
+    description="PWM duty cycle phase B [0..1]"
+    causality="input"
+    >
+    <Real start="0.5"/>
+  </ScalarVariable>
+  <!-- Index of variable = "13" -->
+  <ScalarVariable
+    name="duty_c"
+    valueReference="16"
+    description="PWM duty cycle phase C [0..1]"
+    causality="input"
+    >
+    <Real start="0.5"/>
+  </ScalarVariable>
+  <!-- Index of variable = "14" -->
+  <ScalarVariable
+    name="emf_a"
+    valueReference="17"
+    description="Phase A back-EMF [V] - ACTUAL"
+    causality="output"
+    >
+    <Real/>
+  </ScalarVariable>
+  <!-- Index of variable = "15" -->
+  <ScalarVariable
+    name="emf_b"
+    valueReference="18"
+    description="Phase B back-EMF [V] - ACTUAL"
+    causality="output"
+    >
+    <Real/>
+  </ScalarVariable>
+  <!-- Index of variable = "16" -->
+  <ScalarVariable
+    name="emf_c"
+    valueReference="19"
+    description="Phase C back-EMF [V] - ACTUAL"
+    causality="output"
+    >
+    <Real/>
+  </ScalarVariable>
+  <!-- Index of variable = "17" -->
+  <ScalarVariable
+    name="i_a"
+    valueReference="20"
+    description="Phase A current sensor [A] - ACTUAL"
+    causality="output"
+    >
+    <Real/>
+  </ScalarVariable>
+  <!-- Index of variable = "18" -->
+  <ScalarVariable
+    name="i_b"
+    valueReference="21"
+    description="Phase B current sensor [A] - ACTUAL"
+    causality="output"
+    >
+    <Real/>
+  </ScalarVariable>
+  <!-- Index of variable = "19" -->
+  <ScalarVariable
+    name="i_beta"
+    valueReference="22"
+    >
+    <Real/>
+  </ScalarVariable>
+  <!-- Index of variable = "20" -->
+  <ScalarVariable
+    name="i_c"
+    valueReference="23"
+    description="Phase C current sensor [A] - ACTUAL"
+    causality="output"
+    >
+    <Real/>
+  </ScalarVariable>
+  <!-- Index of variable = "21" -->
+  <ScalarVariable
+    name="omega_e"
+    valueReference="24"
+    >
+    <Real/>
+  </ScalarVariable>
+  <!-- Index of variable = "22" -->
+  <ScalarVariable
+    name="omega_m_out"
+    valueReference="25"
+    description="Resolver: mechanical speed [rad/s] - ACTUAL"
+    causality="output"
+    >
+    <Real/>
+  </ScalarVariable>
+  <!-- Index of variable = "23" -->
+  <ScalarVariable
+    name="speed_rpm"
+    valueReference="26"
+    description="Shaft speed [RPM] - ACTUAL"
+    causality="output"
+    >
+    <Real/>
+  </ScalarVariable>
+  <!-- Index of variable = "24" -->
+  <ScalarVariable
+    name="theta_m"
+    valueReference="27"
+    description="Resolver: mechanical angle [rad] - ACTUAL"
+    causality="output"
+    >
+    <Real/>
+  </ScalarVariable>
+  <!-- Index of variable = "25" -->
+  <ScalarVariable
+    name="v_a"
+    valueReference="28"
+    >
+    <Real/>
+  </ScalarVariable>
+  <!-- Index of variable = "26" -->
+  <ScalarVariable
+    name="v_a_leg"
+    valueReference="29"
+    >
+    <Real/>
+  </ScalarVariable>
+  <!-- Index of variable = "27" -->
+  <ScalarVariable
+    name="v_alpha"
+    valueReference="30"
+    >
+    <Real/>
+  </ScalarVariable>
+  <!-- Index of variable = "28" -->
+  <ScalarVariable
+    name="v_b"
+    valueReference="31"
+    >
+    <Real/>
+  </ScalarVariable>
+  <!-- Index of variable = "29" -->
+  <ScalarVariable
+    name="v_b_leg"
+    valueReference="32"
+    >
+    <Real/>
+  </ScalarVariable>
+  <!-- Index of variable = "30" -->
+  <ScalarVariable
+    name="v_beta"
+    valueReference="33"
+    >
+    <Real/>
+  </ScalarVariable>
+  <!-- Index of variable = "31" -->
+  <ScalarVariable
+    name="v_c"
+    valueReference="34"
+    >
+    <Real/>
+  </ScalarVariable>
+  <!-- Index of variable = "32" -->
+  <ScalarVariable
+    name="v_c_leg"
+    valueReference="35"
+    >
+    <Real/>
+  </ScalarVariable>
+  <!-- Index of variable = "33" -->
+  <ScalarVariable
+    name="v_d"
+    valueReference="36"
+    >
+    <Real/>
+  </ScalarVariable>
+  <!-- Index of variable = "34" -->
+  <ScalarVariable
+    name="v_dc"
+    valueReference="37"
+    description="DC bus voltage [V]"
+    causality="input"
+    >
+    <Real start="48.0"/>
+  </ScalarVariable>
+  <!-- Index of variable = "35" -->
+  <ScalarVariable
+    name="v_neutral"
+    valueReference="38"
+    >
+    <Real/>
+  </ScalarVariable>
+  <!-- Index of variable = "36" -->
+  <ScalarVariable
+    name="v_q"
+    valueReference="39"
+    >
+    <Real/>
+  </ScalarVariable>
+  <!-- Index of variable = "37" -->
+  <ScalarVariable
+    name="B"
+    valueReference="40"
+    description="Viscous friction [N.m.s/rad]"
+    variability="fixed"
+    causality="parameter"
+    >
+    <Real start="0.001"/>
+  </ScalarVariable>
+  <!-- Index of variable = "38" -->
+  <ScalarVariable
+    name="J"
+    valueReference="41"
+    description="Rotor inertia [kg.m2]"
+    variability="fixed"
+    causality="parameter"
+    >
+    <Real start="0.002"/>
+  </ScalarVariable>
+  <!-- Index of variable = "39" -->
+  <ScalarVariable
+    name="L_d"
+    valueReference="42"
+    description="d-axis inductance [H]"
+    variability="fixed"
+    causality="parameter"
+    >
+    <Real start="0.005"/>
+  </ScalarVariable>
+  <!-- Index of variable = "40" -->
+  <ScalarVariable
+    name="L_q"
+    valueReference="43"
+    description="q-axis inductance [H]"
+    variability="fixed"
+    causality="parameter"
+    >
+    <Real start="0.006"/>
+  </ScalarVariable>
+  <!-- Index of variable = "41" -->
+  <ScalarVariable
+    name="R"
+    valueReference="44"
+    description="Stator phase resistance [Ohm]"
+    variability="fixed"
+    causality="parameter"
+    >
+    <Real start="0.5"/>
+  </ScalarVariable>
+  <!-- Index of variable = "42" -->
+  <ScalarVariable
+    name="lambda_pm"
+    valueReference="45"
+    description="PM flux linkage [Wb]"
+    variability="fixed"
+    causality="parameter"
+    >
+    <Real start="0.175"/>
+  </ScalarVariable>
+  <!-- Index of variable = "43" -->
+  <ScalarVariable
+    name="p"
+    valueReference="46"
+    description="Number of pole pairs [-]"
+    variability="fixed"
+    causality="parameter"
+    >
+    <Real start="2.0"/>
+  </ScalarVariable>
+  <!-- Index of variable = "44" -->
+  <ScalarVariable
+    name="T_em"
+    valueReference="12"
+    >
+    <Real/>
+  </ScalarVariable>
+  <!-- Index of variable = "45" -->
+  <ScalarVariable
+    name="i_alpha"
+    valueReference="20"
+    >
+    <Real/>
+  </ScalarVariable>
+  </ModelVariables>
+  <ModelStructure>
+    <Outputs>
+      <Unknown index="9" dependencies="1 2" dependenciesKind="dependent dependent" />
+      <Unknown index="14" dependencies="3 4" dependenciesKind="dependent dependent" />
+      <Unknown index="15" dependencies="3 4" dependenciesKind="dependent dependent" />
+      <Unknown index="16" dependencies="3 4" dependenciesKind="dependent dependent" />
+      <Unknown index="17" dependencies="1 2 4" dependenciesKind="dependent dependent dependent" />
+      <Unknown index="18" dependencies="1 2 4" dependenciesKind="dependent dependent dependent" />
+      <Unknown index="20" dependencies="1 2 4" dependenciesKind="dependent dependent dependent" />
+      <Unknown index="22" dependencies="3" dependenciesKind="dependent" />
+      <Unknown index="23" dependencies="3" dependenciesKind="dependent" />
+      <Unknown index="24" dependencies="4" dependenciesKind="dependent" />
+    </Outputs>
+    <Derivatives>
+      <Unknown index="5" dependencies="1 2 3 4 11 12 13 34" dependenciesKind="dependent dependent dependent dependent dependent dependent dependent dependent" />
+      <Unknown index="6" dependencies="1 2 3 4 11 12 13 34" dependenciesKind="dependent dependent dependent dependent dependent dependent dependent dependent" />
+      <Unknown index="7" dependencies="1 2 3 10" dependenciesKind="dependent dependent dependent dependent" />
+      <Unknown index="8" dependencies="3" dependenciesKind="dependent" />
+    </Derivatives>
+    <InitialUnknowns>
+      <Unknown index="5" dependencies="1 2 3 4 11 12 13 34 39 40 41 43" dependenciesKind="dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent" />
+      <Unknown index="6" dependencies="1 2 3 4 11 12 13 34 39 40 41 42 43" dependenciesKind="dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent" />
+      <Unknown index="7" dependencies="1 2 3 10 37 38 39 40 42 43" dependenciesKind="dependent dependent dependent dependent dependent dependent dependent dependent dependent dependent" />
+      <Unknown index="8" dependencies="3 43" dependenciesKind="dependent dependent" />
+      <Unknown index="9" dependencies="1 2 39 40 42 43" dependenciesKind="dependent dependent dependent dependent dependent dependent" />
+      <Unknown index="14" dependencies="3 4 42 43" dependenciesKind="dependent dependent dependent dependent" />
+      <Unknown index="15" dependencies="3 4 42 43" dependenciesKind="dependent dependent dependent dependent" />
+      <Unknown index="16" dependencies="3 4 42 43" dependenciesKind="dependent dependent dependent dependent" />
+      <Unknown index="17" dependencies="1 2 4" dependenciesKind="dependent dependent dependent" />
+      <Unknown index="18" dependencies="1 2 4" dependenciesKind="dependent dependent dependent" />
+      <Unknown index="20" dependencies="1 2 4" dependenciesKind="dependent dependent dependent" />
+      <Unknown index="22" dependencies="3" dependenciesKind="dependent" />
+      <Unknown index="23" dependencies="3" dependenciesKind="dependent" />
+      <Unknown index="24" dependencies="4 43" dependenciesKind="dependent dependent" />
+    </InitialUnknowns>
+  </ModelStructure>
+</fmiModelDescription>

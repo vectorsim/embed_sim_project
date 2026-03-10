@@ -1,0 +1,70 @@
+
+<h1>ThreePhaseMotor_PWM</h1>
+<p> <i>PMSM with PWM Inverter Interface, 3-Phase Current Sensors and Resolver Output</i> </p> 
+<h4> <u> Information </u> </h4>
+<html>
+<h2>PMSM Motor with PWM Inverter Interface</h2>
+
+<h3>Overview</h3>
+<p>
+  Interior Permanent Magnet Synchronous Motor (IPMSM) modelled in the
+  dq rotating reference frame, with a realistic PWM inverter interface
+  for direct connection to a FOC controller outputting duty cycles.
+</p>
+
+<h3>Signal Chain</h3>
+<pre>
+  FOC Controller
+      | duty_a, duty_b, duty_c  [0..1]
+      v
+  Ideal 2-Level VSI Inverter (average-value model)
+      | v_a, v_b, v_c  [V]  (w.r.t. virtual neutral)
+      v
+  Clarke Transform  (abc -> alpha/beta)
+      v
+  Park Transform    (alpha/beta -> dq, uses theta_e)
+      v
+  dq Voltage Equations (IPMSM dynamics)
+      v
+  Inverse Park      (dq -> alpha/beta currents)
+      v
+  Inverse Clarke    (alpha/beta -> i_a, i_b, i_c)
+</pre>
+
+<h3>Sensor Outputs</h3>
+<ul>
+  <li><b>i_a, i_b, i_c</b> - three phase current sensors [A]</li>
+  <li><b>theta_m</b> - resolver: mechanical rotor angle [rad]</li>
+  <li><b>emf_a, emf_b, emf_c</b> - back-EMF per phase [V]</li>
+</ul>
+
+<h3>Inverter Average-Value Model</h3>
+<p>
+  Valid when PWM switching frequency is much higher than the electrical
+  time constants (typical for automotive: 10-20 kHz PWM vs ~1 kHz
+  electrical bandwidth). The duty cycle represents the averaged phase
+  voltage directly: <code>v_phase_leg = duty * v_dc</code>.
+  Zero-sequence is removed by subtracting the virtual neutral:
+  <code>v_neutral = (v_a_leg + v_b_leg + v_c_leg) / 3</code>.
+</p>
+
+<h3>Export as FMU (OpenModelica)</h3>
+<pre>
+  loadFile("ThreePhaseMotor_PWM.mo");
+  buildModelFMU(ThreePhaseMotor_PWM,
+                version="2.0",
+                fmuType="cs",
+                fileNamePrefix="ThreePhaseMotor_PWM");
+</pre>
+<p>This produces <b>ThreePhaseMotor_PWM.fmu</b> ready for EmbedSim FMUBlock.</p>
+
+<h3>Typical Operating Conditions</h3>
+<ul>
+  <li>DC bus: 48 V (automotive low-voltage)</li>
+  <li>Duty cycle at hover: 0.5 (zero net voltage)</li>
+  <li>FOC d-axis: duty near 0.5 (flux weakening)</li>
+  <li>FOC q-axis: duty deviation from 0.5 drives torque</li>
+</ul>
+</html>
+    
+<h4> <u> Revisions </u> </h4>

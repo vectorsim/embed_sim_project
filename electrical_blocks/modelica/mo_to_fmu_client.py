@@ -4,56 +4,36 @@ mo_to_fmu_client.py
 Parses OpenModelica (.mo) files and automatically generates
 typed FMUBlock subclasses for the EmbedSim VectorBlock framework.
 
-WHAT IT DOES
-------------
-  1. Parses .mo files to extract:
-       - Model name
-       - input variables  (causality = input Real ...)
-       - output variables (state / algebraic Real + output Real ...)
-       - parameters       (parameter Real ...)
-  2. Generates a typed FMUBlock subclass per model — wires
-     input_names, output_names, and DEFAULT_PARAMS automatically
-  3. Optionally writes to a .py file
+MAIN FUNCTION:
+    generate_fmu_block(mo_path, output_dir=None)
+        - Parses a .mo file and generates a Python FMUBlock class
+        - Returns the path to the generated file
 
-USAGE
------
-  # CLI — generate block for a single model
-  python mo_to_fmu_client.py ThreePhaseMotor.mo
+    generate_fmu_blocks_from_folder(folder_path, output_dir=None)
+        - Processes all .mo files in a folder
+        - Returns list of generated file paths
 
-  # CLI — generate blocks for all .mo files in a folder
-  python mo_to_fmu_client.py ./models/
+USAGE:
+    from mo_to_fmu_client import generate_fmu_block
 
-  # Programmatic
-  from mo_to_fmu_client import MoParser, ClientGenerator
+    # Generate a single block
+    output_file = generate_fmu_block("ThreePhaseMotor.mo")
 
-  model = MoParser("ThreePhaseMotor.mo").parse()
-  gen   = ClientGenerator(model)
-  gen.write("ThreePhaseMotorBlock.py")
+    # Generate with custom output directory
+    output_file = generate_fmu_block("ThreePhaseMotor.mo", output_dir="./blocks")
 
-OUTPUT EXAMPLE
---------------
-  Generates ThreePhaseMotorBlock.py containing:
-
-    class ThreePhaseMotorBlock(FMUBlock):
-        DEFAULT_PARAMS = {"R": 0.5, "L_d": 0.005, ...}
-        INPUT_VARS     = ["v_d", "v_q", "T_load"]
-        OUTPUT_VARS    = ["i_d", "i_q", "omega_m", ...]
-
-        def __init__(self, name, fmu_path, R=0.5, L_d=0.005, ...): ...
-        def read_i_d(self) -> float: ...
-        def read_i_q(self) -> float: ...
-        ...
+    # Generate all models in a folder
+    generated_files = generate_fmu_blocks_from_folder("./models/")
 """
 
 from __future__ import annotations
 
 import re
 import os
-import sys
 import glob
 import textwrap
 from dataclasses import dataclass, field
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Union
 
 
 # =============================================================================
@@ -234,7 +214,6 @@ class ClientGenerator:
         code = self.generate()
         with open(output_path, "w", encoding="utf-8") as f:
             f.write(code)
-        print(f"  ✓  Generated: {output_path}")
         return output_path
 
     # ----------------------------------------------------------------
@@ -254,7 +233,7 @@ class ClientGenerator:
             "DO NOT EDIT — re-run generator to update.",
             "",
             "USAGE:",
-            f"    from {m.name}Block import {cls}",
+            f"    from {cls} import {cls}",
             "",
             f"    block = {cls}(",
             f'        name="{m.name.lower()}",',
@@ -269,14 +248,17 @@ class ClientGenerator:
             "",
         ]
 
+
+
     def _imports(self) -> List[str]:
         return [
             "from __future__ import annotations",
-            "",
+            "import sys",
             "from typing import Dict, List, Optional",
             "from embedsim.fmu_blocks import FMUBlock",
-            "",
-            "",
+            "from _path_utils import get_embedsim_import_path",
+            "sys.path.insert(0, get_embedsim_import_path())",
+            ""
         ]
 
     def _class_body(self, m: ModelInfo, cls: str) -> List[str]:
@@ -404,10 +386,14 @@ class ClientGenerator:
 
 
 # =============================================================================
-# Summary printer
+# Summary printer (optional, can be disabled)
 # =============================================================================
 
-def print_model_summary(model: ModelInfo) -> None:
+def print_model_summary(model: ModelInfo, verbose: bool = True) -> None:
+    """Print a summary of the parsed model if verbose is True."""
+    if not verbose:
+        return
+
     w = 60
     print(f"\n{'─'*w}")
     print(f"  Model  : {model.name}")
@@ -432,55 +418,140 @@ def print_model_summary(model: ModelInfo) -> None:
 
 
 # =============================================================================
-# CLI entry point
+# Main API Functions
 # =============================================================================
 
-def process_path(path: str, output_dir: Optional[str] = None) -> None:
-    """Process a single .mo file or a directory of .mo files."""
+def generate_fmu_block(mo_path: str, output_dir: Optional[str] = None,
+                      verbose: bool = True) -> str:
+    """
+    Generate an FMUBlock Python class from a .mo file.
 
-    if os.path.isdir(path):
-        mo_files = glob.glob(os.path.join(path, "*.mo"))
-        if not mo_files:
-            print(f"  No .mo files found in: {path}")
-            return
-        for f in mo_files:
-            process_path(f, output_dir)
-        return
+    Args:
+        mo_path: Path to the .mo file to parse
+        output_dir: Optional directory to write the output file
+        verbose: Whether to print progress information
 
-    print(f"\nParsing: {path}")
+    Returns:
+        Path to the generated Python file
 
-    parser = MoParser(path)
-    try:
-        model = parser.parse()
-    except Exception as e:
-        print(f"  [ERROR] Parse failed: {e}")
-        return
+    Raises:
+        FileNotFoundError: If the .mo file doesn't exist
+        ValueError: If the .mo file can't be parsed correctly
+    """
+    if verbose:
+        print(f"\nParsing: {mo_path}")
 
-    print_model_summary(model)
+    # Parse the model
+    parser = MoParser(mo_path)
+    model = parser.parse()
 
-    gen = ClientGenerator(model)
+    # Print summary if verbose
+    print_model_summary(model, verbose)
 
-    out_name = f"{model.name}Block.py"
+    # Generate the code
+    generator = ClientGenerator(model)
+
+    # Determine output path
     if output_dir:
         os.makedirs(output_dir, exist_ok=True)
-        out_name = os.path.join(output_dir, out_name)
+        output_path = os.path.join(output_dir, f"{model.name}Block.py")
+    else:
+        output_path = f"{model.name}Block.py"
 
-    gen.write(out_name)
+    # Write the file
+    generator.write(output_path)
+
+    if verbose:
+        print(f"  ✓  Generated: {output_path}")
+
+    return output_path
 
 
-def main() -> None:
+def generate_fmu_blocks_from_folder(folder_path: str, output_dir: Optional[str] = None,
+                                   verbose: bool = True) -> List[str]:
+    """
+    Generate FMUBlock Python classes for all .mo files in a folder.
+
+    Args:
+        folder_path: Path to folder containing .mo files
+        output_dir: Optional directory to write the output files
+        verbose: Whether to print progress information
+
+    Returns:
+        List of paths to generated Python files
+    """
+    if not os.path.isdir(folder_path):
+        raise NotADirectoryError(f"Not a directory: {folder_path}")
+
+    # Find all .mo files
+    mo_files = glob.glob(os.path.join(folder_path, "*.mo"))
+    if not mo_files:
+        if verbose:
+            print(f"  No .mo files found in: {folder_path}")
+        return []
+
+    if verbose:
+        print(f"\nFound {len(mo_files)} .mo files in {folder_path}")
+
+    # Process each file
+    generated_files = []
+    for mo_file in mo_files:
+        try:
+            output_path = generate_fmu_block(mo_file, output_dir, verbose)
+            generated_files.append(output_path)
+        except Exception as e:
+            if verbose:
+                print(f"  [ERROR] Failed to process {mo_file}: {e}")
+
+    if verbose:
+        print(f"\nGenerated {len(generated_files)} FMUBlock classes")
+
+    return generated_files
+
+
+# Simple function for basic use
+def mo_to_fmu_block(mo_path: str, output_path: Optional[str] = None) -> str:
+    """
+    Simple wrapper for basic use cases.
+
+    Args:
+        mo_path: Path to the .mo file
+        output_path: Optional full output path
+
+    Returns:
+        Path to the generated Python file
+    """
+    if output_path:
+        output_dir = os.path.dirname(output_path)
+    else:
+        output_dir = None
+
+    return generate_fmu_block(mo_path, output_dir, verbose=False)
+
+
+# =============================================================================
+# Legacy CLI support (optional)
+# =============================================================================
+
+def main_cli() -> None:
+    """Legacy CLI entry point - kept for backward compatibility."""
+    import sys
+
     args = sys.argv[1:]
 
     if not args:
         print(__doc__)
-        print("\nUSAGE:")
+        print("\nCLI USAGE (legacy):")
         print("  python mo_to_fmu_client.py <file.mo>")
         print("  python mo_to_fmu_client.py <models_dir/>")
         print("  python mo_to_fmu_client.py <file.mo> --out <output_dir>")
+        print("\nOr use the function API:")
+        print("  from mo_to_fmu_client import generate_fmu_block")
+        print("  generate_fmu_block('model.mo')")
         sys.exit(0)
 
     output_dir = None
-    paths      = []
+    paths = []
 
     i = 0
     while i < len(args):
@@ -492,10 +563,16 @@ def main() -> None:
             i += 1
 
     for p in paths:
-        process_path(p, output_dir)
+        if os.path.isdir(p):
+            generate_fmu_blocks_from_folder(p, output_dir)
+        else:
+            generate_fmu_block(p, output_dir)
 
     print("\nDone.")
 
 
 if __name__ == "__main__":
-    main()
+    # When run directly, use the CLI
+    #main_cli()
+    output_path = mo_to_fmu_block("PMSM_Motor_WithSensors.mo", "PMSM_Motor_WithSensors.py")
+    print(output_path)

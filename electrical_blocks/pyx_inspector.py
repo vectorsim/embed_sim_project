@@ -454,6 +454,13 @@ def auto_populate_from_pyx(cls, pyx_file: str | Path) -> None:
         cls.C_SOURCES   = list(meta.c_sources)
     if not hasattr(cls, 'C_HEADERS') or not cls.C_HEADERS:
         cls.C_HEADERS   = ([meta.header_file] if meta.header_file else [])
+    # CodeGen function / struct names — also auto-populated from .pyx
+    if not getattr(cls, 'step_func', ''):
+        cls.step_func    = meta.step_func
+    if not getattr(cls, 'init_func', ''):
+        cls.init_func    = meta.init_func
+    if not getattr(cls, 'state_struct', ''):
+        cls.state_struct = meta.state_struct
 
 
 # =============================================================================

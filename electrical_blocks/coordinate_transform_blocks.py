@@ -71,6 +71,12 @@ _HALF_SQRT3 = np.float32(np.sqrt(3.0) / 2.0)
 class TransformBlockBase(SimBlockBase):
     """Base class for all coordinate transform blocks."""
 
+    # ── Shared CodeGen attrs (inherited by all four transform blocks) ─────────
+    # step_func / C_CUSTOM_EMIT are set per-subclass because each transform
+    # calls a different C function with a different matrix-pointer signature.
+    C_SOURCES:   list = ['Coordinate_Transform.c', 'Matrix_Operations.c']
+    C_HEADERS:   list = ['Coordinate_Transform.h', 'Sys_Types.h']
+
     def __init__(self, name: str, use_c_backend: bool = False, dtype=None):
         super().__init__(name, use_c_backend=use_c_backend, dtype=dtype)
         self._c_wrapper = None
@@ -115,6 +121,28 @@ class ClarkeTransformBlock(TransformBlockBase):
 
     C Backend: Uses matrix multiplication with pre-computed 3x2 Clarke matrix.
     """
+
+    # ── CodeGen attrs ─────────────────────────────────────────────────────────
+    NUM_INPUTS:  int = 3   # [ia, ib, ic]
+    OUTPUT_SIZE: int = 2   # [alpha, beta]
+    # Clarke_Transform takes a matrix pointer — use C_CUSTOM_EMIT instead of
+    # the standard (state*, u, dt, y) auto-emission pattern.
+    C_CUSTOM_EMIT: str = (
+        "\n"
+        "    /* --- clarke (ClarkeTransformBlock) --- */\n"
+        "    static ClarkeMatrix_T _clarke_mat;\n"
+        "    Clarke_InitMatrix(&_clarke_mat);\n"
+        "    real32_T y_clarke[2];\n"
+        "    {\n"
+        "        Phase3Signal_T _in = {\n"
+        "            y_noisy_currents[0], y_noisy_currents[1], y_noisy_currents[2]\n"
+        "        };\n"
+        "        AlphaBetaSignal_T _out;\n"
+        "        Clarke_Transform(&_clarke_mat, &_in, &_out);\n"
+        "        y_clarke[0] = _out.Alpha;\n"
+        "        y_clarke[1] = _out.Beta;\n"
+        "    }\n"
+    )
 
     def __init__(self, name: str, use_c_backend: bool = False, dtype=None) -> None:
         super().__init__(name, use_c_backend=use_c_backend, dtype=dtype)
@@ -188,6 +216,25 @@ class InvClarkeTransformBlock(TransformBlockBase):
     C Backend: Uses matrix multiplication with pre-computed 2x3 inverse matrix.
     """
 
+    # ── CodeGen attrs ─────────────────────────────────────────────────────────
+    NUM_INPUTS:  int = 2   # [alpha, beta]
+    OUTPUT_SIZE: int = 3   # [ia, ib, ic]
+    C_CUSTOM_EMIT: str = (
+        "\n"
+        "    /* --- inv_clarke (InvClarkeTransformBlock) --- */\n"
+        "    static Matrix3x2_T _inv_clarke_mat;\n"
+        "    InvClarke_InitMatrix(&_inv_clarke_mat);\n"
+        "    real32_T y_inv_clarke[3];\n"
+        "    {\n"
+        "        AlphaBetaSignal_T _in = { y_inv_park[0], y_inv_park[1] };\n"
+        "        Phase3Signal_T _out;\n"
+        "        InvClarke_Transform(&_inv_clarke_mat, &_in, &_out);\n"
+        "        y_inv_clarke[0] = _out.A;\n"
+        "        y_inv_clarke[1] = _out.B;\n"
+        "        y_inv_clarke[2] = _out.C;\n"
+        "    }\n"
+    )
+
     def __init__(self, name: str, use_c_backend: bool = False, dtype=None) -> None:
         super().__init__(name, use_c_backend=use_c_backend, dtype=dtype)
         self.output_label = "[a,b,c]"
@@ -258,6 +305,26 @@ class ParkTransformBlock(TransformBlockBase):
     C Backend: Updates 2x2 rotation matrix each cycle using current angle,
               then performs matrix multiplication.
     """
+
+    # ── CodeGen attrs ─────────────────────────────────────────────────────────
+    NUM_INPUTS:  int = 3   # [alpha, beta, theta] — two ports flattened
+    OUTPUT_SIZE: int = 2   # [d, q]
+    # C_INPUT_MAP set per-instance in pmsm_foc_pwm_smc.py after wiring:
+    #   park.C_INPUT_MAP = [("clarke", 0), ("clarke", 1), ("noisy_angle", 0)]
+    C_CUSTOM_EMIT: str = (
+        "\n"
+        "    /* --- park (ParkTransformBlock) --- */\n"
+        "    real32_T y_park[2];\n"
+        "    {\n"
+        "        ParkMatrix_T _park_mat;\n"
+        "        Park_InitMatrix(&_park_mat, y_noisy_angle[0]);\n"
+        "        AlphaBetaSignal_T _in = { y_clarke[0], y_clarke[1] };\n"
+        "        DQSignal_T _out;\n"
+        "        Park_Transform(&_park_mat, &_in, &_out);\n"
+        "        y_park[0] = _out.D;\n"
+        "        y_park[1] = _out.Q;\n"
+        "    }\n"
+    )
 
     def __init__(self, name: str, use_c_backend: bool = False, dtype=None) -> None:
         super().__init__(name, use_c_backend=use_c_backend, dtype=dtype)
@@ -345,6 +412,26 @@ class InvParkTransformBlock(TransformBlockBase):
     C Backend: Updates 2x2 inverse rotation matrix each cycle using current angle,
               then performs matrix multiplication.
     """
+
+    # ── CodeGen attrs ─────────────────────────────────────────────────────────
+    NUM_INPUTS:  int = 3   # [d, q, theta] — two ports flattened
+    OUTPUT_SIZE: int = 2   # [alpha, beta]
+    # C_INPUT_MAP set per-instance in pmsm_foc_pwm_smc.py after wiring:
+    #   inv_park.C_INPUT_MAP = [("smc", 0), ("smc", 1), ("noisy_angle", 0)]
+    C_CUSTOM_EMIT: str = (
+        "\n"
+        "    /* --- inv_park (InvParkTransformBlock) --- */\n"
+        "    real32_T y_inv_park[2];\n"
+        "    {\n"
+        "        ParkMatrix_T _inv_park_mat;\n"
+        "        InvPark_InitMatrix(&_inv_park_mat, y_noisy_angle[0]);\n"
+        "        DQSignal_T _in = { y_smc[0], y_smc[1] };\n"
+        "        AlphaBetaSignal_T _out;\n"
+        "        InvPark_Transform(&_inv_park_mat, &_in, &_out);\n"
+        "        y_inv_park[0] = _out.Alpha;\n"
+        "        y_inv_park[1] = _out.Beta;\n"
+        "    }\n"
+    )
 
     def __init__(self, name: str, use_c_backend: bool = False, dtype=None) -> None:
         super().__init__(name, use_c_backend=use_c_backend, dtype=dtype)

@@ -423,6 +423,100 @@ class VectorRamp(VectorBlock):
 
 
 # =========================
+# Gaussian White Noise Source
+# =========================
+
+class GaussianNoiseBlock(VectorBlock):
+    """
+    Outputs a vector of independent Gaussian (white) noise samples.
+
+    Each call to compute_py draws a fresh independent sample from
+    N(mean, std²) for every element of the output vector.  The noise
+    is statistically white in discrete time: samples at different time
+    steps are uncorrelated.
+
+    A fixed ``seed`` makes runs reproducible — useful for unit-testing
+    and for comparing controller designs under identical disturbance
+    sequences.  Leave ``seed=None`` for non-deterministic operation.
+
+    Attributes:
+        mean  (float):       Mean of the Gaussian distribution.
+        std   (float):       Standard deviation (σ).  Power = σ².
+        dim   (int):         Output vector length.
+        _rng  (np.random.Generator): Internal numpy Generator instance.
+
+    Mathematical description:
+        y(k) ~ N(mean, std²)  ∀ k,  components i.i.d.
+
+    Typical use-cases in EmbedSim:
+        • Sensor noise added to current/speed measurements
+        • Process disturbance injected into a torque or voltage path
+        • Monte-Carlo robustness sweeps (vary seed per run)
+
+    Example:
+        >>> # 1-D speed-sensor noise, σ = 0.05 rad/s
+        >>> speed_noise = GaussianNoiseBlock("spd_noise", std=0.05, dim=1)
+        >>> speed_noise >> speed_sum          # add to measured speed
+        >>>
+        >>> # 2-D current noise, reproducible
+        >>> iq_noise = GaussianNoiseBlock("iq_noise", std=0.01, dim=2, seed=42)
+    """
+
+    def __init__(self, name: str, mean: float = 0.0, std: float = 1.0,
+                 dim: int = 1, seed: Optional[int] = None,
+                 use_c_backend: bool = False, dtype=None, **kwargs) -> None:
+        """
+        Initialize a GaussianNoiseBlock.
+
+        Args:
+            name:  Unique identifier for this block.
+            mean:  Mean of the distribution.  Default: 0.0
+            std:   Standard deviation σ ≥ 0.  Default: 1.0
+            dim:   Number of independent noise channels (output vector length).
+                   Default: 1
+            seed:  Integer seed for the numpy Generator, or None for
+                   non-deterministic operation.  Default: None
+
+        Raises:
+            ValueError: If std < 0.
+
+        Example:
+            >>> n1 = GaussianNoiseBlock("noise", mean=0.0, std=0.1, dim=2)
+            >>> n2 = GaussianNoiseBlock("rep_noise", std=0.05, dim=1, seed=0)
+        """
+        if std < 0:
+            raise ValueError(f"GaussianNoiseBlock '{name}': std must be >= 0, got {std}")
+        super().__init__(name, use_c_backend=use_c_backend, dtype=dtype, **kwargs)
+        self.mean: float = mean
+        self.std:  float = std
+        self.dim:  int   = dim
+        self._rng: np.random.Generator = np.random.default_rng(seed)
+
+    def compute_py(self, t: float, dt: float,
+                   input_values: Optional[List[VectorSignal]] = None) -> VectorSignal:
+        """
+        Draw one vector of i.i.d. Gaussian samples.
+
+        Args:
+            t:            Current simulation time (seconds) — unused.
+            dt:           Time step — unused.
+            input_values: Ignored; this is a source block.
+
+        Returns:
+            VectorSignal: ``dim``-element vector sampled from N(mean, std²).
+
+        Example:
+            >>> noise = GaussianNoiseBlock("n", std=1.0, dim=3, seed=7)
+            >>> out = noise.compute(t=0.0, dt=0.01)
+            >>> print(out.value.shape)   # (3,)
+            >>> print(out.value)         # e.g. [ 0.27  -1.13   0.62 ]
+        """
+        val = self._rng.normal(loc=self.mean, scale=self.std, size=self.dim)
+        self.output = VectorSignal(val, self.name)
+        return self.output
+
+
+# =========================
 # Module Metadata
 # =========================
 
@@ -432,6 +526,7 @@ __all__ = [
     'ThreePhaseGenerator',
     'SinusoidalGenerator',
     'VectorRamp',
+    'GaussianNoiseBlock',
 ]
 
 __version__ = '1.0.0'

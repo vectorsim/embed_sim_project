@@ -418,6 +418,44 @@ def traverse_blocks_from_sinks_with_loops(sinks: List[VectorBlock]) -> List[Vect
     for sink in sinks:
         dfs(sink)
 
+    # Second pass: any block that feeds a LoopBreaker from the feed-forward
+    # direction may have been skipped by the DFS (because LoopBreaker inputs
+    # are not followed).  Find all such blocks and insert them into the order
+    # immediately before the LoopBreaker that depends on them.
+    # We iterate until stable to handle chains of missing blocks.
+    changed = True
+    while changed:
+        changed = False
+        for lb in list(loop_breakers):
+            if lb not in blocks_set:
+                continue
+            lb_idx = blocks_order.index(lb)
+            for inp in lb.inputs:
+                if inp not in blocks_set:
+                    # inp was never visited — run a mini-DFS to add it and
+                    # its own dependencies, then insert before lb.
+                    mini_order = []
+                    mini_visited = set()
+
+                    def mini_dfs(b):
+                        if b in blocks_set or b in mini_visited:
+                            return
+                        mini_visited.add(b)
+                        for b_inp in b.inputs:
+                            if b_inp not in loop_breakers:
+                                mini_dfs(b_inp)
+                        mini_visited.discard(b)
+                        blocks_set.add(b)
+                        mini_order.append(b)
+
+                    mini_dfs(inp)
+                    if mini_order:
+                        # Find insertion point: just before lb's current position
+                        lb_idx = blocks_order.index(lb)
+                        for i, b in enumerate(mini_order):
+                            blocks_order.insert(lb_idx + i, b)
+                        changed = True
+
     return blocks_order
 
 

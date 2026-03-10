@@ -49,6 +49,7 @@ SOURCE BLOCKS
     VectorConstant    — constant vector source
     VectorRamp        — ramp signal source
     VectorSine        — sinusoidal source
+    GaussianNoiseBlock — Gaussian white-noise source (zero-mean, seeded RNG)
 
 DYNAMIC BLOCKS
     VectorEnd         — terminal sink
@@ -119,6 +120,7 @@ from embedsim.core_blocks import (
 from embedsim.source_blocks import (
     VectorStep,
     VectorConstant,
+    GaussianNoiseBlock,
 )
 
 # Ramp and Sine are optional — only exported if they exist in source_blocks
@@ -258,6 +260,7 @@ __all__ = [
     "VectorConstant",
     "VectorRamp",
     "VectorSine",
+    "GaussianNoiseBlock",
 
     # Dynamic
     "VectorEnd",
