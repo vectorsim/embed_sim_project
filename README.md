@@ -55,7 +55,7 @@ ScriptBlock          — AST-based C code generation for inline logic
 | | MATLAB/Simulink | EmbedSim |
 |---|---|---|
 | Cost | Expensive licensing | Free / open-source |
-| Language | Proprietary | Python + C |
+| Language | Proprietary | Python + C + Modelica|
 | Code generation | Embedded Coder (paid) | Built-in |
 | Extensibility | Limited | Full Python ecosystem |
 | Version control | Difficult (.slx) | Plain text, git-friendly |
