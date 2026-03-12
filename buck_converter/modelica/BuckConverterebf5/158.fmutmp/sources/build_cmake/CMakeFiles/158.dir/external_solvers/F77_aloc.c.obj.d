@@ -1,6 +1,6 @@
 CMakeFiles/158.dir/external_solvers/F77_aloc.c.obj: \
-  C:/EmbedSimProject/examples/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/external_solvers/F77_aloc.c \
-  C:/EmbedSimProject/examples/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/external_solvers/f2c.h \
+  C:/EmbedSimProject/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/external_solvers/F77_aloc.c \
+  C:/EmbedSimProject/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/external_solvers/f2c.h \
   C:/Program\ Files/OpenModelica1.25.7-64bit/tools/msys/ucrt64/include/math.h \
   C:/Program\ Files/OpenModelica1.25.7-64bit/tools/msys/ucrt64/include/crtdefs.h \
   C:/Program\ Files/OpenModelica1.25.7-64bit/tools/msys/ucrt64/include/corecrt.h \

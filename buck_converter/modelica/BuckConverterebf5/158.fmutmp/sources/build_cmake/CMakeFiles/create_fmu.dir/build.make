@@ -53,10 +53,10 @@ RM = "/C/Program Files/OpenModelica1.25.7-64bit/tools/msys/ucrt64/bin/cmake.exe"
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /C/EmbedSimProject/examples/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources
+CMAKE_SOURCE_DIR = /C/EmbedSimProject/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /C/EmbedSimProject/examples/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/build_cmake
+CMAKE_BINARY_DIR = /C/EmbedSimProject/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/build_cmake
 
 # Utility rule file for create_fmu.
 
@@ -67,8 +67,8 @@ include CMakeFiles/create_fmu.dir/compiler_depend.make
 include CMakeFiles/create_fmu.dir/progress.make
 
 CMakeFiles/create_fmu:
-	cd /C/EmbedSimProject/examples/buck_converter/modelica/BuckConverterebf5/158.fmutmp && "/C/Program Files/OpenModelica1.25.7-64bit/tools/msys/ucrt64/bin/cmake.exe" --build C:/EmbedSimProject/examples/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/build_cmake --target install
-	cd /C/EmbedSimProject/examples/buck_converter/modelica/BuckConverterebf5/158.fmutmp && "/C/Program Files/OpenModelica1.25.7-64bit/tools/msys/ucrt64/bin/cmake.exe" -E tar cfv ../BuckConverter.fmu --format=zip binaries/ resources/ sources/ modelDescription.xml
+	cd /C/EmbedSimProject/buck_converter/modelica/BuckConverterebf5/158.fmutmp && "/C/Program Files/OpenModelica1.25.7-64bit/tools/msys/ucrt64/bin/cmake.exe" --build C:/EmbedSimProject/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/build_cmake --target install
+	cd /C/EmbedSimProject/buck_converter/modelica/BuckConverterebf5/158.fmutmp && "/C/Program Files/OpenModelica1.25.7-64bit/tools/msys/ucrt64/bin/cmake.exe" -E tar cfv ../BuckConverter.fmu --format=zip binaries/ resources/ sources/ modelDescription.xml
 
 create_fmu: CMakeFiles/create_fmu
 create_fmu: CMakeFiles/create_fmu.dir/build.make
@@ -83,6 +83,6 @@ CMakeFiles/create_fmu.dir/clean:
 .PHONY : CMakeFiles/create_fmu.dir/clean
 
 CMakeFiles/create_fmu.dir/depend:
-	$(CMAKE_COMMAND) -E cmake_depends "MSYS Makefiles" /C/EmbedSimProject/examples/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources /C/EmbedSimProject/examples/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources /C/EmbedSimProject/examples/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/build_cmake /C/EmbedSimProject/examples/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/build_cmake /C/EmbedSimProject/examples/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/build_cmake/CMakeFiles/create_fmu.dir/DependInfo.cmake
+	$(CMAKE_COMMAND) -E cmake_depends "MSYS Makefiles" /C/EmbedSimProject/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources /C/EmbedSimProject/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources /C/EmbedSimProject/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/build_cmake /C/EmbedSimProject/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/build_cmake /C/EmbedSimProject/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/build_cmake/CMakeFiles/create_fmu.dir/DependInfo.cmake
 .PHONY : CMakeFiles/create_fmu.dir/depend
 

@@ -62,7 +62,7 @@ PHONY: BuckConverter_FMU
 BuckConverter_FMU: nozip
 	cd .. && rm -f ../BuckConverter.fmu && zip -r ../BuckConverter.fmu *
 nozip: BuckConverter_functions.h BuckConverter_literals.h $(OFILES) $(RUNTIMEFILES) $(FMISUNDIALSFILES)
-	$(CXX) -shared -I. -o BuckConverter$(DLLEXT) $(RUNTIMEFILES) $(FMISUNDIALSFILES) $(OFILES) $(CPPFLAGS) -L"C:/EmbedSimProject/examples/buck_converter/modelica"   $(CFLAGS) $(LDFLAGS) -llis -Wl,--kill-at
+	$(CXX) -shared -I. -o BuckConverter$(DLLEXT) $(RUNTIMEFILES) $(FMISUNDIALSFILES) $(OFILES) $(CPPFLAGS) -L"C:/EmbedSimProject/buck_converter/modelica"   $(CFLAGS) $(LDFLAGS) -llis -Wl,--kill-at
 	mkdir.exe -p ../binaries/win64
 	dlltool -d BuckConverter.def --dllname BuckConverter$(DLLEXT) --output-lib BuckConverter.lib --kill-at
 	cp BuckConverter$(DLLEXT) BuckConverter.lib BuckConverter_FMU.libs ../binaries/win64/

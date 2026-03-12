@@ -1,7 +1,7 @@
 CMakeFiles/158.dir/external_solvers/r1updt_.c.obj: \
-  C:/EmbedSimProject/examples/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/external_solvers/r1updt_.c \
-  C:/EmbedSimProject/examples/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/external_solvers/minpack.h \
-  C:/EmbedSimProject/examples/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/external_solvers/cminpack.h \
+  C:/EmbedSimProject/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/external_solvers/r1updt_.c \
+  C:/EmbedSimProject/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/external_solvers/minpack.h \
+  C:/EmbedSimProject/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/external_solvers/cminpack.h \
   C:/Program\ Files/OpenModelica1.25.7-64bit/tools/msys/ucrt64/include/math.h \
   C:/Program\ Files/OpenModelica1.25.7-64bit/tools/msys/ucrt64/include/crtdefs.h \
   C:/Program\ Files/OpenModelica1.25.7-64bit/tools/msys/ucrt64/include/corecrt.h \
@@ -11,6 +11,6 @@ CMakeFiles/158.dir/external_solvers/r1updt_.c.obj: \
   C:/Program\ Files/OpenModelica1.25.7-64bit/tools/msys/ucrt64/lib/clang/18/include/vadefs.h \
   C:/Program\ Files/OpenModelica1.25.7-64bit/tools/msys/ucrt64/include/vadefs.h \
   C:/Program\ Files/OpenModelica1.25.7-64bit/tools/msys/ucrt64/include/sdks/_mingw_ddk.h \
-  C:/EmbedSimProject/examples/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/external_solvers/minpackP.h \
+  C:/EmbedSimProject/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/external_solvers/minpackP.h \
   C:/Program\ Files/OpenModelica1.25.7-64bit/tools/msys/ucrt64/lib/clang/18/include/float.h \
   C:/Program\ Files/OpenModelica1.25.7-64bit/tools/msys/ucrt64/include/float.h

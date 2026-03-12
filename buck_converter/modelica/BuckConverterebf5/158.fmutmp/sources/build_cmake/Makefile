@@ -57,10 +57,10 @@ RM = "/C/Program Files/OpenModelica1.25.7-64bit/tools/msys/ucrt64/bin/cmake.exe"
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /C/EmbedSimProject/examples/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources
+CMAKE_SOURCE_DIR = /C/EmbedSimProject/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /C/EmbedSimProject/examples/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/build_cmake
+CMAKE_BINARY_DIR = /C/EmbedSimProject/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/build_cmake
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -132,9 +132,9 @@ install/strip/fast: preinstall/fast
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /C/EmbedSimProject/examples/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/build_cmake/CMakeFiles /C/EmbedSimProject/examples/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/build_cmake//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /C/EmbedSimProject/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/build_cmake/CMakeFiles /C/EmbedSimProject/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/build_cmake//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /C/EmbedSimProject/examples/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/build_cmake/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /C/EmbedSimProject/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/build_cmake/CMakeFiles 0
 .PHONY : all
 
 # The main clean target

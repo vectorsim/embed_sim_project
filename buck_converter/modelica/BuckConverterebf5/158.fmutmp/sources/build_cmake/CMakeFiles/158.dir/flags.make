@@ -4,7 +4,7 @@
 # compile C with C:/Program Files/OpenModelica1.25.7-64bit/tools/msys/ucrt64/bin/clang.exe
 C_DEFINES = -DCMINPACK_NO_DLL -DFMI2_OVERRIDE_FUNCTION_PREFIX -DOMC_FMI_RUNTIME=1 -DOMC_MINIMAL_RUNTIME=1 -DOM_HAVE_PTHREADS -D_158_EXPORTS
 
-C_INCLUDES = -I/C/EmbedSimProject/examples/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources -I/C/EmbedSimProject/examples/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/fmi -I/C/EmbedSimProject/examples/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/sundials
+C_INCLUDES = -I/C/EmbedSimProject/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources -I/C/EmbedSimProject/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/fmi -I/C/EmbedSimProject/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/sundials
 
 C_FLAGS = -O3 -DNDEBUG
 

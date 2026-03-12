@@ -2,11 +2,11 @@
 <fmiModelDescription
   fmiVersion="2.0"
   modelName="BuckConverter"
-  guid="{4cd92b97-f2b6-4cc1-9a9e-9ea93a5af35c}"
-  description="Simple buck converter plant model"
+  guid="{fcecc3c0-31fc-4b0c-b5cb-7274e89f85b9}"
+  description="Simple buck converter plant model - Clean version without switch_state"
   version=""
   generationTool="OpenModelica Compiler OpenModelica v1.25.7 (64-bit)"
-  generationDateAndTime="2026-03-10T08:26:03Z"
+  generationDateAndTime="2026-03-12T10:19:21Z"
   variableNamingConvention="structured"
   numberOfEventIndicators="0">
   <ModelExchange

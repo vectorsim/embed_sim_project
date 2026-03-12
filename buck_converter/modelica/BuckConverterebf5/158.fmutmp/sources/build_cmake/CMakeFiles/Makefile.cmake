@@ -7,7 +7,7 @@ set(CMAKE_DEPENDS_GENERATOR "MSYS Makefiles")
 # The top level Makefile was generated from the following files:
 set(CMAKE_MAKEFILE_DEPENDS
   "CMakeCache.txt"
-  "C:/EmbedSimProject/examples/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/CMakeLists.txt"
+  "C:/EmbedSimProject/buck_converter/modelica/BuckConverterebf5/158.fmutmp/sources/CMakeLists.txt"
   "CMakeFiles/3.30.5/CMakeCCompiler.cmake"
   "CMakeFiles/3.30.5/CMakeRCCompiler.cmake"
   "CMakeFiles/3.30.5/CMakeSystem.cmake"

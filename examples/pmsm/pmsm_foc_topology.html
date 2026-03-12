@@ -126,7 +126,7 @@ canvas{display:block;}
 <script>
 /* ── Data ── */
 const NODES=[{"id": "speed_ref", "x": 40, "y": 100, "w": 160, "h": 60, "cat": "source", "cls": "VectorConstant", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {}}, {"id": "vdc", "x": 240, "y": 100, "w": 160, "h": 60, "cat": "source", "cls": "VectorConstant", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {}}, {"id": "tload", "x": 440, "y": 100, "w": 160, "h": 60, "cat": "source", "cls": "VectorConstant", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {}}, {"id": "noisy_speed", "x": 640, "y": 100, "w": 160, "h": 60, "cat": "generic", "cls": "NoisySensorBlock", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {"vector_size": "1"}}, {"id": "noisy_currents", "x": 840, "y": 100, "w": 160, "h": 60, "cat": "generic", "cls": "NoisySensorBlock", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {"vector_size": "3"}}, {"id": "noisy_angle", "x": 1040, "y": 100, "w": 160, "h": 60, "cat": "generic", "cls": "NoisySensorBlock", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {"vector_size": "1"}}, {"id": "clarke", "x": 1240, "y": 100, "w": 160, "h": 60, "cat": "transform", "cls": "ClarkeTransformBlock", "dyn": false, "lb": false, "c": false, "lbl": "[alpha,beta]", "attrs": {"vector_size": "2"}}, {"id": "cg_start", "x": 1440, "y": 100, "w": 160, "h": 60, "cat": "codegen", "cls": "CodeGenStart", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {}}, {"id": "park", "x": 1640, "y": 100, "w": 160, "h": 60, "cat": "transform", "cls": "ParkTransformBlock", "dyn": false, "lb": false, "c": false, "lbl": "[d,q]", "attrs": {"vector_size": "2"}}, {"id": "speed_pi", "x": 1840, "y": 100, "w": 160, "h": 60, "cat": "control", "cls": "SpeedPIBlock", "dyn": true, "lb": false, "c": false, "lbl": "[id_ref,iq_ref]", "attrs": {"vector_size": "2"}}, {"id": "dq_ref", "x": 2040, "y": 100, "w": 160, "h": 60, "cat": "generic", "cls": "DQRefBlock", "dyn": false, "lb": false, "c": false, "lbl": "[id_ref,iq_ref]", "attrs": {"vector_size": "2"}}, {"id": "smc", "x": 2240, "y": 100, "w": 160, "h": 60, "cat": "control", "cls": "SMCBlock", "dyn": false, "lb": false, "c": false, "lbl": "[v_d,v_q]", "attrs": {"vector_size": "2"}}, {"id": "inv_park", "x": 2440, "y": 100, "w": 160, "h": 60, "cat": "transform", "cls": "InvParkTransformBlock", "dyn": false, "lb": false, "c": false, "lbl": "[alpha,beta]", "attrs": {"vector_size": "2"}}, {"id": "inv_clarke", "x": 2640, "y": 100, "w": 160, "h": 60, "cat": "transform", "cls": "InvClarkeTransformBlock", "dyn": false, "lb": false, "c": false, "lbl": "[a,b,c]", "attrs": {"vector_size": "3"}}, {"id": "svpwm", "x": 2840, "y": 100, "w": 160, "h": 60, "cat": "generic", "cls": "SVPWMBlock", "dyn": false, "lb": false, "c": false, "lbl": "[duty_a,duty_b,duty_c]", "attrs": {"vector_size": "3"}}, {"id": "cg_end", "x": 3040, "y": 100, "w": 160, "h": 60, "cat": "codegen", "cls": "CodeGenEnd", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {}}, {"id": "motor_sink", "x": 3240, "y": 100, "w": 160, "h": 60, "cat": "sink", "cls": "VectorEnd", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {}}, {"id": "sink", "x": 3440, "y": 100, "w": 160, "h": 60, "cat": "sink", "cls": "VectorEnd", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {}}, {"id": "motor_fb", "x": 40, "y": 310, "w": 160, "h": 60, "cat": "delay", "cls": "VectorDelay", "dyn": false, "lb": true, "c": false, "lbl": "", "attrs": {}}, {"id": "motor_speed", "x": 40, "y": 500, "w": 160, "h": 60, "cat": "plant", "cls": "MotorSpeedBlock", "dyn": false, "lb": false, "c": false, "lbl": "ωm", "attrs": {"vector_size": "1"}}, {"id": "motor_currents", "x": 240, "y": 500, "w": 160, "h": 60, "cat": "plant", "cls": "MotorCurrentsBlock", "dyn": false, "lb": false, "c": false, "lbl": "[ia,ib,ic]", "attrs": {"vector_size": "3"}}, {"id": "motor_angle", "x": 440, "y": 500, "w": 160, "h": 60, "cat": "plant", "cls": "MotorAngleBlock", "dyn": false, "lb": false, "c": false, "lbl": "θe", "attrs": {"vector_size": "1"}}, {"id": "motor", "x": 3040, "y": 500, "w": 160, "h": 60, "cat": "plant", "cls": "PMSM_Motor_WithSensorsBlock", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {"fmu_path": "PMSM_Motor_WithSensors.fmu"}}, {"id": "motor_out", "x": 3240, "y": 500, "w": 160, "h": 60, "cat": "plant", "cls": "MotorOutputBlock", "dyn": false, "lb": false, "c": false, "lbl": "[ia,ib,ic,θm,ωm]", "attrs": {"vector_size": "5"}}];
-const EDGES=[{"src": "motor_out", "dst": "motor_fb", "lb": false}, {"src": "motor_out", "dst": "sink", "lb": false}, {"src": "motor_fb", "dst": "motor_speed", "lb": true}, {"src": "motor_fb", "dst": "motor_currents", "lb": true}, {"src": "motor_fb", "dst": "motor_angle", "lb": true}, {"src": "motor_speed", "dst": "noisy_speed", "lb": false}, {"src": "motor_currents", "dst": "noisy_currents", "lb": false}, {"src": "motor_angle", "dst": "noisy_angle", "lb": false}, {"src": "speed_ref", "dst": "cg_start", "lb": false}, {"src": "noisy_speed", "dst": "cg_start", "lb": false}, {"src": "noisy_speed", "dst": "speed_pi", "lb": false}, {"src": "noisy_currents", "dst": "cg_start", "lb": false}, {"src": "noisy_currents", "dst": "clarke", "lb": false}, {"src": "noisy_angle", "dst": "cg_start", "lb": false}, {"src": "noisy_angle", "dst": "park", "lb": false}, {"src": "noisy_angle", "dst": "inv_park", "lb": false}, {"src": "cg_start", "dst": "speed_pi", "lb": false}, {"src": "speed_pi", "dst": "dq_ref", "lb": false}, {"src": "clarke", "dst": "park", "lb": false}, {"src": "dq_ref", "dst": "smc", "lb": false}, {"src": "park", "dst": "smc", "lb": false}, {"src": "smc", "dst": "inv_park", "lb": false}, {"src": "inv_park", "dst": "inv_clarke", "lb": false}, {"src": "inv_clarke", "dst": "svpwm", "lb": false}, {"src": "svpwm", "dst": "cg_end", "lb": false}, {"src": "cg_end", "dst": "motor", "lb": false}, {"src": "vdc", "dst": "motor", "lb": false}, {"src": "tload", "dst": "motor", "lb": false}, {"src": "motor", "dst": "motor_out", "lb": false}, {"src": "motor", "dst": "motor_sink", "lb": false}];
+const EDGES=[{"src": "motor_out", "dst": "motor_fb", "lb": false, "lbl": ""}, {"src": "motor_out", "dst": "sink", "lb": false, "lbl": ""}, {"src": "motor_fb", "dst": "motor_speed", "lb": true, "lbl": ""}, {"src": "motor_fb", "dst": "motor_currents", "lb": true, "lbl": ""}, {"src": "motor_fb", "dst": "motor_angle", "lb": true, "lbl": ""}, {"src": "motor_speed", "dst": "noisy_speed", "lb": false, "lbl": ""}, {"src": "motor_currents", "dst": "noisy_currents", "lb": false, "lbl": ""}, {"src": "motor_angle", "dst": "noisy_angle", "lb": false, "lbl": ""}, {"src": "speed_ref", "dst": "cg_start", "lb": false, "lbl": ""}, {"src": "noisy_speed", "dst": "cg_start", "lb": false, "lbl": ""}, {"src": "noisy_speed", "dst": "speed_pi", "lb": false, "lbl": ""}, {"src": "noisy_currents", "dst": "cg_start", "lb": false, "lbl": ""}, {"src": "noisy_currents", "dst": "clarke", "lb": false, "lbl": ""}, {"src": "noisy_angle", "dst": "cg_start", "lb": false, "lbl": ""}, {"src": "noisy_angle", "dst": "park", "lb": false, "lbl": ""}, {"src": "noisy_angle", "dst": "inv_park", "lb": false, "lbl": ""}, {"src": "cg_start", "dst": "speed_pi", "lb": false, "lbl": ""}, {"src": "speed_pi", "dst": "dq_ref", "lb": false, "lbl": ""}, {"src": "clarke", "dst": "park", "lb": false, "lbl": ""}, {"src": "dq_ref", "dst": "smc", "lb": false, "lbl": ""}, {"src": "park", "dst": "smc", "lb": false, "lbl": ""}, {"src": "smc", "dst": "inv_park", "lb": false, "lbl": ""}, {"src": "inv_park", "dst": "inv_clarke", "lb": false, "lbl": ""}, {"src": "inv_clarke", "dst": "svpwm", "lb": false, "lbl": ""}, {"src": "svpwm", "dst": "cg_end", "lb": false, "lbl": ""}, {"src": "cg_end", "dst": "motor", "lb": false, "lbl": ""}, {"src": "vdc", "dst": "motor", "lb": false, "lbl": ""}, {"src": "tload", "dst": "motor", "lb": false, "lbl": ""}, {"src": "motor", "dst": "motor_out", "lb": false, "lbl": ""}, {"src": "motor", "dst": "motor_sink", "lb": false, "lbl": ""}];
 const CG_REGION={"x": 1426, "y": 64, "w": 1788, "h": 110};
 
 /* ── Category colours — vivid, fully saturated ── */
@@ -208,25 +208,28 @@ function drawEdge(e){
     ctx.beginPath();ctx.moveTo(x1,s.y+s.h);ctx.lineTo(x1,by);
     ctx.lineTo(x2,by);ctx.lineTo(x2,d.y+d.h);ctx.stroke();
     ah(x2,d.y+d.h,Math.PI/2,9,col);
-    mlx=(x1+x2)/2;mly=by;
+    mlx=(x1+x2)/2;mly=by-10;
   }else if(Math.abs(sy-dy)<6){
     ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(dx,dy);ctx.stroke();
-    ah(dx,dy,0,9,col);mlx=(sx+dx)/2;mly=sy-12;
+    ah(dx,dy,0,9,col);mlx=(sx+dx)/2;mly=sy-13;
   }else{
     const mx=(sx+dx)/2;
     ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(mx,sy);
     ctx.lineTo(mx,dy);ctx.lineTo(dx,dy);ctx.stroke();
-    ah(dx,dy,0,9,col);mlx=mx;mly=(sy+dy)/2;
+    ah(dx,dy,0,9,col);mlx=(mx+dx)/2;mly=dy-13;
   }
-  /* Signal label on wire */
-  const lbl=s.lbl;
-  if(lbl&&!e.lb){
-    ctx.globalAlpha=0.95;
+  /* Signal label — read from edge, not source node */
+  const lbl=e.lbl||'';
+  if(lbl){
+    ctx.globalAlpha=1.0;
     ctx.font='bold 11px "JetBrains Mono",monospace';
-    const tw=ctx.measureText(lbl).width+8;
-    ctx.fillStyle='rgba(255,255,255,0.92)';
-    ctx.fillRect(mlx-tw/2,mly-8,tw,16);
-    ctx.fillStyle=CC[s.cat]||CC.generic;
+    const tw=ctx.measureText(lbl).width+10;
+    const th=16;
+    ctx.fillStyle='rgba(255,255,255,0.96)';
+    ctx.strokeStyle=col;ctx.lineWidth=1.2;ctx.setLineDash([]);
+    ctx.beginPath();ctx.roundRect(mlx-tw/2,mly-th/2,tw,th,4);
+    ctx.fill();ctx.stroke();
+    ctx.fillStyle=col;
     ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.fillText(lbl,mlx,mly);
   }

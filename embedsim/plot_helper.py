@@ -864,6 +864,112 @@ class PlotHelper:
         print(f"✅ All plots saved successfully!")
 
 
+    def plot_grid(self,
+                  rows: list,
+                  title: str = "",
+                  figsize: tuple = (12, 9),
+                  style: str = 'default',
+                  save_path: str = None,
+                  time_unit: str = 'ms') -> None:
+        """
+        Plot multiple signals in a vertical grid — one subplot per row.
+
+        Each row is a dict with these keys:
+
+            signal    (str)            scope key e.g. "buck_out[0]"      [required]
+            ylabel    (str)            y-axis label                       [optional]
+            title     (str)            subplot title                      [optional]
+            color     (str)            line colour  default "#1f77b4"     [optional]
+            ylim      (tuple)          (low, high) y limits               [optional]
+            ref_val   (float)          horizontal dashed reference line   [optional]
+            ref_label (str)            legend label for ref_val line      [optional]
+            step_time (float)          vertical dotted line (same unit    [optional]
+                                       as time_unit, default ms)
+
+        Parameters
+        ----------
+        rows        : list of dict  — one entry per subplot (see above)
+        title       : overall figure title
+        figsize     : (width, height) inches.  Default (12, 9)
+        style       : matplotlib style.  Default 'default'
+        save_path   : file path to save PNG.  If None, not saved.
+        time_unit   : 's' or 'ms'.  Default 'ms'
+
+        Example
+        -------
+        ph.plot_grid([
+            dict(signal="buck_out[0]", ylabel="Voltage (V)",
+                 title="Output Voltage V_out", color="#58a6ff",
+                 ylim=(-1, 20), ref_val=12.0, ref_label="V_ref = 12 V",
+                 step_time=1.0),
+            dict(signal="pi_ctrl[0]",  ylabel="Duty cycle",
+                 title="PI Controller — Duty Cycle", color="#3fb950",
+                 ylim=(0.0, 1.0)),
+            dict(signal="buck_out[1]", ylabel="Current (A)",
+                 title="Inductor Current I_L", color="#d2a8ff",
+                 ylim=(-12, 12)),
+        ], title="Buck Converter — PI Voltage Control",
+           save_path="pi_buck_response.png")
+        """
+        if not self._check_data():
+            return
+
+        scale = 1e3 if time_unit == 'ms' else 1.0
+        xlabel = f"Time ({time_unit})"
+
+        with plt.style.context(style):
+            fig, axes = plt.subplots(len(rows), 1, figsize=figsize,
+                                     constrained_layout=True)
+            if len(rows) == 1:
+                axes = [axes]
+
+            if title:
+                fig.suptitle(title, fontsize=14, fontweight='bold')
+
+            for ax, row in zip(axes, rows):
+                sig   = row['signal']
+                color = row.get('color', '#1f77b4')
+                ylim  = row.get('ylim')
+                ref   = row.get('ref_val')
+                rlbl  = row.get('ref_label')
+                st    = row.get('step_time')
+
+                if sig not in self.sim.scope.data:
+                    ax.set_title(f"⚠ '{sig}' not found", fontsize=10)
+                    continue
+
+                y = np.array([float(v) for v in self.sim.scope.data[sig]])
+                t = self.t * scale
+
+                ax.plot(t, y, color=color, linewidth=1.5)
+                ax.set_ylabel(row.get('ylabel', sig), fontsize=9)
+                ax.set_title(row.get('title', sig), fontsize=10)
+                ax.grid(True, alpha=0.3, linestyle='--')
+
+                if ylim:
+                    ax.set_ylim(*ylim)
+                if ref is not None:
+                    ax.axhline(ref, color='#f0883e', linestyle='--',
+                               linewidth=1.0,
+                               label=rlbl or f"ref = {ref}")
+                    ax.legend(fontsize=8, loc='upper right')
+                if st is not None:
+                    ax.axvline(st, color='#888888', linestyle=':', linewidth=1.0)
+                if len(y):
+                    ax.annotate(f"{y[-1]:.3f}",
+                                xy=(t[-1], y[-1]),
+                                xytext=(-6, 4),
+                                textcoords='offset points',
+                                fontsize=8)
+
+            axes[-1].set_xlabel(xlabel, fontsize=10)
+
+            if save_path:
+                fig.savefig(save_path, dpi=150, bbox_inches='tight')
+                print(f"✅ Plot saved to: {save_path}")
+            plt.show()
+
+
 def create_plotter(sim: EmbedSim) -> PlotHelper:
     """
     Create a PlotHelper instance for the given simulation.

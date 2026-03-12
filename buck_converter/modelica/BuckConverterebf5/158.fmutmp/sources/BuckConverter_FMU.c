@@ -1,6 +1,6 @@
 // define class name and unique id
 #define MODEL_IDENTIFIER BuckConverter
-#define MODEL_GUID "{4cd92b97-f2b6-4cc1-9a9e-9ea93a5af35c}"
+#define MODEL_GUID "{fcecc3c0-31fc-4b0c-b5cb-7274e89f85b9}"
 
 // include fmu header files, typedefs and macros
 #include <stdio.h>

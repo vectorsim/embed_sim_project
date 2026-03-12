@@ -62,6 +62,18 @@ def _block_info(block) -> Dict[str, Any]:
     cls  = getattr(block, '_cls', None) or type(block).__name__
     cat  = _classify(cls, name)
 
+    # _classify works on names/strings and misses FMU subclasses with arbitrary
+    # names (e.g. BuckConverterBlock).  Override via isinstance then fmu_path.
+    if cat == 'generic':
+        try:
+            from embedsim.fmu_blocks import FMUBlock
+            if isinstance(block, FMUBlock):
+                cat = 'plant'
+        except ImportError:
+            pass
+        if cat == 'generic' and getattr(block, 'fmu_path', None):
+            cat = 'plant'
+
     stub_attrs = getattr(block, '_attrs', None)
     if stub_attrs:
         attrs = dict(stub_attrs)
@@ -110,7 +122,8 @@ def _classify(cls: str, name: str) -> str:
     if any(x in token for x in ('motor', 'fmu', 'plant', 'threephase')):
         return 'plant'
     if any(x in token for x in ('smc', 'speedpi', 'speed_pi', 'pid',
-                                  'controller', 'mrac')):
+                                  'controller', 'mrac', 'pi_buck', 'pi_',
+                                  'regulator', 'observer')):
         return 'control'
     if any(x in token for x in ('park', 'clarke', 'transform',
                                   'invpark', 'invclarke')):
@@ -614,9 +627,11 @@ def _layout_nodes(nodes: List[Any],
 
 def _build_edges(nodes_data: List[Dict],
                  edges: Dict[str, List[str]],
-                 infos: Dict[str, Dict]) -> List[Dict]:
-    """Build JS edge list with lb flag for delay/feedback arcs."""
+                 infos: Dict[str, Dict],
+                 wire_labels: Optional[Dict[Tuple[str,str], str]] = None) -> List[Dict]:
+    """Build JS edge list with lb flag and optional signal label per arc."""
     ids = {n['id'] for n in nodes_data}
+    wl  = wire_labels or {}
     out = []
     for src, dsts in edges.items():
         if src not in ids:
@@ -624,17 +639,23 @@ def _build_edges(nodes_data: List[Dict],
         lb = infos.get(src, {}).get('is_lb', False)
         for dst in dsts:
             if dst in ids:
-                out.append({'src': src, 'dst': dst, 'lb': bool(lb)})
+                out.append({
+                    'src': src,
+                    'dst': dst,
+                    'lb':  bool(lb),
+                    'lbl': wl.get((src, dst), ''),
+                })
     return out
 
 
 def _render_html(nodes: List[Any],
                  edges: Dict[str, List[str]],
-                 title: str = "EmbedSim Topology") -> str:
+                 title: str = "EmbedSim Topology",
+                 wire_labels: Optional[Dict[Tuple[str,str], str]] = None) -> str:
 
     infos      = {getattr(b,'name',''): _block_info(b) for b in nodes}
     nodes_data = _layout_nodes(nodes, edges)
-    edges_data = _build_edges(nodes_data, edges, infos)
+    edges_data = _build_edges(nodes_data, edges, infos, wire_labels)
 
     canvas_w = max((n['x'] + n['w'] for n in nodes_data), default=800) + 80
     canvas_h = max((n['y'] + n['h'] for n in nodes_data), default=500) + 100
@@ -894,25 +915,28 @@ function drawEdge(e){{
     ctx.beginPath();ctx.moveTo(x1,s.y+s.h);ctx.lineTo(x1,by);
     ctx.lineTo(x2,by);ctx.lineTo(x2,d.y+d.h);ctx.stroke();
     ah(x2,d.y+d.h,Math.PI/2,9,col);
-    mlx=(x1+x2)/2;mly=by;
+    mlx=(x1+x2)/2;mly=by-10;
   }}else if(Math.abs(sy-dy)<6){{
     ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(dx,dy);ctx.stroke();
-    ah(dx,dy,0,9,col);mlx=(sx+dx)/2;mly=sy-12;
+    ah(dx,dy,0,9,col);mlx=(sx+dx)/2;mly=sy-13;
   }}else{{
     const mx=(sx+dx)/2;
     ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(mx,sy);
     ctx.lineTo(mx,dy);ctx.lineTo(dx,dy);ctx.stroke();
-    ah(dx,dy,0,9,col);mlx=mx;mly=(sy+dy)/2;
+    ah(dx,dy,0,9,col);mlx=(mx+dx)/2;mly=dy-13;
   }}
-  /* Signal label on wire */
-  const lbl=s.lbl;
-  if(lbl&&!e.lb){{
-    ctx.globalAlpha=0.95;
+  /* Signal label — read from edge, not source node */
+  const lbl=e.lbl||'';
+  if(lbl){{
+    ctx.globalAlpha=1.0;
     ctx.font='bold 11px "JetBrains Mono",monospace';
-    const tw=ctx.measureText(lbl).width+8;
-    ctx.fillStyle='rgba(255,255,255,0.92)';
-    ctx.fillRect(mlx-tw/2,mly-8,tw,16);
-    ctx.fillStyle=CC[s.cat]||CC.generic;
+    const tw=ctx.measureText(lbl).width+10;
+    const th=16;
+    ctx.fillStyle='rgba(255,255,255,0.96)';
+    ctx.strokeStyle=col;ctx.lineWidth=1.2;ctx.setLineDash([]);
+    ctx.beginPath();ctx.roundRect(mlx-tw/2,mly-th/2,tw,th,4);
+    ctx.fill();ctx.stroke();
+    ctx.fillStyle=col;
     ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.fillText(lbl,mlx,mly);
   }}
@@ -1123,11 +1147,23 @@ class TopologyPrinter:
         A built simulation object (or demo stub).
     title : str
         Title shown in the browser tab.
+    wire_labels : dict, optional
+        Maps (src_block_name, dst_block_name) -> signal label string.
+        Declared in the simulation script (the only place that knows
+        signal semantics). Example::
+
+            wire_labels = {
+                ("vref",    "pi_ctrl_start"): "[V_ref]",
+                ("pi_buck", "pi_ctrl_end"):   "[duty]",
+                ("buck",    "fb_delay"):      "[V_out]",
+            }
     """
 
-    def __init__(self, sim, title: str = "EmbedSim Topology"):
-        self._sim   = sim
-        self._title = title
+    def __init__(self, sim, title: str = "EmbedSim Topology",
+                 wire_labels: Optional[Dict[Tuple[str,str], str]] = None):
+        self._sim         = sim
+        self._title       = title
+        self._wire_labels = wire_labels or {}
         self._nodes, self._edges = _extract_graph(sim)
 
     def print_console(self) -> None:
@@ -1138,12 +1174,25 @@ class TopologyPrinter:
         return _render_console(self._nodes, self._edges)
 
     def get_html(self) -> str:
-        return _render_html(self._nodes, self._edges, title=self._title)
+        return _render_html(self._nodes, self._edges,
+                            title=self._title,
+                            wire_labels=self._wire_labels)
 
-    def export_html(self, path: str) -> str:
+    def export_html(self, path: str,
+                    wire_labels: Optional[Dict[Tuple[str,str], str]] = None) -> str:
+        """
+        Write the topology HTML to *path*.
+
+        wire_labels here overrides the instance-level wire_labels if supplied,
+        so  sim.topo.export_html("out.html", wire_labels=WIRE_LABELS)  works
+        even when TopologyPrinter was constructed without labels.
+        """
+        wl = wire_labels if wire_labels is not None else self._wire_labels
         abs_path = os.path.abspath(path)
+        html = _render_html(self._nodes, self._edges,
+                            title=self._title, wire_labels=wl)
         with open(abs_path, 'w', encoding='utf-8') as f:
-            f.write(self.get_html())
+            f.write(html)
         print(f"[TopologyPrinter] Saved: {abs_path}")
         return abs_path
 

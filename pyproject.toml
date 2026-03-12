@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=61", "wheel", "cython>=3.0"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "embedsim"
+version = "2.0.0"
+description = "Open-source simulation and C code generation for embedded control systems"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.9"
+dependencies = [
+    "numpy",
+    "scipy",
+    "matplotlib",
+    "cython>=3.0",
+]
+
+[project.optional-dependencies]
+fmu = ["fmpy"]
+dev = ["pytest", "build", "twine"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = [
+    "embedsim*",
+    "electrical_blocks*",
+    "utility_functions*",
+    "buck_converter*",
+]
+
+[project.urls]
+Homepage = "https://github.com/vectorsim/embed_sim_project"
+Repository = "https://github.com/vectorsim/embed_sim_project"
+Issues = "https://github.com/vectorsim/embed_sim_project/issues"

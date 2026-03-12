@@ -979,12 +979,9 @@ class LoopGenerator:
         # Output buffer
         lines.append(f"    real32_T y_{sn}[{total_out}];")
 
-        # State struct pointer (if stateful — PYXInspector sets state_struct)
+        # State struct pointer (if stateful — defined at file scope in _gen_c)
         state_struct = getattr(block, 'state_struct',
                        getattr(block.__class__, 'state_struct', ''))
-        if state_struct:
-            lines.append(f"    /* State: {state_struct} {sn}_state; "
-                         f"(declare as file-scope static) */")
 
         # The actual C call
         if state_struct:
@@ -1027,12 +1024,50 @@ class LoopGenerator:
             " * DO NOT EDIT — re-generate with cg_end.generate_loop()",
             " */",
             "",
-            '#include <string.h>   /* memcpy */',
+            '#include <string.h>   /* memcpy, memset */',
             '#include "embedsim_loop.h"',
         ]
         for h in headers:
             L.append(f'#include "{h}"')
 
+        # ── File-scope static state definitions ───────────────────────────────
+        # Declared extern in the header, defined (allocated) here in the .c.
+        statics = []
+        for blk in blocks:
+            state_struct = (getattr(blk, 'state_struct', None) or
+                            getattr(blk.__class__, 'state_struct', ''))
+            if state_struct:
+                sn = _sanitize(blk.name or blk.__class__.__name__)
+                statics.append((state_struct, sn))
+
+        if statics:
+            L.append("")
+            L.append("/* ── State struct definitions (one per stateful block) ── */")
+            for state_struct, sn in statics:
+                L.append(f"static {state_struct} {sn}_state;")
+
+        # ── embedsim_loop_init ────────────────────────────────────────────────
+        L += [
+            "",
+            "",
+            "/* ================================================================",
+            " * embedsim_loop_init",
+            " *",
+            " * Zero all block states.  Call once at startup before the first",
+            " * call to embedsim_loop_step().",
+            " * ================================================================",
+            " */",
+            "void embedsim_loop_init(void)",
+            "{",
+        ]
+        if statics:
+            for state_struct, sn in statics:
+                L.append(f"    memset(&{sn}_state, 0, sizeof({state_struct}));")
+        else:
+            L.append("    /* No stateful blocks in this region */")
+        L.append("}")
+
+        # ── embedsim_loop_step ────────────────────────────────────────────────
         L += [
             "",
             "",
@@ -1100,8 +1135,8 @@ class LoopGenerator:
                 statics.append(f"static {state_struct} {sn}_state;")
 
         if statics:
-            L.append("/* Persistent state (file-scope statics — one per stateful block) */")
-            L += statics
+            L.append("/* Persistent state — defined in embedsim_loop.c, declared extern here */")
+            L += [s.replace("static ", "extern ") for s in statics]
             L.append("")
 
         # Collect unique motor_reg declarations for unit-delay blocks

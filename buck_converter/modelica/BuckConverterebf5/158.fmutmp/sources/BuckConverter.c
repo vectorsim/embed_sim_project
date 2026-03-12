@@ -387,9 +387,9 @@ struct OpenModelicaGeneratedFunctionCallbacks BuckConverter_callback = {
 };
 
 #define _OMC_LIT_RESOURCE_0_name_data "BuckConverter"
-#define _OMC_LIT_RESOURCE_0_dir_data "C:/EmbedSimProject/examples/buck_converter/modelica"
+#define _OMC_LIT_RESOURCE_0_dir_data "C:/EmbedSimProject/buck_converter/modelica"
 static const MMC_DEFSTRINGLIT(_OMC_LIT_RESOURCE_0_name,13,_OMC_LIT_RESOURCE_0_name_data);
-static const MMC_DEFSTRINGLIT(_OMC_LIT_RESOURCE_0_dir,51,_OMC_LIT_RESOURCE_0_dir_data);
+static const MMC_DEFSTRINGLIT(_OMC_LIT_RESOURCE_0_dir,42,_OMC_LIT_RESOURCE_0_dir_data);
 
 #define _OMC_LIT_RESOURCE_1_name_data "Complex"
 #define _OMC_LIT_RESOURCE_1_dir_data "C:/Users/paul/AppData/Roaming/.openmodelica/libraries/Complex 4.0.0+maint.om"
@@ -417,8 +417,8 @@ void BuckConverter_setupDataStruc(DATA *data, threadData_t *threadData)
   data->modelData->modelFilePrefix = "BuckConverter";
   data->modelData->modelFileName = "BuckConverter.mo";
   data->modelData->resultFileName = NULL;
-  data->modelData->modelDir = "C:/EmbedSimProject/examples/buck_converter/modelica";
-  data->modelData->modelGUID = "{4cd92b97-f2b6-4cc1-9a9e-9ea93a5af35c}";
+  data->modelData->modelDir = "C:/EmbedSimProject/buck_converter/modelica";
+  data->modelData->modelGUID = "{fcecc3c0-31fc-4b0c-b5cb-7274e89f85b9}";
   data->modelData->initXMLData = NULL;
   data->modelData->modelDataXml.infoXMLData = NULL;
   GC_asprintf(&data->modelData->modelDataXml.fileName, "%s/BuckConverter_info.json", data->modelData->resourcesDir);

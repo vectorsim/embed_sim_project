@@ -13,10 +13,9 @@
 
 /* Block headers */
 #include "pi_buck_controller.h"
-#include "Sys_Types.h"
 
-/* Persistent state (file-scope statics — one per stateful block) */
-static PI_Buck_Block_T pi_buck_state;
+/* Persistent state — defined in embedsim_loop.c, declared extern here */
+extern PI_Buck_Block_T pi_buck_state;
 
 /* ── Public API ─────────────────────────────────────────────── */
 

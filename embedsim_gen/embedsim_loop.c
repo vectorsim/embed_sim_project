@@ -3,10 +3,25 @@
  * DO NOT EDIT — re-generate with cg_end.generate_loop()
  */
 
-#include <string.h>   /* memcpy */
+#include <string.h>   /* memcpy, memset */
 #include "embedsim_loop.h"
 #include "pi_buck_controller.h"
-#include "Sys_Types.h"
+
+/* ── State struct definitions (one per stateful block) ── */
+static PI_Buck_Block_T pi_buck_state;
+
+
+/* ================================================================
+ * embedsim_loop_init
+ *
+ * Zero all block states.  Call once at startup before the first
+ * call to embedsim_loop_step().
+ * ================================================================
+ */
+void embedsim_loop_init(void)
+{
+    memset(&pi_buck_state, 0, sizeof(PI_Buck_Block_T));
+}
 
 
 /* ================================================================
@@ -26,12 +41,13 @@ void embedsim_loop_step(real32_T dt)
     /* [fb_delay] Python-only block — no C step function. Replace with hand-written C or add C_SOURCES + step_func. */
 
     /* --- pi_buck (PI_BuckBlock) --- */
-    real32_T u_pi_buck[2];
-    u_pi_buck[0] = y_pi_ctrl_start[0];
-    u_pi_buck[1] = y_fb_delay[0];
-    real32_T y_pi_buck[1];
-    /* State: PI_Buck_Block_T pi_buck_state; (declare as file-scope static) */
-    PI_Buck_Compute(&pi_buck_state, u_pi_buck, dt, y_pi_buck);
-
+    {
+        PI_Buck_Input_T  u_pi_buck;
+        PI_Buck_Output_T y_pi_buck;
+        u_pi_buck.V_ref  = y_pi_ctrl_start[0];
+        u_pi_buck.V_meas = y_fb_delay[0];
+        PI_Buck_Compute(&pi_buck_state, &u_pi_buck, dt, &y_pi_buck);
+        /* y_pi_buck.duty available to downstream blocks as needed */
+    }
 
 }
