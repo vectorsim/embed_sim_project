@@ -1,0 +1,74 @@
+[
+  {
+    "V_ref": 8.0,
+    "R_load": 5.0,
+    "V_in": 24.0,
+    "Kp_best": 0.08,
+    "Ki_best": 3.0,
+    "cost_best": 2.000528879655153
+  },
+  {
+    "V_ref": 8.0,
+    "R_load": 10.0,
+    "V_in": 24.0,
+    "Kp_best": 0.08,
+    "Ki_best": 3.0,
+    "cost_best": 10.0
+  },
+  {
+    "V_ref": 8.0,
+    "R_load": 18.0,
+    "V_in": 24.0,
+    "Kp_best": 0.08,
+    "Ki_best": 3.0,
+    "cost_best": 10.0
+  },
+  {
+    "V_ref": 12.0,
+    "R_load": 5.0,
+    "V_in": 24.0,
+    "Kp_best": 0.08,
+    "Ki_best": 3.0,
+    "cost_best": 2.5354280323022547
+  },
+  {
+    "V_ref": 12.0,
+    "R_load": 10.0,
+    "V_in": 24.0,
+    "Kp_best": 0.08,
+    "Ki_best": 3.0,
+    "cost_best": 10.0
+  },
+  {
+    "V_ref": 12.0,
+    "R_load": 18.0,
+    "V_in": 24.0,
+    "Kp_best": 0.08,
+    "Ki_best": 3.0,
+    "cost_best": 10.0
+  },
+  {
+    "V_ref": 15.0,
+    "R_load": 5.0,
+    "V_in": 24.0,
+    "Kp_best": 0.08,
+    "Ki_best": 3.0,
+    "cost_best": 2.5925975838530184
+  },
+  {
+    "V_ref": 15.0,
+    "R_load": 10.0,
+    "V_in": 24.0,
+    "Kp_best": 0.08,
+    "Ki_best": 3.0,
+    "cost_best": 8.70557527621775
+  },
+  {
+    "V_ref": 15.0,
+    "R_load": 18.0,
+    "V_in": 24.0,
+    "Kp_best": 0.08,
+    "Ki_best": 3.0,
+    "cost_best": 10.0
+  }
+]
