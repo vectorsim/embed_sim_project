@@ -2,120 +2,151 @@
 fs_clarke_park_codegen.py
 =========================
 
-Simple test: 3-phase sine-wave generator → Clarke → Park transformation.
-Theta is supplied as a VectorConstant (fixed electrical angle).
+3-phase sine source -> Clarke -> Park transformation.
 
-Runs a short simulation then triggers EmbedSim code generation,
-emitting embedsim_loop.c / embedsim_loop.h into embedsim_gen/.
-
-Layout
-------
-  Va(t) = sin(ωt)
-  Vb(t) = sin(ωt - 2π/3)
-  Vc(t) = sin(ωt + 2π/3)
-  θ     = constant (e.g. 0.5 rad)
-
-  [Va, Vb, Vc] ──► ClarkeBlock ──► [Vα, Vβ]
-                                         │
-  [θ] ─────────────────────────────────► ParkBlock ──► [Vd, Vq]
+Wiring for codegen:
+  ThreePhaseSine --> cg_start --> Clarke --> Park --> cg_end --> Sink
+                                               ^
+                                           Theta  (VectorConstant, outside
+                                                   codegen region so it is
+                                                   not emitted as a block —
+                                                   its value becomes the
+                                                   THETA_E #define in the
+                                                   generated C header)
 """
 
 import sys
 import math
 import numpy as np
+from pathlib import Path
 
-# ── Path setup ────────────────────────────────────────────────────────────────
-from _path_utils import get_embedsim_import_path
-sys.path.insert(0, get_embedsim_import_path())
+# -- Path setup ----------------------------------------------------------------
+from _path_utils import get_project_root
 
-# ── EmbedSim imports ──────────────────────────────────────────────────────────
-from embedsim.simulation_engine import SimulationEngine
-from embedsim.vector_block     import VectorConstant
-from embedsim.script_block     import ScriptBlock          # used for sine gen
+_root = get_project_root()
 
-# Coordinate transform blocks
-from fs_electrical_machines.electrical_blocks.clarke_block import ClarkeBlock
-from fs_electrical_machines.electrical_blocks.park_block   import ParkBlock
+sys.path.insert(0, str(_root))
+sys.path.insert(0, str(_root / "fs_electrical_machines"))
+sys.path.insert(0, str(_root / "fs_electrical_machines" / "c_src"))
 
-# ── Parameters ────────────────────────────────────────────────────────────────
-F_ELEC   = 50.0          # electrical frequency [Hz]
-OMEGA    = 2 * math.pi * F_ELEC
-V_PEAK   = 1.0           # normalised peak amplitude
-THETA    = 0.5           # fixed electrical angle [rad]
+# -- EmbedSim imports ----------------------------------------------------------
+from embedsim.simulation_engine import EmbedSim, ODESolver
+from embedsim.source_blocks     import VectorConstant, ThreePhaseGenerator
+from embedsim.dynamic_blocks    import VectorEnd
+from embedsim.plot_helper       import create_plotter
+from embedsim.code_generator    import CodeGenStart, CodeGenEnd, LoopGenerator
 
-T_END    = 0.04          # 2 full electrical cycles
-DT       = 1e-5          # 10 µs step
-
-# ── Build simulation ──────────────────────────────────────────────────────────
-eng = SimulationEngine(dt=DT, t_end=T_END)
-
-# 3-phase sine source  (ScriptBlock: outputs [Va, Vb, Vc])
-def three_phase_sine(t, inputs):
-    va = V_PEAK * math.sin(OMEGA * t)
-    vb = V_PEAK * math.sin(OMEGA * t - 2 * math.pi / 3)
-    vc = V_PEAK * math.sin(OMEGA * t + 2 * math.pi / 3)
-    return np.array([va, vb, vc], dtype=np.float32)
-
-sine_src = ScriptBlock(
-    name        = "ThreePhaseSine",
-    num_inputs  = 0,
-    output_size = 3,
-    func        = three_phase_sine,
+# -- Coordinate transform blocks -----------------------------------------------
+from coordinate_transform_blocks import (
+    ClarkeTransformBlock as ClarkeBlock,
+    ParkTransformBlock   as ParkBlock,
 )
 
-# Fixed electrical angle
-theta_src = VectorConstant(
-    name  = "Theta",
-    value = np.array([THETA], dtype=np.float32),
-)
+# -- Parameters ----------------------------------------------------------------
+F_ELEC = 50.0
+V_PEAK = 1.0
+THETA  = 0.5            # fixed electrical angle [rad]
 
-# Clarke transform:  [Va, Vb, Vc] → [Vα, Vβ]
-clarke = ClarkeBlock(name="Clarke")
+T_END  = 0.04
+DT     = 1e-5
 
-# Park transform:    [Vα, Vβ, θ] → [Vd, Vq]
-park = ParkBlock(name="Park")
+# -- Build blocks --------------------------------------------------------------
+sine_src  = ThreePhaseGenerator(name="ThreePhaseSine", amplitude=V_PEAK, freq=F_ELEC)
 
-# ── Wiring ────────────────────────────────────────────────────────────────────
-#   sine_src[0:3] → Clarke inputs
-sine_src >> clarke
+# Theta is outside the codegen region — it feeds Park at simulation time
+# but in generated C it is represented by the THETA_E #define below.
+theta_src = VectorConstant(name="Theta",
+                           value=np.array([THETA], dtype=np.float32))
 
-#   Clarke[0:2] → Park inputs 0,1
-#   theta_src[0] → Park input 2
-clarke  >> park          # Vα, Vβ
-theta_src >> park        # θ  (port 2)
+clarke    = ClarkeBlock(name="Clarke")
+park      = ParkBlock(name="Park")
 
-# Register blocks
-eng.add_blocks([sine_src, theta_src, clarke, park])
+cg_start  = CodeGenStart(name="cg_start")
+cg_end    = CodeGenEnd(name="cg_end")
+sink      = VectorEnd(name="Sink")
 
-# ── Run simulation ────────────────────────────────────────────────────────────
+# -- Wiring --------------------------------------------------------------------
+#
+#  ThreePhaseSine --> cg_start --> Clarke --> Park --> cg_end --> Sink
+#                                              ^
+#                                           Theta   (outside region)
+#
+sine_src  >> cg_start
+cg_start  >> clarke
+clarke    >> park
+theta_src >> park          # Theta feeds Park but is outside the codegen region
+park      >> cg_end
+cg_end    >> sink
+
+# -- Build simulation ----------------------------------------------------------
+eng = EmbedSim(sinks=[sink], T=T_END, dt=DT, solver=ODESolver.RK4)
+
+# -- Topology ------------------------------------------------------------------
+eng.topo.print_console()
+
+# -- Register signals for recording --------------------------------------------
+eng.scope.add(sine_src, label="3phase")
+eng.scope.add(clarke,   label="clarke")
+eng.scope.add(park,     label="park")
+
+# -- Run -----------------------------------------------------------------------
 print("=" * 60)
 print(" Running Clarke-Park simulation")
-print(f"  f_elec = {F_ELEC} Hz,  θ = {THETA:.3f} rad,  T = {T_END*1e3:.1f} ms")
+print(f"  f_elec = {F_ELEC} Hz,  theta = {THETA:.3f} rad,  T = {T_END*1e3:.1f} ms")
 print("=" * 60)
 
 eng.run()
 
-# ── Print final-step results ──────────────────────────────────────────────────
-t_final = eng.time_log[-1]
-va_f = V_PEAK * math.sin(OMEGA * t_final)
-vb_f = V_PEAK * math.sin(OMEGA * t_final - 2 * math.pi / 3)
-vc_f = V_PEAK * math.sin(OMEGA * t_final + 2 * math.pi / 3)
-
-v_alpha = clarke.output_signal.value[0]
-v_beta  = clarke.output_signal.value[1]
-vd      = park.output_signal.value[0]
-vq      = park.output_signal.value[1]
+# -- Print final-step results --------------------------------------------------
+t_final = eng.scope.t[-1]
+v_alpha = float(clarke.output.value[0])
+v_beta  = float(clarke.output.value[1])
+vd      = float(park.output.value[0])
+vq      = float(park.output.value[1])
+omega   = 2 * math.pi * F_ELEC
+va_f    = V_PEAK * math.sin(omega * t_final)
+vb_f    = V_PEAK * math.sin(omega * t_final - 2 * math.pi / 3)
+vc_f    = V_PEAK * math.sin(omega * t_final + 2 * math.pi / 3)
 
 print(f"\nFinal step  t = {t_final*1e3:.3f} ms")
 print(f"  Va={va_f:+.4f}  Vb={vb_f:+.4f}  Vc={vc_f:+.4f}")
-print(f"  Vα={v_alpha:+.4f}  Vβ={v_beta:+.4f}")
+print(f"  Valpha={v_alpha:+.4f}  Vbeta={v_beta:+.4f}")
 print(f"  Vd={vd:+.4f}  Vq={vq:+.4f}")
 
-# ── Code generation ───────────────────────────────────────────────────────────
+# -- Plot ----------------------------------------------------------------------
+ph = create_plotter(eng)
+
+ph.plot_grid(
+    rows=[
+        dict(signal="3phase[0]", ylabel="Voltage (V)",
+             title="Phase Va",  color="#58a6ff"),
+        dict(signal="3phase[1]", ylabel="Voltage (V)",
+             title="Phase Vb",  color="#3fb950"),
+        dict(signal="3phase[2]", ylabel="Voltage (V)",
+             title="Phase Vc",  color="#d2a8ff"),
+        dict(signal="clarke[0]", ylabel="Valpha (V)",
+             title="Clarke -- Valpha (alpha-axis)", color="#f0883e"),
+        dict(signal="clarke[1]", ylabel="Vbeta (V)",
+             title="Clarke -- Vbeta (beta-axis)",  color="#ffa657"),
+        dict(signal="park[0]", ylabel="Vd (V)",
+             title="Park -- Vd (d-axis)", color="#79c0ff",
+             ref_val=round(vd, 3), ref_label=f"Vd = {vd:.3f} V"),
+        dict(signal="park[1]", ylabel="Vq (V)",
+             title="Park -- Vq (q-axis)", color="#56d364",
+             ref_val=round(vq, 3), ref_label=f"Vq = {vq:.3f} V"),
+    ],
+    title=f"Clarke-Park Transform  |  f={F_ELEC} Hz   theta={THETA:.2f} rad",
+    figsize=(13, 16),
+    time_unit="ms",
+    save_path="clarke_park_results.png",
+)
+
+# -- Code generation -----------------------------------------------------------
 print("\n" + "=" * 60)
-print(" Running code generation  →  embedsim_gen/")
+print(" Running code generation  ->  embedsim_gen/")
 print("=" * 60)
 
-eng.generate_loop()
+gen = LoopGenerator(cg_start, cg_end)
+gen.generate(output_dir=_root, dt_hz=1.0 / DT)
 
 print("\n[DONE] embedsim_loop.c and embedsim_loop.h written to embedsim_gen/")

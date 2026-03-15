@@ -1,19 +1,19 @@
 """
-coordinate_transform_blocks.py  —  fs_electrical_machines
+coordinate_transform_blocks.py  --  fs_electrical_machines
 ==========================================================
 Clarke / Park / InvClarke / InvPark as EmbedSim VectorBlock subclasses.
 
-Each block:
-  - has a pure-Python compute_py() fallback (works before Cython build)
-  - tries to use the Cython/C wrapper in compute() when available
-  - carries full CodeGen attributes for Feature 05121967 (PYXInspector)
+PYX_FILE is resolved using Path(__file__) so it is always absolute.
 
-Signal conventions
-------------------
-  Clarke    : input  [i_a, i_b, i_c]  → output [i_alpha, i_beta]
-  Park      : input  [i_alpha, i_beta, theta_e]  → output [i_d, i_q]
-  InvPark   : input  [v_d, v_q, theta_e]  → output [v_alpha, v_beta]
-  InvClarke : input  [v_alpha, v_beta]  → output [v_a, v_b, v_c]
+C_CUSTOM_EMIT is used for all four transforms because their C functions
+take individual scalar arguments and pointer outputs — incompatible with
+the flat real32_T u[]/y[] auto-emission path in LoopGenerator._emit_block().
+
+Actual signatures (from Coordinate_Transform.h):
+    Clarke_Step (Clarke_T*, ia, ib, ic, alpha_out*, beta_out*)
+    Park_Step   (Park_T*,   alpha, beta, theta, d_out*, q_out*)
+    InvPark_Step(InvPark_T*, d, q, theta, alpha_out*, beta_out*)
+    InvClarke_Step(InvClarke_T*, alpha, beta, va_out*, vb_out*, vc_out*)
 """
 
 from __future__ import annotations
@@ -23,18 +23,24 @@ import sys
 import numpy as np
 from pathlib import Path
 
-# ── path bootstrap ────────────────────────────────────────────────────────────
-from _path_utils import get_embedsim_import_path, get_current_parent
+# -- path bootstrap ------------------------------------------------------------
+_HERE  = Path(__file__).resolve().parent        # always fs_electrical_machines/
+_C_SRC = _HERE / "c_src"
 
-sys.path.insert(0, get_embedsim_import_path())
+_root = _HERE.parent
+if str(_root) not in sys.path:
+    sys.path.insert(0, str(_root))
 
-from embedsim.core_blocks import VectorBlock, VectorSignal
-
-_C_SRC = get_current_parent() / "c_src"
 if str(_C_SRC) not in sys.path:
     sys.path.insert(0, str(_C_SRC))
 
-# ── try to import Cython wrapper ──────────────────────────────────────────────
+from embedsim.core_blocks import VectorBlock, VectorSignal
+
+# Absolute path to the .pyx — PYXInspector fills C_SOURCES, C_HEADERS,
+# step_func, init_func, state_struct at class-definition time.
+_PYX = str(_C_SRC / "coordinate_transform_wrapper.pyx")
+
+# -- try to import Cython wrapper ----------------------------------------------
 try:
     from coordinate_transform_wrapper import (
         ClarkeWrapper,
@@ -47,26 +53,45 @@ except ImportError:
     _HAS_C = False
 
 
-# =============================================================================
+# ==============================================================================
 # ClarkeTransformBlock
-# =============================================================================
+# ==============================================================================
 
 class ClarkeTransformBlock(VectorBlock):
     """
-    Clarke transform: [i_a, i_b, i_c] → [i_alpha, i_beta]
+    Clarke transform: [i_a, i_b, i_c] -> [i_alpha, i_beta]
 
-    Power-invariant form:
-        i_alpha = (2/3) * i_a  −  (1/3) * i_b  −  (1/3) * i_c
-        i_beta  = (1/√3) * (i_b − i_c)
+    C signature:
+        void Clarke_Step(Clarke_T* pS,
+                         MatrixFloat ia, MatrixFloat ib, MatrixFloat ic,
+                         MatrixFloat* alpha_out, MatrixFloat* beta_out);
+
+    C_CUSTOM_EMIT bypasses flat-array auto-emission because the C function
+    takes individual scalar args and pointer outputs, not u[]/y[] arrays.
+    State struct Clarke_T is stateful per the header (has Clarke_Init).
     """
 
-    NUM_INPUTS:   int  = 1
-    OUTPUT_SIZE:  int  = 2
-    C_SOURCES:    list = ["Coordinate_Transform.c", "Matrix.c"]
-    C_HEADERS:    list = ["Coordinate_Transform.h"]
-    step_func:    str  = "Clarke_Step"
-    init_func:    str  = "Clarke_Init"
-    state_struct: str  = "Clarke_T"
+    PYX_FILE     = _PYX
+    NUM_INPUTS   = 1          # single port: [ia, ib, ic]
+    OUTPUT_SIZE  = 2          # [i_alpha, i_beta]
+    C_SOURCES    = ["Coordinate_Transform.c", "Matrix.c"]
+    C_HEADERS    = ["Coordinate_Transform.h"]
+    init_func    = "Clarke_Init"
+    step_func    = "Clarke_Step"
+    state_struct = "Clarke_T"
+
+    # Custom C emission — matches the actual scalar-arg pointer-output signature
+    C_CUSTOM_EMIT = """\
+    /* --- Clarke (ClarkeTransformBlock) --- */
+    {
+        MatrixFloat clarke_alpha, clarke_beta;
+        Clarke_Step(&Clarke_state,
+                    u_cg_start[0], u_cg_start[1], u_cg_start[2],
+                    &clarke_alpha, &clarke_beta);
+        real32_T y_Clarke[2];
+        y_Clarke[0] = clarke_alpha;
+        y_Clarke[1] = clarke_beta;
+    }"""
 
     def __init__(self, name: str, use_c_backend: bool = True, dtype=None):
         super().__init__(name, dtype=dtype)
@@ -82,10 +107,10 @@ class ClarkeTransformBlock(VectorBlock):
             v = input_values[0].value
             if len(v) >= 3:
                 i_a, i_b, i_c = float(v[0]), float(v[1]), float(v[2])
-        i_alpha = (2.0 / 3.0) * i_a - (1.0 / 3.0) * i_b - (1.0 / 3.0) * i_c
+        i_alpha = (2.0/3.0)*i_a - (1.0/3.0)*i_b - (1.0/3.0)*i_c
         i_beta  = (i_b - i_c) / math.sqrt(3.0)
-        out = np.array([i_alpha, i_beta], dtype=np.float32)
-        self.output = VectorSignal(out, self.name, dtype=self.dtype)
+        self.output = VectorSignal(np.array([i_alpha, i_beta], dtype=np.float32),
+                                   self.name, dtype=self.dtype)
         return self.output
 
     def compute(self, t, dt, input_values=None):
@@ -97,7 +122,8 @@ class ClarkeTransformBlock(VectorBlock):
             u[:min(3, len(v))] = v[:3]
         self._wrapper.step(float(u[0]), float(u[1]), float(u[2]))
         y = self._wrapper.get_outputs()
-        self.output = VectorSignal(np.array(y, dtype=np.float32), self.name, dtype=self.dtype)
+        self.output = VectorSignal(np.array(y, dtype=np.float32),
+                                   self.name, dtype=self.dtype)
         return self.output
 
     def reset(self):
@@ -106,25 +132,44 @@ class ClarkeTransformBlock(VectorBlock):
             self._wrapper.reset()
 
 
-# =============================================================================
+# ==============================================================================
 # ParkTransformBlock
-# =============================================================================
+# ==============================================================================
 
 class ParkTransformBlock(VectorBlock):
     """
-    Park transform: [i_alpha, i_beta, theta_e] → [i_d, i_q]
+    Park transform: [i_alpha, i_beta] + theta_e -> [i_d, i_q]
 
-        i_d =  i_alpha * cos(θ) + i_beta * sin(θ)
-        i_q = −i_alpha * sin(θ) + i_beta * cos(θ)
+    C signature:
+        void Park_Step(Park_T* pS,
+                       MatrixFloat alpha, MatrixFloat beta, MatrixFloat theta,
+                       MatrixFloat* d_out, MatrixFloat* q_out);
+
+    theta comes from the upstream VectorConstant (Theta block).
+    In generated C it is a static const defined in embedsim_loop.c.
     """
 
-    NUM_INPUTS:   int  = 2          # port 0: [alpha, beta],  port 1: theta scalar
-    OUTPUT_SIZE:  int  = 2
-    C_SOURCES:    list = ["Coordinate_Transform.c", "Matrix.c"]
-    C_HEADERS:    list = ["Coordinate_Transform.h"]
-    step_func:    str  = "Park_Step"
-    init_func:    str  = "Park_Init"
-    state_struct: str  = "Park_T"
+    PYX_FILE     = _PYX
+    NUM_INPUTS   = 2          # port 0: [alpha, beta]  port 1: theta scalar
+    OUTPUT_SIZE  = 2          # [i_d, i_q]
+    C_SOURCES    = ["Coordinate_Transform.c", "Matrix.c"]
+    C_HEADERS    = ["Coordinate_Transform.h"]
+    init_func    = "Park_Init"
+    step_func    = "Park_Step"
+    state_struct = "Park_T"
+
+    C_CUSTOM_EMIT = """\
+    /* --- Park (ParkTransformBlock) --- */
+    {
+        MatrixFloat park_d, park_q;
+        Park_Step(&Park_state,
+                  y_Clarke[0], y_Clarke[1],
+                  THETA_E,
+                  &park_d, &park_q);
+        real32_T y_Park[2];
+        y_Park[0] = park_d;
+        y_Park[1] = park_q;
+    }"""
 
     def __init__(self, name: str, use_c_backend: bool = True, dtype=None):
         super().__init__(name, dtype=dtype)
@@ -142,12 +187,11 @@ class ParkTransformBlock(VectorBlock):
                 alpha, beta = float(v[0]), float(v[1])
         if input_values and len(input_values) > 1 and input_values[1] is not None:
             theta = float(input_values[1].value[0])
-        cos_t = math.cos(theta)
-        sin_t = math.sin(theta)
+        cos_t, sin_t = math.cos(theta), math.sin(theta)
         i_d =  alpha * cos_t + beta * sin_t
         i_q = -alpha * sin_t + beta * cos_t
-        out = np.array([i_d, i_q], dtype=np.float32)
-        self.output = VectorSignal(out, self.name, dtype=self.dtype)
+        self.output = VectorSignal(np.array([i_d, i_q], dtype=np.float32),
+                                   self.name, dtype=self.dtype)
         return self.output
 
     def compute(self, t, dt, input_values=None):
@@ -162,7 +206,8 @@ class ParkTransformBlock(VectorBlock):
             theta = float(input_values[1].value[0])
         self._wrapper.step(alpha, beta, theta)
         y = self._wrapper.get_outputs()
-        self.output = VectorSignal(np.array(y, dtype=np.float32), self.name, dtype=self.dtype)
+        self.output = VectorSignal(np.array(y, dtype=np.float32),
+                                   self.name, dtype=self.dtype)
         return self.output
 
     def reset(self):
@@ -171,25 +216,41 @@ class ParkTransformBlock(VectorBlock):
             self._wrapper.reset()
 
 
-# =============================================================================
+# ==============================================================================
 # InvParkTransformBlock
-# =============================================================================
+# ==============================================================================
 
 class InvParkTransformBlock(VectorBlock):
     """
-    Inverse Park transform: [v_d, v_q, theta_e] → [v_alpha, v_beta]
+    Inverse Park: [v_d, v_q] + theta_e -> [v_alpha, v_beta]
 
-        v_alpha = v_d * cos(θ) − v_q * sin(θ)
-        v_beta  = v_d * sin(θ) + v_q * cos(θ)
+    C signature:
+        void InvPark_Step(InvPark_T* pS,
+                          MatrixFloat d, MatrixFloat q, MatrixFloat theta,
+                          MatrixFloat* alpha_out, MatrixFloat* beta_out);
     """
 
-    NUM_INPUTS:   int  = 2          # port 0: [d, q],  port 1: theta scalar
-    OUTPUT_SIZE:  int  = 2
-    C_SOURCES:    list = ["Coordinate_Transform.c", "Matrix.c"]
-    C_HEADERS:    list = ["Coordinate_Transform.h"]
-    step_func:    str  = "InvPark_Step"
-    init_func:    str  = "InvPark_Init"
-    state_struct: str  = "InvPark_T"
+    PYX_FILE     = _PYX
+    NUM_INPUTS   = 2
+    OUTPUT_SIZE  = 2
+    C_SOURCES    = ["Coordinate_Transform.c", "Matrix.c"]
+    C_HEADERS    = ["Coordinate_Transform.h"]
+    init_func    = "InvPark_Init"
+    step_func    = "InvPark_Step"
+    state_struct = "InvPark_T"
+
+    C_CUSTOM_EMIT = """\
+    /* --- InvPark (InvParkTransformBlock) --- */
+    {
+        MatrixFloat invpark_alpha, invpark_beta;
+        InvPark_Step(&InvPark_state,
+                     y_upstream_d[0], y_upstream_q[0],
+                     THETA_E,
+                     &invpark_alpha, &invpark_beta);
+        real32_T y_InvPark[2];
+        y_InvPark[0] = invpark_alpha;
+        y_InvPark[1] = invpark_beta;
+    }"""
 
     def __init__(self, name: str, use_c_backend: bool = True, dtype=None):
         super().__init__(name, dtype=dtype)
@@ -207,12 +268,11 @@ class InvParkTransformBlock(VectorBlock):
                 v_d, v_q = float(v[0]), float(v[1])
         if input_values and len(input_values) > 1 and input_values[1] is not None:
             theta = float(input_values[1].value[0])
-        cos_t = math.cos(theta)
-        sin_t = math.sin(theta)
+        cos_t, sin_t = math.cos(theta), math.sin(theta)
         v_alpha = v_d * cos_t - v_q * sin_t
         v_beta  = v_d * sin_t + v_q * cos_t
-        out = np.array([v_alpha, v_beta], dtype=np.float32)
-        self.output = VectorSignal(out, self.name, dtype=self.dtype)
+        self.output = VectorSignal(np.array([v_alpha, v_beta], dtype=np.float32),
+                                   self.name, dtype=self.dtype)
         return self.output
 
     def compute(self, t, dt, input_values=None):
@@ -227,7 +287,8 @@ class InvParkTransformBlock(VectorBlock):
             theta = float(input_values[1].value[0])
         self._wrapper.step(v_d, v_q, theta)
         y = self._wrapper.get_outputs()
-        self.output = VectorSignal(np.array(y, dtype=np.float32), self.name, dtype=self.dtype)
+        self.output = VectorSignal(np.array(y, dtype=np.float32),
+                                   self.name, dtype=self.dtype)
         return self.output
 
     def reset(self):
@@ -236,26 +297,42 @@ class InvParkTransformBlock(VectorBlock):
             self._wrapper.reset()
 
 
-# =============================================================================
+# ==============================================================================
 # InvClarkeTransformBlock
-# =============================================================================
+# ==============================================================================
 
 class InvClarkeTransformBlock(VectorBlock):
     """
-    Inverse Clarke transform: [v_alpha, v_beta] → [v_a, v_b, v_c]
+    Inverse Clarke: [v_alpha, v_beta] -> [v_a, v_b, v_c]
 
-        v_a =  v_alpha
-        v_b = −(1/2) * v_alpha + (√3/2) * v_beta
-        v_c = −(1/2) * v_alpha − (√3/2) * v_beta
+    C signature:
+        void InvClarke_Step(InvClarke_T* pS,
+                            MatrixFloat alpha, MatrixFloat beta,
+                            MatrixFloat* va_out, MatrixFloat* vb_out,
+                            MatrixFloat* vc_out);
     """
 
-    NUM_INPUTS:   int  = 1
-    OUTPUT_SIZE:  int  = 3
-    C_SOURCES:    list = ["Coordinate_Transform.c", "Matrix.c"]
-    C_HEADERS:    list = ["Coordinate_Transform.h"]
-    step_func:    str  = "InvClarke_Step"
-    init_func:    str  = "InvClarke_Init"
-    state_struct: str  = "InvClarke_T"
+    PYX_FILE     = _PYX
+    NUM_INPUTS   = 1
+    OUTPUT_SIZE  = 3
+    C_SOURCES    = ["Coordinate_Transform.c", "Matrix.c"]
+    C_HEADERS    = ["Coordinate_Transform.h"]
+    init_func    = "InvClarke_Init"
+    step_func    = "InvClarke_Step"
+    state_struct = "InvClarke_T"
+
+    C_CUSTOM_EMIT = """\
+    /* --- InvClarke (InvClarkeTransformBlock) --- */
+    {
+        MatrixFloat invclarke_va, invclarke_vb, invclarke_vc;
+        InvClarke_Step(&InvClarke_state,
+                       y_upstream_alpha[0], y_upstream_beta[0],
+                       &invclarke_va, &invclarke_vb, &invclarke_vc);
+        real32_T y_InvClarke[3];
+        y_InvClarke[0] = invclarke_va;
+        y_InvClarke[1] = invclarke_vb;
+        y_InvClarke[2] = invclarke_vc;
+    }"""
 
     _HALF_SQRT3 = math.sqrt(3.0) / 2.0
 
@@ -276,8 +353,8 @@ class InvClarkeTransformBlock(VectorBlock):
         v_a =  v_alpha
         v_b = -0.5 * v_alpha + self._HALF_SQRT3 * v_beta
         v_c = -0.5 * v_alpha - self._HALF_SQRT3 * v_beta
-        out = np.array([v_a, v_b, v_c], dtype=np.float32)
-        self.output = VectorSignal(out, self.name, dtype=self.dtype)
+        self.output = VectorSignal(np.array([v_a, v_b, v_c], dtype=np.float32),
+                                   self.name, dtype=self.dtype)
         return self.output
 
     def compute(self, t, dt, input_values=None):
@@ -290,7 +367,8 @@ class InvClarkeTransformBlock(VectorBlock):
                 v_alpha, v_beta = float(v[0]), float(v[1])
         self._wrapper.step(v_alpha, v_beta)
         y = self._wrapper.get_outputs()
-        self.output = VectorSignal(np.array(y, dtype=np.float32), self.name, dtype=self.dtype)
+        self.output = VectorSignal(np.array(y, dtype=np.float32),
+                                   self.name, dtype=self.dtype)
         return self.output
 
     def reset(self):
