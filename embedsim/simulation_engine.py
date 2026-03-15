@@ -126,6 +126,8 @@ from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
 from typing import List, Optional, Dict, Set, Tuple
 from dataclasses import dataclass
 import time
+import logging
+import os
 
 from .core_blocks import (VectorBlock, VectorSignal, DEFAULT_DTYPE)
 
@@ -140,6 +142,195 @@ def _get_topology_printer():
         return TopologyPrinter
     except ImportError:
         return None
+
+
+# =============================================================================
+# SimulationLogger
+# =============================================================================
+#
+# Why a dedicated logger instead of print()?
+# -------------------------------------------
+# Python's print() has no concept of severity, no timestamps, and writes
+# to no persistent record.  Python's stdlib `logging` module solves all of
+# that.  SimulationLogger wraps it with EmbedSim-specific conveniences:
+#
+#   • Anchored log directory — log files land in <project_root>/embedsim_log/
+#     regardless of which directory Python is launched from.  The anchor is
+#     __file__ (this source file), so the path is always deterministic.
+#
+#   • Per-block parse logging  — log_parse(block) is called by the graph
+#     traversal so you can see exactly which blocks were discovered and in
+#     what order during the DFS.
+#
+#   • Per-block execute logging — log_execute(step, t, block) is called
+#     inside _compute_all_blocks() for every block on every timestep.
+#     This is DEBUG level (silent at INFO) but produces a full audit trail
+#     in the log file.
+#
+#   • Severity levels:
+#       DEBUG    (10) — per-step, per-block detail
+#       INFO     (20) — run start/end, block counts, topology summary
+#       WARNING  (30) — unexpected but recoverable (zero-fallback input)
+#       ERROR    (40) — serious failures (algebraic loop detected)
+#
+# Log file location:
+#   <this_file>/../embedsim_log/<sink_name>_YYYYMMDD_HHMMSS.log
+#   e.g.  C:\EmbedSimProject\embed_sim_project\embedsim_log\pmsm_foc_20260315_143200.log
+
+# Resolve the project root from this file's location so the log directory
+# is always <project_root>/embedsim_log/ — never a mystery CWD location.
+_PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+_LOG_DIR = os.path.join(_PROJECT_ROOT, "embedsim_log")
+
+
+class SimulationLogger:
+    """
+    Structured logger for EmbedSim — records graph parsing, block execution,
+    and simulation lifecycle events to both console and a timestamped file.
+
+    Log file is always written to ``<project_root>/embedsim_log/``.
+
+    Attributes:
+        log_file (str | None): Absolute path of the active .log file.
+        logger (logging.Logger): The underlying stdlib Logger object.
+
+    Usage::
+
+        # Accessible as sim.logger after EmbedSim.__init__:
+        sim.logger.info("Custom message")
+        sim.logger.log_parse(block)          # during graph traversal
+        sim.logger.log_execute(step, t, block)  # during compute pass
+    """
+
+    def __init__(
+        self,
+        name: str = "EmbedSim",
+        console_level: int = logging.INFO,
+        log_to_file: bool = True,
+    ) -> None:
+        self.name = name
+        self.log_file: Optional[str] = None
+
+        # Named logger — one per EmbedSim instance, identified by sink name.
+        # Using a unique name prevents handler accumulation across multiple
+        # EmbedSim objects in the same Python process (e.g. Jupyter notebook
+        # cells that run repeatedly without restarting the kernel).
+        self.logger = logging.getLogger(f"EmbedSim.{name}")
+        self.logger.setLevel(logging.DEBUG)  # accept everything; handlers filter
+
+        if self.logger.handlers:
+            # Already initialised (e.g. second call in same process) — clear
+            # stale handlers so we don't get duplicate log lines.
+            self.logger.handlers.clear()
+
+        # ── Console handler ──────────────────────────────────────────────────
+        # Always active.  Level is configurable; default INFO keeps the
+        # console clean during normal runs.
+        console_handler = logging.StreamHandler()
+        console_handler.setLevel(console_level)
+        console_handler.setFormatter(logging.Formatter(
+            fmt="%(asctime)s [%(levelname)-7s] %(name)s — %(message)s",
+            datefmt="%H:%M:%S",
+        ))
+        self.logger.addHandler(console_handler)
+
+        # ── File handler ─────────────────────────────────────────────────────
+        # Always DEBUG level so the file contains the full record (including
+        # per-block parse and execute lines) even when the console shows INFO.
+        # The directory is anchored to the project root via _LOG_DIR so it
+        # is always predictable regardless of the launch CWD.
+        if log_to_file:
+            try:
+                os.makedirs(_LOG_DIR, exist_ok=True)
+                timestamp = time.strftime("%Y%m%d_%H%M%S")
+                self.log_file = os.path.join(_LOG_DIR, f"{name}_{timestamp}.log")
+                file_handler = logging.FileHandler(self.log_file, encoding="utf-8")
+                file_handler.setLevel(logging.DEBUG)
+                file_handler.setFormatter(logging.Formatter(
+                    fmt="%(asctime)s [%(levelname)-7s] %(name)s — %(message)s",
+                    datefmt="%Y-%m-%d %H:%M:%S",
+                ))
+                self.logger.addHandler(file_handler)
+            except OSError as exc:
+                self.logger.warning(f"Could not open log file in {_LOG_DIR}: {exc}")
+
+    # ── Severity helpers ──────────────────────────────────────────────────────
+
+    def debug(self, msg: str) -> None:
+        """Emit DEBUG — verbose detail, per-step internals."""
+        self.logger.debug(msg)
+
+    def info(self, msg: str) -> None:
+        """Emit INFO — normal lifecycle events (run start, block counts)."""
+        self.logger.info(msg)
+
+    def warning(self, msg: str) -> None:
+        """Emit WARNING — unexpected but recoverable conditions."""
+        self.logger.warning(msg)
+
+    def error(self, msg: str) -> None:
+        """Emit ERROR — serious failure; results may be invalid."""
+        self.logger.error(msg)
+
+    # ── EmbedSim-specific structured log helpers ──────────────────────────────
+
+    def log_parse(self, block) -> None:
+        """
+        Record that a block was discovered during graph traversal (DFS parse).
+
+        Called by traverse_blocks_from_sinks_with_loops() each time a block
+        is added to the execution order.  The log line includes the block's
+        sequential position, name, type, and whether it is dynamic or a loop
+        breaker — giving a complete picture of the graph as it is built.
+
+        Example log line (DEBUG level, visible in file, silent on console)::
+
+            [DEBUG] EmbedSim.pmsm — PARSE  #003  inv_park        (InvParkBlock      ) dynamic=False  loop_breaker=False
+        """
+        is_lb = getattr(block, 'is_loop_breaker', False)
+        is_dyn = getattr(block, 'is_dynamic', False)
+        self.logger.debug(
+            f"PARSE  {block.name:<30s}  type={type(block).__name__:<25s}"
+            f"  dynamic={is_dyn}  loop_breaker={is_lb}"
+        )
+
+    def log_execute(self, step: int, t: float, block) -> None:
+        """
+        Record that a block is about to be computed at a given timestep.
+
+        Called inside _compute_all_blocks() for every block on every step.
+        This is DEBUG level — it produces one line per block per timestep,
+        which can be thousands of lines per second, so it only appears in
+        the log file (not the console at INFO level).
+
+        Use this to answer questions like:
+          "Is block 'smc' being executed before 'inv_park' at step 1200?"
+          "Which block is producing NaN at t = 0.005 s?"
+
+        Example log line::
+
+            [DEBUG] EmbedSim.pmsm — EXEC   step=00042  t=0.042000  smc             (SMCBlock)
+        """
+        self.logger.debug(
+            f"EXEC   step={step:05d}  t={t:.6f} s  "
+            f"{block.name:<30s}  ({type(block).__name__})"
+        )
+
+    def log_step(self, step: int, t: float, message: str = "") -> None:
+        """
+        Emit one summary DEBUG line per timestep (not per block).
+
+        Lighter than log_execute when you only need to confirm the step
+        counter is advancing correctly, not trace individual blocks.
+        """
+        self.logger.debug(f"STEP   step={step:05d}  t={t:.6f} s  {message}")
+
+    def close(self) -> None:
+        """Flush and close all handlers — call after sim.run() finishes."""
+        for handler in list(self.logger.handlers):
+            handler.flush()
+            handler.close()
+            self.logger.removeHandler(handler)
 
 
 # =========================
@@ -318,7 +509,10 @@ class VectorDelay(VectorBlock, LoopBreaker):
 # Enhanced Dependency Graph Traversal
 # =========================
 
-def traverse_blocks_from_sinks_with_loops(sinks: List[VectorBlock]) -> List[VectorBlock]:
+def traverse_blocks_from_sinks_with_loops(
+    sinks: List[VectorBlock],
+    logger: Optional["SimulationLogger"] = None,
+) -> List[VectorBlock]:
     """
     Build a topologically sorted execution order for all blocks reachable
     from the given sink blocks, correctly handling feedback loops.
@@ -341,8 +535,11 @@ def traverse_blocks_from_sinks_with_loops(sinks: List[VectorBlock]) -> List[Vect
         message.
 
     Args:
-        sinks: List of terminal (sink) VectorBlock objects.  Traversal starts
-               here and walks backwards through the ``inputs`` graph.
+        sinks:  List of terminal (sink) VectorBlock objects.  Traversal starts
+                here and walks backwards through the ``inputs`` graph.
+        logger: Optional SimulationLogger.  When provided, every block that
+                is added to the execution order is logged via log_parse() at
+                DEBUG level, giving a full trace of graph discovery order.
 
     Returns:
         List[VectorBlock]: All reachable blocks ordered so that every block
@@ -364,6 +561,11 @@ def traverse_blocks_from_sinks_with_loops(sinks: List[VectorBlock]) -> List[Vect
     blocks_set = set()
     visiting = set()
     loop_breakers = set()
+
+    def _log_parse(block):
+        """Emit a PARSE log line if a logger is attached."""
+        if logger is not None:
+            logger.log_parse(block)
 
     # First pass: identify all loop breakers
     def find_loop_breakers(block: VectorBlock):
@@ -410,10 +612,12 @@ def traverse_blocks_from_sinks_with_loops(sinks: List[VectorBlock]) -> List[Vect
                 if inp not in blocks_set:
                     blocks_set.add(inp)
                     blocks_order.append(inp)
+                    _log_parse(inp)   # ← log loop-breaker discovery
 
         visiting.remove(block)
         blocks_set.add(block)
         blocks_order.append(block)
+        _log_parse(block)             # ← log normal block discovery
 
     for sink in sinks:
         dfs(sink)
@@ -447,6 +651,7 @@ def traverse_blocks_from_sinks_with_loops(sinks: List[VectorBlock]) -> List[Vect
                         mini_visited.discard(b)
                         blocks_set.add(b)
                         mini_order.append(b)
+                        _log_parse(b)  # ← log late-discovered block
 
                     mini_dfs(inp)
                     if mini_order:
@@ -726,10 +931,28 @@ class EmbedSim:
         self.scope = VectorScope()
         self.stats = SimulationStats()
 
-        # Build execution order with loop support
+        # ── Logger — created first so all subsequent init steps can emit logs ─
+        # Uses the first sink's name as the logger/file identity so each
+        # simulation instance produces a distinct log file in embedsim_log/.
+        # The log directory is anchored to the project root (see _LOG_DIR),
+        # not the launch CWD, so the file is always in a predictable location.
+        sink_name = sinks[0].name if sinks else "unnamed"
+        self.logger = SimulationLogger(name=sink_name, log_to_file=True)
+        self.logger.info(
+            f"EmbedSim init  T={T} s  dt={dt} s  solver={solver.upper()}  "
+            f"log={self.logger.log_file}"
+        )
+
+        # ── Build execution order with loop support ─────────────────────────
+        # Pass the logger so traverse_blocks_from_sinks_with_loops() can call
+        # logger.log_parse(block) for every block it adds to the order — giving
+        # a full audit trail of graph discovery in the log file.
         try:
-            self.blocks = traverse_blocks_from_sinks_with_loops(self.sinks)
+            self.blocks = traverse_blocks_from_sinks_with_loops(
+                self.sinks, logger=self.logger
+            )
         except ValueError as e:
+            self.logger.error(f"Block diagram error: {e}")
             raise ValueError(f"Block diagram error: {e}")
 
         # Categorize blocks
@@ -738,6 +961,13 @@ class EmbedSim:
         self.loop_breakers = [b for b in self.blocks if isinstance(b, LoopBreaker)]
 
         self.stats.loop_breakers_count = len(self.loop_breakers)
+
+        self.logger.info(
+            f"Graph resolved: {len(self.blocks)} blocks  "
+            f"({len(self.dynamic_blocks)} dynamic, "
+            f"{len(self.static_blocks)} static, "
+            f"{len(self.loop_breakers)} loop breakers)"
+        )
 
         # Detect feedback loops
         self._detect_feedback_loops()
@@ -793,8 +1023,12 @@ class EmbedSim:
                 if breaking_output is not None:
                     block.output = breaking_output
 
-        # Now compute all blocks
+        # Now compute all blocks — log_execute emits one DEBUG line per block.
+        # This is silent at INFO level (console) but fully recorded in the
+        # log file, giving a complete per-step execution trace for debugging.
         for block in self.blocks:
+            self.logger.log_execute(self._step_counter, t, block)
+
             # Get inputs from connected blocks
             if len(block.inputs) > 0:
                 input_values = []
@@ -803,6 +1037,10 @@ class EmbedSim:
                         input_values.append(inp.output)
                     else:
                         # Use zero signal as fallback
+                        self.logger.warning(
+                            f"  zero-fallback input: block '{block.name}' "
+                            f"← upstream '{inp.name}' has no output yet at t={t:.6f}"
+                        )
                         input_values.append(VectorSignal([0.0]))
             else:
                 input_values = None
@@ -941,18 +1179,31 @@ class EmbedSim:
                 print(f"  Topology:       sim.topo.print_console() | sim.topo.show_gui()")
             print(f"{'=' * 70}\n")
 
+        steps = int(self.T / self.dt)
+        self.logger.info(
+            f"run() start  T={self.T} s  dt={self.dt} s  "
+            f"steps={steps}  solver={self.solver.upper()}"
+        )
+
         # Reset all blocks
         for b in self.blocks:
             b.reset()
 
+        # _step_counter is read by _compute_all_blocks → log_execute so that
+        # every EXEC log line carries the correct step index.  It is kept as
+        # an instance attribute (not a local) so RK4 sub-steps that call
+        # _compute_all_blocks() internally don't advance it independently.
+        self._step_counter = 0
+
         t = 0.0
-        steps = int(self.T / self.dt)
         start_time = time.time()
 
         if verbose:
             print("Simulation started...")
 
         for step in range(steps):
+            self._step_counter = step
+
             # Compute all blocks
             self._compute_all_blocks(t)
 
@@ -973,6 +1224,7 @@ class EmbedSim:
             t += self.dt
 
         # Final computation and recording
+        self._step_counter = steps
         self._compute_all_blocks(t)
         self.scope.record(t)
 
@@ -986,6 +1238,15 @@ class EmbedSim:
             print(f"  Progress: 100.0%")
         if verbose:
             print(f"\n✓ Simulation complete\n")
+
+        self.logger.info(
+            f"run() complete  {steps} steps  "
+            f"wall={self.stats.compute_time:.3f} s  "
+            f"avg={self.stats.avg_step_time*1e6:.1f} µs/step"
+        )
+        # Flush and close file handler — ensures the .log is fully written
+        # to disk before the caller moves on to plotting / post-processing.
+        self.logger.close()
 
     def print_topology(self) -> None:
         """
@@ -1637,6 +1898,7 @@ __all__ = [
     'VectorDelay',
     'VectorScope',
     'SimulationStats',
+    'SimulationLogger',
     'EmbedSim',
     'traverse_blocks_from_sinks_with_loops',
     'ODESolver',
