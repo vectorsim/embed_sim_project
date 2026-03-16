@@ -693,6 +693,49 @@ class CodeGenEnd(SimBlockBase):
                             dt_hz=dt_hz,
                             write_files=write_files)
 
+    def generate_step(self,
+                      cg_start: "CodeGenStart",
+                      output_dir: Union[str, Path, None] = None,
+                      dt_hz: float = 0.0,
+                      prefix: str = "EmbedSim",
+                      write_files: bool = True) -> dict:
+        """
+        Generate a Simulink-equivalent step-function pair for any MCU target.
+
+        Reads CodeGenStart.iter_signals() → <Prefix>_Input_T
+        Reads CodeGenEnd.iter_signals()   → <Prefix>_Output_T
+        Emits <Prefix>_Step(dt, in*, out*) calling every block in order.
+
+        Parameters
+        ----------
+        cg_start    : CodeGenStart
+        output_dir  : root directory; ``embedsim_gen/`` created inside it
+        dt_hz       : sample rate [Hz]; emits ``#define EMBEDSIM_DT`` if > 0
+        prefix      : identifier prefix — "EmbedSim" → EmbedSim_Input_T etc.
+        write_files : False → return dict only, no disk writes
+
+        Returns dict with keys "h" and "c".
+
+        Example
+        -------
+        ::
+
+            cg_end.generate_step(
+                cg_start   = cg_start,
+                output_dir = _ROOT,
+                dt_hz      = 10_000.0,
+                prefix     = "FocCtrl",
+            )
+            # Writes embedsim_gen/FocCtrl_step.h and FocCtrl_step.c
+        """
+        gen = StepGenerator(
+            cg_start = cg_start,
+            cg_end   = self,
+            prefix   = prefix,
+            dt_hz    = dt_hz,
+        )
+        return gen.generate(output_dir=output_dir, write_files=write_files)
+
     def _print_compile_hint(self, safe_name, out_dir):
         print(f"\n  Next steps:")
         print(f"  1. Implement {safe_name}_compute() in {safe_name}.c")
@@ -1219,7 +1262,408 @@ class MCUTarget:
     CORTEX_M4     = 'CORTEX_M4'
 
 
+# =============================================================================
+# StepGenerator  (universal — works for any MCU target)
+# =============================================================================
+
+class StepGenerator:
+    """
+    Generates a Simulink-equivalent step-function pair from a
+    CodeGenStart / CodeGenEnd bounded region.
+
+    Produces two files in ``<output_dir>/embedsim_gen/``:
+        <prefix>_step.h  — <Prefix>_Input_T, <Prefix>_Output_T, API prototypes
+        <prefix>_step.c  — <Prefix>_Init(), <Prefix>_Step(dt, in*, out*)
+
+    The generated step function is MCU-agnostic:
+        void <Prefix>_Step(real32_T dt,
+                           const <Prefix>_Input_T  *in,
+                                 <Prefix>_Output_T *out);
+
+    This is the Simulink equivalent pattern:
+        Simulink  : Model_step(RT_MODEL *M)       — hidden global RT_MODEL
+        EmbedSim  : EmbedSim_Step(dt, in*, out*)  — explicit I/O, no globals
+
+    MISRA C:2012 compliant.  No dynamic memory.  No static locals.
+
+    Usage (via CodeGenEnd):
+        cg_end.generate_step(cg_start, output_dir=_ROOT, dt_hz=10_000.0)
+
+    Or directly:
+        gen = StepGenerator(cg_start, cg_end, prefix="FocCtrl", dt_hz=10000.0)
+        gen.generate(output_dir=".", write_files=True)
+    """
+
+    def __init__(self,
+                 cg_start,
+                 cg_end,
+                 prefix: str  = "EmbedSim",
+                 dt_hz:  float = 0.0) -> None:
+        self.cg_start = cg_start
+        self.cg_end   = cg_end
+        self.prefix   = prefix
+        self.dt_hz    = dt_hz
+
+        p = prefix
+        self.T_input  = f"{p}_Input_T"
+        self.T_output = f"{p}_Output_T"
+        self.fn_init  = f"{p}_Init"
+        self.fn_step  = f"{p}_Step"
+        self.guard    = f"{p.upper()}_STEP_H_"
+        self.h_file   = f"{p}_step.h"
+        self.c_file   = f"{p}_step.c"
+
+    # ── Signal lists from boundaries ─────────────────────────────────────────
+
+    def _in_sigs(self):
+        return list(self.cg_start.iter_signals())
+
+    def _out_sigs(self):
+        """
+        Signals leaving the region.  Respects OUTPUT_NAMES / OUTPUT_KEEP
+        on the last upstream block to expose only a named scalar subset.
+        """
+        raw = list(self.cg_end.iter_signals())
+        refined = []
+        for blk in self.cg_end.inputs:
+            names = (getattr(blk, 'OUTPUT_NAMES', None) or
+                     getattr(blk.__class__, 'OUTPUT_NAMES', None))
+            keep  = (getattr(blk, 'OUTPUT_KEEP', None) or
+                     getattr(blk.__class__, 'OUTPUT_KEEP', None))
+            if names and keep and len(names) == len(keep):
+                sn = blk.name or blk.__class__.__name__
+                for fname, idx in zip(names, keep):
+                    refined.append((fname, 1, sn, idx))
+            else:
+                for name, size in raw:
+                    if (blk.name or blk.__class__.__name__) == name:
+                        refined.append((name, size, name, None))
+        if not refined:
+            return [(n, s, n, None) for n, s in raw]
+        return refined
+
+    @staticmethod
+    def _emit_fields(sigs, indent="    "):
+        lines = []
+        for entry in sigs:
+            name, size = entry[0], entry[1]
+            lines.append(f"{indent}real32_T {name};" if size == 1
+                         else f"{indent}real32_T {name}[{size}];")
+        return lines
+
+    # ── Header generator ──────────────────────────────────────────────────────
+
+    def _gen_h(self) -> str:
+        in_sigs  = self._in_sigs()
+        out_sigs = self._out_sigs()
+        p        = self.prefix
+
+        tmp_gen   = LoopGenerator(self.cg_start, self.cg_end)
+        blk_list  = tmp_gen._collect_region_blocks()
+
+        seen_h: set = set()
+        all_headers = []
+        for blk in blk_list:
+            for h in (getattr(blk, 'C_HEADERS', None) or
+                      getattr(blk.__class__, 'C_HEADERS', [])):
+                if h and h not in seen_h:
+                    seen_h.add(h)
+                    all_headers.append(h)
+
+        externs = []
+        for blk in blk_list:
+            ss = (getattr(blk, 'state_struct', None) or
+                  getattr(blk.__class__, 'state_struct', ''))
+            if ss:
+                sn = _sanitize(blk.name or blk.__class__.__name__)
+                externs.append(f"extern {ss} {sn}_state;")
+
+        L = [
+            "/**",
+            f" * \\file {self.h_file}",
+            f" * \\brief {p} — auto-generated step-function API",
+            " *",
+            " * Auto-generated by EmbedSim StepGenerator.",
+            " * DO NOT EDIT — re-generate with cg_end.generate_step().",
+            " *",
+            " * Simulink-equivalent pattern:",
+            f" *   Simulink  : Model_step(RT_MODEL *M)",
+            f" *   EmbedSim  : {self.fn_step}(dt, in*, out*)",
+            " *",
+            f" * {self.T_input}  — signals entering region at CodeGenStart",
+            f" * {self.T_output} — signals leaving  region at CodeGenEnd",
+            " *",
+            " * Integration pattern:",
+            " *   AppInit():",
+            f" *       {self.fn_init}();",
+            " *   controlLoop_ISR():",
+            f" *       {self.T_input}  in;",
+            f" *       {self.T_output} out;",
+            " *       in.<field> = <sensor value>;",
+            f" *       {self.fn_step}(EMBEDSIM_DT, &in, &out);",
+            " *       <write out.<field> to actuator registers>;",
+            " *",
+            " * MISRA C:2012 compliant — no dynamic memory, no static locals.",
+            " */",
+            "",
+            f"#ifndef {self.guard}",
+            f"#define {self.guard}",
+            "",
+            '#include "Sys_Types.h"   /* real32_T */',
+            "",
+        ]
+
+        if self.dt_hz > 0.0:
+            dt_val = 1.0 / self.dt_hz
+            L += [
+                f"/* Sample period for a {self.dt_hz:.0f} Hz control loop */",
+                f"#define EMBEDSIM_DT  ({dt_val:.10f}f)",
+                "",
+            ]
+
+        L += [
+            "/**",
+            f" * {self.T_input}",
+            f" * Signals entering the CodeGen region (CodeGenStart boundary).",
+            " */",
+            "typedef struct",
+            "{",
+        ]
+        L += (self._emit_fields(in_sigs) if in_sigs
+              else ["    /* No input signals — run sim at least one step */"])
+        L += [f"}} {self.T_input};", ""]
+
+        L += [
+            "/**",
+            f" * {self.T_output}",
+            f" * Signals leaving the CodeGen region (CodeGenEnd boundary).",
+            " */",
+            "typedef struct",
+            "{",
+        ]
+        L += (self._emit_fields(out_sigs) if out_sigs
+              else ["    /* No output signals — run sim at least one step */"])
+        L += [f"}} {self.T_output};", ""]
+
+        if all_headers:
+            L.append("/* Block headers */")
+            for h in all_headers:
+                L.append(f'#include "{h}"')
+            L.append("")
+
+        if externs:
+            L.append("/* Block state structs — defined in the .c */")
+            L += externs
+            L.append("")
+
+        L += [
+            f"void {self.fn_init}(void);",
+            "",
+            f"void {self.fn_step}(",
+            f"    real32_T                    dt,",
+            f"    const {self.T_input}  * in,",
+            f"          {self.T_output} * out",
+            ");",
+            "",
+            f"#endif /* {self.guard} */",
+            "",
+        ]
+        return "\n".join(L)
+
+    # ── Source generator ──────────────────────────────────────────────────────
+
+    def _gen_c(self, blocks: list) -> str:
+        in_sigs  = self._in_sigs()
+        out_sigs = self._out_sigs()
+        p        = self.prefix
+
+        seen: set = set()
+        headers: list = []
+        for blk in blocks:
+            for h in (getattr(blk, 'C_HEADERS', None) or
+                      getattr(blk.__class__, 'C_HEADERS', [])):
+                if h not in seen:
+                    seen.add(h)
+                    headers.append(h)
+
+        statics = []
+        for blk in blocks:
+            ss = (getattr(blk, 'state_struct', None) or
+                  getattr(blk.__class__, 'state_struct', ''))
+            if ss:
+                sn = _sanitize(blk.name or blk.__class__.__name__)
+                init_f = (getattr(blk, 'init_func', None) or
+                          getattr(blk.__class__, 'init_func', None))
+                init_arg_names = (getattr(blk, 'C_INIT_ARGS', None) or
+                                  getattr(blk.__class__, 'C_INIT_ARGS', []))
+                init_arg_vals = []
+                for attr in init_arg_names:
+                    val = getattr(blk, attr, None)
+                    if val is not None:
+                        if isinstance(val, float):
+                            init_arg_vals.append(f"{val:.8f}f")
+                        elif isinstance(val, int):
+                            init_arg_vals.append(f"(uint8_T){val}U")
+                        else:
+                            init_arg_vals.append(str(val))
+                statics.append((ss, sn, init_f, init_arg_vals))
+
+        L = [
+            "/**",
+            f" * \\file {self.c_file}",
+            f" * \\brief {p} — auto-generated step-function implementation",
+            " *",
+            " * Auto-generated by EmbedSim StepGenerator.",
+            " * DO NOT EDIT — re-generate with cg_end.generate_step().",
+            " *",
+            " * MISRA C:2012 compliant — no dynamic memory, no static locals.",
+            " */",
+            "",
+            '#include <string.h>   /* memcpy, memset */',
+            '#include <math.h>     /* fabsf, atan2f, sqrtf */',
+            f'#include "{self.h_file}"',
+        ]
+        for h in headers:
+            L.append(f'#include "{h}"')
+
+        if statics:
+            L += [
+                "",
+                "/* ── Block state structs ──────────────────────────────────────",
+                " * Allocated here — declared extern in the .h.",
+                " * ──────────────────────────────────────────────────────────── */",
+            ]
+            for ss, sn, _, _args in statics:
+                L.append(f"static {ss} {sn}_state;")
+
+        # ── <Prefix>_Init ─────────────────────────────────────────────────────
+        L += [
+            "", "",
+            "/* ================================================================",
+            f" * {self.fn_init}",
+            " * Initialise all block states via typed Init functions.",
+            " * MISRA C:2012 Rule 21.8: no memset on float-bearing structs.",
+            " * ================================================================",
+            " */",
+            f"void {self.fn_init}(void)",
+            "{",
+        ]
+        if statics:
+            for ss, sn, init_f, init_arg_vals in statics:
+                if init_f:
+                    args = ", ".join([f"&{sn}_state"] + init_arg_vals)
+                    L.append(f"    {init_f}({args});")
+                else:
+                    L.append(f"    /* MISRA deviation: no typed Init for {ss}. */")
+                    L.append(f"    memset(&{sn}_state, 0, sizeof({ss}));")
+        else:
+            L.append("    /* No stateful blocks in this region */")
+        L.append("}")
+
+        # ── <Prefix>_Step ─────────────────────────────────────────────────────
+        L += [
+            "", "",
+            "/* ================================================================",
+            f" * {self.fn_step}",
+            " * Execute one control-loop step.",
+            f" * \\param dt   Sample period [s].",
+            f" * \\param in   Pointer to {self.T_input}.",
+            f" * \\param out  Pointer to {self.T_output}.",
+            " * ================================================================",
+            " */",
+            f"void {self.fn_step}(",
+            f"    real32_T                    dt,",
+            f"    const {self.T_input}  * in,",
+            f"          {self.T_output} * out",
+            ")",
+            "{",
+        ]
+
+        # ── Unpack input struct ───────────────────────────────────────────────
+        if in_sigs:
+            L.append("    /* ── Unpack inputs ────────────────────────────────── */")
+            src_block_map = {}
+            for blk in blocks:
+                ni    = (getattr(blk, 'NUM_INPUTS', None) or
+                         getattr(blk.__class__, 'NUM_INPUTS', -1))
+                n_out = (getattr(blk, 'OUTPUT_SIZE', None) or
+                         getattr(blk.__class__, 'OUTPUT_SIZE', 1))
+                src_block_map[_sanitize(blk.name or '')] = (ni, n_out)
+
+            for name, size in in_sigs:
+                sn = _sanitize(name)
+                ni, n_out = src_block_map.get(sn, (-1, size))
+                if ni == 0:
+                    L.append(f"    real32_T y_{sn}[{n_out}];")
+                    if size == 1:
+                        L.append(f"    y_{sn}[0] = in->{name};")
+                    else:
+                        for k in range(size):
+                            L.append(f"    y_{sn}[{k}] = in->{name}[{k}];")
+                else:
+                    if size == 1:
+                        L.append(f"    const real32_T {name} = in->{name};")
+                    else:
+                        for k in range(size):
+                            L.append(f"    const real32_T {name}_{k}"
+                                     f" = in->{name}[{k}];")
+            L.append("")
+
+        # ── Block chain ───────────────────────────────────────────────────────
+        tmp_gen = LoopGenerator(self.cg_start, self.cg_end)
+        L.append("    /* ── Block chain ──────────────────────────────────────── */")
+        for blk in blocks:
+            L.append(tmp_gen._emit_block(blk))
+
+        # ── Pack output struct ────────────────────────────────────────────────
+        if out_sigs:
+            L.append("    /* ── Pack outputs ─────────────────────────────────── */")
+            for entry in out_sigs:
+                fname, size, src_blk, src_idx = entry[0], entry[1], _sanitize(entry[2]), entry[3]
+                if src_idx is not None:
+                    L.append(f"    out->{fname} = y_{src_blk}[{src_idx}];")
+                elif size == 1:
+                    L.append(f"    out->{fname} = y_{src_blk}[0];")
+                else:
+                    for k in range(size):
+                        L.append(f"    out->{fname}[{k}] = y_{src_blk}[{k}];")
+            L.append("")
+
+        L += ["}", ""]
+        return "\n".join(L)
+
+    # ── Public entry point ────────────────────────────────────────────────────
+
+    def generate(self,
+                 output_dir: Union[str, Path, None] = None,
+                 write_files: bool = True) -> dict:
+        """
+        Build the .h / .c pair and optionally write to
+        ``<output_dir>/embedsim_gen/``.
+
+        Returns dict with keys "h" and "c".
+        """
+        tmp_gen = LoopGenerator(self.cg_start, self.cg_end)
+        blocks  = tmp_gen._collect_region_blocks()
+
+        h_text = self._gen_h()
+        c_text = self._gen_c(blocks)
+
+        if write_files:
+            root = Path(output_dir) if output_dir else Path.cwd()
+            gen_dir = root if root.name == "embedsim_gen" else root / "embedsim_gen"
+            gen_dir.mkdir(parents=True, exist_ok=True)
+            (gen_dir / self.h_file).write_text(h_text, encoding="utf-8")
+            (gen_dir / self.c_file).write_text(c_text, encoding="utf-8")
+            print(f"\n[StepGenerator] Files written to '{gen_dir}/':")
+            print(f"  {self.h_file}")
+            print(f"  {self.c_file}")
+            print(f"  ({len(blocks)} block(s) in region)")
+
+        return {"h": h_text, "c": c_text}
+
+
 __all__ = ['SimBlockBase', 'CodeGenStart', 'CodeGenEnd', 'MCUTarget',
-           'LoopGenerator']
-__version__ = '1.6.0'
+           'LoopGenerator', 'StepGenerator']
+__version__ = '2.0.0'
 __author__ = 'EmbedSim'

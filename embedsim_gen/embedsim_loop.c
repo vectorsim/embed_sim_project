@@ -5,11 +5,18 @@
 
 #include <string.h>   /* memcpy, memset */
 #include "embedsim_loop.h"
+#include "motor_utility_blocks.h"
 #include "Coordinate_Transform.h"
+#include "svpwm.h"
 
 /* -- State struct definitions (one per stateful block) -- */
-static Clarke_T Clarke_state;
-static Park_T Park_state;
+static SpeedRamp_T speed_ref_state;
+static VfAngle_T vf_angle_state;
+static VfDQ_T vf_dq_state;
+static VfTheta_T vf_theta_state;
+static InvPark_T inv_park_state;
+static SVPWMPack_T svpwm_pack_state;
+static DutyPack_T duty_pack_state;
 
 
 /* ================================================================
@@ -28,8 +35,13 @@ static Park_T Park_state;
  */
 void embedsim_loop_init(void)
 {
-    Clarke_Init(&Clarke_state);
-    Park_Init(&Park_state);
+    SpeedRamp_Init(&speed_ref_state);
+    VfAngle_Init(&vf_angle_state);
+    VfDQ_Init(&vf_dq_state);
+    VfTheta_Init(&vf_theta_state);
+    InvPark_Init(&inv_park_state);
+    SVPWMPack_Init(&svpwm_pack_state);
+    DutyPack_Init(&duty_pack_state);
 }
 
 
@@ -44,29 +56,80 @@ void embedsim_loop_init(void)
  */
 void embedsim_loop_step(real32_T dt)
 {
-    /* --- Clarke (ClarkeTransformBlock) --- */
+    /* --- speed_ref (SpeedRampBlock) — source, no u[] --- */
+    /* y_speed_ref[1] pre-seeded from in->speed_ref above */
+    SpeedRamp_Step(&speed_ref_state, dt, y_speed_ref);
+    /* Override ramp output with external command if non-zero */
+    if (in->speed_ref > 0.0f) { y_speed_ref[0] = in->speed_ref; }
+
+    /* --- vf_angle (VfAngleBlock) --- */
+    real32_T u_vf_angle[1];
+    u_vf_angle[0] = y_speed_ref[0];
+    real32_T y_vf_angle[3];
+    VfAngle_Step(&vf_angle_state, u_vf_angle, dt, y_vf_angle);
+
+
+    /* --- vf_dq (VfDQBlock) --- */
+    real32_T u_vf_dq[3];
+    u_vf_dq[0] = y_vf_angle[0];
+    u_vf_dq[1] = y_vf_angle[1];
+    u_vf_dq[2] = y_vf_angle[2];
+    real32_T y_vf_dq[2];
+    VfDQ_Step(&vf_dq_state, u_vf_dq, dt, y_vf_dq);
+
+
+    /* --- vf_theta (VfThetaBlock) --- */
+    real32_T u_vf_theta[3];
+    u_vf_theta[0] = y_vf_angle[0];
+    u_vf_theta[1] = y_vf_angle[1];
+    u_vf_theta[2] = y_vf_angle[2];
+    real32_T y_vf_theta[1];
+    VfTheta_Step(&vf_theta_state, u_vf_theta, dt, y_vf_theta);
+
+
+    /* --- inv_park (InvParkTransformBlock) --- */
+    real32_T y_inv_park[2];
     {
-        MatrixFloat clarke_alpha, clarke_beta;
-        Clarke_Step(&Clarke_state,
-                    u_cg_start[0], u_cg_start[1], u_cg_start[2],
-                    &clarke_alpha, &clarke_beta);
-        real32_T y_Clarke[2];
-        y_Clarke[0] = clarke_alpha;
-        y_Clarke[1] = clarke_beta;
+        MatrixFloat invpark_alpha, invpark_beta;
+        InvPark_Step(&inv_park_state,
+                     y_vf_dq[0],      /* v_d     */
+                     y_vf_dq[1],      /* v_q     */
+                     y_vf_theta[0],   /* theta_e */
+                     &invpark_alpha,
+                     &invpark_beta);
+        y_inv_park[0] = (real32_T)invpark_alpha;
+        y_inv_park[1] = (real32_T)invpark_beta;
     }
 
-    /* [Theta] Python-only block — no C step function. Replace with hand-written C or add C_SOURCES + step_func. */
+    /* --- svpwm_pack (SVPWMPackBlock) — inline polar conversion --- */
+    real32_T y_svpwm_pack[3];
+    y_svpwm_pack[0] = sqrtf(  y_inv_park[0] * y_inv_park[0]
+                            + y_inv_park[1] * y_inv_park[1]);
+    y_svpwm_pack[1] = atan2f( y_inv_park[1], y_inv_park[0]);
+    y_svpwm_pack[2] = 17.0000f;   /* V_dc */
 
-    /* --- Park (ParkTransformBlock) --- */
+    /* --- svpwm (SVPWMBlock) — struct-based I/O --- */
+    real32_T y_svpwm[4];
     {
-        MatrixFloat park_d, park_q;
-        Park_Step(&Park_state,
-                  y_Clarke[0], y_Clarke[1],
-                  THETA_E,
-                  &park_d, &park_q);
-        real32_T y_Park[2];
-        y_Park[0] = park_d;
-        y_Park[1] = park_q;
+        SVPWM_Input  svpwm_in;
+        SVPWM_Output svpwm_out;
+        svpwm_in.Vref  = y_svpwm_pack[0];   /* Vref  */
+        svpwm_in.alpha = y_svpwm_pack[1];   /* alpha */
+        svpwm_in.Vdc   = y_svpwm_pack[2];   /* V_dc  */
+        svpwm_in.Ts    = dt;
+        SVPWM_Step(&svpwm_in, &svpwm_out);
+        y_svpwm[0] = svpwm_out.T1;
+        y_svpwm[1] = svpwm_out.T2;
+        y_svpwm[2] = svpwm_out.T0;
+        y_svpwm[3] = (real32_T)svpwm_out.sector;
     }
+
+    /* --- duty_pack (DutyPackBlock) --- */
+    real32_T u_duty_pack[2];
+    u_duty_pack[0] = y_inv_park[0];
+    u_duty_pack[1] = y_inv_park[1];
+    real32_T y_duty_pack[5];
+    DutyPack_Step(&duty_pack_state, u_duty_pack, dt, y_duty_pack);
+
 
 }

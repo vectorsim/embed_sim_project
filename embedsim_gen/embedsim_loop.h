@@ -8,15 +8,28 @@
 
 #include "Sys_Types.h"   /* real32_T */
 
-/* Sample period for a 100000 Hz control loop */
-#define EMBEDSIM_DT  (0.0000100000f)
+/* Sample period for a 10000 Hz control loop */
+#define EMBEDSIM_DT  (0.0001000000f)
 
 /* Block headers */
+#include "motor_utility_blocks.h"
 #include "Coordinate_Transform.h"
+#include "svpwm.h"
 
 /* Persistent state -- defined in embedsim_loop.c, declared extern here */
-extern Clarke_T Clarke_state;
-extern Park_T Park_state;
+extern SpeedRamp_T speed_ref_state;
+extern VfAngle_T vf_angle_state;
+extern VfDQ_T vf_dq_state;
+extern VfTheta_T vf_theta_state;
+extern InvPark_T inv_park_state;
+extern SVPWMPack_T svpwm_pack_state;
+extern DutyPack_T duty_pack_state;
+
+/* Shared sensor/motor register — filled by integration layer */
+/* before each call to embedsim_loop_step().                  */
+extern real32_T theta_e[1];
+extern real32_T vdc_block[1];
+extern real32_T vref_block[1];
 
 /* -- Public API ------------------------------------------------- */
 

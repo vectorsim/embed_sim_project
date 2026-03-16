@@ -918,27 +918,33 @@ function drawEdge(e){{
     mlx=(x1+x2)/2;mly=by-10;
   }}else if(Math.abs(sy-dy)<6){{
     ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(dx,dy);ctx.stroke();
-    ah(dx,dy,0,9,col);mlx=(sx+dx)/2;mly=sy-13;
+    ah(dx,dy,0,9,col);mlx=(sx+dx)/2;mly=sy-28;
   }}else{{
     const mx=(sx+dx)/2;
     ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(mx,sy);
     ctx.lineTo(mx,dy);ctx.lineTo(dx,dy);ctx.stroke();
-    ah(dx,dy,0,9,col);mlx=(mx+dx)/2;mly=dy-13;
+    ah(dx,dy,0,9,col);mlx=(mx+dx)/2;mly=dy-28;
   }}
-  /* Signal label — read from edge, not source node */
+  /* Signal label — rotated 90° CCW, above the arrow midpoint */
   const lbl=e.lbl||'';
   if(lbl){{
+    ctx.save();
     ctx.globalAlpha=1.0;
     ctx.font='bold 11px "JetBrains Mono",monospace';
-    const tw=ctx.measureText(lbl).width+10;
-    const th=16;
-    ctx.fillStyle='rgba(255,255,255,0.96)';
+    const tw=ctx.measureText(lbl).width+12;  /* text length + padding */
+    const th=15;                               /* pill narrow width     */
+    const lx=mlx;
+    const ly=mly-tw/2-8;   /* push centre above arrow line by half pill height + gap */
+    ctx.translate(lx,ly);
+    ctx.rotate(-Math.PI/2);  /* 90° counter-clockwise */
+    ctx.fillStyle='rgba(255,255,255,0.97)';
     ctx.strokeStyle=col;ctx.lineWidth=1.2;ctx.setLineDash([]);
-    ctx.beginPath();ctx.roundRect(mlx-tw/2,mly-th/2,tw,th,4);
+    ctx.beginPath();ctx.roundRect(-tw/2,-th/2,tw,th,4);
     ctx.fill();ctx.stroke();
     ctx.fillStyle=col;
     ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText(lbl,mlx,mly);
+    ctx.fillText(lbl,0,0);
+    ctx.restore();
   }}
   ctx.restore();
 }}

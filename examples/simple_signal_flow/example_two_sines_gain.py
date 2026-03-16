@@ -1,266 +1,685 @@
 """
-example_two_sines_gain.py
-=========================
+db42s02_openloop_fmu.py
+=======================
+EmbedSim  —  Open-loop V/f control  —  NANOTEC DB42S02
+=======================================================
 
-EmbedSim — Example: Two Sinusoidal Sources + Gain
+Library: fs_electrical_machines
 
-Signal flow:
+Block diagram (Python-first, EmbedSim canonical order):
+─────────────────────────────────────────────────────────────────
+  CodeGenStart
+       │
+  SpeedRampBlock            omega_m_ref [rad/s]
+       │                    motor_utility_blocks.c → SpeedRamp_Step
+  VfAngleBlock              [v_d=0, v_q, theta_e]
+       │                    motor_utility_blocks.c → VfAngle_Step
+       ├─── VfDQBlock        [v_d, v_q]
+       │    motor_utility_blocks.c → VfDQ_Step
+       └─── VfThetaBlock     [theta_e]
+            motor_utility_blocks.c → VfTheta_Step
+                              ↓
+  InvParkTransformBlock     [v_alpha, v_beta]
+       │                    coordinate_transform.c → InvPark_Step
+       ├────────────────────────────────────────► DutyPackBlock (port 0)
+       └──► SVPWMBlock       [T1, T2, T0, sector]
+                │            svpwm.c → SVPWM_Step
+                └────────────────────────────── DutyPackBlock (port 1)
+  DutyPackBlock             [duty_a, duty_b, duty_c, V_dc, 0]
+       │                    motor_utility_blocks.c → DutyPack_Step
+  CodeGenEnd                → cg_end.generate_loop() → LoopGenerator
+       │
+  FMUSinkBlock              PMSM plant (NOT code-generated)
+─────────────────────────────────────────────────────────────────
 
-   [sin_a5 (SinusoidalGenerator)] ──►┐
-                                      ├──► [sum (VectorSum)] ──► [gain (VectorGain)] ──► [output (VectorEnd)]
-   [sin_a2 (SinusoidalGenerator)] ──►┘
+CodeGen strategy
+────────────────
+  Every block carries PYX_FILE.
+  PYXInspector auto-populates step_func / state_struct / init_func
+  at class-definition time via VectorBlock.__init_subclass__.
+  LoopGenerator emits typed C calls for every block.
+  Zero C_CUSTOM_EMIT.  Zero hand-written C strings in this file.
 
-Signal Description:
-    source1(t) = 5.0 · sin(2π · 15t)
-    source2(t) = 2.0 · sin(2π · 15t + 1.56 rad)
-    sum(t)     = source1(t) + source2(t)
-    output(t)  = 0.5 · sum(t)
+Motor: NANOTEC DB42S02  (PMSM_Motor.mo)
+  R=0.19 Ω  Ld=Lq=0.125 mH  λ_pm=0.0014 Wb  J=2.4e-6 kg·m²
+  p=4  V_dc=17 V
 
-Parameters:
-    Amplitude 1 : 5.0
-    Amplitude 2 : 2.0
-    Frequency   : 15 Hz
-    Phase       : 1.56 rad  (source2 only)
-    Gain        : 0.5
-    Duration    : 0.56 s
-    Time step   : 0.001 s
-    Solver      : RK4
+Build wrappers once:
+    cd fs_electrical_machines/c_src
+    python setup_motor_utility_blocks.py build_ext --inplace
 
-Author : EmbedSim Framework
+Run:
+    python db42s02_openloop_fmu.py
 """
 
+from __future__ import annotations
+
 import sys
-import matplotlib.pyplot as plt
+import math
 import numpy as np
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
+import matplotlib.animation as animation
+from pathlib import Path
 
-from _path_utils import get_embedsim_import_path
-sys.path.insert(0, get_embedsim_import_path())
+# ── Path bootstrap ─────────────────────────────────────────────────────────────
+_HERE = Path(__file__).resolve().parent
+_ROOT = _HERE
+for _ in range(6):
+    if (_ROOT / "embedsim").is_dir():
+        break
+    _ROOT = _ROOT.parent
 
-from embedsim.source_blocks      import SinusoidalGenerator
-from embedsim.processing_blocks  import VectorSum, VectorGain
-from embedsim.dynamic_blocks     import VectorEnd
-from embedsim.simulation_engine  import EmbedSim, ODESolver
-from embedsim.plot_helper        import create_plotter
-from embedsim.topology_printer   import TopologyPrinter, attach
+if str(_ROOT) not in sys.path:
+    sys.path.insert(0, str(_ROOT))
+
+_FS_ELEC = _ROOT / "fs_electrical_machines"
+if str(_FS_ELEC) not in sys.path:
+    sys.path.insert(0, str(_FS_ELEC))
+
+# ── EmbedSim — full engine ────────────────────────────────────────────────────
+from embedsim import EmbedSim, ODESolver, VectorEnd
+from embedsim.core_blocks import VectorBlock, VectorSignal, DEFAULT_DTYPE
+from embedsim.code_generator import CodeGenStart, CodeGenEnd
+
+# ── fs_electrical_machines — all blocks have compiled .pyd wrappers ────────────
+from motor_utility_blocks import (
+    SpeedRampBlock,
+    VfAngleBlock,
+    VfDQBlock,
+    VfThetaBlock,
+    DutyPackBlock,
+)
+from coordinate_transform_blocks import InvParkTransformBlock
+from svpwm_block                 import SVPWMBlock
+from PMSM_MotorBlock             import PMSM_MotorBlock
+
+_FMU_PATH = str(_FS_ELEC / "modelica" / "PMSM_Motor.fmu")
+
+# ── Attach PYX_FILE to blocks defined in external modules ─────────────────────
+# motor_utility_blocks.py already sets PYX_FILE on its own five classes.
+# InvParkTransformBlock and SVPWMBlock are defined in their own modules
+# so we attach PYX_FILE here before any instance is created.
+InvParkTransformBlock.PYX_FILE = str(
+    _FS_ELEC / "c_src" / "coordinate_transform_wrapper.pyx")
+SVPWMBlock.PYX_FILE = str(
+    _FS_ELEC / "c_src" / "svpwm_wrapper.pyx")
 
 
 # =============================================================================
-# Build simulation
+# Motor constants  (PMSM_Motor.mo)
 # =============================================================================
+P_POLES        = 4
+V_DC           = 17.0
+V_PHASE_PEAK   = V_DC / math.sqrt(3.0)
+OMEGA_M_RATED  = 8000.0 * 2.0 * math.pi / 60.0
+OMEGA_E_RATED  = P_POLES * OMEGA_M_RATED
+VF_RATIO       = V_PHASE_PEAK / OMEGA_E_RATED
 
-GAIN_VALUE = 0.5   # single source of truth — used in both block and label
+T_SIM          = 0.4
+DT             = 1e-4
+OMEGA_CMD_RPM  = 400.0
+OMEGA_CMD_RADS = OMEGA_CMD_RPM * 2.0 * math.pi / 60.0
+RAMP_TIME      = 0.15
 
-def build_sim():
 
-    # ── Sources ───────────────────────────────────────────────────────────────
-    source1 = SinusoidalGenerator("sin_a5", amplitude=5.0, freq=15.0,
-                                  output_label="Ia")
-    source2 = SinusoidalGenerator("sin_a2", amplitude=2.0, freq=15.0,
-                                  phase=1.56, output_label="Ib")
+# =============================================================================
+# FMUSinkBlock  — simulation plant, NOT code-generated
+# =============================================================================
+class FMUSinkBlock(VectorBlock):
+    """
+    Wraps PMSM_MotorBlock FMU from fs_electrical_machines.
+    Analytical Euler dq fallback when FMU is unavailable.
+    Outside CodeGenStart/CodeGenEnd — never touched by LoopGenerator.
+    """
 
-    # ── Processing ────────────────────────────────────────────────────────────
-    adder = VectorSum("sum",   signs=[1, 1],
-                      output_label="Ia+Ib")
+    def __init__(self, name: str, fmu_path: str) -> None:
+        super().__init__(name)
+        self.is_dynamic = False
+        try:
+            self._motor   = PMSM_MotorBlock(name="pmsm", fmu_path=fmu_path)
+            self._has_fmu = True
+            print(f"[FMU] Loaded: {fmu_path}")
+        except Exception as exc:
+            print(f"[FMU] Not available ({exc}) — using analytical fallback")
+            self._has_fmu = False
+            self._motor   = None
+            self._id = self._iq = self._omega_m = self._th = 0.0
 
-    gain  = VectorGain("gain", gain=GAIN_VALUE,
-                       output_label=f"{GAIN_VALUE}·(Ia+Ib)")
+        self.speed_rpm = self.i_a = self.i_b = self.i_c = 0.0
+        self.theta_e_motor = self.T_em = 0.0
 
-    # ── Sink ──────────────────────────────────────────────────────────────────
-    output = VectorEnd("output")
+    def compute_py(self, t, dt, input_values=None):
+        da = db = dc = 0.5
+        vdc = V_DC
+        if input_values and input_values[0] is not None:
+            v = input_values[0].value
+            if len(v) >= 4:
+                da, db, dc, vdc = (float(v[0]), float(v[1]),
+                                   float(v[2]), float(v[3]))
 
-    # ── Connect ───────────────────────────────────────────────────────────────
-    source1 >> adder
-    source2 >> adder
-    adder >> gain >> output
+        if self._has_fmu:
+            sig = VectorSignal(
+                np.array([da, db, dc, vdc, 0.0], dtype=DEFAULT_DTYPE))
+            self._motor.compute_py(t, dt, [sig])
+            self.speed_rpm     = self._motor.read_speed_rpm()
+            self.i_a           = self._motor.read_i_a()
+            self.i_b           = self._motor.read_i_b()
+            self.i_c           = self._motor.read_i_c()
+            self.theta_e_motor = self._motor.read_theta_e()
+            self.T_em          = self._motor.read_T_em()
+        else:
+            R = 0.19; Ld = Lq = 0.125e-3; lam = 0.0014
+            Jm = 2.4e-6; Bf = 1e-6; H = math.sqrt(3.0) / 2.0
+            van = da*vdc; vbn = db*vdc; vcn = dc*vdc
+            vn  = (van + vbn + vcn) / 3.0
+            va  = van - vn; vb = vbn - vn; vc = vcn - vn
+            va_a = (2.0/3.0)*(va - 0.5*vb - 0.5*vc)
+            vb_a = (2.0/3.0)*(H*vb - H*vc)
+            th   = self._th
+            vd   =  va_a*math.cos(th) + vb_a*math.sin(th)
+            vq   = -va_a*math.sin(th) + vb_a*math.cos(th)
+            oe   = P_POLES * self._omega_m
+            self._id += (vd - R*self._id + oe*Lq*self._iq) / Ld * dt
+            self._iq += (vq - R*self._iq - oe*(Ld*self._id + lam)) / Lq * dt
+            Tem  = 1.5*P_POLES*(lam*self._iq + (Ld-Lq)*self._id*self._iq)
+            self._omega_m += (Tem - Bf*self._omega_m) / Jm * dt
+            self._th       = math.fmod(self._th + oe*dt, 2.0*math.pi)
+            if self._th < 0.0:
+                self._th += 2.0*math.pi
+            ia = self._id*math.cos(th) - self._iq*math.sin(th)
+            ib = self._id*math.sin(th) + self._iq*math.cos(th)
+            self.i_a           =  ia
+            self.i_b           = -0.5*ia + H*ib
+            self.i_c           = -0.5*ia - H*ib
+            self.speed_rpm     = self._omega_m * 60.0 / (2.0*math.pi)
+            self.theta_e_motor = self._th
+            self.T_em          = Tem
 
-    # ── Simulation ────────────────────────────────────────────────────────────
+        self.output = VectorSignal(
+            np.array([self.speed_rpm, self.i_a, self.i_b,
+                      self.i_c, self.T_em], dtype=DEFAULT_DTYPE),
+            self.name)
+        return self.output
+
+
+# =============================================================================
+# Build & run
+# =============================================================================
+def build_and_run() -> dict:
+    """
+    Wire all blocks, register signals on sim.scope, hand to EmbedSim
+    for topology sort + time loop, export topology HTML via sim.topo,
+    then call LoopGenerator.
+
+    Signal recording : sim.scope.add(block, indices, label) before sim.run()
+    Signal retrieval : sim.scope.get_signal(label, index) after sim.run()
+    No VectorEnd sinks for data.  No hand-rolled loop.  No _h() hack.
+    """
+
+    # ── Instantiate ──────────────────────────────────────────────────────────
+    cg_start  = CodeGenStart("cg_start")
+    speed_ref = SpeedRampBlock("speed_ref",
+                               omega_target=OMEGA_CMD_RADS,
+                               ramp_time=RAMP_TIME)
+    vf_angle  = VfAngleBlock("vf_angle",
+                             vf_ratio=VF_RATIO,
+                             v_phase_peak=V_PHASE_PEAK,
+                             p_poles=P_POLES)
+    vf_dq     = VfDQBlock("vf_dq")
+    vf_theta  = VfThetaBlock("vf_theta")
+    inv_park  = InvParkTransformBlock("inv_park", use_c_backend=False)
+    svpwm     = SVPWMBlock("svpwm", use_c_backend=False)
+    duty_pack = DutyPackBlock("duty_pack", v_dc=V_DC)
+    cg_end    = CodeGenEnd("cg_end")
+    motor     = FMUSinkBlock("motor_sink", fmu_path=_FMU_PATH)
+    sink      = VectorEnd("sink")           # single terminal sink for graph walk
+
+    # ── Wire ─────────────────────────────────────────────────────────────────
+    speed_ref >> cg_start
+    speed_ref >> vf_angle
+    vf_angle  >> vf_dq
+    vf_angle  >> vf_theta
+    vf_dq     >> inv_park       # port 0: [v_d, v_q]
+    vf_theta  >> inv_park       # port 1: [theta_e]
+    inv_park  >> svpwm
+    vf_theta  >> svpwm          # port 1: [theta_e]
+    inv_park  >> duty_pack      # port 0: [v_alpha, v_beta]
+    svpwm     >> duty_pack      # port 1: [T1, T2, T0, sector]
+    duty_pack >> cg_end
+    duty_pack >> motor
+    motor     >> sink           # terminal — EmbedSim walks back from here
+
+    # ── EmbedSim ─────────────────────────────────────────────────────────────
     sim = EmbedSim(
-        sinks  = [output],
-        T      = 0.56,
-        dt     = 0.001,
-        solver = ODESolver.RK4,
+        sinks  = [sink],
+        T      = T_SIM,
+        dt     = DT,
+        solver = ODESolver.EULER,
     )
 
-    # ── Scope ─────────────────────────────────────────────────────────────────
-    sim.scope.add(source1, indices=[0], label="sin_a5")
-    sim.scope.add(source2, indices=[0], label="sin_a2")
-    sim.scope.add(gain,    indices=[0], label="gain")
-    sim.scope.add(adder,   indices=[0], label="sum")  # Add the sum signal too
+    # ── Register signals on scope (MUST be before sim.run()) ─────────────────
+    sim.scope.add(speed_ref,  indices=[0],          label="omega_ref")
+    sim.scope.add(vf_angle,   indices=[0, 1, 2],    label="vf_angle")
+    sim.scope.add(inv_park,   indices=[0, 1],        label="inv_park")
+    sim.scope.add(svpwm,      indices=[0, 1, 2, 3],  label="svpwm")
+    sim.scope.add(duty_pack,  indices=[0, 1, 2],    label="duty_pack")
+    sim.scope.add(motor,      indices=[0, 1, 2, 3, 4], label="motor")
 
-    return sim
-
-
-# =============================================================================
-# Run + plot + visualize topology
-# =============================================================================
-
-def main():
-    print("\n" + "=" * 70)
-    print("  EmbedSim — Two Sine Sources + Gain")
-    print("=" * 70)
-
-    sim = build_sim()
-
-    # ── Attach topology printer ───────────────────────────────────────────────
-    # This adds sim.topo and sim.print_topology_sources2sink()
-    attach(sim, title="Two Sine Sources + Gain - Topology")
-
-    # Print topology to console
-    print("\n📊 Topology (via sim.topo):")
+    # ── Topology: console ASCII + interactive HTML ────────────────────────────
+    print("\n[Topology] Signal-flow diagram:")
     sim.topo.print_console()
+    _topo_path = str(_HERE / "db42s02_topology.html")
+    sim.topo.export_html(_topo_path)
+    print(f"[Topology] {_topo_path}")
 
-    print("\n📊 Topology (via built-in method):")
-    sim.print_topology_sources2sink()
-
-    # Run simulation
-    print("\n⚙️  Running simulation...")
+    # ── Run ───────────────────────────────────────────────────────────────────
     sim.run()
-    print(f"✅ Done — {len(sim.scope.t)} samples over "
-          f"{sim.scope.t[-1]*1000:.1f} ms")
 
-    # ── Show all recorded signals ─────────────────────────────────────────────
-    plotter = create_plotter(sim)
-    plotter.info()
+    # ── Extract signals from scope ────────────────────────────────────────────
+    sc = sim.scope
+    hist = {
+        "t":         np.array(sc.t, dtype=np.float32),
+        # omega_ref: scope records rad/s → convert to RPM
+        "omega_ref": sc.get_signal("omega_ref", 0) * 60.0 / (2.0 * math.pi),
+        "v_d":       sc.get_signal("vf_angle",  0),
+        "v_q":       sc.get_signal("vf_angle",  1),
+        "theta_e":   sc.get_signal("vf_angle",  2),
+        "v_alpha":   sc.get_signal("inv_park",  0),
+        "v_beta":    sc.get_signal("inv_park",  1),
+        "sector":    sc.get_signal("svpwm",     3),
+        "duty_a":    sc.get_signal("duty_pack", 0),
+        "duty_b":    sc.get_signal("duty_pack", 1),
+        "duty_c":    sc.get_signal("duty_pack", 2),
+        "speed_rpm": sc.get_signal("motor",     0),
+        "i_a":       sc.get_signal("motor",     1),
+        "i_b":       sc.get_signal("motor",     2),
+        "i_c":       sc.get_signal("motor",     3),
+        "T_em":      sc.get_signal("motor",     4),
+    }
 
-    print("\n📋 Available signals:")
-    plotter.list_signals()
-
-    # ── Create various plots ──────────────────────────────────────────────────
-
-    # 1. Simple plot with component names (this works!)
-    print("\n📊 Creating plot with component names...")
-    plotter.easyplot(
-        signals   = ["sin_a5[0]", "sin_a2[0]", "gain[0]"],
-        title     = "Two Sine Sources + Gain",
-        figsize   = (12, 5),
-        save_path = "two_sines_gain.png",
+    # ── LoopGenerator ─────────────────────────────────────────────────────────
+    print("\n[CodeGen] Calling cg_end.generate_loop() …")
+    cg_end.generate_loop(
+        cg_start=cg_start,
+        output_dir=_ROOT,
+        dt_hz=1.0 / DT,
+        write_files=True,
     )
 
-    # 2. Enhanced plot with all signals including sum (using plotter's easyplot)
-    print("\n📊 Creating enhanced plot with all signals...")
-    plotter.easyplot(
-        signals   = ["sin_a5[0]", "sin_a2[0]", "sum[0]", "gain[0]"],
-        title     = "Two Sine Sources + Gain - All Signals",
-        figsize   = (12, 6),
-        save_path = "two_sines_gain_all_signals.png",
-    )
+    return hist
 
-    # 3. Manual plot with subplots (using correct data access)
-    print("\n📊 Creating custom subplot figure...")
-    fig, axes = plt.subplots(2, 1, figsize=(12, 8))
 
-    # Convert time to numpy array for mathematical operations
-    t = np.array(sim.scope.t)
+# =============================================================================
+# Static plots
+# =============================================================================
+_SECTOR_COLORS = ["#FF595E", "#FF924C", "#FFCA3A",
+                  "#8AC926", "#1982C4", "#6A4C93"]
 
-    # Access data through sim.scope.data dictionary
-    signal1 = np.array(sim.scope.data["sin_a5[0]"])
-    signal2 = np.array(sim.scope.data["sin_a2[0]"])
-    signal_sum = np.array(sim.scope.data["sum[0]"])
-    signal_gain = np.array(sim.scope.data["gain[0]"])
 
-    # Top subplot: Individual sources
-    ax1 = axes[0]
-    ax1.plot(t, signal1, 'b-', linewidth=1.5,
-             label=r'sin_a5: $5.0 \cdot \sin(2\pi \cdot 15t)$')
-    ax1.plot(t, signal2, 'g-', linewidth=1.5,
-             label=r'sin_a2: $2.0 \cdot \sin(2\pi \cdot 15t + 1.56)$')
-    ax1.set_ylabel('Amplitude', fontsize=11)
-    ax1.set_title('Individual Sources', fontsize=12, fontweight='bold')
-    ax1.legend(loc='upper right', fontsize=9)
-    ax1.grid(True, alpha=0.3)
-    ax1.set_xlim([0, 0.56])
+def plot_results(d: dict, path: str = "db42s02_openloop_results.png"):
+    fig, axes = plt.subplots(4, 1, figsize=(12, 12), sharex=True)
+    fig.suptitle(
+        f"NANOTEC DB42S02 — Open-loop V/f  "
+        f"(cmd {OMEGA_CMD_RPM:.0f} RPM | V_dc {V_DC} V | p={P_POLES})",
+        fontsize=13, fontweight="bold")
+    t = d["t"]
 
-    # Bottom subplot: Sum and Gain
-    ax2 = axes[1]
+    axes[0].plot(t, d["omega_ref"], "k--", lw=1.2, label="ω_ref [RPM]")
+    axes[0].plot(t, d["speed_rpm"], "C0",  lw=1.5, label="ω_motor FMU [RPM]")
+    axes[0].set_ylabel("Speed [RPM]"); axes[0].legend(fontsize=9)
+    axes[0].grid(alpha=0.3)
+    axes[0].set_title("Motor speed  (fs_electrical_machines FMU plant)")
 
-    # Calculate theoretical values for verification (using numpy arrays)
-    theoretical_sum = 5.0 * np.sin(2 * np.pi * 15 * t) + 2.0 * np.sin(2 * np.pi * 15 * t + 1.56)
-    theoretical_gain = GAIN_VALUE * theoretical_sum
+    axes[1].plot(t, d["i_a"], "C3", lw=0.9, label="i_a")
+    axes[1].plot(t, d["i_b"], "C2", lw=0.9, label="i_b")
+    axes[1].plot(t, d["i_c"], "C1", lw=0.9, label="i_c")
+    axes[1].set_ylabel("Current [A]"); axes[1].legend(fontsize=9)
+    axes[1].grid(alpha=0.3); axes[1].set_title("Phase currents — FMU sensor output")
 
-    ax2.plot(t, signal_sum, 'm-', linewidth=1.5, alpha=0.7,
-             label='sum = sin_a5 + sin_a2 (from scope)')
-    ax2.plot(t, theoretical_sum, 'm--', linewidth=1, alpha=0.5,
-             label='sum (theoretical)')
-    ax2.plot(t, signal_gain, 'r-', linewidth=2,
-             label=f'gain = {GAIN_VALUE}·sum (from scope)')
-    ax2.plot(t, theoretical_gain, 'k--', linewidth=1, alpha=0.5,
-             label='gain (theoretical)')
+    axes[2].plot(t, d["duty_a"], "C3", lw=0.8, label="duty_a → GTM TOM0 CH0")
+    axes[2].plot(t, d["duty_b"], "C2", lw=0.8, label="duty_b → GTM TOM0 CH2")
+    axes[2].plot(t, d["duty_c"], "C1", lw=0.8, label="duty_c → GTM TOM0 CH4")
+    axes[2].set_ylabel("Duty [0–1]"); axes[2].legend(fontsize=9)
+    axes[2].grid(alpha=0.3); axes[2].set_ylim(0, 1)
+    axes[2].set_title("PWM duty cycles  (DutyPackBlock → AURIX GTM TOM)")
 
-    ax2.set_xlabel('Time [s]', fontsize=11)
-    ax2.set_ylabel('Amplitude', fontsize=11)
-    ax2.set_title(f'Sum and Gain (Gain = {GAIN_VALUE})', fontsize=12, fontweight='bold')
-    ax2.legend(loc='upper right', fontsize=9)
-    ax2.grid(True, alpha=0.3)
-    ax2.set_xlim([0, 0.56])
+    ax4 = axes[3]; ax4b = ax4.twinx()
+    ax4.step(t, d["sector"], where="post", color="C5", lw=1.2, label="SVPWM sector")
+    ax4b.plot(t, d["v_q"], "C0--", lw=1.0, label="v_q [V]")
+    ax4.set_ylabel("Sector [1–6]", color="C5"); ax4b.set_ylabel("v_q [V]", color="C0")
+    ax4.set_ylim(0, 7); ax4.set_yticks([1, 2, 3, 4, 5, 6])
+    ax4.set_xlabel("Time [s]"); ax4.grid(alpha=0.3)
+    ax4.set_title("SVPWM sector + v_q")
+    l1, n1 = ax4.get_legend_handles_labels(); l2, n2 = ax4b.get_legend_handles_labels()
+    ax4.legend(l1+l2, n1+n2, fontsize=9)
 
-    plt.suptitle('Two Sine Sources + Gain - Detailed Analysis', fontsize=14, fontweight='bold')
     plt.tight_layout()
-    plt.savefig("two_sines_gain_detailed.png", dpi=150, bbox_inches='tight')
-    plt.show()
-
-    # 4. Phase relationship plot (XY plot)
-    print("\n📊 Creating XY plot (Lissajous figure)...")
-    fig, ax = plotter.xy_plot("sin_a5[0]", "sin_a2[0]",
-                               title="Phase Relationship: sin_a5 vs sin_a2",
-                               figsize=(7, 7),
-                               color='purple')
-    if fig:
-        fig.savefig("two_sines_gain_xy.png", dpi=150, bbox_inches='tight')
-        plt.close(fig)
-
-    # 5. FFT analysis
-    print("\n📊 Creating FFT plot...")
-    fig, axes = plotter.fft_plot("gain[0]", max_freq=100,
-                                  title="Frequency Spectrum of Gain Output",
-                                  figsize=(12, 6))
-    if fig:
-        fig.savefig("two_sines_gain_fft.png", dpi=150, bbox_inches='tight')
-        plt.close(fig)
-
-    # 6. Component plot (showing all components of a block)
-    print("\n📊 Creating component plot for gain block...")
-    fig, axes = plotter.plot_components("gain", figsize=(10, 4))
-    if fig:
-        fig.savefig("two_sines_gain_component.png", dpi=150, bbox_inches='tight')
-        plt.close(fig)
-
-    # ── Export HTML topology ──────────────────────────────────────────────────
-    print("\n📊 Exporting interactive topology visualization...")
-    html_path = sim.topo.export_html("two_sines_gain_topology.html")
-
-    # Open in browser (optional - comment out if you don't want browser to open)
-    print("   Opening topology in browser...")
-    sim.topo.show_gui()  # Opens in browser
-
-    # ── Save all plots ────────────────────────────────────────────────────────
-    print("\n💾 Saving all plots with prefix 'two_sines_gain'...")
-    plotter.save_all_plots(prefix="two_sines_gain", format="png")
-
-    # ── Summary ───────────────────────────────────────────────────────────────
-    print("\n" + "=" * 70)
-    print("✅ COMPLETE - All outputs generated:")
-    print("=" * 70)
-    print("\n📊 Topology:")
-    print("   - Console output (above)")
-    print(f"   - Interactive HTML: two_sines_gain_topology.html")
-
-    print("\n📈 Plots:")
-    print("   - two_sines_gain.png (basic plot with component names)")
-    print("   - two_sines_gain_all_signals.png (all signals together)")
-    print("   - two_sines_gain_detailed.png (custom subplot with verification)")
-    print("   - two_sines_gain_xy.png (Lissajous figure)")
-    print("   - two_sines_gain_fft.png (frequency spectrum)")
-    print("   - two_sines_gain_component.png (component view)")
-
-    print("\n📊 Signal statistics:")
-    for signal in ["sin_a5[0]", "sin_a2[0]", "sum[0]", "gain[0]"]:
-        if signal in sim.scope.data:
-            data = np.array(sim.scope.data[signal])
-            print(f"   {signal:10s}: min={np.min(data):6.3f}, "
-                  f"max={np.max(data):6.3f}, mean={np.mean(data):6.3f}")
-
-    print("\n" + "=" * 70)
+    fig.savefig(path, dpi=150, bbox_inches="tight"); plt.close(fig)
+    print(f"[Plot] {path}")
 
 
+def plot_phasor_static(d: dict, path: str = "db42s02_phasor_sectors.png"):
+    fig, ax = plt.subplots(figsize=(7, 7))
+    ax.set_aspect("equal")
+    ax.set_title(
+        f"SVPWM hexagon — α-β plane\n"
+        f"NANOTEC DB42S02  {OMEGA_CMD_RPM:.0f} RPM open-loop V/f",
+        fontsize=12, fontweight="bold")
+    R = 2.0 / 3.0
+    for s in range(6):
+        a0 = math.radians(60*s); a1 = math.radians(60*(s+1))
+        angs = np.linspace(a0, a1, 30)
+        ax.fill(np.concatenate([[0], R*np.cos(angs), [0]]),
+                np.concatenate([[0], R*np.sin(angs), [0]]),
+                color=_SECTOR_COLORS[s], alpha=0.22)
+        am = (a0+a1)/2.0
+        ax.text(0.45*math.cos(am), 0.45*math.sin(am), f"S{s+1}",
+                ha="center", va="center", fontsize=13,
+                fontweight="bold", color=_SECTOR_COLORS[s])
+    ax.plot([R*math.cos(k*math.pi/3) for k in range(7)],
+            [R*math.sin(k*math.pi/3) for k in range(7)], "k-", lw=1.5)
+    for k in range(6):
+        ax.text(R*math.cos(k*math.pi/3)*1.08, R*math.sin(k*math.pi/3)*1.08,
+                f"V{k+1}", ha="center", fontsize=9, fontweight="bold")
+    sc = 1.0 / V_DC
+    ax.plot(d["v_alpha"]*sc, d["v_beta"]*sc,
+            "navy", lw=0.5, alpha=0.35, label="α-β trajectory")
+    vx = float(d["v_alpha"][-1])*sc; vy = float(d["v_beta"][-1])*sc
+    ax.annotate("", xy=(vx, vy), xytext=(0, 0),
+                arrowprops=dict(arrowstyle="->", color="red", lw=2.5))
+    ax.axhline(0, color="gray", lw=0.5); ax.axvline(0, color="gray", lw=0.5)
+    ax.set_xlabel("α  (normalised to V_dc)"); ax.set_ylabel("β")
+    ax.set_xlim(-0.85, 0.85); ax.set_ylim(-0.85, 0.85); ax.grid(alpha=0.25)
+    ax.legend(handles=[mpatches.Patch(color=_SECTOR_COLORS[i], alpha=0.5,
+              label=f"Sector {i+1}") for i in range(6)],
+              fontsize=8, loc="lower right")
+    plt.tight_layout()
+    fig.savefig(path, dpi=150, bbox_inches="tight"); plt.close(fig)
+    print(f"[Plot] {path}")
+
+
+# =============================================================================
+# FOC six-sector animated phasor hexagon  +  phase current scrolling plot
+# =============================================================================
+def animate_phasor_hexagon(d: dict,
+                           path: str = "db42s02_phasor_anim.gif",
+                           n_frames: int = 150,
+                           fps: int = 25) -> None:
+    """
+    Two-panel animated GIF saved as a single image per frame.
+
+    Left  panel : FOC six-sector Hehagen hexagon with rotating α-β
+                  voltage phasor, sector highlight and trajectory trace.
+    Right panel : Scrolling phase current waveforms (i_a, i_b, i_c)
+                  showing a 40 ms window that follows the current time,
+                  with a moving red cursor line and live readouts.
+
+    Both panels share the same FuncAnimation so they stay in sync.
+    """
+    print(f"[Anim] Building {n_frames}-frame dual-panel animation …")
+
+    # ── Decimate data ─────────────────────────────────────────────────────────
+    idx     = np.linspace(0, len(d["t"]) - 1, n_frames, dtype=int)
+    t_dec   = d["t"][idx]
+    va_dec  = d["v_alpha"][idx] / V_DC
+    vb_dec  = d["v_beta"][idx]  / V_DC
+    sec_dec = d["sector"][idx].astype(int)
+    rpm_dec = d["speed_rpm"][idx]
+    vq_dec  = d["v_q"][idx]
+    ia_dec  = d["i_a"][idx]
+    ib_dec  = d["i_b"][idx]
+    ic_dec  = d["i_c"][idx]
+
+    # Full-resolution time axis for the current plot background
+    t_full  = d["t"]
+    ia_full = d["i_a"]
+    ib_full = d["i_b"]
+    ic_full = d["i_c"]
+
+    # Scrolling window width [s]
+    WIN = 0.04
+
+    # Current axis y-limits with 20 % headroom
+    i_peak = max(np.max(np.abs(ia_full)),
+                 np.max(np.abs(ib_full)),
+                 np.max(np.abs(ic_full))) * 1.25
+    if i_peak < 0.01:
+        i_peak = 0.5   # fallback if FMU not available
+
+    # ── Figure layout ─────────────────────────────────────────────────────────
+    fig, (ax_hex, ax_cur) = plt.subplots(
+        1, 2,
+        figsize=(14, 7),
+        gridspec_kw={"width_ratios": [1, 1.15]})
+    fig.suptitle(
+        f"NANOTEC DB42S02 — Open-loop V/f  "
+        f"{OMEGA_CMD_RPM:.0f} RPM  V_dc={V_DC} V  p={P_POLES}",
+        fontsize=12, fontweight="bold")
+    fig.patch.set_facecolor("#0f0f0f")
+    for _ax in (ax_hex, ax_cur):
+        _ax.set_facecolor("#181818")
+        _ax.tick_params(colors="lightgray", labelsize=8)
+        for spine in _ax.spines.values():
+            spine.set_edgecolor("#444444")
+
+    # ── LEFT: hexagon phasor ──────────────────────────────────────────────────
+    ax_hex.set_aspect("equal")
+    ax_hex.set_xlim(-0.85, 0.85)
+    ax_hex.set_ylim(-0.85, 0.85)
+    ax_hex.axhline(0, color="#444444", lw=0.5)
+    ax_hex.axvline(0, color="#444444", lw=0.5)
+    ax_hex.grid(alpha=0.15, color="#555555")
+    ax_hex.set_xlabel("α  (norm. to V_dc)", fontsize=9, color="lightgray")
+    ax_hex.set_ylabel("β", fontsize=9, color="lightgray")
+    ax_hex.set_title("α-β voltage phasor  (SVPWM sectors)",
+                     fontsize=10, color="white", pad=6)
+
+    R = 2.0 / 3.0
+    sector_patches = []
+    for s in range(6):
+        a0 = math.radians(60 * s)
+        a1 = math.radians(60 * (s + 1))
+        angs = np.linspace(a0, a1, 30)
+        xs = np.concatenate([[0], R * np.cos(angs), [0]])
+        ys = np.concatenate([[0], R * np.sin(angs), [0]])
+        patch = ax_hex.fill(xs, ys, color=_SECTOR_COLORS[s], alpha=0.10)[0]
+        sector_patches.append(patch)
+        am = (a0 + a1) / 2.0
+        ax_hex.text(0.48 * math.cos(am), 0.48 * math.sin(am), f"S{s+1}",
+                    ha="center", va="center", fontsize=11,
+                    fontweight="bold", color=_SECTOR_COLORS[s], alpha=0.70)
+
+    ax_hex.plot(
+        [R * math.cos(k * math.pi / 3) for k in range(7)],
+        [R * math.sin(k * math.pi / 3) for k in range(7)],
+        color="#cccccc", lw=1.2, zorder=3)
+    for k in range(6):
+        ax_hex.text(
+            R * math.cos(k * math.pi / 3) * 1.10,
+            R * math.sin(k * math.pi / 3) * 1.10,
+            f"V{k+1}", ha="center", va="center",
+            fontsize=7, fontweight="bold", color="#aaaaaa")
+
+    traj_line, = ax_hex.plot([], [], color="#3399ff", lw=0.7,
+                              alpha=0.30, zorder=2)
+    quiv = ax_hex.quiver(
+        0, 0, 0, 0,
+        angles="xy", scale_units="xy", scale=1.0,
+        color="#ff4444", width=0.018, zorder=5,
+        headwidth=4, headlength=5)
+    tip_dot, = ax_hex.plot([], [], "o", color="#ff4444", ms=7, zorder=6)
+    info_box = ax_hex.text(
+        0.02, 0.98, "", transform=ax_hex.transAxes,
+        fontsize=9, va="top", ha="left", color="white",
+        bbox=dict(boxstyle="round,pad=0.3", fc="#222222", alpha=0.85),
+        fontfamily="monospace", zorder=7)
+    ax_hex.legend(
+        handles=[mpatches.Patch(color=_SECTOR_COLORS[i], alpha=0.55,
+                                label=f"S{i+1}") for i in range(6)],
+        fontsize=7, loc="lower right", framealpha=0.5,
+        facecolor="#222222", labelcolor="white")
+
+    # ── RIGHT: phase current scrolling plot ───────────────────────────────────
+    ax_cur.set_xlim(0.0, WIN)
+    ax_cur.set_ylim(-i_peak, i_peak)
+    ax_cur.set_xlabel("Time in window [ms]", fontsize=9, color="lightgray")
+    ax_cur.set_ylabel("Phase current [A]", fontsize=9, color="lightgray")
+    ax_cur.set_title("Phase currents  i_a / i_b / i_c  (FMU sensor)",
+                     fontsize=10, color="white", pad=6)
+    ax_cur.axhline(0, color="#444444", lw=0.6)
+    ax_cur.grid(alpha=0.15, color="#555555")
+
+    # Convert x-ticks to ms
+    ax_cur.xaxis.set_major_formatter(
+        plt.FuncFormatter(lambda x, _: f"{x*1000:.0f}"))
+
+    # Static full waveform faded in background
+    ax_cur.plot(t_full,  ia_full, color="#ff6666", lw=0.3, alpha=0.10)
+    ax_cur.plot(t_full,  ib_full, color="#66ff66", lw=0.3, alpha=0.10)
+    ax_cur.plot(t_full,  ic_full, color="#6699ff", lw=0.3, alpha=0.10)
+
+    # Scrolling window lines (updated each frame)
+    line_ia, = ax_cur.plot([], [], color="#ff4444", lw=1.4,
+                            label="i_a", zorder=4)
+    line_ib, = ax_cur.plot([], [], color="#44cc44", lw=1.4,
+                            label="i_b", zorder=4)
+    line_ic, = ax_cur.plot([], [], color="#4488ff", lw=1.4,
+                            label="i_c", zorder=4)
+
+    # Moving cursor vertical line
+    cursor_line = ax_cur.axvline(0.0, color="white", lw=1.0,
+                                  alpha=0.7, zorder=5)
+
+    # Live current readout
+    cur_box = ax_cur.text(
+        0.98, 0.98, "", transform=ax_cur.transAxes,
+        fontsize=9, va="top", ha="right", color="white",
+        bbox=dict(boxstyle="round,pad=0.3", fc="#222222", alpha=0.85),
+        fontfamily="monospace", zorder=7)
+
+    ax_cur.legend(fontsize=8, loc="lower right",
+                  framealpha=0.5, facecolor="#222222", labelcolor="white")
+
+    _prev_sector = [None]
+
+    # ── Init ──────────────────────────────────────────────────────────────────
+    def _init():
+        traj_line.set_data([], [])
+        quiv.set_UVC(0, 0)
+        tip_dot.set_data([], [])
+        info_box.set_text("")
+        line_ia.set_data([], [])
+        line_ib.set_data([], [])
+        line_ic.set_data([], [])
+        cur_box.set_text("")
+        return (traj_line, quiv, tip_dot, info_box,
+                line_ia, line_ib, line_ic, cur_box)
+
+    # ── Update ────────────────────────────────────────────────────────────────
+    def _update(frame):
+        tf  = float(t_dec[frame])
+        vx  = float(va_dec[frame])
+        vy  = float(vb_dec[frame])
+        sec = int(sec_dec[frame])
+        rpm = float(rpm_dec[frame])
+        vq  = float(vq_dec[frame])
+        ia  = float(ia_dec[frame])
+        ib  = float(ib_dec[frame])
+        ic  = float(ic_dec[frame])
+
+        # ── Hexagon panel ─────────────────────────────────────────────────────
+        traj_line.set_data(va_dec[:frame + 1], vb_dec[:frame + 1])
+        quiv.set_UVC(vx, vy)
+        tip_dot.set_data([vx], [vy])
+
+        if _prev_sector[0] is not None:
+            _prev_sector[0].set_alpha(0.10)
+        arrow_color = "#ff4444"
+        if 1 <= sec <= 6:
+            sector_patches[sec - 1].set_alpha(0.55)
+            _prev_sector[0] = sector_patches[sec - 1]
+            arrow_color     = _SECTOR_COLORS[sec - 1]
+        else:
+            _prev_sector[0] = None
+        quiv.set_color(arrow_color)
+        tip_dot.set_color(arrow_color)
+
+        info_box.set_text(
+            f"t  = {tf*1000:6.1f} ms\n"
+            f"ω  = {rpm:7.1f} RPM\n"
+            f"Vq = {vq:7.3f} V\n"
+            f"S  =     {sec}")
+
+        # ── Current panel — 40 ms scrolling window ────────────────────────────
+        t_win_start = max(0.0, tf - WIN * 0.75)   # cursor at 75 % of window
+        t_win_end   = t_win_start + WIN
+        ax_cur.set_xlim(t_win_start, t_win_end)
+
+        # Mask to window
+        mask = (t_full >= t_win_start) & (t_full <= t_win_end)
+        t_w  = t_full[mask]
+        line_ia.set_data(t_w, ia_full[mask])
+        line_ib.set_data(t_w, ib_full[mask])
+        line_ic.set_data(t_w, ic_full[mask])
+
+        # Cursor at current time
+        cursor_line.set_xdata([tf, tf])
+
+        # Reformat x-tick labels to ms relative
+        ax_cur.xaxis.set_major_formatter(
+            plt.FuncFormatter(lambda x, _: f"{x*1000:.0f}"))
+
+        cur_box.set_text(
+            f"i_a = {ia:+.3f} A\n"
+            f"i_b = {ib:+.3f} A\n"
+            f"i_c = {ic:+.3f} A")
+
+        return (traj_line, quiv, tip_dot, info_box,
+                line_ia, line_ib, line_ic, cur_box,
+                cursor_line, *sector_patches)
+
+    # ── Render ────────────────────────────────────────────────────────────────
+    plt.tight_layout(rect=[0, 0, 1, 0.94])
+    anim_obj = animation.FuncAnimation(
+        fig, _update, frames=n_frames,
+        init_func=_init, interval=int(1000 / fps), blit=False)
+    anim_obj.save(path, writer="pillow", fps=fps, dpi=120)
+    plt.close(fig)
+    print(f"[Anim] {path}  ({n_frames} frames @ {fps} fps)")
+
+
+# =============================================================================
+# Entry point
+# =============================================================================
 if __name__ == "__main__":
-    main()
+    print("=" * 64)
+    print("  EmbedSim — NANOTEC DB42S02  Open-loop V/f")
+    print("  Library  : fs_electrical_machines")
+    print("  Blocks   : motor_utility_blocks.c (SpeedRamp, VfAngle,")
+    print("             VfDQ, VfTheta, DutyPack)")
+    print("             coordinate_transform.c  (InvPark)")
+    print("             svpwm.c                 (SVPWM)")
+    print("  CodeGen  : LoopGenerator (feature 05121967)")
+    print("             PYX_FILE + PYXInspector on every block")
+    print("             Zero C_CUSTOM_EMIT — zero hand-written C strings")
+    print("  Topology : TopologyPrinter → db42s02_topology.html")
+    print("  Animation: FOC six-sector phasor + phase currents (Hehagen)")
+    print(f"  Target   : {OMEGA_CMD_RPM:.0f} RPM  V_dc={V_DC} V  "
+          f"p={P_POLES}  dt={DT*1e6:.0f} µs")
+    print("=" * 64)
+
+    data = build_and_run()
+    plot_results(data)
+    plot_phasor_static(data)
+    animate_phasor_hexagon(data, n_frames=150, fps=25)
+
+    print("\n[Done]")
+    print("  db42s02_openloop_results.png")
+    print("  db42s02_phasor_sectors.png")
+    print("  db42s02_phasor_anim.gif")
+    print("  db42s02_topology.html")
+    print("  embedsim_gen/embedsim_loop.c")
+    print("  embedsim_gen/embedsim_loop.h")

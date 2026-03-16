@@ -24,9 +24,13 @@
 #   would be ambiguous when one of the sources is a LoopBreaker (theta_e).
 # =============================================================================
 
+from pathlib import Path
 from typing import List, Optional
 import numpy as np
 from embedsim.core_blocks import VectorBlock, VectorSignal
+
+_HERE  = Path(__file__).resolve().parent
+_C_SRC = _HERE / "c_src"
 
 
 class SVPWMBlock(VectorBlock):
@@ -40,6 +44,7 @@ class SVPWMBlock(VectorBlock):
     """
 
     # ── CodeGen class attributes ─────────────────────────────────────────────
+    PYX_FILE    = str(_C_SRC / "svpwm_wrapper.pyx")
     NUM_INPUTS  = 3
     OUTPUT_SIZE = 4
 
@@ -63,20 +68,24 @@ class SVPWMBlock(VectorBlock):
     # Struct-pointer ABI — bypass auto-emission.
     # 'sn' is the sanitised block name injected by _emit_block().
     # 'dt' is the loop step parameter already in scope inside embedsim_loop_step().
+    # NOTE: local struct variables use _in/_out suffix to avoid name collision
+    #       with the output array y_{name}[4] emitted by LoopGenerator.
     C_CUSTOM_EMIT = """\
     /* --- svpwm (SVPWMBlock) --- */
-    SVPWM_Input  u_svpwm;
-    SVPWM_Output y_svpwm;
-    u_svpwm.Vref  = y_vref_block[0];
-    u_svpwm.alpha = y_theta_e[0];
-    u_svpwm.Vdc   = y_vdc_block[0];
-    u_svpwm.Ts    = dt;
-    SVPWM_Step(&u_svpwm, &y_svpwm);
-    real32_T y_svpwm[4];
-    y_svpwm[0] = y_svpwm_out.T1;
-    y_svpwm[1] = y_svpwm_out.T2;
-    y_svpwm[2] = y_svpwm_out.T0;
-    y_svpwm[3] = (real32_T)y_svpwm_out.sector;
+    {
+        SVPWM_Input  svpwm_in;
+        SVPWM_Output svpwm_out;
+        svpwm_in.Vref  = y_vref_block[0];
+        svpwm_in.alpha = y_theta_e[0];
+        svpwm_in.Vdc   = y_vdc_block[0];
+        svpwm_in.Ts    = dt;
+        SVPWM_Step(&svpwm_in, &svpwm_out);
+        real32_T y_svpwm[4];
+        y_svpwm[0] = svpwm_out.T1;
+        y_svpwm[1] = svpwm_out.T2;
+        y_svpwm[2] = svpwm_out.T0;
+        y_svpwm[3] = (real32_T)svpwm_out.sector;
+    }
 """
 
     # ── Constants (mirror svpwm.c) ───────────────────────────────────────────
