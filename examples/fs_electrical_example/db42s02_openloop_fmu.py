@@ -29,7 +29,7 @@ Block diagram (Python-first, EmbedSim canonical order):
        │                    motor_utility_blocks.c → DutyPack_Step
   CodeGenEnd                → cg_end.generate_loop() → LoopGenerator
        │
-  FMUSinkBlock              PMSM plant (NOT code-generated)
+  DB42S02PlantBlock         PMSM plant (NOT code-generated)
 ─────────────────────────────────────────────────────────────────
 
 CodeGen strategy
@@ -120,35 +120,84 @@ RAMP_TIME      = 0.15
 
 
 # =============================================================================
-# FMUSinkBlock  — simulation plant, NOT code-generated
+# DB42S02PlantBlock  — simulation plant, NOT code-generated
 # =============================================================================
-class FMUSinkBlock(VectorBlock):
+class DB42S02PlantBlock(PMSM_MotorBlock):
     """
-    Wraps PMSM_MotorBlock FMU from fs_electrical_machines.
-    Analytical Euler dq fallback when FMU is unavailable.
-    Outside CodeGenStart/CodeGenEnd — never touched by LoopGenerator.
+    NANOTEC DB42S02 plant block for EmbedSim simulation.
+
+    Subclasses PMSM_MotorBlock directly — no wrapper, no delegation.
+    All VectorBlock lifecycle methods (reset, terminate) are inherited
+    from FMUBlock → PMSM_MotorBlock.
+
+    Topology / CodeGen attributes
+    ─────────────────────────────
+      TOPO_CATEGORY    = "plant"   → TopologyPrinter renders as plant node.
+      C_CODEGEN_EXCLUDE = True     → LoopGenerator skips this block entirely.
+      Both ensure the plant never appears in embedsim_loop.c.
+
+    Output bus (5 signals — controller-relevant subset of 20 FMU outputs)
+    ──────────────────────────────────────────────────────────────────────
+      [0] speed_rpm   [RPM]
+      [1] i_a         [A]
+      [2] i_b         [A]
+      [3] i_c         [A]
+      [4] T_em        [N·m]
+
+    Analytical Euler dq fallback
+    ────────────────────────────
+      When PMSM_Motor.fmu is absent or fmpy is not installed the FMUBlock
+      __init__ raises.  DB42S02PlantBlock catches that exception and
+      activates a self-contained forward-Euler dq integrator using the
+      DB42S02 parameters so the simulation always runs.
     """
-    # Topology printer uses these class attributes for categorisation
-    TOPO_CATEGORY = "plant"
-    output_label  = "[rpm,ia,ib,ic,Tem]"
+
+    # ── Topology / CodeGen class attributes ───────────────────────────────────
+    TOPO_CATEGORY     = "plant"
+    C_CODEGEN_EXCLUDE = True          # LoopGenerator respects this flag
+    output_label      = "[rpm,ia,ib,ic,Tem]"
 
     def __init__(self, name: str, fmu_path: str) -> None:
-        super().__init__(name)
-        self.is_dynamic = False
+        # Attempt full FMUBlock initialisation via PMSM_MotorBlock.__init__
         try:
-            self._motor   = PMSM_MotorBlock(name="pmsm", fmu_path=fmu_path)
+            super().__init__(
+                name     = name,
+                fmu_path = fmu_path,
+                R        = 0.19,
+                L_d      = 0.125e-3,
+                L_q      = 0.125e-3,
+                lambda_pm= 0.0014,
+                J        = 2.4e-6,
+                B        = 1e-6,
+                p        = float(P_POLES),
+            )
             self._has_fmu = True
             print(f"[FMU] Loaded: {fmu_path}")
         except Exception as exc:
+            # FMU unavailable — bypass FMUBlock, call VectorBlock.__init__
+            # directly so the block is still a valid graph node.
             print(f"[FMU] Not available ({exc}) — using analytical fallback")
-            self._has_fmu = False
-            self._motor   = None
-            self._id = self._iq = self._omega_m = self._th = 0.0
+            VectorBlock.__init__(self, name)
+            self._has_fmu  = False
+            self._id       = self._iq = self._omega_m = self._th = 0.0
 
-        self.speed_rpm = self.i_a = self.i_b = self.i_c = 0.0
-        self.theta_e_motor = self.T_em = 0.0
+        # Public sensor outputs — written every step, read by scope
+        self.speed_rpm     = 0.0
+        self.i_a = self.i_b = self.i_c = 0.0
+        self.theta_e_motor = 0.0
+        self.T_em          = 0.0
 
-    def compute_py(self, t, dt, input_values=None):
+    # ── compute_py ────────────────────────────────────────────────────────────
+    def compute_py(self, t: float, dt: float, input_values=None):
+        """
+        Step the plant one time increment.
+
+        Input bus from DutyPackBlock:
+          [0] duty_a   [1] duty_b   [2] duty_c   [3] v_dc   ([4] zero)
+
+        Output bus → 5 controller-relevant signals.
+        """
+        # ── Unpack duty / Vdc from upstream signal ────────────────────────────
         da = db = dc = 0.5
         vdc = V_DC
         if input_values and input_values[0] is not None:
@@ -158,34 +207,50 @@ class FMUSinkBlock(VectorBlock):
                                    float(v[2]), float(v[3]))
 
         if self._has_fmu:
+            # ── FMU path: delegate to inherited PMSM_MotorBlock.compute_py ───
             sig = VectorSignal(
                 np.array([da, db, dc, vdc, 0.0], dtype=DEFAULT_DTYPE))
-            self._motor.compute_py(t, dt, [sig])
-            self.speed_rpm     = self._motor.read_speed_rpm()
-            self.i_a           = self._motor.read_i_a()
-            self.i_b           = self._motor.read_i_b()
-            self.i_c           = self._motor.read_i_c()
-            self.theta_e_motor = self._motor.read_theta_e()
-            self.T_em          = self._motor.read_T_em()
+            super().compute_py(t, dt, [sig])
+            # Read typed outputs via inherited read_*() accessors
+            self.speed_rpm     = self.read_speed_rpm()
+            self.i_a           = self.read_i_a()
+            self.i_b           = self.read_i_b()
+            self.i_c           = self.read_i_c()
+            self.theta_e_motor = self.read_theta_e()
+            self.T_em          = self.read_T_em()
         else:
-            R = 0.19; Ld = Lq = 0.125e-3; lam = 0.0014
-            Jm = 2.4e-6; Bf = 1e-6; H = math.sqrt(3.0) / 2.0
-            van = da*vdc; vbn = db*vdc; vcn = dc*vdc
+            # ── Analytical fallback: forward-Euler dq integrator ──────────────
+            # DB42S02 parameters (hardcoded — FMU not available)
+            R  = 0.19;  Ld = Lq = 0.125e-3;  lam = 0.0014
+            Jm = 2.4e-6;  Bf = 1e-6;  H = math.sqrt(3.0) / 2.0
+
+            # abc → αβ (Clarke, amplitude-invariant)
+            van = da*vdc;  vbn = db*vdc;  vcn = dc*vdc
             vn  = (van + vbn + vcn) / 3.0
-            va  = van - vn; vb = vbn - vn; vc = vcn - vn
+            va  = van - vn;  vb = vbn - vn;  vc = vcn - vn
             va_a = (2.0/3.0)*(va - 0.5*vb - 0.5*vc)
             vb_a = (2.0/3.0)*(H*vb - H*vc)
-            th   = self._th
-            vd   =  va_a*math.cos(th) + vb_a*math.sin(th)
-            vq   = -va_a*math.sin(th) + vb_a*math.cos(th)
-            oe   = P_POLES * self._omega_m
+
+            # αβ → dq (Park)
+            th = self._th
+            vd =  va_a*math.cos(th) + vb_a*math.sin(th)
+            vq = -va_a*math.sin(th) + vb_a*math.cos(th)
+
+            # dq current integration
+            oe = P_POLES * self._omega_m
             self._id += (vd - R*self._id + oe*Lq*self._iq) / Ld * dt
             self._iq += (vq - R*self._iq - oe*(Ld*self._id + lam)) / Lq * dt
-            Tem  = 1.5*P_POLES*(lam*self._iq + (Ld-Lq)*self._id*self._iq)
+
+            # Torque + mechanical integration
+            Tem = 1.5*P_POLES*(lam*self._iq + (Ld - Lq)*self._id*self._iq)
             self._omega_m += (Tem - Bf*self._omega_m) / Jm * dt
-            self._th       = math.fmod(self._th + oe*dt, 2.0*math.pi)
+
+            # Electrical angle accumulation (wrap to [0, 2π))
+            self._th = math.fmod(self._th + oe*dt, 2.0*math.pi)
             if self._th < 0.0:
                 self._th += 2.0*math.pi
+
+            # dq → abc (inverse Park + inverse Clarke)
             ia = self._id*math.cos(th) - self._iq*math.sin(th)
             ib = self._id*math.sin(th) + self._iq*math.cos(th)
             self.i_a           =  ia
@@ -195,6 +260,7 @@ class FMUSinkBlock(VectorBlock):
             self.theta_e_motor = self._th
             self.T_em          = Tem
 
+        # ── Narrow output bus to 5 controller-relevant signals ────────────────
         self.output = VectorSignal(
             np.array([self.speed_rpm, self.i_a, self.i_b,
                       self.i_c, self.T_em], dtype=DEFAULT_DTYPE),
@@ -232,7 +298,7 @@ def build_and_run() -> dict:
     svpwm     = SVPWMBlock("svpwm", use_c_backend=False)
     duty_pack = DutyPackBlock("duty_pack", v_dc=V_DC)
     cg_end    = CodeGenEnd("cg_end")
-    motor     = FMUSinkBlock("motor_sink", fmu_path=_FMU_PATH)
+    motor     = DB42S02PlantBlock("motor_sink", fmu_path=_FMU_PATH)
     sink      = VectorEnd("sink")      # terminal — main path
     sink_cg   = VectorEnd("sink_cg")   # terminal — CodeGen boundary branches
 
