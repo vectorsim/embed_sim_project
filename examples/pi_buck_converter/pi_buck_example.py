@@ -36,12 +36,28 @@ from embedsim.source_blocks     import VectorStep
 from embedsim.dynamic_blocks    import VectorEnd
 
 # CodeGen — inline pass-through boundary markers + loop generator
-from embedsim.code_generator import CodeGenStart, CodeGenEnd, LoopGenerator
+from embedsim.code_generator import CodeGenStart, CodeGenEnd, StepGenerator as LoopGenerator
 
 # Topology printer
 from embedsim.topology_printer import TopologyPrinter
 
 # Plot helper
+from embedsim.core_blocks import VectorSignal
+
+# ScalarDelay — VectorDelay that outputs only upstream_output[0] as a scalar.
+# buck_plant outputs [V_out, I_L, I_load] (size 3). Only V_out (index 0)
+# is needed as the PI feedback measurement. Subclassing VectorDelay here
+# avoids adding a VectorIndex block to the framework.
+class ScalarDelay(VectorDelay):
+    """One-step delay that forwards only index-0 of the upstream signal."""
+    def compute_py(self, t, dt, input_values=None):
+        sig = super().compute_py(t, dt, input_values)
+        self.output = VectorSignal(
+            np.array([sig.value[0]], dtype=np.float32), self.name
+        )
+        self.vector_size = 1
+        return self.output
+
 from embedsim.plot_helper import create_plotter
 
 # Buck converter blocks
@@ -87,8 +103,9 @@ buck_plant = BuckConverterBlock(
     f_sw=100e3,
 )
 
-# One-step delay to break the algebraic feedback loop
-feedback_delay = VectorDelay("fb_delay", initial=[0.0])
+# One-step delay — carries only V_out (index 0) to break the algebraic loop.
+# ScalarDelay strips I_L and I_load so EmbedSim_Input_T gets a scalar field.
+feedback_delay = ScalarDelay("fb_delay", initial=[0.0])
 
 # Sink
 sink = VectorEnd("sink")
@@ -116,6 +133,11 @@ buck_plant    >> sink              # outputs → sink
 # Feedback path: V_out → delay → PI port 1
 buck_plant    >> feedback_delay    # V_out → delay
 feedback_delay >> pi_controller   # delayed V_meas → PI port 1
+
+# Wire feedback_delay into cg_start so the StepGenerator sees V_meas as a
+# region input — this adds 'fb_delay' to EmbedSim_Input_T automatically,
+# matching the in->fb_delay reference in PI_BuckBlock.C_CUSTOM_EMIT.
+feedback_delay >> cg_start
 
 print("\n✅ FMU outputs:", buck_plant.OUTPUT_VARS)
 
@@ -183,8 +205,8 @@ print("Simulation complete!")
 # Only the PI controller C code is emitted.
 # dt_hz=1e6 bakes  #define EMBEDSIM_DT (0.0000010000f)  into the header.
 
-gen = LoopGenerator(cg_start, cg_end)
-gen.generate(output_dir=codegen_dir, dt_hz=1e6)
+gen = LoopGenerator(cg_start, cg_end, prefix="EmbedSim", dt_hz=1e6)
+gen.generate(output_dir=codegen_dir)
 print(f"  ↳ C files written to: {codegen_dir}/")
 print( "    embedsim_loop.c")
 print( "    embedsim_loop.h")

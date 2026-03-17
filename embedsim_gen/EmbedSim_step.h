@@ -67,9 +67,9 @@ extern InvPark_T inv_park_state;
 extern SVPWMPack_T svpwm_pack_state;
 extern DutyPack_T duty_pack_state;
 
-void EmbedSim_Init(void);
+extern void EmbedSim_Init(void);
 
-void EmbedSim_Step(
+extern void EmbedSim_Step(
     real32_T                    dt,
     const EmbedSim_Input_T  * in,
           EmbedSim_Output_T * out

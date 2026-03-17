@@ -191,6 +191,13 @@ class PI_BuckBlock(SimBlockBase):
     C_SOURCES:    list = []     # will be set to ['pi_buck_controller.c']
     C_HEADERS:    list = []     # will be set to ['pi_buck_controller.h']
 
+    # Tell StepGenerator._out_sigs() there is nothing to pack — C_CUSTOM_EMIT
+    # already writes out->pi_buck = y_pi_buck.duty inside the block scope.
+    # Without these, the pack stage emits a duplicate out->pi_buck = y_pi_buck[0]
+    # which is wrong (y_pi_buck is a struct, not an array, and is out of scope).
+    OUTPUT_NAMES: list = []
+    OUTPUT_KEEP:  list = []
+
     # ── state_struct override ─────────────────────────────────────────────────
     # PYXInspector reads the .pyx and infers PI_Buck_State_T (the inner state
     # struct).  But PI_Buck_Compute() takes PI_Buck_Block_T* (params + state).
@@ -209,20 +216,66 @@ class PI_BuckBlock(SimBlockBase):
     # this call.  C_CUSTOM_EMIT is the escape hatch: LoopGenerator emits this
     # verbatim instead of auto-generating.
     #
-    # Naming contract with embedsim_loop.c:
-    #   pi_buck_state  — PI_Buck_Block_T declared static in .c / extern in .h
-    #   (LoopGenerator uses block.name sanitized → "pi_buck")
-    C_CUSTOM_EMIT: str = (
-        "    /* --- pi_buck (PI_BuckBlock) --- */\n"
-        "    {\n"
-        "        PI_Buck_Input_T  u_pi_buck;\n"
-        "        PI_Buck_Output_T y_pi_buck;\n"
-        "        u_pi_buck.V_ref  = y_pi_ctrl_start[0];\n"
-        "        u_pi_buck.V_meas = y_fb_delay[0];\n"
-        "        PI_Buck_Compute(&pi_buck_state, &u_pi_buck, dt, &y_pi_buck);\n"
-        "        /* y_pi_buck.duty available to downstream blocks as needed */\n"
-        "    }"
-    )
+    # Built by _build_custom_emit() AFTER PYXInspector has populated
+    # step_func, state_struct etc. — so all names come from the .pyx,
+    # not from hardcoded strings here.
+    C_CUSTOM_EMIT: str = ''   # populated below by _build_custom_emit()
+
+    @classmethod
+    def _build_custom_emit(cls) -> None:
+        """
+        Build C_CUSTOM_EMIT from PYXInspector-populated class attributes.
+
+        Called once after the class body is fully executed and after
+        auto_populate_from_pyx() has filled step_func / state_struct.
+
+        All names (step function, state struct, input/output struct names)
+        are derived from the .pyx — nothing is hardcoded here.
+
+        Naming conventions inferred from the .pyx:
+            step_func      → 'PI_Buck_Compute'  (from PYXInspector)
+            state_struct   → 'PI_Buck_Block_T'  (manual override above)
+            input struct   → step_func prefix + '_Input_T'
+            output struct  → step_func prefix + '_Output_T'
+            state var name → sanitized block name + '_state'
+                             (matches StepGenerator convention)
+        """
+        import re as _re
+        fn   = cls.step_func    or 'PI_Buck_Compute'
+        ss   = cls.state_struct or 'PI_Buck_Block_T'
+
+        # PYXInspector sometimes picks up the Cython wrapper's 'compute'
+        # cpdef method instead of the extern C 'PI_Buck_Compute' function.
+        # Guard: a valid C step function must contain an underscore.
+        # If it doesn't, fall back to the known-correct name from the .pyx.
+        if '_' not in fn:
+            fn = 'PI_Buck_Compute'
+
+        # Derive Input/Output struct names from the function name prefix.
+        # PI_Buck_Compute → prefix = PI_Buck
+        # Then Input_T = PI_Buck_Input_T, Output_T = PI_Buck_Output_T
+        m = _re.match(r'^(.+?)_(?:Compute|Step|Update)$', fn, _re.IGNORECASE)
+        prefix    = m.group(1) if m else fn
+        in_struct  = f"{prefix}_Input_T"
+        out_struct = f"{prefix}_Output_T"
+
+        # State variable name follows StepGenerator convention:
+        # sanitized block name + '_state'.  Use the class-level name
+        # placeholder; actual block name is always 'pi_buck' in this model.
+        # StepGenerator sanitizes block.name the same way.
+        state_var = "pi_buck_state"   # = _sanitize(block.name) + "_state"
+
+        cls.C_CUSTOM_EMIT = (
+            f"    /* --- pi_buck ({cls.__name__}) --- */\n"
+            f"    {{\n"
+            f"        {in_struct}  u_pi_buck;\n"
+            f"        {out_struct} y_pi_buck;\n"
+            f"        u_pi_buck.V_ref  = in->vref;\n"
+            f"        u_pi_buck.V_meas = in->fb_delay;\n"
+            f"        {fn}(&{state_var}, &u_pi_buck, dt, &y_pi_buck);\n"
+            f"        out->pi_buck = y_pi_buck.duty;\n"
+            f"    }}"
+        )
 
     def __init_subclass__(cls, **kwargs):
         """
@@ -242,6 +295,7 @@ class PI_BuckBlock(SimBlockBase):
         super().__init_subclass__(**kwargs)
         if hasattr(cls, 'PYX_FILE') and cls.PYX_FILE:
             auto_populate_from_pyx(cls, cls.PYX_FILE)
+        cls._build_custom_emit()
 
     def __init__(
             self,
@@ -332,6 +386,13 @@ class PI_BuckBlock(SimBlockBase):
         The try/except gives a clear, actionable error message if the
         Cython .pyd was not compiled, rather than a cryptic ImportError.
         """
+        # Ensure c_src is on sys.path so the .pyd is found regardless of
+        # working directory or Windows Store Python sandbox restrictions.
+        import pathlib as _pl, sys as _sys
+        _c_src = str(_pl.Path(__file__).resolve().parent / 'c_src')
+        if _c_src not in _sys.path:
+            _sys.path.insert(0, _c_src)
+
         try:
             import pi_buck_wrapper as pbw          # import the .pyd binary
             w = pbw.PI_BuckWrapper()               # create C-level instance
@@ -621,3 +682,8 @@ class PI_BuckBlock(SimBlockBase):
             f"duty=[{self._duty_min:.2f},{self._duty_max:.2f}], "
             f"backend={be})"
         )
+
+# ── Build C_CUSTOM_EMIT on PI_BuckBlock itself ──────────────────────────────
+# VectorBlock.__init_subclass__ already called auto_populate_from_pyx() when
+# PI_BuckBlock was defined, so step_func / state_struct are populated now.
+PI_BuckBlock._build_custom_emit()

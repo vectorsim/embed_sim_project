@@ -1,0 +1,9 @@
+2026-03-17 11:19:46 [INFO   ] EmbedSim.output — EmbedSim init  T=4.0 s  dt=0.01 s  solver=RK4  log=C:\EmbedSimProject\embed_sim_project\embedsim_log\output_20260317_111946.log
+2026-03-17 11:19:46 [DEBUG  ] EmbedSim.output — PARSE  cosine_source                   type=SinusoidalGenerator        dynamic=False  loop_breaker=False
+2026-03-17 11:19:46 [DEBUG  ] EmbedSim.output — PARSE  sin_source                      type=SinusoidalGenerator        dynamic=False  loop_breaker=False
+2026-03-17 11:19:46 [DEBUG  ] EmbedSim.output — PARSE  const_1                         type=VectorConstant             dynamic=False  loop_breaker=False
+2026-03-17 11:19:46 [DEBUG  ] EmbedSim.output — PARSE  source_sum                      type=VectorSum                  dynamic=False  loop_breaker=False
+2026-03-17 11:19:46 [DEBUG  ] EmbedSim.output — PARSE  gain                            type=VectorGain                 dynamic=False  loop_breaker=False
+2026-03-17 11:19:46 [DEBUG  ] EmbedSim.output — PARSE  integrator                      type=VectorIntegrator           dynamic=True  loop_breaker=False
+2026-03-17 11:19:46 [DEBUG  ] EmbedSim.output — PARSE  output                          type=VectorEnd                  dynamic=False  loop_breaker=False
+2026-03-17 11:19:46 [INFO   ] EmbedSim.output — Graph resolved: 7 blocks  (1 dynamic, 6 static, 0 loop breakers)

@@ -1,258 +1,257 @@
 """
-db42s02_openloop_fmu.py
-=======================
-EmbedSim  —  Open-loop V/f control  —  NANOTEC DB42S02
-=======================================================
+example_two_sines_gain.py
+=========================
+EmbedSim — Introductory example: two sine sources, gain, summer
+================================================================
 
-Library: fs_electrical_machines
+PURPOSE
+-------
+This file demonstrates the core EmbedSim workflow on the simplest
+possible signal-flow graph:
 
-Block diagram (Python-first, EmbedSim canonical order):
-─────────────────────────────────────────────────────────────────
-  CodeGenStart
-       │
-  SpeedRampBlock            omega_m_ref [rad/s]
-       │                    motor_utility_blocks.c → SpeedRamp_Step
-  VfAngleBlock              [v_d=0, v_q, theta_e]
-       │                    motor_utility_blocks.c → VfAngle_Step
-       ├─── VfDQBlock        [v_d, v_q]
-       │    motor_utility_blocks.c → VfDQ_Step
-       └─── VfThetaBlock     [theta_e]
-            motor_utility_blocks.c → VfTheta_Step
-                              ↓
-  InvParkTransformBlock     [v_alpha, v_beta]
-       │                    coordinate_transform.c → InvPark_Step
-       ├────────────────────────────────────────► DutyPackBlock (port 0)
-       └──► SVPWMBlock       [T1, T2, T0, sector]
-                │            svpwm.c → SVPWM_Step
-                └────────────────────────────── DutyPackBlock (port 1)
-  DutyPackBlock             [duty_a, duty_b, duty_c, V_dc, 0]
-       │                    motor_utility_blocks.c → DutyPack_Step
-  CodeGenEnd                → cg_end.generate_loop() → LoopGenerator
-       │
-  FMUSinkBlock              PMSM plant (NOT code-generated)
-─────────────────────────────────────────────────────────────────
+    SineSource("sine_a")  ──────────────────────────────► SumBlock("summer")
+    SineSource("sine_b")  ──► GainBlock("gain_b", k=2.0) ──► SumBlock("summer")
+                                                                     │
+                                                               VectorEnd("sink")
 
-CodeGen strategy
-────────────────
-  Every block carries PYX_FILE.
-  PYXInspector auto-populates step_func / state_struct / init_func
-  at class-definition time via VectorBlock.__init_subclass__.
-  LoopGenerator emits typed C calls for every block.
-  Zero C_CUSTOM_EMIT.  Zero hand-written C strings in this file.
+It focuses on two features that are useful for understanding and
+debugging any EmbedSim simulation:
 
-Motor: NANOTEC DB42S02  (PMSM_Motor.mo)
-  R=0.19 Ω  Ld=Lq=0.125 mH  λ_pm=0.0014 Wb  J=2.4e-6 kg·m²
-  p=4  V_dc=17 V
+  1. Topology Printer  — ASCII console view + interactive HTML export
+                         (sim.topo.print_console / sim.topo.export_html)
 
-Build wrappers once:
-    cd fs_electrical_machines/c_src
-    python setup_motor_utility_blocks.py build_ext --inplace
+  2. Execution order   — the DFS-sorted block list that the simulation
+                         engine walks at every time step
+                         (sim.execution_order)
+
+No FMU, no Cython extension, no CodeGen — just pure Python blocks so
+the file runs anywhere with only embedsim + numpy + matplotlib.
+
+WHAT TO LOOK FOR
+----------------
+Console output after "Run this script":
+
+  [Topology] Signal-flow diagram:
+      ┌─ cg_start ─ sine_a ─ ...
+      ...
+  [Topology] Written: example_signal_flow.html
+
+  [Execution order]  (DFS topological sort — engine walks this list)
+      Step 0 : sine_a        SineSource
+      Step 1 : sine_b        SineSource
+      Step 2 : gain_b        GainBlock
+      Step 3 : summer        SumBlock
+      Step 4 : sink          VectorEnd
+  ...
 
 Run:
-    python db42s02_openloop_fmu.py
+    python example_two_sines_gain.py
 """
 
 from __future__ import annotations
 
+# ---------------------------------------------------------------------------
+# Standard library
+# ---------------------------------------------------------------------------
 import sys
 import math
 import numpy as np
 import matplotlib
-matplotlib.use("Agg")
+matplotlib.use("Agg")          # non-interactive backend — safe on all machines
 import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
-import matplotlib.animation as animation
 from pathlib import Path
 
-# ── Path bootstrap ─────────────────────────────────────────────────────────────
 _HERE = Path(__file__).resolve().parent
-_ROOT = _HERE
-for _ in range(6):
-    if (_ROOT / "embedsim").is_dir():
-        break
-    _ROOT = _ROOT.parent
 
-if str(_ROOT) not in sys.path:
-    sys.path.insert(0, str(_ROOT))
+# ---------------------------------------------------------------------------
+# Path bootstrap — use shared utility (safe to call multiple times).
+# Walks up to the .project_root_marker file and inserts project root onto
+# sys.path so "from embedsim import ..." always resolves.
+# ---------------------------------------------------------------------------
+sys.path.insert(0, str(_HERE))   # make local _path_utils importable
+from _path_utils import setup_embedsim_path
+setup_embedsim_path()
 
-_FS_ELEC = _ROOT / "fs_electrical_machines"
-if str(_FS_ELEC) not in sys.path:
-    sys.path.insert(0, str(_FS_ELEC))
-
-# ── EmbedSim — full engine ────────────────────────────────────────────────────
-from embedsim import EmbedSim, ODESolver, VectorEnd
+# ---------------------------------------------------------------------------
+# EmbedSim — public surface
+# ---------------------------------------------------------------------------
+from embedsim import EmbedSim, ODESolver, VectorEnd          # engine + sink
 from embedsim.core_blocks import VectorBlock, VectorSignal, DEFAULT_DTYPE
-from embedsim.code_generator import CodeGenStart, CodeGenEnd
 
-# ── fs_electrical_machines — all blocks have compiled .pyd wrappers ────────────
-from motor_utility_blocks import (
-    SpeedRampBlock,
-    VfAngleBlock,
-    VfDQBlock,
-    VfThetaBlock,
-    DutyPackBlock,
-)
-from coordinate_transform_blocks import InvParkTransformBlock
-from svpwm_block                 import SVPWMBlock
-from PMSM_MotorBlock             import PMSM_MotorBlock
+# ---------------------------------------------------------------------------
+# Simulation parameters
+# ---------------------------------------------------------------------------
+T_SIM = 0.10          # total simulation time  [s]
+DT    = 1e-4          # fixed time step         [s]  → 10 000 steps
 
-_FMU_PATH = str(_FS_ELEC / "modelica" / "PMSM_Motor.fmu")
+FREQ_A = 50.0         # sine_a frequency  [Hz]
+AMP_A  = 1.0          # sine_a amplitude  [V]
 
-# ── Attach PYX_FILE to blocks defined in external modules ─────────────────────
-# motor_utility_blocks.py already sets PYX_FILE on its own five classes.
-# InvParkTransformBlock and SVPWMBlock are defined in their own modules
-# so we attach PYX_FILE here before any instance is created.
-InvParkTransformBlock.PYX_FILE = str(
-    _FS_ELEC / "c_src" / "coordinate_transform_wrapper.pyx")
-SVPWMBlock.PYX_FILE = str(
-    _FS_ELEC / "c_src" / "svpwm_wrapper.pyx")
+FREQ_B = 150.0        # sine_b frequency  [Hz]  (3rd harmonic)
+AMP_B  = 0.5          # sine_b amplitude  [V]
+
+GAIN_B = 2.0          # scalar gain applied to sine_b before summation
 
 
 # =============================================================================
-# Motor constants  (PMSM_Motor.mo)
+# Block definitions
 # =============================================================================
-P_POLES        = 4
-V_DC           = 17.0
-V_PHASE_PEAK   = V_DC / math.sqrt(3.0)
-OMEGA_M_RATED  = 8000.0 * 2.0 * math.pi / 60.0
-OMEGA_E_RATED  = P_POLES * OMEGA_M_RATED
-VF_RATIO       = V_PHASE_PEAK / OMEGA_E_RATED
 
-T_SIM          = 0.4
-DT             = 1e-4
-OMEGA_CMD_RPM  = 400.0
-OMEGA_CMD_RADS = OMEGA_CMD_RPM * 2.0 * math.pi / 60.0
-RAMP_TIME      = 0.15
-
-
-# =============================================================================
-# FMUSinkBlock  — simulation plant, NOT code-generated
-# =============================================================================
-class FMUSinkBlock(VectorBlock):
+class SineSource(VectorBlock):
     """
-    Wraps PMSM_MotorBlock FMU from fs_electrical_machines.
-    Analytical Euler dq fallback when FMU is unavailable.
-    Outside CodeGenStart/CodeGenEnd — never touched by LoopGenerator.
+    Pure-Python sine generator block.
+
+    Output vector: [sin(2π·freq·t) * amp]   (1 element)
+
+    This is a SOURCE block — it has no upstream inputs.  EmbedSim
+    DFS-sorts source blocks to the front of the execution order
+    automatically.
     """
 
-    def __init__(self, name: str, fmu_path: str) -> None:
+    def __init__(self, name: str, freq: float, amp: float = 1.0) -> None:
         super().__init__(name)
-        self.is_dynamic = False
-        try:
-            self._motor   = PMSM_MotorBlock(name="pmsm", fmu_path=fmu_path)
-            self._has_fmu = True
-            print(f"[FMU] Loaded: {fmu_path}")
-        except Exception as exc:
-            print(f"[FMU] Not available ({exc}) — using analytical fallback")
-            self._has_fmu = False
-            self._motor   = None
-            self._id = self._iq = self._omega_m = self._th = 0.0
+        self.freq = freq
+        self.amp  = amp
+        # No is_dynamic flag needed — stateless block, recomputed each step.
 
-        self.speed_rpm = self.i_a = self.i_b = self.i_c = 0.0
-        self.theta_e_motor = self.T_em = 0.0
+    def compute_py(self, t: float, dt: float, input_values=None) -> VectorSignal:
+        """
+        Called by the simulation engine once per time step.
 
-    def compute_py(self, t, dt, input_values=None):
-        da = db = dc = 0.5
-        vdc = V_DC
-        if input_values and input_values[0] is not None:
-            v = input_values[0].value
-            if len(v) >= 4:
-                da, db, dc, vdc = (float(v[0]), float(v[1]),
-                                   float(v[2]), float(v[3]))
+        Parameters
+        ----------
+        t   : current simulation time  [s]
+        dt  : fixed step size          [s]  (unused here — stateless)
+        input_values : list[VectorSignal | None] — upstream port signals.
+                       None for a source block.
 
-        if self._has_fmu:
-            sig = VectorSignal(
-                np.array([da, db, dc, vdc, 0.0], dtype=DEFAULT_DTYPE))
-            self._motor.compute_py(t, dt, [sig])
-            self.speed_rpm     = self._motor.read_speed_rpm()
-            self.i_a           = self._motor.read_i_a()
-            self.i_b           = self._motor.read_i_b()
-            self.i_c           = self._motor.read_i_c()
-            self.theta_e_motor = self._motor.read_theta_e()
-            self.T_em          = self._motor.read_T_em()
-        else:
-            R = 0.19; Ld = Lq = 0.125e-3; lam = 0.0014
-            Jm = 2.4e-6; Bf = 1e-6; H = math.sqrt(3.0) / 2.0
-            van = da*vdc; vbn = db*vdc; vcn = dc*vdc
-            vn  = (van + vbn + vcn) / 3.0
-            va  = van - vn; vb = vbn - vn; vc = vcn - vn
-            va_a = (2.0/3.0)*(va - 0.5*vb - 0.5*vc)
-            vb_a = (2.0/3.0)*(H*vb - H*vc)
-            th   = self._th
-            vd   =  va_a*math.cos(th) + vb_a*math.sin(th)
-            vq   = -va_a*math.sin(th) + vb_a*math.cos(th)
-            oe   = P_POLES * self._omega_m
-            self._id += (vd - R*self._id + oe*Lq*self._iq) / Ld * dt
-            self._iq += (vq - R*self._iq - oe*(Ld*self._id + lam)) / Lq * dt
-            Tem  = 1.5*P_POLES*(lam*self._iq + (Ld-Lq)*self._id*self._iq)
-            self._omega_m += (Tem - Bf*self._omega_m) / Jm * dt
-            self._th       = math.fmod(self._th + oe*dt, 2.0*math.pi)
-            if self._th < 0.0:
-                self._th += 2.0*math.pi
-            ia = self._id*math.cos(th) - self._iq*math.sin(th)
-            ib = self._id*math.sin(th) + self._iq*math.cos(th)
-            self.i_a           =  ia
-            self.i_b           = -0.5*ia + H*ib
-            self.i_c           = -0.5*ia - H*ib
-            self.speed_rpm     = self._omega_m * 60.0 / (2.0*math.pi)
-            self.theta_e_motor = self._th
-            self.T_em          = Tem
-
+        Returns
+        -------
+        VectorSignal wrapping a 1-element numpy array.
+        """
+        value = self.amp * math.sin(2.0 * math.pi * self.freq * t)
         self.output = VectorSignal(
-            np.array([self.speed_rpm, self.i_a, self.i_b,
-                      self.i_c, self.T_em], dtype=DEFAULT_DTYPE),
-            self.name)
+            np.array([value], dtype=DEFAULT_DTYPE), self.name)
+        return self.output
+
+
+class GainBlock(VectorBlock):
+    """
+    Element-wise scalar gain: output = k * input[0]
+
+    This is a PROCESSING block — it sits between SineSource and SumBlock
+    in the execution order.  EmbedSim DFS ensures all upstream blocks
+    (SineSource here) are computed before this block is called.
+    """
+
+    def __init__(self, name: str, k: float = 1.0) -> None:
+        super().__init__(name)
+        self.k = k
+
+    def compute_py(self, t: float, dt: float, input_values=None) -> VectorSignal:
+        """
+        Multiply every element of the upstream signal by scalar k.
+
+        input_values[0] is the VectorSignal produced by the immediately
+        upstream block.  EmbedSim guarantees it is not None when this
+        method is called (the block has one declared input edge).
+        """
+        upstream = input_values[0].value if input_values else np.zeros(1)
+        self.output = VectorSignal(
+            (self.k * upstream).astype(DEFAULT_DTYPE), self.name)
+        return self.output
+
+
+class SumBlock(VectorBlock):
+    """
+    Element-wise sum over all upstream ports.
+
+    This is a SINK-adjacent block.  It merges two incoming signals
+    (sine_a and the gained sine_b) into a single output vector.
+
+    Multi-port wiring in EmbedSim:
+        sine_a  >> summer   →  port 0
+        gain_b  >> summer   →  port 1
+    EmbedSim concatenates them as input_values = [sig_port0, sig_port1].
+    Both signals must have the same length for element-wise addition.
+    """
+
+    def compute_py(self, t: float, dt: float, input_values=None) -> VectorSignal:
+        """
+        Sum all upstream port signals element-wise.
+
+        Guards against None entries — can happen in unit tests or when a
+        port has not yet been connected.
+        """
+        result = None
+        for sig in (input_values or []):
+            if sig is None:
+                continue
+            v = sig.value
+            result = v if result is None else result + v
+
+        if result is None:
+            result = np.zeros(1, dtype=DEFAULT_DTYPE)
+
+        self.output = VectorSignal(result.astype(DEFAULT_DTYPE), self.name)
         return self.output
 
 
 # =============================================================================
-# Build & run
+# build_and_run
 # =============================================================================
 def build_and_run() -> dict:
     """
-    Wire all blocks, register signals on sim.scope, hand to EmbedSim
-    for topology sort + time loop, export topology HTML via sim.topo,
-    then call LoopGenerator.
+    Instantiate blocks, wire them, configure EmbedSim, run the simulation.
 
-    Signal recording : sim.scope.add(block, indices, label) before sim.run()
-    Signal retrieval : sim.scope.get_signal(label, index) after sim.run()
-    No VectorEnd sinks for data.  No hand-rolled loop.  No _h() hack.
+    This function demonstrates the complete EmbedSim workflow:
+
+      1.  Instantiate blocks.
+      2.  Wire blocks with the >> operator (builds the signal-flow graph).
+      3.  Create EmbedSim(sinks=[...]) — triggers DFS topology sort.
+      4.  Register scope channels  (MUST be before sim.run()).
+      5.  Print topology to console  (ASCII art).
+      6.  Export topology to HTML    (interactive pan/zoom).
+      7.  Print execution order      (sorted block list).
+      8.  sim.run()                  (fixed-step Euler time loop).
+      9.  Extract scope data.
+
+    Returns
+    -------
+    dict with numpy arrays: t, sig_a, sig_b_gained, sig_sum
     """
 
-    # ── Instantiate ──────────────────────────────────────────────────────────
-    cg_start  = CodeGenStart("cg_start")
-    speed_ref = SpeedRampBlock("speed_ref",
-                               omega_target=OMEGA_CMD_RADS,
-                               ramp_time=RAMP_TIME)
-    vf_angle  = VfAngleBlock("vf_angle",
-                             vf_ratio=VF_RATIO,
-                             v_phase_peak=V_PHASE_PEAK,
-                             p_poles=P_POLES)
-    vf_dq     = VfDQBlock("vf_dq")
-    vf_theta  = VfThetaBlock("vf_theta")
-    inv_park  = InvParkTransformBlock("inv_park", use_c_backend=False)
-    svpwm     = SVPWMBlock("svpwm", use_c_backend=False)
-    duty_pack = DutyPackBlock("duty_pack", v_dc=V_DC)
-    cg_end    = CodeGenEnd("cg_end")
-    motor     = FMUSinkBlock("motor_sink", fmu_path=_FMU_PATH)
-    sink      = VectorEnd("sink")           # single terminal sink for graph walk
+    # ── 1. Instantiate ───────────────────────────────────────────────────────
+    sine_a = SineSource("sine_a", freq=FREQ_A, amp=AMP_A)
+    sine_b = SineSource("sine_b", freq=FREQ_B, amp=AMP_B)
+    gain_b = GainBlock ("gain_b", k=GAIN_B)
+    summer = SumBlock  ("summer")
+    sink   = VectorEnd ("sink")
 
-    # ── Wire ─────────────────────────────────────────────────────────────────
-    speed_ref >> cg_start
-    speed_ref >> vf_angle
-    vf_angle  >> vf_dq
-    vf_angle  >> vf_theta
-    vf_dq     >> inv_park       # port 0: [v_d, v_q]
-    vf_theta  >> inv_park       # port 1: [theta_e]
-    inv_park  >> svpwm
-    vf_theta  >> svpwm          # port 1: [theta_e]
-    inv_park  >> duty_pack      # port 0: [v_alpha, v_beta]
-    svpwm     >> duty_pack      # port 1: [T1, T2, T0, sector]
-    duty_pack >> cg_end
-    duty_pack >> motor
-    motor     >> sink           # terminal — EmbedSim walks back from here
+    # ── 2. Wire ──────────────────────────────────────────────────────────────
+    #
+    #   A >> B   means: "the output of A becomes an input of B"
+    #                   and adds the edge A → B to the signal-flow graph.
+    #
+    #   EmbedSim supports multi-port blocks:
+    #       A >> C   →  C.input_values[0] = A.output
+    #       B >> C   →  C.input_values[1] = B.output
+    #   Ports are assigned in wiring order.
+    #
+    sine_a >> gain_b    # port 0 of gain_b  (only port)
+    sine_a >> summer    # port 0 of summer
+    gain_b >> summer    # port 1 of summer
+    summer >> sink      # terminal — EmbedSim walks the graph backward from here
 
-    # ── EmbedSim ─────────────────────────────────────────────────────────────
+    # ── 3. Create EmbedSim ───────────────────────────────────────────────────
+    #
+    #   sinks  : one or more VectorEnd blocks.  EmbedSim performs a DFS
+    #            backward from each sink to discover ALL reachable blocks,
+    #            then reverses to produce the execution order (sources first).
+    #
+    #   solver : ODESolver.EULER — fixed-step forward Euler.
+    #            ODESolver.RK4  is available for stiff systems.
+    #
     sim = EmbedSim(
         sinks  = [sink],
         T      = T_SIM,
@@ -260,426 +259,144 @@ def build_and_run() -> dict:
         solver = ODESolver.EULER,
     )
 
-    # ── Register signals on scope (MUST be before sim.run()) ─────────────────
-    sim.scope.add(speed_ref,  indices=[0],          label="omega_ref")
-    sim.scope.add(vf_angle,   indices=[0, 1, 2],    label="vf_angle")
-    sim.scope.add(inv_park,   indices=[0, 1],        label="inv_park")
-    sim.scope.add(svpwm,      indices=[0, 1, 2, 3],  label="svpwm")
-    sim.scope.add(duty_pack,  indices=[0, 1, 2],    label="duty_pack")
-    sim.scope.add(motor,      indices=[0, 1, 2, 3, 4], label="motor")
+    # ── 4. Register scope channels ───────────────────────────────────────────
+    #
+    #   sim.scope.add(block, indices, label)
+    #     block   : any VectorBlock in the graph
+    #     indices : list of output-vector element indices to record
+    #     label   : key used later with sim.scope.get_signal(label, index)
+    #
+    #   IMPORTANT: All scope.add() calls must happen BEFORE sim.run().
+    #   The scope allocates its recording arrays when sim.run() is called.
+    #
+    sim.scope.add(sine_a, indices=[0], label="sine_a")
+    sim.scope.add(gain_b, indices=[0], label="gained_b")   # sine_b * GAIN_B
+    sim.scope.add(summer, indices=[0], label="sum_out")
 
-    # ── Topology: console ASCII + interactive HTML ────────────────────────────
-    print("\n[Topology] Signal-flow diagram:")
+    # ── 5. Topology — ASCII console ──────────────────────────────────────────
+    #
+    #   sim.topo.print_console() walks the sorted block list and prints a
+    #   human-readable signal-flow tree to stdout.  Useful for a quick
+    #   sanity-check that wiring is correct before a long simulation.
+    #
+    print("\n" + "=" * 60)
+    print("  [Topology]  Signal-flow diagram (console)")
+    print("=" * 60)
     sim.topo.print_console()
-    _topo_path = str(_HERE / "db42s02_topology.html")
-    sim.topo.export_html(_topo_path)
-    print(f"[Topology] {_topo_path}")
 
-    # ── Run ───────────────────────────────────────────────────────────────────
+    # ── 6. Topology — interactive HTML ───────────────────────────────────────
+    #
+    #   sim.topo.export_html(path) writes a self-contained HTML file with
+    #   the block graph rendered as a pannable, zoomable diagram.
+    #   Each node shows the block name, class, and wiring.
+    #
+    _topo_html = str(_HERE / "example_signal_flow.html")
+    sim.topo.export_html(_topo_html)
+    print(f"\n  [Topology]  Written: {_topo_html}\n")
+
+    # ── 7. Execution order ───────────────────────────────────────────────────
+    #
+    #   sim.execution_order is the DFS-topologically-sorted list of blocks.
+    #   The simulation engine calls block.compute_py() in exactly this order
+    #   at every time step.  Inspect it to verify that:
+    #     • All source blocks appear before their consumers.
+    #     • LoopBreaker nodes are placed correctly in feedback chains.
+    #     • No unexpected blocks crept into the graph.
+    #
+    print("=" * 60)
+    print("  [Execution order]  (DFS topological sort — engine walks this list)")
+    print("=" * 60)
+    # execution_order lives on the topology printer as sorted_blocks
+    _order = (
+        sim.topo.sorted_blocks
+        if hasattr(sim.topo, "sorted_blocks")
+        else getattr(sim, "execution_order", [])
+    )
+    for step, blk in enumerate(_order):
+        class_name = type(blk).__name__
+        print(f"  Step {step:>2d} :  {blk.name:<20s}  ({class_name})")
+    print()
+
+    # ── 8. Run ───────────────────────────────────────────────────────────────
+    print("  [Run]  Starting simulation …")
     sim.run()
+    print(f"  [Run]  Done — {int(T_SIM / DT)} steps × dt={DT*1e6:.0f} µs\n")
 
-    # ── Extract signals from scope ────────────────────────────────────────────
+    # ── 9. Extract scope data ─────────────────────────────────────────────────
     sc = sim.scope
-    hist = {
-        "t":         np.array(sc.t, dtype=np.float32),
-        # omega_ref: scope records rad/s → convert to RPM
-        "omega_ref": sc.get_signal("omega_ref", 0) * 60.0 / (2.0 * math.pi),
-        "v_d":       sc.get_signal("vf_angle",  0),
-        "v_q":       sc.get_signal("vf_angle",  1),
-        "theta_e":   sc.get_signal("vf_angle",  2),
-        "v_alpha":   sc.get_signal("inv_park",  0),
-        "v_beta":    sc.get_signal("inv_park",  1),
-        "sector":    sc.get_signal("svpwm",     3),
-        "duty_a":    sc.get_signal("duty_pack", 0),
-        "duty_b":    sc.get_signal("duty_pack", 1),
-        "duty_c":    sc.get_signal("duty_pack", 2),
-        "speed_rpm": sc.get_signal("motor",     0),
-        "i_a":       sc.get_signal("motor",     1),
-        "i_b":       sc.get_signal("motor",     2),
-        "i_c":       sc.get_signal("motor",     3),
-        "T_em":      sc.get_signal("motor",     4),
+    return {
+        "t":         np.array(sc.t,                     dtype=np.float32),
+        "sig_a":     sc.get_signal("sine_a",   0),      # raw sine_a
+        "sig_b_g":   sc.get_signal("gained_b", 0),      # sine_b × GAIN_B
+        "sig_sum":   sc.get_signal("sum_out",  0),      # summer output
     }
 
-    # ── LoopGenerator ─────────────────────────────────────────────────────────
-    print("\n[CodeGen] Calling cg_end.generate_loop() …")
-    cg_end.generate_loop(
-        cg_start=cg_start,
-        output_dir=_ROOT,
-        dt_hz=1.0 / DT,
-        write_files=True,
-    )
-
-    return hist
-
 
 # =============================================================================
-# Static plots
+# Plot
 # =============================================================================
-_SECTOR_COLORS = ["#FF595E", "#FF924C", "#FFCA3A",
-                  "#8AC926", "#1982C4", "#6A4C93"]
-
-
-def plot_results(d: dict, path: str = "db42s02_openloop_results.png"):
-    fig, axes = plt.subplots(4, 1, figsize=(12, 12), sharex=True)
+def plot_results(d: dict, path: str = "example_two_sines_gain.png") -> None:
+    """
+    Three-panel plot:
+      Top    : sine_a  (50 Hz)
+      Middle : gained_b  (150 Hz × 2)
+      Bottom : sum  (composite waveform)
+    """
+    t   = d["t"]
+    fig, axes = plt.subplots(3, 1, figsize=(10, 7), sharex=True)
     fig.suptitle(
-        f"NANOTEC DB42S02 — Open-loop V/f  "
-        f"(cmd {OMEGA_CMD_RPM:.0f} RPM | V_dc {V_DC} V | p={P_POLES})",
-        fontsize=13, fontweight="bold")
-    t = d["t"]
+        f"EmbedSim — Two Sines + Gain  "
+        f"(f_a={FREQ_A} Hz, f_b={FREQ_B} Hz, k={GAIN_B})",
+        fontsize=12, fontweight="bold")
 
-    axes[0].plot(t, d["omega_ref"], "k--", lw=1.2, label="ω_ref [RPM]")
-    axes[0].plot(t, d["speed_rpm"], "C0",  lw=1.5, label="ω_motor FMU [RPM]")
-    axes[0].set_ylabel("Speed [RPM]"); axes[0].legend(fontsize=9)
+    axes[0].plot(t * 1e3, d["sig_a"], color="C0", lw=1.2,
+                 label=f"sine_a  ({FREQ_A} Hz, A={AMP_A})")
+    axes[0].set_ylabel("Amplitude"); axes[0].legend(fontsize=9)
     axes[0].grid(alpha=0.3)
-    axes[0].set_title("Motor speed  (fs_electrical_machines FMU plant)")
+    axes[0].set_title("SineSource: sine_a")
 
-    axes[1].plot(t, d["i_a"], "C3", lw=0.9, label="i_a")
-    axes[1].plot(t, d["i_b"], "C2", lw=0.9, label="i_b")
-    axes[1].plot(t, d["i_c"], "C1", lw=0.9, label="i_c")
-    axes[1].set_ylabel("Current [A]"); axes[1].legend(fontsize=9)
-    axes[1].grid(alpha=0.3); axes[1].set_title("Phase currents — FMU sensor output")
+    axes[1].plot(t * 1e3, d["sig_b_g"], color="C1", lw=1.2,
+                 label=f"gained_b  ({FREQ_B} Hz, A={AMP_B}×{GAIN_B}={AMP_B*GAIN_B})")
+    axes[1].set_ylabel("Amplitude"); axes[1].legend(fontsize=9)
+    axes[1].grid(alpha=0.3)
+    axes[1].set_title(f"SineSource → GainBlock (k={GAIN_B}): sine_b × {GAIN_B}")
 
-    axes[2].plot(t, d["duty_a"], "C3", lw=0.8, label="duty_a → GTM TOM0 CH0")
-    axes[2].plot(t, d["duty_b"], "C2", lw=0.8, label="duty_b → GTM TOM0 CH2")
-    axes[2].plot(t, d["duty_c"], "C1", lw=0.8, label="duty_c → GTM TOM0 CH4")
-    axes[2].set_ylabel("Duty [0–1]"); axes[2].legend(fontsize=9)
-    axes[2].grid(alpha=0.3); axes[2].set_ylim(0, 1)
-    axes[2].set_title("PWM duty cycles  (DutyPackBlock → AURIX GTM TOM)")
-
-    ax4 = axes[3]; ax4b = ax4.twinx()
-    ax4.step(t, d["sector"], where="post", color="C5", lw=1.2, label="SVPWM sector")
-    ax4b.plot(t, d["v_q"], "C0--", lw=1.0, label="v_q [V]")
-    ax4.set_ylabel("Sector [1–6]", color="C5"); ax4b.set_ylabel("v_q [V]", color="C0")
-    ax4.set_ylim(0, 7); ax4.set_yticks([1, 2, 3, 4, 5, 6])
-    ax4.set_xlabel("Time [s]"); ax4.grid(alpha=0.3)
-    ax4.set_title("SVPWM sector + v_q")
-    l1, n1 = ax4.get_legend_handles_labels(); l2, n2 = ax4b.get_legend_handles_labels()
-    ax4.legend(l1+l2, n1+n2, fontsize=9)
+    axes[2].plot(t * 1e3, d["sig_sum"], color="C2", lw=1.2,
+                 label="sum = sine_a + gained_b")
+    axes[2].set_ylabel("Amplitude"); axes[2].legend(fontsize=9)
+    axes[2].set_xlabel("Time [ms]")
+    axes[2].grid(alpha=0.3)
+    axes[2].set_title("SumBlock: composite waveform")
 
     plt.tight_layout()
-    fig.savefig(path, dpi=150, bbox_inches="tight"); plt.close(fig)
-    print(f"[Plot] {path}")
-
-
-def plot_phasor_static(d: dict, path: str = "db42s02_phasor_sectors.png"):
-    fig, ax = plt.subplots(figsize=(7, 7))
-    ax.set_aspect("equal")
-    ax.set_title(
-        f"SVPWM hexagon — α-β plane\n"
-        f"NANOTEC DB42S02  {OMEGA_CMD_RPM:.0f} RPM open-loop V/f",
-        fontsize=12, fontweight="bold")
-    R = 2.0 / 3.0
-    for s in range(6):
-        a0 = math.radians(60*s); a1 = math.radians(60*(s+1))
-        angs = np.linspace(a0, a1, 30)
-        ax.fill(np.concatenate([[0], R*np.cos(angs), [0]]),
-                np.concatenate([[0], R*np.sin(angs), [0]]),
-                color=_SECTOR_COLORS[s], alpha=0.22)
-        am = (a0+a1)/2.0
-        ax.text(0.45*math.cos(am), 0.45*math.sin(am), f"S{s+1}",
-                ha="center", va="center", fontsize=13,
-                fontweight="bold", color=_SECTOR_COLORS[s])
-    ax.plot([R*math.cos(k*math.pi/3) for k in range(7)],
-            [R*math.sin(k*math.pi/3) for k in range(7)], "k-", lw=1.5)
-    for k in range(6):
-        ax.text(R*math.cos(k*math.pi/3)*1.08, R*math.sin(k*math.pi/3)*1.08,
-                f"V{k+1}", ha="center", fontsize=9, fontweight="bold")
-    sc = 1.0 / V_DC
-    ax.plot(d["v_alpha"]*sc, d["v_beta"]*sc,
-            "navy", lw=0.5, alpha=0.35, label="α-β trajectory")
-    vx = float(d["v_alpha"][-1])*sc; vy = float(d["v_beta"][-1])*sc
-    ax.annotate("", xy=(vx, vy), xytext=(0, 0),
-                arrowprops=dict(arrowstyle="->", color="red", lw=2.5))
-    ax.axhline(0, color="gray", lw=0.5); ax.axvline(0, color="gray", lw=0.5)
-    ax.set_xlabel("α  (normalised to V_dc)"); ax.set_ylabel("β")
-    ax.set_xlim(-0.85, 0.85); ax.set_ylim(-0.85, 0.85); ax.grid(alpha=0.25)
-    ax.legend(handles=[mpatches.Patch(color=_SECTOR_COLORS[i], alpha=0.5,
-              label=f"Sector {i+1}") for i in range(6)],
-              fontsize=8, loc="lower right")
-    plt.tight_layout()
-    fig.savefig(path, dpi=150, bbox_inches="tight"); plt.close(fig)
-    print(f"[Plot] {path}")
-
-
-# =============================================================================
-# FOC six-sector animated phasor hexagon  +  phase current scrolling plot
-# =============================================================================
-def animate_phasor_hexagon(d: dict,
-                           path: str = "db42s02_phasor_anim.gif",
-                           n_frames: int = 150,
-                           fps: int = 25) -> None:
-    """
-    Two-panel animated GIF saved as a single image per frame.
-
-    Left  panel : FOC six-sector Hehagen hexagon with rotating α-β
-                  voltage phasor, sector highlight and trajectory trace.
-    Right panel : Scrolling phase current waveforms (i_a, i_b, i_c)
-                  showing a 40 ms window that follows the current time,
-                  with a moving red cursor line and live readouts.
-
-    Both panels share the same FuncAnimation so they stay in sync.
-    """
-    print(f"[Anim] Building {n_frames}-frame dual-panel animation …")
-
-    # ── Decimate data ─────────────────────────────────────────────────────────
-    idx     = np.linspace(0, len(d["t"]) - 1, n_frames, dtype=int)
-    t_dec   = d["t"][idx]
-    va_dec  = d["v_alpha"][idx] / V_DC
-    vb_dec  = d["v_beta"][idx]  / V_DC
-    sec_dec = d["sector"][idx].astype(int)
-    rpm_dec = d["speed_rpm"][idx]
-    vq_dec  = d["v_q"][idx]
-    ia_dec  = d["i_a"][idx]
-    ib_dec  = d["i_b"][idx]
-    ic_dec  = d["i_c"][idx]
-
-    # Full-resolution time axis for the current plot background
-    t_full  = d["t"]
-    ia_full = d["i_a"]
-    ib_full = d["i_b"]
-    ic_full = d["i_c"]
-
-    # Scrolling window width [s]
-    WIN = 0.04
-
-    # Current axis y-limits with 20 % headroom
-    i_peak = max(np.max(np.abs(ia_full)),
-                 np.max(np.abs(ib_full)),
-                 np.max(np.abs(ic_full))) * 1.25
-    if i_peak < 0.01:
-        i_peak = 0.5   # fallback if FMU not available
-
-    # ── Figure layout ─────────────────────────────────────────────────────────
-    fig, (ax_hex, ax_cur) = plt.subplots(
-        1, 2,
-        figsize=(14, 7),
-        gridspec_kw={"width_ratios": [1, 1.15]})
-    fig.suptitle(
-        f"NANOTEC DB42S02 — Open-loop V/f  "
-        f"{OMEGA_CMD_RPM:.0f} RPM  V_dc={V_DC} V  p={P_POLES}",
-        fontsize=12, fontweight="bold")
-    fig.patch.set_facecolor("#0f0f0f")
-    for _ax in (ax_hex, ax_cur):
-        _ax.set_facecolor("#181818")
-        _ax.tick_params(colors="lightgray", labelsize=8)
-        for spine in _ax.spines.values():
-            spine.set_edgecolor("#444444")
-
-    # ── LEFT: hexagon phasor ──────────────────────────────────────────────────
-    ax_hex.set_aspect("equal")
-    ax_hex.set_xlim(-0.85, 0.85)
-    ax_hex.set_ylim(-0.85, 0.85)
-    ax_hex.axhline(0, color="#444444", lw=0.5)
-    ax_hex.axvline(0, color="#444444", lw=0.5)
-    ax_hex.grid(alpha=0.15, color="#555555")
-    ax_hex.set_xlabel("α  (norm. to V_dc)", fontsize=9, color="lightgray")
-    ax_hex.set_ylabel("β", fontsize=9, color="lightgray")
-    ax_hex.set_title("α-β voltage phasor  (SVPWM sectors)",
-                     fontsize=10, color="white", pad=6)
-
-    R = 2.0 / 3.0
-    sector_patches = []
-    for s in range(6):
-        a0 = math.radians(60 * s)
-        a1 = math.radians(60 * (s + 1))
-        angs = np.linspace(a0, a1, 30)
-        xs = np.concatenate([[0], R * np.cos(angs), [0]])
-        ys = np.concatenate([[0], R * np.sin(angs), [0]])
-        patch = ax_hex.fill(xs, ys, color=_SECTOR_COLORS[s], alpha=0.10)[0]
-        sector_patches.append(patch)
-        am = (a0 + a1) / 2.0
-        ax_hex.text(0.48 * math.cos(am), 0.48 * math.sin(am), f"S{s+1}",
-                    ha="center", va="center", fontsize=11,
-                    fontweight="bold", color=_SECTOR_COLORS[s], alpha=0.70)
-
-    ax_hex.plot(
-        [R * math.cos(k * math.pi / 3) for k in range(7)],
-        [R * math.sin(k * math.pi / 3) for k in range(7)],
-        color="#cccccc", lw=1.2, zorder=3)
-    for k in range(6):
-        ax_hex.text(
-            R * math.cos(k * math.pi / 3) * 1.10,
-            R * math.sin(k * math.pi / 3) * 1.10,
-            f"V{k+1}", ha="center", va="center",
-            fontsize=7, fontweight="bold", color="#aaaaaa")
-
-    traj_line, = ax_hex.plot([], [], color="#3399ff", lw=0.7,
-                              alpha=0.30, zorder=2)
-    quiv = ax_hex.quiver(
-        0, 0, 0, 0,
-        angles="xy", scale_units="xy", scale=1.0,
-        color="#ff4444", width=0.018, zorder=5,
-        headwidth=4, headlength=5)
-    tip_dot, = ax_hex.plot([], [], "o", color="#ff4444", ms=7, zorder=6)
-    info_box = ax_hex.text(
-        0.02, 0.98, "", transform=ax_hex.transAxes,
-        fontsize=9, va="top", ha="left", color="white",
-        bbox=dict(boxstyle="round,pad=0.3", fc="#222222", alpha=0.85),
-        fontfamily="monospace", zorder=7)
-    ax_hex.legend(
-        handles=[mpatches.Patch(color=_SECTOR_COLORS[i], alpha=0.55,
-                                label=f"S{i+1}") for i in range(6)],
-        fontsize=7, loc="lower right", framealpha=0.5,
-        facecolor="#222222", labelcolor="white")
-
-    # ── RIGHT: phase current scrolling plot ───────────────────────────────────
-    ax_cur.set_xlim(0.0, WIN)
-    ax_cur.set_ylim(-i_peak, i_peak)
-    ax_cur.set_xlabel("Time in window [ms]", fontsize=9, color="lightgray")
-    ax_cur.set_ylabel("Phase current [A]", fontsize=9, color="lightgray")
-    ax_cur.set_title("Phase currents  i_a / i_b / i_c  (FMU sensor)",
-                     fontsize=10, color="white", pad=6)
-    ax_cur.axhline(0, color="#444444", lw=0.6)
-    ax_cur.grid(alpha=0.15, color="#555555")
-
-    # Convert x-ticks to ms
-    ax_cur.xaxis.set_major_formatter(
-        plt.FuncFormatter(lambda x, _: f"{x*1000:.0f}"))
-
-    # Static full waveform faded in background
-    ax_cur.plot(t_full,  ia_full, color="#ff6666", lw=0.3, alpha=0.10)
-    ax_cur.plot(t_full,  ib_full, color="#66ff66", lw=0.3, alpha=0.10)
-    ax_cur.plot(t_full,  ic_full, color="#6699ff", lw=0.3, alpha=0.10)
-
-    # Scrolling window lines (updated each frame)
-    line_ia, = ax_cur.plot([], [], color="#ff4444", lw=1.4,
-                            label="i_a", zorder=4)
-    line_ib, = ax_cur.plot([], [], color="#44cc44", lw=1.4,
-                            label="i_b", zorder=4)
-    line_ic, = ax_cur.plot([], [], color="#4488ff", lw=1.4,
-                            label="i_c", zorder=4)
-
-    # Moving cursor vertical line
-    cursor_line = ax_cur.axvline(0.0, color="white", lw=1.0,
-                                  alpha=0.7, zorder=5)
-
-    # Live current readout
-    cur_box = ax_cur.text(
-        0.98, 0.98, "", transform=ax_cur.transAxes,
-        fontsize=9, va="top", ha="right", color="white",
-        bbox=dict(boxstyle="round,pad=0.3", fc="#222222", alpha=0.85),
-        fontfamily="monospace", zorder=7)
-
-    ax_cur.legend(fontsize=8, loc="lower right",
-                  framealpha=0.5, facecolor="#222222", labelcolor="white")
-
-    _prev_sector = [None]
-
-    # ── Init ──────────────────────────────────────────────────────────────────
-    def _init():
-        traj_line.set_data([], [])
-        quiv.set_UVC(0, 0)
-        tip_dot.set_data([], [])
-        info_box.set_text("")
-        line_ia.set_data([], [])
-        line_ib.set_data([], [])
-        line_ic.set_data([], [])
-        cur_box.set_text("")
-        return (traj_line, quiv, tip_dot, info_box,
-                line_ia, line_ib, line_ic, cur_box)
-
-    # ── Update ────────────────────────────────────────────────────────────────
-    def _update(frame):
-        tf  = float(t_dec[frame])
-        vx  = float(va_dec[frame])
-        vy  = float(vb_dec[frame])
-        sec = int(sec_dec[frame])
-        rpm = float(rpm_dec[frame])
-        vq  = float(vq_dec[frame])
-        ia  = float(ia_dec[frame])
-        ib  = float(ib_dec[frame])
-        ic  = float(ic_dec[frame])
-
-        # ── Hexagon panel ─────────────────────────────────────────────────────
-        traj_line.set_data(va_dec[:frame + 1], vb_dec[:frame + 1])
-        quiv.set_UVC(vx, vy)
-        tip_dot.set_data([vx], [vy])
-
-        if _prev_sector[0] is not None:
-            _prev_sector[0].set_alpha(0.10)
-        arrow_color = "#ff4444"
-        if 1 <= sec <= 6:
-            sector_patches[sec - 1].set_alpha(0.55)
-            _prev_sector[0] = sector_patches[sec - 1]
-            arrow_color     = _SECTOR_COLORS[sec - 1]
-        else:
-            _prev_sector[0] = None
-        quiv.set_color(arrow_color)
-        tip_dot.set_color(arrow_color)
-
-        info_box.set_text(
-            f"t  = {tf*1000:6.1f} ms\n"
-            f"ω  = {rpm:7.1f} RPM\n"
-            f"Vq = {vq:7.3f} V\n"
-            f"S  =     {sec}")
-
-        # ── Current panel — 40 ms scrolling window ────────────────────────────
-        t_win_start = max(0.0, tf - WIN * 0.75)   # cursor at 75 % of window
-        t_win_end   = t_win_start + WIN
-        ax_cur.set_xlim(t_win_start, t_win_end)
-
-        # Mask to window
-        mask = (t_full >= t_win_start) & (t_full <= t_win_end)
-        t_w  = t_full[mask]
-        line_ia.set_data(t_w, ia_full[mask])
-        line_ib.set_data(t_w, ib_full[mask])
-        line_ic.set_data(t_w, ic_full[mask])
-
-        # Cursor at current time
-        cursor_line.set_xdata([tf, tf])
-
-        # Reformat x-tick labels to ms relative
-        ax_cur.xaxis.set_major_formatter(
-            plt.FuncFormatter(lambda x, _: f"{x*1000:.0f}"))
-
-        cur_box.set_text(
-            f"i_a = {ia:+.3f} A\n"
-            f"i_b = {ib:+.3f} A\n"
-            f"i_c = {ic:+.3f} A")
-
-        return (traj_line, quiv, tip_dot, info_box,
-                line_ia, line_ib, line_ic, cur_box,
-                cursor_line, *sector_patches)
-
-    # ── Render ────────────────────────────────────────────────────────────────
-    plt.tight_layout(rect=[0, 0, 1, 0.94])
-    anim_obj = animation.FuncAnimation(
-        fig, _update, frames=n_frames,
-        init_func=_init, interval=int(1000 / fps), blit=False)
-    anim_obj.save(path, writer="pillow", fps=fps, dpi=120)
+    # Save next to the script (original location)
+    out = str(_HERE / path)
+    plt.savefig(out, dpi=150)
     plt.close(fig)
-    print(f"[Anim] {path}  ({n_frames} frames @ {fps} fps)")
+    print(f"  [Plot]  {out}")
 
 
 # =============================================================================
 # Entry point
 # =============================================================================
 if __name__ == "__main__":
-    print("=" * 64)
-    print("  EmbedSim — NANOTEC DB42S02  Open-loop V/f")
-    print("  Library  : fs_electrical_machines")
-    print("  Blocks   : motor_utility_blocks.c (SpeedRamp, VfAngle,")
-    print("             VfDQ, VfTheta, DutyPack)")
-    print("             coordinate_transform.c  (InvPark)")
-    print("             svpwm.c                 (SVPWM)")
-    print("  CodeGen  : LoopGenerator (feature 05121967)")
-    print("             PYX_FILE + PYXInspector on every block")
-    print("             Zero C_CUSTOM_EMIT — zero hand-written C strings")
-    print("  Topology : TopologyPrinter → db42s02_topology.html")
-    print("  Animation: FOC six-sector phasor + phase currents (Hehagen)")
-    print(f"  Target   : {OMEGA_CMD_RPM:.0f} RPM  V_dc={V_DC} V  "
-          f"p={P_POLES}  dt={DT*1e6:.0f} µs")
-    print("=" * 64)
+    print("=" * 60)
+    print("  EmbedSim — example_two_sines_gain.py")
+    print("  Demonstrates:")
+    print("    • Block wiring with the >> operator")
+    print("    • sim.topo.print_console()  — ASCII topology")
+    print("    • sim.topo.export_html()    — interactive HTML")
+    print("    • sim.execution_order       — DFS sorted block list")
+    print("    • sim.scope                 — signal recording")
+    print(f"  T_SIM = {T_SIM*1e3:.0f} ms   DT = {DT*1e6:.0f} µs")
+    print("=" * 60)
 
     data = build_and_run()
     plot_results(data)
-    plot_phasor_static(data)
-    animate_phasor_hexagon(data, n_frames=150, fps=25)
 
-    print("\n[Done]")
-    print("  db42s02_openloop_results.png")
-    print("  db42s02_phasor_sectors.png")
-    print("  db42s02_phasor_anim.gif")
-    print("  db42s02_topology.html")
-    print("  embedsim_gen/embedsim_loop.c")
-    print("  embedsim_gen/embedsim_loop.h")
+    print()
+    print("  Output files:")
+    print("    example_signal_flow.html       ← interactive topology")
+    print("    example_two_sines_gain.png     ← three-panel waveform plot")
+    print()
+    print("  [Done]")

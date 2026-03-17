@@ -1,0 +1,4 @@
+2026-03-17 11:08:41 [INFO   ] EmbedSim.output — EmbedSim init  T=0.04 s  dt=0.0001 s  solver=RK4  log=C:\EmbedSimProject\embed_sim_project\embedsim_log\output_20260317_110841.log
+2026-03-17 11:08:41 [DEBUG  ] EmbedSim.output — PARSE  3phase_gen                      type=ThreePhaseGenerator        dynamic=False  loop_breaker=False
+2026-03-17 11:08:41 [DEBUG  ] EmbedSim.output — PARSE  output                          type=VectorEnd                  dynamic=False  loop_breaker=False
+2026-03-17 11:08:41 [INFO   ] EmbedSim.output — Graph resolved: 2 blocks  (0 dynamic, 2 static, 0 loop breakers)

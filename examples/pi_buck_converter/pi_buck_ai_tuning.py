@@ -53,8 +53,11 @@ from matplotlib.gridspec import GridSpec
 warnings.filterwarnings('ignore')
 
 # ── Project path setup ────────────────────────────────────────────────────────
-project_root = Path(__file__).resolve().parent.parent.parent
-sys.path.insert(0, str(project_root))
+from _path_utils import get_project_root, get_embedsim_import_path, get_current_parent
+
+_HERE         = get_current_parent()          # …/examples/pi_buck_converter
+project_root  = get_project_root()
+sys.path.insert(0, get_embedsim_import_path())
 
 # ── EmbedSim ──────────────────────────────────────────────────────────────────
 from embedsim.simulation_engine import EmbedSim, ODESolver, VectorDelay
@@ -413,7 +416,7 @@ class FMUProber:
         axes[1].grid(True, alpha=0.3)
 
         plt.tight_layout()
-        out_path = Path(__file__).parent / "fmu_gain_surface.png"
+        out_path = _HERE / "fmu_gain_surface.png"
         plt.savefig(str(out_path), dpi=120, bbox_inches='tight')
         print(f"📈 Gain surface saved → {out_path}")
         plt.show(block=False)
@@ -610,7 +613,7 @@ def train_gain_net(
     plt.title('GainNet Training Loss — FMU-Probed Dataset')
     plt.grid(True, alpha=0.3)
     plt.tight_layout()
-    loss_path = Path(__file__).parent / "gain_net_training.png"
+    loss_path = _HERE / "gain_net_training.png"
     plt.savefig(str(loss_path), dpi=120, bbox_inches='tight')
     print(f"📈 Training loss saved → {loss_path}")
     plt.show(block=False)
@@ -799,6 +802,9 @@ def run_ai_simulation(
 
     # ── Topology ──────────────────────────────────────────────────────────────
     sim.topo.print_console()
+    _topo_html = _HERE / "topology_ai_pi.html"
+    sim.topo.show_gui(str(_topo_html))
+    print(f"🗺  Topology saved → {_topo_html}")
 
     print("\n⚙  Simulating…")
     sim.run(verbose=True, progress_bar=True)
@@ -857,6 +863,12 @@ def run_fixed_pi_simulation(
             _orig(t)
 
         sim._compute_all_blocks = _with_disturbance
+
+    # ── Topology ──────────────────────────────────────────────────────────────
+    sim.topo.print_console()
+    _topo_html = _HERE / "topology_fixed_pi.html"
+    sim.topo.show_gui(str(_topo_html))
+    print(f"🗺  Topology saved → {_topo_html}")
 
     sim.run(verbose=False, progress_bar=True)
     return sim
@@ -1021,7 +1033,7 @@ def plot_comparison(
         f"(V_ref={V_ref}V, load 10Ω→5Ω @ 5ms)",
         fontsize=13, fontweight='bold',
     )
-    out_path = Path(__file__).parent / "ai_vs_fixed_comparison.png"
+    out_path = _HERE / "ai_vs_fixed_comparison.png"
     plt.savefig(str(out_path), dpi=150, bbox_inches='tight')
     print(f"📈 Comparison saved → {out_path}")
     plt.show(block=False)
@@ -1032,8 +1044,8 @@ def plot_comparison(
 # SECTION 10 — MAIN
 # ==============================================================================
 
-DATASET_CACHE = Path(__file__).parent / "fmu_probe_dataset.json"
-MODEL_CACHE   = Path(__file__).parent / "gain_net.pt"
+DATASET_CACHE = _HERE / "fmu_probe_dataset.json"
+MODEL_CACHE   = _HERE / "gain_net.pt"
 
 
 def main() -> None:
@@ -1112,7 +1124,7 @@ def main() -> None:
     )
 
     # Save individual AI result plots
-    ai_png = str(Path(__file__).parent / "pi_buck_ai_response.png")
+    ai_png = str(_HERE / "pi_buck_ai_response.png")
     create_plotter(ai_sim).plot_grid([
         dict(signal="buck_out[0]", ylabel="Voltage (V)",
              title="Output Voltage V_out", color="#58a6ff",

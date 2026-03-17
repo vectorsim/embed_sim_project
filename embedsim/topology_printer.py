@@ -256,6 +256,28 @@ _CAT_ICONS = {
 }
 
 
+def _is_codegen_only(block, infos: dict, edges: dict) -> bool:
+    """
+    Return True if this block is a CodeGen boundary marker (cg_start / cg_end)
+    or a terminal sink that only receives from CodeGen markers.
+    These blocks are rendered in a separate CODEGEN BOUNDARY lane so they
+    don't pollute the FORWARD PATH lane layout.
+    """
+    cat  = infos.get(getattr(block, 'name', ''), {}).get('cat', '')
+    name = getattr(block, 'name', '')
+    # Explicit codegen category blocks always belong in the codegen lane
+    if cat == 'codegen':
+        return True
+    # Sink blocks whose every input is a codegen block → codegen lane
+    if cat == 'sink':
+        # Find all sources that feed this sink
+        sources = [src for src, dsts in edges.items() if name in dsts]
+        if sources and all(infos.get(s, {}).get('cat', '') == 'codegen'
+                           for s in sources):
+            return True
+    return False
+
+
 def _is_plant_only(block, infos: dict, edges: dict, all_blocks: list) -> bool:
     """
     Return True if this block's outputs go exclusively to plant/delay blocks
@@ -302,10 +324,12 @@ def _render_console(nodes: List[Any], edges: Dict[str, List[str]]) -> str:
         return any(infos.get(d, {}).get('cat', '') in ('sink', 'codegen')
                    for d in edges.get(name, []))
 
-    forward = [b for b in sn if infos[getattr(b,'name','')]['cat']
-               not in ('delay', 'plant') and not _is_plant_only(b, infos, edges, sn)
+    forward = [b for b in sn if not _is_codegen_only(b, infos, edges)
+               and infos[getattr(b,'name','')]['cat'] not in ('delay', 'plant')
+               and not _is_plant_only(b, infos, edges, sn)
                or (infos[getattr(b,'name','')]['cat'] == 'plant'
                    and _has_sink_output(b))]
+    codegen = [b for b in sn if _is_codegen_only(b, infos, edges)]
     plant   = [b for b in sn if (infos[getattr(b,'name','')]['cat'] == 'plant'
                and not _has_sink_output(b))
                or _is_plant_only(b, infos, edges, sn)]
@@ -365,7 +389,47 @@ def _render_console(nodes: List[Any], edges: Dict[str, List[str]]) -> str:
         for b in blocks:
             b_by_name[getattr(b,'name','')] = b
 
-        # segments: list of ('single', name) | ('fanin', [inp_names], dst_name)
+        def _build_chain(name, s_idx, segs, fmt_map, arr):
+            """
+            Walk upstream singles to build a display string for one fanin arm.
+            Stops at blocks that have >1 downstream consumer (fan-out) or
+            >1 lane input (they are their own segment).
+            e.g.  svpwm_pack → svpwm  renders as
+                  '[○ svpwm_pack] ──► [○ svpwm]'
+            """
+            # Build a reverse map: name → list of downstream names in block_names
+            downstream = {}
+            for bk in blocks:
+                for inp in _get_inputs(bk):
+                    src = getattr(inp, 'name', '')
+                    if src in block_names:
+                        downstream.setdefault(src, [])
+                        dst = getattr(bk, 'name', '')
+                        if dst not in downstream[src]:
+                            downstream[src].append(dst)
+
+            chain_parts = [fmt_map.get(name, name)]
+            cur = name
+            while True:
+                preds = [getattr(i,'name','') for i in _get_inputs(b_by_name[cur])
+                         if getattr(i,'name','') in block_names] if cur in b_by_name else []
+                if len(preds) == 1 and preds[0] in s_idx:
+                    pred = preds[0]
+                    # Stop if pred fans out to multiple downstream blocks
+                    if len(downstream.get(pred, [])) > 1:
+                        break
+                    pred_seg = segs[s_idx[pred]]
+                    if pred_seg is not None and pred_seg[0] == 'single':
+                        chain_parts.insert(0, fmt_map.get(pred, pred))
+                        segs[s_idx[pred]] = None   # tombstone the predecessor
+                        cur = pred
+                    else:
+                        break
+                else:
+                    break
+            return arr.join(chain_parts) if len(chain_parts) > 1 else chain_parts[0]
+
+        # segments: list of ('single', name) | ('fanin', [(name, disp_str)...], dst_name)
         # None entries are tombstones (absorbed into a later fanin)
         segments: List[Any] = []
         seg_idx: Dict[str, int] = {}   # block_name → index in segments
@@ -377,14 +441,38 @@ def _render_console(nodes: List[Any], edges: Dict[str, List[str]]) -> str:
                          and not getattr(i,'is_loop_breaker', False)]
 
             if len(lane_inps) >= 2:
-                # Absorb all lane inputs into this fanin segment
+                # Each arm is either a plain name (single) or a pre-rendered
+                # chain string built from an inner fanin being tombstoned.
+                # We store arms as ('name', display_str) tuples so _seg_rows
+                # can render them correctly regardless of nesting depth.
+                arm_list = []
                 for inp in lane_inps:
                     if inp in seg_idx:
+                        old_seg = segments[seg_idx[inp]]
+                        if old_seg is not None and old_seg[0] == 'fanin':
+                            # Inner fanin: render its arms inline, append
+                            # the fanin's dst as the last item in the chain
+                            inner_arms = old_seg[1]  # list of (name, disp)
+                            chain_str  = '  '.join(
+                                d if isinstance(a, tuple) else fmts.get(a, a)
+                                for a, d in (inner_arms
+                                             if inner_arms and isinstance(inner_arms[0], tuple)
+                                             else [(a, fmts.get(a, a)) for a in inner_arms])
+                            )
+                            arm_list.append((inp, chain_str + ARROW[:-1] + fmts[inp]))
+                        elif old_seg is not None and old_seg[0] == 'single':
+                            # Check if this single has its own single-input chain upstream
+                            chain = _build_chain(old_seg[1], seg_idx, segments, fmts, ARROW)
+                            arm_list.append((inp, chain))
+                        else:
+                            arm_list.append((inp, fmts.get(inp, inp)))
                         segments[seg_idx[inp]] = None   # tombstone
+                    else:
+                        arm_list.append((inp, fmts.get(inp, inp)))
                 idx = len(segments)
-                segments.append(('fanin', lane_inps, bname))
-                for inp in lane_inps:
-                    seg_idx[inp] = idx
+                segments.append(('fanin', arm_list, bname))
+                for name_key, _ in arm_list:
+                    seg_idx[name_key] = idx
                 seg_idx[bname] = idx
             else:
                 if bname not in seg_idx:
@@ -401,9 +489,9 @@ def _render_console(nodes: List[Any], edges: Dict[str, List[str]]) -> str:
         def _seg_rows(seg) -> List[str]:
             if seg[0] == 'single':
                 return [fmts[seg[1]]]
-            # fanin
-            _, inp_names, dst_name = seg
-            inp_strs = [fmts[n] for n in inp_names]
+            # fanin: arms are (key_name, display_str) tuples
+            _, arm_tuples, dst_name = seg
+            inp_strs = [disp for _, disp in arm_tuples]
             n_arms   = len(inp_strs)
             max_src  = max(len(s) for s in inp_strs)
             suffix   = ARROW[1:] + fmts[dst_name]
@@ -464,12 +552,13 @@ def _render_console(nodes: List[Any], edges: Dict[str, List[str]]) -> str:
         return [r.rstrip() for r in result]
 
     # Build all lane row-lists
-    fwd_rows   = _render_lane(forward)
+    fwd_rows  = _render_lane(forward)
+    cg_rows   = _render_lane(codegen)
     plant_rows = _render_lane(plant)
     dly_rows   = _render_lane(delays)
 
     # Auto-fit box width to widest lane (min 78)
-    all_rows = fwd_rows + plant_rows + dly_rows
+    all_rows = fwd_rows + cg_rows + plant_rows + dly_rows
     W = max(78, max(len(r) + 6 for r in all_rows) if all_rows else 78)
 
     def _sep(ch='·') -> str:
@@ -492,6 +581,7 @@ def _render_console(nodes: List[Any], edges: Dict[str, List[str]]) -> str:
         '',
     ]
     lines += _section('FORWARD PATH  (Sources → Sinks)', fwd_rows)
+    lines += _section('CODEGEN BOUNDARY  (cg_start → cg_end)', cg_rows)
     lines += _section('PLANT', plant_rows)
     lines += _section('FEEDBACK DELAYS  (z⁻¹ LoopBreakers)', dly_rows)
 
@@ -533,7 +623,7 @@ def _render_console(nodes: List[Any], edges: Dict[str, List[str]]) -> str:
 # =============================================================================
 
 # Lane Y centres for the three horizontal bands
-_LANE_Y = {'forward': 130, 'delay': 340, 'plant': 530}
+_LANE_Y = {'forward':  80, 'codegen': 220, 'delay': 360, 'plant': 520}
 _NODE_W  = 160
 _NODE_H  = 60
 _H_GAP   = 40
@@ -552,8 +642,9 @@ def _layout_nodes(nodes: List[Any],
     sn    = _topo_sort(nodes, edges)
     infos = {getattr(b, 'name', ''): _block_info(b) for b in sn}
 
-    forward = [b for b in sn if infos[getattr(b,'name','')]['cat']
-               not in ('delay','plant')]
+    forward = [b for b in sn if not _is_codegen_only(b, infos, edges)
+               and infos[getattr(b,'name','')]['cat'] not in ('delay','plant')]
+    codegen = [b for b in sn if _is_codegen_only(b, infos, edges)]
     delays  = [b for b in sn if infos[getattr(b,'name','')]['cat'] == 'delay']
     plant   = [b for b in sn if infos[getattr(b,'name','')]['cat'] == 'plant']
 
@@ -583,6 +674,24 @@ def _layout_nodes(nodes: List[Any],
         n = getattr(b, 'name', '')
         result[n] = _node_dict(n, x, 'forward')
         x += _NODE_W + _H_GAP
+
+    # CodeGen boundary — align each marker under its driver in the forward lane
+    cg_fallback_x = _MARGIN
+    used_cg_x: Set[int] = set()
+    for b in codegen:
+        n = getattr(b, 'name', '')
+        driver_names = [src for src, dsts in edges.items() if n in dsts]
+        drv_x = None
+        for d in driver_names:
+            if d in result:
+                drv_x = result[d]['x']
+                break
+        x_cg = drv_x if drv_x is not None else cg_fallback_x
+        while x_cg in used_cg_x:
+            x_cg += _NODE_W + _H_GAP
+        used_cg_x.add(x_cg)
+        result[n] = _node_dict(n, x_cg, 'codegen')
+        cg_fallback_x = x_cg + _NODE_W + _H_GAP
 
     # Delays — try to centre under the forward-path block they feed into
     delay_fallback_x = _MARGIN
@@ -666,13 +775,17 @@ def _render_html(nodes: List[Any],
     if len(cg_nodes) >= 2:
         cg_start_n = min(cg_nodes, key=lambda n: n['x'])
         cg_end_n   = max(cg_nodes, key=lambda n: n['x'])
-        fwd_y = _LANE_Y['forward'] - _NODE_H // 2
-        pad = 14
+        # Region spans from above the forward lane down through the codegen lane
+        # so ALL controller blocks sit visually inside the CodeGen region box.
+        fwd_top  = _LANE_Y['forward'] - _NODE_H // 2
+        cg_bot   = _LANE_Y['codegen'] - _NODE_H // 2 + _NODE_H
+        pad      = 18
+        label_h  = 26   # space for the "CodeGen Region" label pill above nodes
         cg_region = {
             'x': cg_start_n['x'] - pad,
-            'y': fwd_y - pad - 22,
+            'y': fwd_top - pad - label_h,
             'w': (cg_end_n['x'] + cg_end_n['w']) - cg_start_n['x'] + pad * 2,
-            'h': _NODE_H + pad * 2 + 22,
+            'h': (cg_bot - fwd_top) + pad * 2 + label_h,
         }
     rj = json.dumps(cg_region, ensure_ascii=False)
 
@@ -850,9 +963,10 @@ NODES.forEach(n=>{{ if(n.cls==='NoisySensorBlock')n.cat='noise'; }});
 
 /* ── Swim-lane bands ── */
 const BANDS=[
-  {{y:84,  h:112, lbl:'FORWARD PATH', col:'{C['band_fwd']}'}},
-  {{y:305, h:100, lbl:'FEEDBACK  z\u207B\u00B9', col:'{C['band_fb']}'}},
-  {{y:494, h:112, lbl:'PLANT', col:'{C['band_plant']}'}},
+  {{y:30,  h:100, lbl:'FORWARD PATH',     col:'{C['band_fwd']}'}},
+  {{y:170, h:100, lbl:'CODEGEN BOUNDARY', col:'rgba(160,120,0,0.07)'}},
+  {{y:310, h: 90, lbl:'FEEDBACK  z\u207B\u00B9', col:'{C['band_fb']}'}},
+  {{y:470, h:100, lbl:'PLANT',            col:'{C['band_plant']}'}},
 ];
 
 const canvas=document.getElementById('c');
@@ -907,8 +1021,15 @@ function drawEdge(e){{
   ctx.save();
   ctx.strokeStyle=col;ctx.lineWidth=lw;ctx.globalAlpha=e.lb?1.0:0.85;
   ctx.setLineDash(e.lb?[8,5]:[]);ctx.lineJoin='round';
-  const sx=s.x+s.w,sy=s.y+s.h/2,dx=d.x,dy=d.y+d.h/2;
+  const sx=s.x+s.w, sy=s.y+s.h/2;
+  const dx=d.x,     dy=d.y+d.h/2;
   let mlx=0,mly=0;
+  /* Cross-lane (src above dst by more than 1 node height):
+     exit bottom of src, drop vertically at src centre-x,
+     then horizontal run at midpoint Y, rise to dst top.
+     The vertical leg is placed at src.x+src.w/2 so it
+     clears other nodes on the forward lane. */
+  const crossLane = (d.y > s.y + s.h + 20);
   if(sx>dx+20){{
     const by=Math.max(s.y+s.h,d.y+d.h)+30;
     const x1=s.x+s.w/2,x2=d.x+d.w/2;
@@ -916,6 +1037,19 @@ function drawEdge(e){{
     ctx.lineTo(x2,by);ctx.lineTo(x2,d.y+d.h);ctx.stroke();
     ah(x2,d.y+d.h,Math.PI/2,9,col);
     mlx=(x1+x2)/2;mly=by-10;
+  }}else if(crossLane){{
+    /* Bottom-exit / top-entry routing for cross-lane edges */
+    const x1=s.x+s.w/2;   /* drop leg x — centre of source */
+    const x2=d.x+d.w/2;   /* rise leg x — centre of dest  */
+    const midY=(s.y+s.h+d.y)/2;  /* midway between lanes     */
+    ctx.beginPath();
+    ctx.moveTo(x1,s.y+s.h);  /* exit source bottom        */
+    ctx.lineTo(x1,midY);      /* drop to lane mid          */
+    ctx.lineTo(x2,midY);      /* horizontal run            */
+    ctx.lineTo(x2,d.y);       /* rise to dest top          */
+    ctx.stroke();
+    ah(x2,d.y,Math.PI/2,9,col);
+    mlx=(x1+x2)/2;mly=midY-6;  /* label sits on horizontal run */
   }}else if(Math.abs(sy-dy)<6){{
     ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(dx,dy);ctx.stroke();
     ah(dx,dy,0,9,col);mlx=(sx+dx)/2;mly=sy-28;
@@ -925,25 +1059,23 @@ function drawEdge(e){{
     ctx.lineTo(mx,dy);ctx.lineTo(dx,dy);ctx.stroke();
     ah(dx,dy,0,9,col);mlx=(mx+dx)/2;mly=dy-28;
   }}
-  /* Signal label — rotated 90° CCW, above the arrow midpoint */
+  /* Signal label — horizontal pill centred above the arrow midpoint */
   const lbl=e.lbl||'';
   if(lbl){{
     ctx.save();
     ctx.globalAlpha=1.0;
     ctx.font='bold 11px "JetBrains Mono",monospace';
-    const tw=ctx.measureText(lbl).width+12;  /* text length + padding */
-    const th=15;                               /* pill narrow width     */
-    const lx=mlx;
-    const ly=mly-tw/2-8;   /* push centre above arrow line by half pill height + gap */
-    ctx.translate(lx,ly);
-    ctx.rotate(-Math.PI/2);  /* 90° counter-clockwise */
-    ctx.fillStyle='rgba(255,255,255,0.97)';
-    ctx.strokeStyle=col;ctx.lineWidth=1.2;ctx.setLineDash([]);
-    ctx.beginPath();ctx.roundRect(-tw/2,-th/2,tw,th,4);
+    const tw=ctx.measureText(lbl).width+14;
+    const th=18;
+    const lx=mlx-tw/2;
+    const ly=mly-th-4;
+    ctx.fillStyle='rgba(255,252,220,0.97)';
+    ctx.strokeStyle=col;ctx.lineWidth=1.5;ctx.setLineDash([]);
+    ctx.beginPath();ctx.roundRect(lx,ly,tw,th,5);
     ctx.fill();ctx.stroke();
     ctx.fillStyle=col;
     ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText(lbl,0,0);
+    ctx.fillText(lbl,mlx,ly+th/2);
     ctx.restore();
   }}
   ctx.restore();
@@ -999,23 +1131,24 @@ function drawCodeGenRegion(){{
   const{{x,y,w,h}}=CG_REGION;
   const col='{C['col_codegen']}';
   ctx.save();
-  /* Filled background */
-  ctx.fillStyle='rgba(184,120,0,0.07)';
-  ctx.beginPath();ctx.roundRect(x,y,w,h,12);ctx.fill();
-  /* Dashed border */
-  ctx.strokeStyle=col;ctx.lineWidth=2.5;ctx.setLineDash([10,6]);
-  ctx.beginPath();ctx.roundRect(x,y,w,h,12);ctx.stroke();
+  /* Wide filled background — clearly visible amber tint */
+  ctx.fillStyle='rgba(184,120,0,0.10)';
+  ctx.beginPath();ctx.roundRect(x,y,w,h,16);ctx.fill();
+  /* Bold dashed border — thicker, more prominent */
+  ctx.strokeStyle=col;ctx.lineWidth=3.5;ctx.setLineDash([12,6]);
+  ctx.beginPath();ctx.roundRect(x,y,w,h,16);ctx.stroke();
   ctx.setLineDash([]);
-  /* Label pill top-left */
-  ctx.font='bold 11px "JetBrains Mono",monospace';
-  const lbl='\u2B21 CodeGen Region \u2014 Aurix TriCore';
-  const tw=ctx.measureText(lbl).width+16;
-  ctx.fillStyle='rgba(255,248,220,0.97)';
-  ctx.beginPath();ctx.roundRect(x+10,y+5,tw,20,6);ctx.fill();
-  ctx.strokeStyle=col;ctx.lineWidth=1.5;ctx.setLineDash([]);
-  ctx.beginPath();ctx.roundRect(x+10,y+5,tw,20,6);ctx.stroke();
+  /* Label pill — larger, anchored at top-left of region */
+  ctx.font='bold 13px "JetBrains Mono",monospace';
+  const lbl='\u2B21  CodeGen Region  \u2014  AURIX TriCore';
+  const tw=ctx.measureText(lbl).width+20;
+  const th=24;
+  ctx.fillStyle='rgba(255,248,210,0.98)';
+  ctx.beginPath();ctx.roundRect(x+12,y+6,tw,th,7);ctx.fill();
+  ctx.strokeStyle=col;ctx.lineWidth=2.0;
+  ctx.beginPath();ctx.roundRect(x+12,y+6,tw,th,7);ctx.stroke();
   ctx.fillStyle=col;ctx.textAlign='left';ctx.textBaseline='middle';
-  ctx.fillText(lbl,x+18,y+15);
+  ctx.fillText(lbl,x+22,y+6+th/2);
   ctx.restore();
 }}
 

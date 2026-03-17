@@ -182,9 +182,9 @@ sim.scope.add(pi_ctrl,     label="Control")
 sim.scope.add(plant_deriv, label="Derivative")
 sim.scope.add(setpoint,    label="Setpoint")
 
-sim.print_topology()
-sim.print_topology_tree()
-sim.print_topology_sources2sink()
+sim.topo.print_console()
+
+
 sim.run(verbose=True, progress_bar=True)
 
 

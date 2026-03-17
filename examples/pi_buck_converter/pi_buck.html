@@ -125,9 +125,9 @@ canvas{display:block;}
 <div id="tip"></div>
 <script>
 /* ── Data ── */
-const NODES=[{"id": "vref", "x": 40, "y": 100, "w": 160, "h": 60, "cat": "source", "cls": "VectorStep", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {"step_time": "0.001"}}, {"id": "pi_ctrl_start", "x": 240, "y": 100, "w": 160, "h": 60, "cat": "codegen", "cls": "CodeGenStart", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {}}, {"id": "pi_buck", "x": 440, "y": 100, "w": 160, "h": 60, "cat": "control", "cls": "PI_BuckBlock", "dyn": true, "lb": false, "c": true, "lbl": "[duty]", "attrs": {"vector_size": "1"}}, {"id": "pi_ctrl_end", "x": 640, "y": 100, "w": 160, "h": 60, "cat": "codegen", "cls": "CodeGenEnd", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {}}, {"id": "sink", "x": 840, "y": 100, "w": 160, "h": 60, "cat": "sink", "cls": "VectorEnd", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {}}, {"id": "fb_delay", "x": 440, "y": 310, "w": 160, "h": 60, "cat": "delay", "cls": "VectorDelay", "dyn": false, "lb": true, "c": false, "lbl": "", "attrs": {}}, {"id": "buck", "x": 640, "y": 500, "w": 160, "h": 60, "cat": "plant", "cls": "BuckConverterBlock", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {"fmu_path": "BuckConverter.fmu"}}];
-const EDGES=[{"src": "vref", "dst": "pi_ctrl_start", "lb": false, "lbl": "[V_ref]"}, {"src": "buck", "dst": "fb_delay", "lb": false, "lbl": "[V_out]"}, {"src": "buck", "dst": "sink", "lb": false, "lbl": "[V_out, I_L, I_load]"}, {"src": "pi_ctrl_start", "dst": "pi_buck", "lb": false, "lbl": "[V_ref]"}, {"src": "fb_delay", "dst": "pi_buck", "lb": true, "lbl": "[V_meas]"}, {"src": "pi_buck", "dst": "pi_ctrl_end", "lb": false, "lbl": "[duty]"}, {"src": "pi_ctrl_end", "dst": "buck", "lb": false, "lbl": "[duty]"}];
-const CG_REGION={"x": 226, "y": 64, "w": 588, "h": 110};
+const NODES=[{"id": "vref", "x": 40, "y": 50, "w": 160, "h": 60, "cat": "source", "cls": "VectorStep", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {"step_time": "0.001"}}, {"id": "pi_buck", "x": 240, "y": 50, "w": 160, "h": 60, "cat": "control", "cls": "PI_BuckBlock", "dyn": true, "lb": false, "c": true, "lbl": "[duty]", "attrs": {"vector_size": "1"}}, {"id": "sink", "x": 440, "y": 50, "w": 160, "h": 60, "cat": "sink", "cls": "VectorEnd", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {}}, {"id": "pi_ctrl_start", "x": 40, "y": 190, "w": 160, "h": 60, "cat": "codegen", "cls": "CodeGenStart", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {}}, {"id": "pi_ctrl_end", "x": 240, "y": 190, "w": 160, "h": 60, "cat": "codegen", "cls": "CodeGenEnd", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {}}, {"id": "fb_delay", "x": 40, "y": 330, "w": 160, "h": 60, "cat": "delay", "cls": "ScalarDelay", "dyn": false, "lb": true, "c": false, "lbl": "", "attrs": {}}, {"id": "buck", "x": 240, "y": 490, "w": 160, "h": 60, "cat": "plant", "cls": "BuckConverterBlock", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {"fmu_path": "BuckConverter.fmu"}}];
+const EDGES=[{"src": "buck", "dst": "fb_delay", "lb": false, "lbl": "[V_out]"}, {"src": "buck", "dst": "sink", "lb": false, "lbl": "[V_out, I_L, I_load]"}, {"src": "vref", "dst": "pi_ctrl_start", "lb": false, "lbl": "[V_ref]"}, {"src": "fb_delay", "dst": "pi_ctrl_start", "lb": true, "lbl": ""}, {"src": "fb_delay", "dst": "pi_buck", "lb": true, "lbl": "[V_meas]"}, {"src": "pi_ctrl_start", "dst": "pi_buck", "lb": false, "lbl": "[V_ref]"}, {"src": "pi_buck", "dst": "pi_ctrl_end", "lb": false, "lbl": "[duty]"}, {"src": "pi_ctrl_end", "dst": "buck", "lb": false, "lbl": "[duty]"}];
+const CG_REGION={"x": 22, "y": 6, "w": 396, "h": 262};
 
 /* ── Category colours — vivid, fully saturated ── */
 const CC={
@@ -143,9 +143,10 @@ NODES.forEach(n=>{ if(n.cls==='NoisySensorBlock')n.cat='noise'; });
 
 /* ── Swim-lane bands ── */
 const BANDS=[
-  {y:84,  h:112, lbl:'FORWARD PATH', col:'rgba(0,60,200,0.08)'},
-  {y:305, h:100, lbl:'FEEDBACK  z⁻¹', col:'rgba(180,0,0,0.08)'},
-  {y:494, h:112, lbl:'PLANT', col:'rgba(80,0,160,0.08)'},
+  {y:30,  h:100, lbl:'FORWARD PATH',     col:'rgba(0,60,200,0.08)'},
+  {y:170, h:100, lbl:'CODEGEN BOUNDARY', col:'rgba(160,120,0,0.07)'},
+  {y:310, h: 90, lbl:'FEEDBACK  z⁻¹', col:'rgba(180,0,0,0.08)'},
+  {y:470, h:100, lbl:'PLANT',            col:'rgba(80,0,160,0.08)'},
 ];
 
 const canvas=document.getElementById('c');
@@ -153,7 +154,7 @@ const ctx=canvas.getContext('2d');
 const wrap=document.getElementById('cw');
 const nm={};
 NODES.forEach(n=>nm[n.id]=n);
-const BW=1080, BH=660;
+const BW=680, BH=650;
 
 /* ── Viewport state ── */
 let scale=1, originX=0, originY=0;
@@ -200,8 +201,15 @@ function drawEdge(e){
   ctx.save();
   ctx.strokeStyle=col;ctx.lineWidth=lw;ctx.globalAlpha=e.lb?1.0:0.85;
   ctx.setLineDash(e.lb?[8,5]:[]);ctx.lineJoin='round';
-  const sx=s.x+s.w,sy=s.y+s.h/2,dx=d.x,dy=d.y+d.h/2;
+  const sx=s.x+s.w, sy=s.y+s.h/2;
+  const dx=d.x,     dy=d.y+d.h/2;
   let mlx=0,mly=0;
+  /* Cross-lane (src above dst by more than 1 node height):
+     exit bottom of src, drop vertically at src centre-x,
+     then horizontal run at midpoint Y, rise to dst top.
+     The vertical leg is placed at src.x+src.w/2 so it
+     clears other nodes on the forward lane. */
+  const crossLane = (d.y > s.y + s.h + 20);
   if(sx>dx+20){
     const by=Math.max(s.y+s.h,d.y+d.h)+30;
     const x1=s.x+s.w/2,x2=d.x+d.w/2;
@@ -209,29 +217,46 @@ function drawEdge(e){
     ctx.lineTo(x2,by);ctx.lineTo(x2,d.y+d.h);ctx.stroke();
     ah(x2,d.y+d.h,Math.PI/2,9,col);
     mlx=(x1+x2)/2;mly=by-10;
+  }else if(crossLane){
+    /* Bottom-exit / top-entry routing for cross-lane edges */
+    const x1=s.x+s.w/2;   /* drop leg x — centre of source */
+    const x2=d.x+d.w/2;   /* rise leg x — centre of dest  */
+    const midY=(s.y+s.h+d.y)/2;  /* midway between lanes     */
+    ctx.beginPath();
+    ctx.moveTo(x1,s.y+s.h);  /* exit source bottom        */
+    ctx.lineTo(x1,midY);      /* drop to lane mid          */
+    ctx.lineTo(x2,midY);      /* horizontal run            */
+    ctx.lineTo(x2,d.y);       /* rise to dest top          */
+    ctx.stroke();
+    ah(x2,d.y,Math.PI/2,9,col);
+    mlx=(x1+x2)/2;mly=midY-6;  /* label sits on horizontal run */
   }else if(Math.abs(sy-dy)<6){
     ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(dx,dy);ctx.stroke();
-    ah(dx,dy,0,9,col);mlx=(sx+dx)/2;mly=sy-13;
+    ah(dx,dy,0,9,col);mlx=(sx+dx)/2;mly=sy-28;
   }else{
     const mx=(sx+dx)/2;
     ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(mx,sy);
     ctx.lineTo(mx,dy);ctx.lineTo(dx,dy);ctx.stroke();
-    ah(dx,dy,0,9,col);mlx=(mx+dx)/2;mly=dy-13;
+    ah(dx,dy,0,9,col);mlx=(mx+dx)/2;mly=dy-28;
   }
-  /* Signal label — read from edge, not source node */
+  /* Signal label — horizontal pill centred above the arrow midpoint */
   const lbl=e.lbl||'';
   if(lbl){
+    ctx.save();
     ctx.globalAlpha=1.0;
     ctx.font='bold 11px "JetBrains Mono",monospace';
-    const tw=ctx.measureText(lbl).width+10;
-    const th=16;
-    ctx.fillStyle='rgba(255,255,255,0.96)';
-    ctx.strokeStyle=col;ctx.lineWidth=1.2;ctx.setLineDash([]);
-    ctx.beginPath();ctx.roundRect(mlx-tw/2,mly-th/2,tw,th,4);
+    const tw=ctx.measureText(lbl).width+14;
+    const th=18;
+    const lx=mlx-tw/2;
+    const ly=mly-th-4;
+    ctx.fillStyle='rgba(255,252,220,0.97)';
+    ctx.strokeStyle=col;ctx.lineWidth=1.5;ctx.setLineDash([]);
+    ctx.beginPath();ctx.roundRect(lx,ly,tw,th,5);
     ctx.fill();ctx.stroke();
     ctx.fillStyle=col;
     ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText(lbl,mlx,mly);
+    ctx.fillText(lbl,mlx,ly+th/2);
+    ctx.restore();
   }
   ctx.restore();
 }
@@ -286,23 +311,24 @@ function drawCodeGenRegion(){
   const{x,y,w,h}=CG_REGION;
   const col='#806000';
   ctx.save();
-  /* Filled background */
-  ctx.fillStyle='rgba(184,120,0,0.07)';
-  ctx.beginPath();ctx.roundRect(x,y,w,h,12);ctx.fill();
-  /* Dashed border */
-  ctx.strokeStyle=col;ctx.lineWidth=2.5;ctx.setLineDash([10,6]);
-  ctx.beginPath();ctx.roundRect(x,y,w,h,12);ctx.stroke();
+  /* Wide filled background — clearly visible amber tint */
+  ctx.fillStyle='rgba(184,120,0,0.10)';
+  ctx.beginPath();ctx.roundRect(x,y,w,h,16);ctx.fill();
+  /* Bold dashed border — thicker, more prominent */
+  ctx.strokeStyle=col;ctx.lineWidth=3.5;ctx.setLineDash([12,6]);
+  ctx.beginPath();ctx.roundRect(x,y,w,h,16);ctx.stroke();
   ctx.setLineDash([]);
-  /* Label pill top-left */
-  ctx.font='bold 11px "JetBrains Mono",monospace';
-  const lbl='⬡ CodeGen Region — Aurix TriCore';
-  const tw=ctx.measureText(lbl).width+16;
-  ctx.fillStyle='rgba(255,248,220,0.97)';
-  ctx.beginPath();ctx.roundRect(x+10,y+5,tw,20,6);ctx.fill();
-  ctx.strokeStyle=col;ctx.lineWidth=1.5;ctx.setLineDash([]);
-  ctx.beginPath();ctx.roundRect(x+10,y+5,tw,20,6);ctx.stroke();
+  /* Label pill — larger, anchored at top-left of region */
+  ctx.font='bold 13px "JetBrains Mono",monospace';
+  const lbl='⬡  CodeGen Region  —  AURIX TriCore';
+  const tw=ctx.measureText(lbl).width+20;
+  const th=24;
+  ctx.fillStyle='rgba(255,248,210,0.98)';
+  ctx.beginPath();ctx.roundRect(x+12,y+6,tw,th,7);ctx.fill();
+  ctx.strokeStyle=col;ctx.lineWidth=2.0;
+  ctx.beginPath();ctx.roundRect(x+12,y+6,tw,th,7);ctx.stroke();
   ctx.fillStyle=col;ctx.textAlign='left';ctx.textBaseline='middle';
-  ctx.fillText(lbl,x+18,y+15);
+  ctx.fillText(lbl,x+22,y+6+th/2);
   ctx.restore();
 }
 

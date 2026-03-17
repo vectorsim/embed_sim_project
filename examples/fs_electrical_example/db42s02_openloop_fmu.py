@@ -27,7 +27,7 @@ Block diagram (Python-first, EmbedSim canonical order):
                 └────────────────────────────── DutyPackBlock (port 1)
   DutyPackBlock             [duty_a, duty_b, duty_c, V_dc, 0]
        │                    motor_utility_blocks.c → DutyPack_Step
-  CodeGenEnd                → cg_end.generate_loop() → LoopGenerator
+  CodeGenEnd                → cg_end.generate_step() → StepGenerator
        │
   DB42S02PlantBlock         PMSM plant (NOT code-generated)
 ─────────────────────────────────────────────────────────────────
@@ -37,7 +37,7 @@ CodeGen strategy
   Every block carries PYX_FILE.
   PYXInspector auto-populates step_func / state_struct / init_func
   at class-definition time via VectorBlock.__init_subclass__.
-  LoopGenerator emits typed C calls for every block.
+  StepGenerator emits typed C calls for every block.
   Zero C_CUSTOM_EMIT.  Zero hand-written C strings in this file.
 
 Motor: NANOTEC DB42S02  (PMSM_Motor.mo)
@@ -133,8 +133,8 @@ class DB42S02PlantBlock(PMSM_MotorBlock):
     Topology / CodeGen attributes
     ─────────────────────────────
       TOPO_CATEGORY    = "plant"   → TopologyPrinter renders as plant node.
-      C_CODEGEN_EXCLUDE = True     → LoopGenerator skips this block entirely.
-      Both ensure the plant never appears in embedsim_loop.c.
+      C_CODEGEN_EXCLUDE = True     → StepGenerator skips this block entirely.
+      Both ensure the plant never appears in EmbedSim_step.c.
 
     Output bus (5 signals — controller-relevant subset of 20 FMU outputs)
     ──────────────────────────────────────────────────────────────────────
@@ -154,7 +154,7 @@ class DB42S02PlantBlock(PMSM_MotorBlock):
 
     # ── Topology / CodeGen class attributes ───────────────────────────────────
     TOPO_CATEGORY     = "plant"
-    C_CODEGEN_EXCLUDE = True          # LoopGenerator respects this flag
+    C_CODEGEN_EXCLUDE = True          # StepGenerator skips this block
     output_label      = "[rpm,ia,ib,ic,Tem]"
 
     def __init__(self, name: str, fmu_path: str) -> None:
@@ -275,7 +275,7 @@ def build_and_run() -> dict:
     """
     Wire all blocks, register signals on sim.scope, hand to EmbedSim
     for topology sort + time loop, export topology HTML via sim.topo,
-    then call LoopGenerator.
+    then call StepGenerator.
 
     Signal recording : sim.scope.add(block, indices, label) before sim.run()
     Signal retrieval : sim.scope.get_signal(label, index) after sim.run()
@@ -392,15 +392,6 @@ def build_and_run() -> dict:
         "i_c":       sc.get_signal("motor",     3),
         "T_em":      sc.get_signal("motor",     4),
     }
-
-    # ── LoopGenerator — embedsim_loop.c / .h ─────────────────────────────────
-    print("\n[CodeGen] Calling cg_end.generate_loop() …")
-    cg_end.generate_loop(
-        cg_start=cg_start,
-        output_dir=_ROOT,
-        dt_hz=1.0 / DT,
-        write_files=True,
-    )
 
     # ── StepGenerator — <Prefix>_step.c / .h ─────────────────────────────────
     # Reads cg_start.iter_signals() → EmbedSim_Input_T
@@ -890,7 +881,7 @@ if __name__ == "__main__":
     print("             VfDQ, VfTheta, DutyPack)")
     print("             coordinate_transform.c  (InvPark)")
     print("             svpwm.c                 (SVPWM)")
-    print("  CodeGen  : LoopGenerator (feature 05121967)")
+    print("  CodeGen  : StepGenerator (feature 05121967)")
     print("             PYX_FILE + PYXInspector on every block")
     print("             Zero C_CUSTOM_EMIT — zero hand-written C strings")
     print("  Topology : TopologyPrinter → db42s02_topology.html")
@@ -909,5 +900,5 @@ if __name__ == "__main__":
     print("  db42s02_phasor_sectors.png")
     print("  db42s02_phasor_anim.gif")
     print("  db42s02_topology.html")
-    print("  embedsim_gen/embedsim_loop.c")
-    print("  embedsim_gen/embedsim_loop.h")
+    print("  embedsim_gen/EmbedSim_step.c")
+    print("  embedsim_gen/EmbedSim_step.h")

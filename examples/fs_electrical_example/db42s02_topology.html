@@ -125,9 +125,9 @@ canvas{display:block;}
 <div id="tip"></div>
 <script>
 /* ── Data ── */
-const NODES=[{"id": "speed_ref", "x": 40, "y": 100, "w": 160, "h": 60, "cat": "source", "cls": "SpeedRampBlock", "dyn": false, "lb": false, "c": false, "lbl": "ω_ref", "attrs": {}}, {"id": "vf_angle", "x": 240, "y": 100, "w": 160, "h": 60, "cat": "generic", "cls": "VfAngleBlock", "dyn": false, "lb": false, "c": false, "lbl": "[v_d,v_q,θ_e]", "attrs": {}}, {"id": "cg_start", "x": 440, "y": 100, "w": 160, "h": 60, "cat": "codegen", "cls": "CodeGenStart", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {}}, {"id": "vf_dq", "x": 640, "y": 100, "w": 160, "h": 60, "cat": "generic", "cls": "VfDQBlock", "dyn": false, "lb": false, "c": false, "lbl": "[v_d,v_q]", "attrs": {}}, {"id": "vf_theta", "x": 840, "y": 100, "w": 160, "h": 60, "cat": "generic", "cls": "VfThetaBlock", "dyn": false, "lb": false, "c": false, "lbl": "θ_e", "attrs": {}}, {"id": "inv_park", "x": 1040, "y": 100, "w": 160, "h": 60, "cat": "transform", "cls": "InvParkTransformBlock", "dyn": false, "lb": false, "c": false, "lbl": "[v_alpha,v_beta]", "attrs": {"vector_size": "2"}}, {"id": "svpwm_pack", "x": 1240, "y": 100, "w": 160, "h": 60, "cat": "generic", "cls": "SVPWMPackBlock", "dyn": false, "lb": false, "c": false, "lbl": "[Vref,α,Vdc]", "attrs": {}}, {"id": "svpwm", "x": 1440, "y": 100, "w": 160, "h": 60, "cat": "generic", "cls": "SVPWMBlock", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {"vector_size": "4"}}, {"id": "duty_pack", "x": 1640, "y": 100, "w": 160, "h": 60, "cat": "generic", "cls": "DutyPackBlock", "dyn": false, "lb": false, "c": false, "lbl": "[da,db,dc]", "attrs": {}}, {"id": "motor_sink", "x": 1840, "y": 100, "w": 160, "h": 60, "cat": "sink", "cls": "DB42S02PlantBlock", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {}}, {"id": "cg_end", "x": 2040, "y": 100, "w": 160, "h": 60, "cat": "codegen", "cls": "CodeGenEnd", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {}}, {"id": "sink", "x": 2240, "y": 100, "w": 160, "h": 60, "cat": "sink", "cls": "VectorEnd", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {}}, {"id": "sink_cg", "x": 2440, "y": 100, "w": 160, "h": 60, "cat": "sink", "cls": "VectorEnd", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {}}];
+const NODES=[{"id": "speed_ref", "x": 40, "y": 50, "w": 160, "h": 60, "cat": "source", "cls": "SpeedRampBlock", "dyn": false, "lb": false, "c": false, "lbl": "ω_ref", "attrs": {}}, {"id": "vf_angle", "x": 240, "y": 50, "w": 160, "h": 60, "cat": "generic", "cls": "VfAngleBlock", "dyn": false, "lb": false, "c": false, "lbl": "[v_d,v_q,θ_e]", "attrs": {}}, {"id": "vf_dq", "x": 440, "y": 50, "w": 160, "h": 60, "cat": "generic", "cls": "VfDQBlock", "dyn": false, "lb": false, "c": false, "lbl": "[v_d,v_q]", "attrs": {}}, {"id": "vf_theta", "x": 640, "y": 50, "w": 160, "h": 60, "cat": "generic", "cls": "VfThetaBlock", "dyn": false, "lb": false, "c": false, "lbl": "θ_e", "attrs": {}}, {"id": "inv_park", "x": 840, "y": 50, "w": 160, "h": 60, "cat": "transform", "cls": "InvParkTransformBlock", "dyn": false, "lb": false, "c": false, "lbl": "[v_alpha,v_beta]", "attrs": {"vector_size": "2"}}, {"id": "svpwm_pack", "x": 1040, "y": 50, "w": 160, "h": 60, "cat": "generic", "cls": "SVPWMPackBlock", "dyn": false, "lb": false, "c": false, "lbl": "[Vref,α,Vdc]", "attrs": {}}, {"id": "svpwm", "x": 1240, "y": 50, "w": 160, "h": 60, "cat": "generic", "cls": "SVPWMBlock", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {"vector_size": "4"}}, {"id": "duty_pack", "x": 1440, "y": 50, "w": 160, "h": 60, "cat": "generic", "cls": "DutyPackBlock", "dyn": false, "lb": false, "c": false, "lbl": "[da,db,dc]", "attrs": {}}, {"id": "motor_sink", "x": 1640, "y": 50, "w": 160, "h": 60, "cat": "sink", "cls": "DB42S02PlantBlock", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {}}, {"id": "sink", "x": 1840, "y": 50, "w": 160, "h": 60, "cat": "sink", "cls": "VectorEnd", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {}}, {"id": "cg_start", "x": 40, "y": 190, "w": 160, "h": 60, "cat": "codegen", "cls": "CodeGenStart", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {}}, {"id": "cg_end", "x": 1440, "y": 190, "w": 160, "h": 60, "cat": "codegen", "cls": "CodeGenEnd", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {}}, {"id": "sink_cg", "x": 240, "y": 190, "w": 160, "h": 60, "cat": "sink", "cls": "VectorEnd", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {}}];
 const EDGES=[{"src": "speed_ref", "dst": "vf_angle", "lb": false, "lbl": "ω_ref [rad/s]"}, {"src": "speed_ref", "dst": "cg_start", "lb": false, "lbl": "ω_ref [rad/s]"}, {"src": "vf_angle", "dst": "vf_dq", "lb": false, "lbl": "[v_d, v_q, θ_e]"}, {"src": "vf_angle", "dst": "vf_theta", "lb": false, "lbl": "[v_d, v_q, θ_e]"}, {"src": "vf_dq", "dst": "inv_park", "lb": false, "lbl": "[v_d, v_q]"}, {"src": "vf_theta", "dst": "inv_park", "lb": false, "lbl": "θ_e"}, {"src": "inv_park", "dst": "svpwm_pack", "lb": false, "lbl": "[v_α, v_β]"}, {"src": "inv_park", "dst": "duty_pack", "lb": false, "lbl": "[v_α, v_β]"}, {"src": "svpwm_pack", "dst": "svpwm", "lb": false, "lbl": "[Vref, α, Vdc]"}, {"src": "svpwm", "dst": "duty_pack", "lb": false, "lbl": "[T1, T2, T0, sec]"}, {"src": "duty_pack", "dst": "motor_sink", "lb": false, "lbl": "[da, db, dc, Vdc, 0]"}, {"src": "duty_pack", "dst": "cg_end", "lb": false, "lbl": "[da, db, dc, Vdc, 0]"}, {"src": "motor_sink", "dst": "sink", "lb": false, "lbl": "[rpm, ia, ib, ic, Tem]"}, {"src": "cg_start", "dst": "sink_cg", "lb": false, "lbl": "ω_ref [rad/s]"}, {"src": "cg_end", "dst": "sink_cg", "lb": false, "lbl": "[da, db, dc]"}];
-const CG_REGION={"x": 426, "y": 64, "w": 1788, "h": 110};
+const CG_REGION={"x": 22, "y": 6, "w": 1596, "h": 262};
 
 /* ── Category colours — vivid, fully saturated ── */
 const CC={
@@ -143,9 +143,10 @@ NODES.forEach(n=>{ if(n.cls==='NoisySensorBlock')n.cat='noise'; });
 
 /* ── Swim-lane bands ── */
 const BANDS=[
-  {y:84,  h:112, lbl:'FORWARD PATH', col:'rgba(0,60,200,0.08)'},
-  {y:305, h:100, lbl:'FEEDBACK  z⁻¹', col:'rgba(180,0,0,0.08)'},
-  {y:494, h:112, lbl:'PLANT', col:'rgba(80,0,160,0.08)'},
+  {y:30,  h:100, lbl:'FORWARD PATH',     col:'rgba(0,60,200,0.08)'},
+  {y:170, h:100, lbl:'CODEGEN BOUNDARY', col:'rgba(160,120,0,0.07)'},
+  {y:310, h: 90, lbl:'FEEDBACK  z⁻¹', col:'rgba(180,0,0,0.08)'},
+  {y:470, h:100, lbl:'PLANT',            col:'rgba(80,0,160,0.08)'},
 ];
 
 const canvas=document.getElementById('c');
@@ -153,7 +154,7 @@ const ctx=canvas.getContext('2d');
 const wrap=document.getElementById('cw');
 const nm={};
 NODES.forEach(n=>nm[n.id]=n);
-const BW=2680, BH=260;
+const BW=2080, BH=350;
 
 /* ── Viewport state ── */
 let scale=1, originX=0, originY=0;
@@ -200,8 +201,15 @@ function drawEdge(e){
   ctx.save();
   ctx.strokeStyle=col;ctx.lineWidth=lw;ctx.globalAlpha=e.lb?1.0:0.85;
   ctx.setLineDash(e.lb?[8,5]:[]);ctx.lineJoin='round';
-  const sx=s.x+s.w,sy=s.y+s.h/2,dx=d.x,dy=d.y+d.h/2;
+  const sx=s.x+s.w, sy=s.y+s.h/2;
+  const dx=d.x,     dy=d.y+d.h/2;
   let mlx=0,mly=0;
+  /* Cross-lane (src above dst by more than 1 node height):
+     exit bottom of src, drop vertically at src centre-x,
+     then horizontal run at midpoint Y, rise to dst top.
+     The vertical leg is placed at src.x+src.w/2 so it
+     clears other nodes on the forward lane. */
+  const crossLane = (d.y > s.y + s.h + 20);
   if(sx>dx+20){
     const by=Math.max(s.y+s.h,d.y+d.h)+30;
     const x1=s.x+s.w/2,x2=d.x+d.w/2;
@@ -209,6 +217,19 @@ function drawEdge(e){
     ctx.lineTo(x2,by);ctx.lineTo(x2,d.y+d.h);ctx.stroke();
     ah(x2,d.y+d.h,Math.PI/2,9,col);
     mlx=(x1+x2)/2;mly=by-10;
+  }else if(crossLane){
+    /* Bottom-exit / top-entry routing for cross-lane edges */
+    const x1=s.x+s.w/2;   /* drop leg x — centre of source */
+    const x2=d.x+d.w/2;   /* rise leg x — centre of dest  */
+    const midY=(s.y+s.h+d.y)/2;  /* midway between lanes     */
+    ctx.beginPath();
+    ctx.moveTo(x1,s.y+s.h);  /* exit source bottom        */
+    ctx.lineTo(x1,midY);      /* drop to lane mid          */
+    ctx.lineTo(x2,midY);      /* horizontal run            */
+    ctx.lineTo(x2,d.y);       /* rise to dest top          */
+    ctx.stroke();
+    ah(x2,d.y,Math.PI/2,9,col);
+    mlx=(x1+x2)/2;mly=midY-6;  /* label sits on horizontal run */
   }else if(Math.abs(sy-dy)<6){
     ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(dx,dy);ctx.stroke();
     ah(dx,dy,0,9,col);mlx=(sx+dx)/2;mly=sy-28;
@@ -218,25 +239,23 @@ function drawEdge(e){
     ctx.lineTo(mx,dy);ctx.lineTo(dx,dy);ctx.stroke();
     ah(dx,dy,0,9,col);mlx=(mx+dx)/2;mly=dy-28;
   }
-  /* Signal label — rotated 90° CCW, above the arrow midpoint */
+  /* Signal label — horizontal pill centred above the arrow midpoint */
   const lbl=e.lbl||'';
   if(lbl){
     ctx.save();
     ctx.globalAlpha=1.0;
     ctx.font='bold 11px "JetBrains Mono",monospace';
-    const tw=ctx.measureText(lbl).width+12;  /* text length + padding */
-    const th=15;                               /* pill narrow width     */
-    const lx=mlx;
-    const ly=mly-tw/2-8;   /* push centre above arrow line by half pill height + gap */
-    ctx.translate(lx,ly);
-    ctx.rotate(-Math.PI/2);  /* 90° counter-clockwise */
-    ctx.fillStyle='rgba(255,255,255,0.97)';
-    ctx.strokeStyle=col;ctx.lineWidth=1.2;ctx.setLineDash([]);
-    ctx.beginPath();ctx.roundRect(-tw/2,-th/2,tw,th,4);
+    const tw=ctx.measureText(lbl).width+14;
+    const th=18;
+    const lx=mlx-tw/2;
+    const ly=mly-th-4;
+    ctx.fillStyle='rgba(255,252,220,0.97)';
+    ctx.strokeStyle=col;ctx.lineWidth=1.5;ctx.setLineDash([]);
+    ctx.beginPath();ctx.roundRect(lx,ly,tw,th,5);
     ctx.fill();ctx.stroke();
     ctx.fillStyle=col;
     ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText(lbl,0,0);
+    ctx.fillText(lbl,mlx,ly+th/2);
     ctx.restore();
   }
   ctx.restore();
@@ -292,23 +311,24 @@ function drawCodeGenRegion(){
   const{x,y,w,h}=CG_REGION;
   const col='#806000';
   ctx.save();
-  /* Filled background */
-  ctx.fillStyle='rgba(184,120,0,0.07)';
-  ctx.beginPath();ctx.roundRect(x,y,w,h,12);ctx.fill();
-  /* Dashed border */
-  ctx.strokeStyle=col;ctx.lineWidth=2.5;ctx.setLineDash([10,6]);
-  ctx.beginPath();ctx.roundRect(x,y,w,h,12);ctx.stroke();
+  /* Wide filled background — clearly visible amber tint */
+  ctx.fillStyle='rgba(184,120,0,0.10)';
+  ctx.beginPath();ctx.roundRect(x,y,w,h,16);ctx.fill();
+  /* Bold dashed border — thicker, more prominent */
+  ctx.strokeStyle=col;ctx.lineWidth=3.5;ctx.setLineDash([12,6]);
+  ctx.beginPath();ctx.roundRect(x,y,w,h,16);ctx.stroke();
   ctx.setLineDash([]);
-  /* Label pill top-left */
-  ctx.font='bold 11px "JetBrains Mono",monospace';
-  const lbl='⬡ CodeGen Region — Aurix TriCore';
-  const tw=ctx.measureText(lbl).width+16;
-  ctx.fillStyle='rgba(255,248,220,0.97)';
-  ctx.beginPath();ctx.roundRect(x+10,y+5,tw,20,6);ctx.fill();
-  ctx.strokeStyle=col;ctx.lineWidth=1.5;ctx.setLineDash([]);
-  ctx.beginPath();ctx.roundRect(x+10,y+5,tw,20,6);ctx.stroke();
+  /* Label pill — larger, anchored at top-left of region */
+  ctx.font='bold 13px "JetBrains Mono",monospace';
+  const lbl='⬡  CodeGen Region  —  AURIX TriCore';
+  const tw=ctx.measureText(lbl).width+20;
+  const th=24;
+  ctx.fillStyle='rgba(255,248,210,0.98)';
+  ctx.beginPath();ctx.roundRect(x+12,y+6,tw,th,7);ctx.fill();
+  ctx.strokeStyle=col;ctx.lineWidth=2.0;
+  ctx.beginPath();ctx.roundRect(x+12,y+6,tw,th,7);ctx.stroke();
   ctx.fillStyle=col;ctx.textAlign='left';ctx.textBaseline='middle';
-  ctx.fillText(lbl,x+18,y+15);
+  ctx.fillText(lbl,x+22,y+6+th/2);
   ctx.restore();
 }
 

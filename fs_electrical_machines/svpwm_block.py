@@ -72,15 +72,15 @@ class SVPWMBlock(VectorBlock):
     #       with the output array y_{name}[4] emitted by LoopGenerator.
     C_CUSTOM_EMIT = """\
     /* --- svpwm (SVPWMBlock) --- */
+    real32_T y_svpwm[4];
     {
         SVPWM_Input  svpwm_in;
         SVPWM_Output svpwm_out;
-        svpwm_in.Vref  = y_vref_block[0];
-        svpwm_in.alpha = y_theta_e[0];
-        svpwm_in.Vdc   = y_vdc_block[0];
+        svpwm_in.Vref  = y_svpwm_pack[0];
+        svpwm_in.alpha = y_svpwm_pack[1];
+        svpwm_in.Vdc   = y_svpwm_pack[2];
         svpwm_in.Ts    = dt;
         SVPWM_Step(&svpwm_in, &svpwm_out);
-        real32_T y_svpwm[4];
         y_svpwm[0] = svpwm_out.T1;
         y_svpwm[1] = svpwm_out.T2;
         y_svpwm[2] = svpwm_out.T0;
