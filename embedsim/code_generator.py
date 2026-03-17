@@ -1023,13 +1023,8 @@ class StepGenerator:
                     seen_h.add(h)
                     all_headers.append(h)
 
-        externs = []
-        for blk in blk_list:
-            ss = (getattr(blk, 'state_struct', None) or
-                  getattr(blk.__class__, 'state_struct', ''))
-            if ss:
-                sn = _sanitize(blk.name or blk.__class__.__name__)
-                externs.append(f"extern {ss} {sn}_state;")
+        # State structs are static in the .c — not exposed in the .h.
+        # MISRA C:2012 Rule 8.7: no external linkage for TU-local objects.
 
         L = [
             "/**",
@@ -1102,11 +1097,6 @@ class StepGenerator:
             L.append("/* Block headers */")
             for h in all_headers:
                 L.append(f'#include "{h}"')
-            L.append("")
-
-        if externs:
-            L.append("/* Block state structs — defined in the .c */")
-            L += externs
             L.append("")
 
         L += [
@@ -1183,11 +1173,12 @@ class StepGenerator:
             L += [
                 "",
                 "/* ── Block state structs ──────────────────────────────────────",
-                " * Allocated here — declared extern in the .h.",
+                " * Internal linkage — not exposed in the .h.",
+                " * MISRA C:2012 Rule 8.7: static, TU-local only.",
                 " * ──────────────────────────────────────────────────────────── */",
             ]
             for ss, sn, _, _args in statics:
-                L.append(f"static {ss} {sn}_state;")
+                L.append(f"static {ss} {sn}_state;   /* Rule 8.7: internal linkage */")
 
         # ── <Prefix>_Init ─────────────────────────────────────────────────────
         L += [

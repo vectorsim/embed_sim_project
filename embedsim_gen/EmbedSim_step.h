@@ -58,15 +58,6 @@ typedef struct
 #include "Coordinate_Transform.h"
 #include "svpwm.h"
 
-/* Block state structs — defined in the .c */
-extern SpeedRamp_T speed_ref_state;
-extern VfAngle_T vf_angle_state;
-extern VfDQ_T vf_dq_state;
-extern VfTheta_T vf_theta_state;
-extern InvPark_T inv_park_state;
-extern SVPWMPack_T svpwm_pack_state;
-extern DutyPack_T duty_pack_state;
-
 extern void EmbedSim_Init(void);
 
 extern void EmbedSim_Step(

@@ -16,15 +16,16 @@
 #include "svpwm.h"
 
 /* ── Block state structs ──────────────────────────────────────
- * Allocated here — declared extern in the .h.
+ * Internal linkage — not exposed in the .h.
+ * MISRA C:2012 Rule 8.7: static, TU-local only.
  * ──────────────────────────────────────────────────────────── */
-static SpeedRamp_T speed_ref_state;
-static VfAngle_T vf_angle_state;
-static VfDQ_T vf_dq_state;
-static VfTheta_T vf_theta_state;
-static InvPark_T inv_park_state;
-static SVPWMPack_T svpwm_pack_state;
-static DutyPack_T duty_pack_state;
+static SpeedRamp_T speed_ref_state;   /* Rule 8.7: internal linkage */
+static VfAngle_T vf_angle_state;   /* Rule 8.7: internal linkage */
+static VfDQ_T vf_dq_state;   /* Rule 8.7: internal linkage */
+static VfTheta_T vf_theta_state;   /* Rule 8.7: internal linkage */
+static InvPark_T inv_park_state;   /* Rule 8.7: internal linkage */
+static SVPWMPack_T svpwm_pack_state;   /* Rule 8.7: internal linkage */
+static DutyPack_T duty_pack_state;   /* Rule 8.7: internal linkage */
 
 
 /* ================================================================

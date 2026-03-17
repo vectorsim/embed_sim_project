@@ -2,16 +2,21 @@ import os
 import shutil
 
 # Directories
-dir_a = r"C:\EmbedSimProject\fs_electrical_machines\c_src"
-dir_b = r"C:\ElectricMachineProject\EmbedSim_PMSM\Control"
+dir_a = r"C:\EmbedSimProject\embed_sim_project\fs_electrical_machines\c_src"
+dir_b = r"C:\Aurix_EmbedSim\PMSM\EmbedSim"
 
 # List of file names (only names, not full paths)
 file_list = [
     "Sys_Types.h",
     "Matrix.h",
     "Matrix.c",
-    "files_transfer.py",
-    "erase_garbage_files.py",
+    "motor_utility_blocks.h",
+    "motor_utility_blocks.c",
+    "coordinate_transform.h",
+    "coordinate_transform.c",
+    "svpwm.h",
+    "svpwm.c",
+
 ]
 
 def copy_if_exists(src_dir, dst_dir, filename):
