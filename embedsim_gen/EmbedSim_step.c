@@ -13,7 +13,6 @@
 #include "EmbedSim_step.h"
 #include "motor_utility_blocks.h"
 #include "Coordinate_Transform.h"
-#include "svpwm.h"
 
 /* ── Block state structs ──────────────────────────────────────
  * Internal linkage — not exposed in the .h.
@@ -24,7 +23,6 @@ static VfAngle_T vf_angle_state;   /* Rule 8.7: internal linkage */
 static VfDQ_T vf_dq_state;   /* Rule 8.7: internal linkage */
 static VfTheta_T vf_theta_state;   /* Rule 8.7: internal linkage */
 static InvPark_T inv_park_state;   /* Rule 8.7: internal linkage */
-static SVPWMPack_T svpwm_pack_state;   /* Rule 8.7: internal linkage */
 static DutyPack_T duty_pack_state;   /* Rule 8.7: internal linkage */
 
 
@@ -41,7 +39,6 @@ void EmbedSim_Init(void)
     VfDQ_Init(&vf_dq_state);
     VfTheta_Init(&vf_theta_state);
     InvPark_Init(&inv_park_state);
-    SVPWMPack_Init(&svpwm_pack_state, 17.00000000f);
     DutyPack_Init(&duty_pack_state, 17.00000000f);
 }
 
@@ -108,29 +105,6 @@ void EmbedSim_Step(
                      &invpark_beta);
         y_inv_park[0] = (real32_T)invpark_alpha;
         y_inv_park[1] = (real32_T)invpark_beta;
-    }
-
-    /* --- svpwm_pack (SVPWMPackBlock) — inline polar conversion --- */
-    real32_T y_svpwm_pack[3];
-    y_svpwm_pack[0] = sqrtf(  y_inv_park[0] * y_inv_park[0]
-                            + y_inv_park[1] * y_inv_park[1]);
-    y_svpwm_pack[1] = atan2f( y_inv_park[1], y_inv_park[0]);
-    y_svpwm_pack[2] = 17.0000f;   /* V_dc */
-
-    /* --- svpwm (SVPWMBlock) — struct-based I/O --- */
-    real32_T y_svpwm[4];
-    {
-        SVPWM_Input  svpwm_in;
-        SVPWM_Output svpwm_out;
-        svpwm_in.Vref  = y_svpwm_pack[0];   /* Vref  */
-        svpwm_in.alpha = y_svpwm_pack[1];   /* alpha */
-        svpwm_in.Vdc   = y_svpwm_pack[2];   /* V_dc  */
-        svpwm_in.Ts    = dt;
-        SVPWM_Step(&svpwm_in, &svpwm_out);
-        y_svpwm[0] = svpwm_out.T1;
-        y_svpwm[1] = svpwm_out.T2;
-        y_svpwm[2] = svpwm_out.T0;
-        y_svpwm[3] = (real32_T)svpwm_out.sector;
     }
 
     /* --- duty_pack (DutyPackBlock) --- */

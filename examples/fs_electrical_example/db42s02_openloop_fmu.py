@@ -21,16 +21,15 @@ Block diagram (Python-first, EmbedSim canonical order):
                               ↓
   InvParkTransformBlock     [v_alpha, v_beta]
        │                    coordinate_transform.c → InvPark_Step
-       ├────────────────────────────────────────► DutyPackBlock (port 0)
-       └──► SVPWMBlock       [T1, T2, T0, sector]
-                │            svpwm.c → SVPWM_Step
-                └────────────────────────────── DutyPackBlock (port 1)
   DutyPackBlock             [duty_a, duty_b, duty_c, V_dc, 0]
        │                    motor_utility_blocks.c → DutyPack_Step
   CodeGenEnd                → cg_end.generate_step() → StepGenerator
        │
-  DB42S02PlantBlock         PMSM plant (NOT code-generated)
+  DB42S02PlantBlock         PMSM_MotorBlock FMU (NOT code-generated)
 ─────────────────────────────────────────────────────────────────
+
+Note: SVPWMPackBlock and SVPWMBlock are C-codegen path only
+      (codegen_db42s02.py).  Not in the Python simulation chain.
 
 CodeGen strategy
 ────────────────
@@ -62,22 +61,21 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import matplotlib.animation as animation
-from pathlib import Path
 
 # ── Path bootstrap ─────────────────────────────────────────────────────────────
-_HERE = Path(__file__).resolve().parent
-_ROOT = _HERE
-for _ in range(6):
-    if (_ROOT / "embedsim").is_dir():
-        break
-    _ROOT = _ROOT.parent
+from _path_utils import get_project_root, get_embedsim_import_path, get_current_parent
 
-if str(_ROOT) not in sys.path:
-    sys.path.insert(0, str(_ROOT))
-
+_HERE    = get_current_parent()
+_ROOT    = get_project_root()
 _FS_ELEC = _ROOT / "fs_electrical_machines"
-if str(_FS_ELEC) not in sys.path:
-    sys.path.insert(0, str(_FS_ELEC))
+
+for _p in (
+    get_embedsim_import_path(),
+    str(_FS_ELEC),
+    str(_FS_ELEC / "c_src"),
+):
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
 
 # ── EmbedSim — full engine ────────────────────────────────────────────────────
 from embedsim import EmbedSim, ODESolver, VectorEnd
@@ -93,10 +91,8 @@ from motor_utility_blocks import (
     VfDQBlock,
     VfThetaBlock,
     DutyPackBlock,
-    SVPWMPackBlock,
 )
 from coordinate_transform_blocks import InvParkTransformBlock
-from svpwm_block                 import SVPWMBlock
 from PMSM_MotorBlock             import PMSM_MotorBlock
 
 _FMU_PATH = str(_FS_ELEC / "modelica" / "PMSM_Motor.fmu")
@@ -158,34 +154,28 @@ class DB42S02PlantBlock(PMSM_MotorBlock):
     output_label      = "[rpm,ia,ib,ic,Tem]"
 
     def __init__(self, name: str, fmu_path: str) -> None:
-        # Attempt full FMUBlock initialisation via PMSM_MotorBlock.__init__
         try:
             super().__init__(
-                name     = name,
-                fmu_path = fmu_path,
-                R        = 0.19,
-                L_d      = 0.125e-3,
-                L_q      = 0.125e-3,
-                lambda_pm= 0.0014,
-                J        = 2.4e-6,
-                B        = 1e-6,
-                p        = float(P_POLES),
+                name      = name,
+                fmu_path  = fmu_path,
+                R         = 0.19,
+                L_d       = 0.125e-3,
+                L_q       = 0.125e-3,
+                lambda_pm = 0.0014,
+                J         = 2.4e-6,
+                B         = 1e-6,
+                p         = float(P_POLES),
             )
-            self._has_fmu = True
-            print(f"[FMU] Loaded: {fmu_path}")
         except Exception as exc:
-            # FMU unavailable — bypass FMUBlock, call VectorBlock.__init__
-            # directly so the block is still a valid graph node.
-            print(f"[FMU] Not available ({exc}) — using analytical fallback")
-            VectorBlock.__init__(self, name)
-            self._has_fmu  = False
-            self._id       = self._iq = self._omega_m = self._th = 0.0
-
-        # Public sensor outputs — written every step, read by scope
+            print(f"\n[DB42S02PlantBlock] ERROR — FMU failed to load: {fmu_path}")
+            print(f"                   Reason : {exc}")
+            print(f"                   No fallback available. Aborting.\n")
+            raise
         self.speed_rpm     = 0.0
         self.i_a = self.i_b = self.i_c = 0.0
         self.theta_e_motor = 0.0
         self.T_em          = 0.0
+        print(f"[FMU] Loaded: {fmu_path}")
 
     # ── compute_py ────────────────────────────────────────────────────────────
     def compute_py(self, t: float, dt: float, input_values=None):
@@ -206,59 +196,15 @@ class DB42S02PlantBlock(PMSM_MotorBlock):
                 da, db, dc, vdc = (float(v[0]), float(v[1]),
                                    float(v[2]), float(v[3]))
 
-        if self._has_fmu:
-            # ── FMU path: delegate to inherited PMSM_MotorBlock.compute_py ───
-            sig = VectorSignal(
+        sig = VectorSignal(
                 np.array([da, db, dc, vdc, 0.0], dtype=DEFAULT_DTYPE))
-            super().compute_py(t, dt, [sig])
-            # Read typed outputs via inherited read_*() accessors
-            self.speed_rpm     = self.read_speed_rpm()
-            self.i_a           = self.read_i_a()
-            self.i_b           = self.read_i_b()
-            self.i_c           = self.read_i_c()
-            self.theta_e_motor = self.read_theta_e()
-            self.T_em          = self.read_T_em()
-        else:
-            # ── Analytical fallback: forward-Euler dq integrator ──────────────
-            # DB42S02 parameters (hardcoded — FMU not available)
-            R  = 0.19;  Ld = Lq = 0.125e-3;  lam = 0.0014
-            Jm = 2.4e-6;  Bf = 1e-6;  H = math.sqrt(3.0) / 2.0
-
-            # abc → αβ (Clarke, amplitude-invariant)
-            van = da*vdc;  vbn = db*vdc;  vcn = dc*vdc
-            vn  = (van + vbn + vcn) / 3.0
-            va  = van - vn;  vb = vbn - vn;  vc = vcn - vn
-            va_a = (2.0/3.0)*(va - 0.5*vb - 0.5*vc)
-            vb_a = (2.0/3.0)*(H*vb - H*vc)
-
-            # αβ → dq (Park)
-            th = self._th
-            vd =  va_a*math.cos(th) + vb_a*math.sin(th)
-            vq = -va_a*math.sin(th) + vb_a*math.cos(th)
-
-            # dq current integration
-            oe = P_POLES * self._omega_m
-            self._id += (vd - R*self._id + oe*Lq*self._iq) / Ld * dt
-            self._iq += (vq - R*self._iq - oe*(Ld*self._id + lam)) / Lq * dt
-
-            # Torque + mechanical integration
-            Tem = 1.5*P_POLES*(lam*self._iq + (Ld - Lq)*self._id*self._iq)
-            self._omega_m += (Tem - Bf*self._omega_m) / Jm * dt
-
-            # Electrical angle accumulation (wrap to [0, 2π))
-            self._th = math.fmod(self._th + oe*dt, 2.0*math.pi)
-            if self._th < 0.0:
-                self._th += 2.0*math.pi
-
-            # dq → abc (inverse Park + inverse Clarke)
-            ia = self._id*math.cos(th) - self._iq*math.sin(th)
-            ib = self._id*math.sin(th) + self._iq*math.cos(th)
-            self.i_a           =  ia
-            self.i_b           = -0.5*ia + H*ib
-            self.i_c           = -0.5*ia - H*ib
-            self.speed_rpm     = self._omega_m * 60.0 / (2.0*math.pi)
-            self.theta_e_motor = self._th
-            self.T_em          = Tem
+        super().compute_py(t, dt, [sig])
+        self.speed_rpm     = self.read_speed_rpm()
+        self.i_a           = self.read_i_a()
+        self.i_b           = self.read_i_b()
+        self.i_c           = self.read_i_c()
+        self.theta_e_motor = self.read_theta_e()
+        self.T_em          = self.read_T_em()
 
         # ── Narrow output bus to 5 controller-relevant signals ────────────────
         self.output = VectorSignal(
@@ -294,35 +240,26 @@ def build_and_run() -> dict:
     vf_dq     = VfDQBlock("vf_dq")
     vf_theta  = VfThetaBlock("vf_theta")
     inv_park  = InvParkTransformBlock("inv_park", use_c_backend=False)
-    svpwm_pack = SVPWMPackBlock("svpwm_pack", v_dc=V_DC)   # polar adapter
-    svpwm     = SVPWMBlock("svpwm", use_c_backend=False)
     duty_pack = DutyPackBlock("duty_pack", v_dc=V_DC)
     cg_end    = CodeGenEnd("cg_end")
     motor     = DB42S02PlantBlock("motor_sink", fmu_path=_FMU_PATH)
-    sink      = VectorEnd("sink")      # terminal — main path
-    sink_cg   = VectorEnd("sink_cg")   # terminal — CodeGen boundary branches
+    sink      = VectorEnd("sink")
+    sink_cg   = VectorEnd("sink_cg")
 
     # ── Wire ─────────────────────────────────────────────────────────────────
-    # Data path — controller chain
     speed_ref  >> vf_angle
     vf_angle   >> vf_dq
     vf_angle   >> vf_theta
     vf_dq      >> inv_park             # port 0: [v_d, v_q]
     vf_theta   >> inv_park             # port 1: [theta_e]
-    inv_park   >> svpwm_pack           # [v_alpha, v_beta] → polar conversion
-    svpwm_pack >> svpwm                # [Vref, alpha, Vdc] → sector detection
-    inv_park   >> duty_pack            # port 0: [v_alpha, v_beta]
-    svpwm      >> duty_pack            # port 1: [T1, T2, T0, sector]
+    inv_park   >> duty_pack            # [v_alpha, v_beta]
     duty_pack  >> motor
-    motor      >> sink                 # terminal sink — main DFS path
+    motor      >> sink
 
-    # CodeGen boundary markers — parallel branches off the data path.
-    # Both feed a dedicated sink_cg so the DFS reaches them and they
-    # appear in the topology with the dashed CodeGen region highlight.
-    speed_ref  >> cg_start             # marks controller region input
-    duty_pack  >> cg_end               # marks controller region output
-    cg_start   >> sink_cg             # keeps cg_start in the DFS graph
-    cg_end     >> sink_cg             # keeps cg_end   in the DFS graph
+    speed_ref  >> cg_start
+    duty_pack  >> cg_end
+    cg_start   >> sink_cg
+    cg_end     >> sink_cg
 
     # ── EmbedSim ─────────────────────────────────────────────────────────────
     sim = EmbedSim(
@@ -333,13 +270,11 @@ def build_and_run() -> dict:
     )
 
     # ── Register signals on scope (MUST be before sim.run()) ─────────────────
-    sim.scope.add(speed_ref,   indices=[0],             label="omega_ref")
-    sim.scope.add(vf_angle,    indices=[0, 1, 2],       label="vf_angle")
-    sim.scope.add(inv_park,    indices=[0, 1],           label="inv_park")
-    sim.scope.add(svpwm_pack,  indices=[0, 1, 2],       label="svpwm_pack")
-    sim.scope.add(svpwm,       indices=[0, 1, 2, 3],    label="svpwm")
-    sim.scope.add(duty_pack,   indices=[0, 1, 2],       label="duty_pack")
-    sim.scope.add(motor,       indices=[0, 1, 2, 3, 4], label="motor")
+    sim.scope.add(speed_ref,  indices=[0],             label="omega_ref")
+    sim.scope.add(vf_angle,   indices=[0, 1, 2],       label="vf_angle")
+    sim.scope.add(inv_park,   indices=[0, 1],           label="inv_park")
+    sim.scope.add(duty_pack,  indices=[0, 1, 2],       label="duty_pack")
+    sim.scope.add(motor,      indices=[0, 1, 2, 3, 4], label="motor")
 
     # ── Topology: console ASCII + interactive HTML ────────────────────────────
     # wire_labels maps (src_name, dst_name) → signal label shown on the arrow.
@@ -351,10 +286,7 @@ def build_and_run() -> dict:
         ("vf_angle",   "vf_theta"):   "[v_d, v_q, θ_e]",
         ("vf_dq",      "inv_park"):   "[v_d, v_q]",
         ("vf_theta",   "inv_park"):   "θ_e",
-        ("inv_park",   "svpwm_pack"): "[v_α, v_β]",
-        ("svpwm_pack", "svpwm"):      "[Vref, α, Vdc]",
         ("inv_park",   "duty_pack"):  "[v_α, v_β]",
-        ("svpwm",      "duty_pack"):  "[T1, T2, T0, sec]",
         ("duty_pack",  "cg_end"):     "[da, db, dc, Vdc, 0]",
         ("duty_pack",  "motor_sink"): "[da, db, dc, Vdc, 0]",
         ("cg_start",   "sink_cg"):    "ω_ref [rad/s]",
@@ -373,16 +305,20 @@ def build_and_run() -> dict:
 
     # ── Extract signals from scope ────────────────────────────────────────────
     sc = sim.scope
+    # Sector derived from v_alpha/v_beta angle — svpwm not in sim chain
+    _alpha_ang = np.arctan2(
+        sc.get_signal("inv_park", 1),
+        sc.get_signal("inv_park", 0))
+    _alpha_ang = np.where(_alpha_ang < 0.0, _alpha_ang + 2.0*np.pi, _alpha_ang)
     hist = {
         "t":         np.array(sc.t, dtype=np.float32),
-        # omega_ref: scope records rad/s → convert to RPM
         "omega_ref": sc.get_signal("omega_ref", 0) * 60.0 / (2.0 * math.pi),
         "v_d":       sc.get_signal("vf_angle",  0),
         "v_q":       sc.get_signal("vf_angle",  1),
         "theta_e":   sc.get_signal("vf_angle",  2),
         "v_alpha":   sc.get_signal("inv_park",  0),
         "v_beta":    sc.get_signal("inv_park",  1),
-        "sector":    sc.get_signal("svpwm",     3),
+        "sector":    np.clip((_alpha_ang / (np.pi / 3.0)).astype(int) + 1, 1, 6),
         "duty_a":    sc.get_signal("duty_pack", 0),
         "duty_b":    sc.get_signal("duty_pack", 1),
         "duty_c":    sc.get_signal("duty_pack", 2),
@@ -656,8 +592,9 @@ def animate_phasor_hexagon(d: dict,
     traj_line, = ax_hex.plot([], [], color="#3399ff", lw=0.7,
                               alpha=0.30, zorder=2)
 
-    # FancyArrow: drawn fresh each frame, stored in a list so we can remove it
-    _arrow_container = [None]
+    # FancyArrow + dashed extension: both drawn fresh each frame
+    # [0] = FancyArrow patch,  [1] = dashed Line2D extension
+    _arrow_container = [None, None]
 
     info_box = ax_hex.text(
         0.02, 0.98, "", transform=ax_hex.transAxes,
@@ -778,9 +715,11 @@ def animate_phasor_hexagon(d: dict,
         # ── Hexagon panel ─────────────────────────────────────────────────────
         traj_line.set_data(va_dec[:frame + 1], vb_dec[:frame + 1])
 
-        # Remove previous arrow and draw a new FancyArrow each frame
+        # Remove previous arrow + extension line and draw fresh each frame
         if _arrow_container[0] is not None:
             _arrow_container[0].remove()
+        if _arrow_container[1] is not None:
+            _arrow_container[1].remove()
 
         if 1 <= sec <= 6:
             arrow_color = _SECTOR_COLORS[sec - 1]
@@ -789,9 +728,9 @@ def animate_phasor_hexagon(d: dict,
 
         mag = math.sqrt(vx * vx + vy * vy)
         if mag > 1e-4:
-            # Shaft length slightly shorter than full mag so head fits cleanly
-            hw = 0.055          # head width
-            hl = 0.07           # head length
+            # ── Solid FancyArrow: origin → phasor tip ─────────────────────────
+            hw = 0.055
+            hl = 0.07
             shaft_x = vx * (1.0 - hl / mag)
             shaft_y = vy * (1.0 - hl / mag)
             arrow = mpatches.FancyArrow(
@@ -802,14 +741,26 @@ def animate_phasor_hexagon(d: dict,
                 length_includes_head=False,
                 color=arrow_color,
                 zorder=6)
+
+            # ── Dashed extension: phasor tip → hexagon boundary ───────────────
+            # Scale the unit direction to R (hexagon circumradius) so the
+            # dashed line always ends exactly at the hexagon outline.
+            ux, uy = vx / mag, vy / mag
+            ext_line, = ax_hex.plot(
+                [vx, ux * R],
+                [vy, uy * R],
+                color=arrow_color, lw=1.0, ls="--", alpha=0.55, zorder=5)
         else:
             arrow = mpatches.FancyArrow(
                 0, 0, 0, 0,
                 width=0.001, head_width=0.001, head_length=0.001,
                 color=arrow_color, zorder=6)
+            ext_line, = ax_hex.plot([], [], color=arrow_color, lw=1.0,
+                                    ls="--", alpha=0.55, zorder=5)
 
         ax_hex.add_patch(arrow)
         _arrow_container[0] = arrow
+        _arrow_container[1] = ext_line
 
         # ── Radial current spokes ─────────────────────────────────────
         # Project each phase current onto its fixed αβ axis:
@@ -859,7 +810,8 @@ def animate_phasor_hexagon(d: dict,
         return (traj_line, info_box,
                 *_spoke_lines, *_spoke_dots,
                 line_ia, line_ib, line_ic,
-                cur_box, cursor_line, *duty_bars, *duty_texts)
+                cur_box, cursor_line, *duty_bars, *duty_texts,
+                ext_line)
 
     # ── Render ────────────────────────────────────────────────────────────────
     anim_obj = animation.FuncAnimation(

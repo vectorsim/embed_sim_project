@@ -56,7 +56,6 @@ typedef struct
 /* Block headers */
 #include "motor_utility_blocks.h"
 #include "Coordinate_Transform.h"
-#include "svpwm.h"
 
 extern void EmbedSim_Init(void);
 

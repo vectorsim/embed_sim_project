@@ -21,20 +21,24 @@ import numpy as np
 from pathlib import Path
 
 # -- Path setup ----------------------------------------------------------------
-from _path_utils import get_project_root
+from _path_utils import get_project_root, get_embedsim_import_path
 
 _root = get_project_root()
 
-sys.path.insert(0, str(_root))
-sys.path.insert(0, str(_root / "fs_electrical_machines"))
-sys.path.insert(0, str(_root / "fs_electrical_machines" / "c_src"))
+for _p in (
+    get_embedsim_import_path(),
+    str(_root / "fs_electrical_machines"),
+    str(_root / "fs_electrical_machines" / "c_src"),
+):
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
 
 # -- EmbedSim imports ----------------------------------------------------------
 from embedsim.simulation_engine import EmbedSim, ODESolver
 from embedsim.source_blocks     import VectorConstant, ThreePhaseGenerator
 from embedsim.dynamic_blocks    import VectorEnd
 from embedsim.plot_helper       import create_plotter
-from embedsim.code_generator    import CodeGenStart, CodeGenEnd, LoopGenerator
+from embedsim.code_generator    import CodeGenStart, CodeGenEnd, StepGenerator
 
 # -- Coordinate transform blocks -----------------------------------------------
 from coordinate_transform_blocks import (
@@ -146,7 +150,7 @@ print("\n" + "=" * 60)
 print(" Running code generation  ->  embedsim_gen/")
 print("=" * 60)
 
-gen = LoopGenerator(cg_start, cg_end)
+gen = StepGenerator(cg_start, cg_end)
 gen.generate(output_dir=_root, dt_hz=1.0 / DT)
 
 print("\n[DONE] embedsim_loop.c and embedsim_loop.h written to embedsim_gen/")
