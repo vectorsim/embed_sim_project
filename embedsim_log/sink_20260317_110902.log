@@ -1,6 +1,0 @@
-2026-03-17 11:09:02 [INFO   ] EmbedSim.sink — EmbedSim init  T=0.1 s  dt=0.0001 s  solver=EULER  log=C:\EmbedSimProject\embed_sim_project\embedsim_log\sink_20260317_110902.log
-2026-03-17 11:09:02 [DEBUG  ] EmbedSim.sink — PARSE  sine_a                          type=SineSource                 dynamic=False  loop_breaker=False
-2026-03-17 11:09:02 [DEBUG  ] EmbedSim.sink — PARSE  gain_b                          type=GainBlock                  dynamic=False  loop_breaker=False
-2026-03-17 11:09:02 [DEBUG  ] EmbedSim.sink — PARSE  summer                          type=SumBlock                   dynamic=False  loop_breaker=False
-2026-03-17 11:09:02 [DEBUG  ] EmbedSim.sink — PARSE  sink                            type=VectorEnd                  dynamic=False  loop_breaker=False
-2026-03-17 11:09:02 [INFO   ] EmbedSim.sink — Graph resolved: 4 blocks  (0 dynamic, 4 static, 0 loop breakers)
