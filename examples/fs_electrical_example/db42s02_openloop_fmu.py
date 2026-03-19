@@ -8,44 +8,67 @@ Library: fs_electrical_machines
 
 Block diagram (Python-first, EmbedSim canonical order):
 ─────────────────────────────────────────────────────────────────
-  CodeGenStart
-       │
-  SpeedRampBlock            omega_m_ref [rad/s]
-       │                    motor_utility_blocks.c → SpeedRamp_Step
-  VfAngleBlock              [v_d=0, v_q, theta_e]
-       │                    motor_utility_blocks.c → VfAngle_Step
-       ├─── VfDQBlock        [v_d, v_q]
-       │    motor_utility_blocks.c → VfDQ_Step
-       └─── VfThetaBlock     [theta_e]
-            motor_utility_blocks.c → VfTheta_Step
-                              ↓
-  InvParkTransformBlock     [v_alpha, v_beta]
-       │                    coordinate_transform.c → InvPark_Step
-  DutyPackBlock             [duty_a, duty_b, duty_c, V_dc, 0]
-       │                    motor_utility_blocks.c → DutyPack_Step
-  CodeGenEnd                → cg_end.generate_step() → StepGenerator
-       │
-  DB42S02PlantBlock         PMSM_MotorBlock FMU (NOT code-generated)
-─────────────────────────────────────────────────────────────────
+  CodeGenStart                    ← no external inputs (empty Input_T)
 
-Note: SVPWMPackBlock and SVPWMBlock are C-codegen path only
-      (codegen_db42s02.py).  Not in the Python simulation chain.
+  SpeedRampBlock            [omega_m_ref]  rad/s
+       │                    SpeedRamp_Step
+  VfAngleBlock              [v_d, v_q, theta_e]
+       │                    VfAngle_Step
+       ├─── VfDQBlock        [v_d, v_q]
+       │    VfDQ_Step
+       └─── VfThetaBlock     [theta_e]
+            VfTheta_Step
+                │
+  InvParkTransformBlock     [v_alpha, v_beta]
+       │                    InvPark_Step
+  SVPWMPackBlock            [Vref, angle_rad, Vdc]
+       │                    SVPWMPack_Step
+       │                    Vref      = sqrt(v_α²+v_β²)  clipped 0.95
+       │                    angle_rad = atan2(v_β,v_α)   wrapped [0,2π)
+  SVPWMBlock                [ta, tb, tc, sector]
+       │                    SVM_CalculateDutyCycle  (C_CUSTOM_EMIT)
+       │
+  CodeGenEnd          ──→   EmbedSim_Output_T: {ta, tb, tc, sector}
+       │                    → GTM ATOM0 CH0/CH2/CH4
+       │
+  DB42S02PlantBlock         PMSM_Motor.mo FMU
+                            FMU inputs (injected in plant adapter only):
+                              duty_a = ta         (from SVPWMBlock)
+                              duty_b = tb         (from SVPWMBlock)
+                              duty_c = tc         (from SVPWMBlock)
+                              v_dc   = 17.0 V     (constant, not a signal)
+                              T_load = 0.03 N·m   (30% rated — constant shaft load)
+                            FMU reconstructs phase voltages internally:
+                              v_x_leg = duty_x * v_dc
+                              v_x     = v_x_leg - (v_a+v_b+v_c)/3
+─────────────────────────────────────────────────────────────────
 
 CodeGen strategy
 ────────────────
-  Every block carries PYX_FILE.
-  PYXInspector auto-populates step_func / state_struct / init_func
-  at class-definition time via VectorBlock.__init_subclass__.
-  StepGenerator emits typed C calls for every block.
-  Zero C_CUSTOM_EMIT.  Zero hand-written C strings in this file.
+  cg_start has no upstream — SpeedRampBlock is self-sourced.
+  EmbedSim_Input_T is empty (_reserved byte for C99 compliance).
+
+  SVPWMBlock is the terminal CodeGen block.
+  EmbedSim_Output_T = {ta, tb, tc, sector} — normalised PWM duties [0,1] + sector [0–5].
+
+  On the AURIX target the ISR writes these to GTM ATOM compare regs:
+      ATOM0_CH0_CM0 = (uint32_t)(out.ta * period)
+      ATOM0_CH2_CM0 = (uint32_t)(out.tb * period)
+      ATOM0_CH4_CM0 = (uint32_t)(out.tc * period)
+  This is identical to SpaceVectorModulation1() → tOn[] in the
+  production code.
+
+  v_dc and T_load are physical constants, not controller signals.
+  They are injected only in DB42S02PlantBlock.compute_py and never
+  appear in the CodeGen region.
+
+  No DutyPackBlock anywhere.
+  Zero C_CUSTOM_EMIT except SVPWMBlock (mandatory — scalar ABI).
+  Zero hand-written C strings in this file.
 
 Motor: NANOTEC DB42S02  (PMSM_Motor.mo)
   R=0.19 Ω  Ld=Lq=0.125 mH  λ_pm=0.0014 Wb  J=2.4e-6 kg·m²
   p=4  V_dc=17 V
-
-Build wrappers once:
-    cd fs_electrical_machines/c_src
-    python setup_motor_utility_blocks.py build_ext --inplace
 
 Run:
     python db42s02_openloop_fmu.py
@@ -61,6 +84,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import matplotlib.animation as animation
+from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
 
 # ── Path bootstrap ─────────────────────────────────────────────────────────────
 from _path_utils import get_project_root, get_embedsim_import_path, get_current_parent
@@ -77,23 +101,22 @@ for _p in (
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
-# ── EmbedSim — full engine ────────────────────────────────────────────────────
+# ── EmbedSim ──────────────────────────────────────────────────────────────────
 from embedsim import EmbedSim, ODESolver, VectorEnd
 from embedsim.core_blocks import VectorBlock, VectorSignal, DEFAULT_DTYPE
 from embedsim.code_generator import CodeGenStart, CodeGenEnd
 
-import codegen_db42s02  # attaches C_CUSTOM_EMIT to the three non-standard blocks
-
-# ── fs_electrical_machines — all blocks have compiled .pyd wrappers ────────────
+# ── fs_electrical_machines ────────────────────────────────────────────────────
 from motor_utility_blocks import (
     SpeedRampBlock,
     VfAngleBlock,
     VfDQBlock,
     VfThetaBlock,
-    DutyPackBlock,
+    SVPWMPackBlock,
 )
 from coordinate_transform_blocks import InvParkTransformBlock
-from PMSM_MotorBlock             import PMSM_MotorBlock
+from svpwm_block                  import SVPWMBlock
+from PMSM_MotorBlock              import PMSM_MotorBlock
 
 _FMU_PATH = str(_FS_ELEC / "modelica" / "PMSM_Motor.fmu")
 
@@ -103,10 +126,28 @@ _FMU_PATH = str(_FS_ELEC / "modelica" / "PMSM_Motor.fmu")
 # =============================================================================
 P_POLES        = 4
 V_DC           = 17.0
-V_PHASE_PEAK   = V_DC / math.sqrt(3.0)
+V_PHASE_PEAK   = V_DC / math.sqrt(3.0)          # 9.815 V — SVPWM max
 OMEGA_M_RATED  = 8000.0 * 2.0 * math.pi / 60.0
 OMEGA_E_RATED  = P_POLES * OMEGA_M_RATED
-VF_RATIO       = V_PHASE_PEAK / OMEGA_E_RATED
+VF_RATIO       = V_PHASE_PEAK / OMEGA_E_RATED   # 0.002929 V·s/rad
+
+# Low-speed voltage boost — compensates stator resistive drop at low omega.
+# Without boost: Vq(400 RPM) = 0.49 V which barely overcomes R×I = 0.19 V,
+# leaving almost no torque-producing voltage. Currents become triangular/
+# inductive rather than sinusoidal.
+# V0_BOOST = R × I_nominal = 0.19 × 1.0 A = 0.19 V.
+# At rated speed boost is only 1.9% of Vq — negligible.
+R_STATOR       = 0.19                            # Ω — from motor datasheet
+I_NOMINAL      = 1.0                             # A — target no-load current
+VF_BOOST       = R_STATOR * I_NOMINAL            # 0.19 V zero-speed boost
+
+# Shaft load for simulation — gives a non-trivial steady-state T_em on the plot.
+# Without load: open-loop V/f at 400 RPM has B*omega ≈ 0.4 mN·m → T_em → 0
+# in steady state, which looks like a flat-line zero.
+# T_LOAD = 0.03 N·m = 30% of DB42S02 rated torque (0.1 N·m) — realistic bench
+# test condition.  Combined with B=1e-5 the FMU settles to:
+#   T_em_ss = T_LOAD + B * omega_400 = 30.4 mN·m  (clearly visible plateau)
+T_LOAD         = 0.03                            # N·m — constant shaft load
 
 T_SIM          = 0.4
 DT             = 1e-4
@@ -120,37 +161,32 @@ RAMP_TIME      = 0.15
 # =============================================================================
 class DB42S02PlantBlock(PMSM_MotorBlock):
     """
-    NANOTEC DB42S02 plant block for EmbedSim simulation.
+    NANOTEC DB42S02 plant block.
 
-    Subclasses PMSM_MotorBlock directly — no wrapper, no delegation.
-    All VectorBlock lifecycle methods (reset, terminate) are inherited
-    from FMUBlock → PMSM_MotorBlock.
+    Upstream: SVPWMBlock → [ta, tb, tc, sector]
 
-    Topology / CodeGen attributes
-    ─────────────────────────────
-      TOPO_CATEGORY    = "plant"   → TopologyPrinter renders as plant node.
-      C_CODEGEN_EXCLUDE = True     → StepGenerator skips this block entirely.
-      Both ensure the plant never appears in EmbedSim_step.c.
+    FMU input interface (PMSM_Motor.mo inputs):
+      duty_a = ta          normalised PWM duty [0,1]
+      duty_b = tb          normalised PWM duty [0,1]
+      duty_c = tc          normalised PWM duty [0,1]
+      v_dc   = V_DC        17.0 V  — constant, not a controller signal
+      T_load = T_LOAD      0.03 N·m — constant shaft load (30% rated)
 
-    Output bus (5 signals — controller-relevant subset of 20 FMU outputs)
-    ──────────────────────────────────────────────────────────────────────
+    FMU reconstructs phase voltages:
+      v_x_leg  = duty_x * v_dc
+      v_neutral = (v_a_leg + v_b_leg + v_c_leg) / 3
+      v_x       = v_x_leg - v_neutral
+
+    Output bus:
       [0] speed_rpm   [RPM]
       [1] i_a         [A]
       [2] i_b         [A]
       [3] i_c         [A]
       [4] T_em        [N·m]
-
-    Analytical Euler dq fallback
-    ────────────────────────────
-      When PMSM_Motor.fmu is absent or fmpy is not installed the FMUBlock
-      __init__ raises.  DB42S02PlantBlock catches that exception and
-      activates a self-contained forward-Euler dq integrator using the
-      DB42S02 parameters so the simulation always runs.
     """
 
-    # ── Topology / CodeGen class attributes ───────────────────────────────────
     TOPO_CATEGORY     = "plant"
-    C_CODEGEN_EXCLUDE = True          # StepGenerator skips this block
+    C_CODEGEN_EXCLUDE = True
     output_label      = "[rpm,ia,ib,ic,Tem]"
 
     def __init__(self, name: str, fmu_path: str) -> None:
@@ -163,13 +199,12 @@ class DB42S02PlantBlock(PMSM_MotorBlock):
                 L_q       = 0.125e-3,
                 lambda_pm = 0.0014,
                 J         = 2.4e-6,
-                B         = 1e-6,
+                B         = 1e-5,   # N·m·s/rad — bearing friction (≈10× default)
                 p         = float(P_POLES),
             )
         except Exception as exc:
-            print(f"\n[DB42S02PlantBlock] ERROR — FMU failed to load: {fmu_path}")
-            print(f"                   Reason : {exc}")
-            print(f"                   No fallback available. Aborting.\n")
+            print(f"\n[DB42S02PlantBlock] FMU load failed: {fmu_path}")
+            print(f"                   {exc}\n")
             raise
         self.speed_rpm     = 0.0
         self.i_a = self.i_b = self.i_c = 0.0
@@ -177,28 +212,25 @@ class DB42S02PlantBlock(PMSM_MotorBlock):
         self.T_em          = 0.0
         print(f"[FMU] Loaded: {fmu_path}")
 
-    # ── compute_py ────────────────────────────────────────────────────────────
     def compute_py(self, t: float, dt: float, input_values=None):
         """
         Step the plant one time increment.
 
-        Input bus from DutyPackBlock:
-          [0] duty_a   [1] duty_b   [2] duty_c   [3] v_dc   ([4] zero)
-
-        Output bus → 5 controller-relevant signals.
+        Unpacks [ta, tb, tc] from SVPWMBlock output[0..2].
+        Injects v_dc=V_DC and T_load=T_LOAD as constants — these are
+        physical parameters, never part of the CodeGen region.
         """
-        # ── Unpack duty / Vdc from upstream signal ────────────────────────────
-        da = db = dc = 0.5
-        vdc = V_DC
+        ta = tb = tc = 0.5
         if input_values and input_values[0] is not None:
             v = input_values[0].value
-            if len(v) >= 4:
-                da, db, dc, vdc = (float(v[0]), float(v[1]),
-                                   float(v[2]), float(v[3]))
+            if len(v) >= 3:
+                ta, tb, tc = float(v[0]), float(v[1]), float(v[2])
 
-        sig = VectorSignal(
-                np.array([da, db, dc, vdc, 0.0], dtype=DEFAULT_DTYPE))
-        super().compute_py(t, dt, [sig])
+        # 5-element FMU input bus: [duty_a, duty_b, duty_c, v_dc, T_load]
+        fmu_input = VectorSignal(
+            np.array([ta, tb, tc, V_DC, T_LOAD], dtype=DEFAULT_DTYPE))
+        super().compute_py(t, dt, [fmu_input])
+
         self.speed_rpm     = self.read_speed_rpm()
         self.i_a           = self.read_i_a()
         self.i_b           = self.read_i_b()
@@ -206,7 +238,6 @@ class DB42S02PlantBlock(PMSM_MotorBlock):
         self.theta_e_motor = self.read_theta_e()
         self.T_em          = self.read_T_em()
 
-        # ── Narrow output bus to 5 controller-relevant signals ────────────────
         self.output = VectorSignal(
             np.array([self.speed_rpm, self.i_a, self.i_b,
                       self.i_c, self.T_em], dtype=DEFAULT_DTYPE),
@@ -219,46 +250,58 @@ class DB42S02PlantBlock(PMSM_MotorBlock):
 # =============================================================================
 def build_and_run() -> dict:
     """
-    Wire all blocks, register signals on sim.scope, hand to EmbedSim
-    for topology sort + time loop, export topology HTML via sim.topo,
-    then call StepGenerator.
+    Wire all blocks, run simulation, export topology, call StepGenerator.
 
-    Signal recording : sim.scope.add(block, indices, label) before sim.run()
-    Signal retrieval : sim.scope.get_signal(label, index) after sim.run()
-    No VectorEnd sinks for data.  No hand-rolled loop.  No _h() hack.
+    CodeGen boundary
+    ────────────────
+    cg_start : no upstream  → EmbedSim_Input_T  is empty
+    cg_end   : svpwm output → EmbedSim_Output_T = {ta, tb, tc, sector}
+
+    Generated EmbedSim_step.c chain:
+        SpeedRamp → VfAngle → VfDQ + VfTheta → InvPark
+        → SVPWMPack → SVPWMBlock (SVM_CalculateDutyCycle)
+        → out.ta / out.tb / out.tc / out.sector
     """
 
     # ── Instantiate ──────────────────────────────────────────────────────────
-    cg_start  = CodeGenStart("cg_start")
-    speed_ref = SpeedRampBlock("speed_ref",
-                               omega_target=OMEGA_CMD_RADS,
-                               ramp_time=RAMP_TIME)
-    vf_angle  = VfAngleBlock("vf_angle",
-                             vf_ratio=VF_RATIO,
-                             v_phase_peak=V_PHASE_PEAK,
-                             p_poles=P_POLES)
-    vf_dq     = VfDQBlock("vf_dq")
-    vf_theta  = VfThetaBlock("vf_theta")
-    inv_park  = InvParkTransformBlock("inv_park", use_c_backend=False)
-    duty_pack = DutyPackBlock("duty_pack", v_dc=V_DC)
-    cg_end    = CodeGenEnd("cg_end")
-    motor     = DB42S02PlantBlock("motor_sink", fmu_path=_FMU_PATH)
-    sink      = VectorEnd("sink")
-    sink_cg   = VectorEnd("sink_cg")
+    cg_start   = CodeGenStart("cg_start")
+    speed_ref  = SpeedRampBlock("speed_ref",
+                                omega_target=OMEGA_CMD_RADS,
+                                ramp_time=RAMP_TIME)
+    vf_angle   = VfAngleBlock("vf_angle",
+                              vf_ratio=VF_RATIO,
+                              v_phase_peak=V_PHASE_PEAK,
+                              p_poles=P_POLES)  # low-speed resistive drop compensation
+    vf_dq      = VfDQBlock("vf_dq")
+    vf_theta   = VfThetaBlock("vf_theta")
+    inv_park   = InvParkTransformBlock("inv_park", use_c_backend=False)
+    svpwm_pack = SVPWMPackBlock("svpwm_pack", v_dc=V_DC)
+    # Expose only indices 0 (magnitude) and 1 (angle_rad) to the CodeGen
+    # input boundary — Vdc at index 2 is an integration-layer constant.
+    svpwm_pack.INPUT_NAMES = ["magnitude", "angle_rad"]
+    svpwm_pack.INPUT_KEEP  = [0, 1]
+    svpwm      = SVPWMBlock("svpwm")
+    cg_end     = CodeGenEnd("cg_end")
+    motor      = DB42S02PlantBlock("motor_sink", fmu_path=_FMU_PATH)
+    sink       = VectorEnd("sink")
+    sink_cg    = VectorEnd("sink_cg")
 
     # ── Wire ─────────────────────────────────────────────────────────────────
     speed_ref  >> vf_angle
     vf_angle   >> vf_dq
     vf_angle   >> vf_theta
-    vf_dq      >> inv_park             # port 0: [v_d, v_q]
-    vf_theta   >> inv_park             # port 1: [theta_e]
-    inv_park   >> duty_pack            # [v_alpha, v_beta]
-    duty_pack  >> motor
+    vf_dq      >> inv_park        # port 0: [v_d, v_q]
+    vf_theta   >> inv_park        # port 1: [theta_e]
+    inv_park   >> svpwm_pack      # [v_alpha, v_beta] → [Vref, angle_rad, Vdc]
+
+    # CodeGen boundary: svpwm_pack[0,1] → cg_start → svpwm → cg_end
+    # EmbedSim_Input_T = {magnitude, angle_rad}
+    svpwm_pack >> cg_start        # indices 0,1 exposed as magnitude, angle_rad
+    cg_start   >> svpwm           # feeds SVPWMBlock directly
+    svpwm      >> cg_end          # [ta, tb, tc, sector] → CodeGen boundary
+    svpwm      >> motor           # [ta, tb, tc, sector] → plant adapter
     motor      >> sink
 
-    speed_ref  >> cg_start
-    duty_pack  >> cg_end
-    cg_start   >> sink_cg
     cg_end     >> sink_cg
 
     # ── EmbedSim ─────────────────────────────────────────────────────────────
@@ -269,29 +312,27 @@ def build_and_run() -> dict:
         solver = ODESolver.EULER,
     )
 
-    # ── Register signals on scope (MUST be before sim.run()) ─────────────────
+    # ── Scope ─────────────────────────────────────────────────────────────────
     sim.scope.add(speed_ref,  indices=[0],             label="omega_ref")
     sim.scope.add(vf_angle,   indices=[0, 1, 2],       label="vf_angle")
     sim.scope.add(inv_park,   indices=[0, 1],           label="inv_park")
-    sim.scope.add(duty_pack,  indices=[0, 1, 2],       label="duty_pack")
+    sim.scope.add(svpwm_pack, indices=[0, 1, 2],       label="svpwm_pack")
+    sim.scope.add(svpwm,      indices=[0, 1, 2, 3],    label="svpwm")
     sim.scope.add(motor,      indices=[0, 1, 2, 3, 4], label="motor")
 
-    # ── Topology: console ASCII + interactive HTML ────────────────────────────
-    # wire_labels maps (src_name, dst_name) → signal label shown on the arrow.
-    # Every edge in the diagram carries the signal name / dimension.
+    # ── Topology ──────────────────────────────────────────────────────────────
     _wire_labels = {
-        ("speed_ref",  "cg_start"):   "ω_ref [rad/s]",
-        ("speed_ref",  "vf_angle"):   "ω_ref [rad/s]",
-        ("vf_angle",   "vf_dq"):      "[v_d, v_q, θ_e]",
-        ("vf_angle",   "vf_theta"):   "[v_d, v_q, θ_e]",
-        ("vf_dq",      "inv_park"):   "[v_d, v_q]",
-        ("vf_theta",   "inv_park"):   "θ_e",
-        ("inv_park",   "duty_pack"):  "[v_α, v_β]",
-        ("duty_pack",  "cg_end"):     "[da, db, dc, Vdc, 0]",
-        ("duty_pack",  "motor_sink"): "[da, db, dc, Vdc, 0]",
-        ("cg_start",   "sink_cg"):    "ω_ref [rad/s]",
-        ("cg_end",     "sink_cg"):    "[da, db, dc]",
-        ("motor_sink", "sink"):       "[rpm, ia, ib, ic, Tem]",
+        ("speed_ref",  "vf_angle"):    "ω_ref [rad/s]",
+        ("vf_angle",   "vf_dq"):       "[v_d, v_q, θ_e]",
+        ("vf_angle",   "vf_theta"):    "[v_d, v_q, θ_e]",
+        ("vf_dq",      "inv_park"):    "[v_d, v_q]",
+        ("vf_theta",   "inv_park"):    "θ_e",
+        ("inv_park",   "svpwm_pack"):  "[v_α, v_β]",
+        ("svpwm_pack", "svpwm"):       "[Vref, α_rad, Vdc]",
+        ("svpwm",      "cg_end"):      "[ta, tb, tc, sector]",
+        ("svpwm",      "motor_sink"):  "[ta, tb, tc, sector]",
+        ("cg_end",     "sink_cg"):     "[ta, tb, tc]",
+        ("motor_sink", "sink"):        "[rpm, ia, ib, ic, Tem]",
     }
 
     print("\n[Topology] Signal-flow diagram:")
@@ -303,42 +344,38 @@ def build_and_run() -> dict:
     # ── Run ───────────────────────────────────────────────────────────────────
     sim.run()
 
-    # ── Extract signals from scope ────────────────────────────────────────────
+    # ── Extract signals ───────────────────────────────────────────────────────
     sc = sim.scope
-    # Sector derived from v_alpha/v_beta angle — svpwm not in sim chain
-    _alpha_ang = np.arctan2(
-        sc.get_signal("inv_park", 1),
-        sc.get_signal("inv_park", 0))
-    _alpha_ang = np.where(_alpha_ang < 0.0, _alpha_ang + 2.0*np.pi, _alpha_ang)
     hist = {
         "t":         np.array(sc.t, dtype=np.float32),
-        "omega_ref": sc.get_signal("omega_ref", 0) * 60.0 / (2.0 * math.pi),
-        "v_d":       sc.get_signal("vf_angle",  0),
-        "v_q":       sc.get_signal("vf_angle",  1),
-        "theta_e":   sc.get_signal("vf_angle",  2),
-        "v_alpha":   sc.get_signal("inv_park",  0),
-        "v_beta":    sc.get_signal("inv_park",  1),
-        "sector":    np.clip((_alpha_ang / (np.pi / 3.0)).astype(int) + 1, 1, 6),
-        "duty_a":    sc.get_signal("duty_pack", 0),
-        "duty_b":    sc.get_signal("duty_pack", 1),
-        "duty_c":    sc.get_signal("duty_pack", 2),
-        "speed_rpm": sc.get_signal("motor",     0),
-        "i_a":       sc.get_signal("motor",     1),
-        "i_b":       sc.get_signal("motor",     2),
-        "i_c":       sc.get_signal("motor",     3),
-        "T_em":      sc.get_signal("motor",     4),
+        "omega_ref": sc.get_signal("omega_ref",  0) * 60.0 / (2.0 * math.pi),
+        "v_d":       sc.get_signal("vf_angle",   0),
+        "v_q":       sc.get_signal("vf_angle",   1),
+        "theta_e":   sc.get_signal("vf_angle",   2),
+        "v_alpha":   sc.get_signal("inv_park",   0),
+        "v_beta":    sc.get_signal("inv_park",   1),
+        "vref":      sc.get_signal("svpwm_pack", 0),
+        "angle_rad": sc.get_signal("svpwm_pack", 1),
+        "ta":        sc.get_signal("svpwm",      0),
+        "tb":        sc.get_signal("svpwm",      1),
+        "tc":        sc.get_signal("svpwm",      2),
+        "sector":    sc.get_signal("svpwm",      3).astype(int) + 1,
+        "speed_rpm": sc.get_signal("motor",      0),
+        "i_a":       sc.get_signal("motor",      1),
+        "i_b":       sc.get_signal("motor",      2),
+        "i_c":       sc.get_signal("motor",      3),
+        "T_em":      sc.get_signal("motor",      4),
     }
 
-    # ── StepGenerator — <Prefix>_step.c / .h ─────────────────────────────────
-    # Reads cg_start.iter_signals() → EmbedSim_Input_T
-    # Reads cg_end.iter_signals()   → EmbedSim_Output_T
-    # Emits EmbedSim_Step(dt, in*, out*) — Simulink-equivalent, fully general.
+    # ── StepGenerator ─────────────────────────────────────────────────────────
+    # cg_start: no upstream      → EmbedSim_Input_T  { _reserved }
+    # cg_end  : svpwm [ta,tb,tc,sector] → EmbedSim_Output_T { ta, tb, tc, sector }
     print("\n[CodeGen] Calling cg_end.generate_step() …")
     cg_end.generate_step(
-        cg_start   = cg_start,
-        output_dir = _ROOT,
-        dt_hz      = 1.0 / DT,
-        prefix     = "EmbedSim",
+        cg_start    = cg_start,
+        output_dir  = _ROOT,
+        dt_hz       = 1.0 / DT,
+        prefix      = "EmbedSim",
         write_files = True,
     )
 
@@ -364,29 +401,32 @@ def plot_results(d: dict, path: str = "db42s02_openloop_results.png"):
     axes[0].plot(t, d["speed_rpm"], "C0",  lw=1.5, label="ω_motor FMU [RPM]")
     axes[0].set_ylabel("Speed [RPM]"); axes[0].legend(fontsize=9)
     axes[0].grid(alpha=0.3)
-    axes[0].set_title("Motor speed  (fs_electrical_machines FMU plant)")
+    axes[0].set_title("Motor speed  (PMSM_Motor.mo FMU plant)")
 
     axes[1].plot(t, d["i_a"], "C3", lw=0.9, label="i_a")
     axes[1].plot(t, d["i_b"], "C2", lw=0.9, label="i_b")
     axes[1].plot(t, d["i_c"], "C1", lw=0.9, label="i_c")
     axes[1].set_ylabel("Current [A]"); axes[1].legend(fontsize=9)
-    axes[1].grid(alpha=0.3); axes[1].set_title("Phase currents — FMU sensor output")
+    axes[1].grid(alpha=0.3)
+    axes[1].set_title("Phase currents — FMU sensor output")
 
-    axes[2].plot(t, d["duty_a"], "C3", lw=0.8, label="duty_a → GTM TOM0 CH0")
-    axes[2].plot(t, d["duty_b"], "C2", lw=0.8, label="duty_b → GTM TOM0 CH2")
-    axes[2].plot(t, d["duty_c"], "C1", lw=0.8, label="duty_c → GTM TOM0 CH4")
+    axes[2].plot(t, d["ta"], "C3", lw=0.8, label="ta → GTM ATOM0 CH0")
+    axes[2].plot(t, d["tb"], "C2", lw=0.8, label="tb → GTM ATOM0 CH2")
+    axes[2].plot(t, d["tc"], "C1", lw=0.8, label="tc → GTM ATOM0 CH4")
     axes[2].set_ylabel("Duty [0–1]"); axes[2].legend(fontsize=9)
     axes[2].grid(alpha=0.3); axes[2].set_ylim(0, 1)
-    axes[2].set_title("PWM duty cycles  (DutyPackBlock → AURIX GTM TOM)")
+    axes[2].set_title("SVM duty cycles  (SVPWMBlock → AURIX GTM ATOM)")
 
     ax4 = axes[3]; ax4b = ax4.twinx()
     ax4.step(t, d["sector"], where="post", color="C5", lw=1.2, label="SVPWM sector")
     ax4b.plot(t, d["v_q"], "C0--", lw=1.0, label="v_q [V]")
-    ax4.set_ylabel("Sector [1–6]", color="C5"); ax4b.set_ylabel("v_q [V]", color="C0")
+    ax4.set_ylabel("Sector [1–6]", color="C5")
+    ax4b.set_ylabel("v_q [V]", color="C0")
     ax4.set_ylim(0, 7); ax4.set_yticks([1, 2, 3, 4, 5, 6])
     ax4.set_xlabel("Time [s]"); ax4.grid(alpha=0.3)
     ax4.set_title("SVPWM sector + v_q")
-    l1, n1 = ax4.get_legend_handles_labels(); l2, n2 = ax4b.get_legend_handles_labels()
+    l1, n1 = ax4.get_legend_handles_labels()
+    l2, n2 = ax4b.get_legend_handles_labels()
     ax4.legend(l1+l2, n1+n2, fontsize=9)
 
     plt.tight_layout()
@@ -417,10 +457,11 @@ def plot_phasor_static(d: dict, path: str = "db42s02_phasor_sectors.png"):
     for k in range(6):
         ax.text(R*math.cos(k*math.pi/3)*1.08, R*math.sin(k*math.pi/3)*1.08,
                 f"V{k+1}", ha="center", fontsize=9, fontweight="bold")
-    sc = 1.0 / V_DC
-    ax.plot(d["v_alpha"]*sc, d["v_beta"]*sc,
+    sc_norm = 1.0 / V_DC
+    ax.plot(d["v_alpha"]*sc_norm, d["v_beta"]*sc_norm,
             "navy", lw=0.5, alpha=0.35, label="α-β trajectory")
-    vx = float(d["v_alpha"][-1])*sc; vy = float(d["v_beta"][-1])*sc
+    vx = float(d["v_alpha"][-1]) * sc_norm
+    vy = float(d["v_beta"][-1])  * sc_norm
     ax.annotate("", xy=(vx, vy), xytext=(0, 0),
                 arrowprops=dict(arrowstyle="->", color="red", lw=2.5))
     ax.axhline(0, color="gray", lw=0.5); ax.axvline(0, color="gray", lw=0.5)
@@ -435,391 +476,435 @@ def plot_phasor_static(d: dict, path: str = "db42s02_phasor_sectors.png"):
 
 
 # =============================================================================
-# FOC six-sector animated phasor hexagon  +  phase current scrolling plot
+# Animation helpers
 # =============================================================================
-def animate_phasor_hexagon(d: dict,
-                           path: str = "db42s02_phasor_anim.gif",
-                           n_frames: int = 150,
-                           fps: int = 25) -> None:
+
+# ── dark-theme palette ────────────────────────────────────────────────────────
+_BG_FIG  = "#0e1117"
+_BG_AX   = "#1a1d27"
+_GRID_C  = "#2e3145"
+_TXT     = "#e0e4f0"
+_CURSOR  = "#FFD700"
+_ON_CLR  = "#00E676"    # IGBT ON  — vivid green
+_OFF_CLR = "#252836"    # IGBT OFF — dark slate
+_ON_TXT  = "#00E676"
+_OFF_TXT = "#4a4e6a"
+_WIRE    = "#5a6080"
+_DC_POS  = "#FF5252"    # +Vdc rail
+_DC_NEG  = "#448AFF"    # GND  rail
+_PH_CLR  = {"a": "#FF595E", "b": "#8AC926", "c": "#1982C4"}
+
+
+def _style_ax(ax):
+    ax.set_facecolor(_BG_AX)
+    ax.tick_params(colors=_TXT, labelsize=8)
+    for sp in ax.spines.values():
+        sp.set_edgecolor(_GRID_C)
+    ax.xaxis.label.set_color(_TXT)
+    ax.yaxis.label.set_color(_TXT)
+    ax.title.set_color(_TXT)
+    ax.grid(color=_GRID_C, linewidth=0.5, alpha=0.7)
+
+
+def _make_sector_patch_anim(s: int, R: float = 2.0 / 3.0) -> mpatches.Polygon:
+    """Filled wedge for SVPWM sector *s* (0-indexed), initially invisible."""
+    a0   = math.radians(60 * s)
+    a1   = math.radians(60 * (s + 1))
+    angs = np.linspace(a0, a1, 40)
+    xs   = np.concatenate([[0.0], R * np.cos(angs), [0.0]])
+    ys   = np.concatenate([[0.0], R * np.sin(angs), [0.0]])
+    return mpatches.Polygon(
+        np.column_stack([xs, ys]),
+        closed=True, facecolor=_SECTOR_COLORS[s],
+        alpha=0.0, edgecolor="none", zorder=1,
+    )
+
+
+def _draw_inverter_bridge(ax) -> dict:
     """
-    Three-panel animated GIF.
+    Draw the static 3-phase 2-level VSI schematic on *ax*
+    (data coordinates 0..1 × 0..1, axis("off")).
 
-    Left        : FOC six-sector Hehagen hexagon.  The voltage phasor is
-                  drawn as a proper FancyArrow (shaft + arrowhead) from the
-                  origin, colored by active sector.  Trajectory trace fades
-                  behind it.
-    Right-top   : Scrolling phase current waveforms i_a / i_b / i_c with
-                  moving cursor and live readout.
-    Right-bottom: PWM duty cycle bar gauges for duty_a / duty_b / duty_c.
-                  Each phase is a vertical bar that fills 0→1, matching the
-                  DutyPackBlock output that drives the AURIX GTM TOM channels.
+    Returns a dict of mutable artist references:
+      "Q{a/b/c}_{H/L}"      FancyBboxPatch  — IGBT body (facecolor toggled)
+      "T{a/b/c}_{H/L}"      Text            — IGBT label (color toggled)
+      "duty_label_{a/b/c}"  Text            — duty readout above upper switch
+      "I_label_{a/b/c}"     Text            — current readout below lower switch
+      "sector_badge"         Text            — active sector centred on mid-bus
+      "vdc_label"            Text            — Vdc value top-centre
+
+    Switch logic (symmetrical triangle carrier):
+      duty_x > 0.5  →  Q_high ON,  Q_low OFF
+      duty_x ≤ 0.5  →  Q_high OFF, Q_low ON
+
+    IEC / AURIX GTM app-note numbering:
+      Q1 (Qa_H)  Q3 (Qb_H)  Q5 (Qc_H)   ← upper rail
+      Q4 (Qa_L)  Q6 (Qb_L)  Q2 (Qc_L)   ← lower rail
     """
-    print(f"[Anim] Building {n_frames}-frame three-panel animation …")
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    ax.set_aspect("equal")
+    ax.axis("off")
+    ax.set_title("3-Phase 2-Level VSI  (AURIX GTM ATOM0)",
+                 fontsize=9, fontweight="bold", color=_TXT, pad=5)
 
-    # ── Decimate data ─────────────────────────────────────────────────────────
-    idx     = np.linspace(0, len(d["t"]) - 1, n_frames, dtype=int)
-    t_dec   = d["t"][idx]
-    # Normalise by V_PHASE_PEAK (= V_dc/sqrt(3)), NOT V_dc.
-    # The SVPWM hexagon boundary is at |V_ref| = V_phase_peak,
-    # so R=2/3 in this normalisation fills ~2/3 of the hexagon
-    # at rated voltage — correct at any operating speed.
-    # Negate v_beta: InvPark emits v_beta = v_d*sin+v_q*cos;
-    # display convention wants CCW rotation for positive omega_e.
-    # Dynamic normalisation: scale so the steady-state phasor fills
-    # ~60% of the hexagon radius regardless of operating speed.
-    # This keeps the arrow visible at 400 RPM (5% of rated voltage)
-    # while still showing the correct circular trajectory shape.
-    _v_mag_peak = float(np.max(np.sqrt(
-        d["v_alpha"]**2 + d["v_beta"]**2))) + 1e-9
-    _VNORM  = _v_mag_peak / 0.60    # map peak magnitude to r=0.60
-    va_dec  =  d["v_alpha"][idx] / _VNORM
-    vb_dec  = -d["v_beta"][idx]  / _VNORM
-    sec_dec = d["sector"][idx].astype(int)
-    rpm_dec = d["speed_rpm"][idx]
-    vq_dec  = d["v_q"][idx]
-    ia_dec  = d["i_a"][idx]
-    ib_dec  = d["i_b"][idx]
-    ic_dec  = d["i_c"][idx]
-    da_dec  = d["duty_a"][idx]
-    db_dec  = d["duty_b"][idx]
-    dc_dec  = d["duty_c"][idx]
+    arts: dict = {}
 
-    t_full  = d["t"]
-    ia_full = d["i_a"]
-    ib_full = d["i_b"]
-    ic_full = d["i_c"]
+    Y_POS = 0.90
+    Y_NEG = 0.08
+    Y_MID = (Y_POS + Y_NEG) / 2   # 0.49
 
-    WIN    = 0.04
-    i_peak = max(np.max(np.abs(ia_full)),
-                 np.max(np.abs(ib_full)),
-                 np.max(np.abs(ic_full))) * 1.25
-    if i_peak < 0.01:
-        i_peak = 0.5
+    # DC rails
+    ax.plot([0.05, 0.95], [Y_POS, Y_POS], color=_DC_POS, lw=2.8, zorder=2)
+    ax.plot([0.05, 0.95], [Y_NEG, Y_NEG], color=_DC_NEG, lw=2.8, zorder=2)
+    ax.text(0.04, Y_POS, "+Vdc", color=_DC_POS, fontsize=7,
+            va="center", ha="right", fontweight="bold")
+    ax.text(0.04, Y_NEG, "GND",  color=_DC_NEG, fontsize=7,
+            va="center", ha="right", fontweight="bold")
+    arts["vdc_label"] = ax.text(
+        0.50, 0.975, f"V_dc = {V_DC:.1f} V",
+        color=_TXT, fontsize=8.5, ha="center", va="top", fontweight="bold",
+    )
 
-    # ── Figure: 1 left column + 2 right rows ─────────────────────────────────
-    fig = plt.figure(figsize=(15, 8))
-    fig.patch.set_facecolor("#0f0f0f")
+    PH_X    = {"a": 0.22, "b": 0.50, "c": 0.78}
+    SW_W    = 0.14
+    SW_H    = 0.115
+    Y_H_CTR = (Y_POS + Y_MID) / 2 + 0.01   # ≈ 0.705
+    Y_L_CTR = (Y_MID + Y_NEG) / 2 - 0.01   # ≈ 0.275
+    IGBT_H  = {"a": "Q1 (Qa↑)", "b": "Q3 (Qb↑)", "c": "Q5 (Qc↑)"}
+    IGBT_L  = {"a": "Q4 (Qa↓)", "b": "Q6 (Qb↓)", "c": "Q2 (Qc↓)"}
+    CH_LBL  = {"a": "CH0", "b": "CH2", "c": "CH4"}
+
+    for ph in ("a", "b", "c"):
+        cx = PH_X[ph]
+
+        # upper IGBT
+        box_h = FancyBboxPatch(
+            (cx - SW_W / 2, Y_H_CTR - SW_H / 2), SW_W, SW_H,
+            boxstyle="round,pad=0.006",
+            facecolor=_OFF_CLR, edgecolor=_WIRE, lw=1.3, zorder=4,
+        )
+        ax.add_patch(box_h)
+        arts[f"Q{ph}_H"] = box_h
+        arts[f"T{ph}_H"] = ax.text(
+            cx, Y_H_CTR, IGBT_H[ph],
+            color=_OFF_TXT, fontsize=6.5, ha="center", va="center",
+            fontweight="bold", zorder=5,
+        )
+
+        # lower IGBT
+        box_l = FancyBboxPatch(
+            (cx - SW_W / 2, Y_L_CTR - SW_H / 2), SW_W, SW_H,
+            boxstyle="round,pad=0.006",
+            facecolor=_OFF_CLR, edgecolor=_WIRE, lw=1.3, zorder=4,
+        )
+        ax.add_patch(box_l)
+        arts[f"Q{ph}_L"] = box_l
+        arts[f"T{ph}_L"] = ax.text(
+            cx, Y_L_CTR, IGBT_L[ph],
+            color=_OFF_TXT, fontsize=6.5, ha="center", va="center",
+            fontweight="bold", zorder=5,
+        )
+
+        # vertical wires
+        ax.plot([cx, cx], [Y_POS,              Y_H_CTR + SW_H / 2], color=_WIRE, lw=1.3, zorder=3)
+        ax.plot([cx, cx], [Y_H_CTR - SW_H / 2, Y_MID             ], color=_WIRE, lw=1.3, zorder=3)
+        ax.plot([cx, cx], [Y_MID,              Y_L_CTR + SW_H / 2], color=_WIRE, lw=1.3, zorder=3)
+        ax.plot([cx, cx], [Y_L_CTR - SW_H / 2, Y_NEG             ], color=_WIRE, lw=1.3, zorder=3)
+
+        # phase midpoint node
+        dot = mpatches.Circle(
+            (cx, Y_MID), radius=0.016,
+            facecolor=_PH_CLR[ph], edgecolor="white", lw=0.8, zorder=6,
+        )
+        ax.add_patch(dot)
+        ax.text(cx, Y_MID + 0.07, f"Ph-{ph.upper()}\n{CH_LBL[ph]}",
+                color=_PH_CLR[ph], fontsize=6, ha="center", va="bottom",
+                fontweight="bold")
+
+        # duty readout above upper switch
+        arts[f"duty_label_{ph}"] = ax.text(
+            cx, Y_POS + 0.045, f"t{ph}=0.500",
+            color=_PH_CLR[ph], fontsize=6.5, ha="center", va="bottom",
+        )
+        # current readout below lower switch
+        arts[f"I_label_{ph}"] = ax.text(
+            cx, Y_NEG - 0.07, f"i{ph}=0.00A",
+            color=_PH_CLR[ph], fontsize=6.5, ha="center", va="top",
+        )
+
+    # motor neutral stub lines → star point
+    for ph in ("a", "b", "c"):
+        cx = PH_X[ph]
+        ax.annotate(
+            "", xy=(0.96, Y_MID), xytext=(cx + SW_W / 2 + 0.005, Y_MID),
+            arrowprops=dict(arrowstyle="-", color=_PH_CLR[ph], lw=1.1),
+            zorder=3,
+        )
+    star = mpatches.Circle(
+        (0.96, Y_MID), radius=0.013,
+        facecolor="#777", edgecolor="white", lw=0.6, zorder=6,
+    )
+    ax.add_patch(star)
+    ax.text(0.975, Y_MID, "N", color="#aaa", fontsize=6, va="center", ha="left")
+
+    # sector badge
+    arts["sector_badge"] = ax.text(
+        0.50, Y_MID + 0.005, "Sector –",
+        color=_TXT, fontsize=9.5, ha="center", va="center",
+        fontweight="bold", zorder=10,
+    )
+    return arts
+
+
+def animate_phasor(
+    d: dict,
+    path: str        = "db42s02_phasor_anim.gif",
+    n_frames: int    = 200,
+    interval_ms: int = 50,
+    save_mp4: bool   = False,
+):
+    """
+    Produce a 6-panel animation (3 rows × 2 cols):
+
+      [0,0]  α-β SVPWM phasor hexagon   [0,1]  3-phase VSI switch states
+      [1,0]  PWM duty cycles ta/tb/tc   [1,1]  Phase currents ia/ib/ic
+      [2,0]  Motor speed [RPM]           [2,1]  Electromagnetic torque T_em
+
+    Inverter switch logic (symmetrical triangle carrier):
+      duty_x > 0.5  →  upper IGBT (Qx_H) ON,  lower IGBT (Qx_L) OFF
+      duty_x ≤ 0.5  →  upper IGBT OFF,         lower IGBT ON
+
+    Parameters
+    ----------
+    d            dict returned by build_and_run()
+    path         output filename  (default: db42s02_phasor_anim.gif)
+    n_frames     animation frames  (200 → ~10 s at 20 fps)
+    interval_ms  ms between frames
+    save_mp4     True → .mp4 via FFMpegWriter  |  False → .gif via pillow
+    """
+    t         = d["t"]
+    N         = len(t)
+    sc        = 1.0 / V_DC
+    frame_idx = np.linspace(0, N - 1, n_frames, dtype=int)
+    va_n      = d["v_alpha"] * sc
+    vb_n      = d["v_beta"]  * sc
+    trail_len = max(1, N // 30)
+
+    # ── figure ────────────────────────────────────────────────────────────────
+    fig = plt.figure(figsize=(11, 9), facecolor=_BG_FIG)
+    fig.patch.set_facecolor(_BG_FIG)
+    gs  = fig.add_gridspec(
+        3, 2, hspace=0.46, wspace=0.28,
+        left=0.06, right=0.97, top=0.93, bottom=0.06,
+    )
+    ax_hex  = fig.add_subplot(gs[0, 0])
+    ax_inv  = fig.add_subplot(gs[0, 1])
+    ax_duty = fig.add_subplot(gs[1, 0])
+    ax_curr = fig.add_subplot(gs[1, 1])
+    ax_spd  = fig.add_subplot(gs[2, 0])
+    ax_tem  = fig.add_subplot(gs[2, 1])
+
+    for ax in (ax_hex, ax_duty, ax_curr, ax_spd, ax_tem):
+        _style_ax(ax)
+
     fig.suptitle(
-        f"NANOTEC DB42S02 — Open-loop V/f  "
-        f"{OMEGA_CMD_RPM:.0f} RPM  V_dc={V_DC} V  p={P_POLES}",
-        fontsize=12, fontweight="bold", color="white")
+        f"NANOTEC DB42S02 — Open-loop V/f  |  "
+        f"cmd {OMEGA_CMD_RPM:.0f} RPM  |  V_dc {V_DC} V  |  p = {P_POLES}",
+        color=_TXT, fontsize=11, fontweight="bold",
+    )
 
-    gs = fig.add_gridspec(2, 2,
-                          width_ratios=[1, 1.2],
-                          height_ratios=[1.4, 1],
-                          hspace=0.38, wspace=0.32,
-                          left=0.06, right=0.97,
-                          top=0.91, bottom=0.08)
-
-    ax_hex = fig.add_subplot(gs[:, 0])   # left: full height
-    ax_cur = fig.add_subplot(gs[0, 1])   # right-top: currents
-    ax_pwm = fig.add_subplot(gs[1, 1])   # right-bottom: duty bars
-
-    for _ax in (ax_hex, ax_cur, ax_pwm):
-        _ax.set_facecolor("#181818")
-        _ax.tick_params(colors="lightgray", labelsize=8)
-        for spine in _ax.spines.values():
-            spine.set_edgecolor("#444444")
-
-    # ── LEFT: hexagon ─────────────────────────────────────────────────────────
-    ax_hex.set_aspect("equal")
-    ax_hex.set_xlim(-0.85, 0.85)
-    ax_hex.set_ylim(-0.85, 0.85)
-    ax_hex.axhline(0, color="#444444", lw=0.5)
-    ax_hex.axvline(0, color="#444444", lw=0.5)
-    ax_hex.grid(alpha=0.15, color="#555555")
-    ax_hex.set_xlabel("α  (norm. to Vₚₕₐₛₑ)", fontsize=9, color="lightgray")
-    ax_hex.set_ylabel("β", fontsize=9, color="lightgray")
-    ax_hex.set_title("α-β voltage phasor  (SVPWM sectors)",
-                     fontsize=10, color="white", pad=6)
-
+    # ── ax_hex: α-β phasor hexagon ────────────────────────────────────────────
     R = 2.0 / 3.0
+    ax_hex.set_aspect("equal")
+    ax_hex.set_xlim(-0.88, 0.88); ax_hex.set_ylim(-0.88, 0.88)
+    ax_hex.set_xlabel("α  (norm. to V_dc)", fontsize=8)
+    ax_hex.set_ylabel("β", fontsize=8)
+    ax_hex.set_title("SVPWM  α-β phasor", fontsize=9, fontweight="bold")
 
-    # ── Static sector wedges — dim background only, NO live highlight ─────────
-    # Standard SVPWM convention: S1 centred on +alpha (0 deg), boundaries at +/-30 deg.
-    for s in range(6):
-        a0   = math.radians(60 * s - 30)
-        a1   = math.radians(60 * s + 30)
-        angs = np.linspace(a0, a1, 30)
-        xs   = np.concatenate([[0], R * np.cos(angs), [0]])
-        ys   = np.concatenate([[0], R * np.sin(angs), [0]])
-        ax_hex.fill(xs, ys, color=_SECTOR_COLORS[s], alpha=0.08, zorder=1)
-        am = math.radians(60 * s)
-        ax_hex.text(0.48 * math.cos(am), 0.48 * math.sin(am), f"S{s+1}",
-                    ha="center", va="center", fontsize=10,
-                    fontweight="bold", color=_SECTOR_COLORS[s], alpha=0.55)
+    sec_patches = [_make_sector_patch_anim(s, R) for s in range(6)]
+    for sp in sec_patches:
+        ax_hex.add_patch(sp)
 
-    ax_hex.plot(
-        [R * math.cos(k * math.pi / 3) for k in range(7)],
-        [R * math.sin(k * math.pi / 3) for k in range(7)],
-        color="#cccccc", lw=1.2, zorder=3)
+    hx = [R * math.cos(k * math.pi / 3) for k in range(7)]
+    hy = [R * math.sin(k * math.pi / 3) for k in range(7)]
+    ax_hex.plot(hx, hy, color="#888", lw=1.2, zorder=2)
+
     for k in range(6):
         ax_hex.text(
-            R * math.cos(k * math.pi / 3) * 1.10,
-            R * math.sin(k * math.pi / 3) * 1.10,
+            R * math.cos(k * math.pi / 3) * 1.14,
+            R * math.sin(k * math.pi / 3) * 1.14,
             f"V{k+1}", ha="center", va="center",
-            fontsize=7, fontweight="bold", color="#aaaaaa")
+            fontsize=7, fontweight="bold", color="#aaa", zorder=3,
+        )
+    for s in range(6):
+        am = math.radians(60 * s + 30)
+        ax_hex.text(
+            0.44 * math.cos(am), 0.44 * math.sin(am), f"S{s+1}",
+            ha="center", va="center", fontsize=10, fontweight="bold",
+            color=_SECTOR_COLORS[s], alpha=0.55, zorder=4,
+        )
+    ax_hex.axhline(0, color=_GRID_C, lw=0.5)
+    ax_hex.axvline(0, color=_GRID_C, lw=0.5)
+    ax_hex.plot(va_n, vb_n, color="navy", lw=0.4, alpha=0.18, zorder=5)
 
-    # ── Phase-axis reference dashes  (0 deg, -120 deg, +120 deg  = a, b, c) ──
-    # Teaches: each phase has a fixed spatial axis in alpha-beta space.
-    _PHASE_ANGLES = [0.0, -2.0 * math.pi / 3.0, 2.0 * math.pi / 3.0]
-    _PHASE_COLORS = ["#ff4444", "#44cc44", "#4488ff"]
-    _PHASE_LABELS = ["a", "b", "c"]
-    _SPOKE_R      = 0.78
-    for ang, col, lbl in zip(_PHASE_ANGLES, _PHASE_COLORS, _PHASE_LABELS):
-        ax_hex.plot([0, _SPOKE_R * math.cos(ang)],
-                    [0, _SPOKE_R * math.sin(ang)],
-                    color=col, lw=0.8, ls="--", alpha=0.35, zorder=2)
-        ax_hex.text(_SPOKE_R * 1.06 * math.cos(ang),
-                    _SPOKE_R * 1.06 * math.sin(ang),
-                    lbl, ha="center", va="center",
-                    fontsize=9, fontweight="bold", color=col, alpha=0.7)
+    phasor = FancyArrowPatch(
+        posA=(0, 0), posB=(float(va_n[0]), float(vb_n[0])),
+        arrowstyle="-|>", mutation_scale=15,
+        color="#FF4040", lw=2.4, zorder=10,
+    )
+    ax_hex.add_patch(phasor)
 
-    # ── Radial current spokes — live, one per phase ───────────────────────────
-    # Each spoke runs from origin along the phase axis.
-    # Length = i_x / i_peak * _SPOKE_R  (signed: pos -> along +axis, neg -> opposite).
-    # A filled dot marks the current tip, showing the student which phases
-    # are conducting and how the resultant (phasor) is synthesised.
-    _spoke_lines = []
-    _spoke_dots  = []
-    for col in _PHASE_COLORS:
-        ln, = ax_hex.plot([], [], color=col, lw=2.5, solid_capstyle="round",
-                          zorder=7)
-        dt, = ax_hex.plot([], [], "o", color=col, ms=7, zorder=8)
-        _spoke_lines.append(ln)
-        _spoke_dots.append(dt)
+    (trail,)       = ax_hex.plot([], [], color="#FF7070", lw=1.5, alpha=0.8, zorder=9)
+    hex_sec_txt    = ax_hex.text(-0.83,  0.80, "Sector –",   color=_TXT, fontsize=9,  fontweight="bold", zorder=11)
+    hex_time_txt   = ax_hex.text(-0.83, -0.80, "t = 0.000 s", color="#888", fontsize=8, zorder=11)
 
-    traj_line, = ax_hex.plot([], [], color="#3399ff", lw=0.7,
-                              alpha=0.30, zorder=2)
+    # ── ax_inv: 3-phase inverter bridge ───────────────────────────────────────
+    inv = _draw_inverter_bridge(ax_inv)
 
-    # FancyArrow + dashed extension: both drawn fresh each frame
-    # [0] = FancyArrow patch,  [1] = dashed Line2D extension
-    _arrow_container = [None, None]
+    # ── ax_duty: PWM duty cycles ───────────────────────────────────────────────
+    for key, lbl, col in (("ta", "ta → CH0", _PH_CLR["a"]),
+                           ("tb", "tb → CH2", _PH_CLR["b"]),
+                           ("tc", "tc → CH4", _PH_CLR["c"])):
+        ax_duty.plot(t, d[key], color=col, lw=0.8, alpha=0.50, label=lbl)
+    ax_duty.axhline(0.5, color="#555", lw=0.8, ls="--", label="50 % threshold")
+    ax_duty.set_ylim(-0.05, 1.05)
+    ax_duty.set_xlabel("Time [s]", fontsize=8)
+    ax_duty.set_ylabel("Duty [0–1]", fontsize=8)
+    ax_duty.set_title("PWM duty cycles", fontsize=9, fontweight="bold")
+    ax_duty.legend(fontsize=7, loc="upper left",
+                   facecolor=_BG_AX, edgecolor=_GRID_C, labelcolor=_TXT)
+    duty_cur  = ax_duty.axvline(t[0], color=_CURSOR, lw=1.2, alpha=0.85)
+    duty_dots = [ax_duty.plot([], [], "o", color=c, ms=5, zorder=10)[0]
+                 for c in (_PH_CLR["a"], _PH_CLR["b"], _PH_CLR["c"])]
 
-    info_box = ax_hex.text(
-        0.02, 0.98, "", transform=ax_hex.transAxes,
-        fontsize=9, va="top", ha="left", color="white",
-        bbox=dict(boxstyle="round,pad=0.3", fc="#222222", alpha=0.85),
-        fontfamily="monospace", zorder=9)
-    ax_hex.legend(
-        handles=[mpatches.Patch(color=c, alpha=0.7, label=f"i_{l}")
-                 for c, l in zip(_PHASE_COLORS, _PHASE_LABELS)],
-        fontsize=8, loc="lower right", framealpha=0.5,
-        facecolor="#222222", labelcolor="white")
+    # ── ax_curr: phase currents ────────────────────────────────────────────────
+    for key, lbl, col in (("i_a", "ia", _PH_CLR["a"]),
+                           ("i_b", "ib", _PH_CLR["b"]),
+                           ("i_c", "ic", _PH_CLR["c"])):
+        ax_curr.plot(t, d[key], color=col, lw=0.8, alpha=0.50, label=lbl)
+    ax_curr.set_xlabel("Time [s]", fontsize=8)
+    ax_curr.set_ylabel("Current [A]", fontsize=8)
+    ax_curr.set_title("Phase currents — FMU sensor", fontsize=9, fontweight="bold")
+    ax_curr.legend(fontsize=7, loc="upper left",
+                   facecolor=_BG_AX, edgecolor=_GRID_C, labelcolor=_TXT)
+    curr_cur  = ax_curr.axvline(t[0], color=_CURSOR, lw=1.2, alpha=0.85)
+    curr_dots = [ax_curr.plot([], [], "o", color=c, ms=5, zorder=10)[0]
+                 for c in (_PH_CLR["a"], _PH_CLR["b"], _PH_CLR["c"])]
 
-    # ── RIGHT-TOP: phase currents ─────────────────────────────────────────────
-    ax_cur.set_xlim(0.0, WIN)
-    ax_cur.set_ylim(-i_peak, i_peak)
-    ax_cur.set_xlabel("Time in window [ms]", fontsize=9, color="lightgray")
-    ax_cur.set_ylabel("Current [A]", fontsize=9, color="lightgray")
-    ax_cur.set_title("Phase currents  i_a / i_b / i_c  (FMU sensor)",
-                     fontsize=10, color="white", pad=4)
-    ax_cur.axhline(0, color="#444444", lw=0.6)
-    ax_cur.grid(alpha=0.15, color="#555555")
-    ax_cur.xaxis.set_major_formatter(
-        plt.FuncFormatter(lambda x, _: f"{x*1000:.0f}"))
+    # ── ax_spd: motor speed ────────────────────────────────────────────────────
+    ax_spd.plot(t, d["omega_ref"],  color="#888",    lw=1.0, ls="--", label="ω_ref")
+    ax_spd.plot(t, d["speed_rpm"],  color="#FFCA3A", lw=1.2, label="ω_motor")
+    ax_spd.set_xlabel("Time [s]", fontsize=8)
+    ax_spd.set_ylabel("Speed [RPM]", fontsize=8)
+    ax_spd.set_title("Motor speed (FMU plant)", fontsize=9, fontweight="bold")
+    ax_spd.legend(fontsize=7, loc="upper left",
+                  facecolor=_BG_AX, edgecolor=_GRID_C, labelcolor=_TXT)
+    spd_cur  = ax_spd.axvline(t[0], color=_CURSOR, lw=1.2, alpha=0.85)
+    (spd_dot,) = ax_spd.plot([], [], "o", color="#FFCA3A", ms=5, zorder=10)
 
-    ax_cur.plot(t_full, ia_full, color="#ff6666", lw=0.3, alpha=0.10)
-    ax_cur.plot(t_full, ib_full, color="#66ff66", lw=0.3, alpha=0.10)
-    ax_cur.plot(t_full, ic_full, color="#6699ff", lw=0.3, alpha=0.10)
+    # ── ax_tem: electromagnetic torque ────────────────────────────────────────
+    ax_tem.plot(t, d["T_em"], color="#FF924C", lw=1.0, alpha=0.65, label="T_em")
+    ax_tem.set_xlabel("Time [s]", fontsize=8)
+    ax_tem.set_ylabel("Torque [N·m]", fontsize=8)
+    ax_tem.set_title("Electromagnetic torque", fontsize=9, fontweight="bold")
+    ax_tem.legend(fontsize=7, loc="upper left",
+                  facecolor=_BG_AX, edgecolor=_GRID_C, labelcolor=_TXT)
+    tem_cur  = ax_tem.axvline(t[0], color=_CURSOR, lw=1.2, alpha=0.85)
+    (tem_dot,) = ax_tem.plot([], [], "o", color="#FF924C", ms=5, zorder=10)
 
-    line_ia, = ax_cur.plot([], [], color="#ff4444", lw=1.4, label="i_a", zorder=4)
-    line_ib, = ax_cur.plot([], [], color="#44cc44", lw=1.4, label="i_b", zorder=4)
-    line_ic, = ax_cur.plot([], [], color="#4488ff", lw=1.4, label="i_c", zorder=4)
-    cursor_line = ax_cur.axvline(0.0, color="white", lw=1.0, alpha=0.7, zorder=5)
+    # ── update callback ────────────────────────────────────────────────────────
+    _prev_sec = [-1]
 
-    cur_box = ax_cur.text(
-        0.98, 0.98, "", transform=ax_cur.transAxes,
-        fontsize=8, va="top", ha="right", color="white",
-        bbox=dict(boxstyle="round,pad=0.3", fc="#222222", alpha=0.85),
-        fontfamily="monospace", zorder=7)
-    ax_cur.legend(fontsize=7, loc="lower right",
-                  framealpha=0.5, facecolor="#222222", labelcolor="white")
+    def _update(frame: int):
+        i   = frame_idx[frame]
+        ti  = float(t[i])
+        vax = float(va_n[i]); vbx = float(vb_n[i])
+        sec = int(d["sector"][i]) - 1          # 0-indexed
+        ta_ = float(d["ta"][i])
+        tb_ = float(d["tb"][i])
+        tc_ = float(d["tc"][i])
+        ia_ = float(d["i_a"][i])
+        ib_ = float(d["i_b"][i])
+        ic_ = float(d["i_c"][i])
 
-    # ── RIGHT-BOTTOM: PWM duty bar gauges ────────────────────────────────────
-    # Three vertical bars: A (red), B (green), C (blue)
-    # x centres: 0.2, 0.5, 0.8 in axes data coords
-    _BAR_X      = [0.2, 0.5, 0.8]
-    _BAR_W      = 0.18
-    _BAR_COLORS = ["#ff4444", "#44cc44", "#4488ff"]
-    _BAR_LABELS = ["duty_a\nTOM0 CH0", "duty_b\nTOM0 CH2", "duty_c\nTOM0 CH4"]
+        # phasor + trail
+        phasor.set_positions((0, 0), (vax, vbx))
+        i0 = max(0, i - trail_len)
+        trail.set_data(va_n[i0:i+1], vb_n[i0:i+1])
+        hex_time_txt.set_text(f"t = {ti:.3f} s")
 
-    ax_pwm.set_xlim(0.0, 1.0)
-    ax_pwm.set_ylim(0.0, 1.0)
-    ax_pwm.set_xticks(_BAR_X)
-    ax_pwm.set_xticklabels(_BAR_LABELS, fontsize=8, color="lightgray")
-    ax_pwm.set_yticks([0.0, 0.25, 0.5, 0.75, 1.0])
-    ax_pwm.set_yticklabels(["0 %", "25 %", "50 %", "75 %", "100 %"],
-                            fontsize=8, color="lightgray")
-    ax_pwm.set_title("PWM duty cycles  (DutyPackBlock → AURIX GTM)",
-                     fontsize=10, color="white", pad=4)
-    ax_pwm.grid(axis="y", alpha=0.15, color="#555555")
-    ax_pwm.axhline(0.5, color="#666666", lw=0.8, ls="--")   # 50 % reference
+        # sector highlight
+        if sec != _prev_sec[0]:
+            col = _SECTOR_COLORS[sec]
+            for s, sp in enumerate(sec_patches):
+                sp.set_alpha(0.35 if s == sec else 0.0)
+            lbl = f"Sector {sec + 1}"
+            hex_sec_txt.set_text(lbl);  hex_sec_txt.set_color(col)
+            inv["sector_badge"].set_text(lbl); inv["sector_badge"].set_color(col)
+            _prev_sec[0] = sec
 
-    # Background slot outlines
-    for bx in _BAR_X:
-        ax_pwm.add_patch(plt.Rectangle(
-            (bx - _BAR_W / 2, 0), _BAR_W, 1.0,
-            fc="#222222", ec="#444444", lw=0.8, zorder=1))
+        # inverter switch states
+        duties   = {"a": ta_, "b": tb_, "c": tc_}
+        currents = {"a": ia_, "b": ib_, "c": ic_}
+        for ph, tx in duties.items():
+            on_h = tx > 0.5
+            inv[f"Q{ph}_H"].set_facecolor(_ON_CLR  if on_h     else _OFF_CLR)
+            inv[f"T{ph}_H"].set_color    (_ON_TXT  if on_h     else _OFF_TXT)
+            inv[f"Q{ph}_L"].set_facecolor(_ON_CLR  if not on_h else _OFF_CLR)
+            inv[f"T{ph}_L"].set_color    (_ON_TXT  if not on_h else _OFF_TXT)
+            inv[f"duty_label_{ph}"].set_text(f"t{ph}={tx:.3f}")
+            inv[f"I_label_{ph}"].set_text(f"i{ph}={currents[ph]:+.2f}A")
 
-    # Live fill bars — start at 0 height
-    duty_bars = []
-    duty_texts = []
-    for bx, bc in zip(_BAR_X, _BAR_COLORS):
-        bar = plt.Rectangle(
-            (bx - _BAR_W / 2, 0), _BAR_W, 0.0,
-            fc=bc, alpha=0.85, zorder=2)
-        ax_pwm.add_patch(bar)
-        duty_bars.append(bar)
-        txt = ax_pwm.text(bx, 0.02, "0.00", ha="center", va="bottom",
-                          fontsize=9, color="white", fontweight="bold",
-                          fontfamily="monospace", zorder=3)
-        duty_texts.append(txt)
+        # cursors
+        for cur in (duty_cur, curr_cur, spd_cur, tem_cur):
+            cur.set_xdata([ti, ti])
 
-    # ── Init ──────────────────────────────────────────────────────────────────
-    def _init():
-        traj_line.set_data([], [])
-        info_box.set_text("")
-        line_ia.set_data([], [])
-        line_ib.set_data([], [])
-        line_ic.set_data([], [])
-        cur_box.set_text("")
-        for bar in duty_bars:
-            bar.set_height(0.0)
-        for txt in duty_texts:
-            txt.set_text("0.00")
-        for ln in _spoke_lines:
-            ln.set_data([], [])
-        for dt in _spoke_dots:
-            dt.set_data([], [])
-        return (traj_line, info_box,
-                *_spoke_lines, *_spoke_dots,
-                line_ia, line_ib, line_ic,
-                cur_box, *duty_bars, *duty_texts)
+        # moving dots
+        for dot, key in zip(duty_dots, ("ta", "tb", "tc")):
+            dot.set_data([ti], [float(d[key][i])])
+        for dot, key in zip(curr_dots, ("i_a", "i_b", "i_c")):
+            dot.set_data([ti], [float(d[key][i])])
+        spd_dot.set_data([ti], [float(d["speed_rpm"][i])])
+        tem_dot.set_data([ti], [float(d["T_em"][i])])
 
-    # ── Update ────────────────────────────────────────────────────────────────
-    def _update(frame):
-        tf  = float(t_dec[frame])
-        vx  = float(va_dec[frame])
-        vy  = float(vb_dec[frame])
-        sec = int(sec_dec[frame])
-        rpm = float(rpm_dec[frame])
-        vq  = float(vq_dec[frame])
-        ia  = float(ia_dec[frame])
-        ib  = float(ib_dec[frame])
-        ic  = float(ic_dec[frame])
-        da  = float(da_dec[frame])
-        db  = float(db_dec[frame])
-        dc  = float(dc_dec[frame])
+        return (
+            phasor, trail, hex_sec_txt, hex_time_txt,
+            duty_cur, curr_cur, spd_cur, tem_cur,
+            spd_dot, tem_dot,
+            *duty_dots, *curr_dots, *sec_patches,
+            *[inv[f"Q{ph}_{r}"] for ph in "abc" for r in "HL"],
+            *[inv[f"T{ph}_{r}"] for ph in "abc" for r in "HL"],
+            *[inv[f"I_label_{ph}"]    for ph in "abc"],
+            *[inv[f"duty_label_{ph}"] for ph in "abc"],
+            inv["sector_badge"], inv["vdc_label"],
+        )
 
-        # ── Hexagon panel ─────────────────────────────────────────────────────
-        traj_line.set_data(va_dec[:frame + 1], vb_dec[:frame + 1])
+    ani = animation.FuncAnimation(
+        fig, _update, frames=n_frames, interval=interval_ms, blit=True,
+    )
 
-        # Remove previous arrow + extension line and draw fresh each frame
-        if _arrow_container[0] is not None:
-            _arrow_container[0].remove()
-        if _arrow_container[1] is not None:
-            _arrow_container[1].remove()
+    out_path = path
+    if save_mp4:
+        out_path = path.replace(".gif", ".mp4")
+        writer   = animation.FFMpegWriter(fps=1000 // interval_ms, bitrate=1400)
+        print(f"[Anim] Encoding {n_frames} frames → {out_path}  (ffmpeg) …", flush=True)
+        ani.save(out_path, writer=writer, dpi=80)
+    else:
+        print(f"[Anim] Encoding {n_frames} frames → {out_path}  (pillow GIF) …", flush=True)
 
-        if 1 <= sec <= 6:
-            arrow_color = _SECTOR_COLORS[sec - 1]
-        else:
-            arrow_color = "#ff4444"
+        # pillow writer with per-frame progress
+        writer_gif = animation.PillowWriter(fps=1000 // interval_ms)
+        writer_gif.setup(fig, out_path, dpi=80)
+        for k in range(n_frames):
+            _update(k)
+            writer_gif.grab_frame()
+            if k % 20 == 0 or k == n_frames - 1:
+                print(f"[Anim]   frame {k+1:3d}/{n_frames}", flush=True)
+        writer_gif.finish()
 
-        mag = math.sqrt(vx * vx + vy * vy)
-        if mag > 1e-4:
-            # ── Solid FancyArrow: origin → phasor tip ─────────────────────────
-            hw = 0.055
-            hl = 0.07
-            shaft_x = vx * (1.0 - hl / mag)
-            shaft_y = vy * (1.0 - hl / mag)
-            arrow = mpatches.FancyArrow(
-                0, 0, shaft_x, shaft_y,
-                width=0.012,
-                head_width=hw,
-                head_length=hl,
-                length_includes_head=False,
-                color=arrow_color,
-                zorder=6)
-
-            # ── Dashed extension: phasor tip → hexagon boundary ───────────────
-            # Scale the unit direction to R (hexagon circumradius) so the
-            # dashed line always ends exactly at the hexagon outline.
-            ux, uy = vx / mag, vy / mag
-            ext_line, = ax_hex.plot(
-                [vx, ux * R],
-                [vy, uy * R],
-                color=arrow_color, lw=1.0, ls="--", alpha=0.55, zorder=5)
-        else:
-            arrow = mpatches.FancyArrow(
-                0, 0, 0, 0,
-                width=0.001, head_width=0.001, head_length=0.001,
-                color=arrow_color, zorder=6)
-            ext_line, = ax_hex.plot([], [], color=arrow_color, lw=1.0,
-                                    ls="--", alpha=0.55, zorder=5)
-
-        ax_hex.add_patch(arrow)
-        _arrow_container[0] = arrow
-        _arrow_container[1] = ext_line
-
-        # ── Radial current spokes ─────────────────────────────────────
-        # Project each phase current onto its fixed αβ axis:
-        #   a-axis: 0 deg    b-axis: -120 deg    c-axis: +120 deg
-        # The spoke length is i_x / i_peak * _SPOKE_R (signed).
-        # Positive current → tip along +axis; negative → tip reversed.
-        # The resultant of the three signed spokes equals the voltage
-        # phasor direction — the core insight of space-vector theory.
-        for ln, dt, ang, i_val in zip(
-                _spoke_lines, _spoke_dots, _PHASE_ANGLES, [ia, ib, ic]):
-            scale = (i_val / i_peak) * _SPOKE_R if i_peak > 1e-6 else 0.0
-            ex = scale * math.cos(ang)
-            ey = scale * math.sin(ang)
-            ln.set_data([0, ex], [0, ey])
-            dt.set_data([ex], [ey])
-
-        info_box.set_text(
-            f"t  = {tf*1000:6.1f} ms\n"
-            f"ω  = {rpm:7.1f} RPM\n"
-            f"Vq = {vq:7.3f} V\n"
-            f"S  =     {sec}")
-
-        # ── Current panel ─────────────────────────────────────────────────────
-        t_win_start = max(0.0, tf - WIN * 0.75)
-        t_win_end   = t_win_start + WIN
-        ax_cur.set_xlim(t_win_start, t_win_end)
-        mask = (t_full >= t_win_start) & (t_full <= t_win_end)
-        t_w  = t_full[mask]
-        line_ia.set_data(t_w, ia_full[mask])
-        line_ib.set_data(t_w, ib_full[mask])
-        line_ic.set_data(t_w, ic_full[mask])
-        cursor_line.set_xdata([tf, tf])
-        ax_cur.xaxis.set_major_formatter(
-            plt.FuncFormatter(lambda x, _: f"{x*1000:.0f}"))
-        cur_box.set_text(
-            f"i_a = {ia:+.3f} A\n"
-            f"i_b = {ib:+.3f} A\n"
-            f"i_c = {ic:+.3f} A")
-
-        # ── PWM duty bar gauges ───────────────────────────────────────────────
-        for bar, val, txt in zip(duty_bars, [da, db, dc], duty_texts):
-            h = float(np.clip(val, 0.0, 1.0))
-            bar.set_height(h)
-            txt.set_position((txt.get_position()[0], max(h + 0.02, 0.04)))
-            txt.set_text(f"{h:.2f}")
-
-        return (traj_line, info_box,
-                *_spoke_lines, *_spoke_dots,
-                line_ia, line_ib, line_ic,
-                cur_box, cursor_line, *duty_bars, *duty_texts,
-                ext_line)
-
-    # ── Render ────────────────────────────────────────────────────────────────
-    anim_obj = animation.FuncAnimation(
-        fig, _update, frames=n_frames,
-        init_func=_init, interval=int(1000 / fps), blit=False)
-    anim_obj.save(path, writer="pillow", fps=fps, dpi=120)
     plt.close(fig)
-    print(f"[Anim] {path}  ({n_frames} frames @ {fps} fps)")
+    print(f"[Plot] {out_path}")
 
 
 # =============================================================================
@@ -829,15 +914,15 @@ if __name__ == "__main__":
     print("=" * 64)
     print("  EmbedSim — NANOTEC DB42S02  Open-loop V/f")
     print("  Library  : fs_electrical_machines")
-    print("  Blocks   : motor_utility_blocks.c (SpeedRamp, VfAngle,")
-    print("             VfDQ, VfTheta, DutyPack)")
-    print("             coordinate_transform.c  (InvPark)")
-    print("             svpwm.c                 (SVPWM)")
-    print("  CodeGen  : StepGenerator (feature 05121967)")
-    print("             PYX_FILE + PYXInspector on every block")
-    print("             Zero C_CUSTOM_EMIT — zero hand-written C strings")
-    print("  Topology : TopologyPrinter → db42s02_topology.html")
-    print("  Animation: FOC six-sector phasor + phase currents (Hehagen)")
+    print("  Blocks   : SpeedRamp, VfAngle, VfDQ, VfTheta, SVPWMPack")
+    print("             InvPark, SVPWMBlock → [ta, tb, tc, sector]")
+    print("  CodeGen  : cg_start no upstream → Input_T empty")
+    print("             cg_end  svpwm output → Output_T {ta, tb, tc, sector}")
+    print("             SVPWMBlock C_CUSTOM_EMIT: SVM_CalculateDutyCycle")
+    print("             No DutyPackBlock")
+    print("  FMU      : PMSM_Motor.mo")
+    print("             duty_a/b/c = ta/tb/tc from SVPWMBlock")
+    print(f"             v_dc={V_DC}V, T_load={T_LOAD} N·m (30% rated)")
     print(f"  Target   : {OMEGA_CMD_RPM:.0f} RPM  V_dc={V_DC} V  "
           f"p={P_POLES}  dt={DT*1e6:.0f} µs")
     print("=" * 64)
@@ -845,7 +930,7 @@ if __name__ == "__main__":
     data = build_and_run()
     plot_results(data)
     plot_phasor_static(data)
-    animate_phasor_hexagon(data, n_frames=150, fps=25)
+    animate_phasor(data)
 
     print("\n[Done]")
     print("  db42s02_openloop_results.png")

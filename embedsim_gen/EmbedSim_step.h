@@ -30,16 +30,13 @@
 
 #include "Sys_Types.h"   /* real32_T */
 
-/* Sample period for a 10000 Hz control loop */
-#define EMBEDSIM_DT  (0.0001000000f)
-
 /**
  * EmbedSim_Input_T
  * Signals entering the CodeGen region (CodeGenStart boundary).
  */
 typedef struct
 {
-    real32_T speed_ref;
+    real32_T ThreePhaseSine[3];
 } EmbedSim_Input_T;
 
 /**
@@ -48,14 +45,11 @@ typedef struct
  */
 typedef struct
 {
-    real32_T duty_a;
-    real32_T duty_b;
-    real32_T duty_c;
+    real32_T Park[2];
 } EmbedSim_Output_T;
 
 /* Block headers */
-#include "motor_utility_blocks.h"
-#include "Coordinate_Transform.h"
+#include "coordinate_transform.h"
 
 extern void EmbedSim_Init(void);
 

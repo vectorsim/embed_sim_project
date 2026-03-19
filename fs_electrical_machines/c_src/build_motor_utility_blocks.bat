@@ -1,6 +1,6 @@
 @echo off
 REM =============================================================================
-REM build_motor_utility_blocks.bat  —  fs_electrical_machines\c_src\
+REM build_motor_utility_blocks.bat  —  fs_electrical_machines\c_src
 REM =============================================================================
 REM Compile motor_utility_blocks_wrapper Cython extension on Windows.
 REM Output .pyd is copied to fs_electrical_machines\ for easy importing.
@@ -21,87 +21,76 @@ REM Get parent directory (fs_electrical_machines/)
 for %%i in ("%CD%") do set "PARENT_DIR=%%~dpi"
 set "PARENT_DIR=%PARENT_DIR:~0,-1%"
 
-REM Build output dir — CPython 3.12 x64
-set BUILD_LIB=build\lib.win-amd64-cpython-312
+REM Get project root (embed_sim_project/)
+for %%i in ("%PARENT_DIR%") do set "PROJECT_ROOT=%%~dpi"
+set "PROJECT_ROOT=%PROJECT_ROOT:~0,-1%"
 
 echo.
 echo [1/4] Cleaning previous builds...
 if exist build rmdir /s /q build > nul 2>&1
-if exist motor_utility_blocks_wrapper.pyd del /f /q motor_utility_blocks_wrapper.pyd > nul 2>&1
-if exist "%PARENT_DIR%\motor_utility_blocks_wrapper.pyd" del /f /q "%PARENT_DIR%\motor_utility_blocks_wrapper.pyd" > nul 2>&1
+if exist motor_utility_blocks_wrapper*.pyd del /f /q motor_utility_blocks_wrapper*.pyd > nul 2>&1
+if exist "%PARENT_DIR%\motor_utility_blocks_wrapper*.pyd" del /f /q "%PARENT_DIR%\motor_utility_blocks_wrapper*.pyd" > nul 2>&1
 echo        Clean complete
 
 echo.
-echo [2/4] Building motor_utility_blocks_wrapper...
+echo [2/4] Setting up Python environment...
 
-REM Auto-detect Python: prefer .venv if present, otherwise use PATH python
-set "VENV_PYTHON=C:\EmbedSimProject\.venv\Scripts\python.exe"
+set "VENV_PYTHON=%PROJECT_ROOT%\.venv\Scripts\python.exe"
 if exist "%VENV_PYTHON%" (
     set "PYTHON=%VENV_PYTHON%"
     echo        Using .venv Python: %VENV_PYTHON%
 ) else (
     set "PYTHON=python"
-    echo        .venv not found — using system/Anaconda Python
+    echo        .venv not found — using system Python
 )
 
+%PYTHON% --version
+
+echo        Checking dependencies...
+%PYTHON% -c "import Cython" > nul 2>&1
+if errorlevel 1 (
+    echo        Cython not found. Installing...
+    %PYTHON% -m pip install --upgrade pip cython
+    if errorlevel 1 ( echo        Failed to install Cython & goto :error )
+) else ( echo        Cython OK )
+
+%PYTHON% -c "import numpy" > nul 2>&1
+if errorlevel 1 (
+    echo        NumPy not found. Installing...
+    %PYTHON% -m pip install numpy
+    if errorlevel 1 ( echo        Failed to install NumPy & goto :error )
+) else ( echo        NumPy OK )
+
+echo.
+echo [3/4] Building motor_utility_blocks_wrapper...
 %PYTHON% setup_motor_utility_blocks.py build_ext --inplace
 if errorlevel 1 goto :error
 echo        OK - motor_utility_blocks_wrapper compiled
 
 echo.
-echo [3/4] Copying .pyd files...
+echo [4/4] Copying .pyd to parent directory...
 set "PYD_FOUND=0"
-
-if exist "%BUILD_LIB%\motor_utility_blocks_wrapper*.pyd" (
-    echo        Found in build directory:
-    for %%f in ("%BUILD_LIB%\motor_utility_blocks_wrapper*.pyd") do (
-        set "PYD_FOUND=1"
-        echo          - %%~nxf
-        copy "%%f" "." > nul
-        echo          Copied to current directory
-        copy "%%f" "%PARENT_DIR%\motor_utility_blocks_wrapper.pyd" > nul
-        echo          Copied to parent as motor_utility_blocks_wrapper.pyd
+for %%f in ("%CD%\motor_utility_blocks_wrapper*.pyd") do (
+    set "PYD_FOUND=1"
+    echo        Found: %%~nxf
+    copy /y "%%f" "%PARENT_DIR%\motor_utility_blocks_wrapper.pyd" > nul
+    if errorlevel 1 (
+        echo        ERROR: copy failed — check permissions on %PARENT_DIR%
+        goto :error
     )
-) else (
-    echo        No .pyd files found in %BUILD_LIB%
+    echo        Copied to %PARENT_DIR%\motor_utility_blocks_wrapper.pyd
 )
-
-if !PYD_FOUND!==0 (
-    if exist motor_utility_blocks_wrapper*.pyd (
-        for %%f in (motor_utility_blocks_wrapper*.pyd) do (
-            set "PYD_FOUND=1"
-            echo          - %%~nxf
-            copy "%%f" "%PARENT_DIR%\motor_utility_blocks_wrapper.pyd" > nul
-            echo          Copied to parent as motor_utility_blocks_wrapper.pyd
-        )
-    )
-)
-
-if !PYD_FOUND!==0 (
-    echo        WARNING: No .pyd files found anywhere!
-    goto :warning
-)
-
-echo.
-echo [4/4] Creating simple module name in current directory...
-if exist motor_utility_blocks_wrapper*.pyd (
-    copy /y motor_utility_blocks_wrapper*.pyd motor_utility_blocks_wrapper.pyd > nul
-    echo        Created motor_utility_blocks_wrapper.pyd
-)
+if "!PYD_FOUND!"=="0" goto :warning
 
 echo.
 echo ============================================================
 echo  motor_utility_blocks built successfully!
 echo ============================================================
 echo.
-echo Files created:
-echo   Current directory (%CD%):
-for %%f in (motor_utility_blocks_wrapper*.pyd) do echo     %%~nxf
+echo   c_src\                   : motor_utility_blocks_wrapper*.pyd  (ABI-tagged)
+echo   fs_electrical_machines\  : motor_utility_blocks_wrapper.pyd   (plain name)
 echo.
-echo   Parent directory (%PARENT_DIR%):
-if exist "%PARENT_DIR%\motor_utility_blocks_wrapper.pyd" echo     motor_utility_blocks_wrapper.pyd
-echo.
-echo You can now import in Python:
+echo Import with:
 echo   from motor_utility_blocks import SpeedRampBlock, VfAngleBlock
 echo   from motor_utility_blocks import VfDQBlock, VfThetaBlock, DutyPackBlock
 echo.
@@ -110,13 +99,13 @@ goto :eof
 :error
 echo.
 echo ============================================================
-echo  ERROR: Build failed
+echo  ERROR: Build failed!
 echo ============================================================
 echo.
-echo Possible issues:
-echo   1. Cython not installed  (pip install cython)
-echo   2. Missing motor_utility_blocks.c / motor_utility_blocks.h
-echo   3. Compiler error — check output above
+echo Common causes:
+echo   1. MSVC / Build Tools not on PATH  (run from a VS Developer prompt)
+echo   2. Missing source files: motor_utility_blocks.c / .h, Matrix.c / .h
+echo   3. C compiler errors — check output above
 echo.
 pause
 exit /b 1
@@ -124,8 +113,11 @@ exit /b 1
 :warning
 echo.
 echo ============================================================
-echo  WARNING: Build completed but no .pyd found
+echo  WARNING: Build succeeded but no .pyd found in %CD%
 echo ============================================================
+echo.
+echo Run:  dir /s /b motor_utility_blocks_wrapper*.pyd
+echo to locate the output and copy manually.
 echo.
 pause
 exit /b 1

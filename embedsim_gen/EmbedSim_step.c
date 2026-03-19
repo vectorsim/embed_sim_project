@@ -11,19 +11,14 @@
 #include <string.h>   /* memcpy, memset */
 #include <math.h>     /* fabsf, atan2f, sqrtf */
 #include "EmbedSim_step.h"
-#include "motor_utility_blocks.h"
-#include "Coordinate_Transform.h"
+#include "coordinate_transform.h"
 
 /* ── Block state structs ──────────────────────────────────────
  * Internal linkage — not exposed in the .h.
  * MISRA C:2012 Rule 8.7: static, TU-local only.
  * ──────────────────────────────────────────────────────────── */
-static SpeedRamp_T speed_ref_state;   /* Rule 8.7: internal linkage */
-static VfAngle_T vf_angle_state;   /* Rule 8.7: internal linkage */
-static VfDQ_T vf_dq_state;   /* Rule 8.7: internal linkage */
-static VfTheta_T vf_theta_state;   /* Rule 8.7: internal linkage */
-static InvPark_T inv_park_state;   /* Rule 8.7: internal linkage */
-static DutyPack_T duty_pack_state;   /* Rule 8.7: internal linkage */
+static Clarke_T Clarke_state;   /* Rule 8.7: internal linkage */
+static Park_T Park_state;   /* Rule 8.7: internal linkage */
 
 
 /* ================================================================
@@ -34,12 +29,8 @@ static DutyPack_T duty_pack_state;   /* Rule 8.7: internal linkage */
  */
 void EmbedSim_Init(void)
 {
-    SpeedRamp_Init(&speed_ref_state, 41.88790205f, 0.15000000f);
-    VfAngle_Init(&vf_angle_state, 0.00292893f, 9.81495458f, (uint8_T)4U);
-    VfDQ_Init(&vf_dq_state);
-    VfTheta_Init(&vf_theta_state);
-    InvPark_Init(&inv_park_state);
-    DutyPack_Init(&duty_pack_state, 17.00000000f);
+    Clarke_Init(&Clarke_state);
+    Park_Init(&Park_state);
 }
 
 
@@ -58,66 +49,38 @@ void EmbedSim_Step(
 )
 {
     /* ── Unpack inputs ────────────────────────────────── */
-    real32_T y_speed_ref[1];
-    y_speed_ref[0] = in->speed_ref;
+    const real32_T ThreePhaseSine_0 = in->ThreePhaseSine[0];
+    const real32_T ThreePhaseSine_1 = in->ThreePhaseSine[1];
+    const real32_T ThreePhaseSine_2 = in->ThreePhaseSine[2];
 
     /* ── Block chain ──────────────────────────────────────── */
-    /* --- speed_ref (SpeedRampBlock) — source, no u[] --- */
-    /* y_speed_ref[1] pre-seeded from in->speed_ref above */
-    SpeedRamp_Step(&speed_ref_state, dt, y_speed_ref);
-    /* Override ramp output with external command if non-zero */
-    if (in->speed_ref > 0.0f) { y_speed_ref[0] = in->speed_ref; }
-
-    /* --- vf_angle (VfAngleBlock) --- */
-    real32_T u_vf_angle[1];
-    u_vf_angle[0] = y_speed_ref[0];
-    real32_T y_vf_angle[3];
-    VfAngle_Step(&vf_angle_state, u_vf_angle, dt, y_vf_angle);
-
-
-    /* --- vf_dq (VfDQBlock) --- */
-    real32_T u_vf_dq[3];
-    u_vf_dq[0] = y_vf_angle[0];
-    u_vf_dq[1] = y_vf_angle[1];
-    u_vf_dq[2] = y_vf_angle[2];
-    real32_T y_vf_dq[2];
-    VfDQ_Step(&vf_dq_state, u_vf_dq, dt, y_vf_dq);
-
-
-    /* --- vf_theta (VfThetaBlock) --- */
-    real32_T u_vf_theta[3];
-    u_vf_theta[0] = y_vf_angle[0];
-    u_vf_theta[1] = y_vf_angle[1];
-    u_vf_theta[2] = y_vf_angle[2];
-    real32_T y_vf_theta[1];
-    VfTheta_Step(&vf_theta_state, u_vf_theta, dt, y_vf_theta);
-
-
-    /* --- inv_park (InvParkTransformBlock) --- */
-    real32_T y_inv_park[2];
+    /* --- Clarke (ClarkeTransformBlock) --- */
     {
-        MatrixFloat invpark_alpha, invpark_beta;
-        InvPark_Step(&inv_park_state,
-                     y_vf_dq[0],      /* v_d     */
-                     y_vf_dq[1],      /* v_q     */
-                     y_vf_theta[0],   /* theta_e */
-                     &invpark_alpha,
-                     &invpark_beta);
-        y_inv_park[0] = (real32_T)invpark_alpha;
-        y_inv_park[1] = (real32_T)invpark_beta;
+        MatrixFloat clarke_alpha, clarke_beta;
+        Clarke_Step(&Clarke_state,
+                    u_cg_start[0], u_cg_start[1], u_cg_start[2],
+                    &clarke_alpha, &clarke_beta);
+        real32_T y_Clarke[2];
+        y_Clarke[0] = clarke_alpha;
+        y_Clarke[1] = clarke_beta;
     }
 
-    /* --- duty_pack (DutyPackBlock) --- */
-    real32_T u_duty_pack[2];
-    u_duty_pack[0] = y_inv_park[0];
-    u_duty_pack[1] = y_inv_park[1];
-    real32_T y_duty_pack[5];
-    DutyPack_Step(&duty_pack_state, u_duty_pack, dt, y_duty_pack);
+    /* [Theta] Python-only block — no C step function. Replace with hand-written C or add C_SOURCES + step_func. */
 
+    /* --- Park (ParkTransformBlock) --- */
+    {
+        MatrixFloat park_d, park_q;
+        Park_Step(&Park_state,
+                  y_Clarke[0], y_Clarke[1],
+                  THETA_E,
+                  &park_d, &park_q);
+        real32_T y_Park[2];
+        y_Park[0] = park_d;
+        y_Park[1] = park_q;
+    }
 
     /* ── Pack outputs ─────────────────────────────────── */
-    out->duty_a = y_duty_pack[0];
-    out->duty_b = y_duty_pack[1];
-    out->duty_c = y_duty_pack[2];
+    out->Park[0] = y_Park[0];
+    out->Park[1] = y_Park[1];
 
 }

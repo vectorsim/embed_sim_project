@@ -151,6 +151,6 @@ print(" Running code generation  ->  embedsim_gen/")
 print("=" * 60)
 
 gen = StepGenerator(cg_start, cg_end)
-gen.generate(output_dir=_root, dt_hz=1.0 / DT)
+gen.generate(output_dir=_root)
 
-print("\n[DONE] embedsim_loop.c and embedsim_loop.h written to embedsim_gen/")
+print("\n[DONE] EmbedSim_step.c and EmbedSim_step.h written to embedsim_gen/")

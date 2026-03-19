@@ -6,8 +6,8 @@ cls
 echo ====================================
 echo        Python Script Runner
 echo ====================================
-echo 1. pi_buck_example.py
-echo 2. pi_buck_ai_tuning.py
+echo 1. db42s02_openloop_fmu.py
+echo 2. fs_clarke_park_codegen.py
 echo 3. Exit
 echo ====================================
 set /p choice="Enter choice (1-3): "

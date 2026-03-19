@@ -122,8 +122,8 @@ class CodeGenStart(SimBlockBase):
             return ""
         lines = [f"typedef struct {struct_name} {{"]
         for name, size in self.iter_signals():
-            lines.append(f"    double {name};" if size == 1
-                         else f"    double {name}[{size}];")
+            lines.append(f"    real32_T {name};" if size == 1
+                         else f"    real32_T {name}[{size}];")
         lines.append(f"}} {struct_name};\n")
         result = "\n".join(lines)
         print(f"\nC struct for '{self.name}':\n{result}")
@@ -204,8 +204,8 @@ class CodeGenEnd(SimBlockBase):
             return ""
         lines = [f"typedef struct {struct_name} {{"]
         for name, size in self.iter_signals():
-            lines.append(f"    double {name};" if size == 1
-                         else f"    double {name}[{size}];")
+            lines.append(f"    real32_T {name};" if size == 1
+                         else f"    real32_T {name}[{size}];")
         lines.append(f"}} {struct_name};\n")
         result = "\n".join(lines)
         print(f"\nC struct for '{self.name}':\n{result}")
@@ -320,8 +320,8 @@ class CodeGenEnd(SimBlockBase):
             f"typedef struct InputSignals {{",
         ]
         for name, size in in_sigs:
-            L.append(f"    double {name};" if size == 1
-                     else f"    double {name}[{size}];")
+            L.append(f"    float {name};" if size == 1
+                     else f"    float {name}[{size}];")
         L += [
             f"}} InputSignals;",
             f"",
@@ -329,8 +329,8 @@ class CodeGenEnd(SimBlockBase):
             f"typedef struct OutputSignals {{",
         ]
         for name, size in out_sigs:
-            L.append(f"    double {name};" if size == 1
-                     else f"    double {name}[{size}];")
+            L.append(f"    float {name};" if size == 1
+                     else f"    float {name}[{size}];")
         L += [
             f"}} OutputSignals;",
             f"",
@@ -367,15 +367,15 @@ class CodeGenEnd(SimBlockBase):
             f"    ctypedef struct InputSignals:",
         ]
         for name, size in in_sigs:
-            L.append(f"        double {name}" if size == 1
-                     else f"        double {name}[{size}]")
+            L.append(f"        float {name}" if size == 1
+                     else f"        float {name}[{size}]")
         L += [
             f"",
             f"    ctypedef struct OutputSignals:",
         ]
         for name, size in out_sigs:
-            L.append(f"        double {name}" if size == 1
-                     else f"        double {name}[{size}]")
+            L.append(f"        float {name}" if size == 1
+                     else f"        float {name}[{size}]")
         L += [
             f"",
             f"    void {safe_name}_compute(",
@@ -411,11 +411,13 @@ class CodeGenEnd(SimBlockBase):
                     L.append(f"        self._out.{name}[{k}] = 0.0")
         L.append("")
 
-        # set_inputs - flat double[::1] -> struct fields
+        # set_inputs - flat float[::1] -> struct fields
+        # float[::1] = np.float32 contiguous — matches EmbedSim DEFAULT_DTYPE.
+        # double[::1] silently receives zeros when passed a float32 array.
         total_in = sum(s for _, s in in_sigs)
         L += [
-            f"    cpdef void set_inputs(self, double[::1] u):",
-            f'        """Pack flat input array into InputSignals struct."""',
+            f"    cpdef void set_inputs(self, float[::1] u):",
+            f'        """Pack flat float32 input array into InputSignals struct."""',
         ]
         offset = 0
         for name, size in in_sigs:
@@ -442,7 +444,7 @@ class CodeGenEnd(SimBlockBase):
         L += [
             f"    cpdef cnp.ndarray get_outputs(self):",
             f'        """Return output struct as a flat numpy array."""',
-            f"        cdef cnp.ndarray y = np.empty({total_out}, dtype=np.float64)",
+            f"        cdef cnp.ndarray y = np.empty({total_out}, dtype=np.float32)",
         ]
         offset = 0
         for name, size in out_sigs:
@@ -559,7 +561,7 @@ class CodeGenEnd(SimBlockBase):
                 )
                 off += size
         L += [
-            f"        y = np.zeros({total_out}, dtype=np.float64)",
+            f"        y = np.zeros({total_out}, dtype=np.float32)",
             f"        # TODO: fill y with your computed outputs",
             f"        self.output = VectorSignal(y, self.name)",
             f"        return self.output",
@@ -573,7 +575,7 @@ class CodeGenEnd(SimBlockBase):
             f"    ) -> VectorSignal:",
             f'        """Call compiled Cython wrapper - zero Python overhead on hot path."""',
             f"        # -- Pack flat input buffer ---------------------------------",
-            f"        u = np.empty({total_in}, dtype=np.float64)",
+            f"        u = np.empty({total_in}, dtype=np.float32)",
         ]
         off = 0
         for i, (name, size) in enumerate(in_sigs):
@@ -589,7 +591,7 @@ class CodeGenEnd(SimBlockBase):
                 L.append(
                     f"        u[{off}:{off+size}] = "
                     f"input_values[0].value[{off}:{off+size}] "
-                    f"if input_values else np.zeros({size}){comment}"
+                    f"if input_values else np.zeros({size}, dtype=np.float32){comment}"
                 )
                 off += size
         L += [
@@ -766,12 +768,42 @@ class StepGenerator:
     # ── Signal lists from boundaries ─────────────────────────────────────────
 
     def _in_sigs(self):
-        return list(self.cg_start.iter_signals())
+        """
+        Signals entering the region.  Respects INPUT_NAMES / INPUT_KEEP
+        on the block feeding cg_start to expose only a named scalar subset.
+
+        Each entry is a 5-tuple:
+            (field_name, size, src_block_name, src_idx, c_type)
+        where c_type defaults to "real32_T" unless the block declares
+        C_INPUT_TYPES = {"field_name": "uint8_T", ...}.
+        """
+        raw = list(self.cg_start.iter_signals())
+        refined = []
+        for blk in self.cg_start.inputs:
+            names = (getattr(blk, 'INPUT_NAMES', None) or
+                     getattr(blk.__class__, 'INPUT_NAMES', None))
+            keep  = (getattr(blk, 'INPUT_KEEP', None) or
+                     getattr(blk.__class__, 'INPUT_KEEP', None))
+            type_map = (getattr(blk, 'C_INPUT_TYPES', None) or
+                        getattr(blk.__class__, 'C_INPUT_TYPES', None) or {})
+            if names and keep and len(names) == len(keep):
+                sn = blk.name or blk.__class__.__name__
+                for fname, idx in zip(names, keep):
+                    ctype = type_map.get(fname, "real32_T")
+                    refined.append((fname, 1, sn, idx, ctype))
+        if not refined:
+            return [(n, s, n, None, "real32_T") for n, s in raw]
+        return refined
 
     def _out_sigs(self):
         """
         Signals leaving the region.  Respects OUTPUT_NAMES / OUTPUT_KEEP
         on the last upstream block to expose only a named scalar subset.
+
+        Each entry is a 5-tuple:
+            (field_name, size, src_block_name, src_idx, c_type)
+        where c_type defaults to "real32_T" unless the block declares
+        C_OUTPUT_TYPES = {"field_name": "uint8_T", ...}.
         """
         raw = list(self.cg_end.iter_signals())
         refined = []
@@ -780,16 +812,20 @@ class StepGenerator:
                      getattr(blk.__class__, 'OUTPUT_NAMES', None))
             keep  = (getattr(blk, 'OUTPUT_KEEP', None) or
                      getattr(blk.__class__, 'OUTPUT_KEEP', None))
+            type_map = (getattr(blk, 'C_OUTPUT_TYPES', None) or
+                        getattr(blk.__class__, 'C_OUTPUT_TYPES', None) or {})
             if names and keep and len(names) == len(keep):
                 sn = blk.name or blk.__class__.__name__
                 for fname, idx in zip(names, keep):
-                    refined.append((fname, 1, sn, idx))
+                    ctype = type_map.get(fname, "real32_T")
+                    refined.append((fname, 1, sn, idx, ctype))
             else:
                 for name, size in raw:
                     if (blk.name or blk.__class__.__name__) == name:
-                        refined.append((name, size, name, None))
+                        ctype = type_map.get(name, "real32_T")
+                        refined.append((name, size, name, None, ctype))
         if not refined:
-            return [(n, s, n, None) for n, s in raw]
+            return [(n, s, n, None, "real32_T") for n, s in raw]
         return refined
 
     @staticmethod
@@ -797,8 +833,9 @@ class StepGenerator:
         lines = []
         for entry in sigs:
             name, size = entry[0], entry[1]
-            lines.append(f"{indent}real32_T {name};" if size == 1
-                         else f"{indent}real32_T {name}[{size}];")
+            ctype = entry[4] if len(entry) > 4 else "real32_T"
+            lines.append(f"{indent}{ctype} {name};" if size == 1
+                         else f"{indent}{ctype} {name}[{size}];")
         return lines
 
     # ── Block graph traversal ─────────────────────────────────────────────────
@@ -951,10 +988,27 @@ class StepGenerator:
         c_input_map = (getattr(block, 'C_INPUT_MAP', None) or
                        getattr(block.__class__, 'C_INPUT_MAP', None))
 
-        total_out = n_outputs if n_outputs > 0 else 1
+        total_out    = n_outputs if n_outputs > 0 else 1
+        state_struct = getattr(block, 'state_struct',
+                       getattr(block.__class__, 'state_struct', ''))
+
         lines = []
         lines.append(f"    /* --- {sn} ({block.__class__.__name__}) --- */")
 
+        # ── Source block: NUM_INPUTS == 0 ─────────────────────────────────────
+        # Signature: <Step>(&state, dt, y*)  — no u[] argument.
+        # This is the canonical pattern for SpeedRamp and any other source
+        # block.  No C_CUSTOM_EMIT needed — handled here automatically.
+        if n_inputs == 0:
+            lines.append(f"    real32_T y_{sn}[{total_out}];")
+            if state_struct:
+                lines.append(f"    {step_func}(&{sn}_state, dt, y_{sn});")
+            else:
+                lines.append(f"    {step_func}(dt, y_{sn});")
+            lines.append("")
+            return "\n".join(lines) + "\n"
+
+        # ── Normal block: build u[] then call Step ────────────────────────────
         if c_input_map:
             total_in = len(c_input_map)
             lines.append(f"    real32_T u_{sn}[{total_in}];")
@@ -964,7 +1018,7 @@ class StepGenerator:
         else:
             in_vars = []
             for inp_block in _safe_inputs(block):
-                inp_sn = _sanitize(inp_block.name or inp_block.__class__.__name__)
+                inp_sn    = _sanitize(inp_block.name or inp_block.__class__.__name__)
                 inp_n_out = getattr(inp_block, 'OUTPUT_SIZE',
                             getattr(inp_block.__class__, 'OUTPUT_SIZE', 0))
                 if inp_n_out == 0 and inp_block.output is not None:
@@ -990,17 +1044,10 @@ class StepGenerator:
 
         lines.append(f"    real32_T y_{sn}[{total_out}];")
 
-        state_struct = getattr(block, 'state_struct',
-                       getattr(block.__class__, 'state_struct', ''))
-
         if state_struct:
-            lines.append(
-                f"    {step_func}(&{sn}_state, u_{sn}, dt, y_{sn});"
-            )
+            lines.append(f"    {step_func}(&{sn}_state, u_{sn}, dt, y_{sn});")
         else:
-            lines.append(
-                f"    {step_func}(u_{sn}, y_{sn});"
-            )
+            lines.append(f"    {step_func}(u_{sn}, y_{sn});")
 
         lines.append("")
         return "\n".join(lines) + "\n"
@@ -1019,9 +1066,10 @@ class StepGenerator:
         for blk in blk_list:
             for h in (getattr(blk, 'C_HEADERS', None) or
                       getattr(blk.__class__, 'C_HEADERS', [])):
-                if h and h not in seen_h:
-                    seen_h.add(h)
-                    all_headers.append(h)
+                h_lower = h.lower() if h else h   # normalise case — Linux FS is case-sensitive
+                if h_lower and h_lower not in seen_h:
+                    seen_h.add(h_lower)
+                    all_headers.append(h_lower)
 
         # State structs are static in the .c — not exposed in the .h.
         # MISRA C:2012 Rule 8.7: no external linkage for TU-local objects.
@@ -1078,7 +1126,9 @@ class StepGenerator:
             "{",
         ]
         L += (self._emit_fields(in_sigs) if in_sigs
-              else ["    /* No input signals — run sim at least one step */"])
+              else ["    /* Self-contained — all setpoints are calibration constants. */",
+                    "    /* No external sensor feeds this CodeGen region.           */",
+                    "    uint8_T _reserved;   /* C99: empty structs are not permitted. */"])
         L += [f"}} {self.T_input};", ""]
 
         L += [
@@ -1125,9 +1175,10 @@ class StepGenerator:
         for blk in blocks:
             for h in (getattr(blk, 'C_HEADERS', None) or
                       getattr(blk.__class__, 'C_HEADERS', [])):
-                if h not in seen:
-                    seen.add(h)
-                    headers.append(h)
+                h_lower = h.lower() if h else h   # normalise case — Linux FS is case-sensitive
+                if h_lower and h_lower not in seen:
+                    seen.add(h_lower)
+                    headers.append(h_lower)
 
         statics = []
         for blk in blocks:
@@ -1224,6 +1275,10 @@ class StepGenerator:
         ]
 
         # ── Unpack input struct ───────────────────────────────────────────────
+        # Only unpack signals that come from OUTSIDE the region (true external
+        # inputs).  Source blocks (NUM_INPUTS==0) generate their own y_ buffer
+        # inside _emit_block — do NOT declare y_ here or it will be declared
+        # twice, causing a C compile error.
         if in_sigs:
             L.append("    /* ── Unpack inputs ────────────────────────────────── */")
             src_block_map = {}
@@ -1234,16 +1289,18 @@ class StepGenerator:
                          getattr(blk.__class__, 'OUTPUT_SIZE', 1))
                 src_block_map[_sanitize(blk.name or '')] = (ni, n_out)
 
-            for name, size in in_sigs:
+            for entry in in_sigs:
+                name, size = entry[0], entry[1]
+                src_idx    = entry[3] if len(entry) > 3 else None
                 sn = _sanitize(name)
                 ni, n_out = src_block_map.get(sn, (-1, size))
                 if ni == 0:
-                    L.append(f"    real32_T y_{sn}[{n_out}];")
-                    if size == 1:
-                        L.append(f"    y_{sn}[0] = in->{name};")
-                    else:
-                        for k in range(size):
-                            L.append(f"    y_{sn}[{k}] = in->{name}[{k}];")
+                    # Source block — _emit_block declares y_{sn}[] itself.
+                    pass
+                elif src_idx is not None:
+                    # Named scalar from INPUT_NAMES/INPUT_KEEP — C_CUSTOM_EMIT
+                    # reads in->fieldname directly.  No local y_ copy needed.
+                    pass
                 else:
                     if size == 1:
                         L.append(f"    const real32_T {name} = in->{name};")
@@ -1251,6 +1308,7 @@ class StepGenerator:
                         for k in range(size):
                             L.append(f"    const real32_T {name}_{k}"
                                      f" = in->{name}[{k}];")
+            # Only emit the unpack comment block if there was anything to unpack
             L.append("")
 
         # ── Block chain ───────────────────────────────────────────────────────
@@ -1260,27 +1318,31 @@ class StepGenerator:
 
         # ── Pack output struct ────────────────────────────────────────────────
         if out_sigs:
-            # Build a set of sanitized block names that use C_CUSTOM_EMIT.
-            # Those blocks write out->* themselves — skip them here to avoid
-            # a duplicate (and scope-invalid) assignment.
-            custom_emit_blks: set = set()
+            # Build a set of sanitized block names whose C_CUSTOM_EMIT writes
+            # out->* directly.  Only those should be skipped here — blocks whose
+            # C_CUSTOM_EMIT writes only a local y_<name>[] buffer still need the
+            # standard pack assignment.
+            custom_emit_writes_out: set = set()
             for blk in blocks:
-                if (getattr(blk, 'C_CUSTOM_EMIT', None) or
-                        getattr(blk.__class__, 'C_CUSTOM_EMIT', None)):
-                    custom_emit_blks.add(_sanitize(blk.name or ''))
+                ce = (getattr(blk, 'C_CUSTOM_EMIT', None) or
+                      getattr(blk.__class__, 'C_CUSTOM_EMIT', None))
+                if ce and "out->" in ce:
+                    custom_emit_writes_out.add(_sanitize(blk.name or ''))
 
             pack_lines = []
             for entry in out_sigs:
                 fname, size, src_blk, src_idx = entry[0], entry[1], _sanitize(entry[2]), entry[3]
-                if src_blk in custom_emit_blks:
+                ctype = entry[4] if len(entry) > 4 else "real32_T"
+                if src_blk in custom_emit_writes_out:
                     continue   # C_CUSTOM_EMIT already wrote out->fname
+                cast = f"({ctype})" if ctype != "real32_T" else ""
                 if src_idx is not None:
-                    pack_lines.append(f"    out->{fname} = y_{src_blk}[{src_idx}];")
+                    pack_lines.append(f"    out->{fname} = {cast}y_{src_blk}[{src_idx}];")
                 elif size == 1:
-                    pack_lines.append(f"    out->{fname} = y_{src_blk}[0];")
+                    pack_lines.append(f"    out->{fname} = {cast}y_{src_blk}[0];")
                 else:
                     for k in range(size):
-                        pack_lines.append(f"    out->{fname}[{k}] = y_{src_blk}[{k}];")
+                        pack_lines.append(f"    out->{fname}[{k}] = {cast}y_{src_blk}[{k}];")
 
             if pack_lines:
                 L.append("    /* ── Pack outputs ─────────────────────────────────── */")

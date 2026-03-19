@@ -3,13 +3,20 @@
 # EmbedSim — NANOTEC DB42S02  Open-loop V/f
 # Cython wrapper for motor_utility_blocks.c
 #
-# Follows the exact pattern of smc_wrapper.pyx / speed_pi_wrapper.pyx
-# in fs_electrical_machines/c_src/.
-#
 # cython: language_level=3
 # cython: boundscheck=False
 # cython: wraparound=False
 # cython: cdivision=True
+#
+# FIX 1: set_inputs() typed as float[::1] not double[::1].
+#         The simulation engine passes np.float32 arrays.  Cython's typed
+#         memoryviews do NOT auto-cast dtypes — passing float32 into a
+#         double[::1] parameter either raises TypeError or silently leaves
+#         _u[] at its zero-initialised value.  Result: every block with
+#         inputs sees omega_m=0, v_d=0, v_q=0, theta_e=0 → duty = 0.5.
+#
+# FIX 2: cdef extern from uses lowercase "motor_utility_blocks.h" — the
+#         header name is already correct here, kept for consistency.
 
 import  numpy as np
 cimport numpy as cnp
@@ -38,14 +45,14 @@ cdef extern from "motor_utility_blocks.h":
 
     # VfAngle
     ctypedef struct VfAngle_T:
-        float   theta_e
-        float   vf_ratio
-        float   v_phase_peak
+        float         theta_e
+        float         vf_ratio
+        float         v_phase_peak
         unsigned char p_poles
 
-    void VfAngle_Init(VfAngle_T *s,
-                      float      vf_ratio,
-                      float      v_phase_peak,
+    void VfAngle_Init(VfAngle_T    *s,
+                      float         vf_ratio,
+                      float         v_phase_peak,
                       unsigned char p_poles) nogil
 
     void VfAngle_Step(VfAngle_T   *s,
@@ -105,11 +112,11 @@ cdef extern from "motor_utility_blocks.h":
 cdef class SpeedRampWrapper:
     """
     Cython wrapper for SpeedRamp_T / SpeedRamp_Step.
-    step_func   = 'SpeedRamp_Step'
+    step_func    = 'SpeedRamp_Step'
     state_struct = 'SpeedRamp_T'
-    init_func   = 'SpeedRamp_Init'
-    NUM_INPUTS  = 0
-    OUTPUT_SIZE = 1
+    init_func    = 'SpeedRamp_Init'
+    NUM_INPUTS   = 0   (source block)
+    OUTPUT_SIZE  = 1
     """
     cdef SpeedRamp_T _state
     cdef float[1]    _y
@@ -118,8 +125,7 @@ cdef class SpeedRampWrapper:
         SpeedRamp_Init(&self._state, omega_target, ramp_time)
         self._y[0] = 0.0
 
-    # set_inputs / compute / get_outputs — EmbedSim SimBlockBase convention
-    cpdef void set_inputs(self, double[::1] u):
+    cpdef void set_inputs(self, cnp.ndarray u):
         """SpeedRamp has no inputs — no-op for API uniformity."""
         pass
 
@@ -145,8 +151,8 @@ cdef class VfAngleWrapper:
     step_func    = 'VfAngle_Step'
     state_struct = 'VfAngle_T'
     init_func    = 'VfAngle_Init'
-    NUM_INPUTS   = 1
-    OUTPUT_SIZE  = 3
+    NUM_INPUTS   = 1   (u[0] = omega_m_ref [rad/s])
+    OUTPUT_SIZE  = 3   (v_d, v_q, theta_e)
     """
     cdef VfAngle_T _state
     cdef float[1]  _u
@@ -158,8 +164,8 @@ cdef class VfAngleWrapper:
         self._u[0] = 0.0
         self._y[0] = self._y[1] = self._y[2] = 0.0
 
-    cpdef void set_inputs(self, double[::1] u):
-        self._u[0] = <float>u[0]   # omega_m_ref [rad/s]
+    cpdef void set_inputs(self, float[::1] u):   # FIX 1: float not double
+        self._u[0] = u[0]   # omega_m_ref [rad/s]
 
     cpdef void compute(self, float dt):
         with nogil:
@@ -173,9 +179,9 @@ cdef class VfAngleWrapper:
         return y
 
     @property
-    def v_d(self):    return self._y[0]
+    def v_d(self):     return self._y[0]
     @property
-    def v_q(self):    return self._y[1]
+    def v_q(self):     return self._y[1]
     @property
     def theta_e(self): return self._y[2]
 
@@ -188,8 +194,8 @@ cdef class VfDQWrapper:
     step_func    = 'VfDQ_Step'
     state_struct = 'VfDQ_T'
     init_func    = 'VfDQ_Init'
-    NUM_INPUTS   = 3
-    OUTPUT_SIZE  = 2
+    NUM_INPUTS   = 3   (v_d, v_q, theta_e — full VfAngle output)
+    OUTPUT_SIZE  = 2   (v_d, v_q)
     """
     cdef VfDQ_T   _state
     cdef float[3] _u
@@ -200,10 +206,10 @@ cdef class VfDQWrapper:
         self._u[0] = self._u[1] = self._u[2] = 0.0
         self._y[0] = self._y[1] = 0.0
 
-    cpdef void set_inputs(self, double[::1] u):
-        self._u[0] = <float>u[0]   # v_d
-        self._u[1] = <float>u[1]   # v_q
-        self._u[2] = <float>u[2]   # theta_e
+    cpdef void set_inputs(self, float[::1] u):   # FIX 1: float not double
+        self._u[0] = u[0]   # v_d
+        self._u[1] = u[1]   # v_q
+        self._u[2] = u[2]   # theta_e
 
     cpdef void compute(self, float dt):
         with nogil:
@@ -229,8 +235,8 @@ cdef class VfThetaWrapper:
     step_func    = 'VfTheta_Step'
     state_struct = 'VfTheta_T'
     init_func    = 'VfTheta_Init'
-    NUM_INPUTS   = 3
-    OUTPUT_SIZE  = 1
+    NUM_INPUTS   = 3   (v_d, v_q, theta_e — full VfAngle output)
+    OUTPUT_SIZE  = 1   (theta_e)
     """
     cdef VfTheta_T _state
     cdef float[3]  _u
@@ -241,10 +247,10 @@ cdef class VfThetaWrapper:
         self._u[0] = self._u[1] = self._u[2] = 0.0
         self._y[0] = 0.0
 
-    cpdef void set_inputs(self, double[::1] u):
-        self._u[0] = <float>u[0]
-        self._u[1] = <float>u[1]
-        self._u[2] = <float>u[2]   # theta_e
+    cpdef void set_inputs(self, float[::1] u):   # FIX 1: float not double
+        self._u[0] = u[0]
+        self._u[1] = u[1]
+        self._u[2] = u[2]   # theta_e at index 2
 
     cpdef void compute(self, float dt):
         with nogil:
@@ -267,8 +273,8 @@ cdef class DutyPackWrapper:
     step_func    = 'DutyPack_Step'
     state_struct = 'DutyPack_T'
     init_func    = 'DutyPack_Init'
-    NUM_INPUTS   = 2
-    OUTPUT_SIZE  = 5
+    NUM_INPUTS   = 2   (v_alpha, v_beta)
+    OUTPUT_SIZE  = 5   (duty_a, duty_b, duty_c, V_dc, T_load)
     """
     cdef DutyPack_T _state
     cdef float[2]   _u
@@ -281,9 +287,9 @@ cdef class DutyPackWrapper:
         self._y[3] = v_dc
         self._y[4] = 0.0
 
-    cpdef void set_inputs(self, double[::1] u):
-        self._u[0] = <float>u[0]   # v_alpha
-        self._u[1] = <float>u[1]   # v_beta
+    cpdef void set_inputs(self, float[::1] u):   # FIX 1: float not double
+        self._u[0] = u[0]   # v_alpha
+        self._u[1] = u[1]   # v_beta
 
     cpdef void compute(self, float dt):
         with nogil:
@@ -316,8 +322,8 @@ cdef class SVPWMPackWrapper:
     step_func    = 'SVPWMPack_Step'
     state_struct = 'SVPWMPack_T'
     init_func    = 'SVPWMPack_Init'
-    NUM_INPUTS   = 2   [v_alpha, v_beta]
-    OUTPUT_SIZE  = 3   [Vref, alpha_angle, V_dc]
+    NUM_INPUTS   = 2   (v_alpha, v_beta)
+    OUTPUT_SIZE  = 3   (Vref, alpha_angle, V_dc)
     """
     cdef SVPWMPack_T _state
     cdef float[2]    _u
@@ -329,9 +335,9 @@ cdef class SVPWMPackWrapper:
         self._y[0] = self._y[1] = 0.0
         self._y[2] = v_dc
 
-    cpdef void set_inputs(self, double[::1] u):
-        self._u[0] = <float>u[0]   # v_alpha
-        self._u[1] = <float>u[1]   # v_beta
+    cpdef void set_inputs(self, float[::1] u):   # FIX 1: float not double
+        self._u[0] = u[0]   # v_alpha
+        self._u[1] = u[1]   # v_beta
 
     cpdef void compute(self, float dt):
         with nogil:

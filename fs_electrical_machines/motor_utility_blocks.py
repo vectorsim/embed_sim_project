@@ -81,17 +81,6 @@ class SpeedRampBlock(VectorBlock):
     # and appends their values to the Init call:
     # SpeedRamp_Init(&state, omega_target, ramp_time)
     C_INIT_ARGS  = ["omega_target", "ramp_time"]
-    # C_CUSTOM_EMIT: SpeedRamp_Step has no u[] — signature is (state*, dt, y*).
-    # y_speed_ref[0] is pre-seeded from in->speed_ref by AurixStepGenerator
-    # before the block chain runs, so the ramp state is updated and the
-    # external command is honoured simultaneously.
-    C_CUSTOM_EMIT = (
-        "    /* --- speed_ref (SpeedRampBlock) — source, no u[] --- */\n"
-        "    /* y_speed_ref[1] pre-seeded from in->speed_ref above */\n"
-        "    SpeedRamp_Step(&speed_ref_state, dt, y_speed_ref);\n"
-        "    /* Override ramp output with external command if non-zero */\n"
-        "    if (in->speed_ref > 0.0f) { y_speed_ref[0] = in->speed_ref; }"
-    )
 
     def __init__(self, name: str,
                  omega_target: float,
@@ -218,7 +207,7 @@ class VfAngleBlock(VectorBlock):
     def compute_c(self, t: float, dt: float,
                   input_values: Optional[List[VectorSignal]] = None
                   ) -> VectorSignal:
-        u = np.zeros(1, dtype=np.float64)
+        u = np.zeros(1, dtype=np.float32)   # FIX: float32 matches float[::1] in wrapper
         if input_values:
             u[0] = float(input_values[0].value[0])
         self._wrapper.set_inputs(u)
@@ -281,7 +270,7 @@ class VfDQBlock(VectorBlock):
     def compute_c(self, t: float, dt: float,
                   input_values: Optional[List[VectorSignal]] = None
                   ) -> VectorSignal:
-        u = np.zeros(3, dtype=np.float64)
+        u = np.zeros(3, dtype=np.float32)   # FIX: float32 matches float[::1] in wrapper
         if input_values:
             u[:3] = input_values[0].value[:3]
         self._wrapper.set_inputs(u)
@@ -338,7 +327,7 @@ class VfThetaBlock(VectorBlock):
     def compute_c(self, t: float, dt: float,
                   input_values: Optional[List[VectorSignal]] = None
                   ) -> VectorSignal:
-        u = np.zeros(3, dtype=np.float64)
+        u = np.zeros(3, dtype=np.float32)   # FIX: float32 matches float[::1] in wrapper
         if input_values:
             u[:3] = input_values[0].value[:3]
         self._wrapper.set_inputs(u)
@@ -373,6 +362,11 @@ class DutyPackBlock(VectorBlock):
     OUTPUT_SIZE  = 5
     # DutyPack_Init(&state, v_dc)
     C_INIT_ARGS  = ["v_dc"]
+    # DutyPack_Step takes [v_alpha, v_beta] — NOT the SVPWM output.
+    # SVPWMBlock sits between inv_park and duty_pack for topology purposes only.
+    # C_INPUT_MAP pins the generated u_duty_pack[] explicitly to y_inv_park[]
+    # so StepGenerator does not auto-wire from the nearest upstream (svpwm).
+    C_INPUT_MAP  = [("inv_park", 0), ("inv_park", 1)]
     # Only duty_a/b/c are meaningful outputs for the integration layer.
     # V_dc (index 3) and T_load (index 4) are internal — excluded from
     # EmbedSim_Output_T.  AurixStepGenerator reads these to build the struct.
@@ -418,7 +412,7 @@ class DutyPackBlock(VectorBlock):
     def compute_c(self, t: float, dt: float,
                   input_values: Optional[List[VectorSignal]] = None
                   ) -> VectorSignal:
-        u = np.zeros(2, dtype=np.float64)
+        u = np.zeros(2, dtype=np.float32)   # FIX: float32 matches float[::1] in wrapper
         if input_values and input_values[0] is not None:
             ab = input_values[0].value
             if len(ab) >= 2:
@@ -438,10 +432,15 @@ class SVPWMPackBlock(VectorBlock):
     """
     Polar adapter: [v_alpha, v_beta] → [Vref, alpha_angle [rad], Vdc].
 
-    Converts InvPark output to the form expected by SVPWMBlock:
-      Vref        = sqrt(v_alpha^2 + v_beta^2)
-      alpha_angle = atan2(v_beta, v_alpha)
+    Converts InvPark output to the form expected by SVPWMBlock and
+    SVM_CalculateDutyCycle():
+      Vref        = sqrt(v_alpha^2 + v_beta^2),  clipped to 0.95
+      alpha_angle = atan2(v_beta, v_alpha),       wrapped to [0, 2π)
       V_dc        = compile-time constant
+
+    Both the clip and the wrap mirror SpaceVectorModulation1() in the
+    AURIX application layer.  SVPWMBlock.compute_py trusts that these
+    invariants are already satisfied on its inputs.
 
     Stateless combinatorial block — same placeholder struct pattern as
     VfDQ and VfTheta.
@@ -481,7 +480,10 @@ class SVPWMPackBlock(VectorBlock):
             if len(ab) >= 2:
                 va, vb = float(ab[0]), float(ab[1])
         Vref  = math.sqrt(va * va + vb * vb)
+        Vref  = min(Vref, 0.95)                    # clip — mirrors SpaceVectorModulation1()
         alpha = math.atan2(vb, va)
+        if alpha < 0.0:
+            alpha += 2.0 * math.pi                 # wrap to [0, 2π) — SVM_CalculateDutyCycle contract
         self.output = VectorSignal(
             np.array([Vref, alpha, self.v_dc], dtype=DEFAULT_DTYPE),
             self.name)
@@ -490,7 +492,7 @@ class SVPWMPackBlock(VectorBlock):
     def compute_c(self, t: float, dt: float,
                   input_values: Optional[List[VectorSignal]] = None
                   ) -> VectorSignal:
-        u = np.zeros(2, dtype=np.float64)
+        u = np.zeros(2, dtype=np.float32)   # FIX: float32 matches float[::1] in wrapper
         if input_values and input_values[0] is not None:
             ab = input_values[0].value
             if len(ab) >= 2:

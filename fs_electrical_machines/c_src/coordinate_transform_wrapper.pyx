@@ -3,17 +3,24 @@
 # Cython wrapper for the MISRA C coordinate transform library.
 # Exposes ClarkeWrapper, ParkWrapper, InvParkWrapper, InvClarkeWrapper.
 #
-# Build:  python setup_coordinate_transform.py build_ext --inplace
-
 # cython: language_level=3
+# cython: boundscheck=False
+# cython: wraparound=False
+# cython: cdivision=True
+#
+# FIX 1: cdef extern from "coordinate_transform.h"  (was "Coordinate_Transform.h")
+#         Wrong case = silent include failure on Linux / TriCore GCC FS.
+#
+# FIX 2: step() scalar arguments are already float — no memoryview issue here.
+#         No set_inputs/get_outputs pattern used; direct scalar API kept as-is.
 
-import numpy as np
-cimport numpy as np
+import  numpy as np
+cimport numpy as cnp
 
 # ---------------------------------------------------------------------------
 # C declarations
 # ---------------------------------------------------------------------------
-cdef extern from "Coordinate_Transform.h":
+cdef extern from "coordinate_transform.h":   # FIX 1: lowercase
 
     ctypedef struct Clarke_T:
         pass

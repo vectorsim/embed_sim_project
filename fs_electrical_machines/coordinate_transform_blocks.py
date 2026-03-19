@@ -240,16 +240,17 @@ class InvParkTransformBlock(VectorBlock):
     state_struct = "InvPark_T"
 
     C_CUSTOM_EMIT = """\
-    /* --- InvPark (InvParkTransformBlock) --- */
+    /* --- inv_park (InvParkTransformBlock) --- */
+    real32_T y_inv_park[2];
     {
         MatrixFloat invpark_alpha, invpark_beta;
-        InvPark_Step(&InvPark_state,
-                     y_upstream_d[0], y_upstream_q[0],
-                     THETA_E,
+        InvPark_Step(&inv_park_state,
+                     y_vf_dq[0],    /* v_d    */
+                     y_vf_dq[1],    /* v_q    */
+                     y_vf_theta[0], /* theta_e */
                      &invpark_alpha, &invpark_beta);
-        real32_T y_InvPark[2];
-        y_InvPark[0] = invpark_alpha;
-        y_InvPark[1] = invpark_beta;
+        y_inv_park[0] = (real32_T)invpark_alpha;
+        y_inv_park[1] = (real32_T)invpark_beta;
     }"""
 
     def __init__(self, name: str, use_c_backend: bool = True, dtype=None):
