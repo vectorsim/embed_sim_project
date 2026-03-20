@@ -150,6 +150,11 @@ class VfAngleBlock(VectorBlock):
     vf_ratio     : V/f gain [V·s/rad]   default: V_phase_peak / omega_e_rated
     v_phase_peak : peak phase voltage limit [V]
     p_poles      : pole pairs
+    v_boost      : zero-speed voltage boost [V] (default 0.0)
+                   Compensates stator resistive drop at low speed.
+                   Applied as: v_q = vf_ratio * |omega_e| + v_boost,
+                   then clamped to v_phase_peak.
+                   Typical value: R_stator * I_nominal (e.g. 0.19 * 1.0 = 0.19 V)
     """
     PYX_FILE     = str(_HERE / "c_src" / "motor_utility_blocks_wrapper.pyx")
     C_SOURCES    = ["motor_utility_blocks.c"]
@@ -159,18 +164,20 @@ class VfAngleBlock(VectorBlock):
     init_func    = "VfAngle_Init"
     NUM_INPUTS   = 1
     OUTPUT_SIZE  = 3
-    # VfAngle_Init(&state, vf_ratio, v_phase_peak, p_poles)
-    C_INIT_ARGS  = ["vf_ratio", "v_phase_peak", "p_poles"]
+    # VfAngle_Init(&state, vf_ratio, v_phase_peak, v_boost, p_poles)
+    C_INIT_ARGS  = ["vf_ratio", "v_phase_peak", "v_boost", "p_poles"]
 
     def __init__(self, name: str,
                  vf_ratio: float,
                  v_phase_peak: float,
                  p_poles: int,
+                 v_boost: float = 0.0,
                  use_c_backend: bool = False) -> None:
         super().__init__(name, use_c_backend=use_c_backend)
         self.vf_ratio      = float(vf_ratio)
         self.v_phase_peak  = float(v_phase_peak)
         self.p_poles       = int(p_poles)
+        self.v_boost       = float(v_boost)
         self.is_dynamic    = False
         self.output_label  = "[v_d,v_q,θ_e]"
         self._theta_e      = 0.0   # Python-path state
@@ -187,6 +194,7 @@ class VfAngleBlock(VectorBlock):
         self._wrapper = VfAngleWrapper(
             float(self.vf_ratio),
             float(self.v_phase_peak),
+            float(self.v_boost),
             self.p_poles)
 
     def compute_py(self, t: float, dt: float,
@@ -194,7 +202,7 @@ class VfAngleBlock(VectorBlock):
                    ) -> VectorSignal:
         omega_m = float(input_values[0].value[0]) if input_values else 0.0
         omega_e = self.p_poles * omega_m
-        v_q     = min(self.vf_ratio * abs(omega_e), self.v_phase_peak)
+        v_q     = min(self.vf_ratio * abs(omega_e) + self.v_boost, self.v_phase_peak)
         self._theta_e += omega_e * dt
         self._theta_e  = math.fmod(self._theta_e, 2.0 * math.pi)
         if self._theta_e < 0.0:

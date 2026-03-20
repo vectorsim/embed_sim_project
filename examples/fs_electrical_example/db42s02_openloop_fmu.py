@@ -141,19 +141,23 @@ R_STATOR       = 0.19                            # Ω — from motor datasheet
 I_NOMINAL      = 1.0                             # A — target no-load current
 VF_BOOST       = R_STATOR * I_NOMINAL            # 0.19 V zero-speed boost
 
-# Shaft load for simulation — gives a non-trivial steady-state T_em on the plot.
-# Without load: open-loop V/f at 400 RPM has B*omega ≈ 0.4 mN·m → T_em → 0
-# in steady state, which looks like a flat-line zero.
-# T_LOAD = 0.03 N·m = 30% of DB42S02 rated torque (0.1 N·m) — realistic bench
-# test condition.  Combined with B=1e-5 the FMU settles to:
-#   T_em_ss = T_LOAD + B * omega_400 = 30.4 mN·m  (clearly visible plateau)
-T_LOAD         = 0.03                            # N·m — constant shaft load
+# Shaft load — light bench-test condition at 4000 RPM.
+# T_LOAD = 0.01 N·m = 10% of DB42S02 rated torque (0.1 N·m).
+T_LOAD         = 0.01                            # N·m — light load (10% rated)
 
-T_SIM          = 0.4
+T_SIM          = 2.0                             # s — ramp (0.5 s) + steady-state (1.5 s)
 DT             = 1e-4
+# 400 RPM is BELOW the R/L corner frequency (≈3630 RPM).
+# At 400 RPM: omega_e = 4*400*2pi/60 = 167.6 rad/s
+#   X_L = omega_e * L = 167.6 * 0.125e-3 = 0.021 Ohm << R = 0.19 Ohm
+# → resistive-dominant → VF_BOOST critical; currents will have triangular component.
+# V_q (no boost) = VF_RATIO * 167.6 = 0.49 V; with boost = 0.68 V — adequate.
 OMEGA_CMD_RPM  = 400.0
 OMEGA_CMD_RADS = OMEGA_CMD_RPM * 2.0 * math.pi / 60.0
-RAMP_TIME      = 0.15
+# RAMP_TIME: at 400 RPM, omega_cmd = 41.9 rad/s.
+# With 0.5 s ramp: accel = 83.8 rad/s², T_accel = J*alpha = 2.4e-6 * 83.8 = 0.0002 N·m
+# T_pullout(400 RPM) ≈ 0.035 N·m → margin > 100× — no pull-out risk.
+RAMP_TIME      = 0.5
 
 
 # =============================================================================
@@ -199,7 +203,10 @@ class DB42S02PlantBlock(PMSM_MotorBlock):
                 L_q       = 0.125e-3,
                 lambda_pm = 0.0014,
                 J         = 2.4e-6,
-                B         = 1e-5,   # N·m·s/rad — bearing friction (≈10× default)
+                # B chosen so friction torque < 20% of pull-out torque at 4000 RPM.
+                # T_pullout(4000 RPM) ≈ 0.151 N·m
+                # B_max = 0.20 * T_po / omega_4k = 0.20 * 0.151 / 418 = 7.2e-5
+                B         = 7e-5,   # N·m·s/rad — lightly damped, within pull-out budget
                 p         = float(P_POLES),
             )
         except Exception as exc:
@@ -271,7 +278,8 @@ def build_and_run() -> dict:
     vf_angle   = VfAngleBlock("vf_angle",
                               vf_ratio=VF_RATIO,
                               v_phase_peak=V_PHASE_PEAK,
-                              p_poles=P_POLES)  # low-speed resistive drop compensation
+                              v_boost=VF_BOOST,        # FIX: was computed but never passed
+                              p_poles=P_POLES)
     vf_dq      = VfDQBlock("vf_dq")
     vf_theta   = VfThetaBlock("vf_theta")
     inv_park   = InvParkTransformBlock("inv_park", use_c_backend=False)
@@ -922,7 +930,7 @@ if __name__ == "__main__":
     print("             No DutyPackBlock")
     print("  FMU      : PMSM_Motor.mo")
     print("             duty_a/b/c = ta/tb/tc from SVPWMBlock")
-    print(f"             v_dc={V_DC}V, T_load={T_LOAD} N·m (30% rated)")
+    print(f"             v_dc={V_DC}V, T_load={T_LOAD} N·m (10% rated)")
     print(f"  Target   : {OMEGA_CMD_RPM:.0f} RPM  V_dc={V_DC} V  "
           f"p={P_POLES}  dt={DT*1e6:.0f} µs")
     print("=" * 64)

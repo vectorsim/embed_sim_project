@@ -11,14 +11,7 @@
 #include <string.h>   /* memcpy, memset */
 #include <math.h>     /* fabsf, atan2f, sqrtf */
 #include "EmbedSim_step.h"
-#include "coordinate_transform.h"
-
-/* ── Block state structs ──────────────────────────────────────
- * Internal linkage — not exposed in the .h.
- * MISRA C:2012 Rule 8.7: static, TU-local only.
- * ──────────────────────────────────────────────────────────── */
-static Clarke_T Clarke_state;   /* Rule 8.7: internal linkage */
-static Park_T Park_state;   /* Rule 8.7: internal linkage */
+#include "svpwm.h"
 
 
 /* ================================================================
@@ -29,8 +22,7 @@ static Park_T Park_state;   /* Rule 8.7: internal linkage */
  */
 void EmbedSim_Init(void)
 {
-    Clarke_Init(&Clarke_state);
-    Park_Init(&Park_state);
+    /* No stateful blocks in this region */
 }
 
 
@@ -49,38 +41,37 @@ void EmbedSim_Step(
 )
 {
     /* ── Unpack inputs ────────────────────────────────── */
-    const real32_T ThreePhaseSine_0 = in->ThreePhaseSine[0];
-    const real32_T ThreePhaseSine_1 = in->ThreePhaseSine[1];
-    const real32_T ThreePhaseSine_2 = in->ThreePhaseSine[2];
 
     /* ── Block chain ──────────────────────────────────────── */
-    /* --- Clarke (ClarkeTransformBlock) --- */
+    /* --- svpwm (SVPWMBlock) — SVM_CalculateDutyCycle --- */
+    real32_T y_svpwm[4];
     {
-        MatrixFloat clarke_alpha, clarke_beta;
-        Clarke_Step(&Clarke_state,
-                    u_cg_start[0], u_cg_start[1], u_cg_start[2],
-                    &clarke_alpha, &clarke_beta);
-        real32_T y_Clarke[2];
-        y_Clarke[0] = clarke_alpha;
-        y_Clarke[1] = clarke_beta;
-    }
-
-    /* [Theta] Python-only block — no C step function. Replace with hand-written C or add C_SOURCES + step_func. */
-
-    /* --- Park (ParkTransformBlock) --- */
-    {
-        MatrixFloat park_d, park_q;
-        Park_Step(&Park_state,
-                  y_Clarke[0], y_Clarke[1],
-                  THETA_E,
-                  &park_d, &park_q);
-        real32_T y_Park[2];
-        y_Park[0] = park_d;
-        y_Park[1] = park_q;
+        SVM_DutyCycle_Type svm_duty;
+        MatrixStatus_Type  svm_status;
+        svm_status = SVM_CalculateDutyCycle(
+                         in->magnitude,   /* modulation index — from integration layer */
+                         in->angle_rad,   /* angle [rad]      — from integration layer */
+                         &svm_duty);
+        if (svm_status == MATRIX_SUCCESS)
+        {
+            y_svpwm[0] = (real32_T)svm_duty.ta     / (real32_T)Q31_ONE;
+            y_svpwm[1] = (real32_T)svm_duty.tb     / (real32_T)Q31_ONE;
+            y_svpwm[2] = (real32_T)svm_duty.tc     / (real32_T)Q31_ONE;
+            y_svpwm[3] = (real32_T)svm_duty.sector;
+        }
+        else
+        {
+            y_svpwm[0] = 0.5f;
+            y_svpwm[1] = 0.5f;
+            y_svpwm[2] = 0.5f;
+            y_svpwm[3] = 0.0f;
+        }
     }
 
     /* ── Pack outputs ─────────────────────────────────── */
-    out->Park[0] = y_Park[0];
-    out->Park[1] = y_Park[1];
+    out->ta = y_svpwm[0];
+    out->tb = y_svpwm[1];
+    out->tc = y_svpwm[2];
+    out->sector = (uint8_T)y_svpwm[3];
 
 }
