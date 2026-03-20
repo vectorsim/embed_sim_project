@@ -5,7 +5,7 @@ Builds the svpwm_wrapper Cython extension.
 
 Sources compiled into this extension:
     svpwm_wrapper.pyx              — Cython wrapper
-    svpwm.c                        — SVPWM implementation
+    SV_PWM.c                        — SVPWM implementation
     Matrix.c                        — MatrixFloat type + Q31 infrastructure
                                         shared by all fs_electrical_machines blocks
 
@@ -45,7 +45,7 @@ ext = Extension(
     name="svpwm_wrapper",  # Simple name for local build
     sources=[
         str(_C_SRC / "svpwm_wrapper.pyx"),
-        str(_C_SRC / "svpwm.c"),
+        str(_C_SRC / "SV_PWM.c"),
         str(_C_SRC / "Matrix.c"),
     ],
     include_dirs=[

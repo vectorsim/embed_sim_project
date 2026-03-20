@@ -762,8 +762,8 @@ class StepGenerator:
         self.fn_init  = f"{p}_Init"
         self.fn_step  = f"{p}_Step"
         self.guard    = f"{p.upper()}_STEP_H_"
-        self.h_file   = f"{p}_step.h"
-        self.c_file   = f"{p}_step.c"
+        self.h_file   = f"{p}_Step.h"
+        self.c_file   = f"{p}_Step.c"
 
     # ── Signal lists from boundaries ─────────────────────────────────────────
 

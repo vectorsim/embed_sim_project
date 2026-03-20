@@ -282,7 +282,7 @@ def build_and_run() -> dict:
                               p_poles=P_POLES)
     vf_dq      = VfDQBlock("vf_dq")
     vf_theta   = VfThetaBlock("vf_theta")
-    inv_park   = InvParkTransformBlock("inv_park", use_c_backend=False)
+    inv_park   = InvParkTransformBlock("inv_park", use_c_backend=True)
     svpwm_pack = SVPWMPackBlock("svpwm_pack", v_dc=V_DC)
     # Expose only indices 0 (magnitude) and 1 (angle_rad) to the CodeGen
     # input boundary — Vdc at index 2 is an integration-layer constant.

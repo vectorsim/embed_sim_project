@@ -77,8 +77,9 @@ class SVPWMBlock(VectorBlock):
 
     # ── CodeGen ──────────────────────────────────────────────────────────────
     PYX_FILE    : str = str(_C_SRC / "svpwm_wrapper.pyx")
-    C_SOURCES        = ["svpwm.c"]
-    C_HEADERS        = ["svpwm.h"]
+    C_SOURCES        = ["SV_PWM"
+                        ".c"]
+    C_HEADERS        = ["SV_PWM.h"]
     NUM_INPUTS       = 1     # one upstream port: SVPWMPackBlock [Vref, angle, Vdc]
     OUTPUT_SIZE      = 4     # [ta, tb, tc, sector]
 

@@ -27,7 +27,7 @@ ext = Extension(
     name="motor_utility_blocks_wrapper",
     sources=[
         "motor_utility_blocks_wrapper.pyx",
-        "motor_utility_blocks.c",
+        "Motor_Utility_Blocks.c",
     ],
     include_dirs=[np.get_include(), "."],
     extra_compile_args=compile_args,

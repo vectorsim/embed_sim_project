@@ -41,13 +41,13 @@ cdef extern from "Matrix.h":
     MatrixFloat   Matrix_Q31ToFloat(const MatrixElement value) nogil
 
 # -----------------------------------------------------------------------------
-# C declarations from svpwm.h
+# C declarations from SV_PWM.h
 # FIX #1: Removed all  extern const <macro>  declarations.
 #         SVM_2PI_F, SVM_SQRT3_F, SVM_SQRT3_OVER_2_F and Q31_ONE are
 #         #define macros — they have no linkage and cannot be declared extern.
 #         The literal 6.28318530718f is inlined directly where needed.
 # -----------------------------------------------------------------------------
-cdef extern from "svpwm.h":
+cdef extern from "SV_PWM.h":
 
     ctypedef enum SVM_Sector_Type:
         SVM_SECTOR_I   = 0

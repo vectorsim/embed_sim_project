@@ -10,12 +10,12 @@ file_list = [
     "Sys_Types.h",
     "Matrix.h",
     "Matrix.c",
-    "motor_utility_blocks.h",
-    "motor_utility_blocks.c",
-    "coordinate_transform.h",
-    "coordinate_transform.c",
-    "svpwm.h",
-    "svpwm.c",
+    "Motor_Utility_Blocks.h",
+    "Motor_Utility_Blocks.c",
+    "Coordinate_Transform.h",
+    "Coordinate_Transform.c",
+    "SV_PWM.h",
+    "SV_PWM.c",
 
 ]
 

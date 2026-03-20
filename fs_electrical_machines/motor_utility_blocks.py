@@ -70,8 +70,8 @@ class SpeedRampBlock(VectorBlock):
     use_c_backend=True   → compute_c()   (SpeedRamp_Step via Cython wrapper)
     """
     PYX_FILE     = str(_HERE / "c_src" / "motor_utility_blocks_wrapper.pyx")
-    C_SOURCES    = ["motor_utility_blocks.c"]
-    C_HEADERS    = ["motor_utility_blocks.h"]
+    C_SOURCES    = ["Motor_Utility_Blocks.c"]
+    C_HEADERS    = ["Motor_Utility_Blocks.h"]
     step_func    = "SpeedRamp_Step"
     state_struct = "SpeedRamp_T"
     init_func    = "SpeedRamp_Init"

@@ -9,7 +9,7 @@
             "C:\\EmbedSimProject\\embed_sim_project\\.venv\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\ndarrayobject.h",
             "C:\\EmbedSimProject\\embed_sim_project\\.venv\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\ndarraytypes.h",
             "C:\\EmbedSimProject\\embed_sim_project\\.venv\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\ufuncobject.h",
-            "motor_utility_blocks.h"
+            "Motor_Utility_Blocks.h"
         ],
         "extra_compile_args": [
             "/O2"
@@ -21,7 +21,7 @@
         "name": "motor_utility_blocks_wrapper",
         "sources": [
             "motor_utility_blocks_wrapper.pyx",
-            "motor_utility_blocks.c"
+            "Motor_Utility_Blocks.c"
         ]
     },
     "module_name": "motor_utility_blocks_wrapper"
@@ -1155,7 +1155,7 @@ static int __Pyx_init_co_variables(void) {
 #include "numpy/ndarraytypes.h"
 #include "numpy/arrayscalars.h"
 #include "numpy/ufuncobject.h"
-#include "motor_utility_blocks.h"
+#include "Motor_Utility_Blocks.h"
 #include "pythread.h"
 #include <stdlib.h>
 #ifdef _OPENMP

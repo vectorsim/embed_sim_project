@@ -1,91 +1,202 @@
-/**
- * motor_utility_blocks.c
- * ======================
- * EmbedSim — NANOTEC DB42S02  Open-loop V/f controller blocks
+/**********************************************************************************************************************
+ * \file      Motor_Utility_Blocks.c
+ * \brief     EmbedSim open-loop V/f controller block implementations.
  *
- * Implementation of:
- *   SpeedRamp   VfAngle   VfDQ   VfTheta   DutyPack
+ * Implements: SpeedRamp, VfAngle, VfDQ, VfTheta, DutyPack, SVPWMPack.
  *
- * MISRA C:2012 compliant.
- *   Rule 14.4  — all conditionals on boolean / relational expressions
+ * MISRA C:2012 compliance notes:
+ *   Rule 14.4  — all conditionals use boolean / relational expressions
  *   Rule 15.5  — single return per function
- *   Rule 21.8  — no static locals; all state in caller structs
+ *   Rule 21.8  — no static locals; all state in caller-supplied structs
  *   Rule 10.x  — explicit casts for mixed-type arithmetic
  *
- * No dynamic memory.  No standard library beyond <math.h> fabsf().
- * Target: AURIX TriCore TC3xx
+ * No dynamic memory allocation.
+ * Standard library use limited to \c <math.h>: \c fabsf, \c sqrtf, \c atan2f.
+ *
+ * Target: Infineon AURIX TriCore TC3xx
+ *
+ * \copyright Copyright (C) EmbedSim 2024
+ *
+ *********************************************************************************************************************/
+
+/*********************************************************************************************************************/
+/*-----------------------------------------------------Includes------------------------------------------------------*/
+/*********************************************************************************************************************/
+#include "Motor_Utility_Blocks.h"
+#include <math.h>   /* fabsf, sqrtf, atan2f */
+
+
+/*********************************************************************************************************************/
+/*------------------------------------------------------Macros-------------------------------------------------------*/
+/*********************************************************************************************************************/
+/* None */
+
+
+/*********************************************************************************************************************/
+/*-------------------------------------------------Global variables--------------------------------------------------*/
+/*********************************************************************************************************************/
+/* None */
+
+
+/*********************************************************************************************************************/
+/*--------------------------------------------Private Variables/Constants--------------------------------------------*/
+/*********************************************************************************************************************/
+/* None */
+
+
+/*********************************************************************************************************************/
+/*------------------------------------------------Function Prototypes------------------------------------------------*/
+/*********************************************************************************************************************/
+
+/**
+ * \brief  Clamp \p x to the closed interval [\p lo, \p hi].
+ *
+ * \param[in] x   Value to clamp.
+ * \param[in] lo  Lower bound.
+ * \param[in] hi  Upper bound.
+ * \return        Clamped value.
  */
+static real32_T MUB_Clamp(real32_T x, real32_T lo, real32_T hi);
 
-#include "motor_utility_blocks.h"
-#include <math.h>   /* fabsf */
+/**
+ * \brief  Wrap angle \p theta into [0, 2π).
+ *
+ * Handles the common ±1-period overshoot arising from a single Euler
+ * integration step; does not loop for multiple-period jumps.
+ *
+ * \param[in] theta  Angle in radians.
+ * \return           Wrapped angle in [0, 2π).
+ */
+static real32_T MUB_WrapAngle(real32_T theta);
 
-/* ============================================================================
- * Internal helpers
- * ========================================================================== */
 
-/** Clamp x to [lo, hi].  Branchless-friendly on TriCore. */
-static real32_T mub_clamp(real32_T x, real32_T lo, real32_T hi)
+/*********************************************************************************************************************/
+/*---------------------------------------------Function Implementations----------------------------------------------*/
+/*********************************************************************************************************************/
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * MUB_Clamp  (private)
+ *------------------------------------------------------------------------------------------------------------------*/
+static real32_T MUB_Clamp(real32_T x, real32_T lo, real32_T hi)
 {
-    real32_T result = x;
-    if (result < lo) { result = lo; }
-    if (result > hi) { result = hi; }
+    real32_T result;
+
+    result = x;
+
+    if (result < lo)
+    {
+        result = lo;
+    }
+    else
+    {
+        /* No action — already above lower bound. */
+    }
+
+    if (result > hi)
+    {
+        result = hi;
+    }
+    else
+    {
+        /* No action — already below upper bound. */
+    }
+
     return result;
 }
 
-/** Wrap angle to [0, 2π). */
-static real32_T mub_wrap_angle(real32_T theta)
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * MUB_WrapAngle  (private)
+ *------------------------------------------------------------------------------------------------------------------*/
+static real32_T MUB_WrapAngle(real32_T theta)
 {
-    real32_T result = theta;
-    if (result >= MUB_TWO_PI) { result -= MUB_TWO_PI; }
-    if (result <  0.0f)       { result += MUB_TWO_PI; }
+    real32_T result;
+
+    result = theta;
+
+    if (result >= MUB_TWO_PI)
+    {
+        result -= MUB_TWO_PI;
+    }
+    else
+    {
+        /* No action — below upper wrap boundary. */
+    }
+
+    if (result < 0.0f)
+    {
+        result += MUB_TWO_PI;
+    }
+    else
+    {
+        /* No action — above lower wrap boundary. */
+    }
+
     return result;
 }
 
-/* ============================================================================
- * SpeedRamp
- * ========================================================================== */
 
-void SpeedRamp_Init(SpeedRamp_T *s,
-                    real32_T     omega_target,
-                    real32_T     ramp_time)
+/*--------------------------------------------------------------------------------------------------------------------
+ * SpeedRamp_Init
+ *------------------------------------------------------------------------------------------------------------------*/
+void SpeedRamp_Init(
+    SpeedRamp_T * s,
+    real32_T      omega_target,
+    real32_T      ramp_time)
 {
     s->ramp_value = 0.0f;
     s->target     = omega_target;
 
-    /* Guard: ramp_time <= 0 → instantaneous step */
+    /* Guard: ramp_time ≤ 0 → instantaneous step to target in one sample. */
     if (ramp_time > 0.0f)
     {
         s->rate = omega_target / ramp_time;
     }
     else
     {
-        s->rate = omega_target;   /* reach target in one step */
+        s->rate = omega_target;
     }
 }
 
-void SpeedRamp_Step(SpeedRamp_T *s,
-                    real32_T     dt,
-                    real32_T    *y)
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * SpeedRamp_Step
+ *------------------------------------------------------------------------------------------------------------------*/
+void SpeedRamp_Step(
+    SpeedRamp_T * s,
+    real32_T      dt,
+    real32_T    * y)
 {
     if (s->ramp_value < s->target)
     {
         s->ramp_value += s->rate * dt;
+
         if (s->ramp_value > s->target)
         {
-            s->ramp_value = s->target;   /* clamp at hold value */
+            s->ramp_value = s->target;  /* Clamp at hold value. */
+        }
+        else
+        {
+            /* No action — still ramping. */
         }
     }
+    else
+    {
+        /* No action — ramp already at or above target. */
+    }
+
     y[0] = s->ramp_value;
 }
 
-/* ============================================================================
- * VfAngle
- * ========================================================================== */
 
-void VfAngle_Init(VfAngle_T *s,
-                  real32_T   vf_ratio,
-                  real32_T   v_phase_peak,
-                  uint8_T    p_poles)
+/*--------------------------------------------------------------------------------------------------------------------
+ * VfAngle_Init
+ *------------------------------------------------------------------------------------------------------------------*/
+void VfAngle_Init(
+    VfAngle_T * s,
+    real32_T    vf_ratio,
+    real32_T    v_phase_peak,
+    uint8_T     p_poles)
 {
     s->theta_e      = 0.0f;
     s->vf_ratio     = vf_ratio;
@@ -93,129 +204,179 @@ void VfAngle_Init(VfAngle_T *s,
     s->p_poles      = p_poles;
 }
 
-void VfAngle_Step(VfAngle_T      *s,
-                  const real32_T *u,
-                  real32_T        dt,
-                  real32_T       *y)
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * VfAngle_Step
+ *------------------------------------------------------------------------------------------------------------------*/
+void VfAngle_Step(
+    VfAngle_T      * s,
+    const real32_T * u,
+    real32_T         dt,
+    real32_T       * y)
 {
-    const real32_T omega_m = u[0];
-    const real32_T omega_e = (real32_T)s->p_poles * omega_m;
-    real32_T       vq      = s->vf_ratio * fabsf(omega_e);
+    real32_T omega_m;
+    real32_T omega_e;
+    real32_T vq;
 
-    /* Voltage limit */
-    if (vq > s->v_phase_peak) { vq = s->v_phase_peak; }
+    omega_m = u[0];
+    omega_e = (real32_T)s->p_poles * omega_m;
+    vq      = s->vf_ratio * fabsf(omega_e);
 
-    /* Angle integrator — wrap to [0, 2π) */
-    s->theta_e = mub_wrap_angle(s->theta_e + omega_e * dt);
+    /* Voltage limit — clamp v_q to peak phase voltage. */
+    if (vq > s->v_phase_peak)
+    {
+        vq = s->v_phase_peak;
+    }
+    else
+    {
+        /* No action — within voltage limit. */
+    }
 
-    y[0] = 0.0f;        /* v_d  — always zero for open-loop V/f */
-    y[1] = vq;          /* v_q                                   */
-    y[2] = s->theta_e;  /* theta_e                               */
+    /* Euler angle integrator — wrap result to [0, 2π). */
+    s->theta_e = MUB_WrapAngle(s->theta_e + (omega_e * dt));
+
+    y[0] = 0.0f;       /* v_d  — always zero for open-loop V/f. */
+    y[1] = vq;         /* v_q.                                   */
+    y[2] = s->theta_e; /* θ_e.                                   */
 }
 
-/* ============================================================================
- * VfDQ  — pass-through extractor  [v_d, v_q] from VfAngle output
- * ========================================================================== */
 
-void VfDQ_Init(VfDQ_T *s)
+/*--------------------------------------------------------------------------------------------------------------------
+ * VfDQ_Init
+ *------------------------------------------------------------------------------------------------------------------*/
+void VfDQ_Init(VfDQ_T * s)
 {
     s->_reserved = 0U;
 }
 
-void VfDQ_Step(VfDQ_T         *s,
-               const real32_T *u,
-               real32_T        dt,
-               real32_T       *y)
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * VfDQ_Step
+ *------------------------------------------------------------------------------------------------------------------*/
+void VfDQ_Step(
+    VfDQ_T         * s,
+    const real32_T * u,
+    real32_T         dt,
+    real32_T       * y)
 {
-    (void)s;    /* stateless */
-    (void)dt;   /* combinatorial */
-    y[0] = u[0];   /* v_d     */
-    y[1] = u[1];   /* v_q     */
+    (void)s;   /* Stateless block — state unused. */
+    (void)dt;  /* Combinatorial block — dt unused. */
+
+    y[0] = u[0];  /* v_d. */
+    y[1] = u[1];  /* v_q. */
 }
 
-/* ============================================================================
- * VfTheta  — pass-through extractor  [theta_e] from VfAngle output
- * ========================================================================== */
 
-void VfTheta_Init(VfTheta_T *s)
+/*--------------------------------------------------------------------------------------------------------------------
+ * VfTheta_Init
+ *------------------------------------------------------------------------------------------------------------------*/
+void VfTheta_Init(VfTheta_T * s)
 {
     s->_reserved = 0U;
 }
 
-void VfTheta_Step(VfTheta_T      *s,
-                  const real32_T *u,
-                  real32_T        dt,
-                  real32_T       *y)
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * VfTheta_Step
+ *------------------------------------------------------------------------------------------------------------------*/
+void VfTheta_Step(
+    VfTheta_T      * s,
+    const real32_T * u,
+    real32_T         dt,
+    real32_T       * y)
 {
-    (void)s;    /* stateless */
-    (void)dt;   /* combinatorial */
-    y[0] = u[2];   /* theta_e  — element [2] of VfAngle output */
+    (void)s;   /* Stateless block — state unused. */
+    (void)dt;  /* Combinatorial block — dt unused. */
+
+    y[0] = u[2];  /* θ_e — element [2] of VfAngle output. */
 }
 
-/* ============================================================================
- * SVPWMPack  — polar conversion [v_alpha, v_beta] → [Vref, alpha_angle, Vdc]
- *
- *   Vref        = sqrtf(v_alpha^2 + v_beta^2)
- *   alpha_angle = atan2f(v_beta, v_alpha)
- *   y[2]        = v_dc  (compile-time constant, passed through)
- * ========================================================================== */
 
-void SVPWMPack_Init(SVPWMPack_T *s,
-                    real32_T     v_dc)
+/*--------------------------------------------------------------------------------------------------------------------
+ * SVPWMPack_Init
+ *------------------------------------------------------------------------------------------------------------------*/
+void SVPWMPack_Init(
+    SVPWMPack_T * s,
+    real32_T      v_dc)
 {
     s->v_dc = v_dc;
 }
 
-void SVPWMPack_Step(SVPWMPack_T    *s,
-                    const real32_T *u,
-                    real32_T        dt,
-                    real32_T       *y)
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * SVPWMPack_Step
+ *------------------------------------------------------------------------------------------------------------------*/
+void SVPWMPack_Step(
+    SVPWMPack_T    * s,
+    const real32_T * u,
+    real32_T         dt,
+    real32_T       * y)
 {
-    (void)dt;   /* combinatorial block */
+    real32_T v_alpha;
+    real32_T v_beta;
 
-    const real32_T v_alpha = u[0];
-    const real32_T v_beta  = u[1];
+    (void)dt;  /* Combinatorial block — dt unused. */
 
-    y[0] = sqrtf((v_alpha * v_alpha) + (v_beta * v_beta));   /* Vref        */
-    y[1] = atan2f(v_beta, v_alpha);                           /* alpha_angle */
-    y[2] = s->v_dc;                                           /* V_dc        */
+    v_alpha = u[0];
+    v_beta  = u[1];
+
+    y[0] = sqrtf((v_alpha * v_alpha) + (v_beta * v_beta));  /* V_ref.       */
+    y[1] = atan2f(v_beta, v_alpha);                          /* alpha_angle. */
+    y[2] = s->v_dc;                                          /* V_dc.        */
 }
 
-/* ============================================================================
- * DutyPack  — InvClarke + centred PWM
- *
- *   v_a =  v_alpha
- *   v_b = -0.5 * v_alpha + (sqrt(3)/2) * v_beta
- *   v_c = -0.5 * v_alpha - (sqrt(3)/2) * v_beta
- *
- *   duty_x = 0.5 + v_x / V_dc          (centred modulation)
- *   duty_x = clamp(duty_x, 0.02, 0.98) (2 % dead-time guard)
- * ========================================================================== */
 
-void DutyPack_Init(DutyPack_T *s,
-                   real32_T    v_dc)
+/*--------------------------------------------------------------------------------------------------------------------
+ * DutyPack_Init
+ *------------------------------------------------------------------------------------------------------------------*/
+void DutyPack_Init(
+    DutyPack_T * s,
+    real32_T     v_dc)
 {
     s->v_dc = v_dc;
 }
 
-void DutyPack_Step(DutyPack_T     *s,
-                   const real32_T *u,
-                   real32_T        dt,
-                   real32_T       *y)
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * DutyPack_Step
+ *
+ * Inverse-Clarke transform:
+ *   v_a =  v_α
+ *   v_b = −0.5·v_α + (√3/2)·v_β
+ *   v_c = −0.5·v_α − (√3/2)·v_β
+ *
+ * Centred modulation:
+ *   duty_x = 0.5 + v_x / V_dc
+ *   duty_x = clamp(duty_x, 0.02, 0.98)   [2 % dead-time guard]
+ *------------------------------------------------------------------------------------------------------------------*/
+void DutyPack_Step(
+    DutyPack_T     * s,
+    const real32_T * u,
+    real32_T         dt,
+    real32_T       * y)
 {
-    const real32_T v_alpha = u[0];
-    const real32_T v_beta  = u[1];
-    const real32_T inv_vdc = 1.0f / s->v_dc;
+    real32_T v_alpha;
+    real32_T v_beta;
+    real32_T inv_vdc;
+    real32_T va;
+    real32_T vb;
+    real32_T vc;
 
-    (void)dt;   /* combinatorial block */
+    (void)dt;  /* Combinatorial block — dt unused. */
 
-    const real32_T va = v_alpha;
-    const real32_T vb = (-0.5f * v_alpha) + (MUB_SQRT3_2 * v_beta);
-    const real32_T vc = (-0.5f * v_alpha) - (MUB_SQRT3_2 * v_beta);
+    v_alpha = u[0];
+    v_beta  = u[1];
+    inv_vdc = 1.0f / s->v_dc;
 
-    y[0] = mub_clamp(0.5f + (va * inv_vdc), 0.02f, 0.98f);   /* duty_a */
-    y[1] = mub_clamp(0.5f + (vb * inv_vdc), 0.02f, 0.98f);   /* duty_b */
-    y[2] = mub_clamp(0.5f + (vc * inv_vdc), 0.02f, 0.98f);   /* duty_c */
-    y[3] = s->v_dc;   /* V_dc pass-through — read by FMU interface     */
-    y[4] = 0.0f;      /* T_load placeholder                             */
+    /* Inverse-Clarke. */
+    va =  v_alpha;
+    vb = (-0.5f * v_alpha) + (MUB_SQRT3_2 * v_beta);
+    vc = (-0.5f * v_alpha) - (MUB_SQRT3_2 * v_beta);
+
+    /* Centred duty cycles, clamped to [0.02, 0.98]. */
+    y[0] = MUB_Clamp(0.5f + (va * inv_vdc), 0.02f, 0.98f);  /* duty_a. */
+    y[1] = MUB_Clamp(0.5f + (vb * inv_vdc), 0.02f, 0.98f);  /* duty_b. */
+    y[2] = MUB_Clamp(0.5f + (vc * inv_vdc), 0.02f, 0.98f);  /* duty_c. */
+    y[3] = s->v_dc;  /* V_dc — pass-through for FMU interface.          */
+    y[4] = 0.0f;     /* T_load — zero placeholder.                       */
 }

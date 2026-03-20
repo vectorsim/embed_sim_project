@@ -1,869 +1,749 @@
-/*
- * Matrix.h
- * ========
- * 32-bit Linear Algebra Library for Embedded Systems
+/**********************************************************************************************************************
+ * \file      Matrix.h
+ * \brief     32-bit fixed-point (Q31) linear algebra library for embedded systems.
  *
- * MISRA C:2012 / AUTOSAR C compliant
- * - NO RECURSION (all algorithms iterative)
- * - 32-bit fixed-point arithmetic (Q31 format)
- * - Supports matrices up to 8x8 with eigenvalue calculation
- * - All indices use uint32_T for sizes, int32_T for values
+ * Provides static-allocation matrix operations targeting 32-bit MCUs
+ * (Infineon AURIX TriCore, ARM Cortex-M4).  All algorithms are iterative —
+ * no recursion — and the implementation is MISRA C:2012 / AUTOSAR C compliant.
  *
- * Target: 32-bit MCUs (Infineon Aurix TriCore, ARM Cortex-M4)
- * Version: 5.0.0
+ * Key properties:
+ *   - Q31 fixed-point arithmetic (1 sign bit + 31 fractional bits)
+ *   - Maximum matrix size: 8 × 8
+ *   - No dynamic memory allocation
+ *   - Supports eigenvalue decomposition (iterative Jacobi method)
  *
- * @file Matrix.h
- * @brief Linear algebra library for embedded systems
- * @author EmbedSim Project
- * @date 2024
- * @copyright MIT License
- */
+ * \version   5.0.0
+ * \copyright Copyright (C) EmbedSim 2024
+ *
+ *********************************************************************************************************************/
 
-#ifndef MATRIX_H
-#define MATRIX_H
+#ifndef MATRIX_H_
+#define MATRIX_H_
 
-/* AUTOSAR standard types from your system */
+/*********************************************************************************************************************/
+/*-----------------------------------------------------Includes------------------------------------------------------*/
+/*********************************************************************************************************************/
 #include "Sys_Types.h"
 
-/**
- * @def MATRIX_MAX_ROWS
- * @brief Maximum number of rows supported (8 for eigenvalue calculation)
+
+/*********************************************************************************************************************/
+/*------------------------------------------------------Macros-------------------------------------------------------*/
+/*********************************************************************************************************************/
+
+/** \addtogroup matrix_limits  Dimension limits
+ * \{
  */
-#define MATRIX_MAX_ROWS     (8U)
+/** \brief Maximum number of rows (and eigenvalues) supported. */
+#define MATRIX_MAX_ROWS   (8U)
+
+/** \brief Maximum number of columns supported. */
+#define MATRIX_MAX_COLS   (8U)
+
+/** \brief Maximum number of eigenvalues that can be stored. */
+#define MATRIX_MAX_EIGEN  (8U)
+/** \} */
+
+
+/*********************************************************************************************************************/
+/*-------------------------------------------------Data Structures---------------------------------------------------*/
+/*********************************************************************************************************************/
+
+/** \addtogroup matrix_types  Types, enumerations and structures
+ * \{
+ */
 
 /**
- * @def MATRIX_MAX_COLS
- * @brief Maximum number of columns supported
- */
-#define MATRIX_MAX_COLS     (8U)
-
-/**
- * @def MATRIX_MAX_EIGEN
- * @brief Maximum number of eigenvalues that can be stored
- */
-#define MATRIX_MAX_EIGEN     (8U)
-
-/**
- * @typedef MatrixElement
- * @brief 32-bit fixed-point element type in Q31 format
+ * \typedef MatrixElement
+ * \brief   32-bit Q31 fixed-point scalar type.
  *
- * Q31 format: 1 sign bit + 31 fractional bits
- * Range: [-1.0, 0.9999999995]
- * Resolution: 2.33e-10
+ * Encoding: 1 sign bit + 31 fractional bits.
+ * Range    : [−1.0, +0.9999999995]
+ * Resolution: ~4.66 × 10⁻¹⁰
  */
 typedef int32_T MatrixElement;
 
 /**
- * @typedef MatrixFloat
- * @brief 32-bit floating-point type for intermediate calculations
- * Uses real32_T from Sys_Types.h
+ * \typedef MatrixFloat
+ * \brief   32-bit floating-point type used for intermediate calculations.
+ *
+ * Maps to \c real32_T from \c Sys_Types.h.
  */
 typedef real32_T MatrixFloat;
 
 /**
- * @enum MatrixStatus_Type
- * @brief Status codes returned by matrix operations
+ * \enum  MatrixStatus_Type
+ * \brief Status codes returned by all matrix operations.
  */
-typedef enum {
-    MATRIX_SUCCESS = 0,                    /**< Operation completed successfully */
-    MATRIX_ERROR_NULL_PTR = 1,              /**< NULL pointer provided */
-    MATRIX_ERROR_DIMENSION_MISMATCH = 2,    /**< Matrix dimensions incompatible */
-    MATRIX_ERROR_SINGULAR = 3,               /**< Matrix is singular (det = 0) */
-    MATRIX_ERROR_SIZE_EXCEEDED = 4,          /**< Matrix exceeds maximum dimensions */
-    MATRIX_ERROR_DIV_BY_ZERO = 5,            /**< Division by zero attempted */
-    MATRIX_ERROR_NOT_SQUARE = 6,             /**< Operation requires square matrix */
-    MATRIX_ERROR_BUFFER_OVERFLOW = 7,        /**< Buffer size insufficient */
-    MATRIX_ERROR_OUT_OF_BOUNDS = 8,          /**< Index out of bounds */
-    MATRIX_ERROR_NON_POSITIVE_DEFINITE = 9,  /**< Matrix not positive definite */
-    MATRIX_ERROR_NOT_INVERTIBLE = 10,        /**< Matrix cannot be inverted */
-    MATRIX_ERROR_NOT_CONVERGENT = 11,        /**< Iterative algorithm did not converge */
-    MATRIX_ERROR_MAX_ITERATIONS = 12         /**< Maximum iterations reached */
+typedef enum
+{
+    MATRIX_SUCCESS                   =  0,  /**< Operation completed successfully.            */
+    MATRIX_ERROR_NULL_PTR            =  1,  /**< NULL pointer supplied.                       */
+    MATRIX_ERROR_DIMENSION_MISMATCH  =  2,  /**< Incompatible matrix dimensions.              */
+    MATRIX_ERROR_SINGULAR            =  3,  /**< Matrix is singular (determinant ≈ 0).        */
+    MATRIX_ERROR_SIZE_EXCEEDED       =  4,  /**< Matrix exceeds maximum supported dimensions. */
+    MATRIX_ERROR_DIV_BY_ZERO         =  5,  /**< Division by zero attempted.                  */
+    MATRIX_ERROR_NOT_SQUARE          =  6,  /**< Operation requires a square matrix.          */
+    MATRIX_ERROR_BUFFER_OVERFLOW     =  7,  /**< Destination buffer is insufficient.          */
+    MATRIX_ERROR_OUT_OF_BOUNDS       =  8,  /**< Index out of valid range.                    */
+    MATRIX_ERROR_NON_POSITIVE_DEFINITE =  9, /**< Matrix is not positive-definite.            */
+    MATRIX_ERROR_NOT_INVERTIBLE      = 10,  /**< Matrix cannot be inverted.                   */
+    MATRIX_ERROR_NOT_CONVERGENT      = 11,  /**< Iterative algorithm did not converge.        */
+    MATRIX_ERROR_MAX_ITERATIONS      = 12   /**< Maximum iteration count reached.             */
 } MatrixStatus_Type;
 
 /**
- * @struct Matrix_Type
- * @brief Matrix handle structure for static allocation
+ * \struct Matrix_Type
+ * \brief  Matrix handle for static-allocation use.
  *
- * All matrices use static buffers - no dynamic memory allocation.
- * The stride allows for submatrix views without copying data.
+ * All storage is provided by the caller via a fixed-size buffer; no heap
+ * allocation occurs.  The \c stride field enables sub-matrix views without
+ * copying.
  */
-typedef struct {
-    MatrixElement*  data;           /**< Pointer to 32-bit data buffer */
-    uint32_T        rows;           /**< Current number of rows */
-    uint32_T        cols;           /**< Current number of columns */
-    uint32_T        max_rows;       /**< Maximum allocated rows */
-    uint32_T        max_cols;       /**< Maximum allocated columns */
-    uint32_T        is_view;        /**< Boolean flag: TRUE if view of another matrix */
-    uint32_T        stride;         /**< Row stride in elements (for views) */
+typedef struct
+{
+    MatrixElement  * data;      /**< Pointer to the Q31 data buffer (row-major).       */
+    uint32_T         rows;      /**< Active row count.                                 */
+    uint32_T         cols;      /**< Active column count.                              */
+    uint32_T         max_rows;  /**< Allocated row capacity.                           */
+    uint32_T         max_cols;  /**< Allocated column capacity.                        */
+    uint32_T         is_view;   /**< TRUE if this handle is a view of another matrix.  */
+    uint32_T         stride;    /**< Row stride in elements (equals max_cols normally).*/
 } Matrix_Type;
 
 /**
- * @struct MatrixEigen_Type
- * @brief Structure to hold eigenvalue decomposition results
+ * \struct MatrixEigen_Type
+ * \brief  Result container for eigenvalue / eigenvector decomposition.
  */
-typedef struct {
-    MatrixFloat     eigenvalues[MATRIX_MAX_EIGEN];     /**< Real eigenvalues found */
-    MatrixFloat     eigenvectors[MATRIX_MAX_ROWS * MATRIX_MAX_COLS]; /**< Eigenvectors (column-wise) */
-    uint32_T        num_eigenvalues;                    /**< Number of eigenvalues found */
-    uint32_T        iterations;                          /**< Number of iterations used */
+typedef struct
+{
+    MatrixFloat  eigenvalues[MATRIX_MAX_EIGEN];                   /**< Real eigenvalues (diagonal of diagonalised matrix). */
+    MatrixFloat  eigenvectors[MATRIX_MAX_ROWS * MATRIX_MAX_COLS]; /**< Eigenvectors stored column-wise.                    */
+    uint32_T     num_eigenvalues;                                  /**< Number of eigenvalues computed.                     */
+    uint32_T     iterations;                                       /**< Jacobi sweeps consumed.                             */
 } MatrixEigen_Type;
 
-/*==============================================================================
- * INITIALIZATION FUNCTIONS
- *============================================================================*/
+/** \} */
 
-/**
- * @brief Initialize a matrix with a static buffer
- *
- * @param[out] matrix  Pointer to matrix structure to initialize
- * @param[in]  buffer  Pointer to data buffer (size: max_rows * max_cols)
- * @param[in]  max_rows Maximum number of rows that can be stored
- * @param[in]  max_cols Maximum number of columns that can be stored
- *
- * @pre matrix != NULL
- * @pre buffer != NULL
- * @pre max_rows > 0U && max_rows <= MATRIX_MAX_ROWS
- * @pre max_cols > 0U && max_cols <= MATRIX_MAX_COLS
- *
- * @post matrix->data == buffer
- * @post matrix->rows == max_rows
- * @post matrix->cols == max_cols
- * @post matrix->max_rows == max_rows
- * @post matrix->max_cols == max_cols
- * @post matrix->is_view == FALSE
- * @post matrix->stride == max_cols
- * @post All elements initialized to zero
+
+/*********************************************************************************************************************/
+/*--------------------------------------------Private Variables/Constants--------------------------------------------*/
+/*********************************************************************************************************************/
+/* None */
+
+
+/*********************************************************************************************************************/
+/*------------------------------------------------Function Prototypes------------------------------------------------*/
+/*********************************************************************************************************************/
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * Initialisation
+ *------------------------------------------------------------------------------------------------------------------*/
+
+/** \addtogroup matrix_init  Initialisation
+ * \{
  */
-extern void Matrix_Init(Matrix_Type* const matrix,
-                        MatrixElement* const buffer,
-                        const uint32_T max_rows,
-                        const uint32_T max_cols);
 
 /**
- * @brief Set current dimensions of a matrix
+ * \brief  Initialise a matrix handle with a caller-supplied static buffer.
  *
- * @param[in,out] matrix Pointer to matrix structure
- * @param[in]     rows   Number of rows to set (must be <= max_rows)
- * @param[in]     cols   Number of columns to set (must be <= max_cols)
+ * Sets \c rows and \c cols to \p max_rows and \p max_cols respectively and
+ * zero-fills the entire buffer via \c memset.
  *
- * @pre matrix != NULL
- * @pre rows > 0U && rows <= matrix->max_rows
- * @pre cols > 0U && cols <= matrix->max_cols
- *
- * @post matrix->rows == rows
- * @post matrix->cols == cols
+ * \param[out] matrix    Matrix handle to initialise (must not be NULL).
+ * \param[in]  buffer    Caller-allocated buffer of size
+ *                       \p max_rows × \p max_cols × sizeof(#MatrixElement).
+ * \param[in]  max_rows  Row capacity (1 … #MATRIX_MAX_ROWS).
+ * \param[in]  max_cols  Column capacity (1 … #MATRIX_MAX_COLS).
  */
-extern void Matrix_SetDimensions(Matrix_Type* const matrix,
-                                 const uint32_T rows,
-                                 const uint32_T cols);
+extern void Matrix_Init(
+    Matrix_Type    * const matrix,
+    MatrixElement  * const buffer,
+    const uint32_T         max_rows,
+    const uint32_T         max_cols);
 
 /**
- * @brief Set all matrix elements to zero
+ * \brief  Set the active dimensions of a matrix without touching data.
  *
- * @param[in,out] matrix Pointer to matrix structure
- *
- * @pre matrix != NULL
- *
- * @post All elements in the current dimension range are zero
+ * \param[in,out] matrix  Matrix handle (must not be NULL).
+ * \param[in]     rows    Active rows    (1 … \c matrix->max_rows).
+ * \param[in]     cols    Active columns (1 … \c matrix->max_cols).
  */
-extern void Matrix_Zero(Matrix_Type* const matrix);
+extern void Matrix_SetDimensions(
+    Matrix_Type  * const matrix,
+    const uint32_T       rows,
+    const uint32_T       cols);
 
 /**
- * @brief Set matrix to identity matrix (ones on diagonal, zeros elsewhere)
+ * \brief  Zero all elements within the active dimensions.
  *
- * @param[in,out] matrix Pointer to matrix structure
- * @return MATRIX_SUCCESS on success, error code otherwise
- *
- * @retval MATRIX_SUCCESS           Operation successful
- * @retval MATRIX_ERROR_NULL_PTR    matrix is NULL
- * @retval MATRIX_ERROR_NOT_SQUARE  matrix is not square
- *
- * @pre matrix != NULL
- * @pre matrix->rows == matrix->cols (square matrix)
- *
- * @post Diagonal elements set to Q31_ONE
- * @post Off-diagonal elements set to Q31_ZERO
+ * \param[in,out] matrix  Matrix handle (must not be NULL).
  */
-extern MatrixStatus_Type Matrix_Identity(Matrix_Type* const matrix);
+extern void Matrix_Zero(Matrix_Type * const matrix);
 
 /**
- * @brief Copy one matrix to another
+ * \brief  Set a square matrix to the identity (I).
  *
- * @param[out] dest Destination matrix
- * @param[in]  src  Source matrix
- * @return MATRIX_SUCCESS on success, error code otherwise
- *
- * @retval MATRIX_SUCCESS           Operation successful
- * @retval MATRIX_ERROR_NULL_PTR    dest or src is NULL
- * @retval MATRIX_ERROR_SIZE_EXCEEDED dest buffer too small
- *
- * @pre dest != NULL && src != NULL
- * @pre dest->max_rows >= src->rows
- * @pre dest->max_cols >= src->cols
- *
- * @post dest->rows == src->rows
- * @post dest->cols == src->cols
- * @post dest elements equal src elements
+ * \param[in,out] matrix  Square matrix handle (must not be NULL).
+ * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_NOT_SQUARE.
  */
-extern MatrixStatus_Type Matrix_Copy(Matrix_Type* const dest,
-                                      const Matrix_Type* const src);
-
-/*==============================================================================
- * ELEMENT ACCESS FUNCTIONS
- *============================================================================*/
+extern MatrixStatus_Type Matrix_Identity(Matrix_Type * const matrix);
 
 /**
- * @brief Set a single matrix element (Q31 format)
+ * \brief  Copy \p src into \p dest.
  *
- * @param[in,out] matrix Pointer to matrix structure
- * @param[in]     row    Row index (0-based)
- * @param[in]     col    Column index (0-based)
- * @param[in]     value  Q31 value to set
- * @return MATRIX_SUCCESS on success, error code otherwise
+ * \p dest must have sufficient capacity to hold all elements of \p src.
  *
- * @retval MATRIX_SUCCESS           Operation successful
- * @retval MATRIX_ERROR_NULL_PTR    matrix is NULL
- * @retval MATRIX_ERROR_OUT_OF_BOUNDS row or col out of range
- *
- * @pre matrix != NULL
- * @pre row < matrix->rows
- * @pre col < matrix->cols
+ * \param[out] dest  Destination matrix (must not be NULL).
+ * \param[in]  src   Source matrix (must not be NULL).
+ * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_SIZE_EXCEEDED.
  */
-extern MatrixStatus_Type Matrix_SetElement(Matrix_Type* const matrix,
-                                           const uint32_T row,
-                                           const uint32_T col,
-                                           const MatrixElement value);
+extern MatrixStatus_Type Matrix_Copy(
+    Matrix_Type        * const dest,
+    const Matrix_Type  * const src);
 
-/**
- * @brief Set a single matrix element (float format, auto-converted to Q31)
- *
- * @param[in,out] matrix Pointer to matrix structure
- * @param[in]     row    Row index (0-based)
- * @param[in]     col    Column index (0-based)
- * @param[in]     value  Float value to set (clamped to [-1.0, 1.0])
- * @return MATRIX_SUCCESS on success, error code otherwise
- *
- * @retval MATRIX_SUCCESS           Operation successful
- * @retval MATRIX_ERROR_NULL_PTR    matrix is NULL
- * @retval MATRIX_ERROR_OUT_OF_BOUNDS row or col out of range
- *
- * @pre matrix != NULL
- * @pre row < matrix->rows
- * @pre col < matrix->cols
+/** \} */
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * Element access
+ *------------------------------------------------------------------------------------------------------------------*/
+
+/** \addtogroup matrix_element_access  Element access
+ * \{
  */
-extern MatrixStatus_Type Matrix_SetElementFloat(Matrix_Type* const matrix,
-                                                const uint32_T row,
-                                                const uint32_T col,
-                                                const MatrixFloat value);
 
 /**
- * @brief Get a single matrix element (Q31 format)
+ * \brief  Write a Q31 value to a single element.
  *
- * @param[in]  matrix Pointer to matrix structure
- * @param[in]  row    Row index (0-based)
- * @param[in]  col    Column index (0-based)
- * @param[out] value  Pointer to store the Q31 value
- * @return MATRIX_SUCCESS on success, error code otherwise
- *
- * @retval MATRIX_SUCCESS           Operation successful
- * @retval MATRIX_ERROR_NULL_PTR    matrix or value is NULL
- * @retval MATRIX_ERROR_OUT_OF_BOUNDS row or col out of range
- *
- * @pre matrix != NULL && value != NULL
- * @pre row < matrix->rows
- * @pre col < matrix->cols
+ * \param[in,out] matrix  Target matrix (must not be NULL).
+ * \param[in]     row     0-based row index (< \c matrix->rows).
+ * \param[in]     col     0-based column index (< \c matrix->cols).
+ * \param[in]     value   Q31 value to write.
+ * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_OUT_OF_BOUNDS.
  */
-extern MatrixStatus_Type Matrix_GetElement(const Matrix_Type* const matrix,
-                                           const uint32_T row,
-                                           const uint32_T col,
-                                           MatrixElement* const value);
+extern MatrixStatus_Type Matrix_SetElement(
+    Matrix_Type    * const matrix,
+    const uint32_T         row,
+    const uint32_T         col,
+    const MatrixElement    value);
 
 /**
- * @brief Get a single matrix element as float
+ * \brief  Write a float value (auto-converted to Q31) to a single element.
  *
- * @param[in]  matrix Pointer to matrix structure
- * @param[in]  row    Row index (0-based)
- * @param[in]  col    Column index (0-based)
- * @param[out] value  Pointer to store the float value
- * @return MATRIX_SUCCESS on success, error code otherwise
- *
- * @retval MATRIX_SUCCESS           Operation successful
- * @retval MATRIX_ERROR_NULL_PTR    matrix or value is NULL
- * @retval MATRIX_ERROR_OUT_OF_BOUNDS row or col out of range
- *
- * @pre matrix != NULL && value != NULL
- * @pre row < matrix->rows
- * @pre col < matrix->cols
+ * \param[in,out] matrix  Target matrix (must not be NULL).
+ * \param[in]     row     0-based row index.
+ * \param[in]     col     0-based column index.
+ * \param[in]     value   Float in [−1.0, 1.0] (clamped).
+ * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_OUT_OF_BOUNDS.
  */
-extern MatrixStatus_Type Matrix_GetElementFloat(const Matrix_Type* const matrix,
-                                                const uint32_T row,
-                                                const uint32_T col,
-                                                MatrixFloat* const value);
-
-/*==============================================================================
- * BASIC OPERATIONS
- *============================================================================*/
+extern MatrixStatus_Type Matrix_SetElementFloat(
+    Matrix_Type    * const matrix,
+    const uint32_T         row,
+    const uint32_T         col,
+    const MatrixFloat      value);
 
 /**
- * @brief Add two matrices: result = a + b
+ * \brief  Read a Q31 value from a single element.
  *
- * @param[in]  a      First matrix
- * @param[in]  b      Second matrix (same dimensions as a)
- * @param[out] result Result matrix
- * @return MATRIX_SUCCESS on success, error code otherwise
- *
- * @retval MATRIX_SUCCESS                Operation successful
- * @retval MATRIX_ERROR_NULL_PTR         a, b, or result is NULL
- * @retval MATRIX_ERROR_DIMENSION_MISMATCH a and b dimensions differ
- * @retval MATRIX_ERROR_SIZE_EXCEEDED    result buffer too small
- *
- * @pre a != NULL && b != NULL && result != NULL
- * @pre a->rows == b->rows && a->cols == b->cols
- * @pre result->max_rows >= a->rows
- * @pre result->max_cols >= a->cols
- *
- * @post result->rows == a->rows
- * @post result->cols == a->cols
+ * \param[in]  matrix  Source matrix (must not be NULL).
+ * \param[in]  row     0-based row index.
+ * \param[in]  col     0-based column index.
+ * \param[out] value   Receives the Q31 value (must not be NULL).
+ * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_OUT_OF_BOUNDS.
  */
-extern MatrixStatus_Type Matrix_Add(const Matrix_Type* const a,
-                                     const Matrix_Type* const b,
-                                     Matrix_Type* const result);
+extern MatrixStatus_Type Matrix_GetElement(
+    const Matrix_Type  * const matrix,
+    const uint32_T             row,
+    const uint32_T             col,
+    MatrixElement      * const value);
 
 /**
- * @brief Subtract two matrices: result = a - b
+ * \brief  Read a single element and return it as a float.
  *
- * @param[in]  a      First matrix
- * @param[in]  b      Second matrix (same dimensions as a)
- * @param[out] result Result matrix
- * @return MATRIX_SUCCESS on success, error code otherwise
- *
- * @retval MATRIX_SUCCESS                Operation successful
- * @retval MATRIX_ERROR_NULL_PTR         a, b, or result is NULL
- * @retval MATRIX_ERROR_DIMENSION_MISMATCH a and b dimensions differ
- * @retval MATRIX_ERROR_SIZE_EXCEEDED    result buffer too small
- *
- * @pre a != NULL && b != NULL && result != NULL
- * @pre a->rows == b->rows && a->cols == b->cols
- * @pre result->max_rows >= a->rows
- * @pre result->max_cols >= a->cols
+ * \param[in]  matrix  Source matrix (must not be NULL).
+ * \param[in]  row     0-based row index.
+ * \param[in]  col     0-based column index.
+ * \param[out] value   Receives the float value (must not be NULL).
+ * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_OUT_OF_BOUNDS.
  */
-extern MatrixStatus_Type Matrix_Subtract(const Matrix_Type* const a,
-                                          const Matrix_Type* const b,
-                                          Matrix_Type* const result);
+extern MatrixStatus_Type Matrix_GetElementFloat(
+    const Matrix_Type  * const matrix,
+    const uint32_T             row,
+    const uint32_T             col,
+    MatrixFloat        * const value);
 
-/**
- * @brief Multiply two matrices: result = a * b
- *
- * @param[in]  a      First matrix (m x n)
- * @param[in]  b      Second matrix (n x p)
- * @param[out] result Result matrix (m x p)
- * @return MATRIX_SUCCESS on success, error code otherwise
- *
- * @retval MATRIX_SUCCESS                Operation successful
- * @retval MATRIX_ERROR_NULL_PTR         a, b, or result is NULL
- * @retval MATRIX_ERROR_DIMENSION_MISMATCH a->cols != b->rows
- * @retval MATRIX_ERROR_SIZE_EXCEEDED    result buffer too small
- *
- * @pre a != NULL && b != NULL && result != NULL
- * @pre a->cols == b->rows
- * @pre result->max_rows >= a->rows
- * @pre result->max_cols >= b->cols
- *
- * @post result->rows == a->rows
- * @post result->cols == b->cols
+/** \} */
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * Basic arithmetic operations
+ *------------------------------------------------------------------------------------------------------------------*/
+
+/** \addtogroup matrix_basic_ops  Basic arithmetic
+ * \{
  */
-extern MatrixStatus_Type Matrix_Multiply(const Matrix_Type* const a,
-                                          const Matrix_Type* const b,
-                                          Matrix_Type* const result);
 
 /**
- * @brief Multiply matrix by scalar: result = scalar * matrix
+ * \brief  Element-wise addition: \p result = \p a + \p b (saturating Q31).
  *
- * @param[in]  matrix Input matrix
- * @param[in]  scalar Q31 scalar value
- * @param[out] result Result matrix
- * @return MATRIX_SUCCESS on success, error code otherwise
- *
- * @retval MATRIX_SUCCESS             Operation successful
- * @retval MATRIX_ERROR_NULL_PTR      matrix or result is NULL
- * @retval MATRIX_ERROR_SIZE_EXCEEDED result buffer too small
- *
- * @pre matrix != NULL && result != NULL
- * @pre result->max_rows >= matrix->rows
- * @pre result->max_cols >= matrix->cols
+ * \param[in]  a       Left operand.
+ * \param[in]  b       Right operand (same dimensions as \p a).
+ * \param[out] result  Output matrix (buffer must be ≥ \p a dimensions).
+ * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR;
+ *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SIZE_EXCEEDED.
  */
-extern MatrixStatus_Type Matrix_ScalarMultiply(const Matrix_Type* const matrix,
-                                                const MatrixElement scalar,
-                                                Matrix_Type* const result);
+extern MatrixStatus_Type Matrix_Add(
+    const Matrix_Type  * const a,
+    const Matrix_Type  * const b,
+    Matrix_Type        * const result);
 
 /**
- * @brief Multiply matrix by float scalar (auto-converted to Q31)
+ * \brief  Element-wise subtraction: \p result = \p a − \p b (saturating Q31).
  *
- * @param[in]  matrix Input matrix
- * @param[in]  scalar Float scalar value (clamped to [-1.0, 1.0])
- * @param[out] result Result matrix
- * @return MATRIX_SUCCESS on success, error code otherwise
- *
- * @retval MATRIX_SUCCESS             Operation successful
- * @retval MATRIX_ERROR_NULL_PTR      matrix or result is NULL
- * @retval MATRIX_ERROR_SIZE_EXCEEDED result buffer too small
+ * \param[in]  a       Minuend.
+ * \param[in]  b       Subtrahend (same dimensions as \p a).
+ * \param[out] result  Output matrix.
+ * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR;
+ *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SIZE_EXCEEDED.
  */
-extern MatrixStatus_Type Matrix_ScalarMultiplyFloat(const Matrix_Type* const matrix,
-                                                    const MatrixFloat scalar,
-                                                    Matrix_Type* const result);
+extern MatrixStatus_Type Matrix_Subtract(
+    const Matrix_Type  * const a,
+    const Matrix_Type  * const b,
+    Matrix_Type        * const result);
 
 /**
- * @brief Transpose matrix: result = matrix^T
+ * \brief  Matrix multiplication: \p result = \p a × \p b (Q31, saturating).
  *
- * @param[in]  matrix Input matrix
- * @param[out] result Result matrix (must have swapped dimensions capacity)
- * @return MATRIX_SUCCESS on success, error code otherwise
+ * \p a is (m × n), \p b is (n × p), \p result is (m × p).
  *
- * @retval MATRIX_SUCCESS             Operation successful
- * @retval MATRIX_ERROR_NULL_PTR      matrix or result is NULL
- * @retval MATRIX_ERROR_SIZE_EXCEEDED result buffer too small
- *
- * @pre matrix != NULL && result != NULL
- * @pre result->max_rows >= matrix->cols
- * @pre result->max_cols >= matrix->rows
- *
- * @post result->rows == matrix->cols
- * @post result->cols == matrix->rows
- * @post result[i][j] == matrix[j][i] for all i,j
+ * \param[in]  a       Left factor  (m × n).
+ * \param[in]  b       Right factor (n × p).
+ * \param[out] result  Product matrix (buffer must be ≥ m × p).
+ * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR;
+ *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SIZE_EXCEEDED.
  */
-extern MatrixStatus_Type Matrix_Transpose(const Matrix_Type* const matrix,
-                                           Matrix_Type* const result);
-
-/*==============================================================================
- * ADVANCED OPERATIONS - ITERATIVE, NO RECURSION
- *============================================================================*/
+extern MatrixStatus_Type Matrix_Multiply(
+    const Matrix_Type  * const a,
+    const Matrix_Type  * const b,
+    Matrix_Type        * const result);
 
 /**
- * @brief Calculate determinant using LU decomposition (iterative, no recursion)
+ * \brief  Scalar multiplication: \p result = \p scalar × \p matrix (Q31).
  *
- * @param[in]  matrix Input matrix (must be square)
- * @param[out] det    Pointer to store determinant value
- * @return MATRIX_SUCCESS on success, error code otherwise
- *
- * @retval MATRIX_SUCCESS             Operation successful
- * @retval MATRIX_ERROR_NULL_PTR      matrix or det is NULL
- * @retval MATRIX_ERROR_NOT_SQUARE    matrix is not square
- * @retval MATRIX_ERROR_SIZE_EXCEEDED matrix size > 8x8
- * @retval MATRIX_ERROR_SINGULAR      matrix is singular
- *
- * @pre matrix != NULL && det != NULL
- * @pre matrix->rows == matrix->cols (square matrix)
- * @pre matrix->rows <= MATRIX_MAX_ROWS
- *
- * Supports matrices up to 8x8
+ * \param[in]  matrix  Input matrix.
+ * \param[in]  scalar  Q31 scalar.
+ * \param[out] result  Output matrix.
+ * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_SIZE_EXCEEDED.
  */
-extern MatrixStatus_Type Matrix_Determinant(const Matrix_Type* const matrix,
-                                             MatrixFloat* const det);
+extern MatrixStatus_Type Matrix_ScalarMultiply(
+    const Matrix_Type  * const matrix,
+    const MatrixElement        scalar,
+    Matrix_Type        * const result);
 
 /**
- * @brief Calculate determinant of 2x2 matrix (optimized)
+ * \brief  Scalar multiplication with float input (auto-converted to Q31).
  *
- * @param[in]  matrix Input matrix (must be 2x2)
- * @param[out] det    Pointer to store determinant value
- * @return MATRIX_SUCCESS on success, error code otherwise
- *
- * @retval MATRIX_SUCCESS             Operation successful
- * @retval MATRIX_ERROR_NULL_PTR      matrix or det is NULL
- * @retval MATRIX_ERROR_DIMENSION_MISMATCH matrix is not 2x2
- *
- * Formula: det = a11*a22 - a12*a21
+ * \param[in]  matrix  Input matrix.
+ * \param[in]  scalar  Float scalar (clamped to [−1.0, 1.0]).
+ * \param[out] result  Output matrix.
+ * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_SIZE_EXCEEDED.
  */
-extern MatrixStatus_Type Matrix_Determinant2x2(const Matrix_Type* const matrix,
-                                                MatrixFloat* const det);
+extern MatrixStatus_Type Matrix_ScalarMultiplyFloat(
+    const Matrix_Type  * const matrix,
+    const MatrixFloat          scalar,
+    Matrix_Type        * const result);
 
 /**
- * @brief Calculate determinant of 3x3 matrix (optimized)
+ * \brief  Transpose: \p result = \p matrix ᵀ.
  *
- * @param[in]  matrix Input matrix (must be 3x3)
- * @param[out] det    Pointer to store determinant value
- * @return MATRIX_SUCCESS on success, error code otherwise
- *
- * @retval MATRIX_SUCCESS             Operation successful
- * @retval MATRIX_ERROR_NULL_PTR      matrix or det is NULL
- * @retval MATRIX_ERROR_DIMENSION_MISMATCH matrix is not 3x3
+ * \param[in]  matrix  Input matrix (m × n).
+ * \param[out] result  Output matrix (buffer must be ≥ n × m).
+ * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_SIZE_EXCEEDED.
  */
-extern MatrixStatus_Type Matrix_Determinant3x3(const Matrix_Type* const matrix,
-                                                MatrixFloat* const det);
+extern MatrixStatus_Type Matrix_Transpose(
+    const Matrix_Type  * const matrix,
+    Matrix_Type        * const result);
 
-/**
- * @brief Calculate determinant of 4x4 matrix (optimized)
- *
- * @param[in]  matrix Input matrix (must be 4x4)
- * @param[out] det    Pointer to store determinant value
- * @return MATRIX_SUCCESS on success, error code otherwise
- *
- * @retval MATRIX_SUCCESS             Operation successful
- * @retval MATRIX_ERROR_NULL_PTR      matrix or det is NULL
- * @retval MATRIX_ERROR_DIMENSION_MISMATCH matrix is not 4x4
+/** \} */
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * Advanced operations (iterative, no recursion)
+ *------------------------------------------------------------------------------------------------------------------*/
+
+/** \addtogroup matrix_advanced_ops  Advanced operations
+ * \{
  */
-extern MatrixStatus_Type Matrix_Determinant4x4(const Matrix_Type* const matrix,
-                                                MatrixFloat* const det);
 
 /**
- * @brief Calculate determinant of 5x5 matrix using LU decomposition
+ * \brief  General determinant dispatcher (1 × 1 … 8 × 8).
  *
- * @param[in]  matrix Input matrix (must be 5x5)
- * @param[out] det    Pointer to store determinant value
- * @return MATRIX_SUCCESS on success, error code otherwise
+ * Delegates to the appropriately-sized specialised function below.
  *
- * @retval MATRIX_SUCCESS             Operation successful
- * @retval MATRIX_ERROR_NULL_PTR      matrix or det is NULL
- * @retval MATRIX_ERROR_DIMENSION_MISMATCH matrix is not 5x5
- * @retval MATRIX_ERROR_SINGULAR      matrix is singular
+ * \param[in]  matrix  Square input matrix (must not be NULL).
+ * \param[out] det     Computed determinant (must not be NULL).
+ * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_NOT_SQUARE;
+ *          #MATRIX_ERROR_SIZE_EXCEEDED; #MATRIX_ERROR_SINGULAR.
  */
-extern MatrixStatus_Type Matrix_Determinant5x5(const Matrix_Type* const matrix,
-                                                MatrixFloat* const det);
+extern MatrixStatus_Type Matrix_Determinant(
+    const Matrix_Type  * const matrix,
+    MatrixFloat        * const det);
 
 /**
- * @brief Calculate determinant of 6x6 matrix using LU decomposition
+ * \brief  Determinant of a 2 × 2 matrix.
+ *         Formula: det = a₁₁·a₂₂ − a₁₂·a₂₁ (double-precision intermediate).
  *
- * @param[in]  matrix Input matrix (must be 6x6)
- * @param[out] det    Pointer to store determinant value
- * @return MATRIX_SUCCESS on success, error code otherwise
- *
- * @retval MATRIX_SUCCESS             Operation successful
- * @retval MATRIX_ERROR_NULL_PTR      matrix or det is NULL
- * @retval MATRIX_ERROR_DIMENSION_MISMATCH matrix is not 6x6
- * @retval MATRIX_ERROR_SINGULAR      matrix is singular
+ * \param[in]  matrix  2 × 2 input matrix.
+ * \param[out] det     Computed determinant.
+ * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_DIMENSION_MISMATCH.
  */
-extern MatrixStatus_Type Matrix_Determinant6x6(const Matrix_Type* const matrix,
-                                                MatrixFloat* const det);
+extern MatrixStatus_Type Matrix_Determinant2x2(
+    const Matrix_Type  * const matrix,
+    MatrixFloat        * const det);
 
 /**
- * @brief Calculate determinant of 7x7 matrix using LU decomposition
+ * \brief  Determinant of a 3 × 3 matrix (Sarrus' rule, double precision).
  *
- * @param[in]  matrix Input matrix (must be 7x7)
- * @param[out] det    Pointer to store determinant value
- * @return MATRIX_SUCCESS on success, error code otherwise
- *
- * @retval MATRIX_SUCCESS             Operation successful
- * @retval MATRIX_ERROR_NULL_PTR      matrix or det is NULL
- * @retval MATRIX_ERROR_DIMENSION_MISMATCH matrix is not 7x7
- * @retval MATRIX_ERROR_SINGULAR      matrix is singular
+ * \param[in]  matrix  3 × 3 input matrix.
+ * \param[out] det     Computed determinant.
+ * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_DIMENSION_MISMATCH.
  */
-extern MatrixStatus_Type Matrix_Determinant7x7(const Matrix_Type* const matrix,
-                                                MatrixFloat* const det);
+extern MatrixStatus_Type Matrix_Determinant3x3(
+    const Matrix_Type  * const matrix,
+    MatrixFloat        * const det);
 
 /**
- * @brief Calculate determinant of 8x8 matrix using LU decomposition
+ * \brief  Determinant of a 4 × 4 matrix (direct formula, double precision).
  *
- * @param[in]  matrix Input matrix (must be 8x8)
- * @param[out] det    Pointer to store determinant value
- * @return MATRIX_SUCCESS on success, error code otherwise
- *
- * @retval MATRIX_SUCCESS             Operation successful
- * @retval MATRIX_ERROR_NULL_PTR      matrix or det is NULL
- * @retval MATRIX_ERROR_DIMENSION_MISMATCH matrix is not 8x8
- * @retval MATRIX_ERROR_SINGULAR      matrix is singular
+ * \param[in]  matrix  4 × 4 input matrix.
+ * \param[out] det     Computed determinant.
+ * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_DIMENSION_MISMATCH.
  */
-extern MatrixStatus_Type Matrix_Determinant8x8(const Matrix_Type* const matrix,
-                                                MatrixFloat* const det);
+extern MatrixStatus_Type Matrix_Determinant4x4(
+    const Matrix_Type  * const matrix,
+    MatrixFloat        * const det);
 
 /**
- * @brief Calculate inverse using Gauss-Jordan elimination (iterative, no recursion)
+ * \brief  Determinant of a 5 × 5 matrix via LU decomposition.
  *
- * @param[in]  matrix Input matrix (must be square and invertible)
- * @param[out] result Result matrix to store inverse
- * @return MATRIX_SUCCESS on success, error code otherwise
- *
- * @retval MATRIX_SUCCESS             Operation successful
- * @retval MATRIX_ERROR_NULL_PTR      matrix or result is NULL
- * @retval MATRIX_ERROR_NOT_SQUARE    matrix is not square
- * @retval MATRIX_ERROR_SIZE_EXCEEDED result buffer too small
- * @retval MATRIX_ERROR_SINGULAR      matrix is singular (not invertible)
- *
- * @pre matrix != NULL && result != NULL
- * @pre matrix->rows == matrix->cols (square matrix)
- * @pre result->max_rows >= matrix->rows
- * @pre result->max_cols >= matrix->cols
- *
- * @post result * matrix = I (within numerical tolerance)
+ * \param[in]  matrix  5 × 5 input matrix.
+ * \param[out] det     Computed determinant.
+ * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR;
+ *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SINGULAR.
  */
-extern MatrixStatus_Type Matrix_Inverse(const Matrix_Type* const matrix,
-                                         Matrix_Type* const result);
+extern MatrixStatus_Type Matrix_Determinant5x5(
+    const Matrix_Type  * const matrix,
+    MatrixFloat        * const det);
 
 /**
- * @brief Calculate inverse of 2x2 matrix (optimized)
+ * \brief  Determinant of a 6 × 6 matrix via LU decomposition.
  *
- * @param[in]  matrix Input matrix (must be 2x2 and invertible)
- * @param[out] result Result matrix to store inverse
- * @return MATRIX_SUCCESS on success, error code otherwise
- *
- * @retval MATRIX_SUCCESS             Operation successful
- * @retval MATRIX_ERROR_NULL_PTR      matrix or result is NULL
- * @retval MATRIX_ERROR_DIMENSION_MISMATCH matrix is not 2x2
- * @retval MATRIX_ERROR_SINGULAR      matrix is singular
- *
- * Formula: inv(A) = (1/det) * [ a22 -a12; -a21 a11 ]
+ * \param[in]  matrix  6 × 6 input matrix.
+ * \param[out] det     Computed determinant.
+ * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR;
+ *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SINGULAR.
  */
-extern MatrixStatus_Type Matrix_Inverse2x2(const Matrix_Type* const matrix,
-                                            Matrix_Type* const result);
+extern MatrixStatus_Type Matrix_Determinant6x6(
+    const Matrix_Type  * const matrix,
+    MatrixFloat        * const det);
 
 /**
- * @brief Calculate inverse of 3x3 matrix (optimized)
+ * \brief  Determinant of a 7 × 7 matrix via LU decomposition.
  *
- * @param[in]  matrix Input matrix (must be 3x3 and invertible)
- * @param[out] result Result matrix to store inverse
- * @return MATRIX_SUCCESS on success, error code otherwise
- *
- * @retval MATRIX_SUCCESS             Operation successful
- * @retval MATRIX_ERROR_NULL_PTR      matrix or result is NULL
- * @retval MATRIX_ERROR_DIMENSION_MISMATCH matrix is not 3x3
- * @retval MATRIX_ERROR_SINGULAR      matrix is singular
+ * \param[in]  matrix  7 × 7 input matrix.
+ * \param[out] det     Computed determinant.
+ * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR;
+ *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SINGULAR.
  */
-extern MatrixStatus_Type Matrix_Inverse3x3(const Matrix_Type* const matrix,
-                                            Matrix_Type* const result);
+extern MatrixStatus_Type Matrix_Determinant7x7(
+    const Matrix_Type  * const matrix,
+    MatrixFloat        * const det);
 
 /**
- * @brief Calculate inverse of 4x4 matrix (optimized)
+ * \brief  Determinant of an 8 × 8 matrix via LU decomposition.
  *
- * @param[in]  matrix Input matrix (must be 4x4 and invertible)
- * @param[out] result Result matrix to store inverse
- * @return MATRIX_SUCCESS on success, error code otherwise
- *
- * @retval MATRIX_SUCCESS             Operation successful
- * @retval MATRIX_ERROR_NULL_PTR      matrix or result is NULL
- * @retval MATRIX_ERROR_DIMENSION_MISMATCH matrix is not 4x4
- * @retval MATRIX_ERROR_SINGULAR      matrix is singular
+ * \param[in]  matrix  8 × 8 input matrix.
+ * \param[out] det     Computed determinant.
+ * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR;
+ *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SINGULAR.
  */
-extern MatrixStatus_Type Matrix_Inverse4x4(const Matrix_Type* const matrix,
-                                            Matrix_Type* const result);
+extern MatrixStatus_Type Matrix_Determinant8x8(
+    const Matrix_Type  * const matrix,
+    MatrixFloat        * const det);
 
 /**
- * @brief Calculate eigenvalues using iterative Jacobi method (no recursion)
+ * \brief  General matrix inverse dispatcher (2 × 2 … 8 × 8, Gauss-Jordan).
  *
- * @param[in,out] matrix Input symmetric matrix (modified during computation)
- * @param[out]    eigen  Structure to store eigenvalues and eigenvectors
- * @param[in]     max_iterations Maximum number of Jacobi rotations
- * @param[in]     tolerance Convergence tolerance
- * @return MATRIX_SUCCESS on success, error code otherwise
+ * Uses optimised closed-form implementations for 2 × 2, 3 × 3, and 4 × 4;
+ * falls back to augmented Gauss-Jordan for larger sizes.
  *
- * @retval MATRIX_SUCCESS             Operation successful
- * @retval MATRIX_ERROR_NULL_PTR      matrix or eigen is NULL
- * @retval MATRIX_ERROR_NOT_SQUARE    matrix is not square
- * @retval MATRIX_ERROR_MAX_ITERATIONS Maximum iterations reached without convergence
- *
- * @pre matrix != NULL && eigen != NULL
- * @pre matrix->rows == matrix->cols (square matrix)
- * @pre matrix->rows <= MATRIX_MAX_ROWS
- * @pre max_iterations > 0U
- *
- * @note Input matrix should be symmetric for real eigenvalues
+ * \param[in]  matrix  Square, invertible input matrix.
+ * \param[out] result  Inverse matrix (buffer must be ≥ input dimensions).
+ * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_NOT_SQUARE;
+ *          #MATRIX_ERROR_SIZE_EXCEEDED; #MATRIX_ERROR_SINGULAR.
  */
-extern MatrixStatus_Type Matrix_Eigenvalues(Matrix_Type* const matrix,
-                                            MatrixEigen_Type* const eigen,
-                                            const uint32_T max_iterations,
-                                            const MatrixFloat tolerance);
+extern MatrixStatus_Type Matrix_Inverse(
+    const Matrix_Type  * const matrix,
+    Matrix_Type        * const result);
 
 /**
- * @brief Calculate eigenvalues only (faster, no eigenvectors)
+ * \brief  Inverse of a 2 × 2 matrix.
+ *         Formula: inv(A) = (1/det) · [ a₂₂  −a₁₂; −a₂₁  a₁₁ ]
  *
- * @param[in,out] matrix Input symmetric matrix (modified during computation)
- * @param[out]    eigenvalues Array to store eigenvalues (size must be at least matrix->rows)
- * @param[in]     max_iterations Maximum number of Jacobi rotations
- * @param[in]     tolerance Convergence tolerance
- * @return MATRIX_SUCCESS on success, error code otherwise
- *
- * @retval MATRIX_SUCCESS             Operation successful
- * @retval MATRIX_ERROR_NULL_PTR      matrix or eigenvalues is NULL
- * @retval MATRIX_ERROR_NOT_SQUARE    matrix is not square
- * @retval MATRIX_ERROR_MAX_ITERATIONS Maximum iterations reached
+ * \param[in]  matrix  2 × 2 input matrix.
+ * \param[out] result  2 × 2 inverse matrix.
+ * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR;
+ *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SINGULAR.
  */
-extern MatrixStatus_Type Matrix_EigenvaluesOnly(Matrix_Type* const matrix,
-                                                MatrixFloat* const eigenvalues,
-                                                const uint32_T max_iterations,
-                                                const MatrixFloat tolerance);
+extern MatrixStatus_Type Matrix_Inverse2x2(
+    const Matrix_Type  * const matrix,
+    Matrix_Type        * const result);
 
 /**
- * @brief LU decomposition with partial pivoting (iterative)
+ * \brief  Inverse of a 3 × 3 matrix (cofactor / adjugate method).
  *
- * @param[in,out] matrix Input matrix, overwritten with L+U
- * @param[out]    pivot  Pivot indices array (size must be at least matrix->rows)
- * @return MATRIX_SUCCESS on success, error code otherwise
- *
- * @retval MATRIX_SUCCESS             Operation successful
- * @retval MATRIX_ERROR_NULL_PTR      matrix or pivot is NULL
- * @retval MATRIX_ERROR_NOT_SQUARE    matrix is not square
- * @retval MATRIX_ERROR_SINGULAR      matrix is singular
- *
- * @post matrix contains L (strict lower triangular) and U (upper triangular)
- * @post L has ones on diagonal (not stored)
+ * \param[in]  matrix  3 × 3 input matrix.
+ * \param[out] result  3 × 3 inverse matrix.
+ * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR;
+ *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SINGULAR.
  */
-extern MatrixStatus_Type Matrix_LU(Matrix_Type* const matrix,
-                                    uint32_T* const pivot);
+extern MatrixStatus_Type Matrix_Inverse3x3(
+    const Matrix_Type  * const matrix,
+    Matrix_Type        * const result);
 
 /**
- * @brief Solve linear system using LU decomposition
+ * \brief  Inverse of a 4 × 4 matrix (augmented Gauss-Jordan, partial pivot).
  *
- * @param[in]  a Coefficient matrix A (must be square)
- * @param[in]  b Right-hand side matrix/vector
- * @param[out] x Solution matrix/vector
- * @return MATRIX_SUCCESS on success, error code otherwise
- *
- * @retval MATRIX_SUCCESS             Operation successful
- * @retval MATRIX_ERROR_NULL_PTR      a, b, or x is NULL
- * @retval MATRIX_ERROR_NOT_SQUARE    a is not square
- * @retval MATRIX_ERROR_DIMENSION_MISMATCH a->rows != b->rows
- * @retval MATRIX_ERROR_SIZE_EXCEEDED x buffer too small
- * @retval MATRIX_ERROR_SINGULAR      a is singular
+ * \param[in]  matrix  4 × 4 input matrix.
+ * \param[out] result  4 × 4 inverse matrix.
+ * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR;
+ *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SINGULAR.
  */
-extern MatrixStatus_Type Matrix_Solve(const Matrix_Type* const a,
-                                       const Matrix_Type* const b,
-                                       Matrix_Type* const x);
+extern MatrixStatus_Type Matrix_Inverse4x4(
+    const Matrix_Type  * const matrix,
+    Matrix_Type        * const result);
 
 /**
- * @brief Solve using Gauss-Jordan elimination (iterative)
+ * \brief  Eigenvalue decomposition via iterative Jacobi method (symmetric matrices).
  *
- * @param[in]  a Coefficient matrix A (must be square)
- * @param[in]  b Right-hand side matrix/vector
- * @param[out] x Solution matrix/vector
- * @return MATRIX_SUCCESS on success, error code otherwise
+ * Modifies \p matrix in-place during the sweep.  On success, the diagonal
+ * of \p matrix holds the eigenvalues and \p eigen carries copies plus the
+ * eigenvector columns.
  *
- * @retval MATRIX_SUCCESS             Operation successful
- * @retval MATRIX_ERROR_NULL_PTR      a, b, or x is NULL
- * @retval MATRIX_ERROR_NOT_SQUARE    a is not square
- * @retval MATRIX_ERROR_DIMENSION_MISMATCH a->rows != b->rows
- * @retval MATRIX_ERROR_SIZE_EXCEEDED x buffer too small
- * @retval MATRIX_ERROR_SINGULAR      a is singular
- *
- * @note This is a direct solver, good for small matrices (<= 8x8)
+ * \param[in,out] matrix          Symmetric input matrix (modified in-place).
+ * \param[out]    eigen           Eigenvalue / eigenvector result structure.
+ * \param[in]     max_iterations  Maximum Jacobi sweeps (0 uses #JACOBI_MAX_ITER).
+ * \param[in]     tolerance       Off-diagonal convergence threshold (0 uses default).
+ * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_NOT_SQUARE;
+ *          #MATRIX_ERROR_MAX_ITERATIONS.
  */
-extern MatrixStatus_Type Matrix_SolveGaussJordan(const Matrix_Type* const a,
-                                                  const Matrix_Type* const b,
-                                                  Matrix_Type* const x);
-
-/*==============================================================================
- * MATRIX PROPERTIES
- *============================================================================*/
+extern MatrixStatus_Type Matrix_Eigenvalues(
+    Matrix_Type      * const matrix,
+    MatrixEigen_Type * const eigen,
+    const uint32_T           max_iterations,
+    const MatrixFloat        tolerance);
 
 /**
- * @brief Check if matrix is square
+ * \brief  Eigenvalues only (no eigenvectors; faster than #Matrix_Eigenvalues).
  *
- * @param[in] matrix Pointer to matrix structure
- * @return TRUE if square, FALSE otherwise
- *
- * @retval TRUE  matrix->rows == matrix->cols
- * @retval FALSE matrix is NULL or not square
+ * \param[in,out] matrix          Symmetric input matrix (modified in-place).
+ * \param[out]    eigenvalues     Array of at least \c matrix->rows floats.
+ * \param[in]     max_iterations  Maximum Jacobi sweeps.
+ * \param[in]     tolerance       Off-diagonal convergence threshold.
+ * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_NOT_SQUARE;
+ *          #MATRIX_ERROR_MAX_ITERATIONS.
  */
-extern boolean_T Matrix_IsSquare(const Matrix_Type* const matrix);
+extern MatrixStatus_Type Matrix_EigenvaluesOnly(
+    Matrix_Type    * const matrix,
+    MatrixFloat    * const eigenvalues,
+    const uint32_T         max_iterations,
+    const MatrixFloat      tolerance);
 
 /**
- * @brief Check if matrix is symmetric within tolerance
+ * \brief  LU decomposition with partial pivoting (in-place, iterative).
  *
- * @param[in] matrix    Pointer to matrix structure
- * @param[in] tolerance Maximum allowed element-wise difference (float)
- * @return TRUE if symmetric, FALSE otherwise
+ * On return \p matrix contains L (strict lower triangular, unit diagonal
+ * not stored) and U (upper triangular) interleaved in the standard packed
+ * form, and \p pivot records the row permutation.
  *
- * @retval TRUE  |a[i][j] - a[j][i]| <= tolerance for all i,j
- * @retval FALSE matrix is NULL, not square, or asymmetric
+ * \param[in,out] matrix  Square input matrix; overwritten with L+U.
+ * \param[out]    pivot   Permutation array (at least \c matrix->rows entries).
+ * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_NOT_SQUARE;
+ *          #MATRIX_ERROR_SINGULAR.
  */
-extern boolean_T Matrix_IsSymmetric(const Matrix_Type* const matrix,
-                                     const MatrixFloat tolerance);
+extern MatrixStatus_Type Matrix_LU(
+    Matrix_Type  * const matrix,
+    uint32_T     * const pivot);
 
 /**
- * @brief Calculate trace of matrix (sum of diagonal elements)
+ * \brief  Solve A·x = b via LU decomposition (delegates to Gauss-Jordan).
  *
- * @param[in]  matrix Input matrix (must be square)
- * @param[out] trace  Pointer to store trace value
- * @return MATRIX_SUCCESS on success, error code otherwise
- *
- * @retval MATRIX_SUCCESS             Operation successful
- * @retval MATRIX_ERROR_NULL_PTR      matrix or trace is NULL
- * @retval MATRIX_ERROR_NOT_SQUARE    matrix is not square
+ * \param[in]  a  Square coefficient matrix.
+ * \param[in]  b  Right-hand side matrix or vector.
+ * \param[out] x  Solution (buffer must be ≥ a->rows × b->cols).
+ * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_NOT_SQUARE;
+ *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SIZE_EXCEEDED;
+ *          #MATRIX_ERROR_SINGULAR.
  */
-extern MatrixStatus_Type Matrix_Trace(const Matrix_Type* const matrix,
-                                       MatrixFloat* const trace);
+extern MatrixStatus_Type Matrix_Solve(
+    const Matrix_Type  * const a,
+    const Matrix_Type  * const b,
+    Matrix_Type        * const x);
 
 /**
- * @brief Calculate Frobenius norm of matrix
+ * \brief  Solve A·x = b via augmented Gauss-Jordan elimination (iterative).
  *
- * @param[in]  matrix Input matrix
- * @param[out] norm   Pointer to store norm value
- * @return MATRIX_SUCCESS on success, error code otherwise
+ * Well-suited for small systems (≤ 8 × 8).
  *
- * @retval MATRIX_SUCCESS             Operation successful
- * @retval MATRIX_ERROR_NULL_PTR      matrix or norm is NULL
- *
- * Formula: norm = sqrt(sum(i,j) a[i][j]^2)
+ * \param[in]  a  Square coefficient matrix.
+ * \param[in]  b  Right-hand side matrix or vector.
+ * \param[out] x  Solution.
+ * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_NOT_SQUARE;
+ *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SIZE_EXCEEDED;
+ *          #MATRIX_ERROR_SINGULAR.
  */
-extern MatrixStatus_Type Matrix_NormFrobenius(const Matrix_Type* const matrix,
-                                               MatrixFloat* const norm);
+extern MatrixStatus_Type Matrix_SolveGaussJordan(
+    const Matrix_Type  * const a,
+    const Matrix_Type  * const b,
+    Matrix_Type        * const x);
 
-/*==============================================================================
- * UTILITY FUNCTIONS
- *============================================================================*/
+/** \} */
 
-/**
- * @brief Check if two matrices are equal within tolerance
- *
- * @param[in] a         First matrix
- * @param[in] b         Second matrix
- * @param[in] tolerance Maximum allowed element-wise difference (float)
- * @return TRUE if equal, FALSE otherwise
- *
- * @retval TRUE  All |a[i][j] - b[i][j]| <= tolerance
- * @retval FALSE Matrices differ or any parameter is NULL
+/*--------------------------------------------------------------------------------------------------------------------
+ * Matrix properties
+ *------------------------------------------------------------------------------------------------------------------*/
+
+/** \addtogroup matrix_properties  Properties
+ * \{
  */
-extern boolean_T Matrix_IsEqual(const Matrix_Type* const a,
-                                 const Matrix_Type* const b,
-                                 const MatrixFloat tolerance);
 
 /**
- * @brief Get matrix dimensions
+ * \brief  Test whether a matrix is square.
  *
- * @param[in]  matrix Pointer to matrix structure
- * @param[out] rows   Pointer to store number of rows
- * @param[out] cols   Pointer to store number of columns
+ * \param[in] matrix  Matrix to test (NULL → FALSE).
+ * \return   TRUE if \c rows == \c cols, FALSE otherwise.
  */
-extern void Matrix_GetDimensions(const Matrix_Type* const matrix,
-                                  uint32_T* const rows,
-                                  uint32_T* const cols);
+extern boolean_T Matrix_IsSquare(const Matrix_Type * const matrix);
 
 /**
- * @brief Fill matrix with constant Q31 value
+ * \brief  Test whether a matrix is symmetric within a tolerance.
  *
- * @param[in,out] matrix Pointer to matrix structure
- * @param[in]     value  Q31 value to fill
+ * \param[in] matrix     Matrix to test.
+ * \param[in] tolerance  Maximum permitted element-wise asymmetry (float).
+ *                       Pass 0.0f to use the internal default threshold.
+ * \return   TRUE if |a[i][j] − a[j][i]| ≤ \p tolerance for all i, j.
  */
-extern void Matrix_Fill(Matrix_Type* const matrix,
-                        const MatrixElement value);
+extern boolean_T Matrix_IsSymmetric(
+    const Matrix_Type  * const matrix,
+    const MatrixFloat          tolerance);
 
 /**
- * @brief Fill matrix with constant float value (auto-converted to Q31)
+ * \brief  Compute the trace (sum of diagonal elements).
  *
- * @param[in,out] matrix Pointer to matrix structure
- * @param[in]     value  Float value to fill (clamped to [-1.0, 1.0])
+ * \param[in]  matrix  Square input matrix.
+ * \param[out] trace   Receives the trace value.
+ * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_NOT_SQUARE.
  */
-extern void Matrix_FillFloat(Matrix_Type* const matrix,
-                             const MatrixFloat value);
-
-/*==============================================================================
- * CONVERSION HELPERS
- *============================================================================*/
+extern MatrixStatus_Type Matrix_Trace(
+    const Matrix_Type  * const matrix,
+    MatrixFloat        * const trace);
 
 /**
- * @brief Convert float to Q31 fixed-point
+ * \brief  Compute the Frobenius norm: ‖A‖_F = √(Σᵢⱼ aᵢⱼ²).
  *
- * @param[in] value Float value (clamped to range [-1.0, 1.0])
- * @return Q31 fixed-point value
+ * \param[in]  matrix  Input matrix.
+ * \param[out] norm    Receives the Frobenius norm.
+ * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR.
+ */
+extern MatrixStatus_Type Matrix_NormFrobenius(
+    const Matrix_Type  * const matrix,
+    MatrixFloat        * const norm);
+
+/** \} */
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * Utility functions
+ *------------------------------------------------------------------------------------------------------------------*/
+
+/** \addtogroup matrix_utility  Utility
+ * \{
+ */
+
+/**
+ * \brief  Test element-wise equality within a tolerance.
  *
- * Formula: result = value * 2^31
+ * \param[in] a          First matrix.
+ * \param[in] b          Second matrix (must have same dimensions as \p a).
+ * \param[in] tolerance  Maximum permitted element-wise difference (float).
+ * \return   TRUE if all |a[i][j] − b[i][j]| ≤ \p tolerance.
+ */
+extern boolean_T Matrix_IsEqual(
+    const Matrix_Type  * const a,
+    const Matrix_Type  * const b,
+    const MatrixFloat          tolerance);
+
+/**
+ * \brief  Retrieve the active dimensions of a matrix.
+ *
+ * Silently does nothing if any pointer is NULL.
+ *
+ * \param[in]  matrix  Source matrix.
+ * \param[out] rows    Receives active row count.
+ * \param[out] cols    Receives active column count.
+ */
+extern void Matrix_GetDimensions(
+    const Matrix_Type  * const matrix,
+    uint32_T           * const rows,
+    uint32_T           * const cols);
+
+/**
+ * \brief  Fill all active elements with a constant Q31 value.
+ *
+ * \param[in,out] matrix  Target matrix (must not be NULL).
+ * \param[in]     value   Q31 fill value.
+ */
+extern void Matrix_Fill(
+    Matrix_Type        * const matrix,
+    const MatrixElement        value);
+
+/**
+ * \brief  Fill all active elements with a constant float value (auto-converted).
+ *
+ * \param[in,out] matrix  Target matrix (must not be NULL).
+ * \param[in]     value   Float fill value (clamped to [−1.0, 1.0]).
+ */
+extern void Matrix_FillFloat(
+    Matrix_Type    * const matrix,
+    const MatrixFloat      value);
+
+/** \} */
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * Q31 conversion helpers
+ *------------------------------------------------------------------------------------------------------------------*/
+
+/** \addtogroup matrix_conversion  Q31 conversion helpers
+ * \{
+ */
+
+/**
+ * \brief  Convert a float to Q31 fixed-point.
+ *
+ * \p value is clamped to [−1.0, +0.9999999995] before conversion.
+ * Formula: result = value × 2³¹
+ *
+ * \param[in] value  Float input.
+ * \return           Q31 representation.
  */
 extern MatrixElement Matrix_FloatToQ31(const MatrixFloat value);
 
 /**
- * @brief Convert Q31 fixed-point to float
+ * \brief  Convert a Q31 fixed-point value to float.
  *
- * @param[in] value Q31 fixed-point value
- * @return Float value in range [-1.0, 1.0]
+ * Formula: result = value / 2³¹
  *
- * Formula: result = value / 2^31
+ * \param[in] value  Q31 input.
+ * \return           Float in [−1.0, +1.0].
  */
 extern MatrixFloat Matrix_Q31ToFloat(const MatrixElement value);
 
-#endif /* MATRIX_H */
+/** \} */
+
+#endif /* MATRIX_H_ */

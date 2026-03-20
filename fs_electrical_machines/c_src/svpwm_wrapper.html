@@ -348,13 +348,13 @@ body.cython { font-family: courier; font-size: 12; }
 <pre class="cython line score-0">&#xA0;<span class="">041</span>:     MatrixFloat   Matrix_Q31ToFloat(const MatrixElement value) nogil</pre>
 <pre class="cython line score-0">&#xA0;<span class="">042</span>: </pre>
 <pre class="cython line score-0">&#xA0;<span class="">043</span>: # -----------------------------------------------------------------------------</pre>
-<pre class="cython line score-0">&#xA0;<span class="">044</span>: # C declarations from svpwm.h</pre>
+<pre class="cython line score-0">&#xA0;<span class="">044</span>: # C declarations from SV_PWM.h</pre>
 <pre class="cython line score-0">&#xA0;<span class="">045</span>: # FIX #1: Removed all  extern const &lt;macro&gt;  declarations.</pre>
 <pre class="cython line score-0">&#xA0;<span class="">046</span>: #         SVM_2PI_F, SVM_SQRT3_F, SVM_SQRT3_OVER_2_F and Q31_ONE are</pre>
 <pre class="cython line score-0">&#xA0;<span class="">047</span>: #         #define macros — they have no linkage and cannot be declared extern.</pre>
 <pre class="cython line score-0">&#xA0;<span class="">048</span>: #         The literal 6.28318530718f is inlined directly where needed.</pre>
 <pre class="cython line score-0">&#xA0;<span class="">049</span>: # -----------------------------------------------------------------------------</pre>
-<pre class="cython line score-0">&#xA0;<span class="">050</span>: cdef extern from "svpwm.h":</pre>
+<pre class="cython line score-0">&#xA0;<span class="">050</span>: cdef extern from "SV_PWM.h":</pre>
 <pre class="cython line score-0">&#xA0;<span class="">051</span>: </pre>
 <pre class="cython line score-0">&#xA0;<span class="">052</span>:     ctypedef enum SVM_Sector_Type:</pre>
 <pre class="cython line score-0">&#xA0;<span class="">053</span>:         SVM_SECTOR_I   = 0</pre>

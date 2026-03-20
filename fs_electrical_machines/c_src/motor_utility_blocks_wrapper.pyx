@@ -23,7 +23,7 @@ cimport numpy as cnp
 
 # ── C declarations ─────────────────────────────────────────────────────────────
 
-cdef extern from "motor_utility_blocks.h":
+cdef extern from "Motor_Utility_Blocks.h":
 
     # Constants
     float MUB_TWO_PI

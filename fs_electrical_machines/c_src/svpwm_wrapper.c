@@ -20,7 +20,7 @@
             "C:\\EmbedSimProject\\embed_sim_project\\.venv\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\ndarraytypes.h",
             "C:\\EmbedSimProject\\embed_sim_project\\.venv\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\ufuncobject.h",
             "C:\\EmbedSimProject\\embed_sim_project\\fs_electrical_machines\\c_src\\Matrix.h",
-            "C:\\EmbedSimProject\\embed_sim_project\\fs_electrical_machines\\c_src\\svpwm.h"
+            "C:\\EmbedSimProject\\embed_sim_project\\fs_electrical_machines\\c_src\\SV_PWM.h"
         ],
         "extra_compile_args": [
             "/O2"
@@ -33,7 +33,7 @@
         "name": "svpwm_wrapper",
         "sources": [
             "C:\\EmbedSimProject\\embed_sim_project\\fs_electrical_machines\\c_src\\svpwm_wrapper.pyx",
-            "C:\\EmbedSimProject\\embed_sim_project\\fs_electrical_machines\\c_src\\svpwm.c",
+            "C:\\EmbedSimProject\\embed_sim_project\\fs_electrical_machines\\c_src\\SV_PWM.c",
             "C:\\EmbedSimProject\\embed_sim_project\\fs_electrical_machines\\c_src\\Matrix.c"
         ]
     },
@@ -1170,7 +1170,7 @@ static int __Pyx_init_co_variables(void) {
 #include "numpy/ufuncobject.h"
 #include <math.h>
 #include "Matrix.h"
-#include "svpwm.h"
+#include "SV_PWM.h"
 #include "pythread.h"
 #include <stdlib.h>
 #ifdef _OPENMP
