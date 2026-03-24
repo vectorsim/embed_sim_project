@@ -23,7 +23,7 @@ cimport numpy as cnp
 
 # ── C declarations ─────────────────────────────────────────────────────────────
 
-cdef extern from "Motor_Utility_Blocks.h":
+cdef extern from "embed_sim_motor_utility_blocks.h":
 
     # Constants
     float MUB_TWO_PI
@@ -48,11 +48,13 @@ cdef extern from "Motor_Utility_Blocks.h":
         float         theta_e
         float         vf_ratio
         float         v_phase_peak
+        float         v_boost
         unsigned char p_poles
 
     void VfAngle_Init(VfAngle_T    *s,
                       float         vf_ratio,
                       float         v_phase_peak,
+                      float         v_boost,
                       unsigned char p_poles) nogil
 
     void VfAngle_Step(VfAngle_T   *s,
@@ -159,8 +161,8 @@ cdef class VfAngleWrapper:
     cdef float[3]  _y
 
     def __cinit__(self, float vf_ratio, float v_phase_peak,
-                  unsigned char p_poles):
-        VfAngle_Init(&self._state, vf_ratio, v_phase_peak, p_poles)
+                  float v_boost, unsigned char p_poles):
+        VfAngle_Init(&self._state, vf_ratio, v_phase_peak, v_boost, p_poles)
         self._u[0] = 0.0
         self._y[0] = self._y[1] = self._y[2] = 0.0
 

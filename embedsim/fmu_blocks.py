@@ -218,7 +218,8 @@ class FMUBlock(VectorBlock):
                  parameters: Optional[Dict[str, float]] = None,
                  instance_name: Optional[str] = None,
                  use_c_backend: bool = False,
-                 dtype=None) -> None:
+                 dtype=None,
+                 substeps: int = 10) -> None:
         """
         Initialize an FMU block.
         
@@ -229,6 +230,10 @@ class FMUBlock(VectorBlock):
             output_names: List of FMU output variable names (in order)
             parameters: Dictionary of parameter names and values to set
             instance_name: FMU instance name (default: same as name)
+            substeps: Number of internal FMU substeps per EmbedSim dt.
+                      Default 10 → FMU sees dt/10 per doStep call.
+                      Increase for stiff electrical dynamics (PMSM: 10 is
+                      sufficient for 50 µs outer dt; use 20 if id diverges).
         
         Raises:
             FileNotFoundError: If FMU file doesn't exist
@@ -248,7 +253,11 @@ class FMUBlock(VectorBlock):
         self.output_names = output_names
         self.parameters = parameters if parameters is not None else {}
         self.instance_name = instance_name if instance_name is not None else name
-        
+
+        # Internal substepping — FMU is advanced in (substeps) micro-steps
+        # per EmbedSim dt to prevent algebraic divergence in stiff models.
+        self._substeps: int = max(1, int(substeps))
+
         # FMU internals
         self.fmu: Optional[FMU2Slave] = None
         self.model_description = None
@@ -321,8 +330,13 @@ class FMUBlock(VectorBlock):
             vr = self._get_value_reference(param_name)
             self.fmu.setReal([vr], [param_value])
         
-        # Setup experiment
-        self.fmu.setupExperiment(startTime=t_start)
+        # Setup experiment — pass tolerance to constrain internal DASSL solver.
+        # stopTime is set large (1e9) so the FMU never self-terminates.
+        self.fmu.setupExperiment(
+            startTime=t_start,
+            stopTime=1e9,
+            tolerance=1e-6,
+        )
         
         # Enter initialization mode
         self.fmu.enterInitializationMode()
@@ -408,14 +422,17 @@ class FMUBlock(VectorBlock):
                 vr = self._get_value_reference(input_name)
                 self.fmu.setReal([vr], [combined_inputs[i]])
         
-        # Perform FMU time step
-        self.fmu.doStep(
-            currentCommunicationPoint=self._current_time,
-            communicationStepSize=dt
-        )
-        
-        # Update current time
-        self._current_time = t + dt
+        # Perform FMU time step — subdivided into _substeps micro-steps.
+        # This prevents algebraic divergence in stiff electrical models
+        # (e.g. PMSM with small L/R time constant) without requiring a
+        # smaller outer EmbedSim dt.
+        micro_dt = dt / self._substeps
+        for _ in range(self._substeps):
+            self.fmu.doStep(
+                currentCommunicationPoint=self._current_time,
+                communicationStepSize=micro_dt,
+            )
+            self._current_time += micro_dt
         
         # Read FMU outputs
         output_values = []

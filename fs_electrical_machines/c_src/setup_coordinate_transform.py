@@ -33,8 +33,8 @@ ext = Extension(
     name="coordinate_transform_wrapper",
     sources=[
         str(_C_SRC / "coordinate_transform_wrapper.pyx"),
-        str(_C_SRC / "Coordinate_Transform.c"),
-        str(_C_SRC / "Matrix.c"),
+        str(_C_SRC / "embed_sim_coordinate_transform.c"),
+        str(_C_SRC / "embed_sim_matrix.c"),
     ],
     include_dirs=[
         str(_C_SRC),          # finds Coordinate_Transform.h, Matrix.h, Sys_Types.h

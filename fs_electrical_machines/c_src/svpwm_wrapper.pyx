@@ -23,11 +23,11 @@ from libc.math cimport fabs, sqrt, atan2
 cnp.import_array()
 
 # -----------------------------------------------------------------------------
-# C declarations from Matrix.h
-# FIX #3: Matrix_FloatToQ31 / Matrix_Q31ToFloat belong under Matrix.h,
-#         not svpwm.h — they are defined in Matrix.c and declared in Matrix.h.
+# C declarations from embed_sim_matrix.h
+# FIX #3: Matrix_FloatToQ31 / Matrix_Q31ToFloat belong under embed_sim_matrix.h,
+#         not svpwm.h — they are defined in Matrix.c and declared in embed_sim_matrix.h.
 # -----------------------------------------------------------------------------
-cdef extern from "Matrix.h":
+cdef extern from "embed_sim_matrix.h":
     ctypedef int       MatrixElement   # int32_T
     ctypedef float     MatrixFloat
 
@@ -47,7 +47,7 @@ cdef extern from "Matrix.h":
 #         #define macros — they have no linkage and cannot be declared extern.
 #         The literal 6.28318530718f is inlined directly where needed.
 # -----------------------------------------------------------------------------
-cdef extern from "SV_PWM.h":
+cdef extern from "embed_sim_sv_pwm.h":
 
     ctypedef enum SVM_Sector_Type:
         SVM_SECTOR_I   = 0

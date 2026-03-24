@@ -20,7 +20,7 @@ cimport numpy as cnp
 # ---------------------------------------------------------------------------
 # C declarations
 # ---------------------------------------------------------------------------
-cdef extern from "coordinate_transform.h":   # FIX 1: lowercase
+cdef extern from "embed_sim_coordinate_transform.h":   # FIX 1: lowercase
 
     ctypedef struct Clarke_T:
         pass

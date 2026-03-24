@@ -115,349 +115,349 @@ int PMSM_Motor_setb_function(DATA *data, threadData_t *threadData)
 
 
 /*
-equation index: 35
-type: SIMPLE_ASSIGN
-speed_rpm = 9.549296585513721 * omega_m
-*/
-void PMSM_Motor_eqFunction_35(DATA *data, threadData_t *threadData)
-{
-  const int equationIndexes[2] = {1,35};
-  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[29]] /* speed_rpm variable */) = (9.549296585513721) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[2]] /* omega_m STATE(1) */));
-  threadData->lastEquationSolved = 35;
-}
-
-/*
-equation index: 36
-type: SIMPLE_ASSIGN
-theta_m = theta_e / p
-*/
-void PMSM_Motor_eqFunction_36(DATA *data, threadData_t *threadData)
-{
-  const int equationIndexes[2] = {1,36};
-  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[30]] /* theta_m variable */) = DIVISION_SIM((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[3]] /* theta_e STATE(1,omega_e) */),(data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[6]] /* p PARAM */),"p",equationIndexes);
-  threadData->lastEquationSolved = 36;
-}
-
-/*
-equation index: 37
-type: SIMPLE_ASSIGN
-T_em_out = 1.5 * p * i_q * (lambda_pm + (L_d - L_q) * i_d)
-*/
-void PMSM_Motor_eqFunction_37(DATA *data, threadData_t *threadData)
-{
-  const int equationIndexes[2] = {1,37};
-  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[14]] /* T_em_out variable */) = (1.5) * (((data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[6]] /* p PARAM */)) * (((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[1]] /* i_q STATE(1) */)) * ((data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[5]] /* lambda_pm PARAM */) + ((data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[2]] /* L_d PARAM */) - (data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[3]] /* L_q PARAM */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[0]] /* i_d STATE(1) */)))));
-  threadData->lastEquationSolved = 37;
-}
-
-/*
-equation index: 38
-type: SIMPLE_ASSIGN
-$DER.omega_m = (T_em_out + (-B) * omega_m - T_load) / J
-*/
-void PMSM_Motor_eqFunction_38(DATA *data, threadData_t *threadData)
-{
-  const int equationIndexes[2] = {1,38};
-  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[6]] /* der(omega_m) STATE_DER */) = DIVISION_SIM((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[14]] /* T_em_out variable */) + ((-(data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[0]] /* B PARAM */))) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[2]] /* omega_m STATE(1) */)) - (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[15]] /* T_load variable */),(data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[1]] /* J PARAM */),"J",equationIndexes);
-  threadData->lastEquationSolved = 38;
-}
-
-/*
 equation index: 39
 type: SIMPLE_ASSIGN
-P_out = T_em_out * omega_m
+speed_rpm = 9.549296585513721 * omega_m
 */
 void PMSM_Motor_eqFunction_39(DATA *data, threadData_t *threadData)
 {
   const int equationIndexes[2] = {1,39};
-  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[13]] /* P_out variable */) = ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[14]] /* T_em_out variable */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[2]] /* omega_m STATE(1) */));
+  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[29]] /* speed_rpm variable */) = (9.549296585513721) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[2]] /* omega_m STATE(1) */));
   threadData->lastEquationSolved = 39;
 }
 
 /*
 equation index: 40
 type: SIMPLE_ASSIGN
-omega_e = p * omega_m
+theta_m = theta_e / p
 */
 void PMSM_Motor_eqFunction_40(DATA *data, threadData_t *threadData)
 {
   const int equationIndexes[2] = {1,40};
-  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[27]] /* omega_e variable */) = ((data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[6]] /* p PARAM */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[2]] /* omega_m STATE(1) */));
+  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[30]] /* theta_m variable */) = DIVISION_SIM((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[3]] /* theta_e STATE(1,omega_e) */),(data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[6]] /* p PARAM */),"p",equationIndexes);
   threadData->lastEquationSolved = 40;
 }
 
 /*
 equation index: 41
 type: SIMPLE_ASSIGN
-$DER.theta_e = omega_e
+T_em_out = 1.5 * p * i_q * (lambda_pm + (L_d - L_q) * i_d)
 */
 void PMSM_Motor_eqFunction_41(DATA *data, threadData_t *threadData)
 {
   const int equationIndexes[2] = {1,41};
-  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[7]] /* der(theta_e) STATE_DER */) = (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[27]] /* omega_e variable */);
+  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[14]] /* T_em_out variable */) = (1.5) * (((data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[6]] /* p PARAM */)) * (((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[1]] /* i_q STATE(1) */)) * ((data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[5]] /* lambda_pm PARAM */) + ((data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[2]] /* L_d PARAM */) - (data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[3]] /* L_q PARAM */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[0]] /* i_d STATE(1) */)))));
   threadData->lastEquationSolved = 41;
 }
 
 /*
 equation index: 42
 type: SIMPLE_ASSIGN
-v_c_leg = duty_c * v_dc
+$DER.omega_m = (T_em_out + (-B) * omega_m - T_load) / J
 */
 void PMSM_Motor_eqFunction_42(DATA *data, threadData_t *threadData)
 {
   const int equationIndexes[2] = {1,42};
-  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[38]] /* v_c_leg variable */) = ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[18]] /* duty_c variable */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[40]] /* v_dc variable */));
+  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[6]] /* der(omega_m) STATE_DER */) = DIVISION_SIM((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[14]] /* T_em_out variable */) + ((-(data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[0]] /* B PARAM */))) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[2]] /* omega_m STATE(1) */)) - (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[15]] /* T_load variable */),(data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[1]] /* J PARAM */),"J",equationIndexes);
   threadData->lastEquationSolved = 42;
 }
 
 /*
 equation index: 43
 type: SIMPLE_ASSIGN
-v_b_leg = duty_b * v_dc
+P_out = T_em_out * omega_m
 */
 void PMSM_Motor_eqFunction_43(DATA *data, threadData_t *threadData)
 {
   const int equationIndexes[2] = {1,43};
-  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[35]] /* v_b_leg variable */) = ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[17]] /* duty_b variable */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[40]] /* v_dc variable */));
+  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[13]] /* P_out variable */) = ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[14]] /* T_em_out variable */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[2]] /* omega_m STATE(1) */));
   threadData->lastEquationSolved = 43;
 }
 
 /*
 equation index: 44
 type: SIMPLE_ASSIGN
-v_a_leg = duty_a * v_dc
+omega_e = p * omega_m
 */
 void PMSM_Motor_eqFunction_44(DATA *data, threadData_t *threadData)
 {
   const int equationIndexes[2] = {1,44};
-  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[32]] /* v_a_leg variable */) = ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[16]] /* duty_a variable */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[40]] /* v_dc variable */));
+  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[27]] /* omega_e variable */) = ((data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[6]] /* p PARAM */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[2]] /* omega_m STATE(1) */));
   threadData->lastEquationSolved = 44;
 }
 
 /*
 equation index: 45
 type: SIMPLE_ASSIGN
-v_neutral = 0.3333333333333333 * (v_a_leg + v_b_leg + v_c_leg)
+$DER.theta_e = omega_e
 */
 void PMSM_Motor_eqFunction_45(DATA *data, threadData_t *threadData)
 {
   const int equationIndexes[2] = {1,45};
-  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[41]] /* v_neutral variable */) = (0.3333333333333333) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[32]] /* v_a_leg variable */) + (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[35]] /* v_b_leg variable */) + (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[38]] /* v_c_leg variable */));
+  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[7]] /* der(theta_e) STATE_DER */) = (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[27]] /* omega_e variable */);
   threadData->lastEquationSolved = 45;
 }
 
 /*
 equation index: 46
 type: SIMPLE_ASSIGN
-v_b = v_b_leg - v_neutral
+v_c_leg = duty_c * v_dc
 */
 void PMSM_Motor_eqFunction_46(DATA *data, threadData_t *threadData)
 {
   const int equationIndexes[2] = {1,46};
-  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[34]] /* v_b variable */) = (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[35]] /* v_b_leg variable */) - (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[41]] /* v_neutral variable */);
+  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[38]] /* v_c_leg variable */) = ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[18]] /* duty_c variable */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[40]] /* v_dc variable */));
   threadData->lastEquationSolved = 46;
 }
 
 /*
 equation index: 47
 type: SIMPLE_ASSIGN
-v_c = v_c_leg - v_neutral
+v_b_leg = duty_b * v_dc
 */
 void PMSM_Motor_eqFunction_47(DATA *data, threadData_t *threadData)
 {
   const int equationIndexes[2] = {1,47};
-  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[37]] /* v_c variable */) = (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[38]] /* v_c_leg variable */) - (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[41]] /* v_neutral variable */);
+  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[35]] /* v_b_leg variable */) = ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[17]] /* duty_b variable */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[40]] /* v_dc variable */));
   threadData->lastEquationSolved = 47;
 }
 
 /*
 equation index: 48
 type: SIMPLE_ASSIGN
-v_beta = 0.5773502691896257 * (v_b - v_c)
+v_a_leg = duty_a * v_dc
 */
 void PMSM_Motor_eqFunction_48(DATA *data, threadData_t *threadData)
 {
   const int equationIndexes[2] = {1,48};
-  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[36]] /* v_beta variable */) = (0.5773502691896257) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[34]] /* v_b variable */) - (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[37]] /* v_c variable */));
+  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[32]] /* v_a_leg variable */) = ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[16]] /* duty_a variable */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[40]] /* v_dc variable */));
   threadData->lastEquationSolved = 48;
 }
 
 /*
 equation index: 49
 type: SIMPLE_ASSIGN
-v_a = v_a_leg - v_neutral
+v_neutral = 0.3333333333333333 * (v_a_leg + v_b_leg + v_c_leg)
 */
 void PMSM_Motor_eqFunction_49(DATA *data, threadData_t *threadData)
 {
   const int equationIndexes[2] = {1,49};
-  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[31]] /* v_a variable */) = (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[32]] /* v_a_leg variable */) - (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[41]] /* v_neutral variable */);
+  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[41]] /* v_neutral variable */) = (0.3333333333333333) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[32]] /* v_a_leg variable */) + (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[35]] /* v_b_leg variable */) + (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[38]] /* v_c_leg variable */));
   threadData->lastEquationSolved = 49;
 }
 
 /*
 equation index: 50
 type: SIMPLE_ASSIGN
-v_alpha = 0.6666666666666666 * (v_a + (-0.5) * (v_b + v_c))
+v_b = v_b_leg - v_neutral
 */
 void PMSM_Motor_eqFunction_50(DATA *data, threadData_t *threadData)
 {
   const int equationIndexes[2] = {1,50};
-  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[33]] /* v_alpha variable */) = (0.6666666666666666) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[31]] /* v_a variable */) + (-0.5) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[34]] /* v_b variable */) + (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[37]] /* v_c variable */)));
+  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[34]] /* v_b variable */) = (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[35]] /* v_b_leg variable */) - (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[41]] /* v_neutral variable */);
   threadData->lastEquationSolved = 50;
 }
 
 /*
 equation index: 51
 type: SIMPLE_ASSIGN
-omega_m_out = omega_m
+v_c = v_c_leg - v_neutral
 */
 void PMSM_Motor_eqFunction_51(DATA *data, threadData_t *threadData)
 {
   const int equationIndexes[2] = {1,51};
-  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[28]] /* omega_m_out variable */) = (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[2]] /* omega_m STATE(1) */);
+  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[37]] /* v_c variable */) = (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[38]] /* v_c_leg variable */) - (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[41]] /* v_neutral variable */);
   threadData->lastEquationSolved = 51;
 }
 
 /*
 equation index: 52
 type: SIMPLE_ASSIGN
-$cse4 = cos(theta_e)
+v_beta = 0.5773502691896257 * (v_c - v_b)
 */
 void PMSM_Motor_eqFunction_52(DATA *data, threadData_t *threadData)
 {
   const int equationIndexes[2] = {1,52};
-  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[11]] /* $cse4 variable */) = cos((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[3]] /* theta_e STATE(1,omega_e) */));
+  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[36]] /* v_beta variable */) = (0.5773502691896257) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[37]] /* v_c variable */) - (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[34]] /* v_b variable */));
   threadData->lastEquationSolved = 52;
 }
 
 /*
 equation index: 53
 type: SIMPLE_ASSIGN
-$cse3 = sin(theta_e)
+v_a = v_a_leg - v_neutral
 */
 void PMSM_Motor_eqFunction_53(DATA *data, threadData_t *threadData)
 {
   const int equationIndexes[2] = {1,53};
-  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[10]] /* $cse3 variable */) = sin((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[3]] /* theta_e STATE(1,omega_e) */));
+  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[31]] /* v_a variable */) = (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[32]] /* v_a_leg variable */) - (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[41]] /* v_neutral variable */);
   threadData->lastEquationSolved = 53;
 }
 
 /*
 equation index: 54
 type: SIMPLE_ASSIGN
-v_d = v_alpha * $cse4 + v_beta * $cse3
+v_alpha = 0.6666666666666666 * (v_a + (-0.5) * (v_b + v_c))
 */
 void PMSM_Motor_eqFunction_54(DATA *data, threadData_t *threadData)
 {
   const int equationIndexes[2] = {1,54};
-  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[39]] /* v_d variable */) = ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[33]] /* v_alpha variable */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[11]] /* $cse4 variable */)) + ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[36]] /* v_beta variable */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[10]] /* $cse3 variable */));
+  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[33]] /* v_alpha variable */) = (0.6666666666666666) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[31]] /* v_a variable */) + (-0.5) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[34]] /* v_b variable */) + (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[37]] /* v_c variable */)));
   threadData->lastEquationSolved = 54;
 }
 
 /*
 equation index: 55
 type: SIMPLE_ASSIGN
-$DER.i_d = (v_d + omega_e * L_q * i_q - R * i_d) / L_d
+omega_m_out = omega_m
 */
 void PMSM_Motor_eqFunction_55(DATA *data, threadData_t *threadData)
 {
   const int equationIndexes[2] = {1,55};
-  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[4]] /* der(i_d) STATE_DER */) = DIVISION_SIM((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[39]] /* v_d variable */) + ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[27]] /* omega_e variable */)) * (((data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[3]] /* L_q PARAM */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[1]] /* i_q STATE(1) */))) - (((data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[4]] /* R PARAM */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[0]] /* i_d STATE(1) */))),(data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[2]] /* L_d PARAM */),"L_d",equationIndexes);
+  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[28]] /* omega_m_out variable */) = (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[2]] /* omega_m STATE(1) */);
   threadData->lastEquationSolved = 55;
 }
 
 /*
 equation index: 56
 type: SIMPLE_ASSIGN
-v_q = v_beta * $cse4 - v_alpha * $cse3
+$cse4 = cos(theta_e)
 */
 void PMSM_Motor_eqFunction_56(DATA *data, threadData_t *threadData)
 {
   const int equationIndexes[2] = {1,56};
-  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[42]] /* v_q variable */) = ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[36]] /* v_beta variable */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[11]] /* $cse4 variable */)) - (((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[33]] /* v_alpha variable */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[10]] /* $cse3 variable */)));
+  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[11]] /* $cse4 variable */) = cos((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[3]] /* theta_e STATE(1,omega_e) */));
   threadData->lastEquationSolved = 56;
 }
 
 /*
 equation index: 57
 type: SIMPLE_ASSIGN
-$DER.i_q = (v_q + (-R) * i_q - omega_e * (L_d * i_d + lambda_pm)) / L_q
+$cse3 = sin(theta_e)
 */
 void PMSM_Motor_eqFunction_57(DATA *data, threadData_t *threadData)
 {
   const int equationIndexes[2] = {1,57};
-  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[5]] /* der(i_q) STATE_DER */) = DIVISION_SIM((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[42]] /* v_q variable */) + ((-(data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[4]] /* R PARAM */))) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[1]] /* i_q STATE(1) */)) - (((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[27]] /* omega_e variable */)) * (((data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[2]] /* L_d PARAM */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[0]] /* i_d STATE(1) */)) + (data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[5]] /* lambda_pm PARAM */))),(data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[3]] /* L_q PARAM */),"L_q",equationIndexes);
+  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[10]] /* $cse3 variable */) = sin((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[3]] /* theta_e STATE(1,omega_e) */));
   threadData->lastEquationSolved = 57;
 }
 
 /*
 equation index: 58
 type: SIMPLE_ASSIGN
-i_a = i_d * $cse4 - i_q * $cse3
+v_d = v_alpha * $cse4 + v_beta * $cse3
 */
 void PMSM_Motor_eqFunction_58(DATA *data, threadData_t *threadData)
 {
   const int equationIndexes[2] = {1,58};
-  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[23]] /* i_a variable */) = ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[0]] /* i_d STATE(1) */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[11]] /* $cse4 variable */)) - (((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[1]] /* i_q STATE(1) */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[10]] /* $cse3 variable */)));
+  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[39]] /* v_d variable */) = ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[33]] /* v_alpha variable */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[11]] /* $cse4 variable */)) + ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[36]] /* v_beta variable */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[10]] /* $cse3 variable */));
   threadData->lastEquationSolved = 58;
 }
 
 /*
 equation index: 59
 type: SIMPLE_ASSIGN
-i_beta = i_d * $cse3 + i_q * $cse4
+$DER.i_d = (v_d + (-R) * i_d - omega_e * L_q * i_q) / L_d
 */
 void PMSM_Motor_eqFunction_59(DATA *data, threadData_t *threadData)
 {
   const int equationIndexes[2] = {1,59};
-  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[25]] /* i_beta variable */) = ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[0]] /* i_d STATE(1) */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[10]] /* $cse3 variable */)) + ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[1]] /* i_q STATE(1) */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[11]] /* $cse4 variable */));
+  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[4]] /* der(i_d) STATE_DER */) = DIVISION_SIM((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[39]] /* v_d variable */) + ((-(data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[4]] /* R PARAM */))) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[0]] /* i_d STATE(1) */)) - (((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[27]] /* omega_e variable */)) * (((data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[3]] /* L_q PARAM */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[1]] /* i_q STATE(1) */)))),(data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[2]] /* L_d PARAM */),"L_d",equationIndexes);
   threadData->lastEquationSolved = 59;
 }
 
 /*
 equation index: 60
 type: SIMPLE_ASSIGN
-i_b = 0.8660254037844386 * i_beta + (-0.5) * i_a
+v_q = v_beta * $cse4 - v_alpha * $cse3
 */
 void PMSM_Motor_eqFunction_60(DATA *data, threadData_t *threadData)
 {
   const int equationIndexes[2] = {1,60};
-  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[24]] /* i_b variable */) = (0.8660254037844386) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[25]] /* i_beta variable */)) + (-0.5) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[23]] /* i_a variable */));
+  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[42]] /* v_q variable */) = ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[36]] /* v_beta variable */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[11]] /* $cse4 variable */)) - (((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[33]] /* v_alpha variable */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[10]] /* $cse3 variable */)));
   threadData->lastEquationSolved = 60;
 }
 
 /*
 equation index: 61
 type: SIMPLE_ASSIGN
-i_c = (-0.5) * i_a + (-0.8660254037844386) * i_beta
+$DER.i_q = (v_q + (-R) * i_q - omega_e * (L_d * i_d + lambda_pm)) / L_q
 */
 void PMSM_Motor_eqFunction_61(DATA *data, threadData_t *threadData)
 {
   const int equationIndexes[2] = {1,61};
-  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[26]] /* i_c variable */) = (-0.5) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[23]] /* i_a variable */)) + (-0.8660254037844386) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[25]] /* i_beta variable */));
+  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[5]] /* der(i_q) STATE_DER */) = DIVISION_SIM((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[42]] /* v_q variable */) + ((-(data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[4]] /* R PARAM */))) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[1]] /* i_q STATE(1) */)) - (((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[27]] /* omega_e variable */)) * (((data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[2]] /* L_d PARAM */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[0]] /* i_d STATE(1) */)) + (data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[5]] /* lambda_pm PARAM */))),(data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[3]] /* L_q PARAM */),"L_q",equationIndexes);
   threadData->lastEquationSolved = 61;
 }
 
 /*
 equation index: 62
 type: SIMPLE_ASSIGN
-P_in = v_a * i_a + v_b * i_b + v_c * i_c
+i_a = i_d * $cse4 - i_q * $cse3
 */
 void PMSM_Motor_eqFunction_62(DATA *data, threadData_t *threadData)
 {
   const int equationIndexes[2] = {1,62};
-  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[12]] /* P_in variable */) = ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[31]] /* v_a variable */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[23]] /* i_a variable */)) + ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[34]] /* v_b variable */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[24]] /* i_b variable */)) + ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[37]] /* v_c variable */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[26]] /* i_c variable */));
+  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[23]] /* i_a variable */) = ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[0]] /* i_d STATE(1) */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[11]] /* $cse4 variable */)) - (((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[1]] /* i_q STATE(1) */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[10]] /* $cse3 variable */)));
   threadData->lastEquationSolved = 62;
 }
 
 /*
 equation index: 63
 type: SIMPLE_ASSIGN
-efficiency = if P_in > 0.0 then P_out / P_in * 100.0 else 0.0
+i_beta = i_d * $cse3 + i_q * $cse4
 */
 void PMSM_Motor_eqFunction_63(DATA *data, threadData_t *threadData)
 {
   const int equationIndexes[2] = {1,63};
+  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[25]] /* i_beta variable */) = ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[0]] /* i_d STATE(1) */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[10]] /* $cse3 variable */)) + ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[1]] /* i_q STATE(1) */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[11]] /* $cse4 variable */));
+  threadData->lastEquationSolved = 63;
+}
+
+/*
+equation index: 64
+type: SIMPLE_ASSIGN
+i_b = 0.8660254037844386 * i_beta + (-0.5) * i_a
+*/
+void PMSM_Motor_eqFunction_64(DATA *data, threadData_t *threadData)
+{
+  const int equationIndexes[2] = {1,64};
+  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[24]] /* i_b variable */) = (0.8660254037844386) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[25]] /* i_beta variable */)) + (-0.5) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[23]] /* i_a variable */));
+  threadData->lastEquationSolved = 64;
+}
+
+/*
+equation index: 65
+type: SIMPLE_ASSIGN
+i_c = (-0.5) * i_a + (-0.8660254037844386) * i_beta
+*/
+void PMSM_Motor_eqFunction_65(DATA *data, threadData_t *threadData)
+{
+  const int equationIndexes[2] = {1,65};
+  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[26]] /* i_c variable */) = (-0.5) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[23]] /* i_a variable */)) + (-0.8660254037844386) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[25]] /* i_beta variable */));
+  threadData->lastEquationSolved = 65;
+}
+
+/*
+equation index: 66
+type: SIMPLE_ASSIGN
+P_in = v_a * i_a + v_b * i_b + v_c * i_c
+*/
+void PMSM_Motor_eqFunction_66(DATA *data, threadData_t *threadData)
+{
+  const int equationIndexes[2] = {1,66};
+  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[12]] /* P_in variable */) = ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[31]] /* v_a variable */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[23]] /* i_a variable */)) + ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[34]] /* v_b variable */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[24]] /* i_b variable */)) + ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[37]] /* v_c variable */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[26]] /* i_c variable */));
+  threadData->lastEquationSolved = 66;
+}
+
+/*
+equation index: 67
+type: SIMPLE_ASSIGN
+efficiency = if P_in > 0.0 then P_out / P_in * 100.0 else 0.0
+*/
+void PMSM_Motor_eqFunction_67(DATA *data, threadData_t *threadData)
+{
+  const int equationIndexes[2] = {1,67};
   modelica_boolean tmp0;
   modelica_real tmp1;
   modelica_real tmp2;
@@ -465,67 +465,67 @@ void PMSM_Motor_eqFunction_63(DATA *data, threadData_t *threadData)
   tmp2 = 0.0;
   relationhysteresis(data, &tmp0, (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[12]] /* P_in variable */), 0.0, tmp1, tmp2, 0, Greater, GreaterZC);
   (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[19]] /* efficiency variable */) = (tmp0?(DIVISION_SIM((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[13]] /* P_out variable */),(data->localData[0]->realVars[data->simulationInfo->realVarsIndex[12]] /* P_in variable */),"P_in",equationIndexes)) * (100.0):0.0);
-  threadData->lastEquationSolved = 63;
-}
-
-/*
-equation index: 64
-type: SIMPLE_ASSIGN
-emf_a = lambda_pm * omega_e * $cse3
-*/
-void PMSM_Motor_eqFunction_64(DATA *data, threadData_t *threadData)
-{
-  const int equationIndexes[2] = {1,64};
-  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[20]] /* emf_a variable */) = ((data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[5]] /* lambda_pm PARAM */)) * (((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[27]] /* omega_e variable */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[10]] /* $cse3 variable */)));
-  threadData->lastEquationSolved = 64;
-}
-
-/*
-equation index: 65
-type: SIMPLE_ASSIGN
-$cse2 = sin(theta_e - 2.0943951023931953)
-*/
-void PMSM_Motor_eqFunction_65(DATA *data, threadData_t *threadData)
-{
-  const int equationIndexes[2] = {1,65};
-  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[9]] /* $cse2 variable */) = sin((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[3]] /* theta_e STATE(1,omega_e) */) - 2.0943951023931953);
-  threadData->lastEquationSolved = 65;
-}
-
-/*
-equation index: 66
-type: SIMPLE_ASSIGN
-emf_b = lambda_pm * omega_e * $cse2
-*/
-void PMSM_Motor_eqFunction_66(DATA *data, threadData_t *threadData)
-{
-  const int equationIndexes[2] = {1,66};
-  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[21]] /* emf_b variable */) = ((data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[5]] /* lambda_pm PARAM */)) * (((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[27]] /* omega_e variable */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[9]] /* $cse2 variable */)));
-  threadData->lastEquationSolved = 66;
-}
-
-/*
-equation index: 67
-type: SIMPLE_ASSIGN
-$cse1 = sin(theta_e + 2.0943951023931953)
-*/
-void PMSM_Motor_eqFunction_67(DATA *data, threadData_t *threadData)
-{
-  const int equationIndexes[2] = {1,67};
-  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[8]] /* $cse1 variable */) = sin((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[3]] /* theta_e STATE(1,omega_e) */) + 2.0943951023931953);
   threadData->lastEquationSolved = 67;
 }
 
 /*
 equation index: 68
 type: SIMPLE_ASSIGN
-emf_c = lambda_pm * omega_e * $cse1
+emf_a = lambda_pm * omega_e * $cse3
 */
 void PMSM_Motor_eqFunction_68(DATA *data, threadData_t *threadData)
 {
   const int equationIndexes[2] = {1,68};
-  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[22]] /* emf_c variable */) = ((data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[5]] /* lambda_pm PARAM */)) * (((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[27]] /* omega_e variable */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[8]] /* $cse1 variable */)));
+  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[20]] /* emf_a variable */) = ((data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[5]] /* lambda_pm PARAM */)) * (((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[27]] /* omega_e variable */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[10]] /* $cse3 variable */)));
   threadData->lastEquationSolved = 68;
+}
+
+/*
+equation index: 69
+type: SIMPLE_ASSIGN
+$cse2 = sin(theta_e - 2.0943951023931953)
+*/
+void PMSM_Motor_eqFunction_69(DATA *data, threadData_t *threadData)
+{
+  const int equationIndexes[2] = {1,69};
+  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[9]] /* $cse2 variable */) = sin((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[3]] /* theta_e STATE(1,omega_e) */) - 2.0943951023931953);
+  threadData->lastEquationSolved = 69;
+}
+
+/*
+equation index: 70
+type: SIMPLE_ASSIGN
+emf_b = lambda_pm * omega_e * $cse2
+*/
+void PMSM_Motor_eqFunction_70(DATA *data, threadData_t *threadData)
+{
+  const int equationIndexes[2] = {1,70};
+  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[21]] /* emf_b variable */) = ((data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[5]] /* lambda_pm PARAM */)) * (((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[27]] /* omega_e variable */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[9]] /* $cse2 variable */)));
+  threadData->lastEquationSolved = 70;
+}
+
+/*
+equation index: 71
+type: SIMPLE_ASSIGN
+$cse1 = sin(theta_e + 2.0943951023931953)
+*/
+void PMSM_Motor_eqFunction_71(DATA *data, threadData_t *threadData)
+{
+  const int equationIndexes[2] = {1,71};
+  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[8]] /* $cse1 variable */) = sin((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[3]] /* theta_e STATE(1,omega_e) */) + 2.0943951023931953);
+  threadData->lastEquationSolved = 71;
+}
+
+/*
+equation index: 72
+type: SIMPLE_ASSIGN
+emf_c = lambda_pm * omega_e * $cse1
+*/
+void PMSM_Motor_eqFunction_72(DATA *data, threadData_t *threadData)
+{
+  const int equationIndexes[2] = {1,72};
+  (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[22]] /* emf_c variable */) = ((data->simulationInfo->realParameter[data->simulationInfo->realParamsIndex[5]] /* lambda_pm PARAM */)) * (((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[27]] /* omega_e variable */)) * ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[8]] /* $cse1 variable */)));
+  threadData->lastEquationSolved = 72;
 }
 
 OMC_DISABLE_OPT
@@ -540,10 +540,6 @@ int PMSM_Motor_functionDAE(DATA *data, threadData_t *threadData)
   data->simulationInfo->discreteCall = 1;
   PMSM_Motor_functionLocalKnownVars(data, threadData);
   static void (*const eqFunctions[34])(DATA*, threadData_t*) = {
-    PMSM_Motor_eqFunction_35,
-    PMSM_Motor_eqFunction_36,
-    PMSM_Motor_eqFunction_37,
-    PMSM_Motor_eqFunction_38,
     PMSM_Motor_eqFunction_39,
     PMSM_Motor_eqFunction_40,
     PMSM_Motor_eqFunction_41,
@@ -573,7 +569,11 @@ int PMSM_Motor_functionDAE(DATA *data, threadData_t *threadData)
     PMSM_Motor_eqFunction_65,
     PMSM_Motor_eqFunction_66,
     PMSM_Motor_eqFunction_67,
-    PMSM_Motor_eqFunction_68
+    PMSM_Motor_eqFunction_68,
+    PMSM_Motor_eqFunction_69,
+    PMSM_Motor_eqFunction_70,
+    PMSM_Motor_eqFunction_71,
+    PMSM_Motor_eqFunction_72
   };
   
   for (int id = 0; id < 34; id++) {
@@ -595,12 +595,8 @@ int PMSM_Motor_functionLocalKnownVars(DATA *data, threadData_t *threadData)
 }
 
 /* forwarded equations */
-extern void PMSM_Motor_eqFunction_37(DATA* data, threadData_t *threadData);
-extern void PMSM_Motor_eqFunction_38(DATA* data, threadData_t *threadData);
-extern void PMSM_Motor_eqFunction_40(DATA* data, threadData_t *threadData);
 extern void PMSM_Motor_eqFunction_41(DATA* data, threadData_t *threadData);
 extern void PMSM_Motor_eqFunction_42(DATA* data, threadData_t *threadData);
-extern void PMSM_Motor_eqFunction_43(DATA* data, threadData_t *threadData);
 extern void PMSM_Motor_eqFunction_44(DATA* data, threadData_t *threadData);
 extern void PMSM_Motor_eqFunction_45(DATA* data, threadData_t *threadData);
 extern void PMSM_Motor_eqFunction_46(DATA* data, threadData_t *threadData);
@@ -608,22 +604,22 @@ extern void PMSM_Motor_eqFunction_47(DATA* data, threadData_t *threadData);
 extern void PMSM_Motor_eqFunction_48(DATA* data, threadData_t *threadData);
 extern void PMSM_Motor_eqFunction_49(DATA* data, threadData_t *threadData);
 extern void PMSM_Motor_eqFunction_50(DATA* data, threadData_t *threadData);
+extern void PMSM_Motor_eqFunction_51(DATA* data, threadData_t *threadData);
 extern void PMSM_Motor_eqFunction_52(DATA* data, threadData_t *threadData);
 extern void PMSM_Motor_eqFunction_53(DATA* data, threadData_t *threadData);
 extern void PMSM_Motor_eqFunction_54(DATA* data, threadData_t *threadData);
-extern void PMSM_Motor_eqFunction_55(DATA* data, threadData_t *threadData);
 extern void PMSM_Motor_eqFunction_56(DATA* data, threadData_t *threadData);
 extern void PMSM_Motor_eqFunction_57(DATA* data, threadData_t *threadData);
+extern void PMSM_Motor_eqFunction_58(DATA* data, threadData_t *threadData);
+extern void PMSM_Motor_eqFunction_59(DATA* data, threadData_t *threadData);
+extern void PMSM_Motor_eqFunction_60(DATA* data, threadData_t *threadData);
+extern void PMSM_Motor_eqFunction_61(DATA* data, threadData_t *threadData);
 
 static void functionODE_system0(DATA *data, threadData_t *threadData)
 {
   static void (*const eqFunctions[19])(DATA*, threadData_t*) = {
-    PMSM_Motor_eqFunction_37,
-    PMSM_Motor_eqFunction_38,
-    PMSM_Motor_eqFunction_40,
     PMSM_Motor_eqFunction_41,
     PMSM_Motor_eqFunction_42,
-    PMSM_Motor_eqFunction_43,
     PMSM_Motor_eqFunction_44,
     PMSM_Motor_eqFunction_45,
     PMSM_Motor_eqFunction_46,
@@ -631,12 +627,16 @@ static void functionODE_system0(DATA *data, threadData_t *threadData)
     PMSM_Motor_eqFunction_48,
     PMSM_Motor_eqFunction_49,
     PMSM_Motor_eqFunction_50,
+    PMSM_Motor_eqFunction_51,
     PMSM_Motor_eqFunction_52,
     PMSM_Motor_eqFunction_53,
     PMSM_Motor_eqFunction_54,
-    PMSM_Motor_eqFunction_55,
     PMSM_Motor_eqFunction_56,
-    PMSM_Motor_eqFunction_57
+    PMSM_Motor_eqFunction_57,
+    PMSM_Motor_eqFunction_58,
+    PMSM_Motor_eqFunction_59,
+    PMSM_Motor_eqFunction_60,
+    PMSM_Motor_eqFunction_61
   };
   
   for (int id = 0; id < 19; id++) {
@@ -771,9 +771,9 @@ static const MMC_DEFSTRINGLIT(_OMC_LIT_RESOURCE_2_name,16,_OMC_LIT_RESOURCE_2_na
 static const MMC_DEFSTRINGLIT(_OMC_LIT_RESOURCE_2_dir,87,_OMC_LIT_RESOURCE_2_dir_data);
 
 #define _OMC_LIT_RESOURCE_3_name_data "PMSM_Motor"
-#define _OMC_LIT_RESOURCE_3_dir_data "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica"
+#define _OMC_LIT_RESOURCE_3_dir_data "C:/Users/CSO212/Downloads"
 static const MMC_DEFSTRINGLIT(_OMC_LIT_RESOURCE_3_name,10,_OMC_LIT_RESOURCE_3_name_data);
-static const MMC_DEFSTRINGLIT(_OMC_LIT_RESOURCE_3_dir,68,_OMC_LIT_RESOURCE_3_dir_data);
+static const MMC_DEFSTRINGLIT(_OMC_LIT_RESOURCE_3_dir,25,_OMC_LIT_RESOURCE_3_dir_data);
 
 static const MMC_DEFSTRUCTLIT(_OMC_LIT_RESOURCES,8,MMC_ARRAY_TAG) {MMC_REFSTRINGLIT(_OMC_LIT_RESOURCE_0_name), MMC_REFSTRINGLIT(_OMC_LIT_RESOURCE_0_dir), MMC_REFSTRINGLIT(_OMC_LIT_RESOURCE_1_name), MMC_REFSTRINGLIT(_OMC_LIT_RESOURCE_1_dir), MMC_REFSTRINGLIT(_OMC_LIT_RESOURCE_2_name), MMC_REFSTRINGLIT(_OMC_LIT_RESOURCE_2_dir), MMC_REFSTRINGLIT(_OMC_LIT_RESOURCE_3_name), MMC_REFSTRINGLIT(_OMC_LIT_RESOURCE_3_dir)}};
 void PMSM_Motor_setupDataStruc(DATA *data, threadData_t *threadData)
@@ -784,10 +784,10 @@ void PMSM_Motor_setupDataStruc(DATA *data, threadData_t *threadData)
   OpenModelica_updateUriMapping(threadData, MMC_REFSTRUCTLIT(_OMC_LIT_RESOURCES));
   data->modelData->modelName = "PMSM_Motor";
   data->modelData->modelFilePrefix = "PMSM_Motor";
-  data->modelData->modelFileName = "PMSM_Motor.mo";
+  data->modelData->modelFileName = "PMSM_Motor (1).mo";
   data->modelData->resultFileName = NULL;
-  data->modelData->modelDir = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica";
-  data->modelData->modelGUID = "{1d831d67-fdf0-4df4-a4ce-7577bc54d53d}";
+  data->modelData->modelDir = "C:/Users/CSO212/Downloads";
+  data->modelData->modelGUID = "{26ba8224-b24a-48ce-936f-f3a1e58ef99b}";
   data->modelData->initXMLData = NULL;
   data->modelData->modelDataXml.infoXMLData = NULL;
   GC_asprintf(&data->modelData->modelDataXml.fileName, "%s/PMSM_Motor_info.json", data->modelData->resourcesDir);
@@ -820,7 +820,7 @@ void PMSM_Motor_setupDataStruc(DATA *data, threadData_t *threadData)
   data->modelData->modelDataXml.modelInfoXmlLength = 0;
   data->modelData->modelDataXml.nFunctions = 0;
   data->modelData->modelDataXml.nProfileBlocks = 0;
-  data->modelData->modelDataXml.nEquations = 69;
+  data->modelData->modelDataXml.nEquations = 73;
   data->modelData->nMixedSystems = 0;
   data->modelData->nLinearSystems = 0;
   data->modelData->nNonLinearSystems = 0;

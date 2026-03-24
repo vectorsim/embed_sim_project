@@ -20,7 +20,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[0].info.id = 1000;
   modelData->realVarsData[0].info.name = "i_d";
   modelData->realVarsData[0].info.comment = "d-axis current [A]";
-  modelData->realVarsData[0].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[0].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[0].info.info.lineStart = 38;
   modelData->realVarsData[0].info.info.colStart = 3;
   modelData->realVarsData[0].info.info.lineEnd = 38;
@@ -37,7 +37,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[1].info.id = 1001;
   modelData->realVarsData[1].info.name = "i_q";
   modelData->realVarsData[1].info.comment = "q-axis current [A]";
-  modelData->realVarsData[1].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[1].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[1].info.info.lineStart = 39;
   modelData->realVarsData[1].info.info.colStart = 3;
   modelData->realVarsData[1].info.info.lineEnd = 39;
@@ -54,7 +54,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[2].info.id = 1002;
   modelData->realVarsData[2].info.name = "omega_m";
   modelData->realVarsData[2].info.comment = "Actual mechanical speed [rad/s]";
-  modelData->realVarsData[2].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[2].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[2].info.info.lineStart = 40;
   modelData->realVarsData[2].info.info.colStart = 3;
   modelData->realVarsData[2].info.info.lineEnd = 40;
@@ -71,7 +71,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[3].info.id = 1003;
   modelData->realVarsData[3].info.name = "theta_e";
   modelData->realVarsData[3].info.comment = "Actual electrical angle [rad]";
-  modelData->realVarsData[3].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[3].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[3].info.info.lineStart = 41;
   modelData->realVarsData[3].info.info.colStart = 3;
   modelData->realVarsData[3].info.info.lineEnd = 41;
@@ -88,7 +88,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[4].info.id = 1004;
   modelData->realVarsData[4].info.name = "der(i_d)";
   modelData->realVarsData[4].info.comment = "der(d-axis current [A])";
-  modelData->realVarsData[4].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[4].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[4].info.info.lineStart = 38;
   modelData->realVarsData[4].info.info.colStart = 3;
   modelData->realVarsData[4].info.info.lineEnd = 38;
@@ -105,7 +105,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[5].info.id = 1005;
   modelData->realVarsData[5].info.name = "der(i_q)";
   modelData->realVarsData[5].info.comment = "der(q-axis current [A])";
-  modelData->realVarsData[5].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[5].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[5].info.info.lineStart = 39;
   modelData->realVarsData[5].info.info.colStart = 3;
   modelData->realVarsData[5].info.info.lineEnd = 39;
@@ -122,7 +122,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[6].info.id = 1006;
   modelData->realVarsData[6].info.name = "der(omega_m)";
   modelData->realVarsData[6].info.comment = "der(Actual mechanical speed [rad/s])";
-  modelData->realVarsData[6].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[6].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[6].info.info.lineStart = 40;
   modelData->realVarsData[6].info.info.colStart = 3;
   modelData->realVarsData[6].info.info.lineEnd = 40;
@@ -139,7 +139,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[7].info.id = 1007;
   modelData->realVarsData[7].info.name = "der(theta_e)";
   modelData->realVarsData[7].info.comment = "der(Actual electrical angle [rad])";
-  modelData->realVarsData[7].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[7].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[7].info.info.lineStart = 41;
   modelData->realVarsData[7].info.info.colStart = 3;
   modelData->realVarsData[7].info.info.lineEnd = 41;
@@ -224,7 +224,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[12].info.id = 1012;
   modelData->realVarsData[12].info.name = "P_in";
   modelData->realVarsData[12].info.comment = "Input power [W] - ACTUAL";
-  modelData->realVarsData[12].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[12].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[12].info.info.lineStart = 64;
   modelData->realVarsData[12].info.info.colStart = 3;
   modelData->realVarsData[12].info.info.lineEnd = 64;
@@ -241,7 +241,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[13].info.id = 1013;
   modelData->realVarsData[13].info.name = "P_out";
   modelData->realVarsData[13].info.comment = "Output power [W] - ACTUAL";
-  modelData->realVarsData[13].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[13].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[13].info.info.lineStart = 63;
   modelData->realVarsData[13].info.info.colStart = 3;
   modelData->realVarsData[13].info.info.lineEnd = 63;
@@ -258,7 +258,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[14].info.id = 1014;
   modelData->realVarsData[14].info.name = "T_em_out";
   modelData->realVarsData[14].info.comment = "Electromagnetic torque [N.m] - ACTUAL";
-  modelData->realVarsData[14].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[14].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[14].info.info.lineStart = 62;
   modelData->realVarsData[14].info.info.colStart = 3;
   modelData->realVarsData[14].info.info.lineEnd = 62;
@@ -275,7 +275,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[15].info.id = 1015;
   modelData->realVarsData[15].info.name = "T_load";
   modelData->realVarsData[15].info.comment = "Load torque [N.m]";
-  modelData->realVarsData[15].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[15].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[15].info.info.lineStart = 33;
   modelData->realVarsData[15].info.info.colStart = 3;
   modelData->realVarsData[15].info.info.lineEnd = 33;
@@ -292,7 +292,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[16].info.id = 1016;
   modelData->realVarsData[16].info.name = "duty_a";
   modelData->realVarsData[16].info.comment = "PWM duty cycle phase A [0..1]";
-  modelData->realVarsData[16].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[16].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[16].info.info.lineStart = 29;
   modelData->realVarsData[16].info.info.colStart = 3;
   modelData->realVarsData[16].info.info.lineEnd = 29;
@@ -309,7 +309,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[17].info.id = 1017;
   modelData->realVarsData[17].info.name = "duty_b";
   modelData->realVarsData[17].info.comment = "PWM duty cycle phase B [0..1]";
-  modelData->realVarsData[17].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[17].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[17].info.info.lineStart = 30;
   modelData->realVarsData[17].info.info.colStart = 3;
   modelData->realVarsData[17].info.info.lineEnd = 30;
@@ -326,7 +326,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[18].info.id = 1018;
   modelData->realVarsData[18].info.name = "duty_c";
   modelData->realVarsData[18].info.comment = "PWM duty cycle phase C [0..1]";
-  modelData->realVarsData[18].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[18].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[18].info.info.lineStart = 31;
   modelData->realVarsData[18].info.info.colStart = 3;
   modelData->realVarsData[18].info.info.lineEnd = 31;
@@ -343,7 +343,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[19].info.id = 1019;
   modelData->realVarsData[19].info.name = "efficiency";
   modelData->realVarsData[19].info.comment = "Motor efficiency [%] - ACTUAL";
-  modelData->realVarsData[19].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[19].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[19].info.info.lineStart = 65;
   modelData->realVarsData[19].info.info.colStart = 3;
   modelData->realVarsData[19].info.info.lineEnd = 65;
@@ -360,7 +360,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[20].info.id = 1020;
   modelData->realVarsData[20].info.name = "emf_a";
   modelData->realVarsData[20].info.comment = "Phase A back-EMF [V] - ACTUAL";
-  modelData->realVarsData[20].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[20].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[20].info.info.lineStart = 56;
   modelData->realVarsData[20].info.info.colStart = 3;
   modelData->realVarsData[20].info.info.lineEnd = 56;
@@ -377,7 +377,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[21].info.id = 1021;
   modelData->realVarsData[21].info.name = "emf_b";
   modelData->realVarsData[21].info.comment = "Phase B back-EMF [V] - ACTUAL";
-  modelData->realVarsData[21].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[21].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[21].info.info.lineStart = 57;
   modelData->realVarsData[21].info.info.colStart = 3;
   modelData->realVarsData[21].info.info.lineEnd = 57;
@@ -394,7 +394,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[22].info.id = 1022;
   modelData->realVarsData[22].info.name = "emf_c";
   modelData->realVarsData[22].info.comment = "Phase C back-EMF [V] - ACTUAL";
-  modelData->realVarsData[22].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[22].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[22].info.info.lineStart = 58;
   modelData->realVarsData[22].info.info.colStart = 3;
   modelData->realVarsData[22].info.info.lineEnd = 58;
@@ -411,7 +411,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[23].info.id = 1023;
   modelData->realVarsData[23].info.name = "i_a";
   modelData->realVarsData[23].info.comment = "Phase A current sensor [A] - ACTUAL";
-  modelData->realVarsData[23].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[23].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[23].info.info.lineStart = 47;
   modelData->realVarsData[23].info.info.colStart = 3;
   modelData->realVarsData[23].info.info.lineEnd = 47;
@@ -428,7 +428,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[24].info.id = 1024;
   modelData->realVarsData[24].info.name = "i_b";
   modelData->realVarsData[24].info.comment = "Phase B current sensor [A] - ACTUAL";
-  modelData->realVarsData[24].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[24].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[24].info.info.lineStart = 48;
   modelData->realVarsData[24].info.info.colStart = 3;
   modelData->realVarsData[24].info.info.lineEnd = 48;
@@ -445,7 +445,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[25].info.id = 1025;
   modelData->realVarsData[25].info.name = "i_beta";
   modelData->realVarsData[25].info.comment = "";
-  modelData->realVarsData[25].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[25].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[25].info.info.lineStart = 75;
   modelData->realVarsData[25].info.info.colStart = 3;
   modelData->realVarsData[25].info.info.lineEnd = 75;
@@ -462,7 +462,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[26].info.id = 1026;
   modelData->realVarsData[26].info.name = "i_c";
   modelData->realVarsData[26].info.comment = "Phase C current sensor [A] - ACTUAL";
-  modelData->realVarsData[26].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[26].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[26].info.info.lineStart = 49;
   modelData->realVarsData[26].info.info.colStart = 3;
   modelData->realVarsData[26].info.info.lineEnd = 49;
@@ -479,7 +479,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[27].info.id = 1027;
   modelData->realVarsData[27].info.name = "omega_e";
   modelData->realVarsData[27].info.comment = "";
-  modelData->realVarsData[27].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[27].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[27].info.info.lineStart = 76;
   modelData->realVarsData[27].info.info.colStart = 3;
   modelData->realVarsData[27].info.info.lineEnd = 76;
@@ -496,7 +496,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[28].info.id = 1028;
   modelData->realVarsData[28].info.name = "omega_m_out";
   modelData->realVarsData[28].info.comment = "Resolver: mechanical speed [rad/s] - ACTUAL";
-  modelData->realVarsData[28].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[28].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[28].info.info.lineStart = 53;
   modelData->realVarsData[28].info.info.colStart = 3;
   modelData->realVarsData[28].info.info.lineEnd = 53;
@@ -513,7 +513,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[29].info.id = 1029;
   modelData->realVarsData[29].info.name = "speed_rpm";
   modelData->realVarsData[29].info.comment = "Shaft speed [RPM] - ACTUAL";
-  modelData->realVarsData[29].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[29].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[29].info.info.lineStart = 61;
   modelData->realVarsData[29].info.info.colStart = 3;
   modelData->realVarsData[29].info.info.lineEnd = 61;
@@ -530,7 +530,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[30].info.id = 1030;
   modelData->realVarsData[30].info.name = "theta_m";
   modelData->realVarsData[30].info.comment = "Resolver: mechanical angle [rad] - ACTUAL";
-  modelData->realVarsData[30].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[30].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[30].info.info.lineStart = 52;
   modelData->realVarsData[30].info.info.colStart = 3;
   modelData->realVarsData[30].info.info.lineEnd = 52;
@@ -547,7 +547,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[31].info.id = 1031;
   modelData->realVarsData[31].info.name = "v_a";
   modelData->realVarsData[31].info.comment = "";
-  modelData->realVarsData[31].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[31].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[31].info.info.lineStart = 72;
   modelData->realVarsData[31].info.info.colStart = 3;
   modelData->realVarsData[31].info.info.lineEnd = 72;
@@ -564,7 +564,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[32].info.id = 1032;
   modelData->realVarsData[32].info.name = "v_a_leg";
   modelData->realVarsData[32].info.comment = "";
-  modelData->realVarsData[32].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[32].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[32].info.info.lineStart = 70;
   modelData->realVarsData[32].info.info.colStart = 3;
   modelData->realVarsData[32].info.info.lineEnd = 70;
@@ -581,7 +581,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[33].info.id = 1033;
   modelData->realVarsData[33].info.name = "v_alpha";
   modelData->realVarsData[33].info.comment = "";
-  modelData->realVarsData[33].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[33].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[33].info.info.lineStart = 73;
   modelData->realVarsData[33].info.info.colStart = 3;
   modelData->realVarsData[33].info.info.lineEnd = 73;
@@ -598,7 +598,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[34].info.id = 1034;
   modelData->realVarsData[34].info.name = "v_b";
   modelData->realVarsData[34].info.comment = "";
-  modelData->realVarsData[34].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[34].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[34].info.info.lineStart = 72;
   modelData->realVarsData[34].info.info.colStart = 3;
   modelData->realVarsData[34].info.info.lineEnd = 72;
@@ -615,7 +615,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[35].info.id = 1035;
   modelData->realVarsData[35].info.name = "v_b_leg";
   modelData->realVarsData[35].info.comment = "";
-  modelData->realVarsData[35].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[35].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[35].info.info.lineStart = 70;
   modelData->realVarsData[35].info.info.colStart = 3;
   modelData->realVarsData[35].info.info.lineEnd = 70;
@@ -632,7 +632,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[36].info.id = 1036;
   modelData->realVarsData[36].info.name = "v_beta";
   modelData->realVarsData[36].info.comment = "";
-  modelData->realVarsData[36].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[36].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[36].info.info.lineStart = 73;
   modelData->realVarsData[36].info.info.colStart = 3;
   modelData->realVarsData[36].info.info.lineEnd = 73;
@@ -649,7 +649,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[37].info.id = 1037;
   modelData->realVarsData[37].info.name = "v_c";
   modelData->realVarsData[37].info.comment = "";
-  modelData->realVarsData[37].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[37].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[37].info.info.lineStart = 72;
   modelData->realVarsData[37].info.info.colStart = 3;
   modelData->realVarsData[37].info.info.lineEnd = 72;
@@ -666,7 +666,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[38].info.id = 1038;
   modelData->realVarsData[38].info.name = "v_c_leg";
   modelData->realVarsData[38].info.comment = "";
-  modelData->realVarsData[38].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[38].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[38].info.info.lineStart = 70;
   modelData->realVarsData[38].info.info.colStart = 3;
   modelData->realVarsData[38].info.info.lineEnd = 70;
@@ -683,7 +683,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[39].info.id = 1039;
   modelData->realVarsData[39].info.name = "v_d";
   modelData->realVarsData[39].info.comment = "";
-  modelData->realVarsData[39].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[39].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[39].info.info.lineStart = 74;
   modelData->realVarsData[39].info.info.colStart = 3;
   modelData->realVarsData[39].info.info.lineEnd = 74;
@@ -700,7 +700,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[40].info.id = 1040;
   modelData->realVarsData[40].info.name = "v_dc";
   modelData->realVarsData[40].info.comment = "DC bus voltage [V] - motor rated for 17V nominal";
-  modelData->realVarsData[40].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[40].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[40].info.info.lineStart = 32;
   modelData->realVarsData[40].info.info.colStart = 3;
   modelData->realVarsData[40].info.info.lineEnd = 32;
@@ -717,7 +717,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[41].info.id = 1041;
   modelData->realVarsData[41].info.name = "v_neutral";
   modelData->realVarsData[41].info.comment = "";
-  modelData->realVarsData[41].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[41].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[41].info.info.lineStart = 71;
   modelData->realVarsData[41].info.info.colStart = 3;
   modelData->realVarsData[41].info.info.lineEnd = 71;
@@ -734,7 +734,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[42].info.id = 1042;
   modelData->realVarsData[42].info.name = "v_q";
   modelData->realVarsData[42].info.comment = "";
-  modelData->realVarsData[42].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realVarsData[42].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realVarsData[42].info.info.lineStart = 74;
   modelData->realVarsData[42].info.info.colStart = 3;
   modelData->realVarsData[42].info.info.lineEnd = 74;
@@ -752,7 +752,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realParameterData[0].info.id = 1043;
   modelData->realParameterData[0].info.name = "B";
   modelData->realParameterData[0].info.comment = "Viscous friction [N.m.s/rad] - estimated for small motor";
-  modelData->realParameterData[0].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realParameterData[0].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realParameterData[0].info.info.lineStart = 23;
   modelData->realParameterData[0].info.info.colStart = 3;
   modelData->realParameterData[0].info.info.lineEnd = 23;
@@ -769,7 +769,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realParameterData[1].info.id = 1044;
   modelData->realParameterData[1].info.name = "J";
   modelData->realParameterData[1].info.comment = "Rotor inertia [kg.m2] - from 24 gcm² converted";
-  modelData->realParameterData[1].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realParameterData[1].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realParameterData[1].info.info.lineStart = 22;
   modelData->realParameterData[1].info.info.colStart = 3;
   modelData->realParameterData[1].info.info.lineEnd = 22;
@@ -786,7 +786,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realParameterData[2].info.id = 1045;
   modelData->realParameterData[2].info.name = "L_d";
   modelData->realParameterData[2].info.comment = "d-axis inductance [H] - from line-line inductance 0.25mH/2";
-  modelData->realParameterData[2].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realParameterData[2].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realParameterData[2].info.info.lineStart = 19;
   modelData->realParameterData[2].info.info.colStart = 3;
   modelData->realParameterData[2].info.info.lineEnd = 19;
@@ -803,7 +803,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realParameterData[3].info.id = 1046;
   modelData->realParameterData[3].info.name = "L_q";
   modelData->realParameterData[3].info.comment = "q-axis inductance [H] - non-salient pole motor (Ld = Lq)";
-  modelData->realParameterData[3].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realParameterData[3].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realParameterData[3].info.info.lineStart = 20;
   modelData->realParameterData[3].info.info.colStart = 3;
   modelData->realParameterData[3].info.info.lineEnd = 20;
@@ -820,7 +820,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realParameterData[4].info.id = 1047;
   modelData->realParameterData[4].info.name = "R";
   modelData->realParameterData[4].info.comment = "Stator phase resistance [Ohm] - line-line resistance from datasheet";
-  modelData->realParameterData[4].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realParameterData[4].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realParameterData[4].info.info.lineStart = 18;
   modelData->realParameterData[4].info.info.colStart = 3;
   modelData->realParameterData[4].info.info.lineEnd = 18;
@@ -837,7 +837,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realParameterData[5].info.id = 1048;
   modelData->realParameterData[5].info.name = "lambda_pm";
   modelData->realParameterData[5].info.comment = "PM flux linkage [Wb] - from torque constant 1.4 Ncm/A";
-  modelData->realParameterData[5].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realParameterData[5].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realParameterData[5].info.info.lineStart = 21;
   modelData->realParameterData[5].info.info.colStart = 3;
   modelData->realParameterData[5].info.info.lineEnd = 21;
@@ -854,7 +854,7 @@ void PMSM_Motor_read_input_fmu(MODEL_DATA* modelData)
   modelData->realParameterData[6].info.id = 1049;
   modelData->realParameterData[6].info.name = "p";
   modelData->realParameterData[6].info.comment = "Number of pole pairs [-] - typical for this motor size";
-  modelData->realParameterData[6].info.info.filename = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo";
+  modelData->realParameterData[6].info.info.filename = "C:/Users/CSO212/Downloads/PMSM_Motor (1).mo";
   modelData->realParameterData[6].info.info.lineStart = 24;
   modelData->realParameterData[6].info.info.colStart = 3;
   modelData->realParameterData[6].info.info.lineEnd = 24;

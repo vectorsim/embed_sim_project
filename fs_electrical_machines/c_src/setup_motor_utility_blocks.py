@@ -27,7 +27,7 @@ ext = Extension(
     name="motor_utility_blocks_wrapper",
     sources=[
         "motor_utility_blocks_wrapper.pyx",
-        "Motor_Utility_Blocks.c",
+        "embed_sim_motor_utility_blocks.c",
     ],
     include_dirs=[np.get_include(), "."],
     extra_compile_args=compile_args,

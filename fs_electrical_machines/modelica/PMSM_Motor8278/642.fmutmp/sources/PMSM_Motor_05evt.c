@@ -14,19 +14,15 @@ void PMSM_Motor_function_initSample(DATA *data, threadData_t *threadData)
 const char *PMSM_Motor_zeroCrossingDescription(int i, int **out_EquationIndexes)
 {
   static const char *res[] = {"P_in > 0.0"};
-  static const int occurEqs0[] = {1,63};
+  static const int occurEqs0[] = {1,67};
   static const int *occurEqs[] = {occurEqs0};
   *out_EquationIndexes = (int*) occurEqs[i];
   return res[i];
 }
 
 /* forwarded equations */
-extern void PMSM_Motor_eqFunction_37(DATA* data, threadData_t *threadData);
-extern void PMSM_Motor_eqFunction_38(DATA* data, threadData_t *threadData);
-extern void PMSM_Motor_eqFunction_40(DATA* data, threadData_t *threadData);
 extern void PMSM_Motor_eqFunction_41(DATA* data, threadData_t *threadData);
 extern void PMSM_Motor_eqFunction_42(DATA* data, threadData_t *threadData);
-extern void PMSM_Motor_eqFunction_43(DATA* data, threadData_t *threadData);
 extern void PMSM_Motor_eqFunction_44(DATA* data, threadData_t *threadData);
 extern void PMSM_Motor_eqFunction_45(DATA* data, threadData_t *threadData);
 extern void PMSM_Motor_eqFunction_46(DATA* data, threadData_t *threadData);
@@ -34,10 +30,10 @@ extern void PMSM_Motor_eqFunction_47(DATA* data, threadData_t *threadData);
 extern void PMSM_Motor_eqFunction_48(DATA* data, threadData_t *threadData);
 extern void PMSM_Motor_eqFunction_49(DATA* data, threadData_t *threadData);
 extern void PMSM_Motor_eqFunction_50(DATA* data, threadData_t *threadData);
+extern void PMSM_Motor_eqFunction_51(DATA* data, threadData_t *threadData);
 extern void PMSM_Motor_eqFunction_52(DATA* data, threadData_t *threadData);
 extern void PMSM_Motor_eqFunction_53(DATA* data, threadData_t *threadData);
 extern void PMSM_Motor_eqFunction_54(DATA* data, threadData_t *threadData);
-extern void PMSM_Motor_eqFunction_55(DATA* data, threadData_t *threadData);
 extern void PMSM_Motor_eqFunction_56(DATA* data, threadData_t *threadData);
 extern void PMSM_Motor_eqFunction_57(DATA* data, threadData_t *threadData);
 extern void PMSM_Motor_eqFunction_58(DATA* data, threadData_t *threadData);
@@ -45,18 +41,18 @@ extern void PMSM_Motor_eqFunction_59(DATA* data, threadData_t *threadData);
 extern void PMSM_Motor_eqFunction_60(DATA* data, threadData_t *threadData);
 extern void PMSM_Motor_eqFunction_61(DATA* data, threadData_t *threadData);
 extern void PMSM_Motor_eqFunction_62(DATA* data, threadData_t *threadData);
+extern void PMSM_Motor_eqFunction_63(DATA* data, threadData_t *threadData);
+extern void PMSM_Motor_eqFunction_64(DATA* data, threadData_t *threadData);
+extern void PMSM_Motor_eqFunction_65(DATA* data, threadData_t *threadData);
+extern void PMSM_Motor_eqFunction_66(DATA* data, threadData_t *threadData);
 
 int PMSM_Motor_function_ZeroCrossingsEquations(DATA *data, threadData_t *threadData)
 {
   data->simulationInfo->callStatistics.functionZeroCrossingsEquations++;
 
   static void (*const eqFunctions[24])(DATA*, threadData_t*) = {
-    PMSM_Motor_eqFunction_37,
-    PMSM_Motor_eqFunction_38,
-    PMSM_Motor_eqFunction_40,
     PMSM_Motor_eqFunction_41,
     PMSM_Motor_eqFunction_42,
-    PMSM_Motor_eqFunction_43,
     PMSM_Motor_eqFunction_44,
     PMSM_Motor_eqFunction_45,
     PMSM_Motor_eqFunction_46,
@@ -64,17 +60,21 @@ int PMSM_Motor_function_ZeroCrossingsEquations(DATA *data, threadData_t *threadD
     PMSM_Motor_eqFunction_48,
     PMSM_Motor_eqFunction_49,
     PMSM_Motor_eqFunction_50,
+    PMSM_Motor_eqFunction_51,
     PMSM_Motor_eqFunction_52,
     PMSM_Motor_eqFunction_53,
     PMSM_Motor_eqFunction_54,
-    PMSM_Motor_eqFunction_55,
     PMSM_Motor_eqFunction_56,
     PMSM_Motor_eqFunction_57,
     PMSM_Motor_eqFunction_58,
     PMSM_Motor_eqFunction_59,
     PMSM_Motor_eqFunction_60,
     PMSM_Motor_eqFunction_61,
-    PMSM_Motor_eqFunction_62
+    PMSM_Motor_eqFunction_62,
+    PMSM_Motor_eqFunction_63,
+    PMSM_Motor_eqFunction_64,
+    PMSM_Motor_eqFunction_65,
+    PMSM_Motor_eqFunction_66
   };
   
   for (int id = 0; id < 24; id++) {

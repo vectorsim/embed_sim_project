@@ -47,10 +47,12 @@ from typing import List, Optional
 
 import numpy as np
 
-from embedsim.core_blocks import VectorBlock, VectorSignal
-
 _HERE  = Path(__file__).resolve().parent
 _C_SRC = _HERE / "c_src"
+
+
+from embedsim.core_blocks import VectorBlock, VectorSignal
+
 
 
 class SVPWMBlock(VectorBlock):
@@ -77,9 +79,9 @@ class SVPWMBlock(VectorBlock):
 
     # ── CodeGen ──────────────────────────────────────────────────────────────
     PYX_FILE    : str = str(_C_SRC / "svpwm_wrapper.pyx")
-    C_SOURCES        = ["SV_PWM"
+    C_SOURCES        = ["sv_pwm"
                         ".c"]
-    C_HEADERS        = ["SV_PWM.h"]
+    C_HEADERS        = ["embed_sim_sv_pwm.h"]
     NUM_INPUTS       = 1     # one upstream port: SVPWMPackBlock [Vref, angle, Vdc]
     OUTPUT_SIZE      = 4     # [ta, tb, tc, sector]
 
@@ -92,35 +94,55 @@ class SVPWMBlock(VectorBlock):
     OUTPUT_KEEP    = [0, 1, 2, 3]
     C_OUTPUT_TYPES = {"sector": "uint8_T"}
 
+    @property
+    def C_CUSTOM_EMIT(self):
+        """Auto-detect where inputs come from."""
+        # Check if connected to svpwm_pack
+        if self.inputs:
+            input_block = self.inputs[0]
+            input_name = input_block.name
+
+            if input_name == "svpwm_pack":
+                magnitude_source = "y_svpwm_pack[0]"
+                angle_source = "y_svpwm_pack[1]"
+            else:
+                # Default - assume from input struct
+                magnitude_source = "in->magnitude"
+                angle_source = "in->angle_rad"
+        else:
+            magnitude_source = "in->magnitude"
+            angle_source = "in->angle_rad"
+
+        return f"""\
+      /* --- svpwm ({self.name}) — SVM_CalculateDutyCycle --- */
+      {{
+          SVM_DutyCycle_Type svm_duty;
+          MatrixStatus_Type  svm_status;
+
+          /* Default values (duty cycles = 0.5 for safe state) */
+          out->ta = 0.5f;
+          out->tb = 0.5f;
+          out->tc = 0.5f;
+          out->sector = 0U;
+
+          svm_status = SVM_CalculateDutyCycle(
+                           {magnitude_source},   /* modulation index */
+                           {angle_source},       /* angle [rad] */
+                           &svm_duty);
+          if (svm_status == MATRIX_SUCCESS)
+          {{
+              out->ta = (real32_T)svm_duty.ta / (real32_T)Q31_ONE;
+              out->tb = (real32_T)svm_duty.tb / (real32_T)Q31_ONE;
+              out->tc = (real32_T)svm_duty.tc / (real32_T)Q31_ONE;
+              out->sector = (uint8_T)svm_duty.sector;
+          }}
+      }}"""
+
     # Non-standard ABI — reads magnitude/angle_rad from EmbedSim_Input_T.
     # Integration layer (AURIX app) is responsible for:
     #   in->magnitude = sqrtf(v_alpha^2+v_beta^2)  clipped to 0.95
     #   in->angle_rad = atan2f(v_beta, v_alpha)     wrapped to [0, 2pi)
-    C_CUSTOM_EMIT = """\
-    /* --- svpwm (SVPWMBlock) — SVM_CalculateDutyCycle --- */
-    real32_T y_svpwm[4];
-    {
-        SVM_DutyCycle_Type svm_duty;
-        MatrixStatus_Type  svm_status;
-        svm_status = SVM_CalculateDutyCycle(
-                         in->magnitude,   /* modulation index — from integration layer */
-                         in->angle_rad,   /* angle [rad]      — from integration layer */
-                         &svm_duty);
-        if (svm_status == MATRIX_SUCCESS)
-        {
-            y_svpwm[0] = (real32_T)svm_duty.ta     / (real32_T)Q31_ONE;
-            y_svpwm[1] = (real32_T)svm_duty.tb     / (real32_T)Q31_ONE;
-            y_svpwm[2] = (real32_T)svm_duty.tc     / (real32_T)Q31_ONE;
-            y_svpwm[3] = (real32_T)svm_duty.sector;
-        }
-        else
-        {
-            y_svpwm[0] = 0.5f;
-            y_svpwm[1] = 0.5f;
-            y_svpwm[2] = 0.5f;
-            y_svpwm[3] = 0.0f;
-        }
-    }"""
+
 
     # ── Constants — mirror svpwm.h ────────────────────────────────────────────
     _SQRT3_OVER_2: float = 0.86602540378

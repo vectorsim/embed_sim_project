@@ -70,8 +70,8 @@ class SpeedRampBlock(VectorBlock):
     use_c_backend=True   → compute_c()   (SpeedRamp_Step via Cython wrapper)
     """
     PYX_FILE     = str(_HERE / "c_src" / "motor_utility_blocks_wrapper.pyx")
-    C_SOURCES    = ["Motor_Utility_Blocks.c"]
-    C_HEADERS    = ["Motor_Utility_Blocks.h"]
+    C_SOURCES    = ["embed_sim_motor_utility_blocks.c"]
+    C_HEADERS    = ["embed_sim_motor_utility_blocks.h"]
     step_func    = "SpeedRamp_Step"
     state_struct = "SpeedRamp_T"
     init_func    = "SpeedRamp_Init"
@@ -157,8 +157,8 @@ class VfAngleBlock(VectorBlock):
                    Typical value: R_stator * I_nominal (e.g. 0.19 * 1.0 = 0.19 V)
     """
     PYX_FILE     = str(_HERE / "c_src" / "motor_utility_blocks_wrapper.pyx")
-    C_SOURCES    = ["motor_utility_blocks.c"]
-    C_HEADERS    = ["motor_utility_blocks.h"]
+    C_SOURCES    = ["embed_sim_motor_utility_blocks.c"]
+    C_HEADERS    = ["embed_sim_motor_utility_blocks.h"]
     step_func    = "VfAngle_Step"
     state_struct = "VfAngle_T"
     init_func    = "VfAngle_Init"
@@ -244,8 +244,8 @@ class VfDQBlock(VectorBlock):
     Stateless combinatorial pass-through.
     """
     PYX_FILE     = str(_HERE / "c_src" / "motor_utility_blocks_wrapper.pyx")
-    C_SOURCES    = ["motor_utility_blocks.c"]
-    C_HEADERS    = ["motor_utility_blocks.h"]
+    C_SOURCES    = ["embed_sim_motor_utility_blocks.c"]
+    C_HEADERS    = ["embed_sim_motor_utility_blocks.h"]
     step_func    = "VfDQ_Step"
     state_struct = "VfDQ_T"
     init_func    = "VfDQ_Init"
@@ -301,8 +301,8 @@ class VfThetaBlock(VectorBlock):
     Stateless combinatorial pass-through.
     """
     PYX_FILE     = str(_HERE / "c_src" / "motor_utility_blocks_wrapper.pyx")
-    C_SOURCES    = ["motor_utility_blocks.c"]
-    C_HEADERS    = ["motor_utility_blocks.h"]
+    C_SOURCES    = ["embed_sim_motor_utility_blocks.c"]
+    C_HEADERS    = ["embed_sim_motor_utility_blocks.h"]
     step_func    = "VfTheta_Step"
     state_struct = "VfTheta_T"
     init_func    = "VfTheta_Init"
@@ -361,8 +361,8 @@ class DutyPackBlock(VectorBlock):
     inside DutyPack_Step.
     """
     PYX_FILE     = str(_HERE / "c_src" / "motor_utility_blocks_wrapper.pyx")
-    C_SOURCES    = ["motor_utility_blocks.c"]
-    C_HEADERS    = ["motor_utility_blocks.h"]
+    C_SOURCES    = ["embed_sim_motor_utility_blocks.c"]
+    C_HEADERS    = ["embed_sim_motor_utility_blocks.h"]
     step_func    = "DutyPack_Step"
     state_struct = "DutyPack_T"
     init_func    = "DutyPack_Init"
@@ -454,8 +454,8 @@ class SVPWMPackBlock(VectorBlock):
     VfDQ and VfTheta.
     """
     PYX_FILE     = str(_HERE / "c_src" / "motor_utility_blocks_wrapper.pyx")
-    C_SOURCES    = ["motor_utility_blocks.c"]
-    C_HEADERS    = ["motor_utility_blocks.h"]
+    C_SOURCES    = ["embed_sim_motor_utility_blocks.c"]
+    C_HEADERS    = ["embed_sim_motor_utility_blocks.h"]
     step_func    = "SVPWMPack_Step"
     state_struct = "SVPWMPack_T"
     init_func    = "SVPWMPack_Init"

@@ -762,8 +762,11 @@ class StepGenerator:
         self.fn_init  = f"{p}_Init"
         self.fn_step  = f"{p}_Step"
         self.guard    = f"{p.upper()}_STEP_H_"
-        self.h_file   = f"{p}_Step.h"
-        self.c_file   = f"{p}_Step.c"
+        # Filename convention: embed_sim_step.c/.h (all lowercase, underscores)
+        # C identifiers (EmbedSim_Init, EmbedSim_Step etc.) keep their prefix capitalisation.
+        p_lower       = p.lower()
+        self.h_file   = f"{p_lower}_step.h"
+        self.c_file   = f"{p_lower}_step.c"
 
     # ── Signal lists from boundaries ─────────────────────────────────────────
 
@@ -876,9 +879,24 @@ class StepGenerator:
 
     # ── Per-block C emission ──────────────────────────────────────────────────
 
-    def _emit_block(self, block) -> str:
+    def _emit_block(self, block,
+                    decls_only: bool = False,
+                    stmts_only: bool = False) -> str:
         """
         Emit the C call snippet for one block.
+
+        decls_only=True  → return ONLY local variable declarations
+                           (real32_T u_X[], y_X[], typed structs).
+        stmts_only=True  → return ONLY assignments + function-call statements,
+                           no declarations.
+        Both False       → combined (legacy, used only for C_CUSTOM_EMIT /
+                           unit-delay blocks that cannot be split).
+
+        MISRA C:2012 Rule 8.1 — all declarations before any statement:
+            _gen_c() calls _emit_block(decls_only=True) for every block first,
+            then _emit_block(stmts_only=True) for every block, so ALL local
+            variable declarations appear at the top of EmbedSim_Step before
+            any executable statement.
 
         Checks (in order):
           0. Block has IS_UNIT_DELAY=True → emit as a z⁻¹ register read.
@@ -896,13 +914,14 @@ class StepGenerator:
         sn = _sanitize(block.name or block.__class__.__name__)
 
         # ── C_CUSTOM_EMIT escape hatch ────────────────────────────────────────
-        # If the block (or its class) declares C_CUSTOM_EMIT, emit that verbatim
-        # and skip all auto-generation logic.  Use this for blocks whose C
-        # signature doesn't fit the standard (state*, u, dt, y) pattern —
-        # e.g. coordinate transforms that pass a matrix pointer.
+        # C_CUSTOM_EMIT blocks contain interleaved declarations and statements
+        # that cannot be mechanically split.  They are exempt from the two-pass
+        # rule — emitted verbatim in the statements pass only; nothing in decls.
         custom = (getattr(block, 'C_CUSTOM_EMIT', None) or
                   getattr(block.__class__, 'C_CUSTOM_EMIT', None))
         if custom is not None:
+            if decls_only:
+                return ""
             return custom + "\n"
 
         # ── Unit delay (z⁻¹) blocks ──────────────────────────────────────────
@@ -925,6 +944,17 @@ class StepGenerator:
                 f"before each call to {self.fn_step}() */",
                 "",
             ]
+            # Unit-delay: declaration (y_ array) and statement (memcpy) are
+            # both present — split them for the two-pass emission.
+            if decls_only:
+                return f"    real32_T y_{sn}[{n_out}];\n"
+            if stmts_only:
+                return (
+                    f"    /* --- {sn} (z\u207b\u00b9 unit delay) --- */\n"
+                    f"    memcpy(y_{sn}, {reg_name}, sizeof(y_{sn}));\n"
+                    f"    /* {reg_name}[] is updated by the sensor/motor interface "
+                    f"before each call to {self.fn_step}() */\n\n"
+                )
             return "\n".join(lines) + "\n"
 
         # ── Try to pull metadata set by PYXInspector ─────────────────────────
@@ -971,20 +1001,22 @@ class StepGenerator:
                         pass
 
         if not step_func and not c_sources:
+            if decls_only:
+                return ""
             return (
                 f"    /* [{sn}] Python-only block — no C step function. "
                 f"Replace with hand-written C or add C_SOURCES + step_func. */\n"
             )
 
         if not step_func:
+            if decls_only:
+                return ""
             return (
                 f"    /* TODO [{sn}] C_SOURCES={c_sources} — "
                 f"set step_func or run PYXInspector to auto-detect. */\n"
             )
 
         # ── Determine input wiring ────────────────────────────────────────────
-        # Prefer explicit C_INPUT_MAP if declared on the block.
-        # Fall back to auto-wiring from block.inputs.
         c_input_map = (getattr(block, 'C_INPUT_MAP', None) or
                        getattr(block.__class__, 'C_INPUT_MAP', None))
 
@@ -992,29 +1024,10 @@ class StepGenerator:
         state_struct = getattr(block, 'state_struct',
                        getattr(block.__class__, 'state_struct', ''))
 
-        lines = []
-        lines.append(f"    /* --- {sn} ({block.__class__.__name__}) --- */")
-
-        # ── Source block: NUM_INPUTS == 0 ─────────────────────────────────────
-        # Signature: <Step>(&state, dt, y*)  — no u[] argument.
-        # This is the canonical pattern for SpeedRamp and any other source
-        # block.  No C_CUSTOM_EMIT needed — handled here automatically.
-        if n_inputs == 0:
-            lines.append(f"    real32_T y_{sn}[{total_out}];")
-            if state_struct:
-                lines.append(f"    {step_func}(&{sn}_state, dt, y_{sn});")
-            else:
-                lines.append(f"    {step_func}(dt, y_{sn});")
-            lines.append("")
-            return "\n".join(lines) + "\n"
-
-        # ── Normal block: build u[] then call Step ────────────────────────────
+        # ── Compute total_in and in_vars (needed for both passes) ─────────────
         if c_input_map:
             total_in = len(c_input_map)
-            lines.append(f"    real32_T u_{sn}[{total_in}];")
-            for k, (src_name, src_idx) in enumerate(c_input_map):
-                src_sn = _sanitize(src_name)
-                lines.append(f"    u_{sn}[{k}] = y_{src_sn}[{src_idx}];")
+            in_vars  = []   # not used in c_input_map path
         else:
             in_vars = []
             for inp_block in _safe_inputs(block):
@@ -1024,11 +1037,57 @@ class StepGenerator:
                 if inp_n_out == 0 and inp_block.output is not None:
                     inp_n_out = len(inp_block.output.value)
                 in_vars.append((inp_sn, inp_n_out))
-
             total_in = n_inputs if n_inputs > 0 else sum(s for _, s in in_vars)
 
+        # ── Source block: NUM_INPUTS == 0 ─────────────────────────────────────
+        if n_inputs == 0:
+            if decls_only:
+                return f"    real32_T y_{sn}[{total_out}];\n"
+            if stmts_only:
+                if state_struct:
+                    return (f"    /* --- {sn} ({block.__class__.__name__}) --- */\n"
+                            f"    {step_func}(&{sn}_state, dt, y_{sn});\n\n")
+                else:
+                    return (f"    /* --- {sn} ({block.__class__.__name__}) --- */\n"
+                            f"    {step_func}(dt, y_{sn});\n\n")
+            # legacy combined path
+            lines = [
+                f"    /* --- {sn} ({block.__class__.__name__}) --- */",
+                f"    real32_T y_{sn}[{total_out}];",
+            ]
+            if state_struct:
+                lines.append(f"    {step_func}(&{sn}_state, dt, y_{sn});")
+            else:
+                lines.append(f"    {step_func}(dt, y_{sn});")
+            lines.append("")
+            return "\n".join(lines) + "\n"
+
+        # ── Normal block ──────────────────────────────────────────────────────
+        # DECLARATIONS pass
+        if decls_only:
+            decl_lines = []
+            if total_in > 0:
+                decl_lines.append(f"    real32_T u_{sn}[{total_in}];")
+            decl_lines.append(f"    real32_T y_{sn}[{total_out}];")
+            return "\n".join(decl_lines) + "\n"
+
+        # STATEMENTS pass  (or legacy combined)
+        lines = []
+        if not stmts_only:
+            # legacy combined: emit decls first, then stmts
             if total_in > 0:
                 lines.append(f"    real32_T u_{sn}[{total_in}];")
+            lines.append(f"    real32_T y_{sn}[{total_out}];")
+
+        lines.append(f"    /* --- {sn} ({block.__class__.__name__}) --- */")
+
+        # Wire inputs into u_[]
+        if c_input_map:
+            for k, (src_name, src_idx) in enumerate(c_input_map):
+                src_sn = _sanitize(src_name)
+                lines.append(f"    u_{sn}[{k}] = y_{src_sn}[{src_idx}];")
+        else:
+            if total_in > 0:
                 offset = 0
                 for inp_sn, inp_sz in in_vars:
                     if inp_sz == 1:
@@ -1041,8 +1100,6 @@ class StepGenerator:
                                     f"    u_{sn}[{offset + k}] = y_{inp_sn}[{k}];"
                                 )
                         offset += inp_sz
-
-        lines.append(f"    real32_T y_{sn}[{total_out}];")
 
         if state_struct:
             lines.append(f"    {step_func}(&{sn}_state, u_{sn}, dt, y_{sn});")
@@ -1105,7 +1162,7 @@ class StepGenerator:
             f"#ifndef {self.guard}",
             f"#define {self.guard}",
             "",
-            '#include "Sys_Types.h"   /* real32_T */',
+            '#include "embed_sim_sys_types.h"   /* real32_T */',
             "",
         ]
 
@@ -1312,9 +1369,22 @@ class StepGenerator:
             L.append("")
 
         # ── Block chain ───────────────────────────────────────────────────────
+        # MISRA C:2012 Rule 8.1: all declarations must precede any statement
+        # within a block.  Two-pass emission:
+        #   Pass 1 — collect every local variable declaration from all blocks
+        #   Pass 2 — emit all statements (assignments + function calls)
+        # C_CUSTOM_EMIT blocks emit only in pass 2 (they manage their own
+        # interleaved declarations internally, which is already ctc-safe because
+        # they use inner braces {} in the hand-written snippet).
+        L.append("    /* ── Local variable declarations (MISRA C:2012 Rule 8.1) ── */")
+        for blk in blocks:
+            d = self._emit_block(blk, decls_only=True)
+            if d:
+                L.append(d.rstrip("\n"))
+        L.append("")
         L.append("    /* ── Block chain ──────────────────────────────────────── */")
         for blk in blocks:
-            L.append(self._emit_block(blk))
+            L.append(self._emit_block(blk, stmts_only=True))
 
         # ── Pack output struct ────────────────────────────────────────────────
         if out_sigs:

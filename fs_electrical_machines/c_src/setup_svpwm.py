@@ -45,8 +45,8 @@ ext = Extension(
     name="svpwm_wrapper",  # Simple name for local build
     sources=[
         str(_C_SRC / "svpwm_wrapper.pyx"),
-        str(_C_SRC / "SV_PWM.c"),
-        str(_C_SRC / "Matrix.c"),
+        str(_C_SRC / "embed_sim_sv_pwm.c"),
+        str(_C_SRC / "embed_sim_matrix.c"),
     ],
     include_dirs=[
         str(_C_SRC),

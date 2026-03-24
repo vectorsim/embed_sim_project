@@ -1,5 +1,5 @@
 /**********************************************************************************************************************
- * \file      Coordinate_Transform.h
+ * \file      embed_sim_coordinate_transform.h
  * \brief     Clarke, Park, Inverse-Park and Inverse-Clarke transforms for FOC motor control.
  *
  * Uses \c MatrixFloat (= \c real32_T) from \c Matrix.h as the working type.
@@ -32,7 +32,7 @@
 /*********************************************************************************************************************/
 /*-----------------------------------------------------Includes------------------------------------------------------*/
 /*********************************************************************************************************************/
-#include "Matrix.h"   /* MatrixFloat (= real32_T), Matrix_FloatToQ31,
+#include "embed_sim_matrix.h"   /* MatrixFloat (= real32_T), Matrix_FloatToQ31,
                          Matrix_Q31ToFloat — also pulls in Sys_Types.h  */
 
 

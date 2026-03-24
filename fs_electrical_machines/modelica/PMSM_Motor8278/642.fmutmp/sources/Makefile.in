@@ -62,7 +62,7 @@ PHONY: PMSM_Motor_FMU
 PMSM_Motor_FMU: nozip
 	cd .. && rm -f ../PMSM_Motor.fmu && zip -r ../PMSM_Motor.fmu *
 nozip: PMSM_Motor_functions.h PMSM_Motor_literals.h $(OFILES) $(RUNTIMEFILES) $(FMISUNDIALSFILES)
-	$(CXX) -shared -I. -o PMSM_Motor$(DLLEXT) $(RUNTIMEFILES) $(FMISUNDIALSFILES) $(OFILES) $(CPPFLAGS) -L"C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica"   $(CFLAGS) $(LDFLAGS) -llis -Wl,--kill-at
+	$(CXX) -shared -I. -o PMSM_Motor$(DLLEXT) $(RUNTIMEFILES) $(FMISUNDIALSFILES) $(OFILES) $(CPPFLAGS) -L"C:/Users/CSO212/Downloads"   $(CFLAGS) $(LDFLAGS) -llis -Wl,--kill-at
 	mkdir.exe -p ../binaries/win64
 	dlltool -d PMSM_Motor.def --dllname PMSM_Motor$(DLLEXT) --output-lib PMSM_Motor.lib --kill-at
 	cp PMSM_Motor$(DLLEXT) PMSM_Motor.lib PMSM_Motor_FMU.libs ../binaries/win64/

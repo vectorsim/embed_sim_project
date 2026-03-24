@@ -5,7 +5,7 @@
 
 // define class name and unique id
 #define MODEL_IDENTIFIER PMSM_Motor
-#define MODEL_GUID "{1d831d67-fdf0-4df4-a4ce-7577bc54d53d}"
+#define MODEL_GUID "{26ba8224-b24a-48ce-936f-f3a1e58ef99b}"
 
 // define model size
 #define NUMBER_OF_STATES 4

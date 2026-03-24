@@ -7,14 +7,6 @@ extern "C" {
 #endif
 
 void PMSM_Motor_functionInitialEquations_0(DATA *data, threadData_t *threadData);
-extern void PMSM_Motor_eqFunction_42(DATA *data, threadData_t *threadData);
-
-extern void PMSM_Motor_eqFunction_43(DATA *data, threadData_t *threadData);
-
-extern void PMSM_Motor_eqFunction_44(DATA *data, threadData_t *threadData);
-
-extern void PMSM_Motor_eqFunction_45(DATA *data, threadData_t *threadData);
-
 extern void PMSM_Motor_eqFunction_46(DATA *data, threadData_t *threadData);
 
 extern void PMSM_Motor_eqFunction_47(DATA *data, threadData_t *threadData);
@@ -24,6 +16,14 @@ extern void PMSM_Motor_eqFunction_48(DATA *data, threadData_t *threadData);
 extern void PMSM_Motor_eqFunction_49(DATA *data, threadData_t *threadData);
 
 extern void PMSM_Motor_eqFunction_50(DATA *data, threadData_t *threadData);
+
+extern void PMSM_Motor_eqFunction_51(DATA *data, threadData_t *threadData);
+
+extern void PMSM_Motor_eqFunction_52(DATA *data, threadData_t *threadData);
+
+extern void PMSM_Motor_eqFunction_53(DATA *data, threadData_t *threadData);
+
+extern void PMSM_Motor_eqFunction_54(DATA *data, threadData_t *threadData);
 
 
 /*
@@ -49,7 +49,7 @@ void PMSM_Motor_eqFunction_11(DATA *data, threadData_t *threadData)
   (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[1]] /* i_q STATE(1) */) = ((modelica_real *)((data->modelData->realVarsData[1] /* i_q STATE(1) */).attribute .start.data))[0];
   threadData->lastEquationSolved = 11;
 }
-extern void PMSM_Motor_eqFunction_37(DATA *data, threadData_t *threadData);
+extern void PMSM_Motor_eqFunction_41(DATA *data, threadData_t *threadData);
 
 
 /*
@@ -63,17 +63,17 @@ void PMSM_Motor_eqFunction_13(DATA *data, threadData_t *threadData)
   (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[2]] /* omega_m STATE(1) */) = ((modelica_real *)((data->modelData->realVarsData[2] /* omega_m STATE(1) */).attribute .start.data))[0];
   threadData->lastEquationSolved = 13;
 }
-extern void PMSM_Motor_eqFunction_51(DATA *data, threadData_t *threadData);
+extern void PMSM_Motor_eqFunction_55(DATA *data, threadData_t *threadData);
 
-extern void PMSM_Motor_eqFunction_40(DATA *data, threadData_t *threadData);
+extern void PMSM_Motor_eqFunction_44(DATA *data, threadData_t *threadData);
 
-extern void PMSM_Motor_eqFunction_41(DATA *data, threadData_t *threadData);
+extern void PMSM_Motor_eqFunction_45(DATA *data, threadData_t *threadData);
 
-extern void PMSM_Motor_eqFunction_38(DATA *data, threadData_t *threadData);
-
-extern void PMSM_Motor_eqFunction_35(DATA *data, threadData_t *threadData);
+extern void PMSM_Motor_eqFunction_42(DATA *data, threadData_t *threadData);
 
 extern void PMSM_Motor_eqFunction_39(DATA *data, threadData_t *threadData);
+
+extern void PMSM_Motor_eqFunction_43(DATA *data, threadData_t *threadData);
 
 
 /*
@@ -99,7 +99,7 @@ void PMSM_Motor_eqFunction_21(DATA *data, threadData_t *threadData)
   (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[39]] /* v_d variable */) = ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[33]] /* v_alpha variable */)) * (cos((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[3]] /* theta_e STATE(1,omega_e) */))) + ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[36]] /* v_beta variable */)) * (sin((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[3]] /* theta_e STATE(1,omega_e) */)));
   threadData->lastEquationSolved = 21;
 }
-extern void PMSM_Motor_eqFunction_55(DATA *data, threadData_t *threadData);
+extern void PMSM_Motor_eqFunction_59(DATA *data, threadData_t *threadData);
 
 
 /*
@@ -113,7 +113,7 @@ void PMSM_Motor_eqFunction_23(DATA *data, threadData_t *threadData)
   (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[42]] /* v_q variable */) = ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[36]] /* v_beta variable */)) * (cos((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[3]] /* theta_e STATE(1,omega_e) */))) - (((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[33]] /* v_alpha variable */)) * (sin((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[3]] /* theta_e STATE(1,omega_e) */))));
   threadData->lastEquationSolved = 23;
 }
-extern void PMSM_Motor_eqFunction_57(DATA *data, threadData_t *threadData);
+extern void PMSM_Motor_eqFunction_61(DATA *data, threadData_t *threadData);
 
 
 /*
@@ -139,15 +139,15 @@ void PMSM_Motor_eqFunction_26(DATA *data, threadData_t *threadData)
   (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[25]] /* i_beta variable */) = ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[0]] /* i_d STATE(1) */)) * (sin((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[3]] /* theta_e STATE(1,omega_e) */))) + ((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[1]] /* i_q STATE(1) */)) * (cos((data->localData[0]->realVars[data->simulationInfo->realVarsIndex[3]] /* theta_e STATE(1,omega_e) */)));
   threadData->lastEquationSolved = 26;
 }
-extern void PMSM_Motor_eqFunction_60(DATA *data, threadData_t *threadData);
+extern void PMSM_Motor_eqFunction_64(DATA *data, threadData_t *threadData);
 
-extern void PMSM_Motor_eqFunction_61(DATA *data, threadData_t *threadData);
+extern void PMSM_Motor_eqFunction_65(DATA *data, threadData_t *threadData);
 
-extern void PMSM_Motor_eqFunction_62(DATA *data, threadData_t *threadData);
+extern void PMSM_Motor_eqFunction_66(DATA *data, threadData_t *threadData);
 
-extern void PMSM_Motor_eqFunction_63(DATA *data, threadData_t *threadData);
+extern void PMSM_Motor_eqFunction_67(DATA *data, threadData_t *threadData);
 
-extern void PMSM_Motor_eqFunction_36(DATA *data, threadData_t *threadData);
+extern void PMSM_Motor_eqFunction_40(DATA *data, threadData_t *threadData);
 
 
 /*
@@ -189,37 +189,37 @@ OMC_DISABLE_OPT
 void PMSM_Motor_functionInitialEquations_0(DATA *data, threadData_t *threadData)
 {
   static void (*const eqFunctions[34])(DATA*, threadData_t*) = {
-    PMSM_Motor_eqFunction_42,
-    PMSM_Motor_eqFunction_43,
-    PMSM_Motor_eqFunction_44,
-    PMSM_Motor_eqFunction_45,
     PMSM_Motor_eqFunction_46,
     PMSM_Motor_eqFunction_47,
     PMSM_Motor_eqFunction_48,
     PMSM_Motor_eqFunction_49,
     PMSM_Motor_eqFunction_50,
+    PMSM_Motor_eqFunction_51,
+    PMSM_Motor_eqFunction_52,
+    PMSM_Motor_eqFunction_53,
+    PMSM_Motor_eqFunction_54,
     PMSM_Motor_eqFunction_10,
     PMSM_Motor_eqFunction_11,
-    PMSM_Motor_eqFunction_37,
-    PMSM_Motor_eqFunction_13,
-    PMSM_Motor_eqFunction_51,
-    PMSM_Motor_eqFunction_40,
     PMSM_Motor_eqFunction_41,
-    PMSM_Motor_eqFunction_38,
-    PMSM_Motor_eqFunction_35,
+    PMSM_Motor_eqFunction_13,
+    PMSM_Motor_eqFunction_55,
+    PMSM_Motor_eqFunction_44,
+    PMSM_Motor_eqFunction_45,
+    PMSM_Motor_eqFunction_42,
     PMSM_Motor_eqFunction_39,
+    PMSM_Motor_eqFunction_43,
     PMSM_Motor_eqFunction_20,
     PMSM_Motor_eqFunction_21,
-    PMSM_Motor_eqFunction_55,
+    PMSM_Motor_eqFunction_59,
     PMSM_Motor_eqFunction_23,
-    PMSM_Motor_eqFunction_57,
+    PMSM_Motor_eqFunction_61,
     PMSM_Motor_eqFunction_25,
     PMSM_Motor_eqFunction_26,
-    PMSM_Motor_eqFunction_60,
-    PMSM_Motor_eqFunction_61,
-    PMSM_Motor_eqFunction_62,
-    PMSM_Motor_eqFunction_63,
-    PMSM_Motor_eqFunction_36,
+    PMSM_Motor_eqFunction_64,
+    PMSM_Motor_eqFunction_65,
+    PMSM_Motor_eqFunction_66,
+    PMSM_Motor_eqFunction_67,
+    PMSM_Motor_eqFunction_40,
     PMSM_Motor_eqFunction_32,
     PMSM_Motor_eqFunction_33,
     PMSM_Motor_eqFunction_34
@@ -246,6 +246,30 @@ int PMSM_Motor_functionRemovedInitialEquations(DATA *data, threadData_t *threadD
   const int *equationIndexes = NULL;
   double res = 0.0;
 
+  res = (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[0]] /* i_d STATE(1) */);
+  if(fabs(res) > 1e-5)
+  {
+    errorStreamPrint(OMC_LOG_INIT, 0, "The initialization problem is inconsistent due to the following equation: 0 != %g = i_d", res);
+    return 1;
+  }
+  res = (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[1]] /* i_q STATE(1) */);
+  if(fabs(res) > 1e-5)
+  {
+    errorStreamPrint(OMC_LOG_INIT, 0, "The initialization problem is inconsistent due to the following equation: 0 != %g = i_q", res);
+    return 1;
+  }
+  res = (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[2]] /* omega_m STATE(1) */);
+  if(fabs(res) > 1e-5)
+  {
+    errorStreamPrint(OMC_LOG_INIT, 0, "The initialization problem is inconsistent due to the following equation: 0 != %g = omega_m", res);
+    return 1;
+  }
+  res = (data->localData[0]->realVars[data->simulationInfo->realVarsIndex[3]] /* theta_e STATE(1,omega_e) */);
+  if(fabs(res) > 1e-5)
+  {
+    errorStreamPrint(OMC_LOG_INIT, 0, "The initialization problem is inconsistent due to the following equation: 0 != %g = theta_e", res);
+    return 1;
+  }
   
   return 0;
 }

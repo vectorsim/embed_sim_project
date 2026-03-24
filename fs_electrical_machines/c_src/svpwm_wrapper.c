@@ -19,8 +19,8 @@
             "C:\\EmbedSimProject\\embed_sim_project\\.venv\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\ndarrayobject.h",
             "C:\\EmbedSimProject\\embed_sim_project\\.venv\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\ndarraytypes.h",
             "C:\\EmbedSimProject\\embed_sim_project\\.venv\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\ufuncobject.h",
-            "C:\\EmbedSimProject\\embed_sim_project\\fs_electrical_machines\\c_src\\Matrix.h",
-            "C:\\EmbedSimProject\\embed_sim_project\\fs_electrical_machines\\c_src\\SV_PWM.h"
+            "C:\\EmbedSimProject\\embed_sim_project\\fs_electrical_machines\\c_src\\embed_sim_matrix.h",
+            "C:\\EmbedSimProject\\embed_sim_project\\fs_electrical_machines\\c_src\\embed_sim_sv_pwm.h"
         ],
         "extra_compile_args": [
             "/O2"
@@ -33,8 +33,8 @@
         "name": "svpwm_wrapper",
         "sources": [
             "C:\\EmbedSimProject\\embed_sim_project\\fs_electrical_machines\\c_src\\svpwm_wrapper.pyx",
-            "C:\\EmbedSimProject\\embed_sim_project\\fs_electrical_machines\\c_src\\SV_PWM.c",
-            "C:\\EmbedSimProject\\embed_sim_project\\fs_electrical_machines\\c_src\\Matrix.c"
+            "C:\\EmbedSimProject\\embed_sim_project\\fs_electrical_machines\\c_src\\embed_sim_sv_pwm.c",
+            "C:\\EmbedSimProject\\embed_sim_project\\fs_electrical_machines\\c_src\\embed_sim_matrix.c"
         ]
     },
     "module_name": "svpwm_wrapper"
@@ -1169,8 +1169,8 @@ static int __Pyx_init_co_variables(void) {
 #include "numpy/arrayscalars.h"
 #include "numpy/ufuncobject.h"
 #include <math.h>
-#include "Matrix.h"
-#include "SV_PWM.h"
+#include "embed_sim_matrix.h"
+#include "embed_sim_sv_pwm.h"
 #include "pythread.h"
 #include <stdlib.h>
 #ifdef _OPENMP

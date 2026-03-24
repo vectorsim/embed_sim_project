@@ -1,5 +1,5 @@
 /**********************************************************************************************************************
- * \file      Motor_Utility_Blocks.h
+ * \file      embed_sim_motor_utility_blocks.h
  * \brief     EmbedSim stateful block API for the NANOTEC DB42S02 open-loop V/f controller.
  *
  * Five blocks used in the open-loop V/f controller chain:
@@ -37,7 +37,7 @@
 /*********************************************************************************************************************/
 /*-----------------------------------------------------Includes------------------------------------------------------*/
 /*********************************************************************************************************************/
-#include "Sys_Types.h"
+#include "embed_sim_sys_types.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -94,6 +94,7 @@ typedef struct
     real32_T  theta_e;       /**< Electrical angle accumulator [rad].   */
     real32_T  vf_ratio;      /**< V/f voltage gain [V·s/rad].           */
     real32_T  v_phase_peak;  /**< Peak phase voltage limit [V].         */
+    real32_T  v_boost;       /**< Zero-speed voltage boost [V].         */
     uint8_T   p_poles;       /**< Number of pole pairs.                 */
 } VfAngle_T;
 
@@ -222,6 +223,7 @@ extern void VfAngle_Init(
     VfAngle_T * s,
     real32_T    vf_ratio,
     real32_T    v_phase_peak,
+    real32_T    v_boost,
     uint8_T     p_poles);
 
 /**

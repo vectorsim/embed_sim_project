@@ -9,7 +9,7 @@
             "C:\\EmbedSimProject\\embed_sim_project\\.venv\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\ndarrayobject.h",
             "C:\\EmbedSimProject\\embed_sim_project\\.venv\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\ndarraytypes.h",
             "C:\\EmbedSimProject\\embed_sim_project\\.venv\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\ufuncobject.h",
-            "C:\\EmbedSimProject\\embed_sim_project\\fs_electrical_machines\\c_src\\coordinate_transform.h"
+            "C:\\EmbedSimProject\\embed_sim_project\\fs_electrical_machines\\c_src\\embed_sim_coordinate_transform.h"
         ],
         "extra_compile_args": [
             "/O2"
@@ -22,8 +22,8 @@
         "name": "coordinate_transform_wrapper",
         "sources": [
             "C:\\EmbedSimProject\\embed_sim_project\\fs_electrical_machines\\c_src\\coordinate_transform_wrapper.pyx",
-            "C:\\EmbedSimProject\\embed_sim_project\\fs_electrical_machines\\c_src\\Coordinate_Transform.c",
-            "C:\\EmbedSimProject\\embed_sim_project\\fs_electrical_machines\\c_src\\Matrix.c"
+            "C:\\EmbedSimProject\\embed_sim_project\\fs_electrical_machines\\c_src\\embed_sim_coordinate_transform.c",
+            "C:\\EmbedSimProject\\embed_sim_project\\fs_electrical_machines\\c_src\\embed_sim_matrix.c"
         ]
     },
     "module_name": "coordinate_transform_wrapper"
@@ -1157,7 +1157,7 @@ static int __Pyx_init_co_variables(void) {
 #include "numpy/ndarraytypes.h"
 #include "numpy/arrayscalars.h"
 #include "numpy/ufuncobject.h"
-#include "coordinate_transform.h"
+#include "embed_sim_coordinate_transform.h"
 #ifdef _OPENMP
 #include <omp.h>
 #endif /* _OPENMP */

@@ -22,7 +22,7 @@
 /*********************************************************************************************************************/
 /*-----------------------------------------------------Includes------------------------------------------------------*/
 /*********************************************************************************************************************/
-#include "Motor_Utility_Blocks.h"
+#include "embed_sim_motor_utility_blocks.h"
 #include <math.h>   /* fabsf, sqrtf, atan2f */
 
 
@@ -196,11 +196,13 @@ void VfAngle_Init(
     VfAngle_T * s,
     real32_T    vf_ratio,
     real32_T    v_phase_peak,
+    real32_T    v_boost,
     uint8_T     p_poles)
 {
     s->theta_e      = 0.0f;
     s->vf_ratio     = vf_ratio;
     s->v_phase_peak = v_phase_peak;
+    s->v_boost      = v_boost;
     s->p_poles      = p_poles;
 }
 
@@ -220,7 +222,7 @@ void VfAngle_Step(
 
     omega_m = u[0];
     omega_e = (real32_T)s->p_poles * omega_m;
-    vq      = s->vf_ratio * fabsf(omega_e);
+    vq      = (s->vf_ratio * fabsf(omega_e)) + s->v_boost;
 
     /* Voltage limit — clamp v_q to peak phase voltage. */
     if (vq > s->v_phase_peak)
@@ -320,9 +322,23 @@ void SVPWMPack_Step(
     v_alpha = u[0];
     v_beta  = u[1];
 
-    y[0] = sqrtf((v_alpha * v_alpha) + (v_beta * v_beta));  /* V_ref.       */
-    y[1] = atan2f(v_beta, v_alpha);                          /* alpha_angle. */
-    y[2] = s->v_dc;                                          /* V_dc.        */
+    y[0] = sqrtf((v_alpha * v_alpha) + (v_beta * v_beta));  /* V_ref magnitude. */
+
+    /* Clip modulation index to 0.95 — mirrors SpaceVectorModulation1()
+     * in the AURIX application layer and SVPWMPackBlock.compute_py().
+     * Prevents SVM_CalculateDutyCycle from returning MATRIX_ERROR_OUT_OF_BOUNDS
+     * at rated speed where Vref approaches 1.0. */
+    if (y[0] > 0.95f)
+    {
+        y[0] = 0.95f;
+    }
+    else
+    {
+        /* No action — within linear modulation range. */
+    }
+
+    y[1] = atan2f(v_beta, v_alpha);  /* alpha_angle [rad]. */
+    y[2] = s->v_dc;                  /* V_dc pass-through. */
 }
 
 

@@ -330,11 +330,11 @@ body.cython { font-family: courier; font-size: 12; }
 <pre class='cython code score-0 '>  __pyx_t_9 = __pyx_f_5numpy_import_array();<span class='error_goto'> if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(0, 23, __pyx_L1_error)</span>
 </pre><pre class="cython line score-0">&#xA0;<span class="">024</span>: </pre>
 <pre class="cython line score-0">&#xA0;<span class="">025</span>: # -----------------------------------------------------------------------------</pre>
-<pre class="cython line score-0">&#xA0;<span class="">026</span>: # C declarations from Matrix.h</pre>
-<pre class="cython line score-0">&#xA0;<span class="">027</span>: # FIX #3: Matrix_FloatToQ31 / Matrix_Q31ToFloat belong under Matrix.h,</pre>
-<pre class="cython line score-0">&#xA0;<span class="">028</span>: #         not svpwm.h — they are defined in Matrix.c and declared in Matrix.h.</pre>
+<pre class="cython line score-0">&#xA0;<span class="">026</span>: # C declarations from embed_sim_matrix.h</pre>
+<pre class="cython line score-0">&#xA0;<span class="">027</span>: # FIX #3: Matrix_FloatToQ31 / Matrix_Q31ToFloat belong under embed_sim_matrix.h,</pre>
+<pre class="cython line score-0">&#xA0;<span class="">028</span>: #         not svpwm.h — they are defined in Matrix.c and declared in embed_sim_matrix.h.</pre>
 <pre class="cython line score-0">&#xA0;<span class="">029</span>: # -----------------------------------------------------------------------------</pre>
-<pre class="cython line score-0">&#xA0;<span class="">030</span>: cdef extern from "Matrix.h":</pre>
+<pre class="cython line score-0">&#xA0;<span class="">030</span>: cdef extern from "embed_sim_matrix.h":</pre>
 <pre class="cython line score-0">&#xA0;<span class="">031</span>:     ctypedef int       MatrixElement   # int32_T</pre>
 <pre class="cython line score-0">&#xA0;<span class="">032</span>:     ctypedef float     MatrixFloat</pre>
 <pre class="cython line score-0">&#xA0;<span class="">033</span>: </pre>
@@ -354,7 +354,7 @@ body.cython { font-family: courier; font-size: 12; }
 <pre class="cython line score-0">&#xA0;<span class="">047</span>: #         #define macros — they have no linkage and cannot be declared extern.</pre>
 <pre class="cython line score-0">&#xA0;<span class="">048</span>: #         The literal 6.28318530718f is inlined directly where needed.</pre>
 <pre class="cython line score-0">&#xA0;<span class="">049</span>: # -----------------------------------------------------------------------------</pre>
-<pre class="cython line score-0">&#xA0;<span class="">050</span>: cdef extern from "SV_PWM.h":</pre>
+<pre class="cython line score-0">&#xA0;<span class="">050</span>: cdef extern from "embed_sim_sv_pwm.h":</pre>
 <pre class="cython line score-0">&#xA0;<span class="">051</span>: </pre>
 <pre class="cython line score-0">&#xA0;<span class="">052</span>:     ctypedef enum SVM_Sector_Type:</pre>
 <pre class="cython line score-0">&#xA0;<span class="">053</span>:         SVM_SECTOR_I   = 0</pre>
