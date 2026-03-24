@@ -69,9 +69,10 @@
 #define SMC_ONE_F           ((MatrixFloat)1.0f)
 #define SMC_LOG_INTERVAL    ((MatrixFloat)0.001f)   /* 1 kHz diagnostic rate */
 
-/** Speed LPF coefficient — matches Python SMCControllerPy exactly */
-#define SMC_LPF_ALPHA       ((MatrixFloat)0.95f)
-#define SMC_LPF_ONE_MINUS   ((MatrixFloat)0.05f)
+/** Speed LPF α=0.70 → τ ≈ 3 steps (150 µs at dt=50µs).
+ *  Previous α=0.95 (τ≈1ms) + no unwrap caused omega_filt→0 on wrap spikes. */
+#define SMC_LPF_ALPHA       ((MatrixFloat)0.70f)
+#define SMC_LPF_ONE_MINUS   ((MatrixFloat)0.30f)
 
 
 /*********************************************************************************************************************/
@@ -152,11 +153,13 @@ static MatrixFloat SMC_SpeedSMC(
  * \param[out] vq       Q-axis voltage reference [V].
  */
 static void SMC_CurrentSMC(
+    SMC_Controller_T    * const s,
     MatrixFloat             id_meas,
     MatrixFloat             iq_meas,
     MatrixFloat             id_ref,
     MatrixFloat             iq_ref,
     MatrixFloat             omega_e,
+    MatrixFloat             dt,
     const SMC_GainSet_T   * const g,
     MatrixFloat           * const vd,
     MatrixFloat           * const vq);
@@ -251,25 +254,23 @@ static MatrixFloat SMC_SpeedSMC(
 {
     MatrixFloat s_spd;
     MatrixFloat iq_ref;
+    /* Generous integrator limits — sized in physical angle units.
+     * int_spd  [rad]:   10 rad ≈ 1.6 mechanical revolutions.
+     * int2_spd [rad·s]: 10/λ ≈ 0.080 rad·s.
+     * Previous limits (PHI_W/λ = 0.064 rad) were so tight that at 2000 RPM
+     * they saturated every ~13 ms, causing the surface to flip sign and the
+     * speed loop to oscillate.  The final iq_ref is already clamped to ±I_MAX.
+     */
+    const MatrixFloat int_limit  = (MatrixFloat)10.0f;
+    const MatrixFloat int2_limit = (MatrixFloat)10.0f / SMC_LAMBDA_W;
 
 #if defined(SMC_INTEGRATOR_TUSTIN)
-    /*
-     * Tustin (bilinear / trapezoidal) — O(dt²).
-     * ∫e  += dt/2 · (e + e_prev)
-     * ∫∫e += dt/2 · (∫e + ∫e_prev)
-     */
     s->int_spd      += (dt * (MatrixFloat)0.5f) * (e        + s->e_prev);
     s->int2_spd     += (dt * (MatrixFloat)0.5f) * (s->int_spd + s->int_spd_prev);
     s->int_spd_prev  = s->int_spd;
     s->e_prev        = e;
 
 #elif defined(SMC_INTEGRATOR_HEUN)
-    /*
-     * Heun predictor-corrector — O(dt²), better phase accuracy for large dt.
-     * Predictor:  int_e_star  = int_e  + dt · e_prev
-     * Corrector:  int_e      += dt/2 · (e_prev + e)
-     * Same for double integral.
-     */
     {
         MatrixFloat int_e_star;
         MatrixFloat int2_e_star;
@@ -283,31 +284,24 @@ static MatrixFloat SMC_SpeedSMC(
         s->int_spd_prev = s->int_spd;
         s->e_prev       = e;
 
-        (void)int_e_star;   /* used only in corrector above */
+        (void)int_e_star;
         (void)int2_e_star;
     }
 
-#else   /* SMC_INTEGRATOR_EULER — forward Euler, O(dt) */
-    /*
-     * Forward Euler — legacy.  No extra state fields required.
-     */
+#else   /* SMC_INTEGRATOR_EULER */
     s->int_spd  += dt * e;
     s->int2_spd += dt * s->int_spd;
 
 #endif  /* integrator selection */
 
-    /*
-     * Sliding surface:  s = e + λ·∫e + γ·∫∫e
-     *   λ = SMC_LAMBDA_W = 2π × 20 Hz
-     *   γ = SMC_GAMMA_W  = 2π × 5  Hz
-     */
+    /* Clamp integrators to generous limits */
+    s->int_spd  = SMC_Clamp(s->int_spd,  int_limit);
+    s->int2_spd = SMC_Clamp(s->int2_spd, int2_limit);
+
     s_spd = e
             + SMC_LAMBDA_W * s->int_spd
             + SMC_GAMMA_W  * s->int2_spd;
 
-    /*
-     * Control law:  iq_ref = ks_w · sat(s/φ_w) + eta_w · s
-     */
     iq_ref = (g->ks_w * SMC_Sat(s_spd, g->phi_w))
              + (g->eta_w * s_spd);
 
@@ -317,13 +311,26 @@ static MatrixFloat SMC_SpeedSMC(
 
 /*--------------------------------------------------------------------------------------------------------------------
  * SMC_CurrentSMC
+ *
+ * Discrete PI current controller with FOC decoupling feedforward.
+ *
+ *   vd = vd_eq  +  Kp·s_d  +  v_int_d  +  Ks·sat(s_d/φ)
+ *   vq = vq_eq  +  Kp·s_q  +  v_int_q  +  Ks·sat(s_q/φ)
+ *
+ * Error: s = i_ref - i_meas  (positive → more voltage needed)
+ *
+ * Kp = L/(5·dt) → α=0.2, stable with 2-step effective delay  (BW≈1.3 kHz)
+ * Ki per step   = R/5  [V/A]    Ti = L/R = 658 µs
+ * Anti-windup   : integrators frozen when |v| > V_MAX
  *------------------------------------------------------------------------------------------------------------------*/
 static void SMC_CurrentSMC(
+    SMC_Controller_T    * const s,
     const MatrixFloat           id_meas,
     const MatrixFloat           iq_meas,
     const MatrixFloat           id_ref,
     const MatrixFloat           iq_ref,
     const MatrixFloat           omega_e,
+    const MatrixFloat           dt,
     const SMC_GainSet_T * const g,
     MatrixFloat         * const vd,
     MatrixFloat         * const vq)
@@ -334,43 +341,63 @@ static void SMC_CurrentSMC(
     MatrixFloat vq_eq;
     MatrixFloat vd_sw;
     MatrixFloat vq_sw;
+    MatrixFloat Kp;
+    MatrixFloat Ki_step;
+    MatrixFloat v_int_d_new;
+    MatrixFloat v_int_q_new;
+    MatrixFloat vd_out;
+    MatrixFloat vq_out;
+    MatrixFloat magnitude;
+    MatrixFloat scale;
 
-    if ((vd != NULL) && (vq != NULL) && (g != NULL))
+    if ((s == NULL) || (vd == NULL) || (vq == NULL) || (g == NULL))
     {
-        /* Sliding surfaces */
-        s_d = id_meas - id_ref;
-        s_q = iq_meas - iq_ref;
+        return;
+    }
 
-        /*
-         * Equivalent control — cancels plant dynamics:
-         *   vd_eq =  R·id - ωe·Lq·iq
-         *   vq_eq =  R·iq + ωe·(Ld·id + λpm)
-         */
-        vd_eq = (SMC_R_S * id_meas) - (omega_e * SMC_L_Q * iq_meas);
-        vq_eq = (SMC_R_S * iq_meas)
-                + (omega_e * ((SMC_L_D * id_meas) + SMC_LAMBDA_PM));
+    s_d = id_ref - id_meas;
+    s_q = iq_ref - iq_meas;
 
-        /*
-         * Switching control — boundary-layer saturation:
-         *   vd_sw = -ks_i · sat(s_d / φ_i)
-         *   vq_sw = -ks_i · sat(s_q / φ_i)
-         *
-         * Sign convention: s = i_meas - i_ref.
-         * Lyapunov stability requires s·ds/dt < 0, which gives
-         * v_sw = -ks·sat(s/φ).  When i < i_ref: s<0, v_sw>0 → drives
-         * current up toward reference.  Positive sign here would oppose
-         * the reference — incorrect.
-         */
-        vd_sw = -(g->ks_i * SMC_Sat(s_d, g->phi_i));
-        vq_sw = -(g->ks_i * SMC_Sat(s_q, g->phi_i));
+    vd_eq = (SMC_R_S * id_meas) - (omega_e * SMC_L_Q * iq_meas);
+    vq_eq = (SMC_R_S * iq_meas)
+            + (omega_e * ((SMC_L_D * id_meas) + SMC_LAMBDA_PM));
 
-        *vd = vd_eq + vd_sw;
-        *vq = vq_eq + vq_sw;
+    /* Kp = L/(5·dt) */
+    Kp = (dt > SMC_ZERO_F) ? (SMC_L_D / ((MatrixFloat)5.0f * dt)) : SMC_ZERO_F;
+
+    /* Ki per step = R/5  [V/A] */
+    Ki_step = SMC_R_S / (MatrixFloat)5.0f;
+
+    v_int_d_new = s->v_int_d + Ki_step * s_d;
+    v_int_q_new = s->v_int_q + Ki_step * s_q;
+
+    /* Clamp to ±V_MAX */
+    v_int_d_new = SMC_Clamp(v_int_d_new, SMC_V_MAX);
+    v_int_q_new = SMC_Clamp(v_int_q_new, SMC_V_MAX);
+
+    vd_sw = g->ks_i * SMC_Sat(s_d, g->phi_i);
+    vq_sw = g->ks_i * SMC_Sat(s_q, g->phi_i);
+
+    vd_out = vd_eq + (Kp * s_d) + v_int_d_new + vd_sw;
+    vq_out = vq_eq + (Kp * s_q) + v_int_q_new + vq_sw;
+
+    /* Vector voltage limit — freeze integrators on saturation */
+    magnitude = sqrtf(vd_out * vd_out + vq_out * vq_out);
+    if (magnitude > SMC_V_MAX)
+    {
+        scale   = SMC_V_MAX / magnitude;
+        vd_out *= scale;
+        vq_out *= scale;
+        /* Freeze: do not commit integrators */
     }
     else
     {
-        /* MISRA C:2012 Rule 15.7: else required */
+        s->v_int_d = v_int_d_new;
+        s->v_int_q = v_int_q_new;
     }
+
+    *vd = vd_out;
+    *vq = vq_out;
 }
 
 
@@ -478,16 +505,28 @@ void SMC_Controller_Step(
         return;   /* MISRA 15.5: single exceptional exit */
     }
 
-    /* ── Speed estimation: Euler differentiator + first-order LPF ──────── *
-     *   omega_raw  = (θ_m - θ_m_prev) / dt
-     *   omega_filt = α · omega_filt + (1-α) · omega_raw    α = 0.95
+    /* ── Speed estimation: 2π-unwrapping differentiator + LPF ─────────── *
      *
-     *   LPF cut-off ≈ (1-α)/(2π·dt) = 0.05/(2π·50µs) ≈ 159 Hz
-     *   Attenuates encoder quantisation noise above 159 Hz.
+     * theta_m is the unwrapped (accumulating) angle from CtrlPacker.
+     * The shortest-step delta guards against any residual wrap:
+     *   delta = theta_m - theta_m_prev
+     *   delta -= 2π · floor( (delta + π) / (2π) )   ← brings into (-π, +π]
+     *   omega_raw  = delta / dt
+     *   omega_filt = 0.7·omega_filt + 0.3·omega_raw
+     *
+     * Without unwrap, every mechanical angle reset produced a large negative
+     * spike that collapsed omega_filt to ~0 — starving the speed SMC.
      * ─────────────────────────────────────────────────────────────────── */
     if (dt > SMC_ZERO_F)
     {
-        omega_raw     = (u->theta_m - s->theta_m_prev) / dt;
+        MatrixFloat delta;
+        const MatrixFloat two_pi = (MatrixFloat)6.28318530717959f;
+        const MatrixFloat pi_f   = (MatrixFloat)3.14159265358979f;
+
+        delta = u->theta_m - s->theta_m_prev;
+        delta -= two_pi * floorf((delta + pi_f) / two_pi);
+
+        omega_raw     = delta / dt;
         s->omega_filt = (SMC_LPF_ALPHA    * s->omega_filt)
                       + (SMC_LPF_ONE_MINUS * omega_raw);
     }
@@ -522,9 +561,10 @@ void SMC_Controller_Step(
     omega_e = (MatrixFloat)SMC_P_POLES * s->omega_m;
 
     /* ── Current SMC: (id,iq) → (vd,vq) ───────────────────────────────── */
-    SMC_CurrentSMC(id_meas, iq_meas,
+    SMC_CurrentSMC(s,
+                   id_meas, iq_meas,
                    s->id_ref, iq_ref,
-                   omega_e,
+                   omega_e, dt,
                    &g_smc_gains,
                    &vd, &vq);
 

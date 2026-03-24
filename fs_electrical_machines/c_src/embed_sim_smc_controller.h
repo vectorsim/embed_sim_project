@@ -227,6 +227,12 @@ typedef struct
     MatrixFloat vd;            /**< d-axis voltage [V] */
     MatrixFloat vq;            /**< q-axis voltage [V] */
 
+    /** Current loop PI voltage integrators [V].
+     *  Committed each step; frozen when |v_out| > V_MAX (anti-windup).
+     *  Zero-initialised by memset in SMC_Controller_Init(). */
+    MatrixFloat v_int_d;       /**< d-axis voltage integrator [V] */
+    MatrixFloat v_int_q;       /**< q-axis voltage integrator [V] */
+
     /* Embedded transform states (MISRA Rule 8.7 — no static locals) */
     Clarke_T   clarke_state;
     Park_T     park_state;

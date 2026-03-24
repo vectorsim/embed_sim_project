@@ -1,0 +1,2 @@
+   : python db42s02_tune_simulate_codegen.py     --no-tune     --rpm 400     --t_sim 2.0     --dt 100e-6
+   : python db42s02_tune_simulate_codegen.py     --no-tune     --rpm 400     --t_sim 1     --dt 50e-6

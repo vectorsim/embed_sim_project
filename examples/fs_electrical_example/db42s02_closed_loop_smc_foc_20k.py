@@ -184,10 +184,15 @@ class CtrlPacker(VectorBlock):
         super().__init__(name, **kw)
         self.output_label    = "[ω_ref_mech,θ_m,ia,ib,ic]"
         self._omega_ref_filt = 0.0    # rate-limited speed reference [rad/s]
+        # theta_m unwrapper — accumulates continuous mechanical angle
+        self._theta_m_prev:     float = 0.0
+        self._theta_m_unwrapped: float = 0.0
 
     def reset(self):
         super().reset()
-        self._omega_ref_filt = 0.0
+        self._omega_ref_filt     = 0.0
+        self._theta_m_prev       = 0.0
+        self._theta_m_unwrapped  = 0.0
 
     def compute_py(self, t, dt, input_values=None):
         # input_values[0] = motor bus  [rpm,ia,ib,ic,theta_m,T_em]
@@ -204,10 +209,22 @@ class CtrlPacker(VectorBlock):
                                     min(max_step,
                                         omega_ref_target - self._omega_ref_filt))
 
+        # ── Unwrap theta_m ───────────────────────────────────────────────────
+        # PMSM_Python_Plant outputs theta_m = theta_e / p which wraps at
+        # 2π/p ≈ 1.57 rad (p=4).  Without unwrapping the finite-difference
+        # speed estimator in SMCControllerBlock sees large sign-flip spikes
+        # every wrap and converges to omega_m_est ≈ 0.
+        theta_m_raw = float(m[4]) if len(m) > 4 else 0.0
+        delta = theta_m_raw - self._theta_m_prev
+        # Bring delta into (-π, +π] to absorb the 2π/p wrap
+        delta -= 2.0 * math.pi * math.floor((delta + math.pi) / (2.0 * math.pi))
+        self._theta_m_unwrapped += delta
+        self._theta_m_prev = theta_m_raw
+
         # theta_m at [4] is already accumulated/unwrapped by DB42S02PlantBlock
         self.output = VectorSignal(np.array([
             self._omega_ref_filt,                       # [0] ω_ref_mech (ramped)
-            float(m[4]) if len(m) > 4 else 0.0,        # [1] θ_m (accumulated)
+            self._theta_m_unwrapped,                    # [1] θ_m (unwrapped, continuous)
             float(m[1]) if len(m) > 1 else 0.0,        # [2] ia
             float(m[2]) if len(m) > 2 else 0.0,        # [3] ib
             float(m[3]) if len(m) > 3 else 0.0,        # [4] ic
@@ -252,7 +269,7 @@ def build_and_run():
         SMC_KS_I   = 0.628,   # L_D * WC_I — unchanged
         SMC_PHI_I  = 0.5,     # unchanged
         dt_s       = DT,
-        use_c_backend = True,
+        use_c_backend = False,   # Python backend: unwrapping speed estimator active
         integrator    = "tustin",
     )
     svpwm_pack = SVPWMPackBlock("svpwm_pack", v_dc=V_DC)
