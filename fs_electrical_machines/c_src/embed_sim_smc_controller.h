@@ -3,12 +3,19 @@
  * \brief     Sliding Mode Control FOC for NANOTEC DB42S02.
  *
  * Implements pure Sliding Mode Control (SMC) with integral sliding surface:
- *   - Speed SMC:   s = e + λ·∫e + γ·∫∫e   (zero steady-state error)
- *   - Current SMC: equivalent control + switching with boundary layer
+ *   - Speed SMC:    s = e + λ·∫e   (first-order, γ=0 — double integral disabled)
+ *   - Current SMC:  classical FOC equivalent control + switching
  *
  * Signal flow (complete FOC chain):
- *   [ia, ib, ic] → Clarke → [iα, iβ] → Park → [id, iq]
- *   [ω_ref_mech, ω_m, id, iq] → SMC → [vd, vq] → InvPark → [vα, vβ]
+ *   [ia, ib, ic] → Clarke → [iα, iβ] → Park(θ_e) → [id, iq]
+ *   θ_e = p·θ_m  (exact from encoder)
+ *   ω_m = Δθ_m/dt + IIR  (encoder finite-difference)
+ *   [ω_ref, ω_m, id, iq] → SMC → [vd, vq] → InvPark(θ_e) → [vα, vβ]
+ *
+ * Equivalent control (no SMO in current loop path):
+ *   ed_hat =  R·id_meas - ωe·Lq·iq_meas
+ *   eq_hat =  R·iq_meas + ωe·(Ld·id_meas + λpm)
+ *   SMO still runs for diagnostics / future sensorless use, NOT used in vd/vq.
  *
  * Gain update workflow
  * --------------------
@@ -82,6 +89,21 @@
 /** \brief Torque constant KT = 1.5·p·λ_pm  [N·m/A] */
 #define SMC_KT               ((MatrixFloat)0.0084f)
 
+/** \brief SVPWM chain gain = V_DC / 2  [—]
+ *
+ *  The SVPWM block (SVPWMPackBlock → SVPWMBlock) amplifies a normalised
+ *  reference in [-1, +1] by V_DC/2 before applying it to the inverter.
+ *  All controller voltages (vd_eq, vq_eq, switching terms) are computed in
+ *  physical units [V] inside SMC_Controller_Step().  The final v_alpha /
+ *  v_beta outputs are divided by this gain so the SVPWM block on AURIX
+ *  sees the correct normalised reference.
+ *
+ *  Matched to Python:
+ *    SMC_SVPWM_GAIN = V_DC / 2.0   (smc_controller_block.py, line 229)
+ *    vd_eq = vd_eq_physical / SMC_SVPWM_GAIN   (line 599)
+ *  At 17 V bus:  gain = 8.5, so 0.625 V physical → 0.0735 normalised. */
+#define SMC_SVPWM_GAIN       (SMC_V_DC / (MatrixFloat)2.0f)
+
 
 /*********************************************************************************************************************/
 /*-------------------------------- Fixed sliding surface coefficients (NOT tuned) ------------------------------------*/
@@ -95,17 +117,66 @@
 /** \brief Current loop bandwidth ωc_i = 2π×800 Hz  [rad/s] */
 #define SMC_WC_I             ((MatrixFloat)5026.548245743669f)
 
-/** \brief Sliding surface slope λ = 2π×20 Hz  [rad/s]
- *  Controls how fast the error trajectory is pulled onto the surface. */
-#define SMC_LAMBDA_W         ((MatrixFloat)125.66370614359172f)
+/** \brief Sliding surface slope λ = 2π×10 Hz  [rad/s]
+ *  First-order integral surface: s = e + λ·∫e.
+ *  Double-integral disabled (GAMMA_W=0) — was causing phase lag and
+ *  instability on this low-inertia motor. */
+#define SMC_LAMBDA_W         ((MatrixFloat)62.83185307179586f)
 
-/** \brief Double-integral coefficient γ = 2π×5 Hz  [rad/s]
- *  Adds integral action to eliminate constant disturbances. */
-#define SMC_GAMMA_W          ((MatrixFloat)31.41592653589793f)
+/** \brief Double-integral coefficient γ = 0  [—]
+ *  Disabled.  Set to non-zero only if steady-state load rejection via
+ *  the integral term alone is insufficient. */
+#define SMC_GAMMA_W          ((MatrixFloat)0.0f)
 
 
 /*********************************************************************************************************************/
-/*--------------- Tunable gain defaults — see smc_gains_config.h (patched by smc_fmu_tuner.py) ----------------------*/
+/*------------------------------------ Sliding Mode Observer parameters ----------------------------------------------*/
+/*********************************************************************************************************************/
+
+/** \brief SMO switching gain k [V]
+ *  k > |e_BEMF_max| = ωe_max·λpm = 837.8·0.0014 = 1.17 V → 2.0 V gives 1.7× margin.
+ *  Must NOT be set to V_MAX (14.7 V) — that injects ±14.7 V per step into the observer,
+ *  ΔI = 14.7·50e-6/125e-6 = 5.9 A/step → observer diverges → id runaway.
+ *  Matched to Python SMC_SMO_K = 2.0 V. */
+#define SMC_SMO_K            ((MatrixFloat)2.0f)
+
+/** \brief SMO back-EMF LPF cutoff  ωc = 2π×500 Hz  [rad/s] */
+#define SMC_SMO_WC           ((MatrixFloat)3141.592653589793f)
+
+/** \brief SMO back-EMF LPF coefficient α = ωc·dt / (1 + ωc·dt)
+ *  Pre-computed at dt = 50 µs (20 kHz sampling) — retained for reference only.
+ *  SMC_SMO_Step() now computes α dynamically each call from SMC_SMO_WC and the
+ *  supplied dt, so this constant is not used in the control loop.
+ *  If dt changes (e.g. variable-rate debug mode), the dynamic computation is
+ *  automatically correct without touching this header. */
+#define SMC_SMO_LPF_ALPHA    ((MatrixFloat)0.13588f)
+
+
+/*********************************************************************************************************************/
+/*------------------------------------ Encoder speed estimator parameters --------------------------------------------*/
+/*********************************************************************************************************************/
+
+/** \brief IIR cutoff frequency for encoder speed estimator [Hz].
+ *  α = ωc·dt / (1 + ωc·dt) is computed each step in SMC_Controller_Step()
+ *  so it is correct for any sample period.
+ *  At dt=50 µs: α = 2π·1364·50e-6 / (1 + ...) = 0.300 → τ ≈ 3 steps (150 µs).
+ *  Matched to Python: omega_filt = 0.7·prev + 0.3·raw  (fc ≈ 1364 Hz). */
+#define SMC_SPEED_IIR_FC     ((MatrixFloat)1364.2f)
+
+
+/*********************************************************************************************************************/
+/*-------------------------------------- Soft-start current ramp parameter -------------------------------------------*/
+/*********************************************************************************************************************/
+
+/** \brief Soft-start ramp duration [s].
+ *  iq_limit ramps from 0 → I_MAX over this interval.
+ *  Absorbs the motor_delay zero-fallback spike at t=0 without dead-time.
+ *  50 ms = 1000 steps at 20 kHz. */
+#define SMC_SOFTSTART_T        ((MatrixFloat)0.05f)
+
+
+/*********************************************************************************************************************/
+/*--------------- Tunable gain defaults — see embed_sim_smc_gains.h (patched by smc_fmu_tuner.py) -------------------*/
 /*********************************************************************************************************************/
 /*
  * SMC_KS_I, SMC_PHI_I, SMC_T_MAX, SMC_PHI_W, SMC_KS_W, SMC_ETA_W
@@ -115,7 +186,7 @@
  * by the tuner.  Recompile after patching to load new startup defaults into
  * g_smc_gains via SMC_Controller_Init().
  */
-#include "smc_gains_config.h"
+#include "embed_sim_smc_gains.h"
 
 
 /*********************************************************************************************************************/
@@ -196,7 +267,7 @@ typedef struct
 
 /**
  * \struct SMC_Controller_T
- * \brief  Full controller state — integrators, transforms, diagnostics.
+ * \brief  Full controller state — integrators, SMO, transforms, diagnostics.
  *
  * Allocate statically:
  *   static SMC_Controller_T smc_state;
@@ -214,10 +285,24 @@ typedef struct
     MatrixFloat int_spd_prev;  /**< ∫e at previous step (Heun & Tustin) [rad]   */
 #endif
 
-    /* Speed estimation */
-    MatrixFloat omega_m;       /**< Estimated mechanical speed     [rad/s] */
-    MatrixFloat omega_filt;    /**< LPF-filtered speed estimate    [rad/s] */
-    MatrixFloat theta_m_prev;  /**< Previous mechanical angle      [rad]   */
+    /* ── Sliding Mode Observer (SMO) state ──────────────────────────────── */
+    MatrixFloat i_alpha_hat;    /**< Estimated α-axis current [A]          */
+    MatrixFloat i_beta_hat;     /**< Estimated β-axis current [A]          */
+    MatrixFloat e_alpha_filt;   /**< LPF-filtered back-EMF ê_α [V]        */
+    MatrixFloat e_beta_filt;    /**< LPF-filtered back-EMF ê_β [V]        */
+    MatrixFloat theta_e_hat;    /**< Estimated electrical angle [rad]      */
+    MatrixFloat theta_e_hat_prev; /**< Previous θ̂_e for speed extraction  */
+    MatrixFloat omega_m_hat;    /**< Estimated mechanical speed [rad/s]    */
+    MatrixFloat v_alpha_prev;   /**< Applied v_α at previous step [V]      */
+    MatrixFloat v_beta_prev;    /**< Applied v_β at previous step [V]      */
+
+    /* Speed and angle — populated from encoder each step */
+    MatrixFloat omega_m;       /**< Filtered mechanical speed [rad/s] — encoder diff + IIR */
+    MatrixFloat theta_m_prev;  /**< theta_m at previous step for finite-difference [rad]   */
+    MatrixFloat omega_m_filt;  /**< IIR-filtered raw speed estimate [rad/s]                */
+
+    /* Soft-start current limit: ramps 0 → I_MAX over SMC_SOFTSTART_T seconds */
+    MatrixFloat iq_limit;      /**< Current soft limit [A] — rises each step               */
 
     /* Diagnostic references */
     MatrixFloat iq_ref;        /**< q-axis current reference [A] */
@@ -226,12 +311,6 @@ typedef struct
     /* Diagnostic voltage outputs */
     MatrixFloat vd;            /**< d-axis voltage [V] */
     MatrixFloat vq;            /**< q-axis voltage [V] */
-
-    /** Current loop PI voltage integrators [V].
-     *  Committed each step; frozen when |v_out| > V_MAX (anti-windup).
-     *  Zero-initialised by memset in SMC_Controller_Init(). */
-    MatrixFloat v_int_d;       /**< d-axis voltage integrator [V] */
-    MatrixFloat v_int_q;       /**< q-axis voltage integrator [V] */
 
     /* Embedded transform states (MISRA Rule 8.7 — no static locals) */
     Clarke_T   clarke_state;

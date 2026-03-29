@@ -4,10 +4,34 @@
  *
  * Implements complete FOC control chain:
  *   [ia, ib, ic] → Clarke → [iα, iβ]
- *   → Park(θ_e) → [id, iq]
- *   → Speed SMC  → iq_ref       surface: s = e + λ·∫e + γ·∫∫e
- *   → Current SMC → [vd, vq]    equivalent control + switching
- *   → InvPark(θ_e) → [vα, vβ]  → SVPWM
+ *   → Park(θ_e) → [id, iq]   θ_e = p·θ_m  (exact encoder)
+ *   → Speed SMC  → iq_ref    surface: s = e + λ·∫e  (γ=0, first-order)
+ *   → Current SMC → [vd, vq]  encoder equivalent control + switching  (physical V)
+ *   → InvPark(θ_e) → [vα, vβ]  (physical V)
+ *   → ÷ (V_DC/2) → [vα_norm, vβ_norm]  → SVPWM  (normalised, [-1,+1])
+ *
+ * SVPWM normalisation
+ * -------------------
+ * All internal voltages are computed in physical units [V].  The final
+ * SMC_Controller_Step() output (y->v_alpha, y->v_beta) is divided by
+ * SMC_SVPWM_GAIN = V_DC/2 before return, so the SVPWM block on AURIX
+ * receives a normalised reference in [-1, +1] and the plant sees the
+ * correct physical voltage after the SVPWM × V_DC/2 amplification.
+ *
+ * The SMO feedback (v_alpha_prev, v_beta_prev) is stored from the physical
+ * InvPark output BEFORE this division — the observer model requires SI units.
+ *
+ * Equivalent control — full cancellation of plant ODE at measured state:
+ *   did/dt = (vd - R·id + ωe·Lq·iq) / Ld
+ *   diq/dt = (vq - R·iq - ωe·(Ld·id + λpm)) / Lq
+ *
+ *   ed_hat =  R·id_meas - ωe·Lq·iq_meas
+ *   eq_hat =  R·iq_meas + ωe·(Ld·id_meas + λpm)
+ *
+ *   Matched exactly to Python smc_controller_block.py compute_py() lines 572-573.
+ *
+ * SMO still executes each step (updates e_alpha_filt, e_beta_filt) but its
+ * output is NOT used in the current loop — reserved for future sensorless use.
  *
  * Runtime-configurable gains
  * --------------------------
@@ -68,11 +92,13 @@
 #define SMC_ZERO_F          ((MatrixFloat)0.0f)
 #define SMC_ONE_F           ((MatrixFloat)1.0f)
 #define SMC_LOG_INTERVAL    ((MatrixFloat)0.001f)   /* 1 kHz diagnostic rate */
+/* SMC_SMO_K / SMC_SMO_WC / SMC_SMO_LPF_ALPHA defined in embed_sim_smc_controller.h */
 
-/** Speed LPF α=0.70 → τ ≈ 3 steps (150 µs at dt=50µs).
- *  Previous α=0.95 (τ≈1ms) + no unwrap caused omega_filt→0 on wrap spikes. */
-#define SMC_LPF_ALPHA       ((MatrixFloat)0.70f)
-#define SMC_LPF_ONE_MINUS   ((MatrixFloat)0.30f)
+/* Speed estimator IIR cutoff frequency [Hz].
+ * Matched to Python: omega_filt = 0.7·prev + 0.3·raw → fc = 0.3/(2π·0.7·dt) ≈ 1364 Hz.
+ * alpha = 2π·fc·dt / (1 + 2π·fc·dt) computed each step — correct for any dt.
+ * At dt=50 µs: alpha = 0.300, τ ≈ 3 steps (150 µs). */
+#define SMC_SPEED_IIR_FC    ((MatrixFloat)1364.2f)
 
 
 /*********************************************************************************************************************/
@@ -147,7 +173,7 @@ static MatrixFloat SMC_SpeedSMC(
  * \param[in]  iq_meas  Measured q-axis current [A].
  * \param[in]  id_ref   D-axis reference [A] (MTPA = 0).
  * \param[in]  iq_ref   Q-axis reference [A].
- * \param[in]  omega_e  Electrical speed [rad/s].
+ * \param[in]  theta_e  Electrical angle [rad] — used to Park-rotate SMO back-EMF.
  * \param[in]  g        Pointer to active gain set.
  * \param[out] vd       D-axis voltage reference [V].
  * \param[out] vq       Q-axis voltage reference [V].
@@ -158,8 +184,8 @@ static void SMC_CurrentSMC(
     MatrixFloat             iq_meas,
     MatrixFloat             id_ref,
     MatrixFloat             iq_ref,
+    MatrixFloat             theta_e,
     MatrixFloat             omega_e,
-    MatrixFloat             dt,
     const SMC_GainSet_T   * const g,
     MatrixFloat           * const vd,
     MatrixFloat           * const vq);
@@ -168,6 +194,27 @@ static void SMC_CurrentSMC(
  * \brief  Saturate voltage vector to hexagon limit (V_MAX).
  */
 static void SMC_SaturateVoltage(MatrixFloat * const vd, MatrixFloat * const vq);
+
+/**
+ * \brief  One step of the Sliding Mode Observer (αβ frame).
+ *
+ * Estimates back-EMF (ê_α, ê_β), electrical angle θ̂_e, and
+ * mechanical speed ω̂_m from measured currents and applied voltages.
+ *
+ * \param[in,out] s        Controller state (observer sub-state updated).
+ * \param[in]     i_alpha  Measured α-axis current [A].
+ * \param[in]     i_beta   Measured β-axis current [A].
+ * \param[in]     v_alpha  Applied α-axis voltage [V] (previous step).
+ * \param[in]     v_beta   Applied β-axis voltage [V] (previous step).
+ * \param[in]     dt       Time step [s].
+ */
+static void SMC_SMO_Step(
+    SMC_Controller_T * const s,
+    MatrixFloat               i_alpha,
+    MatrixFloat               i_beta,
+    MatrixFloat               v_alpha,
+    MatrixFloat               v_beta,
+    MatrixFloat               dt);
 
 
 /*********************************************************************************************************************/
@@ -254,74 +301,166 @@ static MatrixFloat SMC_SpeedSMC(
 {
     MatrixFloat s_spd;
     MatrixFloat iq_ref;
-    /* Generous integrator limits — sized in physical angle units.
-     * int_spd  [rad]:   10 rad ≈ 1.6 mechanical revolutions.
-     * int2_spd [rad·s]: 10/λ ≈ 0.080 rad·s.
-     * Previous limits (PHI_W/λ = 0.064 rad) were so tight that at 2000 RPM
-     * they saturated every ~13 ms, causing the surface to flip sign and the
-     * speed loop to oscillate.  The final iq_ref is already clamped to ±I_MAX.
-     */
+    MatrixFloat iq_unsat;
     const MatrixFloat int_limit  = (MatrixFloat)10.0f;
-    const MatrixFloat int2_limit = (MatrixFloat)10.0f / SMC_LAMBDA_W;
+    const MatrixFloat eta_capped = (g->eta_w < (MatrixFloat)0.01f) ?
+                                    g->eta_w : (MatrixFloat)0.01f;
 
-#if defined(SMC_INTEGRATOR_TUSTIN)
-    s->int_spd      += (dt * (MatrixFloat)0.5f) * (e        + s->e_prev);
-    s->int2_spd     += (dt * (MatrixFloat)0.5f) * (s->int_spd + s->int_spd_prev);
-    s->int_spd_prev  = s->int_spd;
-    s->e_prev        = e;
+    /* Compute unsaturated output with current integrator state to check
+     * for saturation before integrating (anti-windup). */
+    s_spd    = e + SMC_LAMBDA_W * s->int_spd;
+    iq_unsat = (g->ks_w * SMC_Sat(s_spd, g->phi_w)) + (eta_capped * s_spd);
 
-#elif defined(SMC_INTEGRATOR_HEUN)
+    /* Anti-windup: only integrate when output is not at the current limit.
+     * s->iq_limit is the soft-start limit; I_MAX after soft-start. */
+    if (fabsf(iq_unsat) < s->iq_limit)
     {
-        MatrixFloat int_e_star;
-        MatrixFloat int2_e_star;
-
-        int_e_star  = s->int_spd  + dt * s->e_prev;
-        s->int_spd += (dt * (MatrixFloat)0.5f) * (s->e_prev + e);
-
-        int2_e_star  = s->int2_spd + dt * s->int_spd_prev;
-        s->int2_spd += (dt * (MatrixFloat)0.5f) * (s->int_spd_prev + s->int_spd);
-
+#if defined(SMC_INTEGRATOR_TUSTIN)
+        s->int_spd  += (dt * (MatrixFloat)0.5f) * (e + s->e_prev);
         s->int_spd_prev = s->int_spd;
         s->e_prev       = e;
-
-        (void)int_e_star;
-        (void)int2_e_star;
+#elif defined(SMC_INTEGRATOR_HEUN)
+        s->int_spd  += (dt * (MatrixFloat)0.5f) * (s->e_prev + e);
+        s->int_spd_prev = s->int_spd;
+        s->e_prev       = e;
+#else   /* SMC_INTEGRATOR_EULER */
+        s->int_spd  += dt * e;
+        s->e_prev    = e;
+#endif
+        s->int_spd = SMC_Clamp(s->int_spd, int_limit);
+    }
+    else
+    {
+        /* Saturated — freeze integrator, update e_prev only (MISRA 15.7) */
+        s->e_prev = e;
     }
 
-#else   /* SMC_INTEGRATOR_EULER */
-    s->int_spd  += dt * e;
-    s->int2_spd += dt * s->int_spd;
-
-#endif  /* integrator selection */
-
-    /* Clamp integrators to generous limits */
-    s->int_spd  = SMC_Clamp(s->int_spd,  int_limit);
-    s->int2_spd = SMC_Clamp(s->int2_spd, int2_limit);
-
-    s_spd = e
-            + SMC_LAMBDA_W * s->int_spd
-            + SMC_GAMMA_W  * s->int2_spd;
-
-    iq_ref = (g->ks_w * SMC_Sat(s_spd, g->phi_w))
-             + (g->eta_w * s_spd);
+    /* GAMMA_W = 0 (double integral disabled) — int2_spd not used */
+    s_spd  = e + SMC_LAMBDA_W * s->int_spd;
+    iq_ref = (g->ks_w * SMC_Sat(s_spd, g->phi_w)) + (eta_capped * s_spd);
 
     return SMC_Clamp(iq_ref, SMC_I_MAX);
 }
 
 
 /*--------------------------------------------------------------------------------------------------------------------
+ * SMC_SMO_Step
+ *
+ * Sliding Mode Observer — αβ frame.
+ *
+ * Observer model (forward Euler discretisation of PMSM voltage equations):
+ *   î_α(k+1) = î_α(k) + dt/L · (vα - R·î_α(k) - ê_α_sw(k))
+ *   î_β(k+1) = î_β(k) + dt/L · (vβ - R·î_β(k) - ê_β_sw(k))
+ *
+ * Switching injection (smooth tanh — no chattering at 20 kHz):
+ *   err   = i_measured - i_hat   (positive → push î upward)
+ *   ê_sw  = k · tanh(err / 0.01)
+ *   k = 2.0 V  (SMC_SMO_K — 1.7× back-EMF margin, NOT 1.5·V_MAX)
+ *   Boundary layer 0.01 A: linear gain 200 V/A for |err| < 0.01 A.
+ *   Matched to Python _smo_step() tanh implementation.
+ *
+ * Back-EMF extraction via 500 Hz first-order LPF (Euler-discretised):
+ *   ê_α_filt += α · (ê_α_sw - ê_α_filt)
+ *   ê_β_filt += α · (ê_β_sw - ê_β_filt)
+ *   α = ωc·dt / (1 + ωc·dt),  ωc = 2π × 500 Hz
+ *
+ * Electrical angle and mechanical speed:
+ *   θ̂_e = atan2(-ê_α_filt, ê_β_filt)
+ *   ω̂_m = Δθ̂_e / (p · dt)          (unwrapped shortest-step delta)
+ *
+ * Results stored in s->e_alpha_filt, s->e_beta_filt (current loop feedforward),
+ * s->theta_e_hat (angle), s->omega_m_hat (mechanical speed for speed SMC).
+ *------------------------------------------------------------------------------------------------------------------*/
+static void SMC_SMO_Step(
+    SMC_Controller_T * const s,
+    const MatrixFloat          i_alpha,
+    const MatrixFloat          i_beta,
+    const MatrixFloat          v_alpha,
+    const MatrixFloat          v_beta,
+    const MatrixFloat          dt)
+{
+    MatrixFloat i_alpha_err;
+    MatrixFloat i_beta_err;
+    MatrixFloat e_alpha_sw;
+    MatrixFloat e_beta_sw;
+    MatrixFloat theta_e_new;
+    MatrixFloat delta;
+    MatrixFloat alpha_dyn;      /* LPF coefficient computed from dt — not a compile-time constant */
+    const MatrixFloat inv_L   = SMC_ONE_F / SMC_L_D;
+    const MatrixFloat k       = SMC_SMO_K;
+    const MatrixFloat two_pi  = (MatrixFloat)6.28318530717959f;
+    const MatrixFloat pi_f    = (MatrixFloat)3.14159265358979f;
+
+    if (s == NULL)
+    {
+        return;
+    }
+
+    /* Dynamic LPF alpha: α = ωc·dt / (1 + ωc·dt), ωc = SMC_SMO_WC = 2π×500 Hz.
+     * Pre-computed SMC_SMO_LPF_ALPHA = 0.13588 was only valid at dt = 50 µs.
+     * Computing it here is correct for any sample period and costs only one
+     * FP divide per step — negligible at 20 kHz on the TriCore FPU. */
+    alpha_dyn = (SMC_SMO_WC * dt) / (SMC_ONE_F + SMC_SMO_WC * dt);
+
+    /* Current estimation errors: (measured - estimated) so that
+     * switching term pushes î toward i, not away from it. */
+    i_alpha_err = i_alpha - s->i_alpha_hat;
+    i_beta_err  = i_beta  - s->i_beta_hat;
+
+    /* Switching injection: k·tanh(err/0.01) — smooth, no chattering at 20 kHz.
+     * Matched to Python: sw = k * math.tanh(err / 0.01) */
+    e_alpha_sw = k * tanhf(i_alpha_err * (MatrixFloat)100.0f);
+    e_beta_sw  = k * tanhf(i_beta_err  * (MatrixFloat)100.0f);
+
+    /* Observer current update (forward Euler) */
+    s->i_alpha_hat += dt * inv_L * (v_alpha - SMC_R_S * s->i_alpha_hat - e_alpha_sw);
+    s->i_beta_hat  += dt * inv_L * (v_beta  - SMC_R_S * s->i_beta_hat  - e_beta_sw);
+
+    /* Back-EMF LPF — 500 Hz, coefficient computed from dt above */
+    s->e_alpha_filt += alpha_dyn * (e_alpha_sw - s->e_alpha_filt);
+    s->e_beta_filt  += alpha_dyn * (e_beta_sw  - s->e_beta_filt);
+
+    /* Electrical angle estimate */
+    theta_e_new = atan2f(-(s->e_alpha_filt), s->e_beta_filt);
+
+    /* Unwrap angle delta for speed extraction.
+     * floorf() can promote to double on TriCore ctc (MISRA Rule 10.8 / Rule 1.3).
+     * Use the same integer-cast unwrap pattern used in the speed estimator above. */
+    delta = theta_e_new - s->theta_e_hat_prev;
+    /* Reduce delta to (-π, π] without calling floorf */
+    while (delta >  pi_f) { delta -= two_pi; }
+    while (delta < -pi_f) { delta += two_pi; }
+
+    /* Mechanical speed estimate */
+    if (dt > SMC_ZERO_F)
+    {
+        s->omega_m_hat = delta / ((MatrixFloat)SMC_P_POLES * dt);
+    }
+    else
+    {
+        /* dt = 0 — hold previous estimate (MISRA 15.7) */
+    }
+
+    s->theta_e_hat_prev = theta_e_new;
+    s->theta_e_hat      = theta_e_new;
+}
+
+
+/*--------------------------------------------------------------------------------------------------------------------
  * SMC_CurrentSMC
  *
- * Discrete PI current controller with FOC decoupling feedforward.
+ * Pure Sliding Mode current controller — encoder-based classical FOC equivalent control.
  *
- *   vd = vd_eq  +  Kp·s_d  +  v_int_d  +  Ks·sat(s_d/φ)
- *   vq = vq_eq  +  Kp·s_q  +  v_int_q  +  Ks·sat(s_q/φ)
+ * Equivalent control — full plant ODE cancellation at the measured state.
  *
- * Error: s = i_ref - i_meas  (positive → more voltage needed)
+ *   ed_hat =  R·id_meas - ωe·Lq·iq_meas
+ *   eq_hat =  R·iq_meas + ωe·(Ld·id_meas + λpm)
  *
- * Kp = L/(5·dt) → α=0.2, stable with 2-step effective delay  (BW≈1.3 kHz)
- * Ki per step   = R/5  [V/A]    Ti = L/R = 658 µs
- * Anti-windup   : integrators frozen when |v| > V_MAX
+ *   vd = ed_hat + ks_i · sat(s_d / φ_i)
+ *   vq = eq_hat + ks_i · sat(s_q / φ_i)
+ *
+ * Matched to Python smc_controller_block.py compute_py() lines 572-573.
+ * Voltage vector clamped to hexagon limit V_MAX.
  *------------------------------------------------------------------------------------------------------------------*/
 static void SMC_CurrentSMC(
     SMC_Controller_T    * const s,
@@ -329,22 +468,16 @@ static void SMC_CurrentSMC(
     const MatrixFloat           iq_meas,
     const MatrixFloat           id_ref,
     const MatrixFloat           iq_ref,
+    const MatrixFloat           theta_e,
     const MatrixFloat           omega_e,
-    const MatrixFloat           dt,
     const SMC_GainSet_T * const g,
     MatrixFloat         * const vd,
     MatrixFloat         * const vq)
 {
     MatrixFloat s_d;
     MatrixFloat s_q;
-    MatrixFloat vd_eq;
-    MatrixFloat vq_eq;
-    MatrixFloat vd_sw;
-    MatrixFloat vq_sw;
-    MatrixFloat Kp;
-    MatrixFloat Ki_step;
-    MatrixFloat v_int_d_new;
-    MatrixFloat v_int_q_new;
+    MatrixFloat ed_hat;
+    MatrixFloat eq_hat;
     MatrixFloat vd_out;
     MatrixFloat vq_out;
     MatrixFloat magnitude;
@@ -355,45 +488,46 @@ static void SMC_CurrentSMC(
         return;
     }
 
+    (void)theta_e;   /* not needed for classical FOC eq. control — suppress MISRA warning */
+
     s_d = id_ref - id_meas;
     s_q = iq_ref - iq_meas;
 
-    vd_eq = (SMC_R_S * id_meas) - (omega_e * SMC_L_Q * iq_meas);
-    vq_eq = (SMC_R_S * iq_meas)
-            + (omega_e * ((SMC_L_D * id_meas) + SMC_LAMBDA_PM));
+    /* Equivalent control — full plant ODE cancellation.
+     *
+     * Plant ODE:
+     *   did/dt = (vd - R·id + ωe·Lq·iq) / Ld
+     *   diq/dt = (vq - R·iq - ωe·(Ld·id + λpm)) / Lq
+     *
+     * Setting d/dt = 0 and solving for vd, vq at the measured state:
+     *   ed_hat =  R·id_meas - ωe·Lq·iq_meas
+     *   eq_hat =  R·iq_meas + ωe·(Ld·id_meas + λpm)
+     *
+     * All values in physical units [V].  The SVPWM normalisation (÷ V_DC/2)
+     * is applied once in SMC_Controller_Step() after InvPark, not here.
+     *
+     * R·id_meas must be included: R·I_MAX = 0.68V > KS_I = 0.625V, so
+     * without it the switching term cannot overcome resistive drop → id drifts.
+     * eq_hat uses iq_meas (not iq_ref) to match Python compute_py exactly.
+     * Matched to Python smc_controller_block.py lines 603-608.
+     */
+    ed_hat =  (SMC_R_S * id_meas) - (omega_e * SMC_L_Q * iq_meas);
+    eq_hat =  (SMC_R_S * iq_meas) + (omega_e * (SMC_L_D * id_meas + SMC_LAMBDA_PM));
 
-    /* Kp = L/(5·dt) */
-    Kp = (dt > SMC_ZERO_F) ? (SMC_L_D / ((MatrixFloat)5.0f * dt)) : SMC_ZERO_F;
+    vd_out = ed_hat + (g->ks_i * SMC_Sat(s_d, g->phi_i));
+    vq_out = eq_hat + (g->ks_i * SMC_Sat(s_q, g->phi_i));
 
-    /* Ki per step = R/5  [V/A] */
-    Ki_step = SMC_R_S / (MatrixFloat)5.0f;
-
-    v_int_d_new = s->v_int_d + Ki_step * s_d;
-    v_int_q_new = s->v_int_q + Ki_step * s_q;
-
-    /* Clamp to ±V_MAX */
-    v_int_d_new = SMC_Clamp(v_int_d_new, SMC_V_MAX);
-    v_int_q_new = SMC_Clamp(v_int_q_new, SMC_V_MAX);
-
-    vd_sw = g->ks_i * SMC_Sat(s_d, g->phi_i);
-    vq_sw = g->ks_i * SMC_Sat(s_q, g->phi_i);
-
-    vd_out = vd_eq + (Kp * s_d) + v_int_d_new + vd_sw;
-    vq_out = vq_eq + (Kp * s_q) + v_int_q_new + vq_sw;
-
-    /* Vector voltage limit — freeze integrators on saturation */
+    /* Hexagon voltage limit */
     magnitude = sqrtf(vd_out * vd_out + vq_out * vq_out);
     if (magnitude > SMC_V_MAX)
     {
         scale   = SMC_V_MAX / magnitude;
         vd_out *= scale;
         vq_out *= scale;
-        /* Freeze: do not commit integrators */
     }
     else
     {
-        s->v_int_d = v_int_d_new;
-        s->v_int_q = v_int_q_new;
+        /* Within hexagon — no saturation required (MISRA 15.7) */
     }
 
     *vd = vd_out;
@@ -455,6 +589,10 @@ void SMC_Controller_Init(SMC_Controller_T * const s, const MatrixFloat dt)
         InvPark_Init(&s->inv_park_state);
 
         s->log_next_time = SMC_LOG_INTERVAL;
+        s->theta_m_prev  = SMC_ZERO_F;
+        s->omega_m_filt  = SMC_ZERO_F;
+        s->omega_m       = SMC_ZERO_F;
+        s->iq_limit      = SMC_ZERO_F;   /* soft-start: grows to I_MAX */
 
         /*
          * Populate g_smc_gains with design-point defaults.
@@ -463,11 +601,11 @@ void SMC_Controller_Init(SMC_Controller_T * const s, const MatrixFloat dt)
          * Override at runtime via UDE, UART loader, or
          * SMC_GainSchedule_Interpolate() without recompiling.
          */
-        g_smc_gains.ks_w  = SMC_KS_W;    /* 0.287831 N·m   speed switching gain  */
-        g_smc_gains.eta_w = SMC_ETA_W;   /* 2.250826 —     speed linear damping  */
-        g_smc_gains.phi_w = SMC_PHI_W;   /* 2.809393 rad/s speed boundary layer  */
-        g_smc_gains.ks_i  = SMC_KS_I;    /* 0.101847 V     current switching gain */
-        g_smc_gains.phi_i = SMC_PHI_I;   /* 0.708913 A     current boundary layer */
+        g_smc_gains.ks_w  = SMC_KS_W;    /* speed switching gain  — see smc_gains_config.h */
+        g_smc_gains.eta_w = SMC_ETA_W;   /* speed linear damping  — see smc_gains_config.h */
+        g_smc_gains.phi_w = SMC_PHI_W;   /* speed boundary layer  — see smc_gains_config.h */
+        g_smc_gains.ks_i  = SMC_KS_I;    /* current switching gain — see smc_gains_config.h */
+        g_smc_gains.phi_i = SMC_PHI_I;   /* current boundary layer — see smc_gains_config.h */
     }
     else
     {
@@ -488,16 +626,19 @@ void SMC_Controller_Step(
     SMC_Output_T      * const y)
 {
     MatrixFloat theta_e;
+    MatrixFloat omega_e;
     MatrixFloat i_alpha;
     MatrixFloat i_beta;
     MatrixFloat id_meas;
     MatrixFloat iq_meas;
-    MatrixFloat omega_e;
     MatrixFloat e_w;
     MatrixFloat iq_ref;
+    MatrixFloat delta;
+    MatrixFloat omega_raw;
     MatrixFloat vd;
     MatrixFloat vq;
-    MatrixFloat omega_raw;
+    const MatrixFloat two_pi = (MatrixFloat)6.28318530717959f;
+    const MatrixFloat pi_f   = (MatrixFloat)3.14159265358979f;
 
     /* ── NULL guard ─────────────────────────────────────────────────────── */
     if ((s == NULL) || (u == NULL) || (y == NULL))
@@ -505,66 +646,84 @@ void SMC_Controller_Step(
         return;   /* MISRA 15.5: single exceptional exit */
     }
 
-    /* ── Speed estimation: 2π-unwrapping differentiator + LPF ─────────── *
-     *
-     * theta_m is the unwrapped (accumulating) angle from CtrlPacker.
-     * The shortest-step delta guards against any residual wrap:
-     *   delta = theta_m - theta_m_prev
-     *   delta -= 2π · floor( (delta + π) / (2π) )   ← brings into (-π, +π]
-     *   omega_raw  = delta / dt
-     *   omega_filt = 0.7·omega_filt + 0.3·omega_raw
-     *
-     * Without unwrap, every mechanical angle reset produced a large negative
-     * spike that collapsed omega_filt to ~0 — starving the speed SMC.
-     * ─────────────────────────────────────────────────────────────────── */
-    if (dt > SMC_ZERO_F)
-    {
-        MatrixFloat delta;
-        const MatrixFloat two_pi = (MatrixFloat)6.28318530717959f;
-        const MatrixFloat pi_f   = (MatrixFloat)3.14159265358979f;
-
-        delta = u->theta_m - s->theta_m_prev;
-        delta -= two_pi * floorf((delta + pi_f) / two_pi);
-
-        omega_raw     = delta / dt;
-        s->omega_filt = (SMC_LPF_ALPHA    * s->omega_filt)
-                      + (SMC_LPF_ONE_MINUS * omega_raw);
-    }
-    else
-    {
-        /* dt = 0 — hold last estimate (MISRA 15.7) */
-    }
-    s->theta_m_prev = u->theta_m;
-    s->omega_m      = s->omega_filt;
-
-    /* ── Electrical angle: θ_e = p · θ_m ──────────────────────────────── */
+    /* ── Electrical angle: θ_e = p · θ_m  (exact from encoder) ─────────── */
     theta_e = (MatrixFloat)SMC_P_POLES * u->theta_m;
+    omega_e = (MatrixFloat)SMC_P_POLES * s->omega_m;
 
     /* ── Clarke transform: abc → αβ ────────────────────────────────────── */
     Clarke_Step(&s->clarke_state,
                 u->ia, u->ib, u->ic,
                 &i_alpha, &i_beta);
 
+    /* ── SMO step (diagnostic only — output NOT used in current loop) ───── */
+    SMC_SMO_Step(s,
+                 i_alpha, i_beta,
+                 s->v_alpha_prev, s->v_beta_prev,
+                 dt);
+
     /* ── Park transform: αβ → dq ───────────────────────────────────────── */
     Park_Step(&s->park_state,
               i_alpha, i_beta, theta_e,
               &id_meas, &iq_meas);
 
+    /* ── Encoder speed estimator: finite-diff + IIR ─────────────────────── */
+    if (dt > SMC_ZERO_F)
+    {
+        /* Compute IIR alpha from fc and dt — correct for any sample period.
+         * alpha = ωc·dt / (1 + ωc·dt),  ωc = 2π·SMC_SPEED_IIR_FC (≈ 1364 Hz).
+         * Matched to Python: omega_filt = 0.7·prev + 0.3·raw → alpha = 0.300 at dt=50µs. */
+        const MatrixFloat wc_spd    = (MatrixFloat)6.28318530717959f * SMC_SPEED_IIR_FC;
+        const MatrixFloat alpha_spd = (wc_spd * dt) / (SMC_ONE_F + wc_spd * dt);
+
+        delta = u->theta_m - s->theta_m_prev;
+        /* 2π unwrap — keep delta in (-π, π] without floorf (avoids double promotion on TriCore) */
+        while (delta >  pi_f) { delta -= two_pi; }
+        while (delta < -pi_f) { delta += two_pi; }
+        omega_raw       = delta / dt;
+        s->omega_m_filt = ((SMC_ONE_F - alpha_spd) * s->omega_m_filt)
+                        + (alpha_spd * omega_raw);
+    }
+    else
+    {
+        /* dt = 0 — hold previous estimate (MISRA 15.7) */
+    }
+    s->theta_m_prev = u->theta_m;
+    s->omega_m      = s->omega_m_filt;
+    omega_e         = (MatrixFloat)SMC_P_POLES * s->omega_m;
+
+    /* ── Soft-start: ramp iq_limit 0 → I_MAX over SMC_SOFTSTART_T ───────── */
+    if (s->iq_limit < SMC_I_MAX)
+    {
+        s->iq_limit += SMC_I_MAX * dt / SMC_SOFTSTART_T;
+        if (s->iq_limit > SMC_I_MAX)
+        {
+            s->iq_limit = SMC_I_MAX;
+        }
+        else
+        {
+            /* Still ramping (MISRA 15.7) */
+        }
+    }
+    else
+    {
+        /* Full current available (MISRA 15.7) */
+    }
+
     /* ── Speed SMC: ω_error → iq_ref ───────────────────────────────────── */
     e_w    = u->omega_ref_mech - s->omega_m;
     iq_ref = SMC_SpeedSMC(s, e_w, dt, &g_smc_gains);
 
+    /* Clamp to soft-start limit */
+    iq_ref = SMC_Clamp(iq_ref, s->iq_limit);
+
     s->iq_ref = iq_ref;
     s->id_ref = SMC_ZERO_F;    /* MTPA: id_ref = 0 */
 
-    /* ── Electrical speed ──────────────────────────────────────────────── */
-    omega_e = (MatrixFloat)SMC_P_POLES * s->omega_m;
-
-    /* ── Current SMC: (id,iq) → (vd,vq) ───────────────────────────────── */
+    /* ── Current SMC (classical FOC equivalent control) ──────────────────── */
     SMC_CurrentSMC(s,
                    id_meas, iq_meas,
                    s->id_ref, iq_ref,
-                   omega_e, dt,
+                   theta_e, omega_e,
                    &g_smc_gains,
                    &vd, &vq);
 
@@ -578,6 +737,26 @@ void SMC_Controller_Step(
     InvPark_Step(&s->inv_park_state,
                  vd, vq, theta_e,
                  &y->v_alpha, &y->v_beta);
+
+    /* Store physical voltages for SMO next step — must be physical [V], not
+     * normalised, because the SMO observer equations use L and R in SI units. */
+    s->v_alpha_prev = y->v_alpha;
+    s->v_beta_prev  = y->v_beta;
+
+    /* ── SVPWM normalisation ────────────────────────────────────────────── */
+    /* The SVPWM block on AURIX expects a normalised reference in [-1, +1].
+     * The SVPWMPackBlock / SVPWMBlock chain amplifies by V_DC/2 = SMC_SVPWM_GAIN.
+     * Divide here so the plant sees the correct physical voltages after SVPWM.
+     *
+     * Matched to Python smc_controller_block.py:
+     *   G = self.SMC_SVPWM_GAIN                   (line 599)
+     *   vd_eq = vd_eq_physical / G                (line 603)
+     *   output = VectorSignal([v_alpha, v_beta])   (line 632)
+     *
+     * Note: SMO state (v_alpha_prev, v_beta_prev) is stored above from the
+     * physical InvPark output — the normalised value must NOT be fed back. */
+    y->v_alpha /= SMC_SVPWM_GAIN;
+    y->v_beta  /= SMC_SVPWM_GAIN;
 
     /* ── Diagnostic logging at 1 kHz ───────────────────────────────────── */
     if (dt > SMC_ZERO_F)

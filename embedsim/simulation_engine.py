@@ -957,8 +957,9 @@ class EmbedSim:
 
         # Categorize blocks
         self.dynamic_blocks = [b for b in self.blocks if b.is_dynamic]
-        self.static_blocks = [b for b in self.blocks if not b.is_dynamic]
-        self.loop_breakers = [b for b in self.blocks if isinstance(b, LoopBreaker)]
+        self.loop_breakers  = [b for b in self.blocks if isinstance(b, LoopBreaker)]
+        self.static_blocks  = [b for b in self.blocks
+                                if not b.is_dynamic and not isinstance(b, LoopBreaker)]
 
         self.stats.loop_breakers_count = len(self.loop_breakers)
 
@@ -1184,6 +1185,7 @@ class EmbedSim:
             print(f"  Solver:         {self.solver.upper()}")
             print(f"  Total blocks:   {len(self.blocks)}")
             print(f"  Dynamic:        {len(self.dynamic_blocks)}")
+            print(f"  Static:         {len(self.static_blocks)}")
             print(f"  Loop breakers:  {len(self.loop_breakers)}")
             print(f"  Feedback loops: {self.stats.feedback_loops_count}")
             if self.topo is not None:
@@ -1295,8 +1297,8 @@ class EmbedSim:
         print(f"\nTotal Blocks: {len(self.blocks)}")
         print(f"  Dynamic:        {len(self.dynamic_blocks)}")
         print(f"  Static:         {len(self.static_blocks)}")
-        print(f"  Loop Breakers:  {len(self.loop_breakers)}")
-        print(f"  Feedback Loops: {self.stats.feedback_loops_count}")
+        print(f"  Loop breakers:  {len(self.loop_breakers)}")
+        print(f"  Feedback loops: {self.stats.feedback_loops_count}")
 
         print("\n" + "=" * 70)
         print("EXECUTION ORDER")

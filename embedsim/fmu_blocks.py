@@ -360,8 +360,16 @@ class FMUBlock(VectorBlock):
             try:
                 self.fmu.terminate()
                 self.fmu.freeInstance()
-            except:
-                pass  # Ignore errors during cleanup
+            except Exception as exc:
+                # Log the failure — silent swallowing hides corrupted FMU state.
+                # Not re-raised because reset() must always complete so the
+                # simulation engine can start a fresh run.
+                import warnings
+                warnings.warn(
+                    f"FMUBlock '{self.name}': error during reset/terminate: {exc}",
+                    RuntimeWarning,
+                    stacklevel=2,
+                )
         
         self.fmu = None
         self._initialized = False
@@ -501,22 +509,45 @@ class FMUBlock(VectorBlock):
             try:
                 self.fmu.terminate()
                 self.fmu.freeInstance()
-            except:
-                pass
+            except Exception as exc:
+                # During garbage collection the logging/warnings infrastructure
+                # may already be torn down, so write directly to stderr.
+                import sys
+                print(
+                    f"FMUBlock '{self.name}': error during __del__ cleanup: {exc}",
+                    file=sys.stderr,
+                )
 
     def terminate(self) -> None:
         """
         Properly terminate and free the FMU instance.
-        """
 
+        Always clears internal state so the block is safe to use again
+        (e.g. re-initialized on the next sim.run() call).  If the FMU
+        runtime raises during teardown the exception is re-raised after
+        cleanup so the caller is informed without leaving the object in a
+        partially-alive state.
+        """
         if self.fmu is None:
             return
 
+        exc_to_raise = None
         try:
             self.fmu.terminate()
             self.fmu.freeInstance()
-        except Exception as e:
-            raise RuntimeError(f"FMU termination failed: {e}")
+        except Exception as exc:
+            exc_to_raise = exc
+        finally:
+            # Always clear — even if terminate() threw, the instance is gone.
+            self.fmu = None
+            self._initialized = False
+            self._simulation_started = False
+            self._current_time = 0.0
+
+        if exc_to_raise is not None:
+            raise RuntimeError(
+                f"FMUBlock '{self.name}': FMU termination failed: {exc_to_raise}"
+            ) from exc_to_raise
 
 # =========================
 # Module Metadata

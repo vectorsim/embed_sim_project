@@ -288,6 +288,11 @@ class PlotHelper:
 
         # Apply style
         with plt.style.context(style):
+            # Capture ownership flag BEFORE ax may be reassigned below.
+            # If ax was None on entry, this call owns the figure and is
+            # responsible for tight_layout / savefig / show.
+            _owns_figure = (ax is None)
+
             # Use injected ax if provided (for subplots), else create own figure
             if ax is not None:
                 fig = ax.get_figure()
@@ -353,7 +358,6 @@ class PlotHelper:
 
             # Only manage figure lifecycle when we created the figure.
             # If ax was injected externally the caller handles show/save/layout.
-            _owns_figure = (ax is None)
             if _owns_figure:
                 plt.tight_layout()
                 if save_path:
@@ -955,7 +959,7 @@ class PlotHelper:
                     ax.legend(fontsize=8, loc='upper right')
                 if st is not None:
                     ax.axvline(st, color='#888888', linestyle=':', linewidth=1.0)
-                if len(y):
+                if len(y) and len(t):
                     ax.annotate(f"{y[-1]:.3f}",
                                 xy=(t[-1], y[-1]),
                                 xytext=(-6, 4),

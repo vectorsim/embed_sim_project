@@ -189,6 +189,7 @@ class PMSM_Python_Plant(VectorBlock):
 
         did_dt     = (vd - self.R*i_d + omega_e*self.L_q*i_q) / self.L_d
         diq_dt     = (vq - self.R*i_q - omega_e*(self.L_d*i_d + self.lambda_pm)) / self.L_q
+
         T_em       = 1.5 * self.p * (self.lambda_pm*i_q
                                       + (self.L_d - self.L_q)*i_d*i_q)
         domega_dt  = (T_em - self.B_fric*omega_m - T_load) / self.J

@@ -109,12 +109,17 @@ class SMCGains:
     BOUNDS: List[Tuple[float, float]] = None
 
     def __post_init__(self):
+        # KS_W floor: T_load_max/KT = 0.025/0.0084 ≈ 2.976 A — search above it
+        # ETA_W cap: controller enforces ≤ 0.01 — search only within that range
+        # KS_I: pure SMC switching gain [V] — L·ωc_i = 0.628 is the nominal;
+        #        allow ±50% around it (observer provides equivalent control)
+        # PHI_I: boundary layer [A] — small fraction of I_MAX = 3.57 A
         self.BOUNDS = [
-            ( 0.005,  0.5),    # SMC_KS_W   [N·m]   — J·λ²≈0.038, T_max=0.02
-            ( 0.01,   5.0),    # SMC_ETA_W  [—]
-            ( 0.5,   50.0),    # SMC_PHI_W  [rad/s] — narrow→chattering, wide→sluggish
-            ( 0.1,   10.0),    # SMC_KS_I   [V]     — L_D*WC_i range 0.1–10
-            ( 0.05,   2.0),    # SMC_PHI_I  [A]     — fraction of I_MAX=3.57 A
+            ( 2.5,   5.0),    # SMC_KS_W   [A]     — above T_load_max/KT floor
+            ( 0.001, 0.01),   # SMC_ETA_W  [—]     — within controller cap
+            ( 2.0,  20.0),    # SMC_PHI_W  [rad/s] — boundary layer width
+            ( 0.3,   1.2),    # SMC_KS_I   [V]     — ±50% around L·ωc_i
+            ( 0.1,   1.0),    # SMC_PHI_I  [A]     — fraction of I_MAX
         ]
 
     def to_array(self) -> np.ndarray:
@@ -187,10 +192,21 @@ class SMCControllerPy:
         self.int_int_e  = 0.0
         self.e_prev     = 0.0
         self.int_e_prev = 0.0
-        self.omega_filt     = 0.0
-        self.theta_m_prev   = 0.0
-        self.id_ref = 0.0
-        self.iq_ref = 0.0
+        # SMO state
+        self.i_alpha_hat    = 0.0
+        self.i_beta_hat     = 0.0
+        self.e_alpha_filt   = 0.0
+        self.e_beta_filt    = 0.0
+        self.theta_e_hat    = 0.0
+        self.theta_e_hat_prev = 0.0
+        self.omega_m_hat    = 0.0
+        self.v_alpha_prev   = 0.0
+        self.v_beta_prev    = 0.0
+        # SMO constants — match C macros
+        # k = 1.5·V_MAX,  fc = 500 Hz,  dt = 50 µs
+        self._smo_k     = 1.5 * self.V_MAX
+        _wc             = 2.0 * math.pi * 500.0
+        self._smo_alpha = _wc * 50e-6 / (1.0 + _wc * 50e-6)   # ≈ 0.13588
 
         # ── Transform block instances — canonical, no inline math ────────────
         from _path_utils import get_project_root
@@ -208,8 +224,15 @@ class SMCControllerPy:
     def reset(self):
         self.int_e = self.int_int_e = 0.0
         self.e_prev = self.int_e_prev = 0.0
-        self.omega_filt = self.theta_m_prev = 0.0
-        self.id_ref = self.iq_ref = 0.0
+        self.i_alpha_hat    = 0.0
+        self.i_beta_hat     = 0.0
+        self.e_alpha_filt   = 0.0
+        self.e_beta_filt    = 0.0
+        self.theta_e_hat    = 0.0
+        self.theta_e_hat_prev = 0.0
+        self.omega_m_hat    = 0.0
+        self.v_alpha_prev   = 0.0
+        self.v_beta_prev    = 0.0
         self._ct_clarke.reset()
         self._ct_park.reset()
         self._ct_inv_park.reset()
@@ -252,20 +275,10 @@ class SMCControllerPy:
 
     def step(self, theta_m: float, ia: float, ib: float, ic: float,
              omega_ref: float, dt: float):
-        """One control step. Returns (v_alpha, v_beta, iq_ref, id_meas, iq_meas)."""
+        """One control step. Returns (v_alpha, v_beta, iq_ref, id_meas, iq_meas).
+        Mirrors SMC_Controller_Step() + SMC_SMO_Step() + SMC_CurrentSMC() exactly.
+        """
         g = self.g
-
-        # Speed estimation — Euler differentiator + Tustin LPF ~300 Hz
-        # alpha = dt / (dt + 1/(2π·f_c))  — matched to C implementation
-        # 300 Hz cutoff gives good noise rejection without excessive lag at 20 kHz
-        if dt > 0.0:
-            omega_raw = (theta_m - self.theta_m_prev) / dt
-            _fc   = 300.0                              # cutoff [Hz]
-            _tau  = 1.0 / (2.0 * math.pi * _fc)
-            _alpha = dt / (dt + _tau)
-            self.omega_filt += _alpha * (omega_raw - self.omega_filt)
-        self.theta_m_prev = theta_m
-        omega_m = self.omega_filt
 
         theta_e = self.P_POLES * theta_m
 
@@ -273,40 +286,80 @@ class SMCControllerPy:
         i_alpha, i_beta  = self._clarke(ia, ib, ic)
         id_meas, iq_meas = self._park(i_alpha, i_beta, theta_e)
 
+        # ── SMO step ─────────────────────────────────────────────────────────
+        # Uses voltages applied at the PREVIOUS step
+        if dt > 0.0:
+            inv_L = 1.0 / self.L_D
+            k     = self._smo_k
+            alpha = self._smo_alpha
+
+            i_alpha_err = self.i_alpha_hat - i_alpha
+            i_beta_err  = self.i_beta_hat  - i_beta
+
+            e_alpha_sw = math.copysign(k, i_alpha_err) if i_alpha_err != 0.0 else 0.0
+            e_beta_sw  = math.copysign(k, i_beta_err)  if i_beta_err  != 0.0 else 0.0
+
+            self.i_alpha_hat += dt * inv_L * (self.v_alpha_prev - self.R_S * self.i_alpha_hat - e_alpha_sw)
+            self.i_beta_hat  += dt * inv_L * (self.v_beta_prev  - self.R_S * self.i_beta_hat  - e_beta_sw)
+
+            self.e_alpha_filt += alpha * (e_alpha_sw - self.e_alpha_filt)
+            self.e_beta_filt  += alpha * (e_beta_sw  - self.e_beta_filt)
+
+            theta_e_new = math.atan2(-self.e_alpha_filt, self.e_beta_filt)
+            delta = theta_e_new - self.theta_e_hat_prev
+            delta -= 2.0 * math.pi * math.floor((delta + math.pi) / (2.0 * math.pi))
+            self.omega_m_hat = delta / (float(self.P_POLES) * dt)
+            self.theta_e_hat_prev = theta_e_new
+            self.theta_e_hat      = theta_e_new
+
+        omega_m = self.omega_m_hat
+
         # ── Speed SMC (Tustin) ────────────────────────────────────────────────
+        # Matches SMC_SpeedSMC() with SMC_INTEGRATOR_TUSTIN
         e = omega_ref - omega_m
-        self.int_e     += dt * 0.5 * (e           + self.e_prev)
-        self.int_int_e += dt * 0.5 * (self.int_e  + self.int_e_prev)
-        self.e_prev     = e
+
+        int_limit  = 10.0
+        int2_limit = 10.0 / self.LAMBDA_W
+
+        # Tustin: correct order — update int_int_e using int_e BEFORE updating int_e
+        self.int_int_e += dt * 0.5 * (self.int_e + self.int_e_prev)
+        self.int_e     += dt * 0.5 * (e          + self.e_prev)
         self.int_e_prev = self.int_e
+        self.e_prev     = e
+
+        self.int_e     = max(-int_limit,  min(int_limit,  self.int_e))
+        self.int_int_e = max(-int2_limit, min(int2_limit, self.int_int_e))
 
         s_spd  = e + self.LAMBDA_W * self.int_e + self.GAMMA_W * self.int_int_e
         iq_ref = (g.SMC_KS_W * self._sat(s_spd, g.SMC_PHI_W)
                   + g.SMC_ETA_W * s_spd)
         iq_ref = self._clamp(iq_ref, self.I_MAX)
-        self.iq_ref = iq_ref
-        self.id_ref = 0.0   # MTPA
 
-        # ── Current SMC — equivalent control + switching ──────────────────────
-        omega_e = self.P_POLES * omega_m
-        s_d = id_meas - self.id_ref
-        s_q = iq_meas - iq_ref
+        # ── Pure SMC current loop with SMO back-EMF equivalent control ────────
+        # Mirrors SMC_CurrentSMC() — no Kp, no v_int
+        s_d = 0.0    - id_meas   # id_ref = 0 (MTPA)
+        s_q = iq_ref - iq_meas
 
-        vd_eq = self.R_S*id_meas  - omega_e*self.L_Q*iq_meas
-        vq_eq = self.R_S*iq_meas  + omega_e*(self.L_D*id_meas + self.LAMBDA_PM)
+        cos_e  = math.cos(theta_e)
+        sin_e  = math.sin(theta_e)
+        ed_hat =  self.e_alpha_filt * cos_e + self.e_beta_filt * sin_e
+        eq_hat =  self.e_beta_filt  * cos_e - self.e_alpha_filt * sin_e
 
-        # Switching term: v_sw = -ks·sat(s/φ)  — Lyapunov stability, negative sign
-        # Matches corrected SMC_CurrentSMC() in embed_sim_smc_controller.c
-        vd = vd_eq - g.SMC_KS_I * self._sat(s_d, g.SMC_PHI_I)
-        vq = vq_eq - g.SMC_KS_I * self._sat(s_q, g.SMC_PHI_I)
+        vd = ed_hat + g.SMC_KS_I * self._sat(s_d, g.SMC_PHI_I)
+        vq = eq_hat + g.SMC_KS_I * self._sat(s_q, g.SMC_PHI_I)
 
-        # Voltage saturation (hexagon limiting)
-        mag = math.sqrt(vd*vd + vq*vq)
+        mag = math.sqrt(vd * vd + vq * vq)
         if mag > self.V_MAX:
             scale = self.V_MAX / mag
-            vd *= scale; vq *= scale
+            vd *= scale
+            vq *= scale
 
         v_alpha, v_beta = self._inv_park(vd, vq, theta_e)
+
+        # Store applied voltages for next SMO step
+        self.v_alpha_prev = v_alpha
+        self.v_beta_prev  = v_beta
+
         return v_alpha, v_beta, iq_ref, id_meas, iq_meas
 
 
@@ -550,7 +603,7 @@ def cost_function(x: np.ndarray,
     d = run_sim(gains,
                 omega_cmd_rpm=omega_cmd_rpm,
                 t_sim=t_sim, dt=dt,
-                t_load=0.0)
+                t_load=0.020)   # 20 mN·m — matches DB42S02 bench load
 
     if d is None:
         return 1e6
