@@ -787,15 +787,28 @@ class StepGenerator:
                      getattr(blk.__class__, 'INPUT_NAMES', None))
             keep  = (getattr(blk, 'INPUT_KEEP', None) or
                      getattr(blk.__class__, 'INPUT_KEEP', None))
-            type_map = (getattr(blk, 'C_INPUT_TYPES', None) or
-                        getattr(blk.__class__, 'C_INPUT_TYPES', None) or {})
+            type_map    = (getattr(blk, 'C_INPUT_TYPES', None) or
+                           getattr(blk.__class__, 'C_INPUT_TYPES', None) or {})
+            comment_map = (getattr(blk, 'C_FIELD_COMMENTS', None) or
+                           getattr(blk.__class__, 'C_FIELD_COMMENTS', None) or {})
             if names and keep and len(names) == len(keep):
                 sn = blk.name or blk.__class__.__name__
                 for fname, idx in zip(names, keep):
-                    ctype = type_map.get(fname, "real32_T")
-                    refined.append((fname, 1, sn, idx, ctype))
+                    ctype   = type_map.get(fname, "real32_T")
+                    comment = comment_map.get(fname, "")
+                    refined.append((fname, 1, sn, idx, ctype, comment))
         if not refined:
-            return [(n, s, n, None, "real32_T") for n, s in raw]
+            # No INPUT_NAMES/INPUT_KEEP — fall back to raw signals.
+            # Still harvest C_FIELD_COMMENTS from all upstream blocks so that
+            # blocks using C_CUSTOM_EMIT (which bypass the INPUT_NAMES path)
+            # get their annotations in the generated struct.
+            merged_comments: dict = {}
+            for blk in self.cg_start.inputs:
+                cm = (getattr(blk, 'C_FIELD_COMMENTS', None) or
+                      getattr(blk.__class__, 'C_FIELD_COMMENTS', None) or {})
+                merged_comments.update(cm)
+            return [(n, s, n, None, "real32_T", merged_comments.get(n, ""))
+                    for n, s in raw]
         return refined
 
     def _out_sigs(self):
@@ -815,30 +828,49 @@ class StepGenerator:
                      getattr(blk.__class__, 'OUTPUT_NAMES', None))
             keep  = (getattr(blk, 'OUTPUT_KEEP', None) or
                      getattr(blk.__class__, 'OUTPUT_KEEP', None))
-            type_map = (getattr(blk, 'C_OUTPUT_TYPES', None) or
-                        getattr(blk.__class__, 'C_OUTPUT_TYPES', None) or {})
+            type_map    = (getattr(blk, 'C_OUTPUT_TYPES', None) or
+                           getattr(blk.__class__, 'C_OUTPUT_TYPES', None) or {})
+            comment_map = (getattr(blk, 'C_FIELD_COMMENTS', None) or
+                           getattr(blk.__class__, 'C_FIELD_COMMENTS', None) or {})
             if names and keep and len(names) == len(keep):
                 sn = blk.name or blk.__class__.__name__
                 for fname, idx in zip(names, keep):
-                    ctype = type_map.get(fname, "real32_T")
-                    refined.append((fname, 1, sn, idx, ctype))
+                    ctype   = type_map.get(fname, "real32_T")
+                    comment = comment_map.get(fname, "")
+                    refined.append((fname, 1, sn, idx, ctype, comment))
             else:
                 for name, size in raw:
                     if (blk.name or blk.__class__.__name__) == name:
-                        ctype = type_map.get(name, "real32_T")
-                        refined.append((name, size, name, None, ctype))
+                        ctype   = type_map.get(name, "real32_T")
+                        comment = comment_map.get(name, "")
+                        refined.append((name, size, name, None, ctype, comment))
         if not refined:
-            return [(n, s, n, None, "real32_T") for n, s in raw]
+            return [(n, s, n, None, "real32_T", "") for n, s in raw]
         return refined
 
     @staticmethod
     def _emit_fields(sigs, indent="    "):
+        """
+        Emit struct field declarations, one per sig entry.
+
+        Each entry is a 5- or 6-tuple:
+            (field_name, size, src_block_name, src_idx, c_type[, comment])
+        If a non-empty comment string is present at index [5] it is appended
+        as a Doxygen ``/**< ... */`` inline comment.  Blocks that do not set
+        ``C_FIELD_COMMENTS`` produce no comment — fully backward-compatible.
+        """
         lines = []
         for entry in sigs:
-            name, size = entry[0], entry[1]
-            ctype = entry[4] if len(entry) > 4 else "real32_T"
-            lines.append(f"{indent}{ctype} {name};" if size == 1
-                         else f"{indent}{ctype} {name}[{size}];")
+            name,  size  = entry[0], entry[1]
+            ctype        = entry[4] if len(entry) > 4 else "real32_T"
+            comment      = entry[5] if len(entry) > 5 else ""
+            decl = (f"{indent}{ctype} {name};" if size == 1
+                    else f"{indent}{ctype} {name}[{size}];")
+            if comment:
+                # Align inline comment at column 56 for readability
+                pad = max(1, 56 - len(decl))
+                decl = f"{decl}{" " * pad}/**< {comment} */"
+            lines.append(decl)
         return lines
 
     # ── Block graph traversal ─────────────────────────────────────────────────

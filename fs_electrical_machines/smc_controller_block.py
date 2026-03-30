@@ -110,8 +110,8 @@ class _DB42S02:
     # All controller voltages must be divided by this gain so that after
     # SVPWM amplification the plant sees the intended physical voltages.
     SMC_SVPWM_GAIN = SMC_V_DC / 2.0   # = 8.5
-    SMC_KS_I  = 0.625 / (SMC_V_DC / 2.0)   # V  = 0.0735V (0.625V / SVPWM_GAIN)
-    SMC_PHI_I = 0.5     # A
+    SMC_KS_I  =   0.058730
+    SMC_PHI_I = 0.277341
 
     # Speed loop:
     #   KS_W ≥ T_load_max/KT = 0.020/0.0084 = 2.381 A → 3.095 A (+30%)
@@ -119,8 +119,8 @@ class _DB42S02:
     #     PHI_W = KS_W·e_max/(I_MAX/3) = 3.095·209.4/1.19 = 545 rad/s
     #   LAMBDA_W = 2π×10 Hz = 62.83 rad/s (surface integral slope)
     #   ETA_W: small damping term, keep tiny
-    SMC_KS_W  = 3.095   # A
-    SMC_PHI_W = 545.0   # rad/s
+    SMC_KS_W  =  5.554994   # A
+    SMC_PHI_W = 279.005762    # rad/s
     SMC_ETA_W = 0.001   # —
     SMC_LAMBDA_W = 2.0 * math.pi * 10.0   # 62.83 rad/s
 

@@ -4,11 +4,11 @@
 {
     "distutils": {
         "depends": [
-            "/home/epl05/EmbedSimProject/embed_sim_project/.venv/lib/python3.12/site-packages/numpy/_core/include/numpy/arrayobject.h",
-            "/home/epl05/EmbedSimProject/embed_sim_project/.venv/lib/python3.12/site-packages/numpy/_core/include/numpy/arrayscalars.h",
-            "/home/epl05/EmbedSimProject/embed_sim_project/.venv/lib/python3.12/site-packages/numpy/_core/include/numpy/ndarrayobject.h",
-            "/home/epl05/EmbedSimProject/embed_sim_project/.venv/lib/python3.12/site-packages/numpy/_core/include/numpy/ndarraytypes.h",
-            "/home/epl05/EmbedSimProject/embed_sim_project/.venv/lib/python3.12/site-packages/numpy/_core/include/numpy/ufuncobject.h",
+            "/home/epl05/EMProject/.venv/lib/python3.12/site-packages/numpy/_core/include/numpy/arrayobject.h",
+            "/home/epl05/EMProject/.venv/lib/python3.12/site-packages/numpy/_core/include/numpy/arrayscalars.h",
+            "/home/epl05/EMProject/.venv/lib/python3.12/site-packages/numpy/_core/include/numpy/ndarrayobject.h",
+            "/home/epl05/EMProject/.venv/lib/python3.12/site-packages/numpy/_core/include/numpy/ndarraytypes.h",
+            "/home/epl05/EMProject/.venv/lib/python3.12/site-packages/numpy/_core/include/numpy/ufuncobject.h",
             "embed_sim_motor_utility_blocks.h"
         ],
         "extra_compile_args": [
@@ -16,7 +16,7 @@
             "-ffast-math"
         ],
         "include_dirs": [
-            "/home/epl05/EmbedSimProject/embed_sim_project/.venv/lib/python3.12/site-packages/numpy/_core/include",
+            "/home/epl05/EMProject/.venv/lib/python3.12/site-packages/numpy/_core/include",
             "."
         ],
         "name": "motor_utility_blocks_wrapper",

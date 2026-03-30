@@ -257,11 +257,21 @@ typedef struct
 /**
  * \struct SMC_Output_T
  * \brief  Output from SMC_Controller_Step.
+ *
+ * \warning  These fields carry a \b normalised reference, \b not physical volts.
+ *           SMC_Controller_Step() computes v_alpha / v_beta in physical [V] via
+ *           the Inverse-Park transform, then divides by
+ *           SMC_SVPWM_GAIN = V_DC / 2 before writing these fields.
+ *           The SVPWM block (SVPWMPack → SVM_CalculateDutyCycle) therefore
+ *           receives a modulation index in [−1, +1] as required.
+ *           Do \b not use these values as physical voltages; read
+ *           SMC_Controller_T::v_alpha_prev / v_beta_prev for the physical [V]
+ *           values stored before normalisation (used by the SMO observer).
  */
 typedef struct
 {
-    MatrixFloat v_alpha;   /**< α-axis voltage for SVPWM [V] */
-    MatrixFloat v_beta;    /**< β-axis voltage for SVPWM [V] */
+    MatrixFloat v_alpha;   /**< α-axis normalised reference for SVPWM [−1, +1] (= v_α_physical / SMC_SVPWM_GAIN) */
+    MatrixFloat v_beta;    /**< β-axis normalised reference for SVPWM [−1, +1] (= v_β_physical / SMC_SVPWM_GAIN) */
 } SMC_Output_T;
 
 

@@ -1,3 +1,0 @@
-C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor8278/642.fmutmp/sources/../binaries/win64/libPMSM_Motor.dll.a
-C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor8278/642.fmutmp/sources/../binaries/win64/PMSM_Motor.dll
-C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor8278/642.fmutmp/sources/../binaries/win64/libwinpthread-1.dll

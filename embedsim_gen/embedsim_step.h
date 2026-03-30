@@ -39,11 +39,11 @@
  */
 typedef struct
 {
-    real32_T omega_ref_mech;
-    real32_T theta_m;
-    real32_T ia;
-    real32_T ib;
-    real32_T ic;
+    real32_T omega_ref_mech;                            /**< Mechanical speed reference [rad/s]; range [0, ~314] for 0-3000 RPM */
+    real32_T theta_m;                                   /**< Mechanical rotor angle [rad]; accumulating (NOT wrapped), from encoder */
+    real32_T ia;                                        /**< Phase-A current from ADC [A]; range [-SMC_I_MAX, +SMC_I_MAX] */
+    real32_T ib;                                        /**< Phase-B current from ADC [A]; range [-SMC_I_MAX, +SMC_I_MAX] */
+    real32_T ic;                                        /**< Phase-C current from ADC [A]; range [-SMC_I_MAX, +SMC_I_MAX] */
 } EmbedSim_Input_T;
 
 /**
@@ -52,10 +52,10 @@ typedef struct
  */
 typedef struct
 {
-    real32_T ta;
-    real32_T tb;
-    real32_T tc;
-    uint8_T sector;
+    real32_T ta;                                        /**< Phase-A PWM duty cycle [0.0, 1.0]  (1.0 = full on, 0.5 = midpoint) */
+    real32_T tb;                                        /**< Phase-B PWM duty cycle [0.0, 1.0] */
+    real32_T tc;                                        /**< Phase-C PWM duty cycle [0.0, 1.0] */
+    uint8_T sector;                                     /**< Active SVM sector [1, 6]; 0 = SVM error */
 } EmbedSim_Output_T;
 
 /* Block headers */

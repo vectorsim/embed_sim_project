@@ -94,6 +94,15 @@ class SVPWMBlock(VectorBlock):
     OUTPUT_KEEP    = [0, 1, 2, 3]
     C_OUTPUT_TYPES = {"sector": "uint8_T"}
 
+    # Unit / range annotations for EmbedSim_Output_T fields.
+    # Consumed by StepGenerator._out_sigs() → _emit_fields() → /**< ... */ comments.
+    C_FIELD_COMMENTS = {
+        "ta":     "Phase-A PWM duty cycle [0.0, 1.0]  (1.0 = full on, 0.5 = midpoint)",
+        "tb":     "Phase-B PWM duty cycle [0.0, 1.0]",
+        "tc":     "Phase-C PWM duty cycle [0.0, 1.0]",
+        "sector": "Active SVM sector [1, 6]; 0 = SVM error",
+    }
+
     @property
     def C_CUSTOM_EMIT(self):
         """Auto-detect where inputs come from."""
