@@ -14,29 +14,29 @@
             ]
         ],
         "depends": [
-            "/home/epl05/EmbedSimProject/embed_sim_project/.venv/lib/python3.12/site-packages/numpy/_core/include/numpy/arrayobject.h",
-            "/home/epl05/EmbedSimProject/embed_sim_project/.venv/lib/python3.12/site-packages/numpy/_core/include/numpy/arrayscalars.h",
-            "/home/epl05/EmbedSimProject/embed_sim_project/.venv/lib/python3.12/site-packages/numpy/_core/include/numpy/ndarrayobject.h",
-            "/home/epl05/EmbedSimProject/embed_sim_project/.venv/lib/python3.12/site-packages/numpy/_core/include/numpy/ndarraytypes.h",
-            "/home/epl05/EmbedSimProject/embed_sim_project/.venv/lib/python3.12/site-packages/numpy/_core/include/numpy/ufuncobject.h",
-            "/home/epl05/EmbedSimProject/embed_sim_project/fs_electrical_machines/c_src/embed_sim_matrix.h",
-            "/home/epl05/EmbedSimProject/embed_sim_project/fs_electrical_machines/c_src/embed_sim_smc_controller.h"
+            "/home/epl05/EMProject/.venv/lib/python3.12/site-packages/numpy/_core/include/numpy/arrayobject.h",
+            "/home/epl05/EMProject/.venv/lib/python3.12/site-packages/numpy/_core/include/numpy/arrayscalars.h",
+            "/home/epl05/EMProject/.venv/lib/python3.12/site-packages/numpy/_core/include/numpy/ndarrayobject.h",
+            "/home/epl05/EMProject/.venv/lib/python3.12/site-packages/numpy/_core/include/numpy/ndarraytypes.h",
+            "/home/epl05/EMProject/.venv/lib/python3.12/site-packages/numpy/_core/include/numpy/ufuncobject.h",
+            "/home/epl05/EMProject/fs_electrical_machines/c_src/embed_sim_matrix.h",
+            "/home/epl05/EMProject/fs_electrical_machines/c_src/embed_sim_smc_controller.h"
         ],
         "extra_compile_args": [
             "-O3",
             "-ffast-math"
         ],
         "include_dirs": [
-            "/home/epl05/EmbedSimProject/embed_sim_project/fs_electrical_machines/c_src",
-            "/home/epl05/EmbedSimProject/embed_sim_project/.venv/lib/python3.12/site-packages/numpy/_core/include"
+            "/home/epl05/EMProject/fs_electrical_machines/c_src",
+            "/home/epl05/EMProject/.venv/lib/python3.12/site-packages/numpy/_core/include"
         ],
         "language": "c",
         "name": "smc_controller_wrapper",
         "sources": [
-            "/home/epl05/EmbedSimProject/embed_sim_project/fs_electrical_machines/c_src/smc_controller_wrapper.pyx",
-            "/home/epl05/EmbedSimProject/embed_sim_project/fs_electrical_machines/c_src/embed_sim_smc_controller.c",
-            "/home/epl05/EmbedSimProject/embed_sim_project/fs_electrical_machines/c_src/embed_sim_coordinate_transform.c",
-            "/home/epl05/EmbedSimProject/embed_sim_project/fs_electrical_machines/c_src/embed_sim_matrix.c"
+            "/home/epl05/EMProject/fs_electrical_machines/c_src/smc_controller_wrapper.pyx",
+            "/home/epl05/EMProject/fs_electrical_machines/c_src/embed_sim_smc_controller.c",
+            "/home/epl05/EMProject/fs_electrical_machines/c_src/embed_sim_coordinate_transform.c",
+            "/home/epl05/EMProject/fs_electrical_machines/c_src/embed_sim_matrix.c"
         ]
     },
     "module_name": "smc_controller_wrapper"

@@ -116,9 +116,9 @@ from motor_utility_blocks import (
 )
 from coordinate_transform_blocks import InvParkTransformBlock
 from svpwm_block                  import SVPWMBlock
-from PMSM_MotorBlock              import PMSM_MotorBlock
+from PMSM_Plant_FMUBlock import PMSM_Plant_FMUBlock
 
-_FMU_PATH = str(_FS_ELEC / "modelica" / "PMSM_Motor.fmu")
+_FMU_PATH = str(_FS_ELEC / "modelica" / "PMSM_Plant_FMU.fmu")
 
 
 # =============================================================================
@@ -163,7 +163,10 @@ RAMP_TIME      = 0.5
 # =============================================================================
 # DB42S02PlantBlock  — simulation plant, NOT code-generated
 # =============================================================================
-class DB42S02PlantBlock(PMSM_MotorBlock):
+# =============================================================================
+# DB42S02PlantBlock  — simulation plant, NOT code-generated
+# =============================================================================
+class DB42S02PlantBlock(PMSM_Plant_FMUBlock):
     """
     NANOTEC DB42S02 plant block.
 
@@ -174,7 +177,7 @@ class DB42S02PlantBlock(PMSM_MotorBlock):
       duty_b = tb          normalised PWM duty [0,1]
       duty_c = tc          normalised PWM duty [0,1]
       v_dc   = V_DC        17.0 V  — constant, not a controller signal
-      T_load = T_LOAD      0.03 N·m — constant shaft load (30% rated)
+      T_load = T_LOAD      0.01 N·m — constant shaft load (10% rated)
 
     FMU reconstructs phase voltages:
       v_x_leg  = duty_x * v_dc
@@ -189,34 +192,45 @@ class DB42S02PlantBlock(PMSM_MotorBlock):
       [4] T_em        [N·m]
     """
 
-    TOPO_CATEGORY     = "plant"
+    TOPO_CATEGORY = "plant"
     C_CODEGEN_EXCLUDE = True
-    output_label      = "[rpm,ia,ib,ic,Tem]"
+    output_label = "[rpm,ia,ib,ic,Tem]"
 
     def __init__(self, name: str, fmu_path: str) -> None:
+        # Save original DEFAULT_PARAMS
+        original_params = self.__class__.DEFAULT_PARAMS.copy()
+
+        # Update with custom parameters
+        self.__class__.DEFAULT_PARAMS.update({
+            'R': 0.19,
+            'L_d': 0.125e-3,
+            'L_q': 0.125e-3,
+            'lambda_pm': 0.0014,
+            'J': 2.4e-6,
+            'B_fric': 7e-5,  # Override default friction
+            'p': float(P_POLES),
+            'v_dc_nom': V_DC,
+        })
+
         try:
             super().__init__(
-                name      = name,
-                fmu_path  = fmu_path,
-                R         = 0.19,
-                L_d       = 0.125e-3,
-                L_q       = 0.125e-3,
-                lambda_pm = 0.0014,
-                J         = 2.4e-6,
-                # B chosen so friction torque < 20% of pull-out torque at 4000 RPM.
-                # T_pullout(4000 RPM) ≈ 0.151 N·m
-                # B_max = 0.20 * T_po / omega_4k = 0.20 * 0.151 / 418 = 7.2e-5
-                B         = 7e-5,   # N·m·s/rad — lightly damped, within pull-out budget
-                p         = float(P_POLES),
+                name=name,
+                fmu_path=fmu_path,
             )
         except Exception as exc:
+            # Restore original params
+            self.__class__.DEFAULT_PARAMS = original_params
             print(f"\n[DB42S02PlantBlock] FMU load failed: {fmu_path}")
             print(f"                   {exc}\n")
             raise
-        self.speed_rpm     = 0.0
+
+        # Restore original params for future instances
+        self.__class__.DEFAULT_PARAMS = original_params
+
+        self.speed_rpm = 0.0
         self.i_a = self.i_b = self.i_c = 0.0
         self.theta_e_motor = 0.0
-        self.T_em          = 0.0
+        self.T_em = 0.0
         print(f"[FMU] Loaded: {fmu_path}")
 
     def compute_py(self, t: float, dt: float, input_values=None):
@@ -238,12 +252,21 @@ class DB42S02PlantBlock(PMSM_MotorBlock):
             np.array([ta, tb, tc, V_DC, T_LOAD], dtype=DEFAULT_DTYPE))
         super().compute_py(t, dt, [fmu_input])
 
-        self.speed_rpm     = self.read_speed_rpm()
-        self.i_a           = self.read_i_a()
-        self.i_b           = self.read_i_b()
-        self.i_c           = self.read_i_c()
-        self.theta_e_motor = self.read_theta_e()
-        self.T_em          = self.read_T_em()
+        # Read outputs from the FMU using the output indices
+        # The output order from the generated block: ['rpm', 'ia', 'ib', 'ic', 'theta_m', 'T_em', 'id_out', 'iq_out']
+        if self.output and len(self.output.value) >= 6:
+            self.speed_rpm = self.output.value[0]  # rpm
+            self.i_a = self.output.value[1]  # ia
+            self.i_b = self.output.value[2]  # ib
+            self.i_c = self.output.value[3]  # ic
+            self.T_em = self.output.value[5]  # T_em (index 5)
+            self.theta_e_motor = self.output.value[4]  # theta_m (index 4)
+        else:
+            # Fallback if output not available yet
+            self.speed_rpm = 0.0
+            self.i_a = self.i_b = self.i_c = 0.0
+            self.T_em = 0.0
+            self.theta_e_motor = 0.0
 
         self.output = VectorSignal(
             np.array([self.speed_rpm, self.i_a, self.i_b,
@@ -278,7 +301,7 @@ def build_and_run() -> dict:
     vf_angle   = VfAngleBlock("vf_angle",
                               vf_ratio=VF_RATIO,
                               v_phase_peak=V_PHASE_PEAK,
-                              v_boost=VF_BOOST,        # FIX: was computed but never passed
+                              v_boost=VF_BOOST,
                               p_poles=P_POLES)
     vf_dq      = VfDQBlock("vf_dq")
     vf_theta   = VfThetaBlock("vf_theta")

@@ -30,8 +30,8 @@
 
 #include "embed_sim_sys_types.h"   /* real32_T */
 
-/* Sample period for a 20000 Hz control loop */
-#define EMBEDSIM_DT  (0.0000500000f)
+/* Sample period for a 10000 Hz control loop */
+#define EMBEDSIM_DT  (0.0001000000f)
 
 /**
  * EmbedSim_Input_T
@@ -39,11 +39,8 @@
  */
 typedef struct
 {
-    real32_T omega_ref_mech;
-    real32_T theta_m;
-    real32_T ia;
-    real32_T ib;
-    real32_T ic;
+    real32_T magnitude;
+    real32_T angle_rad;
 } EmbedSim_Input_T;
 
 /**
@@ -59,8 +56,6 @@ typedef struct
 } EmbedSim_Output_T;
 
 /* Block headers */
-#include "embed_sim_smc_controller.h"
-#include "embed_sim_motor_utility_blocks.h"
 #include "embed_sim_sv_pwm.h"
 
 extern void EmbedSim_Init(void);

@@ -205,7 +205,7 @@ def build_and_run() -> dict:
         SMC_SMO_K     = _DB42S02.SMC_SMO_K,
         SMC_SMO_FC    = _DB42S02.SMC_SMO_FC,
         dt_s          = DT,
-        use_c_backend = False,
+        use_c_backend = True,
         integrator    = "tustin",
     )
 
