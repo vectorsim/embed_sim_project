@@ -1,0 +1,53 @@
+* [33mb12d878[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m added embedsim-agent
+* [33mf94c8f2[m added smc visualisation
+[31m|[m * [33m8ce9907[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m added smc visualisation
+[31m|[m[31m/[m  
+* [33m48f5468[m add mpc
+* [33m180f721[m addes mpc control
+* [33m86d01c7[m SMC tuned
+* [33mbe534f6[m secure work progress
+* [33m24fb1a7[m added sSliede mode controller
+* [33m162cb8e[m feat: Add placeholder files for future electrical machine components and examples
+* [33m2234fbf[m refactor: Prepare for C-based SMC controller integration
+* [33ma60ceb9[m feat: Add DB42S02 motor example with SMC closed-loop control
+* [33md4cbadf[m feat: Implement Python-based Sliding Mode Controller block
+* [33m58ec24f[m ts_open_loop_mile_stone
+* [33m6a24d9d[m Logs Delete
+* [33m0b9012b[m Milestone Open Loop Code Generation (Aurix Tricore TC 397)
+* [33mec56b33[m refurbished the example algebraic loop
+* [33m3682091[m logo_add
+* [33m1d13f27[m im_fs_electrical_example
+* [33m1ca66d8[m LogDeleted
+* [33m6bc639e[m improved examples
+* [33mcff1c0b[m consolidated_sim_ebgine_topo_printer
+* [33mf793923[m ex_amend
+* [33m8e05d0c[m aurix_code_generator
+* [33m1780283[m add_log_to_simulation_engine
+* [33me4cebaf[m added_ex_fs_electrical_machines
+* [33mafa7aa2[m add_fs_transform
+* [33m63cf3ee[m Add_Documents
+*   [33m22e2798[m Merge branch 'main' of https://github.com/vectorsim/embed_sim_project
+[33m|[m[34m\[m  
+[33m|[m * [33meec527d[m Update README.md
+* [34m|[m [33mac4f9e7[m Add Bucck Konverter Document
+[34m|[m[34m/[m  
+*   [33ma4249de[m Merge branch 'main' of https://github.com/vectorsim/embed_sim_project
+[35m|[m[36m\[m  
+[35m|[m * [33mda7c27d[m Create README.md
+* [36m|[m [33mb61a4e9[m eb updated
+[36m|[m[36m/[m  
+* [33mad36f51[m added documents and logos
+* [33mda6000b[m ADDOdf
+* [33ma9aa2cb[m BUckConverter
+* [33mb1646a8[m check eb
+* [33m7a50dd3[m secured working progress 04_03_2026
+* [33m691cb90[m renamed
+* [33m8f3294a[m wp_03_03
+* [33maa24732[m NN ES examples added
+* [33mc4c37a1[m Create esf-logo.svg
+* [33me8e060a[m proof of concept
+* [33md008cee[m Delete sim_core directory
+* [33mb68411f[m Update simulation_engine.py
+* [33m21cf57f[m Update fmu_blocks.py
+* [33mb1773a0[m sim_core
+* [33ma798670[m Initial commit
