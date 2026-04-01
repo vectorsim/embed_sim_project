@@ -64,7 +64,9 @@ class _DB42S02:
     B_FRICTION = 1e-6
     I_MAX      = 3.57
     V_DC       = 17.0
-    V_MAX      = 17.0 / math.sqrt(3.0)
+    V_MAX      = 17.0 / 2.0        # = V_DC/2 = 8.5 V  (SVPWM normalised limit)
+    # Note: hexagon limit is V_DC/√3 = 9.815 V, but SVPWMPackBlock normalises
+    # by V_DC/2, so the MPC must clamp to V_DC/2 to keep normalised output ≤ 1.0.
     KT         = 1.5 * 4 * 0.0014
 
     SMO_K  = 4.68
@@ -83,7 +85,7 @@ class MPCControllerBlock(VectorBlock):
     """
     True 3-state receding-horizon MPC for PMSM speed and current control.
 
-    Input bus  : [omega_ref_mech, theta_m, ia, ib, ic]
+    Input bus  : [omega_ref_mech, theta_m, ia, ib, ic, omega_m_meas]
     Output bus : [v_alpha, v_beta]
 
     No external speed loop. Speed tracking is inside the MPC cost function.
@@ -130,6 +132,7 @@ class MPCControllerBlock(VectorBlock):
             V_MAX:         float = _DB42S02.V_MAX,
             N:             int   = 10,
             Q_id:          float = 10.0,
+            Q_iq:          float = 100.0,
             Q_omega:       float = 500.0,
             R_vd:          float = 0.01,
             R_vq:          float = 0.01,
@@ -152,8 +155,14 @@ class MPCControllerBlock(VectorBlock):
         self.V_MAX     = float(V_MAX)
         self.KT        = 1.5 * float(P_POLES) * float(LAMBDA_PM)
 
+        # SVPWM_GAIN = V_DC/2: SVPWMPackBlock normalises physical volts by this
+        # value to produce duty-cycle references in [-1, +1].
+        # V_MAX is already set to V_DC/2 above, so SVPWM_GAIN == V_MAX.
+        self.SVPWM_GAIN = self.V_MAX
+
         self.N      = int(N)
         self.Q_id   = float(Q_id)
+        self.Q_iq   = float(Q_iq)
         self.Q_omega = float(Q_omega)
         self.R_vd   = float(R_vd)
         self.R_vq   = float(R_vq)
@@ -199,7 +208,7 @@ class MPCControllerBlock(VectorBlock):
 
         print(f"\n[MPC Controller] Initialized  (3-state speed-tracking MPC)")
         print(f"  Prediction horizon : N={self.N}")
-        print(f"  Weights            : Q_id={Q_id:.1f}  Q_omega={Q_omega:.1f}")
+        print(f"  Weights            : Q_id={Q_id:.1f}  Q_iq={Q_iq:.1f}  Q_omega={Q_omega:.1f}")
         print(f"  Control weights    : R_vd={R_vd:.4f}  R_vq={R_vq:.4f}")
         print(f"  SMO                : k={self.SMO_K:.2f} V  fc={self.SMO_FC:.0f} Hz")
 
@@ -269,10 +278,10 @@ class MPCControllerBlock(VectorBlock):
 
         bk = 0.0; ek = 0.0
 
-        sum_bk_err_d = 0.0   # Σ bk·(0 − id_free)
-        sum_bk2      = 0.0   # Σ bk²
-        sum_ek_err   = 0.0   # Σ ek·(omega_ref − omega_free)
-        sum_ek2      = 0.0   # Σ ek²
+        sum_bk_err_d  = 0.0   # Σ bk·(0 − id_free)           → vd numerator
+        sum_bk2       = 0.0   # Σ bk²                         → vd/vq denominator
+        sum_ek_err    = 0.0   # Σ ek·(omega_ref − omega_free)  → vq numerator
+        sum_ek2       = 0.0   # Σ ek²                         → vq denominator
 
         for _ in range(self.N):
             # Free-run: cross-coupling only (no BEMF — handled by feedforward)
@@ -289,14 +298,19 @@ class MPCControllerBlock(VectorBlock):
             ek += dt_J * self.KT * bk  # omega response: accumulate current bk
 
             # Gradient accumulation
-            sum_bk_err_d += bk * (0.0      - id_free)
-            sum_ek_err   += ek * (omega_ref - omega_free)
-            sum_bk2      += bk * bk
-            sum_ek2      += ek * ek
+            sum_bk_err_d  += bk * (0.0       - id_free)
+            sum_ek_err    += ek * (omega_ref  - omega_free)
+            sum_bk2       += bk * bk
+            sum_ek2       += ek * ek
 
         # Analytical optimal inputs
+        # Q_iq acts as extra regularisation on the vq denominator:
+        #   it penalises large vq (hence large iq) without creating a
+        #   competing numerator term that would fight the speed objective.
+        #   This keeps the speed-tracking vq numerator (Q_omega · Σek·err)
+        #   in full control while Q_iq simply reduces the gain magnitude.
         denom_d = self.Q_id    * sum_bk2 + self.R_vd
-        denom_q = self.Q_omega * sum_ek2 + self.R_vq
+        denom_q = self.Q_omega * sum_ek2 + self.Q_iq * sum_bk2 + self.R_vq
 
         vd_mpc = self.Q_id    * sum_bk_err_d / denom_d if denom_d > 1e-30 else 0.0
         vq_mpc = self.Q_omega * sum_ek_err   / denom_q if denom_q > 1e-30 else 0.0
@@ -325,10 +339,21 @@ class MPCControllerBlock(VectorBlock):
         ia             = float(u[2])
         ib             = float(u[3])
         ic             = float(u[4])
+        # Direct speed measurement from FMU (element [5]) — bypasses the
+        # finite-difference estimator which is noisy at startup and stalls
+        # the controller during direction changes.
+        omega_m_direct = float(u[5]) if len(u) > 5 else None
 
         # Electrical angle
         theta_e = self.P_POLES * theta_m
-        omega_m = self._get_speed(theta_m, dt)
+        # Use FMU speed directly when available; fall back to estimator otherwise.
+        if omega_m_direct is not None:
+            omega_m = omega_m_direct
+            # Keep estimator state in sync so fallback is seamless
+            self._last_theta_m = theta_m
+            self._omega_filt   = omega_m_direct
+        else:
+            omega_m = self._get_speed(theta_m, dt)
 
         # Clarke transform: [ia,ib,ic] → [i_alpha, i_beta]
         clarke_out = self._clarke.compute_py(
@@ -392,7 +417,11 @@ class MPCControllerBlock(VectorBlock):
         # KI_v = 0.03 V/(rad·s): corrects 53 RPM (5.6 rad/s) error in ~1.5s.
         _KI_v   = 0.03
         _sp_err = omega_ref_mech - omega_m
-        self._speed_err_integral += _sp_err * dt
+        # Only integrate once soft-start is complete — avoids wind-up while
+        # vq is artificially clamped below the MPC's natural output.
+        _softstart_done = (self._iq_limit >= self.I_MAX)
+        if _softstart_done:
+            self._speed_err_integral += _sp_err * dt
         # Anti-windup: keep integral contribution within remaining vq headroom
         _head   = self.V_MAX - abs(vq)
         _intmax = _head / (_KI_v + 1e-30)
@@ -409,8 +438,14 @@ class MPCControllerBlock(VectorBlock):
         v_alpha = float(inv_out.value[0])
         v_beta  = float(inv_out.value[1])
 
+        # Store PHYSICAL volts for SMO (SI units — L and R are in SI).
         self._v_alpha_prev = v_alpha
         self._v_beta_prev  = v_beta
+
+        # Normalise for SVPWMPackBlock: divide by V_DC/2 → range [-1, +1].
+        # Matches SMC: y->v_alpha /= SMC_SVPWM_GAIN in embed_sim_smc_controller.c
+        v_alpha_out = v_alpha / self.SVPWM_GAIN
+        v_beta_out  = v_beta  / self.SVPWM_GAIN
 
         # Logging (every 1ms, first 500ms detailed)
         if t >= self._log_next:
@@ -433,7 +468,7 @@ class MPCControllerBlock(VectorBlock):
                 )
 
         self.output = VectorSignal(
-            np.array([v_alpha, v_beta], dtype=np.float32), self.name)
+            np.array([v_alpha_out, v_beta_out], dtype=np.float32), self.name)
         return self.output
 
     def compute_c(self, t, dt, input_values=None):

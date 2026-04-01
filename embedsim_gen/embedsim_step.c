@@ -11,7 +11,7 @@
 #include <string.h>   /* memcpy, memset */
 #include <math.h>     /* fabsf, atan2f, sqrtf */
 #include "embedsim_step.h"
-#include "embed_sim_smc_controller.h"
+#include "embed_sim_mpc_controller.h"
 #include "embed_sim_motor_utility_blocks.h"
 #include "embed_sim_sv_pwm.h"
 
@@ -19,7 +19,7 @@
  * Internal linkage — not exposed in the .h.
  * MISRA C:2012 Rule 8.7: static, TU-local only.
  * ──────────────────────────────────────────────────────────── */
-static SMC_Controller_T smc_state;   /* Rule 8.7: internal linkage */
+static MPC_Controller_T mpc_state;   /* Rule 8.7: internal linkage */
 static SVPWMPack_T svpwm_pack_state;   /* Rule 8.7: internal linkage */
 
 
@@ -31,7 +31,7 @@ static SVPWMPack_T svpwm_pack_state;   /* Rule 8.7: internal linkage */
  */
 void EmbedSim_Init(void)
 {
-    SMC_Controller_Init(&smc_state, EMBEDSIM_DT);
+    MPC_Controller_Init(&mpc_state);
     SVPWMPack_Init(&svpwm_pack_state, 17.00000000f);
 }
 
@@ -53,57 +53,53 @@ void EmbedSim_Step(
     /* ── Unpack inputs ────────────────────────────────── */
 
     /* ── Local variable declarations (MISRA C:2012 Rule 8.1) ── */
-    real32_T u_svpwm_pack[2];
-    real32_T y_svpwm_pack[3];
 
     /* ── Block chain ──────────────────────────────────────── */
-        /* --- smc_controller (SMCControllerBlock) --- */
-        /* SMC_Controller_Step() outputs normalised v_alpha/v_beta (÷ V_DC/2)  */
-        /* so the SVPWM block receives a reference in [-1,+1].                  */
-        /* SMO feedback is stored from the physical InvPark output inside Step. */
-        SMC_Input_T   u_smc;
-        SMC_Output_T  y_smc_out;
-        real32_T      y_smc[2];
+    /* --- mpc (MPCControllerBlock) --- */
+    {
+        MPC_Input_T   u_mpc;
+        MPC_Output_T  y_mpc_out;
+        real32_T      y_mpc[2];
 
-        u_smc.omega_ref_mech = in->omega_ref_mech;
-        u_smc.theta_m        = in->theta_m;
-        u_smc.ia             = in->ia;
-        u_smc.ib             = in->ib;
-        u_smc.ic             = in->ic;
+        u_mpc.omega_ref_mech = in->omega_ref_mech;
+        u_mpc.theta_m        = in->theta_m;
+        u_mpc.ia             = in->ia;
+        u_mpc.ib             = in->ib;
+        u_mpc.ic             = in->ic;
 
-        SMC_Controller_Step(&smc_state, &u_smc, dt, &y_smc_out);
+        MPC_Controller_Step(&mpc_state, &u_mpc, dt, &y_mpc_out);
 
-        y_smc[0] = y_smc_out.v_alpha;
-        y_smc[1] = y_smc_out.v_beta;
+        y_mpc[0] = y_mpc_out.v_alpha;
+        y_mpc[1] = y_mpc_out.v_beta;
+    }
 
     /* --- svpwm_pack (SVPWMPackBlock) --- */
-    u_svpwm_pack[0] = y_smc[0];
-    u_svpwm_pack[1] = y_smc[1];
-    SVPWMPack_Step(&svpwm_pack_state, u_svpwm_pack, dt, y_svpwm_pack);
+    {
+        SVPWMPack_T  svpwm_pack_st;
+        real32_T     y_svpwm_pack[3];
+        real32_T     u_svpwm_pack[2];
+        u_svpwm_pack[0] = y_mpc[0];   /* v_alpha */
+        u_svpwm_pack[1] = y_mpc[1];   /* v_beta  */
+        SVPWMPack_Init(&svpwm_pack_st, 17.0f);
+        SVPWMPack_Step(&svpwm_pack_st, u_svpwm_pack, dt, y_svpwm_pack);
+    }
 
+    /* --- svpwm (SVPWMBlock) --- */
+    {
+        SVM_DutyCycle_Type  svm_duty;
+        real32_T            y_svpwm[4];
+        SVM_CalculateDutyCycle(y_svpwm_pack[0],
+                               y_svpwm_pack[1],
+                               &svm_duty);
+        SVM_GetDutyCyclesFloat(&svm_duty,
+                               &y_svpwm[0], &y_svpwm[1], &y_svpwm[2]);
+        y_svpwm[3] = (real32_T)svm_duty.sector;
+    }
 
-      /* --- svpwm (svpwm) — SVM_CalculateDutyCycle --- */
-      {
-          SVM_DutyCycle_Type svm_duty;
-          MatrixStatus_Type  svm_status;
-
-          /* Default values (duty cycles = 0.5 for safe state) */
-          out->ta = 0.5f;
-          out->tb = 0.5f;
-          out->tc = 0.5f;
-          out->sector = 0U;
-
-          svm_status = SVM_CalculateDutyCycle(
-                           y_svpwm_pack[0],   /* modulation index */
-                           y_svpwm_pack[1],       /* angle [rad] */
-                           &svm_duty);
-          if (svm_status == MATRIX_SUCCESS)
-          {
-              out->ta = (real32_T)svm_duty.ta / (real32_T)Q31_ONE;
-              out->tb = (real32_T)svm_duty.tb / (real32_T)Q31_ONE;
-              out->tc = (real32_T)svm_duty.tc / (real32_T)Q31_ONE;
-              out->sector = (uint8_T)svm_duty.sector;
-          }
-      }
+    /* ── Pack outputs ─────────────────────────────────── */
+    out->ta = y_svpwm[0];
+    out->tb = y_svpwm[1];
+    out->tc = y_svpwm[2];
+    out->sector = (uint8_T)y_svpwm[3];
 
 }

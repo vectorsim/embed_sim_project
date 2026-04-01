@@ -48,14 +48,14 @@ for _p in (get_embedsim_import_path(), str(_FS_ELEC), str(_FS_ELEC / "c_src")):
 
 from embedsim import EmbedSim, ODESolver, VectorEnd
 from embedsim.core_blocks import VectorBlock, VectorSignal, DEFAULT_DTYPE
-from embedsim.source_blocks import VectorStep, VectorConstant
+from embedsim.source_blocks import VectorStep
 from embedsim.simulation_engine import VectorDelay
 from embedsim.code_generator import CodeGenStart, CodeGenEnd
 
 from motor_utility_blocks import SVPWMPackBlock
 from svpwm_block import SVPWMBlock
 from mpc_controller_block import MPCControllerBlock, _DB42S02 as MPC_MOTOR
-from pmsm_python_plant import PMSM_Python_Plant
+from PMSM_Plant_FMUBlock import PMSM_Plant_FMUBlock
 
 
 # =============================================================================
@@ -76,7 +76,8 @@ T_LOAD_LIGHT = 0.005  # [N·m]  5 mN·m
 T_LOAD_HEAVY = 0.020  # [N·m]  20 mN·m
 
 TARGET_RADS_MECH = TARGET_RPM * 2.0 * math.pi / 60.0
-_MOTOR_OUT_SIZE  = 8   # [rpm, ia, ib, ic, theta_m, T_em, id, iq]
+_MOTOR_OUT_SIZE  = 8   # FMU: [rpm(0), ia(1), ib(2), ic(3), theta_m(4),
+                        #       T_em(5), id_out(6), iq_out(7)]
 
 # =============================================================================
 # Sensor noise configuration
@@ -112,21 +113,21 @@ NOISE_SEED        = 42      # reproducible runs; set None for random
 # MPC PRINCIPLES:
 #   Prediction horizon N = 10 (500µs at 20 kHz)
 #   Q matrix: state tracking weights (higher = more important)
-#     Q_id = 10.0    — keep id near zero (MTPA)
-#     Q_iq = 100.0   — track iq_ref accurately (torque control)
-#     Q_omega = 1.0  — track speed (lower because speed loop slower)
+#     Q_id    = 10.0   — keep id near zero (MTPA)
+#     Q_iq    = 0.1    — iq regularisation: appears in vq denominator only,
+#                        damping the vq gain without creating a competing
+#                        numerator term. Must be << Q_omega for speed control.
+#     Q_omega = 500.0  — speed tracking (dominant weight, drives vq numerator)
 #   R matrix: control effort weights (higher = less aggressive)
-#     R_vd = 0.01    — allow vd to change
-#     R_vq = 0.01    — allow vq to change
-#
-# These weights work for ANY operating point. No per-load tuning needed!
+#     R_vd = 0.01  — allow vd to change freely
+#     R_vq = 0.01  — allow vq to change freely
 
 MPC_N        = 10       # Prediction horizon (steps)
-MPC_Q_ID     = 10.0     # id tracking weight
-MPC_Q_IQ     = 100.0    # iq tracking weight
-MPC_Q_OMEGA  = 1.0      # speed tracking weight
-MPC_R_VD     = 0.01     # vd control effort weight
-MPC_R_VQ     = 0.01     # vq control effort weight
+MPC_Q_ID     = 10.0     # id tracking weight  (drive id → 0, MTPA)
+MPC_Q_IQ     = 0.1     # iq regularisation weight (denominator only — damps vq gain)
+MPC_Q_OMEGA  = 500.0   # speed tracking weight (must dominate Q_iq for speed control)
+MPC_R_VD     = 0.01    # vd control effort weight
+MPC_R_VQ     = 0.01    # vq control effort weight
 
 # SMO parameters (for disturbance rejection)
 MPC_SMO_K    = 4.68     # V (4× max back-EMF for robust convergence)
@@ -134,47 +135,50 @@ MPC_SMO_FC   = 1000.0   # Hz (LPF cutoff for smooth back-EMF)
 
 
 # =============================================================================
-# Plant block — pure Python PMSM, no FMU dependency
+# Plant block — PMSM_Plant_FMUBlock  (PMSM_Plant_FMU.fmu)
 # =============================================================================
+# FMU input bus : [duty_a, duty_b, duty_c, v_dc, T_load]
+# FMU output bus: [rpm(0), ia(1), ib(2), ic(3), theta_m(4),
+#                  T_em(5), id_out(6), iq_out(7)]
+#
+# compute_py pattern from db42s02_openloop_fmu.py:
+#   - duties read unconditionally (no zero-guard)
+#   - FMU input bus packed as VectorSignal and passed to super().compute_py
+#   - T_load injected from timed schedule (never in CodeGen region)
 
-class DB42S02PlantBlock(PMSM_Python_Plant):
-    """DB42S02 plant with timed load torque schedule."""
+_FMU_PATH = str(_FS_ELEC / "modelica" / "PMSM_Plant_FMU.fmu")
+
+
+class DB42S02PlantBlock(PMSM_Plant_FMUBlock):
+    """
+    DB42S02 FMU plant with timed load torque schedule.
+    Wraps PMSM_Plant_FMUBlock with the 5-element input bus
+    [duty_a, duty_b, duty_c, v_dc, T_load].
+    """
 
     TOPO_CATEGORY     = "plant"
     C_CODEGEN_EXCLUDE = True
     output_label      = "[rpm,ia,ib,ic,theta_m,Tem,id,iq]"
 
-    def __init__(self, name: str, **kwargs):
-        super().__init__(
-            name      = name,
-            R         = MPC_MOTOR.R_S,
-            L_d       = MPC_MOTOR.L_D,
-            L_q       = MPC_MOTOR.L_Q,
-            lambda_pm = MPC_MOTOR.LAMBDA_PM,
-            J         = MPC_MOTOR.J_ROTOR,
-            B_fric    = MPC_MOTOR.B_FRICTION,
-            p         = float(MPC_MOTOR.P_POLES),
-            v_dc      = V_DC,
-        )
+    def __init__(self, name: str):
+        super().__init__(name=name, fmu_path=_FMU_PATH)
 
     def compute_py(self, t, dt, input_values=None):
         if   t < T_LOAD_T1: t_load = T_LOAD_ZERO
         elif t < T_LOAD_T2: t_load = T_LOAD_LIGHT
         else:                t_load = T_LOAD_HEAVY
 
-        ta = tb = tc = 0.5   # neutral — zero net voltage on all phases
+        # Duties read unconditionally — zero-vector states are legitimate
+        ta = tb = tc = 0.5
         if input_values and input_values[0] is not None:
             v = input_values[0].value
             if len(v) >= 3:
-                ta_in = float(v[0])
-                tb_in = float(v[1])
-                tc_in = float(v[2])
-                if ta_in != 0.0 or tb_in != 0.0 or tc_in != 0.0:
-                    ta, tb, tc = ta_in, tb_in, tc_in
+                ta, tb, tc = float(v[0]), float(v[1]), float(v[2])
 
-        aug = [VectorSignal(
-            np.array([ta, tb, tc, V_DC, t_load], dtype=DEFAULT_DTYPE))]
-        return super().compute_py(t, dt, aug)
+        # Pack FMU input bus: [duty_a, duty_b, duty_c, v_dc, T_load]
+        fmu_in = VectorSignal(
+            np.array([ta, tb, tc, V_DC, t_load], dtype=DEFAULT_DTYPE))
+        return super().compute_py(t, dt, [fmu_in])
 
     def compute(self, t, dt, input_values=None):
         return self.compute_py(t, dt, input_values)
@@ -189,10 +193,20 @@ class CtrlPacker(VectorBlock):
     Packs plant feedback into the MPC input bus.
     Defines named input fields for CodeGen (INPUT_NAMES → EmbedSim_Input_T).
 
-    Outputs: [omega_ref_mech, theta_m, ia, ib, ic]
+    Outputs: [omega_ref_mech, theta_m, ia, ib, ic, omega_m_meas]
       omega_ref_mech — rate-limited ramp [rad/s]
       theta_m        — unwrapped mechanical angle [rad]
       ia, ib, ic     — phase currents [A]
+      omega_m_meas   — mechanical speed from FMU rpm output [rad/s]
+
+    Note on theta_m unwrapping
+    --------------------------
+    The FMU integrates theta_e and outputs theta_m = theta_e / p, which wraps
+    every 2π/p mechanical radians (= π/2 rad for p=4).  The MPC Park transform
+    computes theta_e = p * theta_m — this must receive a continuously increasing
+    angle, not one that resets to 0 every π/2 rad.  A 2π unwrap is applied here
+    on the raw FMU theta_m before forwarding it to the controller, mirroring the
+    _last_theta_m_unwrapped pattern in smc_controller_block.py.
     """
 
     INPUT_NAMES       = ["omega_ref_mech", "theta_m", "ia", "ib", "ic"]
@@ -203,15 +217,17 @@ class CtrlPacker(VectorBlock):
 
     def __init__(self, name: str = "ctrl_packer", **kw):
         super().__init__(name, **kw)
-        self.output_label           = "[ω_ref,θ_m,ia,ib,ic]"
-        self._omega_ref_filt: float = 0.0
-        # Noise RNG — seeded once at construction for reproducibility.
-        # Only used when ENABLE_NOISE is True.
+        self.output_label            = "[ω_ref,θ_m,ia,ib,ic,ω_m]"
+        self._omega_ref_filt: float  = 0.0
+        self._theta_m_prev: float    = 0.0      # previous raw FMU theta_m
+        self._theta_m_unwrapped: float = 0.0    # continuously accumulating angle
         self._rng = np.random.default_rng(NOISE_SEED)
 
     def reset(self):
         super().reset()
-        self._omega_ref_filt = 0.0
+        self._omega_ref_filt    = 0.0
+        self._theta_m_prev      = 0.0
+        self._theta_m_unwrapped = 0.0
         self._rng = np.random.default_rng(NOISE_SEED)
 
     def compute_py(self, t, dt, input_values=None):
@@ -229,19 +245,26 @@ class CtrlPacker(VectorBlock):
             -max_step,
             min(max_step, omega_target - self._omega_ref_filt))
 
-        # theta_m at bus index [4] is already the continuous unwrapped
-        # mechanical angle from PMSM_Python_Plant (theta_e / p, never wraps).
-        theta_m = float(m[4]) if len(m) > 4 else 0.0
+        # FMU output bus: [rpm(0), ia(1), ib(2), ic(3), theta_m(4), T_em(5), ...]
+        # FMU theta_m = theta_e / p — wraps every 2π/p rad (π/2 rad for p=4).
+        # Unwrap to continuously accumulating angle for MPC Park transform.
+        theta_m_raw = float(m[4]) if len(m) > 4 else 0.0
+        delta = theta_m_raw - self._theta_m_prev
+        delta -= 2.0 * math.pi * math.floor(
+            (delta + math.pi) / (2.0 * math.pi))
+        self._theta_m_unwrapped += delta
+        self._theta_m_prev       = theta_m_raw
+        theta_m = self._theta_m_unwrapped
 
         ia = float(m[1]) if len(m) > 1 else 0.0
         ib = float(m[2]) if len(m) > 2 else 0.0
         ic = float(m[3]) if len(m) > 3 else 0.0
 
+        # Exact mechanical speed from FMU rpm[0] — zero lag.
+        rpm_val      = float(m[0]) if len(m) > 0 else 0.0
+        omega_m_meas = rpm_val * (2.0 * math.pi / 60.0)
+
         # ── Sensor noise injection ────────────────────────────────────────────
-        # Injected here (between plant and controller) — architecturally correct:
-        # the plant remains ideal; the controller sees what real ADC/encoder
-        # hardware would deliver.  The SMO running inside the controller then
-        # has the opportunity to filter this noise.
         if ENABLE_NOISE:
             ia      += float(self._rng.normal(0.0, NOISE_I_SIGMA))
             ib      += float(self._rng.normal(0.0, NOISE_I_SIGMA))
@@ -254,6 +277,7 @@ class CtrlPacker(VectorBlock):
             ia,
             ib,
             ic,
+            omega_m_meas,
         ], dtype=DEFAULT_DTYPE), self.name)
         return self.output
 
@@ -263,6 +287,57 @@ class CtrlPacker(VectorBlock):
 
 # =============================================================================
 # Build, simulate, generate code
+# =============================================================================
+# CodeGen-configured SVPWM subclasses
+# =============================================================================
+# C_CUSTOM_EMIT (and the other CodeGen class attributes) are declared as
+# read-only @property on the base classes.  They must be overridden at the
+# class level via subclassing — instance-level assignment raises AttributeError.
+# Pattern mirrors SMCControllerBlock.C_CUSTOM_EMIT in smc_controller_block.py.
+
+class DB42S02SVPWMPackBlock(SVPWMPackBlock):
+    """SVPWMPackBlock with DB42S02 / AURIX CodeGen metadata."""
+
+    C_SOURCES    = ["embed_sim_motor_utility_blocks.c"]
+    C_HEADERS    = ["embed_sim_motor_utility_blocks.h"]
+    state_struct = "SVPWMPack_T"
+    step_func    = "SVPWMPack_Step"
+    init_func    = "SVPWMPack_Init"
+    C_INIT_ARGS  = ["v_dc"]
+    C_CUSTOM_EMIT = (
+        "    /* --- svpwm_pack (SVPWMPackBlock) --- */\n"
+        "    {\n"
+        "        SVPWMPack_T  svpwm_pack_st;\n"
+        "        real32_T     y_svpwm_pack[3];\n"
+        "        real32_T     u_svpwm_pack[2];\n"
+        "        u_svpwm_pack[0] = y_mpc[0];   /* v_alpha */\n"
+        "        u_svpwm_pack[1] = y_mpc[1];   /* v_beta  */\n"
+        "        SVPWMPack_Init(&svpwm_pack_st, 17.0f);\n"
+        "        SVPWMPack_Step(&svpwm_pack_st, u_svpwm_pack, dt, y_svpwm_pack);\n"
+        "    }"
+    )
+
+
+class DB42S02SVPWMBlock(SVPWMBlock):
+    """SVPWMBlock with DB42S02 / AURIX CodeGen metadata."""
+
+    C_SOURCES    = ["embed_sim_sv_pwm.c"]
+    C_HEADERS    = ["embed_sim_sv_pwm.h"]
+    C_CUSTOM_EMIT = (
+        "    /* --- svpwm (SVPWMBlock) --- */\n"
+        "    {\n"
+        "        SVM_DutyCycle_Type  svm_duty;\n"
+        "        real32_T            y_svpwm[4];\n"
+        "        SVM_CalculateDutyCycle(y_svpwm_pack[0],\n"
+        "                               y_svpwm_pack[1],\n"
+        "                               &svm_duty);\n"
+        "        SVM_GetDutyCyclesFloat(&svm_duty,\n"
+        "                               &y_svpwm[0], &y_svpwm[1], &y_svpwm[2]);\n"
+        "        y_svpwm[3] = (real32_T)svm_duty.sector;\n"
+        "    }"
+    )
+
+
 # =============================================================================
 
 def build_and_run() -> dict:
@@ -313,61 +388,36 @@ def build_and_run() -> dict:
         use_c_backend = False,
     )
 
-    svpwm_pack = SVPWMPackBlock("svpwm_pack", v_dc=V_DC, use_c_backend=True)
-    svpwm_pack.C_SOURCES    = ["embed_sim_motor_utility_blocks.c"]
-    svpwm_pack.C_HEADERS    = ["embed_sim_motor_utility_blocks.h"]
-    svpwm_pack.state_struct  = "SVPWMPack_T"
-    svpwm_pack.step_func     = "SVPWMPack_Step"
-    svpwm_pack.init_func     = "SVPWMPack_Init"
-    svpwm_pack.C_INIT_ARGS   = ["v_dc"]
-    svpwm_pack.C_CUSTOM_EMIT = (
-        "    /* --- svpwm_pack (SVPWMPackBlock) --- */\n"
-        "    {\n"
-        "        SVPWMPack_T  svpwm_pack_st;\n"
-        "        real32_T     y_svpwm_pack[3];\n"
-        "        real32_T     u_svpwm_pack[2];\n"
-        "        u_svpwm_pack[0] = y_mpc[0];   /* v_alpha */\n"
-        "        u_svpwm_pack[1] = y_mpc[1];   /* v_beta  */\n"
-        "        SVPWMPack_Init(&svpwm_pack_st, 17.0f);\n"
-        "        SVPWMPack_Step(&svpwm_pack_st, u_svpwm_pack, dt, y_svpwm_pack);\n"
-        "    }"
-    )
-    svpwm = SVPWMBlock("svpwm", use_c_backend=True)
-    svpwm.C_SOURCES    = ["embed_sim_sv_pwm.c"]
-    svpwm.C_HEADERS    = ["embed_sim_sv_pwm.h"]
-    svpwm.C_CUSTOM_EMIT = (
-        "    /* --- svpwm (SVPWMBlock) --- */\n"
-        "    {\n"
-        "        SVM_DutyCycle_Type  svm_duty;\n"
-        "        real32_T            y_svpwm[4];\n"
-        "        SVM_CalculateDutyCycle(y_svpwm_pack[0],\n"
-        "                               y_svpwm_pack[1],\n"
-        "                               &svm_duty);\n"
-        "        SVM_GetDutyCyclesFloat(&svm_duty,\n"
-        "                               &y_svpwm[0], &y_svpwm[1], &y_svpwm[2]);\n"
-        "        y_svpwm[3] = (real32_T)svm_duty.sector;\n"
-        "    }"
-    )
+    svpwm_pack = DB42S02SVPWMPackBlock("svpwm_pack", v_dc=V_DC, use_c_backend=False)
+    svpwm      = DB42S02SVPWMBlock("svpwm", use_c_backend=False)
     cg_end     = CodeGenEnd("cg_end")
 
     # ── Simulation-only blocks ────────────────────────────────────────────────
-    speed_ref   = VectorStep("speed_ref", step_time=0.0,
-                              before_value=TARGET_RADS_MECH,
-                              after_value=TARGET_RADS_MECH)
-    load_torque = VectorConstant("load_torque", value=T_LOAD_ZERO)
-    motor       = DB42S02PlantBlock("motor")
-    motor_delay = VectorDelay("motor_delay", initial=[0.0] * _MOTOR_OUT_SIZE)
-    ctrl        = CtrlPacker("ctrl_packer")
-    sink        = VectorEnd("sink")
-    sink_cg     = VectorEnd("sink_cg")
+    speed_ref    = VectorStep("speed_ref", step_time=0.0,
+                               before_value=TARGET_RADS_MECH,
+                               after_value=TARGET_RADS_MECH)
+    motor        = DB42S02PlantBlock("motor")
+    motor_delay  = VectorDelay("motor_delay", initial=[0.0] * _MOTOR_OUT_SIZE)
+    ctrl         = CtrlPacker("ctrl_packer")
+    sink         = VectorEnd("sink")
+    sink_cg      = VectorEnd("sink_cg")
 
     # ── Wiring ────────────────────────────────────────────────────────────────
+    # CodeGen chain: ctrl → cg_start → mpc → svpwm_pack → svpwm → cg_end
     cg_start >> mpc >> svpwm_pack >> svpwm >> cg_end
-    motor >> motor_delay >> ctrl
+
+    # Plant receives duties directly from SVPWMBlock — not from cg_end.
+    # Pattern from db42s02_openloop_fmu.py: svpwm >> motor directly.
+    # cg_end is the CodeGen boundary only; routing through it adds a
+    # step delay and output repacking that corrupts the duty signals.
+    svpwm       >> motor
+
+    # Feedback path: plant output → 1-step delay → CtrlPacker → cg_start
+    motor       >> motor_delay
+    motor_delay >> ctrl
     speed_ref   >> ctrl
     ctrl        >> cg_start
-    cg_end      >> motor        # direct — plant guards against zero-fallback
-    load_torque >> motor
+
     motor       >> sink
     cg_end      >> sink_cg
 
@@ -381,21 +431,22 @@ def build_and_run() -> dict:
         str(_HERE / "db42s02_mpc_topology.html"),
         wire_labels={
             ("speed_ref",   "ctrl_packer"): "ω_ref [rad/s]",
-            ("motor",       "motor_delay"): "motor feedback",
+            ("motor",       "motor_delay"): "FMU feedback",
             ("motor_delay", "ctrl_packer"): "z⁻¹ feedback",
-            ("ctrl_packer", "cg_start"):    "[ω_ref,θ_m,ia,ib,ic]",
+            ("ctrl_packer", "cg_start"):    "[ω_ref,θ_m,ia,ib,ic,ω_m]",
             ("cg_start",    "mpc"):         "sensor inputs",
             ("mpc",         "svpwm_pack"):  "[v_α,v_β]",
             ("svpwm_pack",  "svpwm"):       "[Vref,α]",
             ("svpwm",       "cg_end"):      "[ta,tb,tc,sector]",
-            ("cg_end",      "motor"):       "PWM duties",
-            ("load_torque", "motor"):       "T_load [N·m]",
+            ("svpwm",       "motor"):       "[ta,tb,tc,sector]",
         })
 
     sim.scope.add(mpc,        indices=[0, 1],             label="Vab")
     sim.scope.add(svpwm_pack, indices=[0],                label="Vref")
     sim.scope.add(svpwm,      indices=[0, 1, 2, 3],       label="Duties")
-    sim.scope.add(motor,      indices=[0, 1, 2, 3, 5, 6, 7], label="Motor")
+    # FMU output bus: [0]=rpm [1]=ia [2]=ib [3]=ic [4]=theta_m
+    #                 [5]=T_em [6]=id_out [7]=iq_out
+    sim.scope.add(motor,      indices=[0, 5, 6, 7],       label="Motor")
 
     print("\nRunning simulation…")
     sim.run()
@@ -437,7 +488,7 @@ def build_and_run() -> dict:
 
     return {
         "t":             t,
-        "speed_rpm":     _m(0),
+        "speed_rpm":     _m(0),   # FMU rpm       (scope Motor pos 0)
         "omega_ref_rpm": _i("speed_ref"),
         "iq_ref":        _i("iq_ref"),
         "iq":            _i("iq"),
@@ -449,9 +500,9 @@ def build_and_run() -> dict:
         "tb":            _s("Duties", 1),
         "tc":            _s("Duties", 2),
         "sector":        _s("Duties", 3),
-        "torque":        _m(4),
-        "id_plant":      _m(5),
-        "iq_plant":      _m(6),
+        "torque":        _m(1),   # FMU T_em      (scope Motor pos 1)
+        "id_plant":      _m(2),   # FMU id_out    (scope Motor pos 2)
+        "iq_plant":      _m(3),   # FMU iq_out    (scope Motor pos 3)
     }
 
 
