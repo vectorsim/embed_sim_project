@@ -1,0 +1,4490 @@
+	; Module start
+	.compiler_version	"TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler v1.1r8 Build 22011964"
+	.compiler_invocation	"ctc -f cc4044a --dep-file=AppSw/PmsmFoc/ControlModules/embed_sim_smc_controller.d -c99 --fp-model=3cflnrSTz -D__CPU__=tc38x -D__CPU_TC38X__ --core=tc1.6.2 --fp-model=+float -D__CPU__=tc38x -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\Display -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\Display\\\\App -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\Display\\\\Configuration -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\Display\\\\Interrupts -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\Display\\\\MCUInit -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\OSTasks -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\OneEye -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\PmsmFoc -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\PmsmFoc\\\\Configuration -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\PmsmFoc\\\\Configuration\\\\Controller_card -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\PmsmFoc\\\\Configuration\\\\Inverter_card -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\PmsmFoc\\\\Configuration\\\\Motors -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\PmsmFoc\\\\ControlModules -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\PmsmFoc\\\\EmbedSim -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\PmsmFoc\\\\ExtDevInit -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\PmsmFoc\\\\Interrupts -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\PmsmFoc\\\\Libraries -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\PmsmFoc\\\\Libraries\\\\Math -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\PmsmFoc\\\\Libraries\\\\MotorDrive -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\PmsmFoc\\\\MCUInit -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\PmsmFoc\\\\MidSys -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Configurations -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\ExtDevDrivers -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\ExtDevDrivers\\\\TLE9180 -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\ExtDevDrivers\\\\TLE9180\\\\Tricore -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\ExtDevDrivers\\\\TLF35584 -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\ExtDevDrivers\\\\TLF35584\\\\Tricore -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Infra -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Infra\\\\Platform -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Infra\\\\Platform\\\\Tricore -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Infra\\\\Platform\\\\Tricore\\\\Compilers -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Infra\\\\Sfr -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Infra\\\\Sfr\\\\TC38A -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Infra\\\\Sfr\\\\TC38A\\\\_Reg -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Infra\\\\Ssw -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Infra\\\\Ssw\\\\TC38A -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Infra\\\\Ssw\\\\TC38A\\\\Tricore -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Service -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Service\\\\CpuGeneric -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Service\\\\CpuGeneric\\\\If -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Service\\\\CpuGeneric\\\\StdIf -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Service\\\\CpuGeneric\\\\SysSe -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Service\\\\CpuGeneric\\\\SysSe\\\\Bsp -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Service\\\\CpuGeneric\\\\SysSe\\\\Comm -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Service\\\\CpuGeneric\\\\SysSe\\\\Math -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Service\\\\CpuGeneric\\\\_Utilities -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Asclin -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Asclin\\\\Asc -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Asclin\\\\Std -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Cpu -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Cpu\\\\Irq -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Cpu\\\\Std -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Cpu\\\\Trap -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Dma -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Dma\\\\Dma -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Dma\\\\Std -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Edsadc -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Edsadc\\\\Edsadc -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Edsadc\\\\Std -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Evadc -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Evadc\\\\Adc -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Evadc\\\\Std -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Gpt12 -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Gpt12\\\\IncrEnc -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Gpt12\\\\Std -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Gtm -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Gtm\\\\Std -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Gtm\\\\Tom -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Gtm\\\\Tom\\\\PwmHl -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Gtm\\\\Tom\\\\Timer -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Gtm\\\\Trig -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Mtu -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Mtu\\\\Std -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Pms -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Pms\\\\Std -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Port -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Port\\\\Std -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Qspi -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Qspi\\\\SpiMaster -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Qspi\\\\Std -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Scu -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Scu\\\\Std -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Src -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Src\\\\Std -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Stm -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Stm\\\\Std -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\_Impl -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\_Lib -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\_Lib\\\\DataHandling -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\_PinMap -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\oneeye_lib -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\oneeye_lib\\\\arduino -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\oneeye_lib\\\\aurix -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\oneeye_lib\\\\aurix\\\\illd -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\oneeye_lib\\\\cy -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\oneeye_lib\\\\cy\\\\pdl -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\oneeye_lib\\\\xmc -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\oneeye_lib\\\\xmc\\\\xmcdaveapp -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\oneeye_lib\\\\xmc\\\\xmclib -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\OS -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\OS\\\\FreeRTOS -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\OS\\\\FreeRTOS\\\\include -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\OS\\\\FreeRTOS\\\\portable -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\OS\\\\FreeRTOS\\\\portable\\\\TriCore -g2 -w544 -w557 -t4 --language=+volatile -N0 -O0 -Y0 -Z0 --compact-max-size=200 --misrac-version=2012 -o AppSw/PmsmFoc/ControlModules/embed_sim_smc_controller.src ../AppSw/PmsmFoc/ControlModules/embed_sim_smc_controller.c"
+	.compiler_name		"ctc"
+	;source	'../AppSw/PmsmFoc/ControlModules/embed_sim_smc_controller.c'
+
+	
+$TC162
+	
+	.sdecl	'.text.embed_sim_smc_controller.SMC_Clamp',code,cluster('SMC_Clamp')
+	.sect	'.text.embed_sim_smc_controller.SMC_Clamp'
+	.align	2
+	
+; Function SMC_Clamp
+.L84:
+SMC_Clamp:	.type	func
+	cmp.f	d15,d4,d5
+	extr.u	d15,d15,#2,#1
+.L720:
+	jeq	d15,#0,.L2
+.L721:
+	mov	d4,d5
+.L722:
+	j	.L3
+.L2:
+	insn.t	d15,d5:31,d5:31
+.L723:
+	cmp.f	d15,d4,d15
+	extr.u	d15,d15,#0,#1
+.L724:
+	jeq	d15,#0,.L4
+.L725:
+	insn.t	d4,d5:31,d5:31
+.L726:
+	j	.L5
+.L4:
+.L5:
+.L3:
+	mov	d2,d4
+.L331:
+	j	.L6
+.L6:
+	ret
+.L234:
+	
+__SMC_Clamp_function_end:
+	.size	SMC_Clamp,__SMC_Clamp_function_end-SMC_Clamp
+.L143:
+	; End of function
+	
+	.sdecl	'.text.embed_sim_smc_controller.SMC_Sat',code,cluster('SMC_Sat')
+	.sect	'.text.embed_sim_smc_controller.SMC_Sat'
+	.align	2
+	
+; Function SMC_Sat
+.L86:
+SMC_Sat:	.type	func
+	mov	d15,#0
+.L731:
+	cmp.f	d15,d5,d15
+	and	d15,#3
+	ne	d15,d15,#0
+.L732:
+	jeq	d15,#0,.L7
+.L733:
+	mov	d15,#0
+.L734:
+	cmp.f	d15,d4,d15
+	extr.u	d15,d15,#2,#1
+.L735:
+	jeq	d15,#0,.L8
+.L736:
+	movh	d2,#16256
+.L332:
+	j	.L9
+.L8:
+	mov	d15,#0
+.L737:
+	cmp.f	d15,d4,d15
+	jnz.t	d15:0,.L10
+.L738:
+	mov	d2,#0
+.L333:
+	j	.L11
+.L10:
+	movh	d2,#49024
+.L11:
+.L9:
+	j	.L12
+.L7:
+	div.f	d2,d4,d5
+.L334:
+	movh	d15,#16256
+.L739:
+	cmp.f	d15,d2,d15
+	extr.u	d15,d15,#2,#1
+.L740:
+	jeq	d15,#0,.L13
+.L741:
+	movh	d2,#16256
+.L742:
+	j	.L14
+.L13:
+	movh	d15,#49024
+.L743:
+	cmp.f	d15,d2,d15
+	extr.u	d15,d15,#0,#1
+.L744:
+	jeq	d15,#0,.L15
+.L745:
+	movh	d2,#49024
+.L746:
+	j	.L16
+.L15:
+.L16:
+.L14:
+.L12:
+	j	.L17
+.L17:
+	ret
+.L240:
+	
+__SMC_Sat_function_end:
+	.size	SMC_Sat,__SMC_Sat_function_end-SMC_Sat
+.L148:
+	; End of function
+	
+	.sdecl	'.text.embed_sim_smc_controller.SMC_SpeedSMC',code,cluster('SMC_SpeedSMC')
+	.sect	'.text.embed_sim_smc_controller.SMC_SpeedSMC'
+	.align	2
+	
+; Function SMC_SpeedSMC
+.L88:
+SMC_SpeedSMC:	.type	func
+	mov.aa	a12,a4
+.L338:
+	mov	e8,d5,d4
+	mov.aa	a15,a5
+.L339:
+	movh	d10,#16672
+.L340:
+	ld.w	d15,[a15]4
+.L751:
+	mov.u	d0,#55050
+	addih	d0,d0,#15395
+.L752:
+	cmp.f	d15,d15,d0
+	jnz.t	d15:0,.L18
+.L753:
+	mov.u	d13,#55050
+	addih	d13,d13,#15395
+.L754:
+	j	.L19
+.L18:
+	ld.w	d13,[a15]4
+.L19:
+	ld.w	d0,[a12]
+.L755:
+	mov	d1,#21457
+	addih	d1,d1,#17019
+.L341:
+	madd.f	d11,d8,d0,d1
+.L342:
+	ld.w	d12,[a15]
+.L756:
+	ld.w	d5,[a15]8
+.L335:
+	mov	d4,d11
+.L336:
+	call	SMC_Sat
+.L337:
+	mul.f	d15,d13,d11
+.L757:
+	madd.f	d15,d15,d12,d2
+.L344:
+	insert	d15,d15,#0,#31,#1
+.L345:
+	ld.w	d0,[a12]64
+.L758:
+	cmp.f	d15,d15,d0
+	jnz.t	d15:0,.L20
+.L346:
+	st.w	[a12]8,d8
+.L347:
+	j	.L21
+.L20:
+	movh	d15,#16128
+.L348:
+	mul.f	d0,d9,d15
+.L349:
+	ld.w	d15,[a12]8
+.L350:
+	add.f	d15,d8,d15
+.L351:
+	ld.w	d1,[a12]
+.L759:
+	madd.f	d15,d1,d0,d15
+	st.w	[a12],d15
+.L352:
+	st.w	[a12]8,d8
+.L353:
+	ld.w	d4,[a12]
+.L760:
+	mov	d5,d10
+.L354:
+	call	SMC_Clamp
+.L355:
+	st.w	[a12],d2
+.L21:
+	ld.w	d15,[a12]
+.L761:
+	mov	d0,#21457
+	addih	d0,d0,#17019
+.L356:
+	madd.f	d15,d8,d15,d0
+.L343:
+	ld.w	d8,[a15]
+.L762:
+	ld.w	d5,[a15]8
+	mov	d4,d15
+.L358:
+	call	SMC_Sat
+.L359:
+	mul.f	d15,d13,d15
+.L357:
+	madd.f	d4,d15,d8,d2
+.L360:
+	mov	d5,#31457
+	addih	d5,d5,#16484
+	call	SMC_Clamp
+.L361:
+	j	.L22
+.L22:
+	ret
+.L246:
+	
+__SMC_SpeedSMC_function_end:
+	.size	SMC_SpeedSMC,__SMC_SpeedSMC_function_end-SMC_SpeedSMC
+.L153:
+	; End of function
+	
+	.sdecl	'.text.embed_sim_smc_controller.SMC_SMO_Step',code,cluster('SMC_SMO_Step')
+	.sect	'.text.embed_sim_smc_controller.SMC_SMO_Step'
+	.align	2
+	
+; Function SMC_SMO_Step
+.L90:
+SMC_SMO_Step:	.type	func
+	sub.a	a10,#8
+.L362:
+	mov.aa	a15,a4
+.L365:
+	mov	d8,d6
+.L366:
+	st.w	[a10]4,d7
+.L367:
+	ld.w	d9,[a10]8
+.L368:
+	mov.u	d10,#65535
+.L369:
+	addih	d10,d10,#17913
+.L791:
+	movh	d11,#16384
+.L370:
+	mov	d12,#4059
+.L371:
+	addih	d12,d12,#16585
+.L792:
+	mov	d13,#4059
+.L372:
+	addih	d13,d13,#16457
+.L793:
+	jnz.a	a15,.L23
+.L794:
+	j	.L24
+.L23:
+	mov	d15,#22908
+	addih	d15,d15,#17732
+.L795:
+	mul.f	d15,d9,d15
+.L796:
+	mov	d0,#22908
+	addih	d0,d0,#17732
+.L797:
+	movh	d1,#16256
+.L798:
+	madd.f	d0,d1,d9,d0
+.L799:
+	div.f	d15,d15,d0
+.L373:
+	st.w	[a10],d15
+.L375:
+	ld.w	d15,[a15]16
+.L374:
+	sub.f	d0,d4,d15
+.L376:
+	ld.w	d15,[a15]20
+.L800:
+	sub.f	d15,d5,d15
+.L377:
+	movh	d1,#17096
+.L801:
+	mul.f	d4,d0,d1
+.L363:
+	call	tanhf
+.L364:
+	mul.f	d14,d11,d2
+.L379:
+	movh	d0,#17096
+.L802:
+	mul.f	d4,d15,d0
+	call	tanhf
+.L803:
+	mul.f	d2,d11,d2
+.L380:
+	mul.f	d0,d9,d10
+.L804:
+	ld.w	d15,[a15]16
+.L378:
+	mov.u	d1,#36700
+	addih	d1,d1,#15938
+.L805:
+	msub.f	d15,d8,d15,d1
+.L806:
+	sub.f	d1,d15,d14
+.L807:
+	ld.w	d15,[a15]16
+.L808:
+	madd.f	d15,d15,d0,d1
+	st.w	[a15]16,d15
+.L809:
+	mul.f	d0,d9,d10
+.L810:
+	ld.w	d15,[a15]20
+.L811:
+	mov.u	d1,#36700
+	addih	d1,d1,#15938
+.L812:
+	ld.w	d3,[a10]4
+.L382:
+	msub.f	d15,d3,d15,d1
+.L813:
+	sub.f	d1,d15,d2
+.L814:
+	ld.w	d15,[a15]20
+.L815:
+	madd.f	d15,d15,d0,d1
+	st.w	[a15]20,d15
+.L816:
+	ld.w	d15,[a15]24
+.L817:
+	sub.f	d0,d14,d15
+.L818:
+	ld.w	d15,[a15]24
+.L819:
+	ld.w	d1,[a10]
+.L383:
+	madd.f	d15,d15,d1,d0
+	st.w	[a15]24,d15
+.L820:
+	ld.w	d15,[a15]28
+.L821:
+	sub.f	d0,d2,d15
+.L822:
+	ld.w	d15,[a15]28
+.L823:
+	madd.f	d15,d15,d1,d0
+	st.w	[a15]28,d15
+.L824:
+	ld.w	d15,[a15]24
+.L825:
+	insn.t	d4,d15:31,d15:31
+.L826:
+	ld.w	d5,[a15]28
+	call	atan2f
+.L381:
+	ld.w	d15,[a15]36
+.L827:
+	sub.f	d0,d2,d15
+.L384:
+	j	.L25
+.L26:
+	sub.f	d0,d0,d12
+.L25:
+	cmp.f	d15,d0,d13
+	jnz.t	d15:2,.L26
+.L828:
+	j	.L27
+.L28:
+	add.f	d0,d0,d12
+.L27:
+	insn.t	d15,d13:31,d13:31
+.L829:
+	cmp.f	d15,d0,d15
+	jnz.t	d15:0,.L28
+.L830:
+	mov	d15,#0
+.L831:
+	cmp.f	d15,d9,d15
+	extr.u	d15,d15,#2,#1
+.L832:
+	jeq	d15,#0,.L29
+.L833:
+	movh	d15,#16512
+.L834:
+	mul.f	d15,d9,d15
+.L835:
+	div.f	d15,d0,d15
+.L836:
+	st.w	[a15]40,d15
+.L837:
+	j	.L30
+.L29:
+.L30:
+	st.w	[a15]36,d2
+.L838:
+	st.w	[a15]32,d2
+.L24:
+	ret
+.L302:
+	
+__SMC_SMO_Step_function_end:
+	.size	SMC_SMO_Step,__SMC_SMO_Step_function_end-SMC_SMO_Step
+.L163:
+	; End of function
+	
+	.sdecl	'.text.embed_sim_smc_controller.SMC_CurrentSMC',code,cluster('SMC_CurrentSMC')
+	.sect	'.text.embed_sim_smc_controller.SMC_CurrentSMC'
+	.align	2
+	
+; Function SMC_CurrentSMC
+.L92:
+SMC_CurrentSMC:	.type	func
+	mov	d6,d4
+.L387:
+	ld.w	d15,[a10]4
+.L390:
+	mov.aa	a15,a5
+.L392:
+	mov.aa	a12,a6
+.L393:
+	mov.aa	a13,a7
+.L394:
+	jz.a	a4,.L31
+.L767:
+	jz.a	a12,.L32
+.L768:
+	jz.a	a13,.L33
+.L769:
+	jnz.a	a15,.L34
+.L33:
+.L32:
+.L31:
+	j	.L35
+.L34:
+	insn.t	d4,d6:31,d6:31
+.L386:
+	sub.f	d8,d7,d5
+.L291:
+	mov.u	d7,#61681
+.L389:
+	addih	d7,d7,#15856
+.L770:
+	mov.u	d0,#36700
+	addih	d0,d0,#15938
+.L771:
+	mul.f	d0,d6,d0
+.L772:
+	mov	d1,#4719
+	addih	d1,d1,#14595
+.L773:
+	mul.f	d1,d15,d1
+.L774:
+	msub.f	d0,d0,d1,d5
+.L395:
+	mov.u	d1,#36700
+	addih	d1,d1,#15938
+.L775:
+	mov	d2,#4719
+	addih	d2,d2,#14595
+.L776:
+	mov.u	d3,#32820
+	addih	d3,d3,#15031
+.L777:
+	madd.f	d2,d3,d6,d2
+.L778:
+	mul.f	d15,d15,d2
+.L391:
+	madd.f	d15,d15,d5,d1
+.L396:
+	mul.f	d9,d0,d7
+.L398:
+	mul.f	d10,d15,d7
+.L292:
+	ld.w	d15,[a15]12
+.L397:
+	ld.w	d5,[a15]16
+.L388:
+	call	SMC_Sat
+.L385:
+	madd.f	d11,d9,d15,d2
+.L400:
+	ld.w	d15,[a15]12
+.L779:
+	ld.w	d5,[a15]16
+	mov	d4,d8
+.L401:
+	call	SMC_Sat
+.L402:
+	madd.f	d8,d10,d15,d2
+.L299:
+	mov.u	d9,#52538
+.L399:
+	addih	d9,d9,#16275
+.L780:
+	mul.f	d15,d8,d8
+.L781:
+	madd.f	d4,d15,d11,d11
+	call	sqrtf
+.L403:
+	cmp.f	d15,d2,d9
+	extr.u	d15,d15,#2,#1
+.L782:
+	jeq	d15,#0,.L36
+.L783:
+	div.f	d15,d9,d2
+.L404:
+	mul.f	d11,d11,d15
+.L784:
+	mul.f	d8,d8,d15
+.L785:
+	j	.L37
+.L36:
+.L37:
+	st.w	[a12],d11
+.L786:
+	st.w	[a13],d8
+.L35:
+	ret
+.L262:
+	
+__SMC_CurrentSMC_function_end:
+	.size	SMC_CurrentSMC,__SMC_CurrentSMC_function_end-SMC_CurrentSMC
+.L158:
+	; End of function
+	
+	.sdecl	'.text.embed_sim_smc_controller.SMC_Controller_Init',code,cluster('SMC_Controller_Init')
+	.sect	'.text.embed_sim_smc_controller.SMC_Controller_Init'
+	.align	2
+	
+	.global	SMC_Controller_Init
+; Function SMC_Controller_Init
+.L94:
+SMC_Controller_Init:	.type	func
+	mov.aa	a15,a4
+.L407:
+	jz.a	a15,.L38
+.L465:
+	mov	d4,#0
+.L405:
+	mov	d5,#120
+	mov.aa	a4,a15
+	call	memset
+.L406:
+	lea	a4,[a15]84
+	call	Clarke_Init
+.L466:
+	lea	a4,[a15]88
+	call	Park_Init
+.L467:
+	lea	a4,[a15]92
+	call	InvPark_Init
+.L468:
+	mov	d15,#4719
+	addih	d15,d15,#14979
+.L469:
+	st.w	[a15]116,d15
+.L470:
+	mov	d15,#0
+.L471:
+	st.w	[a15]56,d15
+.L472:
+	mov	d15,#0
+.L473:
+	st.w	[a15]60,d15
+.L474:
+	mov	d15,#0
+.L475:
+	st.w	[a15]52,d15
+.L476:
+	mov	d15,#0
+.L477:
+	st.w	[a15]64,d15
+.L478:
+	movh.a	a15,#@his(g_smc_gains)
+.L408:
+	lea	a15,[a15]@los(g_smc_gains)
+.L479:
+	mov.u	d15,#49795
+	addih	d15,d15,#16561
+.L480:
+	st.w	[a15],d15
+.L481:
+	movh.a	a15,#@his(g_smc_gains)
+	lea	a15,[a15]@los(g_smc_gains)
+.L482:
+	mov	d15,#4719
+	addih	d15,d15,#14979
+.L483:
+	st.w	[a15]4,d15
+.L484:
+	movh.a	a15,#@his(g_smc_gains)
+	lea	a15,[a15]@los(g_smc_gains)
+.L485:
+	mov.u	d15,#32957
+	addih	d15,d15,#17291
+.L486:
+	st.w	[a15]8,d15
+.L487:
+	movh.a	a15,#@his(g_smc_gains)
+	lea	a15,[a15]@los(g_smc_gains)
+.L488:
+	mov.u	d15,#36574
+	addih	d15,d15,#15728
+.L489:
+	st.w	[a15]12,d15
+.L490:
+	movh.a	a15,#@his(g_smc_gains)
+	lea	a15,[a15]@los(g_smc_gains)
+.L491:
+	mov.u	d15,#65444
+	addih	d15,d15,#16013
+.L492:
+	st.w	[a15]16,d15
+.L493:
+	j	.L39
+.L38:
+.L39:
+	ret
+.L166:
+	
+__SMC_Controller_Init_function_end:
+	.size	SMC_Controller_Init,__SMC_Controller_Init_function_end-SMC_Controller_Init
+.L113:
+	; End of function
+	
+	.sdecl	'.text.embed_sim_smc_controller.SMC_Controller_Step',code,cluster('SMC_Controller_Step')
+	.sect	'.text.embed_sim_smc_controller.SMC_Controller_Step'
+	.align	2
+	
+	.global	SMC_Controller_Step
+; Function SMC_Controller_Step
+.L96:
+SMC_Controller_Step:	.type	func
+	sub.a	a10,#32
+.L409:
+	mov.aa	a15,a4
+.L414:
+	mov.aa	a12,a5
+.L415:
+	mov	d8,d4
+.L416:
+	mov.aa	a13,a6
+.L417:
+	mov	d9,#4059
+.L419:
+	addih	d9,d9,#16585
+.L498:
+	mov	d10,#4059
+.L421:
+	addih	d10,d10,#16457
+.L499:
+	jz.a	a15,.L40
+.L500:
+	jz.a	a12,.L41
+.L501:
+	jnz.a	a13,.L42
+.L41:
+.L40:
+	j	.L43
+.L42:
+	ld.w	d15,[a12]4
+.L502:
+	movh	d0,#16512
+.L503:
+	mul.f	d11,d15,d0
+.L422:
+	lea	a4,[a15]84
+.L411:
+	ld.w	d4,[a12]8
+.L410:
+	ld.w	d5,[a12]12
+.L504:
+	ld.w	d6,[a12]16
+.L505:
+	lea	a5,[a10]8
+.L412:
+	lea	a6,[a10]12
+.L413:
+	call	Clarke_Step
+.L506:
+	st.w	[a10],d8
+.L507:
+	ld.w	d4,[a10]8
+.L508:
+	ld.w	d5,[a10]12
+.L509:
+	ld.w	d6,[a15]44
+.L510:
+	ld.w	d7,[a15]48
+	mov.aa	a4,a15
+.L423:
+	call	SMC_SMO_Step
+.L424:
+	lea	a4,[a15]88
+.L511:
+	ld.w	d4,[a10]8
+.L512:
+	ld.w	d5,[a10]12
+.L513:
+	lea	a5,[a10]16
+.L514:
+	lea	a6,[a10]20
+	mov	d6,d11
+.L425:
+	call	Park_Step
+.L426:
+	mov	d15,#0
+.L515:
+	cmp.f	d15,d8,d15
+	extr.u	d15,d15,#2,#1
+.L516:
+	jeq	d15,#0,.L44
+.L197:
+	mov.u	d15,#60950
+.L427:
+	addih	d15,d15,#17925
+.L517:
+	mul.f	d0,d15,d8
+.L518:
+	movh	d1,#16256
+.L519:
+	madd.f	d15,d1,d15,d8
+.L428:
+	div.f	d0,d0,d15
+.L429:
+	ld.w	d15,[a12]4
+.L520:
+	ld.w	d1,[a15]56
+.L521:
+	sub.f	d15,d15,d1
+.L431:
+	j	.L45
+.L46:
+	sub.f	d15,d15,d9
+.L45:
+	cmp.f	d1,d15,d10
+	jnz.t	d1:2,.L46
+.L522:
+	j	.L47
+.L48:
+	add.f	d15,d15,d9
+.L47:
+	insn.t	d1,d10:31,d10:31
+.L523:
+	cmp.f	d1,d15,d1
+	jnz.t	d1:0,.L48
+.L524:
+	div.f	d1,d15,d8
+.L433:
+	movh	d15,#16256
+.L432:
+	sub.f	d2,d15,d0
+.L525:
+	ld.w	d15,[a15]60
+.L526:
+	mul.f	d0,d0,d1
+.L430:
+	madd.f	d15,d0,d2,d15
+.L527:
+	st.w	[a15]60,d15
+.L198:
+	j	.L49
+.L44:
+.L49:
+	ld.w	d15,[a12]4
+.L528:
+	st.w	[a15]56,d15
+.L529:
+	ld.w	d15,[a15]60
+.L530:
+	st.w	[a15]52,d15
+.L531:
+	ld.w	d15,[a15]52
+.L532:
+	movh	d0,#16512
+.L533:
+	mul.f	d9,d15,d0
+.L420:
+	ld.w	d0,[a15]64
+.L534:
+	mov	d1,#31457
+	addih	d1,d1,#16484
+.L535:
+	cmp.f	d0,d0,d1
+	extr.u	d15,d0,#0,#1
+.L536:
+	jeq	d15,#0,.L50
+.L537:
+	ld.w	d0,[a15]64
+.L538:
+	mov	d15,#31457
+	addih	d15,d15,#16484
+.L539:
+	mul.f	d15,d8,d15
+.L540:
+	mov.u	d1,#52429
+	addih	d1,d1,#15692
+.L541:
+	div.f	d15,d15,d1
+.L542:
+	add.f	d15,d0,d15
+	st.w	[a15]64,d15
+.L543:
+	ld.w	d15,[a15]64
+.L544:
+	mov	d0,#31457
+	addih	d0,d0,#16484
+.L545:
+	cmp.f	d15,d15,d0
+	extr.u	d15,d15,#2,#1
+.L546:
+	jeq	d15,#0,.L51
+.L547:
+	mov	d15,#31457
+	addih	d15,d15,#16484
+.L548:
+	st.w	[a15]64,d15
+.L549:
+	j	.L52
+.L51:
+.L52:
+	j	.L53
+.L50:
+.L53:
+	ld.w	d0,[a12]
+.L550:
+	ld.w	d15,[a15]52
+.L551:
+	sub.f	d4,d0,d15
+.L434:
+	movh.a	a5,#@his(g_smc_gains)
+	lea	a5,[a5]@los(g_smc_gains)
+	mov.aa	a4,a15
+.L436:
+	mov	d5,d8
+.L437:
+	call	SMC_SpeedSMC
+.L435:
+	ld.w	d5,[a15]64
+	mov	d4,d2
+.L439:
+	call	SMC_Clamp
+.L440:
+	st.w	[a15]68,d2
+.L552:
+	mov	d15,#0
+.L553:
+	st.w	[a15]72,d15
+.L554:
+	st.w	[a10],d11
+.L555:
+	st.w	[a10]4,d9
+.L556:
+	ld.w	d4,[a10]16
+.L557:
+	ld.w	d5,[a10]20
+.L558:
+	mov	d6,#0
+.L559:
+	movh.a	a5,#@his(g_smc_gains)
+	lea	a5,[a5]@los(g_smc_gains)
+.L560:
+	lea	a6,[a10]24
+.L561:
+	lea	a7,[a10]28
+	mov.aa	a4,a15
+.L441:
+	mov	d7,d2
+.L442:
+	call	SMC_CurrentSMC
+.L438:
+	ld.w	d15,[a10]24
+.L562:
+	st.w	[a15]76,d15
+.L563:
+	ld.w	d15,[a10]28
+.L564:
+	st.w	[a15]80,d15
+.L565:
+	lea	a4,[a15]92
+.L566:
+	ld.w	d4,[a10]24
+.L567:
+	ld.w	d5,[a10]28
+.L568:
+	mov.aa	a6,a13
+.L443:
+	add.a	a6,#4
+.L418:
+	mov	d6,d11
+.L445:
+	mov.aa	a5,a13
+.L446:
+	call	InvPark_Step
+.L444:
+	ld.w	d15,[a13]
+.L447:
+	movh	d0,#16648
+.L569:
+	mul.f	d15,d15,d0
+.L570:
+	st.w	[a15]44,d15
+.L448:
+	ld.w	d15,[a13]4
+.L449:
+	movh	d0,#16648
+.L571:
+	mul.f	d15,d15,d0
+.L572:
+	st.w	[a15]48,d15
+.L573:
+	mov	d15,#0
+.L574:
+	cmp.f	d15,d8,d15
+	extr.u	d15,d15,#2,#1
+.L575:
+	jeq	d15,#0,.L54
+.L576:
+	ld.w	d15,[a15]112
+.L577:
+	add	d15,#1
+	st.w	[a15]112,d15
+.L578:
+	ld.w	d15,[a15]112
+.L579:
+	utof	d15,d15
+.L580:
+	mul.f	d15,d15,d8
+.L581:
+	ld.w	d0,[a15]116
+.L582:
+	cmp.f	d15,d15,d0
+	and	d15,#6
+	ne	d15,d15,#0
+.L583:
+	jeq	d15,#0,.L55
+.L584:
+	ld.w	d15,[a15]52
+.L585:
+	st.w	[a15]96,d15
+.L586:
+	ld.w	d15,[a12]
+.L587:
+	st.w	[a15]100,d15
+.L588:
+	ld.w	d15,[a10]20
+.L589:
+	st.w	[a15]104,d15
+.L590:
+	ld.w	d15,[a10]16
+.L591:
+	st.w	[a15]108,d15
+.L592:
+	ld.w	d15,[a15]116
+.L593:
+	mov	d0,#4719
+	addih	d0,d0,#14979
+.L594:
+	add.f	d15,d15,d0
+	st.w	[a15]116,d15
+.L595:
+	j	.L56
+.L55:
+.L56:
+	j	.L57
+.L54:
+.L57:
+.L43:
+	ret
+.L171:
+	
+__SMC_Controller_Step_function_end:
+	.size	SMC_Controller_Step,__SMC_Controller_Step_function_end-SMC_Controller_Step
+.L118:
+	; End of function
+	
+	.sdecl	'.text.embed_sim_smc_controller.SMC_Controller_Reset',code,cluster('SMC_Controller_Reset')
+	.sect	'.text.embed_sim_smc_controller.SMC_Controller_Reset'
+	.align	2
+	
+	.global	SMC_Controller_Reset
+; Function SMC_Controller_Reset
+.L98:
+SMC_Controller_Reset:	.type	func
+	jz.a	a4,.L58
+.L600:
+	mov	d4,#0
+	call	SMC_Controller_Init
+.L450:
+	j	.L59
+.L58:
+.L59:
+	ret
+.L203:
+	
+__SMC_Controller_Reset_function_end:
+	.size	SMC_Controller_Reset,__SMC_Controller_Reset_function_end-SMC_Controller_Reset
+.L123:
+	; End of function
+	
+	.sdecl	'.text.embed_sim_smc_controller.SMC_Controller_GetDiagnostics',code,cluster('SMC_Controller_GetDiagnostics')
+	.sect	'.text.embed_sim_smc_controller.SMC_Controller_GetDiagnostics'
+	.align	2
+	
+	.global	SMC_Controller_GetDiagnostics
+; Function SMC_Controller_GetDiagnostics
+.L100:
+SMC_Controller_GetDiagnostics:	.type	func
+	ld.a	a15,[a10]
+.L451:
+	jz.a	a4,.L60
+.L605:
+	jz.a	a5,.L61
+.L606:
+	jz.a	a6,.L62
+.L607:
+	jz.a	a7,.L63
+.L608:
+	jz.a	a15,.L64
+.L609:
+	ld.w	d15,[a4]96
+.L610:
+	st.w	[a5],d15
+.L611:
+	ld.w	d15,[a4]100
+.L612:
+	st.w	[a6],d15
+.L613:
+	ld.w	d15,[a4]104
+.L614:
+	st.w	[a7],d15
+.L615:
+	ld.w	d15,[a4]108
+.L616:
+	st.w	[a15],d15
+.L617:
+	j	.L65
+.L64:
+.L63:
+.L62:
+.L61:
+.L60:
+.L65:
+	ret
+.L206:
+	
+__SMC_Controller_GetDiagnostics_function_end:
+	.size	SMC_Controller_GetDiagnostics,__SMC_Controller_GetDiagnostics_function_end-SMC_Controller_GetDiagnostics
+.L128:
+	; End of function
+	
+	.sdecl	'.text.embed_sim_smc_controller.SMC_GainSet_SetFromSchedule',code,cluster('SMC_GainSet_SetFromSchedule')
+	.sect	'.text.embed_sim_smc_controller.SMC_GainSet_SetFromSchedule'
+	.align	2
+	
+	.global	SMC_GainSet_SetFromSchedule
+; Function SMC_GainSet_SetFromSchedule
+.L102:
+SMC_GainSet_SetFromSchedule:	.type	func
+	jz.a	a4,.L66
+.L622:
+	movh.a	a15,#@his(g_smc_gains)
+	lea	a15,[a15]@los(g_smc_gains)
+.L623:
+	ld.w	d15,[a4]
+.L624:
+	st.w	[a15],d15
+.L625:
+	movh.a	a15,#@his(g_smc_gains)
+	lea	a15,[a15]@los(g_smc_gains)
+.L626:
+	ld.w	d15,[a4]4
+.L627:
+	st.w	[a15]4,d15
+.L628:
+	movh.a	a15,#@his(g_smc_gains)
+	lea	a15,[a15]@los(g_smc_gains)
+.L629:
+	ld.w	d15,[a4]8
+.L630:
+	st.w	[a15]8,d15
+.L631:
+	movh.a	a15,#@his(g_smc_gains)
+	lea	a15,[a15]@los(g_smc_gains)
+.L632:
+	ld.w	d15,[a4]12
+.L633:
+	st.w	[a15]12,d15
+.L634:
+	movh.a	a15,#@his(g_smc_gains)
+	lea	a15,[a15]@los(g_smc_gains)
+.L635:
+	ld.w	d15,[a4]16
+.L636:
+	st.w	[a15]16,d15
+.L637:
+	j	.L67
+.L66:
+.L67:
+	ret
+.L217:
+	
+__SMC_GainSet_SetFromSchedule_function_end:
+	.size	SMC_GainSet_SetFromSchedule,__SMC_GainSet_SetFromSchedule_function_end-SMC_GainSet_SetFromSchedule
+.L133:
+	; End of function
+	
+	.sdecl	'.text.embed_sim_smc_controller.SMC_GainSchedule_Interpolate',code,cluster('SMC_GainSchedule_Interpolate')
+	.sect	'.text.embed_sim_smc_controller.SMC_GainSchedule_Interpolate'
+	.align	2
+	
+	.global	SMC_GainSchedule_Interpolate
+; Function SMC_GainSchedule_Interpolate
+.L104:
+SMC_GainSchedule_Interpolate:	.type	func
+	jz.a	a4,.L68
+.L642:
+	jz.a	a5,.L69
+.L643:
+	jne	d5,#0,.L70
+.L69:
+.L68:
+	j	.L71
+.L70:
+	ld.w	d0,[a4]
+.L644:
+	cmp.f	d15,d4,d0
+	and	d15,#3
+	ne	d15,d15,#0
+.L645:
+	jeq	d15,#0,.L72
+.L646:
+	lea	a15,[a4]4
+.L647:
+	lea	a2,[a5]0
+	mov.a	a4,#4
+.L73:
+	ld.w	d15,[a15+]
+	st.w	[a2+],d15
+	loop	a4,.L73
+.L648:
+	j	.L74
+.L72:
+	add	d15,d5,#-1
+.L649:
+	mul	d15,d15,#24
+	addsc.a	a15,a4,d15,#0
+.L650:
+	ld.w	d0,[a15]
+.L651:
+	cmp.f	d15,d4,d0
+	and	d15,#6
+	ne	d15,d15,#0
+.L652:
+	jeq	d15,#0,.L75
+.L653:
+	add	d15,d5,#-1
+.L654:
+	mul	d15,d15,#24
+	addsc.a	a15,a4,d15,#0
+.L655:
+	lea	a15,[a15]4
+.L656:
+	lea	a2,[a5]0
+	mov.a	a4,#4
+.L76:
+	ld.w	d15,[a15+]
+	st.w	[a2+],d15
+	loop	a4,.L76
+.L657:
+	j	.L77
+.L75:
+	mov	d3,#0
+.L452:
+	j	.L78
+.L79:
+	mul	d15,d3,#24
+	addsc.a	a15,a4,d15,#0
+.L658:
+	ld.w	d0,[a15]
+.L453:
+	add	d15,d3,#1
+.L659:
+	mul	d15,d15,#24
+	addsc.a	a15,a4,d15,#0
+.L660:
+	ld.w	d1,[a15]
+.L455:
+	cmp.f	d15,d4,d0
+	and	d15,#6
+	ne	d2,d15,#0
+.L661:
+	jeq	d2,#0,.L80
+.L662:
+	cmp.f	d2,d4,d1
+	extr.u	d2,d2,#0,#1
+	jeq	d2,#0,.L81
+.L663:
+	sub.f	d2,d4,d0
+.L664:
+	sub.f	d0,d1,d0
+.L454:
+	div.f	d1,d2,d0
+.L456:
+	add	d15,d3,#1
+.L665:
+	mul	d15,d15,#24
+	addsc.a	a15,a4,d15,#0
+.L666:
+	ld.w	d0,[a15]4
+.L667:
+	mul	d15,d3,#24
+	addsc.a	a15,a4,d15,#0
+.L668:
+	ld.w	d15,[a15]4
+.L669:
+	sub.f	d0,d0,d15
+.L670:
+	mul	d15,d3,#24
+	addsc.a	a15,a4,d15,#0
+.L671:
+	ld.w	d15,[a15]4
+.L672:
+	madd.f	d15,d15,d1,d0
+.L673:
+	st.w	[a5],d15
+.L674:
+	add	d15,d3,#1
+.L675:
+	mul	d15,d15,#24
+	addsc.a	a15,a4,d15,#0
+.L676:
+	ld.w	d0,[a15]8
+.L677:
+	mul	d15,d3,#24
+	addsc.a	a15,a4,d15,#0
+.L678:
+	ld.w	d15,[a15]8
+.L679:
+	sub.f	d0,d0,d15
+.L680:
+	mul	d15,d3,#24
+	addsc.a	a15,a4,d15,#0
+.L681:
+	ld.w	d15,[a15]8
+.L682:
+	madd.f	d15,d15,d1,d0
+.L683:
+	st.w	[a5]4,d15
+.L684:
+	add	d15,d3,#1
+.L685:
+	mul	d15,d15,#24
+	addsc.a	a15,a4,d15,#0
+.L686:
+	ld.w	d0,[a15]12
+.L687:
+	mul	d15,d3,#24
+	addsc.a	a15,a4,d15,#0
+.L688:
+	ld.w	d15,[a15]12
+.L689:
+	sub.f	d0,d0,d15
+.L690:
+	mul	d15,d3,#24
+	addsc.a	a15,a4,d15,#0
+.L691:
+	ld.w	d15,[a15]12
+.L692:
+	madd.f	d15,d15,d1,d0
+.L693:
+	st.w	[a5]8,d15
+.L694:
+	add	d15,d3,#1
+.L695:
+	mul	d15,d15,#24
+	addsc.a	a15,a4,d15,#0
+.L696:
+	ld.w	d0,[a15]16
+.L697:
+	mul	d15,d3,#24
+	addsc.a	a15,a4,d15,#0
+.L698:
+	ld.w	d15,[a15]16
+.L699:
+	sub.f	d0,d0,d15
+.L700:
+	mul	d15,d3,#24
+	addsc.a	a15,a4,d15,#0
+.L701:
+	ld.w	d15,[a15]16
+.L702:
+	madd.f	d15,d15,d1,d0
+.L703:
+	st.w	[a5]12,d15
+.L704:
+	add	d15,d3,#1
+.L705:
+	mul	d15,d15,#24
+	addsc.a	a15,a4,d15,#0
+.L706:
+	ld.w	d0,[a15]20
+.L707:
+	mul	d15,d3,#24
+	addsc.a	a15,a4,d15,#0
+.L708:
+	ld.w	d15,[a15]20
+.L709:
+	sub.f	d0,d0,d15
+.L710:
+	mul	d15,d3,#24
+	addsc.a	a15,a4,d15,#0
+.L711:
+	ld.w	d15,[a15]20
+.L712:
+	madd.f	d15,d15,d1,d0
+.L713:
+	st.w	[a5]16,d15
+.L714:
+	j	.L82
+.L81:
+.L80:
+	add	d3,#1
+.L78:
+	add	d15,d5,#-1
+.L715:
+	jlt.u	d3,d15,.L79
+.L82:
+.L77:
+.L74:
+.L71:
+	ret
+.L220:
+	
+__SMC_GainSchedule_Interpolate_function_end:
+	.size	SMC_GainSchedule_Interpolate,__SMC_GainSchedule_Interpolate_function_end-SMC_GainSchedule_Interpolate
+.L138:
+	; End of function
+	
+	.sdecl	'.bss.embed_sim_smc_controller.g_smc_gains',data,cluster('g_smc_gains')
+	.sect	'.bss.embed_sim_smc_controller.g_smc_gains'
+	.global	g_smc_gains
+	.align	4
+g_smc_gains:	.type	object
+	.size	g_smc_gains,20
+	.space	20
+	.calls	'SMC_SpeedSMC','SMC_Sat'
+	.calls	'SMC_SpeedSMC','SMC_Clamp'
+	.calls	'SMC_SMO_Step','tanhf'
+	.calls	'SMC_SMO_Step','atan2f'
+	.calls	'SMC_CurrentSMC','SMC_Sat'
+	.calls	'SMC_CurrentSMC','sqrtf'
+	.calls	'SMC_Controller_Init','memset'
+	.calls	'SMC_Controller_Init','Clarke_Init'
+	.calls	'SMC_Controller_Init','Park_Init'
+	.calls	'SMC_Controller_Init','InvPark_Init'
+	.calls	'SMC_Controller_Step','Clarke_Step'
+	.calls	'SMC_Controller_Step','SMC_SMO_Step'
+	.calls	'SMC_Controller_Step','Park_Step'
+	.calls	'SMC_Controller_Step','SMC_SpeedSMC'
+	.calls	'SMC_Controller_Step','SMC_Clamp'
+	.calls	'SMC_Controller_Step','SMC_CurrentSMC'
+	.calls	'SMC_Controller_Step','InvPark_Step'
+	.calls	'SMC_Controller_Reset','SMC_Controller_Init'
+	.calls	'SMC_Clamp','',0
+	.calls	'SMC_Sat','',0
+	.calls	'SMC_SpeedSMC','',0
+	.calls	'SMC_SMO_Step','',8
+	.calls	'SMC_CurrentSMC','',0
+	.calls	'SMC_Controller_Init','',0
+	.calls	'SMC_Controller_Step','',32
+	.calls	'SMC_Controller_Reset','',0
+	.calls	'SMC_Controller_GetDiagnostics','',0
+	.calls	'SMC_GainSet_SetFromSchedule','',0
+	.extern	Clarke_Init
+	.extern	Clarke_Step
+	.extern	Park_Init
+	.extern	Park_Step
+	.extern	InvPark_Init
+	.extern	InvPark_Step
+	.extern	atan2f
+	.extern	tanhf
+	.extern	sqrtf
+	.extern	memset
+	.calls	'SMC_GainSchedule_Interpolate','',0
+	.sdecl	'.debug_info',debug
+	.sect	'.debug_info'
+.L106:
+	.word	2502
+	.half	3
+	.word	.L107
+	.byte	4
+.L105:
+	.byte	1
+	.byte	'../AppSw/PmsmFoc/ControlModules/embed_sim_smc_controller.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Aurix_EmbedSim\\AURIX_TC3x_Motor_Control_SDK\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L108
+.L180:
+	.byte	2
+	.byte	'float',0,4,4,3
+	.byte	'__fabsf',0
+	.word	226
+	.byte	1,1,1,1,4
+	.byte	'f',0
+	.word	226
+	.byte	0,5,1,61,9,4,6
+	.byte	'dummy',0
+	.word	226
+	.byte	4,2,35,0,0,7
+	.word	260
+	.byte	8
+	.word	281
+	.byte	9
+	.byte	'Clarke_Init',0,1,121,13,1,1,1,1,10
+	.byte	's',0,1,121,42
+	.word	286
+	.byte	0,8
+	.word	281
+	.byte	7
+	.word	226
+	.byte	8
+	.word	327
+	.byte	8
+	.word	327
+	.byte	9
+	.byte	'Clarke_Step',0,1,139,1,13,1,1,1,1,10
+	.byte	's',0,1,140,1,28
+	.word	322
+	.byte	10
+	.byte	'ia',0,1,141,1,28
+	.word	226
+	.byte	10
+	.byte	'ib',0,1,142,1,28
+	.word	226
+	.byte	10
+	.byte	'ic',0,1,143,1,28
+	.word	226
+	.byte	10
+	.byte	'alpha_out',0,1,144,1,28
+	.word	332
+	.byte	10
+	.byte	'beta_out',0,1,145,1,28
+	.word	337
+	.byte	0,5,1,72,9,4,6
+	.byte	'dummy',0
+	.word	226
+	.byte	4,2,35,0,0,7
+	.word	448
+	.byte	8
+	.word	469
+	.byte	9
+	.byte	'Park_Init',0,1,158,1,13,1,1,1,1,10
+	.byte	's',0,1,158,1,38
+	.word	474
+	.byte	0,8
+	.word	469
+	.byte	8
+	.word	327
+	.byte	8
+	.word	327
+	.byte	9
+	.byte	'Park_Step',0,1,176,1,13,1,1,1,1,10
+	.byte	's',0,1,177,1,28
+	.word	510
+	.byte	10
+	.byte	'alpha',0,1,178,1,28
+	.word	226
+	.byte	10
+	.byte	'beta',0,1,179,1,28
+	.word	226
+	.byte	10
+	.byte	'theta',0,1,180,1,28
+	.word	226
+	.byte	10
+	.byte	'd_out',0,1,181,1,28
+	.word	515
+	.byte	10
+	.byte	'q_out',0,1,182,1,28
+	.word	520
+	.byte	0,5,1,83,9,4,6
+	.byte	'dummy',0
+	.word	226
+	.byte	4,2,35,0,0,7
+	.word	630
+	.byte	8
+	.word	651
+	.byte	9
+	.byte	'InvPark_Init',0,1,195,1,13,1,1,1,1,10
+	.byte	's',0,1,195,1,44
+	.word	656
+	.byte	0,8
+	.word	651
+	.byte	8
+	.word	327
+	.byte	8
+	.word	327
+	.byte	9
+	.byte	'InvPark_Step',0,1,213,1,13,1,1,1,1,10
+	.byte	's',0,1,214,1,28
+	.word	695
+	.byte	10
+	.byte	'd',0,1,215,1,28
+	.word	226
+	.byte	10
+	.byte	'q',0,1,216,1,28
+	.word	226
+	.byte	10
+	.byte	'theta',0,1,217,1,28
+	.word	226
+	.byte	10
+	.byte	'alpha_out',0,1,218,1,28
+	.word	700
+	.byte	10
+	.byte	'beta_out',0,1,219,1,28
+	.word	705
+	.byte	0
+.L229:
+	.byte	2
+	.byte	'unsigned int',0,4,7,5,2,159,2,9,120,6
+	.byte	'int_spd',0
+	.word	226
+	.byte	4,2,35,0,6
+	.byte	'int2_spd',0
+	.word	226
+	.byte	4,2,35,4,6
+	.byte	'e_prev',0
+	.word	226
+	.byte	4,2,35,8,6
+	.byte	'int_spd_prev',0
+	.word	226
+	.byte	4,2,35,12,6
+	.byte	'i_alpha_hat',0
+	.word	226
+	.byte	4,2,35,16,6
+	.byte	'i_beta_hat',0
+	.word	226
+	.byte	4,2,35,20,6
+	.byte	'e_alpha_filt',0
+	.word	226
+	.byte	4,2,35,24,6
+	.byte	'e_beta_filt',0
+	.word	226
+	.byte	4,2,35,28,6
+	.byte	'theta_e_hat',0
+	.word	226
+	.byte	4,2,35,32,6
+	.byte	'theta_e_hat_prev',0
+	.word	226
+	.byte	4,2,35,36,6
+	.byte	'omega_m_hat',0
+	.word	226
+	.byte	4,2,35,40,6
+	.byte	'v_alpha_prev',0
+	.word	226
+	.byte	4,2,35,44,6
+	.byte	'v_beta_prev',0
+	.word	226
+	.byte	4,2,35,48,6
+	.byte	'omega_m',0
+	.word	226
+	.byte	4,2,35,52,6
+	.byte	'theta_m_prev',0
+	.word	226
+	.byte	4,2,35,56,6
+	.byte	'omega_m_filt',0
+	.word	226
+	.byte	4,2,35,60,6
+	.byte	'iq_limit',0
+	.word	226
+	.byte	4,2,35,64,6
+	.byte	'iq_ref',0
+	.word	226
+	.byte	4,2,35,68,6
+	.byte	'id_ref',0
+	.word	226
+	.byte	4,2,35,72,6
+	.byte	'vd',0
+	.word	226
+	.byte	4,2,35,76,6
+	.byte	'vq',0
+	.word	226
+	.byte	4,2,35,80,6
+	.byte	'clarke_state',0
+	.word	260
+	.byte	4,2,35,84,6
+	.byte	'park_state',0
+	.word	448
+	.byte	4,2,35,88,6
+	.byte	'inv_park_state',0
+	.word	630
+	.byte	4,2,35,92,6
+	.byte	'log_speed',0
+	.word	226
+	.byte	4,2,35,96,6
+	.byte	'log_speed_ref',0
+	.word	226
+	.byte	4,2,35,100,6
+	.byte	'log_iq_meas',0
+	.word	226
+	.byte	4,2,35,104,6
+	.byte	'log_id_meas',0
+	.word	226
+	.byte	4,2,35,108,6
+	.byte	'log_counter',0
+	.word	818
+	.byte	4,2,35,112,6
+	.byte	'log_next_time',0
+	.word	226
+	.byte	4,2,35,116,0,7
+	.word	834
+.L167:
+	.byte	8
+	.word	1438
+.L169:
+	.byte	8
+	.word	226
+.L172:
+	.byte	8
+	.word	1438
+	.byte	5,2,247,1,9,20,6
+	.byte	'omega_ref_mech',0
+	.word	226
+	.byte	4,2,35,0,6
+	.byte	'theta_m',0
+	.word	226
+	.byte	4,2,35,4,6
+	.byte	'ia',0
+	.word	226
+	.byte	4,2,35,8,6
+	.byte	'ib',0
+	.word	226
+	.byte	4,2,35,12,6
+	.byte	'ic',0
+	.word	226
+	.byte	4,2,35,16,0,8
+	.word	1458
+	.byte	7
+	.word	1542
+.L174:
+	.byte	8
+	.word	1547
+.L176:
+	.byte	8
+	.word	226
+	.byte	5,2,143,2,9,8,6
+	.byte	'v_alpha',0
+	.word	226
+	.byte	4,2,35,0,6
+	.byte	'v_beta',0
+	.word	226
+	.byte	4,2,35,4,0,7
+	.word	1562
+.L178:
+	.byte	8
+	.word	1602
+.L193:
+	.byte	8
+	.word	226
+.L195:
+	.byte	8
+	.word	226
+.L199:
+	.byte	8
+	.word	226
+.L201:
+	.byte	8
+	.word	226
+.L204:
+	.byte	8
+	.word	1438
+	.byte	8
+	.word	834
+	.byte	7
+	.word	1637
+.L207:
+	.byte	8
+	.word	1642
+.L209:
+	.byte	8
+	.word	327
+.L211:
+	.byte	8
+	.word	327
+.L213:
+	.byte	8
+	.word	327
+.L215:
+	.byte	8
+	.word	327
+.L330:
+	.byte	5,2,211,1,9,20,6
+	.byte	'ks_w',0
+	.word	226
+	.byte	4,2,35,0,6
+	.byte	'eta_w',0
+	.word	226
+	.byte	4,2,35,4,6
+	.byte	'phi_w',0
+	.word	226
+	.byte	4,2,35,8,6
+	.byte	'ks_i',0
+	.word	226
+	.byte	4,2,35,12,6
+	.byte	'phi_i',0
+	.word	226
+	.byte	4,2,35,16,0,8
+	.word	1672
+	.byte	7
+	.word	1752
+.L218:
+	.byte	8
+	.word	1757
+.L221:
+	.byte	8
+	.word	226
+	.byte	5,2,236,1,9,24,6
+	.byte	'rpm',0
+	.word	226
+	.byte	4,2,35,0,6
+	.byte	'gains',0
+	.word	1672
+	.byte	20,2,35,4,0,8
+	.word	1772
+	.byte	7
+	.word	1807
+.L223:
+	.byte	8
+	.word	1812
+.L225:
+	.byte	8
+	.word	818
+	.byte	7
+	.word	1672
+.L227:
+	.byte	8
+	.word	1827
+	.byte	11
+	.byte	'atan2f',0,3,107,25
+	.word	226
+	.byte	1,1,1,1,12,3,107,43
+	.word	226
+	.byte	12,3,107,50
+	.word	226
+	.byte	0,11
+	.byte	'tanhf',0,3,116,25
+	.word	226
+	.byte	1,1,1,1,12,3,116,43
+	.word	226
+	.byte	0,11
+	.byte	'sqrtf',0,3,187,1,25
+	.word	226
+	.byte	1,1,1,1,12,3,187,1,43
+	.word	226
+	.byte	0,13
+	.byte	'void',0,7
+	.word	1929
+	.byte	2
+	.byte	'int',0,4,5,11
+	.byte	'memset',0,4,56,17
+	.word	1935
+	.byte	1,1,1,1,12,4,56,33
+	.word	1935
+	.byte	12,4,56,36
+	.word	1940
+	.byte	12,4,56,41
+	.word	818
+	.byte	0
+.L235:
+	.byte	8
+	.word	226
+.L237:
+	.byte	8
+	.word	226
+.L241:
+	.byte	8
+	.word	226
+.L243:
+	.byte	8
+	.word	226
+.L247:
+	.byte	8
+	.word	1438
+.L249:
+	.byte	8
+	.word	226
+.L251:
+	.byte	8
+	.word	226
+.L253:
+	.byte	8
+	.word	1757
+.L258:
+	.byte	8
+	.word	226
+.L260:
+	.byte	8
+	.word	226
+.L263:
+	.byte	8
+	.word	1438
+.L265:
+	.byte	8
+	.word	226
+.L267:
+	.byte	8
+	.word	226
+.L269:
+	.byte	8
+	.word	226
+.L271:
+	.byte	8
+	.word	226
+.L273:
+	.byte	8
+	.word	226
+.L275:
+	.byte	8
+	.word	226
+.L277:
+	.byte	8
+	.word	1757
+.L279:
+	.byte	8
+	.word	327
+.L281:
+	.byte	8
+	.word	327
+.L293:
+	.byte	8
+	.word	226
+.L295:
+	.byte	8
+	.word	226
+.L297:
+	.byte	8
+	.word	226
+.L300:
+	.byte	8
+	.word	226
+.L303:
+	.byte	8
+	.word	1438
+.L305:
+	.byte	8
+	.word	226
+.L307:
+	.byte	8
+	.word	226
+.L309:
+	.byte	8
+	.word	226
+.L311:
+	.byte	8
+	.word	226
+.L313:
+	.byte	8
+	.word	226
+.L322:
+	.byte	8
+	.word	226
+.L324:
+	.byte	8
+	.word	226
+.L326:
+	.byte	8
+	.word	226
+.L328:
+	.byte	8
+	.word	226
+	.byte	14
+	.byte	'__size_t',0,5,1,1
+	.word	818
+	.byte	15,1,7
+	.word	2178
+	.byte	14
+	.byte	'__codeptr',0,5,1,1
+	.word	2180
+	.byte	14
+	.byte	'int32_T',0,6,44,28
+	.word	1940
+	.byte	14
+	.byte	'uint32_T',0,6,45,28
+	.word	818
+	.byte	14
+	.byte	'real32_T',0,6,52,28
+	.word	226
+	.byte	2
+	.byte	'char',0,1,6,14
+	.byte	'char_T',0,6,65,28
+	.word	2253
+	.byte	14
+	.byte	'MatrixElement',0,7,63,17
+	.word	1940
+	.byte	14
+	.byte	'MatrixFloat',0,7,71,18
+	.word	226
+	.byte	14
+	.byte	'Clarke_T',0,1,64,3
+	.word	260
+	.byte	14
+	.byte	'Park_T',0,1,75,3
+	.word	448
+	.byte	14
+	.byte	'InvPark_T',0,1,86,3
+	.word	630
+	.byte	14
+	.byte	'SMC_GainSet_T',0,2,218,1,3
+	.word	1672
+	.byte	14
+	.byte	'SMC_GainTableEntry_T',0,2,240,1,3
+	.word	1772
+	.byte	14
+	.byte	'SMC_Input_T',0,2,254,1,3
+	.word	1458
+	.byte	14
+	.byte	'SMC_Output_T',0,2,147,2,3
+	.word	1562
+	.byte	14
+	.byte	'SMC_Controller_T',0,2,212,2,3
+	.word	834
+	.byte	14
+	.byte	'size_t',0,4,29,25
+	.word	818
+	.byte	0
+	.sdecl	'.debug_abbrev',debug
+	.sect	'.debug_abbrev'
+.L107:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,16,6,0,0,2,36,0,3,8,11,15,62,15,0,0,3,46,1,3,8,73,19,54,15,39,12
+	.byte	63,12,60,12,0,0,4,5,0,3,8,73,19,0,0,5,19,1,58,15,59,15,57,15,11,15,0,0,6,13,0,3,8,73,19,11,15,56,9,0,0
+	.byte	7,15,0,73,19,0,0,8,38,0,73,19,0,0,9,46,1,3,8,58,15,59,15,57,15,54,15,39,12,63,12,60,12,0,0,10,5,0,3,8
+	.byte	58,15,59,15,57,15,73,19,0,0,11,46,1,3,8,58,15,59,15,57,15,73,19,54,15,39,12,63,12,60,12,0,0,12,5,0,58
+	.byte	15,59,15,57,15,73,19,0,0,13,59,0,3,8,0,0,14,22,0,3,8,58,15,59,15,57,15,73,19,0,0,15,21,0,54,15,0,0,0
+	.sdecl	'.debug_line',debug
+	.sect	'.debug_line'
+.L108:
+	.word	.L458-.L457
+.L457:
+	.half	3
+	.word	.L460-.L459
+.L459:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1
+	.byte	'C:\\Infineon\\AURIX-Studio-1.10.28\\tools\\Compilers\\Tasking_1.1r8\\ctc\\include\\',0,0
+	.byte	'..\\AppSw\\PmsmFoc\\ControlModules\\embed_sim_coordinate_transform.h',0,0,0,0
+	.byte	'..\\AppSw\\PmsmFoc\\ControlModules\\embed_sim_smc_controller.h',0,0,0,0
+	.byte	'math.h',0,1,0,0
+	.byte	'string.h',0,1,0,0
+	.byte	'../AppSw/PmsmFoc/ControlModules/embed_sim_smc_controller.c',0,0,0,0
+	.byte	'..\\AppSw\\PmsmFoc\\ControlModules\\embed_sim_sys_types.h',0,0,0,0
+	.byte	'..\\AppSw\\PmsmFoc\\ControlModules\\embed_sim_matrix.h',0,0,0,0,0
+.L460:
+.L458:
+	.sdecl	'.debug_info',debug,cluster('SMC_Controller_Init')
+	.sect	'.debug_info'
+.L109:
+	.word	313
+	.half	3
+	.word	.L110
+	.byte	4,1
+	.byte	'../AppSw/PmsmFoc/ControlModules/embed_sim_smc_controller.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Aurix_EmbedSim\\AURIX_TC3x_Motor_Control_SDK\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L112,.L111
+	.byte	2
+	.word	.L105
+	.byte	3
+	.byte	'SMC_Controller_Init',0,1,185,4,6,1,1,1
+	.word	.L94,.L166,.L93
+	.byte	4
+	.byte	's',0,1,185,4,51
+	.word	.L167,.L168
+	.byte	4
+	.byte	'dt',0,1,185,4,72
+	.word	.L169,.L170
+	.byte	5
+	.word	.L94,.L166
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('SMC_Controller_Init')
+	.sect	'.debug_abbrev'
+.L110:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('SMC_Controller_Init')
+	.sect	'.debug_line'
+.L111:
+	.word	.L462-.L461
+.L461:
+	.half	3
+	.word	.L464-.L463
+.L463:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../AppSw/PmsmFoc/ControlModules/embed_sim_smc_controller.c',0,0,0,0,0
+.L464:
+	.byte	5,6,7,0,5,2
+	.word	.L94
+	.byte	3,184,4,1,5,5,9
+	.half	.L407-.L94
+	.byte	3,2,1,5,25,7,9
+	.half	.L465-.L407
+	.byte	3,2,1,5,28,9
+	.half	.L405-.L465
+	.byte	1,5,23,9
+	.half	.L406-.L405
+	.byte	3,8,1,5,21,9
+	.half	.L466-.L406
+	.byte	3,1,1,5,24,9
+	.half	.L467-.L466
+	.byte	3,1,1,5,28,9
+	.half	.L468-.L467
+	.byte	3,2,1,5,26,9
+	.half	.L469-.L468
+	.byte	1,5,28,9
+	.half	.L470-.L469
+	.byte	3,1,1,5,26,9
+	.half	.L471-.L470
+	.byte	1,5,28,9
+	.half	.L472-.L471
+	.byte	3,1,1,5,26,9
+	.half	.L473-.L472
+	.byte	1,5,28,9
+	.half	.L474-.L473
+	.byte	3,1,1,5,26,9
+	.half	.L475-.L474
+	.byte	1,5,28,9
+	.half	.L476-.L475
+	.byte	3,1,1,5,26,9
+	.half	.L477-.L476
+	.byte	1,5,9,9
+	.half	.L478-.L477
+	.byte	3,9,1,5,29,9
+	.half	.L479-.L478
+	.byte	1,5,27,9
+	.half	.L480-.L479
+	.byte	1,5,9,9
+	.half	.L481-.L480
+	.byte	3,1,1,5,29,9
+	.half	.L482-.L481
+	.byte	1,5,27,9
+	.half	.L483-.L482
+	.byte	1,5,9,9
+	.half	.L484-.L483
+	.byte	3,1,1,5,29,9
+	.half	.L485-.L484
+	.byte	1,5,27,9
+	.half	.L486-.L485
+	.byte	1,5,9,9
+	.half	.L487-.L486
+	.byte	3,1,1,5,29,9
+	.half	.L488-.L487
+	.byte	1,5,27,9
+	.half	.L489-.L488
+	.byte	1,5,9,9
+	.half	.L490-.L489
+	.byte	3,1,1,5,29,9
+	.half	.L491-.L490
+	.byte	1,5,27,9
+	.half	.L492-.L491
+	.byte	1,5,53,9
+	.half	.L493-.L492
+	.byte	3,99,1,5,1,9
+	.half	.L39-.L493
+	.byte	3,37,1,7,9
+	.half	.L113-.L39
+	.byte	0,1,1
+.L462:
+	.sdecl	'.debug_ranges',debug,cluster('SMC_Controller_Init')
+	.sect	'.debug_ranges'
+.L112:
+	.word	-1,.L94,0,.L113-.L94,0,0
+	.sdecl	'.debug_info',debug,cluster('SMC_Controller_Step')
+	.sect	'.debug_info'
+.L114:
+	.word	671
+	.half	3
+	.word	.L115
+	.byte	4,1
+	.byte	'../AppSw/PmsmFoc/ControlModules/embed_sim_smc_controller.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Aurix_EmbedSim\\AURIX_TC3x_Motor_Control_SDK\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L117,.L116
+	.byte	2
+	.word	.L105
+	.byte	3
+	.byte	'SMC_Controller_Step',0,1,232,4,6,1,1,1
+	.word	.L96,.L171,.L95
+	.byte	4
+	.byte	's',0,1,233,4,31
+	.word	.L172,.L173
+	.byte	4
+	.byte	'u',0,1,234,4,31
+	.word	.L174,.L175
+	.byte	4
+	.byte	'dt',0,1,235,4,31
+	.word	.L176,.L177
+	.byte	4
+	.byte	'y',0,1,236,4,31
+	.word	.L178,.L179
+	.byte	5
+	.word	.L96,.L171
+	.byte	6
+	.byte	'theta_e',0,1,238,4,17
+	.word	.L180,.L181
+	.byte	6
+	.byte	'omega_e',0,1,239,4,17
+	.word	.L180,.L182
+	.byte	6
+	.byte	'i_alpha',0,1,240,4,17
+	.word	.L180,.L183
+	.byte	6
+	.byte	'i_beta',0,1,241,4,17
+	.word	.L180,.L184
+	.byte	6
+	.byte	'id_meas',0,1,242,4,17
+	.word	.L180,.L185
+	.byte	6
+	.byte	'iq_meas',0,1,243,4,17
+	.word	.L180,.L186
+	.byte	6
+	.byte	'e_w',0,1,244,4,17
+	.word	.L180,.L187
+	.byte	6
+	.byte	'iq_ref',0,1,245,4,17
+	.word	.L180,.L188
+	.byte	6
+	.byte	'delta',0,1,246,4,17
+	.word	.L180,.L189
+	.byte	6
+	.byte	'omega_raw',0,1,247,4,17
+	.word	.L180,.L190
+	.byte	6
+	.byte	'vd',0,1,248,4,17
+	.word	.L180,.L191
+	.byte	6
+	.byte	'vq',0,1,249,4,17
+	.word	.L180,.L192
+	.byte	6
+	.byte	'two_pi',0,1,250,4,23
+	.word	.L193,.L194
+	.byte	6
+	.byte	'pi_f',0,1,251,4,23
+	.word	.L195,.L196
+	.byte	5
+	.word	.L197,.L198
+	.byte	6
+	.byte	'wc_spd',0,1,157,5,27
+	.word	.L199,.L200
+	.byte	6
+	.byte	'alpha_spd',0,1,158,5,27
+	.word	.L201,.L202
+	.byte	0,0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('SMC_Controller_Step')
+	.sect	'.debug_abbrev'
+.L115:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0,0,6,52,0,3
+	.byte	8,58,15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('SMC_Controller_Step')
+	.sect	'.debug_line'
+.L116:
+	.word	.L495-.L494
+.L494:
+	.half	3
+	.word	.L497-.L496
+.L496:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../AppSw/PmsmFoc/ControlModules/embed_sim_smc_controller.c',0,0,0,0,0
+.L497:
+	.byte	5,6,7,0,5,2
+	.word	.L96
+	.byte	3,231,4,1,5,45,9
+	.half	.L417-.L96
+	.byte	3,18,1,9
+	.half	.L498-.L417
+	.byte	3,1,1,5,9,9
+	.half	.L499-.L498
+	.byte	3,3,1,5,27,7,9
+	.half	.L500-.L499
+	.byte	1,5,42,7,9
+	.half	.L501-.L500
+	.byte	1,5,9,7,9
+	.half	.L40-.L501
+	.byte	3,2,1,5,43,9
+	.half	.L42-.L40
+	.byte	3,4,1,5,15,9
+	.half	.L502-.L42
+	.byte	1,5,43,9
+	.half	.L503-.L502
+	.byte	1,5,19,9
+	.half	.L422-.L503
+	.byte	3,4,1,5,18,9
+	.half	.L411-.L422
+	.byte	3,1,1,5,25,9
+	.half	.L410-.L411
+	.byte	1,5,32,9
+	.half	.L504-.L410
+	.byte	1,5,18,9
+	.half	.L505-.L504
+	.byte	3,1,1,5,28,9
+	.half	.L412-.L505
+	.byte	1,5,18,9
+	.half	.L506-.L412
+	.byte	3,6,1,9
+	.half	.L507-.L506
+	.byte	3,126,1,5,27,9
+	.half	.L508-.L507
+	.byte	1,5,19,9
+	.half	.L509-.L508
+	.byte	3,1,1,5,36,9
+	.half	.L510-.L509
+	.byte	1,5,17,9
+	.half	.L424-.L510
+	.byte	3,4,1,5,15,9
+	.half	.L511-.L424
+	.byte	3,1,1,5,24,9
+	.half	.L512-.L511
+	.byte	1,5,16,9
+	.half	.L513-.L512
+	.byte	3,1,1,5,26,9
+	.half	.L514-.L513
+	.byte	1,5,14,9
+	.half	.L426-.L514
+	.byte	3,3,1,5,12,9
+	.half	.L515-.L426
+	.byte	1,5,5,9
+	.half	.L516-.L515
+	.byte	1,5,70,7,9
+	.half	.L197-.L516
+	.byte	3,5,1,5,47,9
+	.half	.L517-.L197
+	.byte	3,1,1,5,56,9
+	.half	.L518-.L517
+	.byte	1,5,66,9
+	.half	.L519-.L518
+	.byte	1,5,53,9
+	.half	.L428-.L519
+	.byte	1,5,18,9
+	.half	.L429-.L428
+	.byte	3,2,1,5,31,9
+	.half	.L520-.L429
+	.byte	1,5,28,9
+	.half	.L521-.L520
+	.byte	1,5,29,9
+	.half	.L431-.L521
+	.byte	3,2,1,5,39,9
+	.half	.L46-.L431
+	.byte	1,5,29,9
+	.half	.L45-.L46
+	.byte	1,9
+	.half	.L522-.L45
+	.byte	3,1,1,5,39,9
+	.half	.L48-.L522
+	.byte	1,5,24,9
+	.half	.L47-.L48
+	.byte	1,5,29,9
+	.half	.L523-.L47
+	.byte	1,5,33,9
+	.half	.L524-.L523
+	.byte	3,1,1,5,29,9
+	.half	.L433-.L524
+	.byte	3,1,1,5,39,9
+	.half	.L432-.L433
+	.byte	1,5,55,9
+	.half	.L525-.L432
+	.byte	1,5,38,9
+	.half	.L526-.L525
+	.byte	3,1,1,5,25,9
+	.half	.L430-.L526
+	.byte	1,9
+	.half	.L527-.L430
+	.byte	3,127,1,5,37,9
+	.half	.L198-.L527
+	.byte	3,127,1,5,24,9
+	.half	.L49-.L198
+	.byte	3,8,1,5,21,9
+	.half	.L528-.L49
+	.byte	1,5,24,9
+	.half	.L529-.L528
+	.byte	3,1,1,5,21,9
+	.half	.L530-.L529
+	.byte	1,5,51,9
+	.half	.L531-.L530
+	.byte	3,1,1,5,23,9
+	.half	.L532-.L531
+	.byte	1,5,51,9
+	.half	.L533-.L532
+	.byte	1,5,10,9
+	.half	.L420-.L533
+	.byte	3,3,1,5,23,9
+	.half	.L534-.L420
+	.byte	1,5,21,9
+	.half	.L535-.L534
+	.byte	1,5,5,9
+	.half	.L536-.L535
+	.byte	1,5,10,7,9
+	.half	.L537-.L536
+	.byte	3,2,1,5,24,9
+	.half	.L538-.L537
+	.byte	1,5,34,9
+	.half	.L539-.L538
+	.byte	1,5,41,9
+	.half	.L540-.L539
+	.byte	1,5,39,9
+	.half	.L541-.L540
+	.byte	1,5,21,9
+	.half	.L542-.L541
+	.byte	1,5,14,9
+	.half	.L543-.L542
+	.byte	3,1,1,5,27,9
+	.half	.L544-.L543
+	.byte	1,5,25,9
+	.half	.L545-.L544
+	.byte	1,5,9,9
+	.half	.L546-.L545
+	.byte	1,5,27,7,9
+	.half	.L547-.L546
+	.byte	3,2,1,5,25,9
+	.half	.L548-.L547
+	.byte	1,5,36,9
+	.half	.L549-.L548
+	.byte	1,5,9,9
+	.half	.L52-.L549
+	.byte	3,2,1,5,15,9
+	.half	.L53-.L52
+	.byte	3,11,1,5,35,9
+	.half	.L550-.L53
+	.byte	1,5,32,9
+	.half	.L551-.L550
+	.byte	1,5,40,9
+	.half	.L434-.L551
+	.byte	3,1,1,5,33,9
+	.half	.L435-.L434
+	.byte	3,3,1,5,15,9
+	.half	.L440-.L435
+	.byte	3,2,1,5,17,9
+	.half	.L552-.L440
+	.byte	3,1,1,5,15,9
+	.half	.L553-.L552
+	.byte	1,5,20,9
+	.half	.L554-.L553
+	.byte	3,6,1,5,29,9
+	.half	.L555-.L554
+	.byte	1,5,20,9
+	.half	.L556-.L555
+	.byte	3,126,1,5,29,9
+	.half	.L557-.L556
+	.byte	1,5,21,9
+	.half	.L558-.L557
+	.byte	3,1,1,9
+	.half	.L559-.L558
+	.byte	3,2,1,9
+	.half	.L560-.L559
+	.byte	3,1,1,5,26,9
+	.half	.L561-.L560
+	.byte	1,5,13,9
+	.half	.L438-.L561
+	.byte	3,2,1,5,11,9
+	.half	.L562-.L438
+	.byte	1,5,13,9
+	.half	.L563-.L562
+	.byte	3,1,1,5,11,9
+	.half	.L564-.L563
+	.byte	1,5,20,9
+	.half	.L565-.L564
+	.byte	3,6,1,5,18,9
+	.half	.L566-.L565
+	.byte	3,1,1,5,22,9
+	.half	.L567-.L566
+	.byte	1,5,33,9
+	.half	.L568-.L567
+	.byte	3,1,1,5,24,9
+	.half	.L444-.L568
+	.byte	3,12,1,5,36,9
+	.half	.L447-.L444
+	.byte	1,5,34,9
+	.half	.L569-.L447
+	.byte	1,5,21,9
+	.half	.L570-.L569
+	.byte	1,5,24,9
+	.half	.L448-.L570
+	.byte	3,1,1,5,36,9
+	.half	.L449-.L448
+	.byte	1,5,34,9
+	.half	.L571-.L449
+	.byte	1,5,21,9
+	.half	.L572-.L571
+	.byte	1,5,14,9
+	.half	.L573-.L572
+	.byte	3,3,1,5,12,9
+	.half	.L574-.L573
+	.byte	1,5,5,9
+	.half	.L575-.L574
+	.byte	1,5,10,7,9
+	.half	.L576-.L575
+	.byte	3,2,1,5,23,9
+	.half	.L577-.L576
+	.byte	1,5,28,9
+	.half	.L578-.L577
+	.byte	3,2,1,5,14,9
+	.half	.L579-.L578
+	.byte	1,5,42,9
+	.half	.L580-.L579
+	.byte	1,5,52,9
+	.half	.L581-.L580
+	.byte	1,5,48,9
+	.half	.L582-.L581
+	.byte	1,5,9,9
+	.half	.L583-.L582
+	.byte	1,5,33,7,9
+	.half	.L584-.L583
+	.byte	3,2,1,5,30,9
+	.half	.L585-.L584
+	.byte	1,5,33,9
+	.half	.L586-.L585
+	.byte	3,1,1,5,30,9
+	.half	.L587-.L586
+	.byte	1,5,32,9
+	.half	.L588-.L587
+	.byte	3,1,1,5,30,9
+	.half	.L589-.L588
+	.byte	1,5,32,9
+	.half	.L590-.L589
+	.byte	3,1,1,5,30,9
+	.half	.L591-.L590
+	.byte	1,5,14,9
+	.half	.L592-.L591
+	.byte	3,1,1,5,33,9
+	.half	.L593-.L592
+	.byte	1,5,30,9
+	.half	.L594-.L593
+	.byte	1,5,42,9
+	.half	.L595-.L594
+	.byte	3,124,1,5,9,9
+	.half	.L56-.L595
+	.byte	3,6,1,5,1,9
+	.half	.L43-.L56
+	.byte	3,9,1,7,9
+	.half	.L118-.L43
+	.byte	0,1,1
+.L495:
+	.sdecl	'.debug_ranges',debug,cluster('SMC_Controller_Step')
+	.sect	'.debug_ranges'
+.L117:
+	.word	-1,.L96,0,.L118-.L96,0,0
+	.sdecl	'.debug_info',debug,cluster('SMC_Controller_Reset')
+	.sect	'.debug_info'
+.L119:
+	.word	298
+	.half	3
+	.word	.L120
+	.byte	4,1
+	.byte	'../AppSw/PmsmFoc/ControlModules/embed_sim_smc_controller.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Aurix_EmbedSim\\AURIX_TC3x_Motor_Control_SDK\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L122,.L121
+	.byte	2
+	.word	.L105
+	.byte	3
+	.byte	'SMC_Controller_Reset',0,1,136,6,6,1,1,1
+	.word	.L98,.L203,.L97
+	.byte	4
+	.byte	's',0,1,136,6,52
+	.word	.L204,.L205
+	.byte	5
+	.word	.L98,.L203
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('SMC_Controller_Reset')
+	.sect	'.debug_abbrev'
+.L120:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('SMC_Controller_Reset')
+	.sect	'.debug_line'
+.L121:
+	.word	.L597-.L596
+.L596:
+	.half	3
+	.word	.L599-.L598
+.L598:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../AppSw/PmsmFoc/ControlModules/embed_sim_smc_controller.c',0,0,0,0,0
+.L599:
+	.byte	5,5,7,0,5,2
+	.word	.L98
+	.byte	3,137,6,1,5,32,7,9
+	.half	.L600-.L98
+	.byte	3,2,1,5,43,9
+	.half	.L450-.L600
+	.byte	1,5,1,9
+	.half	.L59-.L450
+	.byte	3,6,1,7,9
+	.half	.L123-.L59
+	.byte	0,1,1
+.L597:
+	.sdecl	'.debug_ranges',debug,cluster('SMC_Controller_Reset')
+	.sect	'.debug_ranges'
+.L122:
+	.word	-1,.L98,0,.L123-.L98,0,0
+	.sdecl	'.debug_info',debug,cluster('SMC_Controller_GetDiagnostics')
+	.sect	'.debug_info'
+.L124:
+	.word	381
+	.half	3
+	.word	.L125
+	.byte	4,1
+	.byte	'../AppSw/PmsmFoc/ControlModules/embed_sim_smc_controller.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Aurix_EmbedSim\\AURIX_TC3x_Motor_Control_SDK\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L127,.L126
+	.byte	2
+	.word	.L105
+	.byte	3
+	.byte	'SMC_Controller_GetDiagnostics',0,1,152,6,6,1,1,1
+	.word	.L100,.L206,.L99
+	.byte	4
+	.byte	's',0,1,153,6,36
+	.word	.L207,.L208
+	.byte	4
+	.byte	'speed',0,1,154,6,36
+	.word	.L209,.L210
+	.byte	4
+	.byte	'speed_ref',0,1,155,6,36
+	.word	.L211,.L212
+	.byte	4
+	.byte	'iq',0,1,156,6,36
+	.word	.L213,.L214
+	.byte	4
+	.byte	'id',0,1,157,6,36
+	.word	.L215,.L216
+	.byte	5
+	.word	.L100,.L206
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('SMC_Controller_GetDiagnostics')
+	.sect	'.debug_abbrev'
+.L125:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('SMC_Controller_GetDiagnostics')
+	.sect	'.debug_line'
+.L126:
+	.word	.L602-.L601
+.L601:
+	.half	3
+	.word	.L604-.L603
+.L603:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../AppSw/PmsmFoc/ControlModules/embed_sim_smc_controller.c',0,0,0,0,0
+.L604:
+	.byte	5,6,7,0,5,2
+	.word	.L100
+	.byte	3,151,6,1,5,9,9
+	.half	.L451-.L100
+	.byte	3,7,1,5,20,7,9
+	.half	.L605-.L451
+	.byte	3,1,1,7,9
+	.half	.L606-.L605
+	.byte	3,1,1,7,9
+	.half	.L607-.L606
+	.byte	3,1,1,7,9
+	.half	.L608-.L607
+	.byte	3,1,1,5,23,7,9
+	.half	.L609-.L608
+	.byte	3,2,1,5,20,9
+	.half	.L610-.L609
+	.byte	1,5,23,9
+	.half	.L611-.L610
+	.byte	3,1,1,5,20,9
+	.half	.L612-.L611
+	.byte	1,5,23,9
+	.half	.L613-.L612
+	.byte	3,1,1,5,20,9
+	.half	.L614-.L613
+	.byte	1,5,23,9
+	.half	.L615-.L614
+	.byte	3,1,1,5,20,9
+	.half	.L616-.L615
+	.byte	1,5,34,9
+	.half	.L617-.L616
+	.byte	3,125,1,5,1,9
+	.half	.L65-.L617
+	.byte	3,9,1,7,9
+	.half	.L128-.L65
+	.byte	0,1,1
+.L602:
+	.sdecl	'.debug_ranges',debug,cluster('SMC_Controller_GetDiagnostics')
+	.sect	'.debug_ranges'
+.L127:
+	.word	-1,.L100,0,.L128-.L100,0,0
+	.sdecl	'.debug_info',debug,cluster('SMC_GainSet_SetFromSchedule')
+	.sect	'.debug_info'
+.L129:
+	.word	307
+	.half	3
+	.word	.L130
+	.byte	4,1
+	.byte	'../AppSw/PmsmFoc/ControlModules/embed_sim_smc_controller.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Aurix_EmbedSim\\AURIX_TC3x_Motor_Control_SDK\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L132,.L131
+	.byte	2
+	.word	.L105
+	.byte	3
+	.byte	'SMC_GainSet_SetFromSchedule',0,1,184,6,6,1,1,1
+	.word	.L102,.L217,.L101
+	.byte	4
+	.byte	'src',0,1,184,6,62
+	.word	.L218,.L219
+	.byte	5
+	.word	.L102,.L217
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('SMC_GainSet_SetFromSchedule')
+	.sect	'.debug_abbrev'
+.L130:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('SMC_GainSet_SetFromSchedule')
+	.sect	'.debug_line'
+.L131:
+	.word	.L619-.L618
+.L618:
+	.half	3
+	.word	.L621-.L620
+.L620:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../AppSw/PmsmFoc/ControlModules/embed_sim_smc_controller.c',0,0,0,0,0
+.L621:
+	.byte	5,5,7,0,5,2
+	.word	.L102
+	.byte	3,185,6,1,5,9,7,9
+	.half	.L622-.L102
+	.byte	3,2,1,5,32,9
+	.half	.L623-.L622
+	.byte	1,5,27,9
+	.half	.L624-.L623
+	.byte	1,5,9,9
+	.half	.L625-.L624
+	.byte	3,1,1,5,32,9
+	.half	.L626-.L625
+	.byte	1,5,27,9
+	.half	.L627-.L626
+	.byte	1,5,9,9
+	.half	.L628-.L627
+	.byte	3,1,1,5,32,9
+	.half	.L629-.L628
+	.byte	1,5,27,9
+	.half	.L630-.L629
+	.byte	1,5,9,9
+	.half	.L631-.L630
+	.byte	3,1,1,5,32,9
+	.half	.L632-.L631
+	.byte	1,5,27,9
+	.half	.L633-.L632
+	.byte	1,5,9,9
+	.half	.L634-.L633
+	.byte	3,1,1,5,32,9
+	.half	.L635-.L634
+	.byte	1,5,27,9
+	.half	.L636-.L635
+	.byte	1,5,38,9
+	.half	.L637-.L636
+	.byte	3,124,1,5,1,9
+	.half	.L67-.L637
+	.byte	3,10,1,7,9
+	.half	.L133-.L67
+	.byte	0,1,1
+.L619:
+	.sdecl	'.debug_ranges',debug,cluster('SMC_GainSet_SetFromSchedule')
+	.sect	'.debug_ranges'
+.L132:
+	.word	-1,.L102,0,.L133-.L102,0,0
+	.sdecl	'.debug_info',debug,cluster('SMC_GainSchedule_Interpolate')
+	.sect	'.debug_info'
+.L134:
+	.word	436
+	.half	3
+	.word	.L135
+	.byte	4,1
+	.byte	'../AppSw/PmsmFoc/ControlModules/embed_sim_smc_controller.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Aurix_EmbedSim\\AURIX_TC3x_Motor_Control_SDK\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L137,.L136
+	.byte	2
+	.word	.L105
+	.byte	3
+	.byte	'SMC_GainSchedule_Interpolate',0,1,213,6,6,1,1,1
+	.word	.L104,.L220,.L103
+	.byte	4
+	.byte	'omega_rpm',0,1,214,6,33
+	.word	.L221,.L222
+	.byte	4
+	.byte	'table',0,1,215,6,40
+	.word	.L223,.L224
+	.byte	4
+	.byte	'n',0,1,216,6,33
+	.word	.L225,.L226
+	.byte	4
+	.byte	'out',0,1,217,6,39
+	.word	.L227,.L228
+	.byte	5
+	.word	.L104,.L220
+	.byte	6
+	.byte	'i',0,1,219,6,17
+	.word	.L229,.L230
+	.byte	6
+	.byte	't',0,1,220,6,17
+	.word	.L180,.L231
+	.byte	6
+	.byte	'rpm_lo',0,1,221,6,17
+	.word	.L180,.L232
+	.byte	6
+	.byte	'rpm_hi',0,1,222,6,17
+	.word	.L180,.L233
+	.byte	0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('SMC_GainSchedule_Interpolate')
+	.sect	'.debug_abbrev'
+.L135:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0,0,6,52,0,3
+	.byte	8,58,15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('SMC_GainSchedule_Interpolate')
+	.sect	'.debug_line'
+.L136:
+	.word	.L639-.L638
+.L638:
+	.half	3
+	.word	.L641-.L640
+.L640:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../AppSw/PmsmFoc/ControlModules/embed_sim_smc_controller.c',0,0,0,0,0
+.L641:
+	.byte	5,9,7,0,5,2
+	.word	.L104
+	.byte	3,223,6,1,5,33,7,9
+	.half	.L642-.L104
+	.byte	1,5,48,7,9
+	.half	.L643-.L642
+	.byte	1,5,9,7,9
+	.half	.L68-.L643
+	.byte	3,2,1,5,31,9
+	.half	.L70-.L68
+	.byte	3,4,1,5,19,9
+	.half	.L644-.L70
+	.byte	1,5,5,9
+	.half	.L645-.L644
+	.byte	1,5,25,7,9
+	.half	.L646-.L645
+	.byte	3,2,1,5,14,9
+	.half	.L647-.L646
+	.byte	1,5,9,9
+	.half	.L648-.L647
+	.byte	3,1,1,5,30,9
+	.half	.L72-.L648
+	.byte	3,4,1,5,27,9
+	.half	.L649-.L72
+	.byte	1,5,35,9
+	.half	.L650-.L649
+	.byte	1,5,19,9
+	.half	.L651-.L650
+	.byte	1,5,5,9
+	.half	.L652-.L651
+	.byte	1,5,24,7,9
+	.half	.L653-.L652
+	.byte	3,2,1,5,21,9
+	.half	.L654-.L653
+	.byte	1,5,29,9
+	.half	.L655-.L654
+	.byte	1,5,14,9
+	.half	.L656-.L655
+	.byte	1,5,9,9
+	.half	.L657-.L656
+	.byte	3,1,1,5,12,9
+	.half	.L75-.L657
+	.byte	3,4,1,5,30,9
+	.half	.L452-.L75
+	.byte	1,5,23,9
+	.half	.L79-.L452
+	.byte	3,2,1,5,26,9
+	.half	.L658-.L79
+	.byte	1,9
+	.half	.L453-.L658
+	.byte	3,1,1,5,23,9
+	.half	.L659-.L453
+	.byte	1,5,31,9
+	.half	.L660-.L659
+	.byte	1,5,24,9
+	.half	.L455-.L660
+	.byte	3,2,1,5,13,9
+	.half	.L661-.L455
+	.byte	1,5,49,7,9
+	.half	.L662-.L661
+	.byte	1,5,28,9
+	.half	.L663-.L662
+	.byte	3,3,1,5,48,9
+	.half	.L664-.L663
+	.byte	1,5,38,9
+	.half	.L454-.L664
+	.byte	1,5,40,9
+	.half	.L456-.L454
+	.byte	3,3,1,5,38,9
+	.half	.L665-.L456
+	.byte	1,5,50,9
+	.half	.L666-.L665
+	.byte	1,5,64,9
+	.half	.L667-.L666
+	.byte	1,5,73,9
+	.half	.L668-.L667
+	.byte	1,5,57,9
+	.half	.L669-.L668
+	.byte	1,5,31,9
+	.half	.L670-.L669
+	.byte	3,127,1,5,40,9
+	.half	.L671-.L670
+	.byte	1,5,26,9
+	.half	.L672-.L671
+	.byte	3,1,1,5,24,9
+	.half	.L673-.L672
+	.byte	3,127,1,5,40,9
+	.half	.L674-.L673
+	.byte	3,3,1,5,38,9
+	.half	.L675-.L674
+	.byte	1,5,50,9
+	.half	.L676-.L675
+	.byte	1,5,64,9
+	.half	.L677-.L676
+	.byte	1,5,73,9
+	.half	.L678-.L677
+	.byte	1,5,57,9
+	.half	.L679-.L678
+	.byte	1,5,31,9
+	.half	.L680-.L679
+	.byte	3,127,1,5,40,9
+	.half	.L681-.L680
+	.byte	1,5,26,9
+	.half	.L682-.L681
+	.byte	3,1,1,5,24,9
+	.half	.L683-.L682
+	.byte	3,127,1,5,40,9
+	.half	.L684-.L683
+	.byte	3,3,1,5,38,9
+	.half	.L685-.L684
+	.byte	1,5,50,9
+	.half	.L686-.L685
+	.byte	1,5,64,9
+	.half	.L687-.L686
+	.byte	1,5,73,9
+	.half	.L688-.L687
+	.byte	1,5,57,9
+	.half	.L689-.L688
+	.byte	1,5,31,9
+	.half	.L690-.L689
+	.byte	3,127,1,5,40,9
+	.half	.L691-.L690
+	.byte	1,5,26,9
+	.half	.L692-.L691
+	.byte	3,1,1,5,24,9
+	.half	.L693-.L692
+	.byte	3,127,1,5,40,9
+	.half	.L694-.L693
+	.byte	3,3,1,5,38,9
+	.half	.L695-.L694
+	.byte	1,5,50,9
+	.half	.L696-.L695
+	.byte	1,5,64,9
+	.half	.L697-.L696
+	.byte	1,5,73,9
+	.half	.L698-.L697
+	.byte	1,5,57,9
+	.half	.L699-.L698
+	.byte	1,5,31,9
+	.half	.L700-.L699
+	.byte	3,127,1,5,40,9
+	.half	.L701-.L700
+	.byte	1,5,26,9
+	.half	.L702-.L701
+	.byte	3,1,1,5,24,9
+	.half	.L703-.L702
+	.byte	3,127,1,5,40,9
+	.half	.L704-.L703
+	.byte	3,3,1,5,38,9
+	.half	.L705-.L704
+	.byte	1,5,50,9
+	.half	.L706-.L705
+	.byte	1,5,64,9
+	.half	.L707-.L706
+	.byte	1,5,73,9
+	.half	.L708-.L707
+	.byte	1,5,57,9
+	.half	.L709-.L708
+	.byte	1,5,31,9
+	.half	.L710-.L709
+	.byte	3,127,1,5,40,9
+	.half	.L711-.L710
+	.byte	1,5,26,9
+	.half	.L712-.L711
+	.byte	3,1,1,5,24,9
+	.half	.L713-.L712
+	.byte	3,127,1,5,13,9
+	.half	.L714-.L713
+	.byte	3,2,1,5,33,9
+	.half	.L80-.L714
+	.byte	3,108,1,5,25,9
+	.half	.L78-.L80
+	.byte	1,5,30,9
+	.half	.L715-.L78
+	.byte	1,5,1,7,9
+	.half	.L71-.L715
+	.byte	3,27,1,7,9
+	.half	.L138-.L71
+	.byte	0,1,1
+.L639:
+	.sdecl	'.debug_ranges',debug,cluster('SMC_GainSchedule_Interpolate')
+	.sect	'.debug_ranges'
+.L137:
+	.word	-1,.L104,0,.L138-.L104,0,0
+	.sdecl	'.debug_info',debug,cluster('SMC_Clamp')
+	.sect	'.debug_info'
+.L139:
+	.word	334
+	.half	3
+	.word	.L140
+	.byte	4,1
+	.byte	'../AppSw/PmsmFoc/ControlModules/embed_sim_smc_controller.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Aurix_EmbedSim\\AURIX_TC3x_Motor_Control_SDK\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L142,.L141
+	.byte	2
+	.word	.L105
+	.byte	3
+	.byte	'SMC_Clamp',0,1,233,1,20
+	.word	.L180
+	.byte	1,1
+	.word	.L84,.L234,.L83
+	.byte	4
+	.byte	'value',0,1,233,1,48
+	.word	.L235,.L236
+	.byte	4
+	.byte	'limit',0,1,233,1,73
+	.word	.L237,.L238
+	.byte	5
+	.word	.L84,.L234
+	.byte	6
+	.byte	'result',0,1,235,1,17
+	.word	.L180,.L239
+	.byte	0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('SMC_Clamp')
+	.sect	'.debug_abbrev'
+.L140:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,73,16
+	.byte	54,15,39,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0,0,6,52,0,3
+	.byte	8,58,15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('SMC_Clamp')
+	.sect	'.debug_line'
+.L141:
+	.word	.L717-.L716
+.L716:
+	.half	3
+	.word	.L719-.L718
+.L718:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../AppSw/PmsmFoc/ControlModules/embed_sim_smc_controller.c',0,0,0,0,0
+.L719:
+	.byte	5,16,7,0,5,2
+	.word	.L84
+	.byte	3,236,1,1,5,5,9
+	.half	.L720-.L84
+	.byte	1,5,16,7,9
+	.half	.L721-.L720
+	.byte	3,2,1,5,23,9
+	.half	.L722-.L721
+	.byte	1,9
+	.half	.L2-.L722
+	.byte	3,2,1,5,21,9
+	.half	.L723-.L2
+	.byte	1,5,10,9
+	.half	.L724-.L723
+	.byte	1,5,18,7,9
+	.half	.L725-.L724
+	.byte	3,2,1,5,24,9
+	.half	.L726-.L725
+	.byte	1,5,5,9
+	.half	.L3-.L726
+	.byte	3,7,1,5,1,9
+	.half	.L6-.L3
+	.byte	3,1,1,7,9
+	.half	.L143-.L6
+	.byte	0,1,1
+.L717:
+	.sdecl	'.debug_ranges',debug,cluster('SMC_Clamp')
+	.sect	'.debug_ranges'
+.L142:
+	.word	-1,.L84,0,.L143-.L84,0,0
+	.sdecl	'.debug_info',debug,cluster('SMC_Sat')
+	.sect	'.debug_info'
+.L144:
+	.word	326
+	.half	3
+	.word	.L145
+	.byte	4,1
+	.byte	'../AppSw/PmsmFoc/ControlModules/embed_sim_smc_controller.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Aurix_EmbedSim\\AURIX_TC3x_Motor_Control_SDK\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L147,.L146
+	.byte	2
+	.word	.L105
+	.byte	3
+	.byte	'SMC_Sat',0,1,129,2,20
+	.word	.L180
+	.byte	1,1
+	.word	.L86,.L240,.L85
+	.byte	4
+	.byte	'x',0,1,129,2,46
+	.word	.L241,.L242
+	.byte	4
+	.byte	'phi',0,1,129,2,67
+	.word	.L243,.L244
+	.byte	5
+	.word	.L86,.L240
+	.byte	6
+	.byte	'result',0,1,131,2,17
+	.word	.L180,.L245
+	.byte	0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('SMC_Sat')
+	.sect	'.debug_abbrev'
+.L145:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,73,16
+	.byte	54,15,39,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0,0,6,52,0,3
+	.byte	8,58,15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('SMC_Sat')
+	.sect	'.debug_line'
+.L146:
+	.word	.L728-.L727
+.L727:
+	.half	3
+	.word	.L730-.L729
+.L729:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../AppSw/PmsmFoc/ControlModules/embed_sim_smc_controller.c',0,0,0,0,0
+.L730:
+	.byte	5,16,7,0,5,2
+	.word	.L86
+	.byte	3,132,2,1,5,13,9
+	.half	.L731-.L86
+	.byte	1,5,5,9
+	.half	.L732-.L731
+	.byte	1,5,17,7,9
+	.half	.L733-.L732
+	.byte	3,3,1,5,15,9
+	.half	.L734-.L733
+	.byte	1,5,9,9
+	.half	.L735-.L734
+	.byte	1,5,22,7,9
+	.half	.L736-.L735
+	.byte	3,2,1,5,31,9
+	.half	.L332-.L736
+	.byte	1,5,22,9
+	.half	.L8-.L332
+	.byte	3,2,1,5,14,9
+	.half	.L737-.L8
+	.byte	1,5,20,9
+	.half	.L738-.L737
+	.byte	3,6,1,5,32,9
+	.half	.L333-.L738
+	.byte	3,124,1,5,22,9
+	.half	.L10-.L333
+	.byte	1,5,9,9
+	.half	.L9-.L10
+	.byte	3,126,1,5,20,9
+	.half	.L7-.L9
+	.byte	3,12,1,5,22,9
+	.half	.L334-.L7
+	.byte	3,1,1,5,20,9
+	.half	.L739-.L334
+	.byte	1,5,9,9
+	.half	.L740-.L739
+	.byte	1,5,22,7,9
+	.half	.L741-.L740
+	.byte	3,2,1,5,31,9
+	.half	.L742-.L741
+	.byte	1,5,27,9
+	.half	.L13-.L742
+	.byte	3,2,1,5,25,9
+	.half	.L743-.L13
+	.byte	1,5,14,9
+	.half	.L744-.L743
+	.byte	1,5,22,7,9
+	.half	.L745-.L744
+	.byte	3,2,1,5,32,9
+	.half	.L746-.L745
+	.byte	1,5,5,9
+	.half	.L12-.L746
+	.byte	3,8,1,5,1,9
+	.half	.L17-.L12
+	.byte	3,1,1,7,9
+	.half	.L148-.L17
+	.byte	0,1,1
+.L728:
+	.sdecl	'.debug_ranges',debug,cluster('SMC_Sat')
+	.sect	'.debug_ranges'
+.L147:
+	.word	-1,.L86,0,.L148-.L86,0,0
+	.sdecl	'.debug_info',debug,cluster('SMC_SpeedSMC')
+	.sect	'.debug_info'
+.L149:
+	.word	448
+	.half	3
+	.word	.L150
+	.byte	4,1
+	.byte	'../AppSw/PmsmFoc/ControlModules/embed_sim_smc_controller.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Aurix_EmbedSim\\AURIX_TC3x_Motor_Control_SDK\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L152,.L151
+	.byte	2
+	.word	.L105
+	.byte	3
+	.byte	'SMC_SpeedSMC',0,1,174,2,20
+	.word	.L180
+	.byte	1,1
+	.word	.L88,.L246,.L87
+	.byte	4
+	.byte	's',0,1,175,2,33
+	.word	.L247,.L248
+	.byte	4
+	.byte	'e',0,1,176,2,33
+	.word	.L249,.L250
+	.byte	4
+	.byte	'dt',0,1,177,2,33
+	.word	.L251,.L252
+	.byte	4
+	.byte	'g',0,1,178,2,33
+	.word	.L253,.L254
+	.byte	5
+	.word	.L88,.L246
+	.byte	6
+	.byte	's_spd',0,1,180,2,17
+	.word	.L180,.L255
+	.byte	6
+	.byte	'iq_ref',0,1,181,2,17
+	.word	.L180,.L256
+	.byte	6
+	.byte	'iq_unsat',0,1,182,2,17
+	.word	.L180,.L257
+	.byte	6
+	.byte	'int_limit',0,1,183,2,23
+	.word	.L258,.L259
+	.byte	6
+	.byte	'eta_capped',0,1,184,2,23
+	.word	.L260,.L261
+	.byte	0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('SMC_SpeedSMC')
+	.sect	'.debug_abbrev'
+.L150:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,73,16
+	.byte	54,15,39,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0,0,6,52,0,3
+	.byte	8,58,15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('SMC_SpeedSMC')
+	.sect	'.debug_line'
+.L151:
+	.word	.L748-.L747
+.L747:
+	.half	3
+	.word	.L750-.L749
+.L749:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../AppSw/PmsmFoc/ControlModules/embed_sim_smc_controller.c',0,0,0,0,0
+.L750:
+	.byte	5,20,7,0,5,2
+	.word	.L88
+	.byte	3,173,2,1,5,49,9
+	.half	.L339-.L88
+	.byte	3,9,1,5,38,9
+	.half	.L340-.L339
+	.byte	3,1,1,5,61,9
+	.half	.L751-.L340
+	.byte	1,5,36,9
+	.half	.L752-.L751
+	.byte	1,5,61,9
+	.half	.L753-.L752
+	.byte	3,1,1,5,46,9
+	.half	.L754-.L753
+	.byte	1,5,38,9
+	.half	.L18-.L754
+	.byte	1,5,36,9
+	.half	.L19-.L18
+	.byte	3,4,1,5,20,9
+	.half	.L755-.L19
+	.byte	1,5,18,9
+	.half	.L341-.L755
+	.byte	1,9
+	.half	.L342-.L341
+	.byte	3,1,1,5,43,9
+	.half	.L756-.L342
+	.byte	1,5,67,9
+	.half	.L337-.L756
+	.byte	1,5,53,9
+	.half	.L757-.L337
+	.byte	1,5,9,9
+	.half	.L344-.L757
+	.byte	3,4,1,5,28,9
+	.half	.L345-.L344
+	.byte	1,5,5,9
+	.half	.L758-.L345
+	.byte	1,5,19,9
+	.half	.L346-.L758
+	.byte	3,17,1,5,65,9
+	.half	.L347-.L346
+	.byte	3,114,1,5,42,9
+	.half	.L20-.L347
+	.byte	1,5,27,9
+	.half	.L348-.L20
+	.byte	1,5,56,9
+	.half	.L349-.L348
+	.byte	1,5,53,9
+	.half	.L350-.L349
+	.byte	1,5,10,9
+	.half	.L351-.L350
+	.byte	1,5,20,9
+	.half	.L759-.L351
+	.byte	1,5,21,9
+	.half	.L352-.L759
+	.byte	3,1,1,5,33,9
+	.half	.L353-.L352
+	.byte	3,8,1,5,44,9
+	.half	.L760-.L353
+	.byte	1,5,20,9
+	.half	.L355-.L760
+	.byte	1,5,34,9
+	.half	.L21-.L355
+	.byte	3,9,1,5,18,9
+	.half	.L761-.L21
+	.byte	1,5,16,9
+	.half	.L356-.L761
+	.byte	1,9
+	.half	.L343-.L356
+	.byte	3,1,1,5,41,9
+	.half	.L762-.L343
+	.byte	1,5,65,9
+	.half	.L359-.L762
+	.byte	1,5,51,9
+	.half	.L357-.L359
+	.byte	1,5,30,9
+	.half	.L360-.L357
+	.byte	3,2,1,5,5,9
+	.half	.L361-.L360
+	.byte	1,5,1,9
+	.half	.L22-.L361
+	.byte	3,1,1,7,9
+	.half	.L153-.L22
+	.byte	0,1,1
+.L748:
+	.sdecl	'.debug_ranges',debug,cluster('SMC_SpeedSMC')
+	.sect	'.debug_ranges'
+.L152:
+	.word	-1,.L88,0,.L153-.L88,0,0
+	.sdecl	'.debug_info',debug,cluster('SMC_CurrentSMC')
+	.sect	'.debug_info'
+.L154:
+	.word	724
+	.half	3
+	.word	.L155
+	.byte	4,1
+	.byte	'../AppSw/PmsmFoc/ControlModules/embed_sim_smc_controller.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Aurix_EmbedSim\\AURIX_TC3x_Motor_Control_SDK\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L157,.L156
+	.byte	2
+	.word	.L105
+	.byte	3
+	.byte	'SMC_CurrentSMC',0,1,213,3,13,1,1
+	.word	.L92,.L262,.L91
+	.byte	4
+	.byte	's',0,1,214,3,33
+	.word	.L263,.L264
+	.byte	4
+	.byte	'id_meas',0,1,215,3,33
+	.word	.L265,.L266
+	.byte	4
+	.byte	'iq_meas',0,1,216,3,33
+	.word	.L267,.L268
+	.byte	4
+	.byte	'id_ref',0,1,217,3,33
+	.word	.L269,.L270
+	.byte	4
+	.byte	'iq_ref',0,1,218,3,33
+	.word	.L271,.L272
+	.byte	4
+	.byte	'theta_e',0,1,219,3,33
+	.word	.L273,.L274
+	.byte	4
+	.byte	'omega_e',0,1,220,3,33
+	.word	.L275,.L276
+	.byte	4
+	.byte	'g',0,1,221,3,33
+	.word	.L277,.L278
+	.byte	4
+	.byte	'vd',0,1,222,3,33
+	.word	.L279,.L280
+	.byte	4
+	.byte	'vq',0,1,223,3,33
+	.word	.L281,.L282
+	.byte	5
+	.word	.L92,.L262
+	.byte	6
+	.byte	's_d',0,1,225,3,17
+	.word	.L180,.L283
+	.byte	6
+	.byte	's_q',0,1,226,3,17
+	.word	.L180,.L284
+	.byte	6
+	.byte	'ed_hat',0,1,227,3,17
+	.word	.L180,.L285
+	.byte	6
+	.byte	'eq_hat',0,1,228,3,17
+	.word	.L180,.L286
+	.byte	6
+	.byte	'vd_out',0,1,229,3,17
+	.word	.L180,.L287
+	.byte	6
+	.byte	'vq_out',0,1,230,3,17
+	.word	.L180,.L288
+	.byte	6
+	.byte	'magnitude',0,1,231,3,17
+	.word	.L180,.L289
+	.byte	6
+	.byte	'scale',0,1,232,3,17
+	.word	.L180,.L290
+	.byte	5
+	.word	.L291,.L292
+	.byte	6
+	.byte	'inv_G',0,1,142,4,27
+	.word	.L293,.L294
+	.byte	6
+	.byte	'ed_phys',0,1,143,4,27
+	.word	.L295,.L296
+	.byte	6
+	.byte	'eq_phys',0,1,144,4,27
+	.word	.L297,.L298
+	.byte	0,5
+	.word	.L299,.L37
+	.byte	6
+	.byte	'v_max_norm',0,1,159,4,27
+	.word	.L300,.L301
+	.byte	0,0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('SMC_CurrentSMC')
+	.sect	'.debug_abbrev'
+.L155:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0,0,6,52,0,3,8,58
+	.byte	15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('SMC_CurrentSMC')
+	.sect	'.debug_line'
+.L156:
+	.word	.L764-.L763
+.L763:
+	.half	3
+	.word	.L766-.L765
+.L765:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../AppSw/PmsmFoc/ControlModules/embed_sim_smc_controller.c',0,0,0,0,0
+.L766:
+	.byte	5,13,7,0,5,2
+	.word	.L92
+	.byte	3,212,3,1,5,9,9
+	.half	.L394-.L92
+	.byte	3,21,1,5,28,7,9
+	.half	.L767-.L394
+	.byte	1,5,44,7,9
+	.half	.L768-.L767
+	.byte	1,5,59,7,9
+	.half	.L769-.L768
+	.byte	1,5,9,7,9
+	.half	.L31-.L769
+	.byte	3,2,1,5,18,9
+	.half	.L34-.L31
+	.byte	3,5,1,9
+	.half	.L386-.L34
+	.byte	3,1,1,5,47,9
+	.half	.L291-.L386
+	.byte	3,28,1,5,38,9
+	.half	.L770-.L291
+	.byte	3,1,1,5,46,9
+	.half	.L771-.L770
+	.byte	1,5,70,9
+	.half	.L772-.L771
+	.byte	1,5,68,9
+	.half	.L773-.L772
+	.byte	1,5,57,9
+	.half	.L774-.L773
+	.byte	1,5,38,9
+	.half	.L395-.L774
+	.byte	3,1,1,5,71,9
+	.half	.L775-.L395
+	.byte	1,5,91,9
+	.half	.L776-.L775
+	.byte	1,5,89,9
+	.half	.L777-.L776
+	.byte	1,5,68,9
+	.half	.L778-.L777
+	.byte	1,5,57,9
+	.half	.L391-.L778
+	.byte	1,5,26,9
+	.half	.L396-.L391
+	.byte	3,2,1,9
+	.half	.L398-.L396
+	.byte	3,1,1,5,25,9
+	.half	.L292-.L398
+	.byte	3,4,1,5,48,9
+	.half	.L397-.L292
+	.byte	1,5,21,9
+	.half	.L385-.L397
+	.byte	1,5,25,9
+	.half	.L400-.L385
+	.byte	3,1,1,5,48,9
+	.half	.L779-.L400
+	.byte	1,5,21,9
+	.half	.L402-.L779
+	.byte	1,5,50,9
+	.half	.L299-.L402
+	.byte	3,7,1,5,52,9
+	.half	.L780-.L299
+	.byte	3,1,1,5,43,9
+	.half	.L781-.L780
+	.byte	1,5,23,9
+	.half	.L403-.L781
+	.byte	3,1,1,5,9,9
+	.half	.L782-.L403
+	.byte	1,5,34,7,9
+	.half	.L783-.L782
+	.byte	3,2,1,5,20,9
+	.half	.L404-.L783
+	.byte	3,1,1,9
+	.half	.L784-.L404
+	.byte	3,1,1,5,45,9
+	.half	.L785-.L784
+	.byte	3,126,1,5,9,9
+	.half	.L37-.L785
+	.byte	3,10,1,9
+	.half	.L786-.L37
+	.byte	3,1,1,5,1,9
+	.half	.L35-.L786
+	.byte	3,1,1,7,9
+	.half	.L158-.L35
+	.byte	0,1,1
+.L764:
+	.sdecl	'.debug_ranges',debug,cluster('SMC_CurrentSMC')
+	.sect	'.debug_ranges'
+.L157:
+	.word	-1,.L92,0,.L158-.L92,0,0
+	.sdecl	'.debug_info',debug,cluster('SMC_SMO_Step')
+	.sect	'.debug_info'
+.L159:
+	.word	623
+	.half	3
+	.word	.L160
+	.byte	4,1
+	.byte	'../AppSw/PmsmFoc/ControlModules/embed_sim_smc_controller.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Aurix_EmbedSim\\AURIX_TC3x_Motor_Control_SDK\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L162,.L161
+	.byte	2
+	.word	.L105
+	.byte	3
+	.byte	'SMC_SMO_Step',0,1,250,2,13,1,1
+	.word	.L90,.L302,.L89
+	.byte	4
+	.byte	's',0,1,251,2,30
+	.word	.L303,.L304
+	.byte	4
+	.byte	'i_alpha',0,1,252,2,32
+	.word	.L305,.L306
+	.byte	4
+	.byte	'i_beta',0,1,253,2,32
+	.word	.L307,.L308
+	.byte	4
+	.byte	'v_alpha',0,1,254,2,32
+	.word	.L309,.L310
+	.byte	4
+	.byte	'v_beta',0,1,255,2,32
+	.word	.L311,.L312
+	.byte	4
+	.byte	'dt',0,1,128,3,32
+	.word	.L313,.L314
+	.byte	5
+	.word	.L90,.L302
+	.byte	6
+	.byte	'i_alpha_err',0,1,130,3,17
+	.word	.L180,.L315
+	.byte	6
+	.byte	'i_beta_err',0,1,131,3,17
+	.word	.L180,.L316
+	.byte	6
+	.byte	'e_alpha_sw',0,1,132,3,17
+	.word	.L180,.L317
+	.byte	6
+	.byte	'e_beta_sw',0,1,133,3,17
+	.word	.L180,.L318
+	.byte	6
+	.byte	'theta_e_new',0,1,134,3,17
+	.word	.L180,.L319
+	.byte	6
+	.byte	'delta',0,1,135,3,17
+	.word	.L180,.L320
+	.byte	6
+	.byte	'alpha_dyn',0,1,136,3,17
+	.word	.L180,.L321
+	.byte	6
+	.byte	'inv_L',0,1,137,3,23
+	.word	.L322,.L323
+	.byte	6
+	.byte	'k',0,1,138,3,23
+	.word	.L324,.L325
+	.byte	6
+	.byte	'two_pi',0,1,139,3,23
+	.word	.L326,.L327
+	.byte	6
+	.byte	'pi_f',0,1,140,3,23
+	.word	.L328,.L329
+	.byte	0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('SMC_SMO_Step')
+	.sect	'.debug_abbrev'
+.L160:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0,0,6,52,0,3,8,58
+	.byte	15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('SMC_SMO_Step')
+	.sect	'.debug_line'
+.L161:
+	.word	.L788-.L787
+.L787:
+	.half	3
+	.word	.L790-.L789
+.L789:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../AppSw/PmsmFoc/ControlModules/embed_sim_smc_controller.c',0,0,0,0,0
+.L790:
+	.byte	5,13,7,0,5,2
+	.word	.L90
+	.byte	3,249,2,1,5,43,9
+	.half	.L368-.L90
+	.byte	3,15,1,5,33,9
+	.half	.L791-.L368
+	.byte	3,1,1,5,46,9
+	.half	.L370-.L791
+	.byte	3,1,1,9
+	.half	.L792-.L370
+	.byte	3,1,1,5,5,9
+	.half	.L793-.L792
+	.byte	3,2,1,5,9,7,9
+	.half	.L794-.L793
+	.byte	3,2,1,5,18,9
+	.half	.L23-.L794
+	.byte	3,7,1,5,29,9
+	.half	.L795-.L23
+	.byte	1,5,50,9
+	.half	.L796-.L795
+	.byte	1,5,38,9
+	.half	.L797-.L796
+	.byte	1,5,48,9
+	.half	.L798-.L797
+	.byte	1,5,35,9
+	.half	.L799-.L798
+	.byte	1,5,30,9
+	.half	.L375-.L799
+	.byte	3,4,1,5,27,9
+	.half	.L374-.L375
+	.byte	1,5,30,9
+	.half	.L376-.L374
+	.byte	3,1,1,5,27,9
+	.half	.L800-.L376
+	.byte	1,5,55,9
+	.half	.L377-.L800
+	.byte	3,4,1,5,40,9
+	.half	.L801-.L377
+	.byte	1,5,20,9
+	.half	.L364-.L801
+	.byte	1,5,55,9
+	.half	.L379-.L364
+	.byte	3,1,1,5,40,9
+	.half	.L802-.L379
+	.byte	1,5,20,9
+	.half	.L803-.L802
+	.byte	1,5,26,9
+	.half	.L380-.L803
+	.byte	3,3,1,5,58,9
+	.half	.L804-.L380
+	.byte	1,5,47,9
+	.half	.L378-.L804
+	.byte	1,5,45,9
+	.half	.L805-.L378
+	.byte	1,5,72,9
+	.half	.L806-.L805
+	.byte	1,5,6,9
+	.half	.L807-.L806
+	.byte	1,5,20,9
+	.half	.L808-.L807
+	.byte	1,5,26,9
+	.half	.L809-.L808
+	.byte	3,1,1,5,58,9
+	.half	.L810-.L809
+	.byte	1,5,47,9
+	.half	.L811-.L810
+	.byte	1,5,45,9
+	.half	.L812-.L811
+	.byte	1,5,72,9
+	.half	.L813-.L812
+	.byte	1,5,6,9
+	.half	.L814-.L813
+	.byte	1,5,20,9
+	.half	.L815-.L814
+	.byte	1,5,51,9
+	.half	.L816-.L815
+	.byte	3,3,1,5,48,9
+	.half	.L817-.L816
+	.byte	1,5,6,9
+	.half	.L818-.L817
+	.byte	1,5,21,9
+	.half	.L819-.L818
+	.byte	1,5,51,9
+	.half	.L820-.L819
+	.byte	3,1,1,5,48,9
+	.half	.L821-.L820
+	.byte	1,5,6,9
+	.half	.L822-.L821
+	.byte	1,5,21,9
+	.half	.L823-.L822
+	.byte	1,5,29,9
+	.half	.L824-.L823
+	.byte	3,3,1,5,26,9
+	.half	.L825-.L824
+	.byte	1,5,47,9
+	.half	.L826-.L825
+	.byte	1,5,28,9
+	.half	.L381-.L826
+	.byte	3,5,1,5,25,9
+	.half	.L827-.L381
+	.byte	1,9
+	.half	.L384-.L827
+	.byte	3,2,1,5,35,9
+	.half	.L26-.L384
+	.byte	1,5,25,9
+	.half	.L25-.L26
+	.byte	1,9
+	.half	.L828-.L25
+	.byte	3,1,1,5,35,9
+	.half	.L28-.L828
+	.byte	1,5,20,9
+	.half	.L27-.L28
+	.byte	1,5,25,9
+	.half	.L829-.L27
+	.byte	1,5,14,9
+	.half	.L830-.L829
+	.byte	3,3,1,5,12,9
+	.half	.L831-.L830
+	.byte	1,5,5,9
+	.half	.L832-.L831
+	.byte	1,5,35,7,9
+	.half	.L833-.L832
+	.byte	3,2,1,5,62,9
+	.half	.L834-.L833
+	.byte	1,5,32,9
+	.half	.L835-.L834
+	.byte	1,5,24,9
+	.half	.L836-.L835
+	.byte	1,5,65,9
+	.half	.L837-.L836
+	.byte	1,5,25,9
+	.half	.L30-.L837
+	.byte	3,7,1,9
+	.half	.L838-.L30
+	.byte	3,1,1,5,1,9
+	.half	.L24-.L838
+	.byte	3,1,1,7,9
+	.half	.L163-.L24
+	.byte	0,1,1
+.L788:
+	.sdecl	'.debug_ranges',debug,cluster('SMC_SMO_Step')
+	.sect	'.debug_ranges'
+.L162:
+	.word	-1,.L90,0,.L163-.L90,0,0
+	.sdecl	'.debug_info',debug,cluster('g_smc_gains')
+	.sect	'.debug_info'
+.L164:
+	.word	252
+	.half	3
+	.word	.L165
+	.byte	4,1
+	.byte	'../AppSw/PmsmFoc/ControlModules/embed_sim_smc_controller.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Aurix_EmbedSim\\AURIX_TC3x_Motor_Control_SDK\\TriCore Debug (TASKING)\\',0,12,1,2
+	.word	.L105
+	.byte	3
+	.byte	'g_smc_gains',0,5,139,1,15
+	.word	.L330
+	.byte	1,5,3
+	.word	g_smc_gains
+	.byte	0
+	.sdecl	'.debug_abbrev',debug,cluster('g_smc_gains')
+	.sect	'.debug_abbrev'
+.L165:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,0,0,2,61,0,24,16,0,0,3,52,0,3,8,58,15,59,15,57,15,73,16,63,12,2,9
+	.byte	0,0,0
+	.sdecl	'.debug_loc',debug,cluster('SMC_Clamp')
+	.sect	'.debug_loc'
+.L83:
+	.word	-1,.L84,0,.L234-.L84
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L238:
+	.word	-1,.L84,0,.L234-.L84
+	.half	1
+	.byte	85
+	.word	0,0
+.L239:
+	.word	-1,.L84,0,.L234-.L84
+	.half	1
+	.byte	84
+	.word	.L331-.L84,.L234-.L84
+	.half	1
+	.byte	82
+	.word	0,0
+.L236:
+	.word	-1,.L84,0,.L234-.L84
+	.half	1
+	.byte	84
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('SMC_Controller_GetDiagnostics')
+	.sect	'.debug_loc'
+.L99:
+	.word	-1,.L100,0,.L206-.L100
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L216:
+	.word	-1,.L100,0,.L206-.L100
+	.half	2
+	.byte	145,0
+	.word	0,.L206-.L100
+	.half	2
+	.byte	145,0
+	.word	.L451-.L100,.L206-.L100
+	.half	1
+	.byte	111
+	.word	0,0
+.L214:
+	.word	-1,.L100,0,.L206-.L100
+	.half	1
+	.byte	103
+	.word	0,0
+.L208:
+	.word	-1,.L100,0,.L206-.L100
+	.half	1
+	.byte	100
+	.word	0,0
+.L210:
+	.word	-1,.L100,0,.L206-.L100
+	.half	1
+	.byte	101
+	.word	0,0
+.L212:
+	.word	-1,.L100,0,.L206-.L100
+	.half	1
+	.byte	102
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('SMC_Controller_Init')
+	.sect	'.debug_loc'
+.L93:
+	.word	-1,.L94,0,.L166-.L94
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L170:
+	.word	-1,.L94,0,.L405-.L94
+	.half	1
+	.byte	84
+	.word	0,0
+.L168:
+	.word	-1,.L94,0,.L406-.L94
+	.half	1
+	.byte	100
+	.word	.L407-.L94,.L408-.L94
+	.half	1
+	.byte	111
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('SMC_Controller_Reset')
+	.sect	'.debug_loc'
+.L97:
+	.word	-1,.L98,0,.L203-.L98
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L205:
+	.word	-1,.L98,0,.L450-.L98
+	.half	1
+	.byte	100
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('SMC_Controller_Step')
+	.sect	'.debug_loc'
+.L95:
+	.word	-1,.L96,0,.L409-.L96
+	.half	2
+	.byte	138,0
+	.word	.L409-.L96,.L171-.L96
+	.half	2
+	.byte	138,32
+	.word	.L171-.L96,.L171-.L96
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L202:
+	.word	-1,.L96,.L429-.L96,.L430-.L96
+	.half	5
+	.byte	144,32,157,32,0
+	.word	0,0
+.L189:
+	.word	-1,.L96,.L431-.L96,.L432-.L96
+	.half	1
+	.byte	95
+	.word	0,0
+.L177:
+	.word	-1,.L96,0,.L410-.L96
+	.half	1
+	.byte	84
+	.word	.L416-.L96,.L171-.L96
+	.half	1
+	.byte	88
+	.word	.L437-.L96,.L435-.L96
+	.half	1
+	.byte	85
+	.word	0,0
+.L187:
+	.word	-1,.L96,.L434-.L96,.L435-.L96
+	.half	1
+	.byte	84
+	.word	0,0
+.L183:
+	.word	-1,.L96,0,.L171-.L96
+	.half	2
+	.byte	145,104
+	.word	0,0
+.L184:
+	.word	-1,.L96,0,.L171-.L96
+	.half	2
+	.byte	145,108
+	.word	0,0
+.L185:
+	.word	-1,.L96,0,.L171-.L96
+	.half	2
+	.byte	145,112
+	.word	0,0
+.L186:
+	.word	-1,.L96,0,.L171-.L96
+	.half	2
+	.byte	145,116
+	.word	0,0
+.L188:
+	.word	-1,.L96,.L435-.L96,.L438-.L96
+	.half	1
+	.byte	82
+	.word	.L439-.L96,.L440-.L96
+	.half	1
+	.byte	84
+	.word	.L442-.L96,.L438-.L96
+	.half	1
+	.byte	87
+	.word	0,0
+.L182:
+	.word	-1,.L96,.L420-.L96,.L43-.L96
+	.half	1
+	.byte	89
+	.word	0,0
+.L190:
+	.word	-1,.L96,.L433-.L96,.L49-.L96
+	.half	1
+	.byte	81
+	.word	0,0
+.L196:
+	.word	-1,.L96,.L421-.L96,.L171-.L96
+	.half	1
+	.byte	90
+	.word	0,0
+.L173:
+	.word	-1,.L96,0,.L411-.L96
+	.half	1
+	.byte	100
+	.word	.L414-.L96,.L171-.L96
+	.half	1
+	.byte	111
+	.word	.L423-.L96,.L424-.L96
+	.half	1
+	.byte	100
+	.word	.L436-.L96,.L435-.L96
+	.half	1
+	.byte	100
+	.word	.L441-.L96,.L438-.L96
+	.half	1
+	.byte	100
+	.word	0,0
+.L181:
+	.word	-1,.L96,.L422-.L96,.L43-.L96
+	.half	1
+	.byte	91
+	.word	.L425-.L96,.L426-.L96
+	.half	1
+	.byte	86
+	.word	.L445-.L96,.L444-.L96
+	.half	1
+	.byte	86
+	.word	0,0
+.L194:
+	.word	-1,.L96,.L419-.L96,.L420-.L96
+	.half	1
+	.byte	89
+	.word	0,0
+.L175:
+	.word	-1,.L96,0,.L412-.L96
+	.half	1
+	.byte	101
+	.word	.L415-.L96,.L171-.L96
+	.half	1
+	.byte	108
+	.word	0,0
+.L191:
+	.word	-1,.L96,0,.L171-.L96
+	.half	2
+	.byte	145,120
+	.word	0,0
+.L192:
+	.word	-1,.L96,0,.L171-.L96
+	.half	2
+	.byte	145,124
+	.word	0,0
+.L200:
+	.word	-1,.L96,.L427-.L96,.L428-.L96
+	.half	1
+	.byte	95
+	.word	0,0
+.L179:
+	.word	-1,.L96,0,.L413-.L96
+	.half	1
+	.byte	102
+	.word	.L417-.L96,.L418-.L96
+	.half	1
+	.byte	109
+	.word	.L443-.L96,.L444-.L96
+	.half	1
+	.byte	102
+	.word	.L445-.L96,.L446-.L96
+	.half	1
+	.byte	109
+	.word	.L446-.L96,.L444-.L96
+	.half	1
+	.byte	101
+	.word	.L444-.L96,.L447-.L96
+	.half	1
+	.byte	109
+	.word	.L448-.L96,.L449-.L96
+	.half	1
+	.byte	109
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('SMC_CurrentSMC')
+	.sect	'.debug_loc'
+.L91:
+	.word	-1,.L92,0,.L262-.L92
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L285:
+	.word	-1,.L92,.L398-.L92,.L399-.L92
+	.half	1
+	.byte	89
+	.word	0,0
+.L296:
+	.word	-1,.L92,.L395-.L92,.L385-.L92
+	.half	5
+	.byte	144,32,157,32,0
+	.word	0,0
+.L286:
+	.word	-1,.L92,.L292-.L92,.L35-.L92
+	.half	1
+	.byte	90
+	.word	0,0
+.L298:
+	.word	-1,.L92,.L396-.L92,.L397-.L92
+	.half	1
+	.byte	95
+	.word	0,0
+.L278:
+	.word	-1,.L92,0,.L385-.L92
+	.half	1
+	.byte	101
+	.word	.L392-.L92,.L262-.L92
+	.half	1
+	.byte	111
+	.word	0,0
+.L266:
+	.word	-1,.L92,0,.L386-.L92
+	.half	1
+	.byte	84
+	.word	.L387-.L92,.L385-.L92
+	.half	1
+	.byte	86
+	.word	0,0
+.L270:
+	.word	-1,.L92,0,.L387-.L92
+	.half	1
+	.byte	86
+	.word	0,0
+.L294:
+	.word	-1,.L92,.L389-.L92,.L385-.L92
+	.half	1
+	.byte	87
+	.word	0,0
+.L268:
+	.word	-1,.L92,0,.L388-.L92
+	.half	1
+	.byte	85
+	.word	0,0
+.L272:
+	.word	-1,.L92,0,.L389-.L92
+	.half	1
+	.byte	87
+	.word	0,0
+.L289:
+	.word	-1,.L92,.L403-.L92,.L35-.L92
+	.half	1
+	.byte	82
+	.word	0,0
+.L276:
+	.word	-1,.L92,0,.L262-.L92
+	.half	2
+	.byte	145,4
+	.word	0,.L262-.L92
+	.half	2
+	.byte	145,4
+	.word	.L390-.L92,.L391-.L92
+	.half	1
+	.byte	95
+	.word	0,0
+.L264:
+	.word	-1,.L92,0,.L385-.L92
+	.half	1
+	.byte	100
+	.word	0,0
+.L283:
+	.word	-1,.L92,.L386-.L92,.L385-.L92
+	.half	1
+	.byte	84
+	.word	0,0
+.L284:
+	.word	-1,.L92,.L291-.L92,.L299-.L92
+	.half	1
+	.byte	88
+	.word	.L401-.L92,.L402-.L92
+	.half	1
+	.byte	84
+	.word	0,0
+.L290:
+	.word	-1,.L92,.L404-.L92,.L37-.L92
+	.half	1
+	.byte	95
+	.word	0,0
+.L274:
+	.word	-1,.L92,0,.L262-.L92
+	.half	2
+	.byte	145,0
+	.word	0,0
+.L301:
+	.word	-1,.L92,.L399-.L92,.L35-.L92
+	.half	1
+	.byte	89
+	.word	0,0
+.L280:
+	.word	-1,.L92,0,.L385-.L92
+	.half	1
+	.byte	102
+	.word	.L393-.L92,.L262-.L92
+	.half	1
+	.byte	108
+	.word	0,0
+.L287:
+	.word	-1,.L92,.L400-.L92,.L35-.L92
+	.half	1
+	.byte	91
+	.word	0,0
+.L282:
+	.word	-1,.L92,0,.L385-.L92
+	.half	1
+	.byte	103
+	.word	.L394-.L92,.L262-.L92
+	.half	1
+	.byte	109
+	.word	0,0
+.L288:
+	.word	-1,.L92,.L299-.L92,.L35-.L92
+	.half	1
+	.byte	88
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('SMC_GainSchedule_Interpolate')
+	.sect	'.debug_loc'
+.L103:
+	.word	-1,.L104,0,.L220-.L104
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L230:
+	.word	-1,.L104,.L452-.L104,.L71-.L104
+	.half	1
+	.byte	83
+	.word	0,0
+.L226:
+	.word	-1,.L104,0,.L220-.L104
+	.half	1
+	.byte	85
+	.word	0,0
+.L222:
+	.word	-1,.L104,0,.L220-.L104
+	.half	1
+	.byte	84
+	.word	0,0
+.L228:
+	.word	-1,.L104,0,.L220-.L104
+	.half	1
+	.byte	101
+	.word	0,0
+.L233:
+	.word	-1,.L104,.L455-.L104,.L456-.L104
+	.half	1
+	.byte	81
+	.word	.L80-.L104,.L78-.L104
+	.half	1
+	.byte	81
+	.word	0,0
+.L232:
+	.word	-1,.L104,.L453-.L104,.L454-.L104
+	.half	5
+	.byte	144,32,157,32,0
+	.word	.L80-.L104,.L78-.L104
+	.half	5
+	.byte	144,32,157,32,0
+	.word	0,0
+.L231:
+	.word	-1,.L104,.L456-.L104,.L80-.L104
+	.half	1
+	.byte	81
+	.word	0,0
+.L224:
+	.word	-1,.L104,0,.L73-.L104
+	.half	1
+	.byte	100
+	.word	.L72-.L104,.L76-.L104
+	.half	1
+	.byte	100
+	.word	.L75-.L104,.L71-.L104
+	.half	1
+	.byte	100
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('SMC_GainSet_SetFromSchedule')
+	.sect	'.debug_loc'
+.L101:
+	.word	-1,.L102,0,.L217-.L102
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L219:
+	.word	-1,.L102,0,.L217-.L102
+	.half	1
+	.byte	100
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('SMC_SMO_Step')
+	.sect	'.debug_loc'
+.L89:
+	.word	-1,.L90,0,.L362-.L90
+	.half	2
+	.byte	138,0
+	.word	.L362-.L90,.L302-.L90
+	.half	2
+	.byte	138,8
+	.word	.L302-.L90,.L302-.L90
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L321:
+	.word	-1,.L90,.L373-.L90,.L374-.L90
+	.half	1
+	.byte	95
+	.word	.L375-.L90,.L24-.L90
+	.half	2
+	.byte	145,120
+	.word	.L383-.L90,.L381-.L90
+	.half	1
+	.byte	81
+	.word	0,0
+.L320:
+	.word	-1,.L90,.L384-.L90,.L24-.L90
+	.half	5
+	.byte	144,32,157,32,0
+	.word	0,0
+.L314:
+	.word	-1,.L90,0,.L302-.L90
+	.half	2
+	.byte	145,0
+	.word	.L368-.L90,.L302-.L90
+	.half	1
+	.byte	89
+	.word	0,0
+.L317:
+	.word	-1,.L90,.L379-.L90,.L24-.L90
+	.half	1
+	.byte	94
+	.word	0,0
+.L318:
+	.word	-1,.L90,.L380-.L90,.L381-.L90
+	.half	1
+	.byte	82
+	.word	0,0
+.L306:
+	.word	-1,.L90,0,.L363-.L90
+	.half	1
+	.byte	84
+	.word	0,0
+.L315:
+	.word	-1,.L90,.L376-.L90,.L364-.L90
+	.half	5
+	.byte	144,32,157,32,0
+	.word	0,0
+.L308:
+	.word	-1,.L90,0,.L364-.L90
+	.half	1
+	.byte	85
+	.word	0,0
+.L316:
+	.word	-1,.L90,.L377-.L90,.L378-.L90
+	.half	1
+	.byte	95
+	.word	0,0
+.L323:
+	.word	-1,.L90,.L369-.L90,.L302-.L90
+	.half	1
+	.byte	90
+	.word	0,0
+.L325:
+	.word	-1,.L90,.L370-.L90,.L302-.L90
+	.half	1
+	.byte	91
+	.word	0,0
+.L329:
+	.word	-1,.L90,.L372-.L90,.L302-.L90
+	.half	1
+	.byte	93
+	.word	0,0
+.L304:
+	.word	-1,.L90,0,.L364-.L90
+	.half	1
+	.byte	100
+	.word	.L365-.L90,.L302-.L90
+	.half	1
+	.byte	111
+	.word	0,0
+.L319:
+	.word	-1,.L90,.L381-.L90,.L24-.L90
+	.half	1
+	.byte	82
+	.word	0,0
+.L327:
+	.word	-1,.L90,.L371-.L90,.L302-.L90
+	.half	1
+	.byte	92
+	.word	0,0
+.L310:
+	.word	-1,.L90,0,.L364-.L90
+	.half	1
+	.byte	86
+	.word	.L366-.L90,.L302-.L90
+	.half	1
+	.byte	88
+	.word	0,0
+.L312:
+	.word	-1,.L90,0,.L364-.L90
+	.half	1
+	.byte	87
+	.word	.L367-.L90,.L302-.L90
+	.half	2
+	.byte	145,124
+	.word	.L382-.L90,.L381-.L90
+	.half	1
+	.byte	83
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('SMC_Sat')
+	.sect	'.debug_loc'
+.L85:
+	.word	-1,.L86,0,.L240-.L86
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L244:
+	.word	-1,.L86,0,.L240-.L86
+	.half	1
+	.byte	85
+	.word	0,0
+.L245:
+	.word	-1,.L86,.L332-.L86,.L8-.L86
+	.half	1
+	.byte	82
+	.word	.L333-.L86,.L10-.L86
+	.half	1
+	.byte	82
+	.word	.L9-.L86,.L7-.L86
+	.half	1
+	.byte	82
+	.word	.L334-.L86,.L240-.L86
+	.half	1
+	.byte	82
+	.word	0,0
+.L242:
+	.word	-1,.L86,0,.L240-.L86
+	.half	1
+	.byte	84
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('SMC_SpeedSMC')
+	.sect	'.debug_loc'
+.L87:
+	.word	-1,.L88,0,.L246-.L88
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L252:
+	.word	-1,.L88,0,.L335-.L88
+	.half	1
+	.byte	85
+	.word	.L348-.L88,.L349-.L88
+	.half	1
+	.byte	89
+	.word	0,0
+.L250:
+	.word	-1,.L88,0,.L336-.L88
+	.half	1
+	.byte	84
+	.word	.L341-.L88,.L342-.L88
+	.half	1
+	.byte	88
+	.word	.L346-.L88,.L347-.L88
+	.half	1
+	.byte	88
+	.word	.L350-.L88,.L351-.L88
+	.half	1
+	.byte	88
+	.word	.L352-.L88,.L353-.L88
+	.half	1
+	.byte	88
+	.word	.L356-.L88,.L343-.L88
+	.half	1
+	.byte	88
+	.word	0,0
+.L261:
+	.word	0,0
+.L254:
+	.word	-1,.L88,0,.L337-.L88
+	.half	1
+	.byte	101
+	.word	.L339-.L88,.L246-.L88
+	.half	1
+	.byte	111
+	.word	0,0
+.L259:
+	.word	-1,.L88,.L340-.L88,.L246-.L88
+	.half	1
+	.byte	90
+	.word	.L354-.L88,.L355-.L88
+	.half	1
+	.byte	85
+	.word	0,0
+.L256:
+	.word	-1,.L88,.L360-.L88,.L361-.L88
+	.half	1
+	.byte	84
+	.word	0,0
+.L257:
+	.word	-1,.L88,.L344-.L88,.L345-.L88
+	.half	1
+	.byte	95
+	.word	0,0
+.L248:
+	.word	-1,.L88,0,.L337-.L88
+	.half	1
+	.byte	100
+	.word	.L338-.L88,.L246-.L88
+	.half	1
+	.byte	108
+	.word	0,0
+.L255:
+	.word	-1,.L88,.L342-.L88,.L343-.L88
+	.half	1
+	.byte	91
+	.word	.L336-.L88,.L337-.L88
+	.half	1
+	.byte	84
+	.word	.L343-.L88,.L357-.L88
+	.half	1
+	.byte	95
+	.word	.L358-.L88,.L359-.L88
+	.half	1
+	.byte	84
+	.word	0,0
+	.sdecl	'.debug_frame',debug
+	.sect	'.debug_frame'
+.L839:
+	.word	48
+	.word	-1
+	.byte	3,0,2,1,27,12,26,0,8,26,8,27,8,30,8,29,8,28,8,16,8,17,8,24,8,25,8,31,8,32,8,33,8,34,8,35,8,36,8,37,8,38
+	.byte	8,39
+	.sdecl	'.debug_frame',debug,cluster('SMC_Clamp')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L839,.L84,.L234-.L84
+	.byte	8,18,8,19,8,20,8,21,8,22,8,23
+	.sdecl	'.debug_frame',debug,cluster('SMC_Sat')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L839,.L86,.L240-.L86
+	.byte	8,18,8,19,8,20,8,21,8,22,8,23
+	.sdecl	'.debug_frame',debug,cluster('SMC_SpeedSMC')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L839,.L88,.L246-.L88
+	.sdecl	'.debug_frame',debug,cluster('SMC_SMO_Step')
+	.sect	'.debug_frame'
+	.word	36
+	.word	.L839,.L90,.L302-.L90
+	.byte	4
+	.word	(.L362-.L90)/2
+	.byte	19,8,22,26,3,19,138,8,4
+	.word	(.L302-.L362)/2
+	.byte	19,0,8,26,0,0
+	.sdecl	'.debug_frame',debug,cluster('SMC_CurrentSMC')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L839,.L92,.L262-.L92
+	.sdecl	'.debug_frame',debug,cluster('SMC_Controller_Init')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L839,.L94,.L166-.L94
+	.sdecl	'.debug_frame',debug,cluster('SMC_Controller_Step')
+	.sect	'.debug_frame'
+	.word	36
+	.word	.L839,.L96,.L171-.L96
+	.byte	4
+	.word	(.L409-.L96)/2
+	.byte	19,32,22,26,3,19,138,32,4
+	.word	(.L171-.L409)/2
+	.byte	19,0,8,26,0,0
+	.sdecl	'.debug_frame',debug,cluster('SMC_Controller_Reset')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L839,.L98,.L203-.L98
+	.sdecl	'.debug_frame',debug,cluster('SMC_Controller_GetDiagnostics')
+	.sect	'.debug_frame'
+	.word	16
+	.word	.L839,.L100,.L206-.L100
+	.byte	8,18,8,19
+	.sdecl	'.debug_frame',debug,cluster('SMC_GainSet_SetFromSchedule')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L839,.L102,.L217-.L102
+	.byte	8,18,8,19,8,21,8,22,8,23,0,0
+	.sdecl	'.debug_frame',debug,cluster('SMC_GainSchedule_Interpolate')
+	.sect	'.debug_frame'
+	.word	20
+	.word	.L839,.L104,.L220-.L104
+	.byte	8,19,8,22,8,23,0,0
+	; Module end
