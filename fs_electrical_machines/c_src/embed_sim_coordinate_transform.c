@@ -111,8 +111,13 @@ void Clarke_Step(
 
     if ((alpha_out != NULL) && (beta_out != NULL))
     {
-        *alpha_out = (CT_TWO_THIRDS * ia) - (CT_ONE_THIRD * ib) - (CT_ONE_THIRD * ic);
-        *beta_out  =  CT_INV_SQRT3 * (ib - ic);
+        /* Amplitude-invariant Clarke -- matches iLLD Clarke() on AURIX.
+         * i_alpha = ia
+         * i_beta  = (ia + 2*ib) / sqrt(3)
+         * ic not used (balanced: ic = -ia - ib). */
+        (void)ic;
+        *alpha_out = ia;
+        *beta_out  = (ia + ((MatrixFloat)2.0f * ib)) * CT_INV_SQRT3;
     }
     else
     {

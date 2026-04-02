@@ -107,8 +107,11 @@ class ClarkeTransformBlock(VectorBlock):
             v = input_values[0].value
             if len(v) >= 3:
                 i_a, i_b, i_c = float(v[0]), float(v[1]), float(v[2])
-        i_alpha = (2.0/3.0)*i_a - (1.0/3.0)*i_b - (1.0/3.0)*i_c
-        i_beta  = (i_b - i_c) / math.sqrt(3.0)
+        # Amplitude-invariant Clarke -- matches iLLD Clarke() and C embed_sim_coordinate_transform.c
+        # i_alpha = ia
+        # i_beta  = (ia + 2*ib) / sqrt(3)
+        i_alpha = i_a
+        i_beta  = (i_a + 2.0 * i_b) / math.sqrt(3.0)
         self.output = VectorSignal(np.array([i_alpha, i_beta], dtype=np.float32),
                                    self.name, dtype=self.dtype)
         return self.output

@@ -18,7 +18,7 @@ file_list = [
     "embed_sim_coordinate_transform.c",
     "embed_sim_sv_pwm.h",
     "embed_sim_sv_pwm.c",
-    "smc_gains_config.h"
+    "embed_sim_smc_gains.h"
 ]
 
 def copy_if_exists(src_dir, dst_dir, filename):

@@ -80,6 +80,24 @@ T_SIM      = 5.0                         # [s]     simulation duration
 DT         = 50e-6                       # [s]     sample period (20 kHz)
 _RAMP_TIME = 0.5                         # [s]     speed ramp duration in CtrlPacker
 
+# =============================================================================
+# GPT12 encoder noise model
+# =============================================================================
+# Simulates the IfxGpt12_IncrEnc_getAbsolutePosition() turn-rollover race
+# condition that causes "lost step" glitches on AURIX hardware.
+#
+# At each turn boundary (rawPosition wraps 3999->0), there is a probability
+# ENC_GLITCH_PROB that rawPosition reads 0 before turn increments, producing
+# a ~2*pi backward jump in reported theta_m for one step.  After the 2*pi
+# unwrap in the speed estimator, this maps to delta=0 (lost step).
+# At 2000 RPM: 2000/60 = 33.3 turn-rollovers/second = once per 600 steps.
+#
+# Set ENC_GLITCH_ENABLE = False for ideal simulation (no hardware noise).
+# Set ENC_GLITCH_ENABLE = True  to reproduce AURIX hardware behaviour.
+ENC_GLITCH_ENABLE = True           # enable GPT12 rollover glitch model
+ENC_GLITCH_PROB   = 0.30           # probability of glitch at each rollover
+ENC_RESOLUTION    = 4000           # encoder pulses/rev (x4 quadrature)
+
 # Load-torque schedule breakpoints [s]
 T_LOAD_T1    = 0.5                       # [s]  light load applied
 T_LOAD_T2    = 1.2                       # [s]  full load applied
@@ -245,10 +263,13 @@ class CtrlPacker(VectorBlock):
         super().__init__(name, **kw)
         self.output_label           = "[w_ref,th_m,ia,ib,ic]"
         self._omega_ref_filt: float = 0.0   # [rad/s] ramped reference state
+        self._enc_theta_prev: float = 0.0   # previous true theta_m for rollover detection
+        self._enc_rng = np.random.default_rng(seed=42)  # reproducible noise
 
     def reset(self):
         super().reset()
         self._omega_ref_filt = 0.0
+        self._enc_theta_prev = 0.0
 
     def compute_py(self, t, dt, input_values=None):
         m = (input_values[0].value
@@ -264,7 +285,26 @@ class CtrlPacker(VectorBlock):
             -max_step,
             min(max_step, omega_target - self._omega_ref_filt))
 
-        theta_m = float(m[4]) if len(m) > 4 else 0.0
+        # ── GPT12 encoder noise model ──────────────────────────────────────
+        # Simulates turn-rollover race condition from IfxGpt12_IncrEnc_getAbsolutePosition.
+        # At each mechanical turn boundary, rawPosition may read 0 before
+        # turn increments -> reported theta_m jumps back by ~2*pi for one step.
+        # After 2*pi unwrap in speed estimator: delta=0 (lost step).
+        theta_m_true = float(m[4]) if len(m) > 4 else 0.0
+        if ENC_GLITCH_ENABLE:
+            # Detect turn boundary: theta_m_true crossed a 2*pi multiple
+            turns_prev = int(self._enc_theta_prev / (2.0 * math.pi))
+            turns_now  = int(theta_m_true        / (2.0 * math.pi))
+            at_rollover = (turns_now > turns_prev) and (theta_m_true > 0.0)
+            if at_rollover and self._enc_rng.random() < ENC_GLITCH_PROB:
+                # Race condition: report position one turn behind (rawPos=0, turn not incremented)
+                theta_m = theta_m_true - 2.0 * math.pi
+            else:
+                theta_m = theta_m_true
+            self._enc_theta_prev = theta_m_true
+        else:
+            theta_m = theta_m_true
+        # ───────────────────────────────────────────────────────────────────
 
         self.output = VectorSignal(np.array([
             self._omega_ref_filt,

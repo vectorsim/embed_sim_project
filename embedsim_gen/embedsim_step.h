@@ -39,11 +39,11 @@
  */
 typedef struct
 {
-    real32_T omega_ref_mech;
-    real32_T theta_m;
-    real32_T ia;
-    real32_T ib;
-    real32_T ic;
+    real32_T omega_ref_mech;                            /**< Mechanical speed reference [rad/s]; range [0, ~314] for 0-3000 RPM */
+    real32_T theta_m;                                   /**< Mechanical rotor angle [rad]; accumulating (NOT wrapped), from encoder */
+    real32_T ia;                                        /**< Phase-A current from ADC [A]; range [-SMC_I_MAX, +SMC_I_MAX] */
+    real32_T ib;                                        /**< Phase-B current from ADC [A]; range [-SMC_I_MAX, +SMC_I_MAX] */
+    real32_T ic;                                        /**< Phase-C current from ADC [A]; range [-SMC_I_MAX, +SMC_I_MAX] */
 } EmbedSim_Input_T;
 
 /**
@@ -59,7 +59,7 @@ typedef struct
 } EmbedSim_Output_T;
 
 /* Block headers */
-#include "embed_sim_mpc_controller.h"
+#include "embed_sim_smc_controller.h"
 #include "embed_sim_motor_utility_blocks.h"
 #include "embed_sim_sv_pwm.h"
 

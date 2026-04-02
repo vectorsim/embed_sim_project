@@ -69,9 +69,9 @@ class _DB42S02:
     """NANOTEC DB42S02 motor parameters."""
 
     SMC_P_POLES    = 4
-    SMC_R_S        = 0.19          # Ω
-    SMC_L_D        = 0.125e-3      # H
-    SMC_L_Q        = 0.125e-3      # H
+    SMC_R_S        = 0.285         # Ω   (DELTA: R_line*3/2)
+    SMC_L_D        = 0.3675e-3     # H   (DELTA: L_line*3/2)
+    SMC_L_Q        = 0.3675e-3     # H   (DELTA: L_line*3/2)
     SMC_LAMBDA_PM  = 0.0014        # Wb
     SMC_J_ROTOR    = 2.4e-6        # kg·m²
     SMC_B_FRICTION = 1e-6          # N·m·s/rad
@@ -83,8 +83,7 @@ class _DB42S02:
     # Sliding surface — first-order: s = e + λ·∫e
     # GAMMA_W = 0.0 disables double integral — was adding phase lag → instability
     SMC_WC_I     = 2.0 * math.pi * 800.0   # current loop bandwidth  [rad/s]
-    SMC_LAMBDA_W = 2.0 * math.pi * 20.0    # surface slope [rad/s]
-    SMC_GAMMA_W  = 0.0                      # double-integral disabled
+    # GAMMA_W = 0.0 disables double integral -- was adding phase lag -> instability
 
     # SMO parameters
     # k must satisfy:  k > |e_back_EMF_max|
@@ -93,8 +92,8 @@ class _DB42S02:
     # NEVER use k = V_MAX — that injects ±9.8V into the observer at every step,
     # which at 20 kHz / L=125µH gives ΔI = 9.8×50e-6/125e-6 = 3.9 A per step
     # → observer diverges → id=42A → motor stalls.
-    SMC_SMO_K  = 2.0                   # V  (1.7× back-EMF margin)
-    SMC_SMO_FC = 500.0                 # Hz — diagnostic only; not in control loop
+    SMC_SMO_K  = 2.5                   # V  k > BEMF_max = we_max*lpm = 1256*0.0014 = 1.76V, 1.4x margin
+    SMC_SMO_FC = 500.0                 # Hz -- diagnostic only; not in control loop
 
     # Current loop — discrete pole placement at z=0.5:
     #   KS_I = φ_i·L/(2·dt) = 0.5·125e-6/(2·50e-6) = 0.625 V
@@ -110,8 +109,8 @@ class _DB42S02:
     # All controller voltages must be divided by this gain so that after
     # SVPWM amplification the plant sees the intended physical voltages.
     SMC_SVPWM_GAIN = SMC_V_DC / 2.0   # = 8.5
-    SMC_KS_I  =   0.058730
-    SMC_PHI_I = 0.277341
+    SMC_KS_I  =   0.179550
+    SMC_PHI_I = 0.622900
 
     # Speed loop:
     #   KS_W ≥ T_load_max/KT = 0.020/0.0084 = 2.381 A → 3.095 A (+30%)
@@ -121,8 +120,9 @@ class _DB42S02:
     #   ETA_W: small damping term, keep tiny
     SMC_KS_W  =  5.554994   # A
     SMC_PHI_W = 279.005762    # rad/s
-    SMC_ETA_W = 0.001   # —
-    SMC_LAMBDA_W = 2.0 * math.pi * 10.0   # 62.83 rad/s
+    SMC_ETA_W = 0.001   # --
+    SMC_LAMBDA_W = 2.0 * math.pi * 10.0   # 62.83 rad/s -- matched to C SMC_LAMBDA_W = 2pi*10 Hz
+    SMC_GAMMA_W  = 0.0                    # rad/s² -- double-integral disabled (adds phase lag)
 
 
 # =============================================================================
@@ -371,22 +371,27 @@ class SMCControllerBlock(VectorBlock):
 
     def _get_speed_from_encoder(self, theta_m: float, dt: float) -> float:
         """
-        Finite-difference speed estimator with 2π unwrapping + IIR.
+        Finite-difference speed estimator with 2pi unwrapping + speed-adaptive IIR.
 
         Used ONLY for speed SMC feedback.
-        Park/InvPark use theta_e = p·theta_m directly — not this estimate.
+        Park/InvPark use theta_e = p*theta_m directly -- not this estimate.
 
-        2π unwrap: every electrical wrap (2π/p ≈ 0.79 rad at p=4) would
-        cause a large negative spike in the raw diff without unwrapping.
-        IIR α=0.3 → τ ≈ 3 steps (150 µs at 50 µs dt).
+        Speed-adaptive alpha:
+          |omega_m_filt| > 52.4 rad/s (500 RPM): alpha=0.3 (fc~1364 Hz, tau~3 steps)
+            -- fast response, GPT12 rollover spikes are rare above 500 RPM.
+          |omega_m_filt| <= 52.4 rad/s           : alpha=0.01 (100-step window)
+            -- suppresses 53 Hz rollover spikes at low speed.
+        Matches C ALPHA_WIN adaptive logic in SMC_Controller_Step().
         """
         if dt > 0.0:
             delta = theta_m - self._last_theta_m
             delta -= 2.0 * math.pi * math.floor(
                 (delta + math.pi) / (2.0 * math.pi))
             self._last_theta_m_unwrapped += delta
-            omega_raw        = delta / dt
-            self._omega_filt = 0.7 * self._omega_filt + 0.3 * omega_raw
+            omega_raw = delta / dt
+            # Speed-adaptive alpha -- matched to C
+            alpha_win = 0.3 if abs(self._omega_filt) > 52.4 else 0.01
+            self._omega_filt = (1.0 - alpha_win) * self._omega_filt + alpha_win * omega_raw
         self._last_theta_m = theta_m
         return self._omega_filt
 
@@ -432,7 +437,11 @@ class SMCControllerBlock(VectorBlock):
 
         inv_L = 1.0 / self.SMC_L_D
         k     = self.SMC_SMO_K
-        alpha = self._smo_lpf_alpha
+        # Dynamic LPF alpha: matched to C alpha_dyn = wc*dt / (1 + wc*dt).
+        # Pre-computed self._smo_lpf_alpha is only valid at the design dt.
+        # Computing here is correct for any dt (variable-rate debug mode).
+        _wc = 2.0 * math.pi * self.SMC_SMO_FC
+        alpha = (_wc * dt) / (1.0 + _wc * dt)
 
         # Current estimation errors — sign must be (measured - estimated)
         # so the switching term pushes î toward i, not away from it.
@@ -517,9 +526,14 @@ class SMCControllerBlock(VectorBlock):
         vd = ed_hat + self.SMC_KS_I * self._sat(s_d, phi_i)
         vq = eq_hat + self.SMC_KS_I * self._sat(s_q, phi_i)
 
+        # Voltage vector clamped to normalised hexagon limit.
+        # vd/vq here are already divided by SVPWM_GAIN, so the limit is
+        # V_MAX_norm = V_MAX / SVPWM_GAIN = (V_DC/sqrt(3)) / (V_DC/2) = 2/sqrt(3) = 1.1547.
+        # Matches C: v_max_norm = SMC_V_MAX / SMC_SVPWM_GAIN inside SMC_CurrentSMC().
+        v_max_norm = self.SMC_V_MAX / self.SMC_SVPWM_GAIN
         magnitude = math.sqrt(vd * vd + vq * vq)
-        if magnitude > self.SMC_V_MAX:
-            scale = self.SMC_V_MAX / magnitude
+        if magnitude > v_max_norm:
+            scale = v_max_norm / magnitude
             vd   *= scale
             vq   *= scale
 

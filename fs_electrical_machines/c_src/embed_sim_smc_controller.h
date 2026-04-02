@@ -6,16 +6,22 @@
  *   - Speed SMC:    s = e + λ·∫e   (first-order, γ=0 — double integral disabled)
  *   - Current SMC:  classical FOC equivalent control + switching
  *
+ * Encoder fault detection:
+ *   - Validates encoder angle steps against physical limits
+ *   - Detects glitches and excessive jumps
+ *   - Automatically switches to sensorless mode if encoder fails
+ *   - Blends encoder and SMO estimates based on confidence
+ *
  * Signal flow (complete FOC chain):
  *   [ia, ib, ic] → Clarke → [iα, iβ] → Park(θ_e) → [id, iq]
- *   θ_e = p·θ_m  (exact from encoder)
- *   ω_m = Δθ_m/dt + IIR  (encoder finite-difference)
+ *   θ_e = p·θ_m  (exact from encoder or SMO blended)
+ *   ω_m = Δθ_m/dt + IIR  (encoder finite-difference or SMO)
  *   [ω_ref, ω_m, id, iq] → SMC → [vd, vq] → InvPark(θ_e) → [vα, vβ]
  *
  * Equivalent control (no SMO in current loop path):
  *   ed_hat =  R·id_meas - ωe·Lq·iq_meas
  *   eq_hat =  R·iq_meas + ωe·(Ld·id_meas + λpm)
- *   SMO still runs for diagnostics / future sensorless use, NOT used in vd/vq.
+ *   SMO still runs for diagnostics / sensorless backup, NOT used in vd/vq.
  *
  * Gain update workflow
  * --------------------
@@ -37,7 +43,7 @@
  *
  * Target: Infineon AURIX TriCore TC3xx, ARM Cortex-M4
  *
- * \version   2.0.0
+ * \version   2.2.0
  * \copyright Copyright (C) EmbedSim 2025
  *
  *********************************************************************************************************************/
@@ -60,13 +66,13 @@
 #define SMC_P_POLES          (4U)
 
 /** \brief Stator resistance [Ω] */
-#define SMC_R_S              ((MatrixFloat)0.19f)
+#define SMC_R_S              ((MatrixFloat)0.285f)   /* DELTA: R_phase = R_line*3/2 = 0.19*1.5 */
 
 /** \brief d-axis inductance [H] */
-#define SMC_L_D              ((MatrixFloat)0.000125f)
+#define SMC_L_D              ((MatrixFloat)0.0003675f) /* DELTA: L_phase = L_line*3/2 = 0.245e-3*1.5 */
 
 /** \brief q-axis inductance [H] */
-#define SMC_L_Q              ((MatrixFloat)0.000125f)
+#define SMC_L_Q              ((MatrixFloat)0.0003675f) /* DELTA: L_phase = L_line*3/2 */
 
 /** \brief Permanent magnet flux linkage [Wb] */
 #define SMC_LAMBDA_PM        ((MatrixFloat)0.0014f)
@@ -134,11 +140,11 @@
 /*********************************************************************************************************************/
 
 /** \brief SMO switching gain k [V]
- *  k > |e_BEMF_max| = ωe_max·λpm = 837.8·0.0014 = 1.17 V → 2.0 V gives 1.7× margin.
+ *  k > |e_BEMF_max| = ωe_max·λpm = 1256·0.0014 = 1.76 V → 2.5 V gives 1.4× margin.
  *  Must NOT be set to V_MAX (14.7 V) — that injects ±14.7 V per step into the observer,
  *  ΔI = 14.7·50e-6/125e-6 = 5.9 A/step → observer diverges → id runaway.
- *  Matched to Python SMC_SMO_K = 2.0 V. */
-#define SMC_SMO_K            ((MatrixFloat)2.0f)
+ *  Increased from 0.75V to 2.5V for reliable tracking at 3000 RPM. */
+#define SMC_SMO_K            ((MatrixFloat)2.5f)  /* k > BEMF_max = we_max*lpm = 1256*0.0014 = 1.76V, 1.4x margin */
 
 /** \brief SMO back-EMF LPF cutoff  ωc = 2π×500 Hz  [rad/s] */
 #define SMC_SMO_WC           ((MatrixFloat)3141.592653589793f)
@@ -156,11 +162,11 @@
 /*------------------------------------ Encoder speed estimator parameters --------------------------------------------*/
 /*********************************************************************************************************************/
 
-/** \brief IIR cutoff frequency for encoder speed estimator [Hz].
- *  α = ωc·dt / (1 + ωc·dt) is computed each step in SMC_Controller_Step()
- *  so it is correct for any sample period.
- *  At dt=50 µs: α = 2π·1364·50e-6 / (1 + ...) = 0.300 → τ ≈ 3 steps (150 µs).
- *  Matched to Python: omega_filt = 0.7·prev + 0.3·raw  (fc ≈ 1364 Hz). */
+/** \brief IIR cutoff frequency for encoder speed estimator -- fast branch [Hz].
+ *  Applied when |omega_m_filt| > 52.4 rad/s (500 RPM).
+ *  At dt=50 µs: alpha_fast = 0.300, tau ~ 3 steps (150 µs).
+ *  Below 500 RPM: alpha_slow = 0.01 (100-step boxcar) suppresses GPT12 rollover spikes.
+ *  Matched to Python _get_speed_from_encoder() alpha_win logic. */
 #define SMC_SPEED_IIR_FC     ((MatrixFloat)1364.2f)
 
 
@@ -194,6 +200,16 @@
 /*********************************************************************************************************************/
 
 /**
+ * \enum SMC_ControlMode_T
+ * \brief  Control mode selection (encoder vs sensorless)
+ */
+typedef enum
+{
+    SMC_MODE_ENCODER = 0U,      /**< Use encoder for position/speed feedback */
+    SMC_MODE_SENSORLESS = 1U    /**< Use SMO for position/speed feedback */
+} SMC_ControlMode_T;
+
+/**
  * \struct SMC_GainSet_T
  * \brief  Runtime-configurable SMC gains.
  *
@@ -202,10 +218,10 @@
  *
  * Member  │ Units  │ Tunes      │ Description
  * ────────┼────────┼────────────┼──────────────────────────────────────
- * ks_w    │ N·m    │ smc_fmu_   │ Speed SMC switching gain
+ * ks_w    │ A      │ smc_fmu_   │ Speed SMC switching gain (q-axis current amplitude)
  * eta_w   │ —      │ tuner.py   │ Speed SMC linear damping
  * phi_w   │ rad/s  │            │ Speed boundary layer thickness
- * ks_i    │ V      │            │ Current SMC switching gain
+ * ks_i    │ V      │            │ Current SMC switching gain (physical, pre-SVPWM)
  * phi_i   │ A      │            │ Current boundary layer thickness
  */
 typedef struct
@@ -318,9 +334,11 @@ typedef struct
     MatrixFloat iq_ref;        /**< q-axis current reference [A] */
     MatrixFloat id_ref;        /**< d-axis current reference [A] — MTPA = 0 */
 
-    /* Diagnostic voltage outputs */
-    MatrixFloat vd;            /**< d-axis voltage [V] */
-    MatrixFloat vq;            /**< q-axis voltage [V] */
+    /* Diagnostic voltage outputs — normalised (÷ V_DC/2), not physical [V].
+     * SMC_CurrentSMC() applies the SVPWM normalisation before returning,
+     * so these hold the values passed to InvPark (same units as v_alpha/v_beta). */
+    MatrixFloat vd;            /**< d-axis voltage normalised (= vd_physical / SMC_SVPWM_GAIN) */
+    MatrixFloat vq;            /**< q-axis voltage normalised (= vq_physical / SMC_SVPWM_GAIN) */
 
     /* Embedded transform states (MISRA Rule 8.7 — no static locals) */
     Clarke_T   clarke_state;
@@ -332,8 +350,25 @@ typedef struct
     MatrixFloat log_speed_ref;
     MatrixFloat log_iq_meas;
     MatrixFloat log_id_meas;
+    MatrixFloat log_control_mode;      /**< Control mode at log time */
+    MatrixFloat log_encoder_glitches;  /**< Glitch count at log time */
     uint32_T    log_counter;
     MatrixFloat log_next_time;
+
+    /* Encoder fault detection */
+    uint32_T    encoder_glitch_count;  /**< Number of consecutive glitches detected */
+    uint32_T    encoder_good_count;    /**< Number of consecutive good samples */
+    uint32_T    encoder_fault_detected; /**< 1 if encoder fault has been detected */
+    uint32_T    control_mode;          /**< Current control mode (0=encoder, 1=sensorless) */
+
+    /* Back-EMF PLL speed estimator -- added AFTER all existing fields.
+     * No existing field offsets are disturbed.
+     * Second-order PLL: wn = 2*pi*80 Hz, zeta = 1/sqrt(2)
+     *   Kp = 2*zeta*wn = 711.0   Ki = wn^2 = 252657
+     * Tracks theta_e_hat from SMO. Pure algorithmic -- no registers.
+     * Matches MATLAB Embedded Coder bemf_pll block output. */
+    MatrixFloat _reserved_pll_1;  /**< Reserved -- was theta_e_pll */
+    MatrixFloat _reserved_pll_2;  /**< Reserved -- was omega_e_pll */
 
 } SMC_Controller_T;
 
@@ -394,6 +429,15 @@ extern void SMC_Controller_GetDiagnostics(
     MatrixFloat            * const speed_ref,
     MatrixFloat            * const iq,
     MatrixFloat            * const id);
+
+/**
+ * \brief  Get encoder fault status.
+ */
+extern void SMC_Controller_GetFaultStatus(
+    const SMC_Controller_T * const s,
+    uint32_T               * const control_mode,
+    uint32_T               * const glitch_count,
+    uint32_T               * const fault_detected);
 
 /**
  * \brief  Copy a gain set into g_smc_gains (ISR-safe field-by-field copy).

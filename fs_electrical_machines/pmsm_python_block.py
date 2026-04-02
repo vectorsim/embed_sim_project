@@ -62,9 +62,9 @@ class PMSM_Python_Plant(VectorBlock):
     output_label      = "[rpm,ia,ib,ic,theta_m,Tem,id,iq]"
 
     def __init__(self, name: str = "pmsm",
-                 R: float         = 0.19,
-                 L_d: float       = 0.125e-3,
-                 L_q: float       = 0.125e-3,
+                 R: float         = 0.285,      # DELTA wiring
+                 L_d: float       = 0.3675e-3,  # DELTA wiring
+                 L_q: float       = 0.3675e-3,  # DELTA wiring
                  lambda_pm: float = 0.0014,
                  J: float         = 2.4e-6,
                  B_fric: float    = 1e-6,

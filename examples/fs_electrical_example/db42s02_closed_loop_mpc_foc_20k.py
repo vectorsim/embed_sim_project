@@ -423,7 +423,7 @@ def build_and_run() -> dict:
 
     # ── Simulate ──────────────────────────────────────────────────────────────
     sim = EmbedSim(sinks=[sink, sink_cg], T=T_SIM, dt=DT,
-                   solver=ODESolver.EULER)
+                   solver=ODESolver.RK4)
 
     print("\n[Topology]")
     sim.topo.print_console()

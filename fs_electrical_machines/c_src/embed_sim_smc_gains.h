@@ -19,11 +19,11 @@
  *           --> 5.554994 A  (x2.33 margin)
  *   PHI_W   tuned by Latin-Hypercube search
  *           --> 279.005762 rad/s
- *   KS_I    discrete z-pole at z = 0.9765
- *           Current slew = KS_I*dt/L = 0.0235 A/step  < PHI_I --> no overshoot
- *           --> 0.058730 V  (physical; divided by V_DC/2 = 8.5 inside SMC_Controller_Step)
+ *   KS_I    discrete z-pole at z = 0.9756
+ *           Current slew = KS_I*dt/L = 0.0244 A/step  < PHI_I --> no overshoot
+ *           --> 0.179550 V  (physical; divided by V_DC/2 = 8.5 inside SMC_Controller_Step)
  *   PHI_I   current boundary layer
- *           --> 0.277341 A
+ *           --> 0.622900 A
  *
  * Written by db42s02_closed_loop_smc_foc_20k.py -- do not edit manually.
  * Recompile embed_sim_smc_controller.c after patching this file.
@@ -80,24 +80,24 @@
  *  reference in [-1, +1] and the plant sees the correct physical voltages.
  *
  *  Discrete pole placement (Krishnan PMSM Drives, Ch.4):
- *    z-pole = 1 - KS_I*dt/L = 1 - 0.058730*5.00e-05/1.250e-04 = 0.9765
+ *    z-pole = 1 - KS_I*dt/L = 1 - 0.179550*5.00e-05/3.675e-04 = 0.9756
  *  Current slew per sample:
- *    slew = KS_I*dt/L = 0.0235 A/step   (< PHI_I --> no overshoot)
+ *    slew = KS_I*dt/L = 0.0244 A/step   (< PHI_I --> no overshoot)
  *
  *  Units  : V  (physical phase voltage, pre-SVPWM)
- *  Range  : [0.3392, 4.9075] V
+ *  Range  : [0.5087, 4.9075] V
  *  Tuned  : Latin-Hypercube search */
-#define SMC_KS_I     ((MatrixFloat)0.058730f)
+#define SMC_KS_I     ((MatrixFloat)0.179550f)
 
 /** \brief Current SMC boundary layer thickness [A].
  *
  *  Controls smooth vs. switching behaviour of the d- and q-axis current loops.
  *  Stability condition: slew = KS_I*dt/L < PHI_I (no inter-sample overshoot).
- *    slew = 0.0235 A/step   PHI_I = 0.2773 A   --> < PHI_I --> no overshoot
+ *    slew = 0.0244 A/step   PHI_I = 0.6229 A   --> < PHI_I --> no overshoot
  *
  *  Units  : A  (dq current error)
  *  Range  : [0.100, 1.500] A
  *  Tuned  : Latin-Hypercube search */
-#define SMC_PHI_I    ((MatrixFloat)0.277341f)
+#define SMC_PHI_I    ((MatrixFloat)0.622900f)
 
 #endif /* EMBED_SIM_SMC_GAINS_H_ */
