@@ -263,10 +263,6 @@ class SMCControllerBlock(VectorBlock):
         self._e_beta_filt: float  = 0.0
         self._v_alpha_prev: float = 0.0
         self._v_beta_prev: float  = 0.0
-        # LPF coefficient α = ωc·dt / (1 + ωc·dt)
-        _wc_smo = 2.0 * math.pi * self.SMC_SMO_FC
-        self._smo_lpf_alpha: float = (
-            _wc_smo * self._dt_s_float / (1.0 + _wc_smo * self._dt_s_float))
 
         # ── Soft-start current limit ───────────────────────────────────────────
         # Ramps iq_ref limit from 0 → I_MAX over _SOFTSTART_T seconds.
@@ -303,8 +299,10 @@ class SMCControllerBlock(VectorBlock):
         self._ct_inv_park = InvParkTransformBlock("_smc_inv_park", use_c_backend=False)
 
         print(f"[SMC] Encoder: theta_e=p·theta_m (exact)  omega_m=diff+IIR")
+        _wc_smo  = 2.0 * math.pi * self.SMC_SMO_FC
+        _alpha_0 = _wc_smo * self._dt_s_float / (1.0 + _wc_smo * self._dt_s_float)
         print(f"[SMC] SMO back-EMF filter: k={self.SMC_SMO_K:.3f} V  "
-              f"fc={self.SMC_SMO_FC:.0f} Hz  alpha={self._smo_lpf_alpha:.5f}")
+              f"fc={self.SMC_SMO_FC:.0f} Hz  alpha(dt={self._dt_s_float*1e6:.0f}us)={_alpha_0:.5f} (dynamic per step)")
         print(f"[SMC] Speed gains: KS_W={self.SMC_KS_W:.4f} A  "
               f"PHI_W={self.SMC_PHI_W:.2f} rad/s  ETA_W={self.SMC_ETA_W:.4f}")
         print(f"[SMC] Current gains (pure SMC): KS_I={self.SMC_KS_I:.4f} V  "
@@ -437,9 +435,8 @@ class SMCControllerBlock(VectorBlock):
 
         inv_L = 1.0 / self.SMC_L_D
         k     = self.SMC_SMO_K
-        # Dynamic LPF alpha: matched to C alpha_dyn = wc*dt / (1 + wc*dt).
-        # Pre-computed self._smo_lpf_alpha is only valid at the design dt.
-        # Computing here is correct for any dt (variable-rate debug mode).
+        # LPF alpha computed dynamically each step -- correct for any dt.
+        # Matched to C: alpha_dyn = SMC_SMO_WC*dt / (1 + SMC_SMO_WC*dt).
         _wc = 2.0 * math.pi * self.SMC_SMO_FC
         alpha = (_wc * dt) / (1.0 + _wc * dt)
 
