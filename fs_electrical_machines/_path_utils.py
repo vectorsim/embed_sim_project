@@ -12,7 +12,7 @@ Identical contract to:
 from pathlib import Path
 
 
-def _get_project_root(start: Path, max_levels: int = 6) -> Path:
+def _find_project_root(start: Path, max_levels: int = 6) -> Path:
     """Walk upward from *start* until we find a dir that contains 'embedsim/'."""
     current = start.resolve()
     for _ in range(max_levels):
@@ -31,7 +31,7 @@ def _get_project_root(start: Path, max_levels: int = 6) -> Path:
 def get_embedsim_import_path() -> str:
     """Return the project root as a str suitable for sys.path.insert(0, ...)."""
     here = Path(__file__).resolve().parent          # fs_electrical_machines/
-    root = _get_project_root(here)
+    root = _find_project_root(here)
     return str(root)
 
 
