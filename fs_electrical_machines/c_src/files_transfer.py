@@ -3,7 +3,7 @@ import shutil
 
 # Directories
 dir_a = r"C:\EmbedSimProject\embed_sim_project\fs_electrical_machines\c_src"
-dir_b = r"C:\Aurix_EmbedSim\AURIX_TC3x_Motor_Control_SDK\AppSw\PmsmFoc\EmbedSim"
+dir_b = r"C:\Aurix_EmbedSim\PMSM\EmbedSim"
 
 # List of file names (only names, not full paths)
 file_list = [
