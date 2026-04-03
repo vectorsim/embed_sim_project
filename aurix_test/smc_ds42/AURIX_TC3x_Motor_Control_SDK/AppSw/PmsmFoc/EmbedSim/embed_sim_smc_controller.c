@@ -122,7 +122,7 @@
 
 /* Encoder validation limits */
 #define SMC_MAX_ANGLE_STEP  ((MatrixFloat)0.2f)   /* Max 0.2 rad/step (~11.5 deg) at 3000 RPM */
-#define SMC_GLITCH_THRESHOLD    (5U)              /* 5 glitches = switch to sensorless */
+#define SMC_GLITCH_THRESHOLD    (50U)             /* 50 consecutive glitches to switch sensorless; 5 fires on startup rollover */
 #define SMC_GLITCH_CLEAR_TIME   (1000U)           /* Clear glitch counter after 1000 good samples */
 
 
@@ -471,9 +471,7 @@ static MatrixFloat SMC_ValidateEncoderAngle(
             {
                 s->control_mode = SMC_MODE_SENSORLESS;
                 s->encoder_fault_detected = 1U;
-                /* Reset integrators to prevent windup during transition */
-                s->int_spd = SMC_ZERO_F;
-                s->int2_spd = SMC_ZERO_F;
+                /* Integrator NOT reset -- causes torque dropout jerk */
             }
             else
             {

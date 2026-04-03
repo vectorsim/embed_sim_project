@@ -80,35 +80,35 @@
 
 void PmsmFoc_initMotorControl(MotorControl* const motorCtrl)
 {
-	/* Initialize control variables */
-	PmsmFoc_initControlVariables(motorCtrl);
+    /* Initialize control variables */
+    PmsmFoc_initControlVariables(motorCtrl);
 
-	/* Initialize hardware peripherals */
-	PmsmFoc_initHardware(motorCtrl);
+    /* Initialize hardware peripherals */
+    PmsmFoc_initHardware(motorCtrl);
 
-	/* Reset phase current sense calibration status */
-	PmsmFoc_PhaseCurrentSense_resetCalibrationStatus(&motorCtrl->inverter.phaseCurrentSense);
+    /* Reset phase current sense calibration status */
+    PmsmFoc_PhaseCurrentSense_resetCalibrationStatus(&motorCtrl->inverter.phaseCurrentSense);
 
-	/* Reset encoder calibration status */
-	PmsmFoc_resetEncoderCalibrationStatus(motorCtrl);
+    /* Reset encoder calibration status */
+    PmsmFoc_resetEncoderCalibrationStatus(motorCtrl);
 
 #if(PHASE_CURRENT_RECONSTRUCTION == USER_LOWSIDE_THREE_SHUNT_WITH_HIGHSIDE_MONITORING)
-	/* Reset the DC-link current sense calibration status */
-	PmsmFoc_CurrentDCLinkSenseHs_resetCalibrationStatus(&motorCtrl->inverter.highSideCurrentSense);
+    /* Reset the DC-link current sense calibration status */
+    PmsmFoc_CurrentDCLinkSenseHs_resetCalibrationStatus(&motorCtrl->inverter.highSideCurrentSense);
 
-	/* Set the DC-link current sense gain */
-	PmsmFoc_CurrentDCLinkSenseHs_setGain(&motorCtrl->inverter.highSideCurrentSense,
-			HighSideCurrentSense_Gain_200VperV);
+    /* Set the DC-link current sense gain */
+    PmsmFoc_CurrentDCLinkSenseHs_setGain(&motorCtrl->inverter.highSideCurrentSense,
+            HighSideCurrentSense_Gain_200VperV);
 #endif
 
 #if(DC_LINK_VOLTAGE_MEASUREMENT == ENABLED)
-	/* Reset DC-link voltage sense calibration status */
-	PmsmFoc_DcLinkVoltageSense_resetCalibrationStatus(&motorCtrl->inverter.dcLinkVoltageSense);
+    /* Reset DC-link voltage sense calibration status */
+    PmsmFoc_DcLinkVoltageSense_resetCalibrationStatus(&motorCtrl->inverter.dcLinkVoltageSense);
 #endif
 
 #if(BEMF_MEASUREMENT == ENABLED)
-	/* Reset the phase voltage sense calibration status */
-	PmsmFoc_BemfVoltageSense_resetCalibrationStatus(&motorCtrl->inverter.bemfVoltageSense);
+    /* Reset the phase voltage sense calibration status */
+    PmsmFoc_BemfVoltageSense_resetCalibrationStatus(&motorCtrl->inverter.bemfVoltageSense);
 #endif
 
 }
@@ -243,8 +243,43 @@ void PmsmFoc_doFieldOrientedControl(MotorControl* const motorCtrl)
     IfxGpt12_IncrEnc_update(&motorCtrl->positionSensor.encoder);
     PmsmFoc_reconstructCurrent(motorCtrl);
 
-    sim_in.theta_m        = IfxGpt12_IncrEnc_getAbsolutePosition(
-                                &motorCtrl->positionSensor.encoder);
+    /* theta_m: accumulate wrapped getAbsolutePosition() delta each step.
+     * getAbsolutePosition() = (turn + raw/res)*2pi. Without Z ISR turn=0,
+     * so it wraps at 2*pi every revolution. Tracking the delta and unwrapping
+     * gives a true accumulating angle -- no Z ISR required.
+     * Calibration offset is already baked into rawPosition by the encoder init,
+     * so the accumulated angle is correct relative to the calibrated zero. */
+    {
+        static float32 s_theta_prev = 0.0f;
+        static float32 s_theta_acc  = 0.0f;
+        static uint8   s_enc_init   = 0U;
+        const  float32 theta_wrap   = IfxGpt12_IncrEnc_getAbsolutePosition(
+                                          &motorCtrl->positionSensor.encoder);
+
+        if (s_enc_init == 0U)
+        {
+            /* First call after start: seed from current position, no delta */
+            s_theta_prev = theta_wrap;
+            s_theta_acc  = theta_wrap;
+            s_enc_init   = 1U;
+        }
+        else
+        {
+            float32 delta = theta_wrap - s_theta_prev;
+
+            /* Unwrap delta to (-pi, pi) to catch 2*pi rollovers */
+            if (delta >  IFX_PI) { delta -= 2.0f * IFX_PI; }
+            if (delta < -IFX_PI) { delta += 2.0f * IFX_PI; }
+
+            s_theta_acc  += delta;
+            s_theta_prev  = theta_wrap;
+        }
+
+        sim_in.theta_m = s_theta_acc;
+
+        /* Reset on motor stop so next start seeds correctly */
+        if (motorCtrl->interface.start == FALSE) { s_enc_init = 0U; }
+    }
     sim_in.omega_ref_mech = s_ramp * (float32)0.10471975512f;  /* RPM -> rad/s */
     sim_in.ia             = motorCtrl->pmsmFoc.iPhaseMeas.u;
     sim_in.ib             = motorCtrl->pmsmFoc.iPhaseMeas.v;
@@ -256,8 +291,8 @@ void PmsmFoc_doFieldOrientedControl(MotorControl* const motorCtrl)
 
 void PmsmFoc_resetEncoderCalibrationStatus(MotorControl* const motorCtrl)
 {
-	motorCtrl->positionSensor.encoder.encSyncTopZero = TRUE;
-	motorCtrl->positionSensor.encoder.calibrationStatus = Encoder_CalibrationStatus_notDone;
+    motorCtrl->positionSensor.encoder.encSyncTopZero = TRUE;
+    motorCtrl->positionSensor.encoder.calibrationStatus = Encoder_CalibrationStatus_notDone;
 }
 
 void PmsmFoc_doEncoderCalibration(MotorControl* const motorCtrl)
@@ -369,27 +404,27 @@ void PmsmFoc_doEncoderCalibration(MotorControl* const motorCtrl)
 void PmsmFoc_reconstructCurrent(MotorControl* const motorCtrl)
 {
     /* Read ADC results for the three shunt currents. */
-	PmsmFoc_PhaseCurrentSense_getRawPhaseCurrentValues(&motorCtrl->inverter.phaseCurrentSense);
+    PmsmFoc_PhaseCurrentSense_getRawPhaseCurrentValues(&motorCtrl->inverter.phaseCurrentSense);
 
 #if(EMOTOR_LIB == MC_EMOTOR)
     /* Reconstruct phase currents: U, V, and W. */
-	motorCtrl->pmsmFoc.iPhaseMeas.u = motorCtrl->inverter.phaseCurrentSense.curVO1.value;
-	motorCtrl->pmsmFoc.iPhaseMeas.v = motorCtrl->inverter.phaseCurrentSense.curVO2.value;
-	motorCtrl->pmsmFoc.iPhaseMeas.w = - motorCtrl->pmsmFoc.iPhaseMeas.u - motorCtrl->pmsmFoc.iPhaseMeas.v;
+    motorCtrl->pmsmFoc.iPhaseMeas.u = motorCtrl->inverter.phaseCurrentSense.curVO1.value;
+    motorCtrl->pmsmFoc.iPhaseMeas.v = motorCtrl->inverter.phaseCurrentSense.curVO2.value;
+    motorCtrl->pmsmFoc.iPhaseMeas.w = - motorCtrl->pmsmFoc.iPhaseMeas.u - motorCtrl->pmsmFoc.iPhaseMeas.v;
 #endif
 #if(PHASE_CURRENT_RECONSTRUCTION == USER_LOWSIDE_THREE_SHUNT_WITH_HIGHSIDE_MONITORING)
     /* Read high-side shunt current for DC-link current reconstruction. */
-	PmsmFoc_CurrentDCLinkSenseHs_getRawCurrentValue(&motorCtrl->inverter.highSideCurrentSense);
+    PmsmFoc_CurrentDCLinkSenseHs_getRawCurrentValue(&motorCtrl->inverter.highSideCurrentSense);
 #endif
 }
 
 void PmsmFoc_doClarkeTransform(PmsmFoc* const foc)
 {
 #if(EMOTOR_LIB == MC_EMOTOR)
-	foc->iab = Clarke(&foc->iPhaseMeas); /**< Perform Clarke transformation. */
+    foc->iab = Clarke(&foc->iPhaseMeas); /**< Perform Clarke transformation. */
 #endif
-	/**< real is Alpha value of current space vector variable */
-	/**< imag is Beta value of current space vector variable */
+    /**< real is Alpha value of current space vector variable */
+    /**< imag is Beta value of current space vector variable */
 }
 
 void PmsmFoc_doParkTransform(PmsmFoc* const foc)
@@ -462,7 +497,7 @@ void PmsmFoc_doVdqLimit(PmsmFoc* const foc)
 
 StdReal PmsmFoc_getVdqLimit(PmsmFoc* const foc)
 {
-	return 0;
+    return 0;
 }
 
 void PmsmFoc_doInverseParkTransform(PmsmFoc* const foc)

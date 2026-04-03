@@ -109,14 +109,12 @@ void PmsmFoc_StateMacine_doControlLoop(MotorControl* const motorCtrl)
 #endif
 		break;
 	case StateMachine_focClosedLoop:
-        /* Execute Field Oriented Control (FOC). */
+		/* EmbedSim FOC: PmsmFoc_applyEmbedSimPwm inside doFieldOrientedControl
+		 * calls disableUpdate/setOnTime/applyUpdate on the GTM TOM directly.
+		 * doPwmSvmUpdate must NOT be called after it -- it overwrites with stale
+		 * pwmOnTimes from the iLLD modulationIndex (zero). */
 		PmsmFoc_doFieldOrientedControl(motorCtrl);
-
-		/* Update speed */
 		PmsmFoc_PositionAcquisition_updateSpeed(&motorCtrl->positionSensor);
-
-		/* Update PWM duty cycles. */
-		PmsmFoc_doPwmSvmUpdate(&motorCtrl->inverter);
 		break;
 
 	case StateMachine_tuneCurrentRegulators:
