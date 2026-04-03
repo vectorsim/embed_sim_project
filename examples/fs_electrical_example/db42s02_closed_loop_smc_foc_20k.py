@@ -68,6 +68,7 @@ from motor_utility_blocks import SVPWMPackBlock
 from svpwm_block import SVPWMBlock
 from smc_controller_block import SMCControllerBlock, _DB42S02
 from pmsm_python_plant import PMSM_Python_Plant
+from maschine_connect import MaschineConnect, MaschineConnectCfg
 
 
 # =============================================================================
@@ -94,9 +95,18 @@ _RAMP_TIME = 0.5                         # [s]     speed ramp duration in CtrlPa
 #
 # Set ENC_GLITCH_ENABLE = False for ideal simulation (no hardware noise).
 # Set ENC_GLITCH_ENABLE = True  to reproduce AURIX hardware behaviour.
-ENC_GLITCH_ENABLE = True           # enable GPT12 rollover glitch model
-ENC_GLITCH_PROB   = 0.30           # probability of glitch at each rollover
-ENC_RESOLUTION    = 4000           # encoder pulses/rev (x4 quadrature)
+ENC_GLITCH_ENABLE  = True           # enable GPT12 rollover glitch model
+ENC_GLITCH_PROB    = 0.30           # probability of glitch at each rollover
+ENC_RESOLUTION     = 4000           # encoder pulses/rev (x4 quadrature)
+
+# ADC phase-current noise  (TC3xx SAR ADC, +-20 A range, 12-bit)
+# ---------------------------------------------------------------------------
+# LSB = 40 / 4096 = ~9.8 mA.  Noise floor ~0.5 LSB thermal + quantisation.
+# Offset drift: op-amp Vos temperature dependence, ~500 ms thermal tau.
+# Set ADC_NOISE_STD_A = 0.0 and ADC_OFFSET_DRIFT_A = 0.0 to disable.
+ADC_NOISE_STD_A    = 0.005         # [A]  1-sigma white noise per phase (~0.5 LSB)
+ADC_OFFSET_DRIFT_A = 0.005         # [A]  OU drift peak per phase (op-amp Vos)
+ADC_OFFSET_TAU_S   = 0.5           # [s]  thermal drift correlation time
 
 # Load-torque schedule breakpoints [s]
 T_LOAD_T1    = 0.5                       # [s]  light load applied
@@ -157,7 +167,7 @@ W_CHAT = 4.0    # [dim-less]  iq chattering weight              (metric in A, st
 # Each round is one full T_SIM-second closed-loop simulation (~30 s wall-clock).
 # Press Ctrl+C between simulations to stop and keep the best result so far.
 
-_TUNER_ROUNDS = 60   # [dim-less]  total number of tuning simulations
+_TUNER_ROUNDS = 20   # [dim-less]  total number of tuning simulations
 
 
 # =============================================================================
@@ -216,104 +226,6 @@ class DB42S02PlantBlock(PMSM_Python_Plant):
         aug = [VectorSignal(
             np.array([ta, tb, tc, V_DC, t_load], dtype=DEFAULT_DTYPE))]
         return super().compute_py(t, dt, aug)
-
-    def compute(self, t, dt, input_values=None):
-        return self.compute_py(t, dt, input_values)
-
-
-# =============================================================================
-# CtrlPacker
-# =============================================================================
-
-class CtrlPacker(VectorBlock):
-    """
-    Packs motor feedback + speed reference into the SMC input bus.
-
-    Input ports:
-      [0] motor feedback bus   [rpm,ia,ib,ic,theta_m,T_em,id,iq]   8 elements
-      [1] speed reference      [rad/s]   scalar (VectorStep output)
-
-    Output bus (5 elements - SMC_Input_T):
-      [0] omega_ref_mech  [rad/s]  ramp-filtered speed reference
-      [1] theta_m         [rad]    mechanical angle from encoder
-      [2] ia              [A]      phase-A current
-      [3] ib              [A]      phase-B current
-      [4] ic              [A]      phase-C current
-
-    Speed ramp: limits domega/dt to TARGET_RADS_MECH / _RAMP_TIME [rad/s^2]
-    so the motor starts gently without triggering the current limiter.
-    """
-
-    INPUT_NAMES       = ["omega_ref_mech", "theta_m", "ia", "ib", "ic"]
-    INPUT_KEEP        = [0, 1, 2, 3, 4]
-    C_CODEGEN_EXCLUDE = True
-
-    # Unit / range annotations for EmbedSim_Input_T — picked up by StepGenerator.
-    C_FIELD_COMMENTS = {
-        "omega_ref_mech": "Mechanical speed reference [rad/s]; range [0, ~314] for 0-3000 RPM",
-        "theta_m":        "Mechanical rotor angle [rad]; accumulating (NOT wrapped), from encoder",
-        "ia":             "Phase-A current from ADC [A]; range [-SMC_I_MAX, +SMC_I_MAX]",
-        "ib":             "Phase-B current from ADC [A]; range [-SMC_I_MAX, +SMC_I_MAX]",
-        "ic":             "Phase-C current from ADC [A]; range [-SMC_I_MAX, +SMC_I_MAX]",
-    }
-
-    _RAMP_RATE = TARGET_RADS_MECH / _RAMP_TIME   # [rad/s^2]
-
-    def __init__(self, name: str = "ctrl_packer", **kw):
-        super().__init__(name, **kw)
-        self.output_label           = "[w_ref,th_m,ia,ib,ic]"
-        self._omega_ref_filt: float = 0.0   # [rad/s] ramped reference state
-        self._enc_theta_prev: float = 0.0   # previous true theta_m for rollover detection
-        self._enc_rng = np.random.default_rng(seed=42)  # reproducible noise
-
-    def reset(self):
-        super().reset()
-        self._omega_ref_filt = 0.0
-        self._enc_theta_prev = 0.0
-
-    def compute_py(self, t, dt, input_values=None):
-        m = (input_values[0].value
-             if input_values and len(input_values) > 0
-             else np.zeros(_MOTOR_OUT_SIZE, dtype=DEFAULT_DTYPE))
-        r = (input_values[1].value
-             if input_values and len(input_values) > 1
-             else np.zeros(1, dtype=DEFAULT_DTYPE))
-
-        omega_target = float(r[0]) if len(r) > 0 else 0.0
-        max_step     = self._RAMP_RATE * dt
-        self._omega_ref_filt += max(
-            -max_step,
-            min(max_step, omega_target - self._omega_ref_filt))
-
-        # ── GPT12 encoder noise model ──────────────────────────────────────
-        # Simulates turn-rollover race condition from IfxGpt12_IncrEnc_getAbsolutePosition.
-        # At each mechanical turn boundary, rawPosition may read 0 before
-        # turn increments -> reported theta_m jumps back by ~2*pi for one step.
-        # After 2*pi unwrap in speed estimator: delta=0 (lost step).
-        theta_m_true = float(m[4]) if len(m) > 4 else 0.0
-        if ENC_GLITCH_ENABLE:
-            # Detect turn boundary: theta_m_true crossed a 2*pi multiple
-            turns_prev = int(self._enc_theta_prev / (2.0 * math.pi))
-            turns_now  = int(theta_m_true        / (2.0 * math.pi))
-            at_rollover = (turns_now > turns_prev) and (theta_m_true > 0.0)
-            if at_rollover and self._enc_rng.random() < ENC_GLITCH_PROB:
-                # Race condition: report position one turn behind (rawPos=0, turn not incremented)
-                theta_m = theta_m_true - 2.0 * math.pi
-            else:
-                theta_m = theta_m_true
-            self._enc_theta_prev = theta_m_true
-        else:
-            theta_m = theta_m_true
-        # ───────────────────────────────────────────────────────────────────
-
-        self.output = VectorSignal(np.array([
-            self._omega_ref_filt,
-            theta_m,
-            float(m[1]) if len(m) > 1 else 0.0,
-            float(m[2]) if len(m) > 2 else 0.0,
-            float(m[3]) if len(m) > 3 else 0.0,
-        ], dtype=DEFAULT_DTYPE), self.name)
-        return self.output
 
     def compute(self, t, dt, input_values=None):
         return self.compute_py(t, dt, input_values)
@@ -388,7 +300,15 @@ def _run_sim(ks_w: float,
         motor       = DB42S02PlantBlock("motor")
         motor_delay = VectorDelay("motor_delay",
                                   initial=[0.0] * _MOTOR_OUT_SIZE)
-        ctrl        = CtrlPacker("ctrl_packer")
+        ctrl        = MaschineConnect("ctrl_packer", cfg=MaschineConnectCfg(
+            target_rads_mech   = TARGET_RADS_MECH,
+            ramp_time_s        = _RAMP_TIME,
+            adc_noise_std_a    = ADC_NOISE_STD_A,
+            adc_offset_drift_a = ADC_OFFSET_DRIFT_A,
+            adc_offset_tau_s   = ADC_OFFSET_TAU_S,
+            enc_glitch_enable  = ENC_GLITCH_ENABLE,
+            enc_glitch_prob    = ENC_GLITCH_PROB,
+        ))
         sink        = VectorEnd("sink")
         sink_cg     = VectorEnd("sink_cg")
 

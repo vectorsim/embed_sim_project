@@ -44,15 +44,18 @@ transform math anywhere in this file — canonical single source of truth.
 
 import math
 import os
-from pathlib import Path
+import sys
 from typing import List, Optional
-
 import numpy as np
 
-_HERE  = Path(__file__).resolve().parent
+from _path_utils import get_embedsim_import_path, get_current_parent
+
+_HERE    = get_current_parent()
+_ROOT    = get_embedsim_import_path()
+sys.path.insert(0,_ROOT )
 _C_SRC = _HERE / "c_src"
 
-from embedsim.core_blocks import VectorBlock, VectorSignal, DEFAULT_DTYPE
+from embedsim.core_blocks import VectorBlock, VectorSignal
 from pyx_inspector import auto_populate_from_pyx
 from coordinate_transform_blocks import (
     ClarkeTransformBlock,
