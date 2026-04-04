@@ -1,0 +1,50 @@
+{
+  "best_result": {
+    "gains": [
+      0.4,
+      8.0,
+      8.0
+    ],
+    "cost": 162.20663505792618,
+    "ss_error": 61.70614242553711,
+    "id_rms": 0.7647318243980408,
+    "iq_chatter": 0.13943974673748016,
+    "convergence": true,
+    "n_simulations": 43,
+    "timestamp": "2026-04-04T08:34:19.582973"
+  },
+  "config": {
+    "n_explore": 40,
+    "n_verification": 3,
+    "n_epochs": 60,
+    "hidden_size": 32,
+    "lr_train": 0.003,
+    "early_stopping_patience": 100,
+    "n_restarts": 12,
+    "n_opt_steps": 400,
+    "lr_opt": 0.05,
+    "w_ss": 2.0,
+    "w_id": 50.0,
+    "w_chat": 4.0,
+    "target_rpm": 2000.0,
+    "t_sim": 5.0,
+    "dt": 5e-05,
+    "ramp_time": 0.5,
+    "load_schedule": [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.5,
+        0.005
+      ],
+      [
+        1.2,
+        0.02
+      ]
+    ]
+  },
+  "n_valid_simulations": 29,
+  "surrogate_r2": 0.6309720367141114
+}

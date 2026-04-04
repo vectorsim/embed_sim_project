@@ -11,7 +11,9 @@
 #include <string.h>   /* memcpy, memset */
 #include <math.h>     /* fabsf, atan2f, sqrtf */
 #include "embedsim_step.h"
-#include "embed_sim_smc_controller.h"
+#include "embed_sim_dfc_controller.h"
+#include "embed_sim_coordinate_transform.h"
+#include "embed_sim_matrix.h"
 #include "embed_sim_motor_utility_blocks.h"
 #include "embed_sim_sv_pwm.h"
 
@@ -19,7 +21,7 @@
  * Internal linkage — not exposed in the .h.
  * MISRA C:2012 Rule 8.7: static, TU-local only.
  * ──────────────────────────────────────────────────────────── */
-static SMC_Controller_T smc_state;   /* Rule 8.7: internal linkage */
+static DFC_State_T dfc_state;   /* Rule 8.7: internal linkage */
 static SVPWMPack_T svpwm_pack_state;   /* Rule 8.7: internal linkage */
 
 
@@ -31,7 +33,7 @@ static SVPWMPack_T svpwm_pack_state;   /* Rule 8.7: internal linkage */
  */
 void EmbedSim_Init(void)
 {
-    SMC_Controller_Init(&smc_state, EMBEDSIM_DT);
+    DFC_Controller_Init(&dfc_state);
     SVPWMPack_Init(&svpwm_pack_state, 17.00000000f);
 }
 
@@ -53,32 +55,20 @@ void EmbedSim_Step(
     /* ── Unpack inputs ────────────────────────────────── */
 
     /* ── Local variable declarations (MISRA C:2012 Rule 8.1) ── */
+    real32_T u_dfc[1];
+    real32_T y_dfc[2];
     real32_T u_svpwm_pack[2];
     real32_T y_svpwm_pack[3];
 
     /* ── Block chain ──────────────────────────────────────── */
-        /* --- smc_controller (SMCControllerBlock) --- */
-        /* SMC_Controller_Step() outputs normalised v_alpha/v_beta (÷ V_DC/2)  */
-        /* so the SVPWM block receives a reference in [-1,+1].                  */
-        /* SMO feedback is stored from the physical InvPark output inside Step. */
-        SMC_Input_T   u_smc;
-        SMC_Output_T  y_smc_out;
-        real32_T      y_smc[2];
+    /* --- dfc (DFControllerBlock) --- */
+    u_dfc[0] = y_cg_start[0];
+    DFC_Controller_Step(&dfc_state, u_dfc, dt, y_dfc);
 
-        u_smc.omega_ref_mech = in->omega_ref_mech;
-        u_smc.theta_m        = in->theta_m;
-        u_smc.ia             = in->ia;
-        u_smc.ib             = in->ib;
-        u_smc.ic             = in->ic;
-
-        SMC_Controller_Step(&smc_state, &u_smc, dt, &y_smc_out);
-
-        y_smc[0] = y_smc_out.v_alpha;
-        y_smc[1] = y_smc_out.v_beta;
 
     /* --- svpwm_pack (SVPWMPackBlock) --- */
-    u_svpwm_pack[0] = y_smc[0];
-    u_svpwm_pack[1] = y_smc[1];
+    u_svpwm_pack[0] = y_dfc[0];
+    u_svpwm_pack[1] = y_dfc[1];
     SVPWMPack_Step(&svpwm_pack_state, u_svpwm_pack, dt, y_svpwm_pack);
 
 
