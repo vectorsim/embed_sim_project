@@ -164,6 +164,7 @@ def _run_sim() -> dict | None:
             fusion_gamma     = 2.0,
             fusion_iir_lo    = 0.05,
             fusion_iir_hi    = 0.30,
+            use_c_backend    = True,
         )
 
         svpwm_pack  = SVPWMPackBlock("svpwm_pack", v_dc=V_DC)

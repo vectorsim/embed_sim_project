@@ -8,6 +8,7 @@
 #   2. motor_utility_blocks  (embed_sim_motor_utility_blocks.c)
 #   3. smc_controller        (embed_sim_smc_controller.c + coord transform + matrix)
 #   4. svpwm                 (embed_sim_sv_pwm.c + matrix)
+#   5. dfc_controller        (dfc_controller_wrapper)
 #
 # Usage:
 #   cd fs_electrical_machines/c_src
@@ -52,6 +53,7 @@ declare -a TARGETS=(
     "motor_utility_blocks:build_motor_utility_blocks.sh"
     "smc_controller:build_smc_controller.sh"
     "svpwm:build_svpwm.sh"
+    "dfc_controller:build_dfc_controller.sh"
 )
 
 # ---------------------------------------------------------------------------
@@ -144,6 +146,7 @@ else
     echo "    from fs_electrical_machines.smc_controller_wrapper      import SMCControllerWrapper"
     echo "    from fs_electrical_machines.svpwm_wrapper               import EmbedSimSVPWM"
     echo "    from motor_utility_blocks import SpeedRampBlock"
+    echo "    from fs_electrical_machines.dfc_controller_wrapper import DFCControllerWrapper"
     echo "    print('All imports OK')"
     echo "  \""
     echo ""
