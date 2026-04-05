@@ -746,4 +746,116 @@ extern MatrixFloat Matrix_Q31ToFloat(const MatrixElement value);
 
 /** \} */
 
+/*--------------------------------------------------------------------------------------------------------------------
+ * Kalman Filter Specific Operations
+ *------------------------------------------------------------------------------------------------------------------*/
+
+/** \addtogroup matrix_kalman  Kalman Filter Operations
+ * \{
+ */
+
+/**
+ * \brief  Cholesky decomposition: A = L * L^T (positive definite symmetric)
+ *
+ * \param[in]  matrix  Symmetric positive definite matrix
+ * \param[out] L       Lower triangular matrix (same dimensions)
+ * \return  MATRIX_SUCCESS; MATRIX_ERROR_NOT_SQUARE;
+ *          MATRIX_ERROR_NON_POSITIVE_DEFINITE; MATRIX_ERROR_SIZE_EXCEEDED
+ */
+extern MatrixStatus_Type Matrix_Cholesky(
+    const Matrix_Type  * const matrix,
+    Matrix_Type        * const L);
+
+/**
+ * \brief  Forward substitution: L * x = b (L lower triangular)
+ *
+ * \param[in]  L   Lower triangular matrix
+ * \param[in]  b   Right-hand side
+ * \param[out] x   Solution vector
+ * \return  MATRIX_SUCCESS; MATRIX_ERROR_NULL_PTR; MATRIX_ERROR_DIMENSION_MISMATCH
+ */
+extern MatrixStatus_Type Matrix_ForwardSubstitution(
+    const Matrix_Type  * const L,
+    const Matrix_Type  * const b,
+    Matrix_Type        * const x);
+
+/**
+ * \brief  Backward substitution: U * x = b (U upper triangular)
+ *
+ * \param[in]  U   Upper triangular matrix
+ * \param[in]  b   Right-hand side
+ * \param[out] x   Solution vector
+ * \return  MATRIX_SUCCESS; MATRIX_ERROR_NULL_PTR; MATRIX_ERROR_DIMENSION_MISMATCH
+ */
+extern MatrixStatus_Type Matrix_BackwardSubstitution(
+    const Matrix_Type  * const U,
+    const Matrix_Type  * const b,
+    Matrix_Type        * const x);
+
+/**
+ * \brief  Symmetric rank-1 update: A = A + alpha * v * v^T
+ *
+ * Used in Kalman filter covariance updates.
+ *
+ * \param[in,out] A     Symmetric matrix to update
+ * \param[in]     v     Vector (n×1 matrix)
+ * \param[in]     alpha Scalar (in Q31 format)
+ * \return  MATRIX_SUCCESS; MATRIX_ERROR_NULL_PTR; MATRIX_ERROR_DIMENSION_MISMATCH
+ */
+extern MatrixStatus_Type Matrix_SymmetricRank1Update(
+    Matrix_Type        * const A,
+    const Matrix_Type  * const v,
+    const MatrixElement        alpha);
+
+/**
+ * \brief  Symmetric rank-1 update with float alpha
+ *
+ * \param[in,out] A     Symmetric matrix to update
+ * \param[in]     v     Vector (n×1 matrix)
+ * \param[in]     alpha Float scalar
+ * \return  MATRIX_SUCCESS; MATRIX_ERROR_NULL_PTR; MATRIX_ERROR_DIMENSION_MISMATCH
+ */
+extern MatrixStatus_Type Matrix_SymmetricRank1UpdateFloat(
+    Matrix_Type        * const A,
+    const Matrix_Type  * const v,
+    const MatrixFloat          alpha);
+
+/**
+ * \brief  Matrix square root for positive semidefinite matrices (Denman-Beavers)
+ *
+ * Computes S such that S * S^T = A. Useful for square-root Kalman filters.
+ *
+ * \param[in]  matrix     Symmetric positive semidefinite matrix
+ * \param[out] result     Square root matrix (lower triangular)
+ * \param[in]  max_iter   Maximum iterations (0 = use default 10)
+ * \return  MATRIX_SUCCESS; MATRIX_ERROR_NON_POSITIVE_DEFINITE;
+ *          MATRIX_ERROR_MAX_ITERATIONS
+ */
+extern MatrixStatus_Type Matrix_MatrixSquareRoot(
+    const Matrix_Type  * const matrix,
+    Matrix_Type        * const result,
+    const uint32_T             max_iter);
+
+/**
+ * \brief  Condition number estimation (1-norm)
+ *
+ * \param[in]  matrix   Input matrix
+ * \param[out] cond     Condition number estimate
+ * \return  MATRIX_SUCCESS; MATRIX_ERROR_NULL_PTR; MATRIX_ERROR_NOT_SQUARE
+ */
+extern MatrixStatus_Type Matrix_ConditionNumber(
+    const Matrix_Type  * const matrix,
+    MatrixFloat        * const cond);
+
+/**
+ * \brief  Check if matrix is positive definite via Cholesky attempt
+ *
+ * \param[in]  matrix   Matrix to test
+ * \return  TRUE if positive definite, FALSE otherwise
+ */
+extern boolean_T Matrix_IsPositiveDefinite(const Matrix_Type * const matrix);
+
+/** \} */
+
+
 #endif /* MATRIX_H_ */

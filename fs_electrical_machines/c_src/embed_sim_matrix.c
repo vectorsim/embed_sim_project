@@ -2442,3 +2442,516 @@ MatrixFloat Matrix_Q31ToFloat(const MatrixElement value)
 {
     return (MatrixFloat)value / Q31_SCALE_F;
 }
+
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * Matrix_Cholesky
+ *------------------------------------------------------------------------------------------------------------------*/
+MatrixStatus_Type Matrix_Cholesky(
+    const Matrix_Type  * const matrix,
+    Matrix_Type        * const L)
+{
+    MatrixStatus_Type status;
+    uint32_T          i;
+    uint32_T          j;
+    uint32_T          k;
+    uint32_T          n;
+    real64_T          sum;
+    real64_T          val;
+
+    status = MATRIX_SUCCESS;
+
+    if ((matrix == NULL) || (L == NULL))
+    {
+        status = MATRIX_ERROR_NULL_PTR;
+    }
+    else if (matrix->rows != matrix->cols)
+    {
+        status = MATRIX_ERROR_NOT_SQUARE;
+    }
+    else if ((L->max_rows < matrix->rows) || (L->max_cols < matrix->cols))
+    {
+        status = MATRIX_ERROR_SIZE_EXCEEDED;
+    }
+    else
+    {
+        n = matrix->rows;
+
+        /* Initialize L to zero */
+        Matrix_Zero(L);
+        Matrix_SetDimensions(L, n, n);
+
+        for (i = 0U; i < n; i++)
+        {
+            for (j = 0U; j <= i; j++)
+            {
+                sum = 0.0;
+
+                /* Sum over k = 0 to j-1 */
+                for (k = 0U; k < j; k++)
+                {
+                    val = (real64_T)L->data[MATRIX_INDEX(L, i, k)] *
+                          (real64_T)L->data[MATRIX_INDEX(L, j, k)];
+                    sum += val;
+                }
+
+                if (i == j)
+                {
+                    /* Diagonal element: L[i][i] = sqrt(A[i][i] - sum) */
+                    real64_T a_ii = (real64_T)matrix->data[MATRIX_INDEX(matrix, i, i)] / Q31_SCALE_D;
+                    real64_T diff = a_ii - sum;
+
+                    if (diff <= 0.0)
+                    {
+                        status = MATRIX_ERROR_NON_POSITIVE_DEFINITE;
+                        break;
+                    }
+
+                    L->data[MATRIX_INDEX(L, i, i)] =
+                        Matrix_FloatToQ31((MatrixFloat)sqrt(diff));
+                }
+                else
+                {
+                    /* Off-diagonal: L[i][j] = (A[i][j] - sum) / L[j][j] */
+                    real64_T a_ij = (real64_T)matrix->data[MATRIX_INDEX(matrix, i, j)] / Q31_SCALE_D;
+                    real64_T l_jj = (real64_T)L->data[MATRIX_INDEX(L, j, j)] / Q31_SCALE_D;
+                    real64_T result;
+
+                    if (ABS_FLOAT((MatrixFloat)l_jj) < ZERO_THRESHOLD_FLOAT)
+                    {
+                        status = MATRIX_ERROR_NON_POSITIVE_DEFINITE;
+                        break;
+                    }
+
+                    result = (a_ij - sum) / l_jj;
+                    L->data[MATRIX_INDEX(L, i, j)] = Matrix_FloatToQ31((MatrixFloat)result);
+                }
+            }
+
+            if (status != MATRIX_SUCCESS)
+            {
+                break;
+            }
+        }
+    }
+
+    return status;
+}
+
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * Matrix_ForwardSubstitution
+ *------------------------------------------------------------------------------------------------------------------*/
+MatrixStatus_Type Matrix_ForwardSubstitution(
+    const Matrix_Type  * const L,
+    const Matrix_Type  * const b,
+    Matrix_Type        * const x)
+{
+    MatrixStatus_Type status;
+    uint32_T          i;
+    uint32_T          j;
+    uint32_T          n;
+    uint32_T          m;
+    real64_T          sum;
+    real64_T          l_ii;
+
+    status = MATRIX_SUCCESS;
+
+    if ((L == NULL) || (b == NULL) || (x == NULL))
+    {
+        status = MATRIX_ERROR_NULL_PTR;
+    }
+    else if (L->rows != L->cols)
+    {
+        status = MATRIX_ERROR_NOT_SQUARE;
+    }
+    else if (L->rows != b->rows)
+    {
+        status = MATRIX_ERROR_DIMENSION_MISMATCH;
+    }
+    else if ((x->max_rows < b->rows) || (x->max_cols < b->cols))
+    {
+        status = MATRIX_ERROR_SIZE_EXCEEDED;
+    }
+    else
+    {
+        n = L->rows;
+        m = b->cols;
+
+        Matrix_SetDimensions(x, n, m);
+        Matrix_Zero(x);
+
+        for (i = 0U; i < n; i++)
+        {
+            for (j = 0U; j < m; j++)
+            {
+                sum = 0.0;
+
+                for (uint32_T k = 0U; k < i; k++)
+                {
+                    sum += (real64_T)L->data[MATRIX_INDEX(L, i, k)] *
+                           (real64_T)x->data[MATRIX_INDEX(x, k, j)];
+                }
+
+                l_ii = (real64_T)L->data[MATRIX_INDEX(L, i, i)] / Q31_SCALE_D;
+
+                if (ABS_FLOAT((MatrixFloat)l_ii) < ZERO_THRESHOLD_FLOAT)
+                {
+                    status = MATRIX_ERROR_SINGULAR;
+                    break;
+                }
+
+                real64_T b_ij = (real64_T)b->data[MATRIX_INDEX(b, i, j)] / Q31_SCALE_D;
+                real64_T result = (b_ij - sum) / l_ii;
+
+                x->data[MATRIX_INDEX(x, i, j)] = Matrix_FloatToQ31((MatrixFloat)result);
+            }
+
+            if (status != MATRIX_SUCCESS)
+            {
+                break;
+            }
+        }
+    }
+
+    return status;
+}
+
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * Matrix_BackwardSubstitution
+ *------------------------------------------------------------------------------------------------------------------*/
+MatrixStatus_Type Matrix_BackwardSubstitution(
+    const Matrix_Type  * const U,
+    const Matrix_Type  * const b,
+    Matrix_Type        * const x)
+{
+    MatrixStatus_Type status;
+    uint32_T          i;
+    uint32_T          j;
+    uint32_T          k;
+    uint32_T          n;
+    uint32_T          m;
+    real64_T          sum;
+    real64_T          u_ii;
+    int32_T           i_signed;
+
+    status = MATRIX_SUCCESS;
+
+    if ((U == NULL) || (b == NULL) || (x == NULL))
+    {
+        status = MATRIX_ERROR_NULL_PTR;
+    }
+    else if (U->rows != U->cols)
+    {
+        status = MATRIX_ERROR_NOT_SQUARE;
+    }
+    else if (U->rows != b->rows)
+    {
+        status = MATRIX_ERROR_DIMENSION_MISMATCH;
+    }
+    else if ((x->max_rows < b->rows) || (x->max_cols < b->cols))
+    {
+        status = MATRIX_ERROR_SIZE_EXCEEDED;
+    }
+    else
+    {
+        n = U->rows;
+        m = b->cols;
+
+        Matrix_SetDimensions(x, n, m);
+        Matrix_Zero(x);
+
+        for (i_signed = (int32_T)n - 1; i_signed >= 0; i_signed--)
+        {
+            i = (uint32_T)i_signed;
+
+            for (j = 0U; j < m; j++)
+            {
+                sum = 0.0;
+
+                for (k = i + 1U; k < n; k++)
+                {
+                    sum += (real64_T)U->data[MATRIX_INDEX(U, i, k)] *
+                           (real64_T)x->data[MATRIX_INDEX(x, k, j)];
+                }
+
+                u_ii = (real64_T)U->data[MATRIX_INDEX(U, i, i)] / Q31_SCALE_D;
+
+                if (ABS_FLOAT((MatrixFloat)u_ii) < ZERO_THRESHOLD_FLOAT)
+                {
+                    status = MATRIX_ERROR_SINGULAR;
+                    break;
+                }
+
+                real64_T b_ij = (real64_T)b->data[MATRIX_INDEX(b, i, j)] / Q31_SCALE_D;
+                real64_T result = (b_ij - sum) / u_ii;
+
+                x->data[MATRIX_INDEX(x, i, j)] = Matrix_FloatToQ31((MatrixFloat)result);
+            }
+
+            if (status != MATRIX_SUCCESS)
+            {
+                break;
+            }
+        }
+    }
+
+    return status;
+}
+
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * Matrix_SymmetricRank1Update
+ *------------------------------------------------------------------------------------------------------------------*/
+MatrixStatus_Type Matrix_SymmetricRank1Update(
+    Matrix_Type        * const A,
+    const Matrix_Type  * const v,
+    const MatrixElement        alpha)
+{
+    MatrixStatus_Type status;
+    uint32_T          i;
+    uint32_T          j;
+    uint32_T          n;
+    MatrixElement     scaled_v_i;
+    MatrixElement     scaled_v_j;
+    MatrixElement     update;
+
+    status = MATRIX_SUCCESS;
+
+    if ((A == NULL) || (v == NULL))
+    {
+        status = MATRIX_ERROR_NULL_PTR;
+    }
+    else if ((A->rows != A->cols) || (v->rows != A->rows) || (v->cols != 1U))
+    {
+        status = MATRIX_ERROR_DIMENSION_MISMATCH;
+    }
+    else
+    {
+        n = A->rows;
+
+        for (i = 0U; i < n; i++)
+        {
+            scaled_v_i = Matrix_MulQ31(v->data[MATRIX_INDEX(v, i, 0U)], alpha);
+
+            for (j = 0U; j <= i; j++)
+            {
+                scaled_v_j = Matrix_MulQ31(v->data[MATRIX_INDEX(v, j, 0U)], alpha);
+                update = Matrix_MulQ31(scaled_v_i, v->data[MATRIX_INDEX(v, j, 0U)]);
+
+                /* A[i][j] += update */
+                MatrixElement current = A->data[MATRIX_INDEX(A, i, j)];
+                MatrixElement new_val = current + update;
+
+                /* Saturation */
+                if ((current > 0) && (update > 0) && (new_val < 0))
+                {
+                    new_val = Q31_ONE;
+                }
+                else if ((current < 0) && (update < 0) && (new_val > 0))
+                {
+                    new_val = Q31_MINUS_ONE;
+                }
+
+                A->data[MATRIX_INDEX(A, i, j)] = new_val;
+                A->data[MATRIX_INDEX(A, j, i)] = new_val; /* Maintain symmetry */
+            }
+        }
+    }
+
+    return status;
+}
+
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * Matrix_SymmetricRank1UpdateFloat
+ *------------------------------------------------------------------------------------------------------------------*/
+MatrixStatus_Type Matrix_SymmetricRank1UpdateFloat(
+    Matrix_Type        * const A,
+    const Matrix_Type  * const v,
+    const MatrixFloat          alpha)
+{
+    return Matrix_SymmetricRank1Update(A, v, Matrix_FloatToQ31(alpha));
+}
+
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * Matrix_MatrixSquareRoot (Denman-Beavers iteration)
+ *------------------------------------------------------------------------------------------------------------------*/
+MatrixStatus_Type Matrix_MatrixSquareRoot(
+    const Matrix_Type  * const matrix,
+    Matrix_Type        * const result,
+    const uint32_T             max_iter)
+{
+    MatrixStatus_Type status;
+    MatrixElement     Y_buf[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
+    MatrixElement     Z_buf[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
+    MatrixElement     Y_inv_buf[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
+    MatrixElement     Y_new_buf[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
+    MatrixElement     Z_new_buf[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
+    Matrix_Type       Y;
+    Matrix_Type       Z;
+    Matrix_Type       Y_inv;
+    Matrix_Type       Y_new;
+    Matrix_Type       Z_new;
+    uint32_T          iter;
+    uint32_T          max_iters;
+    MatrixFloat       norm_diff;
+    MatrixFloat       norm_prev;
+
+    status = MATRIX_SUCCESS;
+
+    if ((matrix == NULL) || (result == NULL))
+    {
+        status = MATRIX_ERROR_NULL_PTR;
+    }
+    else if (matrix->rows != matrix->cols)
+    {
+        status = MATRIX_ERROR_NOT_SQUARE;
+    }
+    else if ((result->max_rows < matrix->rows) || (result->max_cols < matrix->cols))
+    {
+        status = MATRIX_ERROR_SIZE_EXCEEDED;
+    }
+    else
+    {
+        max_iters = (max_iter > 0U) ? max_iter : 10U;
+
+        Matrix_Init(&Y, Y_buf, matrix->rows, matrix->cols);
+        Matrix_Init(&Z, Z_buf, matrix->rows, matrix->cols);
+        Matrix_Init(&Y_inv, Y_inv_buf, matrix->rows, matrix->cols);
+        Matrix_Init(&Y_new, Y_new_buf, matrix->rows, matrix->cols);
+        Matrix_Init(&Z_new, Z_new_buf, matrix->rows, matrix->cols);
+
+        /* Initialize: Y0 = A, Z0 = I */
+        (void)Matrix_Copy(&Y, matrix);
+        (void)Matrix_Identity(&Z);
+
+        norm_prev = 0.0f;
+
+        for (iter = 0U; iter < max_iters; iter++)
+        {
+            /* Y_inv = inv(Y) */
+            status = Matrix_Inverse(&Y, &Y_inv);
+            if (status != MATRIX_SUCCESS)
+            {
+                break;
+            }
+
+            /* Y_new = 0.5 * (Y + Z_inv) but we use Y_inv as Z = inv(Y) */
+            Matrix_Add(&Y, &Z, &Y_new);
+            Matrix_ScalarMultiplyFloat(&Y_new, 0.5f, &Y_new);
+
+            /* Z_new = 0.5 * (Z + Y_inv) */
+            Matrix_Add(&Z, &Y_inv, &Z_new);
+            Matrix_ScalarMultiplyFloat(&Z_new, 0.5f, &Z_new);
+
+            /* Check convergence */
+            Matrix_Subtract(&Y_new, &Y, &Y);
+            Matrix_NormFrobenius(&Y, &norm_diff);
+
+            if (norm_diff < 1e-6f)
+            {
+                break;
+            }
+
+            /* Update */
+            (void)Matrix_Copy(&Y, &Y_new);
+            (void)Matrix_Copy(&Z, &Z_new);
+            norm_prev = norm_diff;
+        }
+
+        if (iter >= max_iters)
+        {
+            status = MATRIX_ERROR_MAX_ITERATIONS;
+        }
+        else
+        {
+            /* Result is lower triangular Cholesky-like factor */
+            (void)Matrix_Cholesky(&Y_new, result);
+        }
+    }
+
+    return status;
+}
+
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * Matrix_ConditionNumber
+ *------------------------------------------------------------------------------------------------------------------*/
+MatrixStatus_Type Matrix_ConditionNumber(
+    const Matrix_Type  * const matrix,
+    MatrixFloat        * const cond)
+{
+    MatrixStatus_Type status;
+    MatrixElement     inv_buf[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
+    Matrix_Type       inv_matrix;
+    MatrixFloat       norm_A;
+    MatrixFloat       norm_Ainv;
+
+    status = MATRIX_SUCCESS;
+
+    if ((matrix == NULL) || (cond == NULL))
+    {
+        status = MATRIX_ERROR_NULL_PTR;
+    }
+    else if (matrix->rows != matrix->cols)
+    {
+        status = MATRIX_ERROR_NOT_SQUARE;
+    }
+    else
+    {
+        Matrix_Init(&inv_matrix, inv_buf, matrix->rows, matrix->cols);
+
+        /* Compute 1-norm of A */
+        Matrix_NormFrobenius(matrix, &norm_A);
+
+        /* Compute inverse */
+        status = Matrix_Inverse(matrix, &inv_matrix);
+
+        if (status == MATRIX_SUCCESS)
+        {
+            /* Compute 1-norm of A^-1 */
+            Matrix_NormFrobenius(&inv_matrix, &norm_Ainv);
+            *cond = norm_A * norm_Ainv;
+        }
+    }
+
+    return status;
+}
+
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * Matrix_IsPositiveDefinite
+ *------------------------------------------------------------------------------------------------------------------*/
+boolean_T Matrix_IsPositiveDefinite(const Matrix_Type * const matrix)
+{
+    MatrixStatus_Type status;
+    MatrixElement     L_buf[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
+    Matrix_Type       L;
+    boolean_T         result;
+
+    result = FALSE;
+
+    if ((matrix != NULL) && (matrix->rows == matrix->cols))
+    {
+        Matrix_Init(&L, L_buf, matrix->rows, matrix->cols);
+        status = Matrix_Cholesky(matrix, &L);
+
+        if (status == MATRIX_SUCCESS)
+        {
+            result = TRUE;
+        }
+        else
+        {
+            /* Not positive definite */
+        }
+    }
+    else
+    {
+        /* NULL or not square */
+    }
+
+    return result;
+}
