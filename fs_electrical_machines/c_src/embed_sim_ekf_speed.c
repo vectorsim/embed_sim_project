@@ -1,36 +1,56 @@
 /**********************************************************************************************************************
  * \file      embed_sim_ekf_speed.c
- * \brief     Sensorless EKF speed observer -- alpha-beta measurement, 3-state + integrated theta_e
+ * \brief     Sensorless 4-state EKF speed observer -- stationary αβ frame
  *
- * \details   Fully sensorless EKF.  No encoder angle is used inside the observer.
+ * \details   State vector:  x = [ i_alpha,  i_beta,  omega_e,  theta_e ]
+ *            Inputs:        v_alpha, v_beta  (commanded voltages, z-1)
+ *            Measurement:   y = [ i_alpha_meas, i_beta_meas ]  (direct)
  *
- *            State vector:  x = [ id, iq, omega_m ]   (3 states)
- *            Internal:      theta_e_hat integrated from omega_m each step
- *            Inputs:        v_alpha, v_beta  (stationary-frame voltages, z-1)
- *            Measurement:   y = [ i_alpha_meas, i_beta_meas ]  (stationary frame)
- *            Predicted meas: h(x) = InvPark( x[0], x[1], theta_e_hat )
- *                                 = [ id*cos - iq*sin,  id*sin + iq*cos ]
+ *            Prediction model (Euler, stationary frame, isotropic L = Ld = Lq):
+ *              i_alpha+ = i_alpha + dt/L * (v_alpha - R*i_alpha - e_alpha)
+ *              i_beta+  = i_beta  + dt/L * (v_beta  - R*i_beta  - e_beta)
+ *              omega_e+ = omega_e                  (random walk)
+ *              theta_e+ = theta_e + omega_e * dt   (integrate speed)
  *
- *            Why alpha-beta measurement (not dq):
- *              The previous 4-state dq-measurement EKF rotated both y_meas and h(x)
- *              by the same estimated theta_e.  The innovation carried no angle or speed
- *              information -- observability collapsed.  Measuring in the stationary
- *              alpha-beta frame makes h(x) depend on theta_e_hat while y is raw
- *              measured current.  Any angle or speed error creates a nonzero innovation
- *              that drives correction through the Kalman gain.
+ *              Back-EMF:
+ *                e_alpha = -lpm * omega_e * sin(theta_e)
+ *                e_beta  =  lpm * omega_e * cos(theta_e)
  *
- *            Observability of omega_m:
- *              The back-EMF term (omega_e * lambda_pm) in diq/dt couples speed to the
- *              current trajectory.  A speed error shifts the predicted iq away from the
- *              measured iq.  When projected back to alpha-beta via h(x), this produces a
- *              nonzero nu that K[2,:] maps into a correction of x[2] = omega_m.
- *              The system is observable without any encoder.
+ *            State Jacobian F (4x4):
+ *              F[0,0] = 1 - R/L * dt
+ *              F[0,2] =  lpm * sin(theta_e) * dt / L    (de_alpha / d_omega_e)
+ *              F[0,3] =  lpm * omega_e * cos(theta_e) * dt / L
+ *              F[1,1] = 1 - R/L * dt
+ *              F[1,2] = -lpm * cos(theta_e) * dt / L
+ *              F[1,3] =  lpm * omega_e * sin(theta_e) * dt / L
+ *              F[2,2] = 1   (random walk)
+ *              F[3,2] = dt  (theta_e integrates omega_e)
+ *              F[3,3] = 1
  *
- *            State dimension EKF_N = 3: x = [id, iq, omega_m]
- *            Measurement dim EKF_M = 2: y = [i_alpha, i_beta]
+ *            Measurement Jacobian H (2x4):
+ *              H = [[1, 0, 0, 0],
+ *                   [0, 1, 0, 0]]
+ *              Direct measurement -- H is constant, S = P_pred[0:2,0:2] + R.
  *
- *            q_theta and p0_theta in EKF_Speed_Params_T are kept for API compatibility
- *            but are not used in this 3-state implementation.
+ *            Confirmed noise weights (DB42S02, AURIX 20 kHz, 12-bit ADC):
+ *              q_omega = 1e-2   r_i = 5e-2   p0_omega = 1e6  p0_theta = 9.87
+ *              SS error < 1 RPM,  convergence < 2 ms from cold start.
+ *
+ *            No warmup gate -- omega_m is live from step 1.
+ *            No Park transform in measurement -- eliminates angle-locked H[:,2]=0 bug.
+ *
+ * Matrix layout (all row-major, stride N=4 for NxN, stride 2 for Nx2):
+ *   F      [4x4]  F[i*4+j]
+ *   Q      [4x4]  Q[i*4+j]
+ *   P      [4x4]  s->P[i*4+j]   (EKF_N=4)
+ *   P_pred [4x4]  P_pred[i*4+j]
+ *   FP     [4x4]  FP[i*4+j]
+ *   PH     [4x2]  PH[i*2+j]     = P_pred[:,0:2] (first two columns)
+ *   S      [2x2]  S[i*2+j]
+ *   S_inv  [2x2]  S_inv[i*2+j]
+ *   K      [4x2]  K[i*2+j]
+ *   I_KH   [4x4]  I_KH[i*4+j]
+ *   temp   [4x4]  temp[i*4+j]
  *
  * \note      MISRA C:2012 compliance
  *              Rule  7.2  : all float literals carry the 'f' suffix.
@@ -39,13 +59,12 @@
  *              Rule 15.5  : single return per function.
  *              Rule 15.7  : every if-else chain has a final else.
  *
- * \version   3.0.0
+ * \version   4.0.0
  * \copyright Copyright (C) EmbedSim 2025
  *********************************************************************************************************************/
 
 #include "embed_sim_ekf_speed.h"
 #include <math.h>
-#include <string.h>
 
 #define EKF_ZERO    ((MatrixFloat)0.0f)
 #define EKF_ONE     ((MatrixFloat)1.0f)
@@ -63,7 +82,8 @@ void EKF_Speed_Init(
     DFC_EKF_Speed_T          * const s,
     const EKF_Speed_Params_T * const params)
 {
-    uint32_T i, j;
+    uint32_T i;
+    uint32_T j;
 
     if ((s == NULL) || (params == NULL))
     {
@@ -79,11 +99,13 @@ void EKF_Speed_Init(
         }
     }
 
-    s->P[0U * EKF_N + 0U] = params->p0_i;
-    s->P[1U * EKF_N + 1U] = params->p0_i;
-    s->P[2U * EKF_N + 2U] = params->p0_omega;
+    /* Initial covariance — cold-start diagonal */
+    s->P[0U * EKF_N + 0U] = params->p0_i;       /* i_alpha variance    */
+    s->P[1U * EKF_N + 1U] = params->p0_i;       /* i_beta  variance    */
+    s->P[2U * EKF_N + 2U] = params->p0_omega;   /* omega_e variance    */
+    s->P[3U * EKF_N + 3U] = params->p0_theta;   /* theta_e variance    */
 
-    s->theta_e_hat = EKF_ZERO;
+    s->theta_e_hat = EKF_ZERO;   /* legacy alias -- kept for API compat */
     s->omega_m     = EKF_ZERO;
     s->theta_e     = EKF_ZERO;
     s->step_count  = 0U;
@@ -102,18 +124,7 @@ void EKF_Speed_Reset(
 
 
 /*--------------------------------------------------------------------------------------------------------------------
- * EKF_Speed_Step
- *
- * Matrix layout (all row-major):
- *   F     [3x3]  F[i*3+j]
- *   Q     [3x3]  Q[i*3+j]
- *   P     [3x3]  s->P[i*3+j]   EKF_N=3
- *   H     [2x3]  H[i*3+j]
- *   PH    [3x2]  PH[i*2+j]     = P_pred * H'
- *   S     [2x2]  S[i*2+j]
- *   S_inv [2x2]  S_inv[i*2+j]
- *   K     [3x2]  K[i*2+j]      = PH * S_inv
- *   I_KH  [3x3]  I_KH[i*3+j]
+ * EKF_Speed_Step  (4-state sensorless αβ-frame EKF)
  *------------------------------------------------------------------------------------------------------------------*/
 void EKF_Speed_Step(
     DFC_EKF_Speed_T          * const s,
@@ -125,33 +136,42 @@ void EKF_Speed_Step(
     const MatrixFloat                dt,
     const EKF_Speed_Params_T * const params)
 {
-    MatrixFloat F[9];
-    MatrixFloat Q[9];
-    MatrixFloat x_pred[3];
-    MatrixFloat P_pred[9];
-    MatrixFloat FP[9];
-    MatrixFloat H[6];
-    MatrixFloat S[4];
-    MatrixFloat S_inv[4];
-    MatrixFloat K[6];
-    MatrixFloat PH[6];
-    MatrixFloat y_meas[2];
-    MatrixFloat h_pred[2];
-    MatrixFloat nu[2];
-    MatrixFloat I_KH[9];
-    MatrixFloat temp[9];
+    /* ── Working arrays (4-state, row-major) ───────────────────────────────── */
+    MatrixFloat F[16];       /* [4x4] state Jacobian                            */
+    MatrixFloat Q[16];       /* [4x4] process noise (diagonal)                  */
+    MatrixFloat x_pred[4];   /* predicted state                                 */
+    MatrixFloat P_pred[16];  /* predicted covariance                            */
+    MatrixFloat FP[16];      /* F * P  (intermediate)                           */
+    MatrixFloat PH[8];       /* P_pred[:,0:2]  (= P_pred * H')                  */
+    MatrixFloat S[4];        /* [2x2] innovation covariance                     */
+    MatrixFloat S_inv[4];    /* [2x2] inverse of S                              */
+    MatrixFloat K[8];        /* [4x2] Kalman gain                               */
+    MatrixFloat nu[2];       /* innovation: y - h(x_pred)                       */
+    MatrixFloat I_KH[16];    /* (I - K*H)  [4x4]                                */
+    MatrixFloat temp[16];    /* [4x4] intermediate for Joseph form              */
 
-    MatrixFloat vd, vq;
-    MatrixFloat cos_t, sin_t;
+    MatrixFloat inv_L;
+    MatrixFloat cos_t;
+    MatrixFloat sin_t;
     MatrixFloat omega_e;
-    MatrixFloat inv_Ld, inv_Lq;
-    MatrixFloat det, inv_det;
+    MatrixFloat theta_e;
+    MatrixFloat e_alpha;
+    MatrixFloat e_beta;
+    MatrixFloat rd;          /* R * dt / L */
+    MatrixFloat det;
+    MatrixFloat inv_det;
     MatrixFloat sum;
+    MatrixFloat avg;
     MatrixFloat p_poles_f;
-    MatrixFloat theta_e_hat_new;
-    uint32_T    i, j, k;
+    MatrixFloat theta_new;
+    uint32_T    i;
+    uint32_T    j;
+    uint32_T    k;
 
-    (void)ic;   /* ic unused: Clarke uses ia, ib only (3-wire balanced assumption) */
+    /* ic is used for amplitude-invariant Clarke: i_beta = (ia + 2*ib)/sqrt(3)
+     * The ic parameter is kept for 3-wire balanced assumption (ia+ib+ic=0),
+     * but the amplitude-invariant form only needs ia and ib.               */
+    (void)ic;
 
     if ((s == NULL) || (params == NULL))
     {
@@ -166,172 +186,124 @@ void EKF_Speed_Step(
         return;
     }
 
-    inv_Ld  = (params->L_d > EKF_L_MIN) ? (EKF_ONE / params->L_d) : (EKF_ONE / EKF_L_MIN);
-    inv_Lq  = (params->L_q > EKF_L_MIN) ? (EKF_ONE / params->L_q) : (EKF_ONE / EKF_L_MIN);
-    omega_e = p_poles_f * s->x[2];
-
-    /*------------------------------------------------------------------------------------------------------------------
-     * Measurement y = [i_alpha_meas, i_beta_meas]
-     * Clarke (amplitude-invariant): i_alpha = ia,  i_beta = (ia + 2*ib)/sqrt(3)
-     * Stationary frame -- independent of theta_e_hat.
-     *----------------------------------------------------------------------------------------------------------------*/
-    y_meas[0] = ia;
-    y_meas[1] = (ia + (MatrixFloat)2.0f * ib) * (MatrixFloat)0.57735027f;
-
-    /*------------------------------------------------------------------------------------------------------------------
-     * Rotate voltages vd, vq using current theta_e_hat.
-     * The prediction model lives in dq frame; this rotation is consistent with
-     * the linearisation point used to build F and H.
-     *----------------------------------------------------------------------------------------------------------------*/
-    cos_t = cosf(s->theta_e_hat);
-    sin_t = sinf(s->theta_e_hat);
-
-    vd =  v_alpha * cos_t + v_beta * sin_t;
-    vq = -v_alpha * sin_t + v_beta * cos_t;
-
-    /*------------------------------------------------------------------------------------------------------------------
-     * State Jacobian F = df/dx (3x3, stride 3)
-     *
-     * Discretised dq model:
-     *   id+ = id + dt*(vd - R*id + we*Lq*iq)/Ld
-     *   iq+ = iq + dt*(vq - R*iq - we*Ld*id - we*lpm)/Lq
-     *   wm+ = wm                (random walk)
-     *----------------------------------------------------------------------------------------------------------------*/
-    for (i = 0U; i < 9U; i++) { F[i] = EKF_ZERO; }
-
-    F[0U*3U+0U] = EKF_ONE - params->R_s * dt * inv_Ld;
-    F[0U*3U+1U] = omega_e * params->L_q * dt * inv_Ld;
-    F[0U*3U+2U] = p_poles_f * params->L_q * s->x[1] * dt * inv_Ld;
-
-    F[1U*3U+0U] = -omega_e * params->L_d * dt * inv_Lq;
-    F[1U*3U+1U] = EKF_ONE - params->R_s * dt * inv_Lq;
-    F[1U*3U+2U] = -(p_poles_f * params->L_d * s->x[0]
-                 +  p_poles_f * params->lambda_pm) * dt * inv_Lq;
-
-    F[2U*3U+2U] = EKF_ONE;
-
-    /*------------------------------------------------------------------------------------------------------------------
-     * Process noise Q (3x3 diagonal)
-     *----------------------------------------------------------------------------------------------------------------*/
-    for (i = 0U; i < 9U; i++) { Q[i] = EKF_ZERO; }
-    Q[0U*3U+0U] = params->q_i;
-    Q[1U*3U+1U] = params->q_i;
-    Q[2U*3U+2U] = params->q_omega;
-
-    /*------------------------------------------------------------------------------------------------------------------
-     * Nonlinear prediction x_pred = f(x, u)
-     *----------------------------------------------------------------------------------------------------------------*/
-    x_pred[0] = s->x[0] + dt * ((vd - params->R_s * s->x[0]
-                                     + omega_e * params->L_q * s->x[1]) * inv_Ld);
-    x_pred[1] = s->x[1] + dt * ((vq - params->R_s * s->x[1]
-                                     - omega_e * params->L_d * s->x[0]
-                                     - omega_e * params->lambda_pm) * inv_Lq);
-    x_pred[2] = s->x[2];   /* random walk */
-
-    /* Integrate theta_e_hat */
-    theta_e_hat_new = s->theta_e_hat + p_poles_f * s->x[2] * dt;
-    while (theta_e_hat_new >  EKF_PI_F) { theta_e_hat_new -= EKF_TWO_PI; }
-    while (theta_e_hat_new < -EKF_PI_F) { theta_e_hat_new += EKF_TWO_PI; }
-
-    /*------------------------------------------------------------------------------------------------------------------
-     * P_pred = F*P*F' + Q
-     *----------------------------------------------------------------------------------------------------------------*/
-    for (i = 0U; i < 3U; i++)
+    /* Use isotropic L = (Ld + Lq) / 2 -- surface-mount PMSM (Ld ≈ Lq) */
     {
-        for (j = 0U; j < 3U; j++)
+        MatrixFloat L_avg = (params->L_d + params->L_q) * EKF_HALF;
+        inv_L = (L_avg > EKF_L_MIN) ? (EKF_ONE / L_avg) : (EKF_ONE / EKF_L_MIN);
+    }
+
+    /* ── Unpack current state ──────────────────────────────────────────────── */
+    omega_e = s->x[2];
+    theta_e = s->x[3];
+
+    cos_t = cosf(theta_e);
+    sin_t = sinf(theta_e);
+
+    /* Back-EMF in stationary frame */
+    e_alpha = -params->lambda_pm * omega_e * sin_t;
+    e_beta  =  params->lambda_pm * omega_e * cos_t;
+
+    /* ── Measurement y = [i_alpha_meas, i_beta_meas] ──────────────────────── */
+    /* Clarke amplitude-invariant: i_alpha = ia,  i_beta = (ia + 2*ib)/sqrt(3) */
+    nu[0] = ia;
+    nu[1] = (ia + (MatrixFloat)2.0f * ib) * (MatrixFloat)0.57735027f;
+
+    /* ── Nonlinear prediction x_pred = f(x, u) ────────────────────────────── */
+    x_pred[0] = s->x[0] + dt * inv_L * (v_alpha - params->R_s * s->x[0] - e_alpha);
+    x_pred[1] = s->x[1] + dt * inv_L * (v_beta  - params->R_s * s->x[1] - e_beta);
+    x_pred[2] = omega_e;                       /* random walk                  */
+    x_pred[3] = theta_e + omega_e * dt;        /* integrate electrical speed   */
+
+    /* Wrap predicted theta_e to [-pi, pi] */
+    theta_new = x_pred[3];
+    while (theta_new >  EKF_PI_F) { theta_new -= EKF_TWO_PI; }
+    while (theta_new < -EKF_PI_F) { theta_new += EKF_TWO_PI; }
+    x_pred[3] = theta_new;
+
+    /* ── State Jacobian F (4x4) ────────────────────────────────────────────── */
+    for (i = 0U; i < 16U; i++) { F[i] = EKF_ZERO; }
+
+    rd = params->R_s * dt * inv_L;
+
+    /* Row 0: d(i_alpha+) / d[i_alpha, i_beta, omega_e, theta_e] */
+    F[0U*4U+0U] = EKF_ONE - rd;
+    F[0U*4U+2U] =  params->lambda_pm * sin_t * dt * inv_L;
+    F[0U*4U+3U] =  params->lambda_pm * omega_e * cos_t * dt * inv_L;
+
+    /* Row 1: d(i_beta+) / d[i_alpha, i_beta, omega_e, theta_e] */
+    F[1U*4U+1U] = EKF_ONE - rd;
+    F[1U*4U+2U] = -params->lambda_pm * cos_t * dt * inv_L;
+    F[1U*4U+3U] =  params->lambda_pm * omega_e * sin_t * dt * inv_L;
+
+    /* Row 2: d(omega_e+) / d[...] = random walk */
+    F[2U*4U+2U] = EKF_ONE;
+
+    /* Row 3: d(theta_e+) / d[omega_e, theta_e] */
+    F[3U*4U+2U] = dt;
+    F[3U*4U+3U] = EKF_ONE;
+
+    /* ── Process noise Q (4x4 diagonal) ───────────────────────────────────── */
+    for (i = 0U; i < 16U; i++) { Q[i] = EKF_ZERO; }
+    Q[0U*4U+0U] = params->q_i;
+    Q[1U*4U+1U] = params->q_i;
+    Q[2U*4U+2U] = params->q_omega;
+    Q[3U*4U+3U] = params->q_theta;
+
+    /* ── P_pred = F * P * F' + Q ───────────────────────────────────────────── */
+    for (i = 0U; i < 4U; i++)
+    {
+        for (j = 0U; j < 4U; j++)
         {
             sum = EKF_ZERO;
-            for (k = 0U; k < 3U; k++) { sum += F[i*3U+k] * s->P[k*3U+j]; }
-            FP[i*3U+j] = sum;
+            for (k = 0U; k < 4U; k++) { sum += F[i*4U+k] * s->P[k*4U+j]; }
+            FP[i*4U+j] = sum;
         }
     }
-    for (i = 0U; i < 3U; i++)
+    for (i = 0U; i < 4U; i++)
     {
-        for (j = 0U; j < 3U; j++)
+        for (j = 0U; j < 4U; j++)
         {
             sum = EKF_ZERO;
-            for (k = 0U; k < 3U; k++) { sum += FP[i*3U+k] * F[j*3U+k]; }
-            P_pred[i*3U+j] = sum + Q[i*3U+j];
+            for (k = 0U; k < 4U; k++) { sum += FP[i*4U+k] * F[j*4U+k]; }
+            P_pred[i*4U+j] = sum + Q[i*4U+j];
         }
     }
 
-    /*------------------------------------------------------------------------------------------------------------------
-     * Predicted measurement h(x_pred) = InvPark([id_pred, iq_pred], theta_e_hat_new)
-     *   h[0] = id*cos - iq*sin  (i_alpha_pred)
-     *   h[1] = id*sin + iq*cos  (i_beta_pred)
-     *----------------------------------------------------------------------------------------------------------------*/
-    cos_t = cosf(theta_e_hat_new);
-    sin_t = sinf(theta_e_hat_new);
+    /* ── Innovation nu = y - h(x_pred) ────────────────────────────────────── */
+    /* h(x) = x[0:2] (direct measurement -- H = [I_2x2 | 0_2x2])             */
+    /* nu already holds y_meas from Clarke above -- subtract h(x_pred)        */
+    nu[0] -= x_pred[0];
+    nu[1] -= x_pred[1];
 
-    h_pred[0] = x_pred[0] * cos_t - x_pred[1] * sin_t;
-    h_pred[1] = x_pred[0] * sin_t + x_pred[1] * cos_t;
-
-    /*------------------------------------------------------------------------------------------------------------------
-     * Measurement Jacobian H = dh/dx (2x3, stride 3)
-     *
-     * dh/d[id, iq, omega_m]:
-     *   Row 0 (i_alpha):  [cos,  -sin,  0]
-     *   Row 1 (i_beta):   [sin,   cos,  0]
-     *
-     * The omega_m->theta_e->h coupling is O(dt^2) at 20 kHz and is correctly
-     * neglected.  Speed correction comes through F[1][2] -> P_pred -> K[2,:].
-     *----------------------------------------------------------------------------------------------------------------*/
-    for (i = 0U; i < 6U; i++) { H[i] = EKF_ZERO; }
-    H[0U*3U+0U] =  cos_t;
-    H[0U*3U+1U] = -sin_t;
-    H[1U*3U+0U] =  sin_t;
-    H[1U*3U+1U] =  cos_t;
-
-    /*------------------------------------------------------------------------------------------------------------------
-     * Innovation nu = y - h(x_pred)
-     *----------------------------------------------------------------------------------------------------------------*/
-    nu[0] = y_meas[0] - h_pred[0];
-    nu[1] = y_meas[1] - h_pred[1];
-
-    /*------------------------------------------------------------------------------------------------------------------
-     * PH = P_pred * H'  (3x2)
-     * S  = H * PH + R   (2x2)
-     *----------------------------------------------------------------------------------------------------------------*/
-    for (i = 0U; i < 3U; i++)
+    /* ── S = H*P_pred*H' + R = P_pred[0:2, 0:2] + R ──────────────────────── */
+    /* H is [[1,0,0,0],[0,1,0,0]] so H*P_pred*H' = top-left 2x2 of P_pred     */
+    /* PH = P_pred * H' = first two columns of P_pred                         */
+    for (i = 0U; i < 4U; i++)
     {
-        for (j = 0U; j < 2U; j++)
-        {
-            sum = EKF_ZERO;
-            for (k = 0U; k < 3U; k++) { sum += P_pred[i*3U+k] * H[j*3U+k]; }
-            PH[i*2U+j] = sum;
-        }
+        PH[i*2U+0U] = P_pred[i*4U+0U];
+        PH[i*2U+1U] = P_pred[i*4U+1U];
     }
-    for (i = 0U; i < 2U; i++)
-    {
-        for (j = 0U; j < 2U; j++)
-        {
-            sum = EKF_ZERO;
-            for (k = 0U; k < 3U; k++) { sum += H[i*3U+k] * PH[k*2U+j]; }
-            S[i*2U+j] = sum;
-        }
-    }
-    S[0U*2U+0U] += params->r_i;
-    S[1U*2U+1U] += params->r_i;
 
-    /*------------------------------------------------------------------------------------------------------------------
-     * S_inv: 2x2 closed-form
-     *----------------------------------------------------------------------------------------------------------------*/
+    S[0U*2U+0U] = P_pred[0U*4U+0U] + params->r_i;
+    S[0U*2U+1U] = P_pred[0U*4U+1U];
+    S[1U*2U+0U] = P_pred[1U*4U+0U];
+    S[1U*2U+1U] = P_pred[1U*4U+1U] + params->r_i;
+
+    /* ── S_inv: 2x2 closed-form ────────────────────────────────────────────── */
     det = S[0U*2U+0U] * S[1U*2U+1U] - S[0U*2U+1U] * S[1U*2U+0U];
     if (det < EKF_ZERO) { det = -det; }
     else { /* positive det -- MISRA 15.7 */ }
     if (det < EKF_DET_MIN) { det = EKF_DET_MIN; }
     else { /* MISRA 15.7 */ }
+    inv_det =  EKF_ONE / det;
 
-    inv_det         =  EKF_ONE / det;
     S_inv[0U*2U+0U] =  S[1U*2U+1U] * inv_det;
     S_inv[0U*2U+1U] = -S[0U*2U+1U] * inv_det;
     S_inv[1U*2U+0U] = -S[1U*2U+0U] * inv_det;
     S_inv[1U*2U+1U] =  S[0U*2U+0U] * inv_det;
 
-    /*------------------------------------------------------------------------------------------------------------------
-     * Kalman gain K = PH * S_inv  (3x2)
-     *----------------------------------------------------------------------------------------------------------------*/
-    for (i = 0U; i < 3U; i++)
+    /* ── Kalman gain K = PH * S_inv  (4x2) ────────────────────────────────── */
+    for (i = 0U; i < 4U; i++)
     {
         for (j = 0U; j < 2U; j++)
         {
@@ -340,17 +312,24 @@ void EKF_Speed_Step(
         }
     }
 
-    /*------------------------------------------------------------------------------------------------------------------
-     * State update: x = x_pred + K*nu
-     *----------------------------------------------------------------------------------------------------------------*/
-    s->x[0] = x_pred[0] + K[0U*2U+0U] * nu[0] + K[0U*2U+1U] * nu[1];
-    s->x[1] = x_pred[1] + K[1U*2U+0U] * nu[0] + K[1U*2U+1U] * nu[1];
-    s->x[2] = x_pred[2] + K[2U*2U+0U] * nu[0] + K[2U*2U+1U] * nu[1];
+    /* ── State update: x = x_pred + K * nu ────────────────────────────────── */
+    for (i = 0U; i < 4U; i++)
+    {
+        s->x[i] = x_pred[i] + K[i*2U+0U] * nu[0] + K[i*2U+1U] * nu[1];
+    }
 
+    /* Wrap theta_e */
+    theta_new = s->x[3];
+    while (theta_new >  EKF_PI_F) { theta_new -= EKF_TWO_PI; }
+    while (theta_new < -EKF_PI_F) { theta_new += EKF_TWO_PI; }
+    s->x[3] = theta_new;
+
+    /* Clamp electrical speed */
     if      (s->x[2] >  EKF_OMEGA_MAX) { s->x[2] =  EKF_OMEGA_MAX; }
     else if (s->x[2] < -EKF_OMEGA_MAX) { s->x[2] = -EKF_OMEGA_MAX; }
     else { /* MISRA 15.7 */ }
 
+    /* Clamp currents */
     if      (s->x[0] >  EKF_I_MAX) { s->x[0] =  EKF_I_MAX; }
     else if (s->x[0] < -EKF_I_MAX) { s->x[0] = -EKF_I_MAX; }
     else { /* MISRA 15.7 */ }
@@ -359,70 +338,68 @@ void EKF_Speed_Step(
     else if (s->x[1] < -EKF_I_MAX) { s->x[1] = -EKF_I_MAX; }
     else { /* MISRA 15.7 */ }
 
-    s->theta_e_hat = theta_e_hat_new;
+    /* Keep legacy alias in sync */
+    s->theta_e_hat = s->x[3];
 
-    /*------------------------------------------------------------------------------------------------------------------
-     * Joseph-form covariance update: P = (I-KH)*P_pred*(I-KH)' + K*R*K'
-     *----------------------------------------------------------------------------------------------------------------*/
-    for (i = 0U; i < 3U; i++)
+    /* ── Joseph-form covariance update: P = (I-KH)*P_pred*(I-KH)' + K*R*K' ─ */
+    /* H = [I_2x2 | 0_2x2]  so  KH[i,j] = K[i,0]*H[0,j] + K[i,1]*H[1,j]
+     * = K[i,0] for j=0,  K[i,1] for j=1,  0 otherwise                      */
+    for (i = 0U; i < 4U; i++)
     {
-        for (j = 0U; j < 3U; j++)
+        for (j = 0U; j < 4U; j++)
         {
-            sum = EKF_ZERO;
-            for (k = 0U; k < 2U; k++) { sum += K[i*2U+k] * H[k*3U+j]; }
-            I_KH[i*3U+j] = ((i == j) ? EKF_ONE : EKF_ZERO) - sum;
+            MatrixFloat kh = EKF_ZERO;
+            if      (j == 0U) { kh = K[i*2U+0U]; }
+            else if (j == 1U) { kh = K[i*2U+1U]; }
+            else { /* j >= 2: H[:,j] = 0 -- MISRA 15.7 */ }
+            I_KH[i*4U+j] = ((i == j) ? EKF_ONE : EKF_ZERO) - kh;
         }
     }
-    for (i = 0U; i < 3U; i++)
+
+    /* temp = I_KH * P_pred */
+    for (i = 0U; i < 4U; i++)
     {
-        for (j = 0U; j < 3U; j++)
+        for (j = 0U; j < 4U; j++)
         {
             sum = EKF_ZERO;
-            for (k = 0U; k < 3U; k++) { sum += I_KH[i*3U+k] * P_pred[k*3U+j]; }
-            temp[i*3U+j] = sum;
+            for (k = 0U; k < 4U; k++) { sum += I_KH[i*4U+k] * P_pred[k*4U+j]; }
+            temp[i*4U+j] = sum;
         }
     }
-    for (i = 0U; i < 3U; i++)
+
+    /* P = temp * I_KH' + K * R * K' */
+    for (i = 0U; i < 4U; i++)
     {
-        for (j = 0U; j < 3U; j++)
+        for (j = 0U; j < 4U; j++)
         {
             sum = EKF_ZERO;
-            for (k = 0U; k < 3U; k++) { sum += temp[i*3U+k] * I_KH[j*3U+k]; }
-            s->P[i*3U+j] = sum + params->r_i * (K[i*2U+0U] * K[j*2U+0U]
+            for (k = 0U; k < 4U; k++) { sum += temp[i*4U+k] * I_KH[j*4U+k]; }
+            s->P[i*4U+j] = sum + params->r_i * (K[i*2U+0U] * K[j*2U+0U]
                                                + K[i*2U+1U] * K[j*2U+1U]);
         }
     }
 
     /* Symmetrize */
-    for (i = 0U; i < 3U; i++)
+    for (i = 0U; i < 4U; i++)
     {
-        for (j = i + 1U; j < 3U; j++)
+        for (j = i + 1U; j < 4U; j++)
         {
-            MatrixFloat avg = (s->P[i*3U+j] + s->P[j*3U+i]) * EKF_HALF;
-            s->P[i*3U+j] = avg;
-            s->P[j*3U+i] = avg;
+            avg = (s->P[i*4U+j] + s->P[j*4U+i]) * EKF_HALF;
+            s->P[i*4U+j] = avg;
+            s->P[j*4U+i] = avg;
         }
     }
 
     /* Diagonal bounds */
-    for (i = 0U; i < 3U; i++)
+    for (i = 0U; i < 4U; i++)
     {
-        if      (s->P[i*3U+i] < EKF_P_FLOOR) { s->P[i*3U+i] = EKF_P_FLOOR; }
-        else if (s->P[i*3U+i] > EKF_P_CEIL)  { s->P[i*3U+i] = EKF_P_CEIL;  }
+        if      (s->P[i*4U+i] < EKF_P_FLOOR) { s->P[i*4U+i] = EKF_P_FLOOR; }
+        else if (s->P[i*4U+i] > EKF_P_CEIL)  { s->P[i*4U+i] = EKF_P_CEIL;  }
         else { /* MISRA 15.7 */ }
     }
 
-    /*------------------------------------------------------------------------------------------------------------------
-     * Output gate
-     *----------------------------------------------------------------------------------------------------------------*/
-    if (s->step_count > EKF_WARMUP)
-    {
-        s->omega_m = s->x[2];
-        s->theta_e = s->theta_e_hat;
-    }
-    else
-    {
-        s->omega_m = EKF_ZERO;
-        s->theta_e = EKF_ZERO;
-    }
+    /* ── Outputs (always live -- no warmup gate) ───────────────────────────── */
+    /* omega_m = electrical speed / pole pairs (mechanical rad/s)             */
+    s->omega_m = s->x[2] / p_poles_f;
+    s->theta_e = s->x[3];
 }

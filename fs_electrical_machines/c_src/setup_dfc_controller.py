@@ -6,7 +6,6 @@ Builds the dfc_controller_wrapper Cython extension.
 Sources compiled into this extension:
     dfc_controller_wrapper.pyx    — Cython wrapper
     embed_sim_dfc_controller.c    — DFC FOC controller implementation
-    embed_sim_ekf_speed.c         — EKF speed observer (NEW)
     embed_sim_coordinate_transform.c — Clarke/Park transforms
     embed_sim_matrix.c            — MatrixFloat type + Q31 infrastructure
 
@@ -40,7 +39,6 @@ print("=" * 60)
 required_sources = [
     "dfc_controller_wrapper.pyx",
     "embed_sim_dfc_controller.c",
-    "embed_sim_ekf_speed.c",           # EKF implementation
     "embed_sim_coordinate_transform.c",
     "embed_sim_matrix.c",
 ]
@@ -67,7 +65,6 @@ ext = Extension(
     sources=[
         str(_HERE / "dfc_controller_wrapper.pyx"),
         str(_HERE / "embed_sim_dfc_controller.c"),
-        str(_HERE / "embed_sim_ekf_speed.c"),      # <-- ADDED: EKF implementation
         str(_HERE / "embed_sim_coordinate_transform.c"),
         str(_HERE / "embed_sim_matrix.c"),
     ],
@@ -85,8 +82,8 @@ ext = Extension(
 
 setup(
     name="dfc_controller_wrapper",
-    version="2.0.0",  # <-- Version bump to match controller version
-    description="EmbedSim Differential Flatness FOC Controller Module with EKF Support",
+    version="3.0.0",
+    description="EmbedSim Differential Flatness FOC Controller -- SMO + encoder",
     author="EmbedSim Team",
     ext_modules=cythonize(
         [ext],
@@ -104,5 +101,5 @@ setup(
 
 print("\n" + "=" * 60)
 print("Build configuration complete")
-print(f"Extension version: 2.0.0 (EKF observer mode enabled)")
+print("Extension version: 3.0.0 (SMO + encoder)")
 print("=" * 60)

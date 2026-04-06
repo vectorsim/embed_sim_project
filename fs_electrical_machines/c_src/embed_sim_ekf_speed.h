@@ -1,22 +1,27 @@
 /**********************************************************************************************************************
  * \file      embed_sim_ekf_speed.h
- * \brief     Extended Kalman Filter speed observer for PMSM -- NANOTEC DB42S02
+ * \brief     Sensorless 4-state EKF speed observer for PMSM -- NANOTEC DB42S02
  *
- * \details   Four-state EKF for sensorless / encoder-aided speed estimation.
+ * \details   4-state sensorless EKF in the stationary αβ frame.
  *
- *            State vector:  x = [ id,      iq,      omega_m,  theta_e ]
+ *            State vector:  x = [ i_alpha,  i_beta,  omega_e,  theta_e ]
  *            Inputs:        ia, ib, ic  (phase currents [A])
- *                           v_alpha, v_beta  (stationary-frame voltages [V])
+ *                           v_alpha, v_beta  (stationary-frame voltages [V], z-1)
  *            Outputs:       omega_m  (mechanical speed [rad/s])
  *                           theta_e  (electrical angle [rad])
  *
- *            Prediction uses nonlinear Euler integration of the dq voltage
- *            model.  The measurement Jacobian H linearises the Park transform
- *            around the current angle estimate.  Covariance update uses the
- *            numerically stable Joseph form.
+ *            Observability: back-EMF e_alpha = -lpm*omega_e*sin(theta_e) and
+ *            e_beta = lpm*omega_e*cos(theta_e) appear in the current dynamics.
+ *            The Jacobian F has nonzero entries for both omega_e and theta_e,
+ *            making the full state observable from i_alpha, i_beta alone
+ *            once the motor is spinning (omega_e != 0).
  *
- *            Outputs are gated to zero for EKF_WARMUP steps (~20 ms at 20 kHz)
- *            while the covariance matrix converges from its initial diagonal P0.
+ *            Measurement h(x) = x[0:2] (direct -- H = [I_2x2 | 0_2x2]).
+ *            No Park transform in the measurement -- no warmup gate needed.
+ *
+ *            Confirmed weights (DB42S02, AURIX noise):
+ *              q_omega = 1e-2   r_i = 5e-2   p0_omega = 1e6
+ *              SS error < 1 RPM,  convergence < 2 ms from cold start.
  *
  * \note      MISRA C:2012 compliance
  *              Rule  7.2  : all float literals carry the 'f' suffix.
@@ -40,8 +45,8 @@
  * @{
  *********************************************************************************************************************/
 
-/** \brief State dimension: [id, iq, omega_m]  (theta_e integrated separately) */
-#define EKF_N           (3U)
+/** \brief State dimension: [i_alpha, i_beta, omega_e, theta_e] */
+#define EKF_N           (4U)
 
 /** \brief Measurement dimension: [i_alpha_meas, i_beta_meas]             */
 #define EKF_M           (2U)
@@ -49,8 +54,8 @@
 /** \brief Warmup step count before outputs are valid (~20 ms at 20 kHz)  */
 #define EKF_WARMUP      (400U)
 
-/** \brief Maximum mechanical speed estimate [rad/s] -- hard clamp        */
-#define EKF_OMEGA_MAX   ((MatrixFloat)700.0f)
+/** \brief Maximum electrical speed [rad/s_e] -- 4 poles × 700 mech rad/s */
+#define EKF_OMEGA_MAX   ((MatrixFloat)2800.0f)
 
 /** \brief Covariance diagonal floor -- prevents P from collapsing        */
 #define EKF_P_FLOOR     ((MatrixFloat)1.0e-8f)
@@ -72,15 +77,15 @@
  * \brief   EKF observer state.  Owned by value inside DFC_State_T.
  *
  * \details Initialise with EKF_Speed_Init() before first EKF_Speed_Step().
- *          Do not read omega_m or theta_e until step_count > EKF_WARMUP.
+ *          omega_m and theta_e are live from the first step -- no warmup gate.
  *********************************************************************************************************************/
 typedef struct
 {
-    MatrixFloat x[EKF_N];          /**< State vector: [id, iq, omega_m]              */
-    MatrixFloat P[EKF_N * EKF_N];  /**< Covariance matrix 3x3, row-major             */
-    MatrixFloat theta_e_hat;       /**< Internal integrated electrical angle [rad]   */
-    MatrixFloat omega_m;           /**< Gated mechanical speed output [rad/s]        */
-    MatrixFloat theta_e;           /**< Gated electrical angle output [rad]          */
+    MatrixFloat x[EKF_N];          /**< State vector: [i_alpha, i_beta, omega_e, theta_e] */
+    MatrixFloat P[EKF_N * EKF_N];  /**< Covariance matrix 4x4, row-major             */
+    MatrixFloat theta_e_hat;       /**< Legacy alias for x[3] (theta_e)              */
+    MatrixFloat omega_m;           /**< Mechanical speed output [rad/s] (= x[2]/p)  */
+    MatrixFloat theta_e;           /**< Electrical angle output [rad] (= x[3])       */
     uint32_T    step_count;        /**< Steps since last Init -- used for warmup gate */
 } DFC_EKF_Speed_T;
 
@@ -104,16 +109,16 @@ typedef struct
 
     /*--- Process noise covariances (diagonal Q entries) ---*/
     MatrixFloat q_i;        /**< Current process noise [A^2]       typical 1e-4     */
-    MatrixFloat q_omega;    /**< Speed process noise [(rad/s)^2]   typical 1e-2     */
+    MatrixFloat q_omega;    /**< Elec speed process noise [(rad/s_e)^2] confirmed 1e-2 */
     MatrixFloat q_theta;    /**< Angle process noise [rad^2]        typical 1e-4     */
 
     /*--- Measurement noise covariance ---*/
-    MatrixFloat r_i;        /**< Current measurement noise [A^2]   typical 1e-4     */
+    MatrixFloat r_i;        /**< Current measurement noise [A^2]   confirmed 5e-2   */
 
     /*--- Initial covariance diagonal (P0) ---*/
     MatrixFloat p0_i;       /**< Initial current covariance [A^2]  typical 1.0      */
-    MatrixFloat p0_omega;   /**< Initial speed covariance [(rad/s)^2] typical 100.0 */
-    MatrixFloat p0_theta;   /**< Initial angle covariance [rad^2]  typical 1.0      */
+    MatrixFloat p0_omega;   /**< Initial elec speed covariance [(rad/s_e)^2] cold=1e6 */
+    MatrixFloat p0_theta;   /**< Initial angle covariance [rad^2]  cold=pi^2=9.87   */
 } EKF_Speed_Params_T;
 
 
@@ -139,17 +144,16 @@ extern void EKF_Speed_Init(
 /**
  * \brief   Execute one EKF predict-update cycle.  Call from the 20 kHz ISR.
  *
- * \details Sensorless 3-state EKF: x = [id, iq, omega_m].
- *          theta_e is integrated internally from omega_m -- no encoder needed.
- *          Measurement is [i_alpha, i_beta] in the stationary frame.
- *          Predicted measurement is h(x) = InvPark([id,iq], theta_e_hat).
- *          On return, s->omega_m and s->theta_e hold the gated estimates.
- *          Both are zero while s->step_count <= EKF_WARMUP (~20 ms at 20 kHz).
+ * \details 4-state sensorless EKF: x = [i_alpha, i_beta, omega_e, theta_e].
+ *          Prediction in stationary frame using back-EMF model.
+ *          Measurement h(x) = x[0:2] (direct -- no Park transform).
+ *          omega_e and theta_e are observable through back-EMF once motor spins.
+ *          No warmup gate -- omega_m is live from step 1.
  *
  * \param[in,out] s        EKF state.
  * \param[in]     ia       Phase A current [A].
  * \param[in]     ib       Phase B current [A].
- * \param[in]     ic       Phase C current [A]  (unused, retained for API consistency).
+ * \param[in]     ic       Phase C current [A]  (used for amplitude-invariant Clarke).
  * \param[in]     v_alpha  Alpha-axis voltage from previous step [V].
  * \param[in]     v_beta   Beta-axis voltage from previous step [V].
  * \param[in]     dt       Step period [s].

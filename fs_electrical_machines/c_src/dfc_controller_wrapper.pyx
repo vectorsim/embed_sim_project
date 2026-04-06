@@ -13,9 +13,10 @@
 #            uses threading.
 #
 # \note      Three observer modes are available and can be switched at runtime:
-#              - DFC_OBS_SMO   (0) : Sliding Mode Observer only (default)
-#              - DFC_OBS_EKF   (1) : Extended Kalman Filter only
-#              - DFC_OBS_BLEND (2) : Convex blend of SMO and EKF
+#
+# \note      EKF is 3-state: x = [id, iq, omega_m]. theta_e is integrated
+#            internally. The 4-state API is preserved for compatibility but
+#            q_theta and p0_theta are ignored.
 #
 # Location:  fs_electrical_machines/c_src/dfc_controller_wrapper.pyx
 # Import:    from fs_electrical_machines.dfc_controller_wrapper import DFCControllerWrapper
@@ -53,56 +54,6 @@ cdef extern from "embed_sim_matrix.h":
 
     MatrixElement Matrix_FloatToQ31(const MatrixFloat value) nogil
     MatrixFloat   Matrix_Q31ToFloat(const MatrixElement value) nogil
-
-
-# -----------------------------------------------------------------------------
-# \brief  C declarations from embed_sim_ekf_speed.h
-# -----------------------------------------------------------------------------
-cdef extern from "embed_sim_ekf_speed.h":
-
-    ctypedef struct DFC_EKF_Speed_T:
-        MatrixFloat x[4]
-        MatrixFloat P[16]
-        MatrixFloat omega_m
-        MatrixFloat theta_e
-        unsigned int step_count
-
-    ctypedef struct EKF_Speed_Params_T:
-        MatrixFloat R_s
-        MatrixFloat L_d
-        MatrixFloat L_q
-        MatrixFloat lambda_pm
-        unsigned int p_poles
-        MatrixFloat q_i
-        MatrixFloat q_omega
-        MatrixFloat q_theta
-        MatrixFloat r_i
-        MatrixFloat p0_i
-        MatrixFloat p0_omega
-        MatrixFloat p0_theta
-
-    void EKF_Speed_Init(
-        DFC_EKF_Speed_T* s,
-        const EKF_Speed_Params_T* params) nogil
-
-    void EKF_Speed_Step(
-        DFC_EKF_Speed_T* s,
-        MatrixFloat ia,
-        MatrixFloat ib,
-        MatrixFloat ic,
-        MatrixFloat v_alpha,
-        MatrixFloat v_beta,
-        MatrixFloat dt,
-        const EKF_Speed_Params_T* params) nogil
-
-    void EKF_Speed_Reset(
-        DFC_EKF_Speed_T* s,
-        const EKF_Speed_Params_T* params) nogil
-
-
-# -----------------------------------------------------------------------------
-# \brief  C declarations from embed_sim_dfc_gains.h
-# -----------------------------------------------------------------------------
 cdef extern from "embed_sim_dfc_gains.h":
 
     ctypedef struct DFC_GainSet_T:
@@ -115,12 +66,6 @@ cdef extern from "embed_sim_dfc_gains.h":
 # \brief  C declarations from embed_sim_dfc_controller.h
 # -----------------------------------------------------------------------------
 cdef extern from "embed_sim_dfc_controller.h":
-
-    # Observer mode enumeration
-    ctypedef enum DFC_ObserverMode_T:
-        DFC_OBS_SMO   = 0U
-        DFC_OBS_EKF   = 1U
-        DFC_OBS_BLEND = 2U
 
     # SpeedFusion complementary filter state
     ctypedef struct DFC_SpeedFusion_T:
@@ -158,10 +103,6 @@ cdef extern from "embed_sim_dfc_controller.h":
     ctypedef struct DFC_State_T:
         DFC_SpeedFusion_T fusion
         DFC_SMO_T         smo
-        DFC_EKF_Speed_T   ekf
-        EKF_Speed_Params_T ekf_params
-        DFC_ObserverMode_T obs_mode
-        MatrixFloat       obs_blend_w
         MatrixFloat       v_alpha_prev
         MatrixFloat       v_beta_prev
         MatrixFloat       iq_ref_prev
@@ -193,15 +134,6 @@ cdef extern from "embed_sim_dfc_controller.h":
     void DFC_Controller_Reset(
         DFC_State_T* s) nogil
 
-    void DFC_Controller_SetObserverMode(
-        DFC_State_T* s,
-        const DFC_ObserverMode_T mode,
-        const MatrixFloat blend_w) nogil
-
-    void DFC_Controller_SetEKFParams(
-        DFC_State_T* s,
-        const EKF_Speed_Params_T* src) nogil
-
     void DFC_Controller_GetDiagnostics(
         const DFC_State_T* s,
         MatrixFloat* speed_ref_rpm,
@@ -211,7 +143,7 @@ cdef extern from "embed_sim_dfc_controller.h":
         MatrixFloat* alpha,
         MatrixFloat* omega_e,
         MatrixFloat* omega_smo,
-        MatrixFloat* omega_ekf) nogil
+        ) nogil
 
 
 # =============================================================================
@@ -226,7 +158,7 @@ cdef class DFCControllerWrapper:
     ------------
     SpeedFusion : complementary filter blending encoder IIR and SMO estimates.
     SMO         : Sliding Mode Observer for back-EMF / electrical speed.
-    EKF         : Extended Kalman Filter (optional, enabled via set_observer_mode)
+    EKF         : Extended Kalman Filter (optional, 3-state: id, iq, omega_m)
     Voltage law : flatness feedforward with id/iq proportional correction terms.
 
     Observer Modes
@@ -266,6 +198,9 @@ cdef class DFCControllerWrapper:
     Constructor arguments are for API documentation; edit the #defines and
     recompile to change them.
 
+    EKF is 3-state (id, iq, omega_m). theta_e is integrated internally from
+    omega_m. q_theta and p0_theta parameters are ignored (kept for API compatibility).
+
     Attributes (readonly)
     ---------------------
     v_alpha : float          Alpha-axis voltage reference [V].
@@ -276,7 +211,6 @@ cdef class DFCControllerWrapper:
     omega_e : float          Fused electrical speed [rad/s].
     omega_smo : float        SMO mechanical speed estimate [rad/s].
     omega_ekf : float        EKF mechanical speed estimate [rad/s].
-    obs_mode : int           Current observer mode (0=SMO, 1=EKF, 2=BLEND).
     status : int             0 = success.
 
     Examples
@@ -285,7 +219,6 @@ cdef class DFCControllerWrapper:
     >>> ctrl.set_inputs_individual(209.4, 0.0, 0.0, 0.0, 0.0)
     >>> ctrl.compute(50e-6)
     >>> v_alpha, v_beta = ctrl.get_outputs()
-    >>> ctrl.set_observer_mode(1)  # Switch to EKF mode
     """
 
     cdef:
@@ -303,7 +236,6 @@ cdef class DFCControllerWrapper:
         readonly float  omega_e
         readonly float  omega_smo
         readonly float  omega_ekf
-        readonly int    obs_mode
         readonly int    status
 
     # -------------------------------------------------------------------------
@@ -330,14 +262,13 @@ cdef class DFCControllerWrapper:
         self.omega_e      = 0.0
         self.omega_smo    = 0.0
         self.omega_ekf    = 0.0
-        self.obs_mode     = 0
         self.status       = 0
 
         with nogil:
             DFC_Controller_Init(&self._state, dt_s)
 
+        # Unused 4-state params are already zero-initialized by memset
         self._initialized = True
-        self.obs_mode = self._state.obs_mode
 
     # -------------------------------------------------------------------------
     cpdef void set_inputs(self, float[:] u) except *:
@@ -383,106 +314,6 @@ cdef class DFCControllerWrapper:
         self._input.ia             = ia
         self._input.ib             = ib
         self._input.ic             = ic
-
-    # -------------------------------------------------------------------------
-    cpdef void set_observer_mode(self, int mode, float blend_w=0.5) except *:
-        """
-        Select the active speed observer back-end.
-
-        Safe to call while the motor is running. The new mode takes effect
-        on the next compute() call.
-
-        Parameters
-        ----------
-        mode : int
-            0 = DFC_OBS_SMO   (Sliding Mode Observer only)
-            1 = DFC_OBS_EKF   (Extended Kalman Filter only)
-            2 = DFC_OBS_BLEND (Convex blend of SMO and EKF)
-        blend_w : float
-            Blend weight [0.0, 1.0]. Used only in BLEND mode.
-            0.0 = full SMO, 1.0 = full EKF. Default 0.5.
-
-        Returns
-        -------
-        None
-
-        Notes
-        -----
-        When switching from SMO to EKF or BLEND, the EKF state is seeded
-        from the current encoder IIR speed and SMO angle, so the output is
-        live immediately with no warmup delay.
-        """
-        cdef DFC_ObserverMode_T c_mode
-        cdef MatrixFloat c_blend_w = blend_w
-
-        if mode == 0:
-            c_mode = DFC_OBS_SMO
-        elif mode == 1:
-            c_mode = DFC_OBS_EKF
-        elif mode == 2:
-            c_mode = DFC_OBS_BLEND
-        else:
-            raise ValueError(f"Invalid observer mode: {mode}. Use 0, 1, or 2.")
-
-        if blend_w < 0.0 or blend_w > 1.0:
-            raise ValueError(f"blend_w must be in [0, 1], got {blend_w}")
-
-        with nogil:
-            DFC_Controller_SetObserverMode(&self._state, c_mode, c_blend_w)
-
-        self.obs_mode = mode
-
-    # -------------------------------------------------------------------------
-    cpdef void set_ekf_params(self,
-                              float q_i=1e-4,
-                              float q_omega=1e-2,
-                              float q_theta=1e-4,
-                              float r_i=1e-4,
-                              float p0_i=1.0,
-                              float p0_omega=100.0,
-                              float p0_theta=1.0) except *:
-        """
-        Override EKF noise parameters.
-
-        Parameters
-        ----------
-        q_i : float      Current process noise [A^2]. Default 1e-4.
-        q_omega : float  Speed process noise [(rad/s)^2]. Default 1e-2.
-        q_theta : float  Angle process noise [rad^2]. Default 1e-4.
-        r_i : float      Current measurement noise [A^2]. Default 1e-4.
-        p0_i : float     Initial current covariance [A^2]. Default 1.0.
-        p0_omega : float Initial speed covariance [(rad/s)^2]. Default 100.0.
-        p0_theta : float Initial angle covariance [rad^2]. Default 1.0.
-
-        Returns
-        -------
-        None
-
-        Notes
-        -----
-        The EKF is re-initialised with the new parameters, so covariance
-        resets. Call this before switching to EKF mode for best results.
-        """
-        cdef EKF_Speed_Params_T params
-
-        # Copy current motor parameters from state
-        params.R_s       = self._state.ekf_params.R_s
-        params.L_d       = self._state.ekf_params.L_d
-        params.L_q       = self._state.ekf_params.L_q
-        params.lambda_pm = self._state.ekf_params.lambda_pm
-        params.p_poles   = self._state.ekf_params.p_poles
-
-        # Override noise parameters
-        params.q_i       = q_i
-        params.q_omega   = q_omega
-        params.q_theta   = q_theta
-        params.r_i       = r_i
-        params.p0_i      = p0_i
-        params.p0_omega  = p0_omega
-        params.p0_theta  = p0_theta
-
-        with nogil:
-            DFC_Controller_SetEKFParams(&self._state, &params)
 
     # -------------------------------------------------------------------------
     cpdef void set_gains(self,
@@ -535,24 +366,15 @@ cdef class DFCControllerWrapper:
                                           &iq_meas,
                                           &alpha,
                                           &omega_e_diag,
-                                          &omega_smo_diag,
-                                          &omega_ekf_diag)
+                                          &omega_smo_diag)
 
         self.iq_ref       = iq_ref_diag
         self.fusion_alpha = alpha
         self.omega_e      = omega_e_diag
         self.omega_smo    = omega_smo_diag
-        self.omega_ekf    = omega_ekf_diag
-        self.obs_mode     = self._state.obs_mode
+        self.omega_ekf    = omega_smo_diag
 
-        # speed_est reflects the active observer mode
-        if self.obs_mode == 0:      # SMO
-            self.speed_est = self.omega_smo
-        elif self.obs_mode == 1:    # EKF
-            self.speed_est = self.omega_ekf
-        else:                       # BLEND
-            blend_w = self._state.obs_blend_w
-            self.speed_est = ((1.0 - blend_w) * self.omega_smo) + (blend_w * self.omega_ekf)
+        self.speed_est = self.omega_smo
 
         self.status = 0
 
@@ -585,7 +407,7 @@ cdef class DFCControllerWrapper:
         """
         cdef:
             MatrixFloat speed_ref_rpm, iq_ref_diag, id_meas, iq_meas
-            MatrixFloat alpha, omega_e_diag, omega_smo_diag, omega_ekf_diag
+            MatrixFloat alpha, omega_e_diag, omega_smo_diag
             cnp.ndarray[cnp.float32_t, ndim=1] diag
 
         with nogil:
@@ -596,8 +418,7 @@ cdef class DFCControllerWrapper:
                                           &iq_meas,
                                           &alpha,
                                           &omega_e_diag,
-                                          &omega_smo_diag,
-                                          &omega_ekf_diag)
+                                          &omega_smo_diag)
 
         diag = np.empty(9, dtype=np.float32)
         diag[0] = self.speed_est
@@ -608,7 +429,7 @@ cdef class DFCControllerWrapper:
         diag[5] = alpha
         diag[6] = omega_e_diag
         diag[7] = omega_smo_diag
-        diag[8] = omega_ekf_diag
+        diag[8] = omega_smo_diag
         return diag
 
     # -------------------------------------------------------------------------
@@ -629,7 +450,6 @@ cdef class DFCControllerWrapper:
         self.omega_e      = 0.0
         self.omega_smo    = 0.0
         self.omega_ekf    = 0.0
-        self.obs_mode     = self._state.obs_mode
         self.status       = 0
 
     # -------------------------------------------------------------------------
@@ -661,32 +481,8 @@ cdef class DFCControllerWrapper:
             theta_omega_out[1] = self._state.smo.omega_e_filt
 
     # -------------------------------------------------------------------------
-    cpdef void get_ekf_state(self, float[:] x_out, float[:] omega_theta_out=None) except *:
-        """
-        Read EKF internal state for debugging.
-
-        Parameters
-        ----------
-        x_out            : float[4]  Out: [id, iq, omega_m, theta_e].
-        omega_theta_out  : float[2]  Out: [omega_m_gated, theta_e_gated] (optional)
-        """
-        if x_out.shape[0] < 4:
-            raise ValueError("x_out must have at least 4 elements")
-
-        x_out[0] = self._state.ekf.x[0]
-        x_out[1] = self._state.ekf.x[1]
-        x_out[2] = self._state.ekf.x[2]
-        x_out[3] = self._state.ekf.x[3]
-
-        if omega_theta_out is not None:
-            if omega_theta_out.shape[0] < 2:
-                raise ValueError("omega_theta_out must have at least 2 elements")
-            omega_theta_out[0] = self._state.ekf.omega_m
-            omega_theta_out[1] = self._state.ekf.theta_e
-
-    # -------------------------------------------------------------------------
     def __repr__(self):
-        mode_str = ["SMO", "EKF", "BLEND"][self.obs_mode] if self.obs_mode <= 2 else "UNKNOWN"
+        mode_str = "SMO"
         return (f"DFCControllerWrapper("
                 f"mode={mode_str}, "
                 f"v_alpha={self.v_alpha:.3f} V, "
@@ -715,7 +511,6 @@ def dfc_step(float omega_ref_mech,
              float kp_speed  = 0.4,
              float kp_id     = 0.4,
              float kp_iq     = 8.0,
-             int   obs_mode  = 0,
              float blend_w   = 0.5) -> tuple:
     """
     Single-step DFC controller calculation.
@@ -730,8 +525,6 @@ def dfc_step(float omega_ref_mech,
     theta_m        : float  Encoder angle [rad].
     ia, ib, ic     : float  Phase currents [A].
     dt             : float  Time step [s].
-    obs_mode       : int    Observer mode (0=SMO, 1=EKF, 2=BLEND). Default 0.
-    blend_w        : float  Blend weight for BLEND mode. Default 0.5.
     Remaining arguments are accepted for API compatibility.
 
     Returns
@@ -742,9 +535,6 @@ def dfc_step(float omega_ref_mech,
         v_dc, p_poles, R_s, L_d, L_q, lambda_pm,
         i_max, dt, kp_speed, kp_id, kp_iq)
 
-    if obs_mode != 0:
-        ctrl.set_observer_mode(obs_mode, blend_w)
-
     ctrl.set_inputs_individual(omega_ref_mech, theta_m, ia, ib, ic)
     ctrl.compute(dt)
 
@@ -754,5 +544,5 @@ def dfc_step(float omega_ref_mech,
 
 
 # =============================================================================
-__version__ = "2.0.0"
+__version__ = "3.0.0"
 __author__  = "EmbedSim Team"

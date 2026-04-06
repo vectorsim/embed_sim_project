@@ -360,6 +360,12 @@ class DFControllerBlock(VectorBlock):
                  smo_k: float = 2.0,
                  smo_tau: float = 0.0002,
                  smo_omega_max: float = 3000.0,
+                 # EKF parameters (matches C defaults)
+                 ekf_q_i: float = 1e-4,
+                 ekf_q_omega: float = 1.0,       # electrical speed process noise
+                 ekf_r_i: float = 1e-4,
+                 ekf_p0_i: float = 1.0,
+                 ekf_p0_omega: float = 1e6,    # cold-start: speed truly unknown
                  # SpeedFusion parameters (matches C)
                  fusion_omega_lo: float = 50.0,
                  fusion_omega_hi: float = 250.0,
@@ -368,6 +374,9 @@ class DFControllerBlock(VectorBlock):
                  fusion_plaus_band: float = 1000.0,
                  # Current derivative LPF time constant (matches C: DFC_DIQ_TAU)
                  diq_tau: float = 0.001,
+                 # Observer mode selection
+                 observer_mode: int = 0,  # 0=SMO, 1=EKF, 2=BLEND
+                 blend_w: float = 0.5,
                  use_c_backend: bool = False,
                  dtype=None):
         super().__init__(name, use_c_backend=use_c_backend, dtype=dtype)
@@ -445,9 +454,15 @@ class DFControllerBlock(VectorBlock):
             self._load_wrapper()
 
         print(f"[DFC] Differential Flatness Controller initialized")
+        print(f"[DFC] Observer mode: {['SMO', 'EKF', 'BLEND'][observer_mode]}")
+        if observer_mode == 2:
+            print(f"[DFC] Blend weight: {blend_w:.2f}")
         print(f"[DFC] Speed gains: Kp_speed={self.Kp_speed:.4f} A/(rad/s)")
         print(f"[DFC] Current gains: Kp_id={self.Kp_id:.2f} V/A, Kp_iq={self.Kp_iq:.2f} V/A")
         print(f"[DFC] SMO: k={smo_k:.1f} V, tau={smo_tau * 1000:.1f} ms")
+        print(f"[DFC] EKF: 4-state sensorless ab  "
+              f"q_i={ekf_q_i:.1e}  q_omega={ekf_q_omega:.1e}  "
+              f"r_i={ekf_r_i:.1e}  p0_omega={ekf_p0_omega:.1e}")
         print(f"[DFC] C backend: {'ENABLED' if use_c_backend else 'disabled (using Python)'}")
 
     # ── C backend loader ──────────────────────────────────────────────────────
@@ -580,9 +595,13 @@ class DFControllerBlock(VectorBlock):
         omega_meas_mech = self.fusion._omega_enc_filt
 
         # ── 6. Outer speed P-loop → iq_ref ───────────────────────────────────
-        speed_err = omega_ref_mech - omega_meas_mech
-        iq_ref = self.Kp_speed * speed_err
-        iq_ref = max(-self.I_MAX, min(self.I_MAX, iq_ref))
+            # Force iq_ref=0 during alignment so only id flows
+            speed_err = 0.0
+            iq_ref    = 0.0
+        else:
+            speed_err = omega_ref_mech - omega_meas_mech
+            iq_ref = self.Kp_speed * speed_err
+            iq_ref = max(-self.I_MAX, min(self.I_MAX, iq_ref))
 
         # ── 7. Current derivative (LPF-filtered finite difference) ───────────
         if _dt > 0.0:
@@ -614,7 +633,7 @@ class DFControllerBlock(VectorBlock):
 
         # ── Log ───────────────────────────────────────────────────────────────
         self._log_ekf_step(t, omega_ref_mech, iq_ref, id_meas, iq_meas,
-                           omega_e, omega_e_smo, omega_ekf_mech, 0.0)
+                           omega_e, omega_e_smo, omega_ekf_mech, _p_omega)
 
         self.output = VectorSignal(
             np.array([v_alpha, v_beta], dtype=np.float32), self.name)
@@ -683,6 +702,7 @@ class DFControllerBlock(VectorBlock):
             fusion_alpha: SpeedFusion weight
             omega_smo: SMO mechanical speed [rad/s]
             omega_ekf: EKF mechanical speed [rad/s]
+            observer_mode: Current observer mode
         """
         # Speed estimate from SpeedFusion
         speed_est = self.fusion._omega_enc_filt
@@ -745,7 +765,7 @@ class DFControllerBlock(VectorBlock):
         return self.fusion.theta_e
 
     def __repr__(self) -> str:
-        return f"DFControllerBlock('{self.name}', SMO+encoder)"
+        return f"DFControllerBlock('{self.name}', mode={mode_str})"
 
 
 __all__ = ["DFControllerBlock", "SpeedFusion", "SlidingModeObserver"]

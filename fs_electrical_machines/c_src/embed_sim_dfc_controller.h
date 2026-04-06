@@ -6,25 +6,8 @@
  *            Three observer modes are available and can be switched at runtime
  *            via DFC_Controller_SetObserverMode() without stopping the motor:
  *
- *              DFC_OBS_SMO   (0) -- Sliding Mode Observer only.
- *                                   Original production mode; motor confirmed
- *                                   running at 3000 RPM.  Default on Init.
- *
- *              DFC_OBS_EKF   (1) -- Extended Kalman Filter only.
- *                                   State: x = [id, iq, omega_m, theta_e].
- *                                   Provides smoother speed estimate at the
- *                                   cost of one 4x4 matrix multiply per step.
- *
- *              DFC_OBS_BLEND (2) -- Convex blend of SMO and EKF outputs.
- *                                   omega_blend = (1-w)*omega_smo + w*omega_ekf
- *                                   Set obs_blend_w via AURIX overlay to sweep
- *                                   0.0 (full SMO) -> 1.0 (full EKF) live.
- *
- *            The SMO always executes -- it feeds SpeedFusion regardless of
- *            mode.  The EKF executes only in DFC_OBS_EKF and DFC_OBS_BLEND
- *            to avoid the trig + 4x4 matrix cost at 20 kHz in the default
- *            DFC_OBS_SMO production mode.  obs_mode controls which estimate
- *            drives the speed P-loop.
+ *            SMO + encoder SpeedFusion.
+
  *
  * \note      MISRA C:2012 compliance
  *              Rule  7.2  : all float literals carry the 'f' suffix.
@@ -33,7 +16,7 @@
  *              Rule 15.5  : single return per function.
  *              Rule 15.7  : every if-else chain has a final else.
  *
- * \version   2.0.0
+ * \version   3.0.0
  * \copyright Copyright (C) EmbedSim 2025
  *********************************************************************************************************************/
 
@@ -43,7 +26,6 @@
 #include "embed_sim_matrix.h"
 #include "embed_sim_coordinate_transform.h"
 #include "embed_sim_dfc_gains.h"
-#include "embed_sim_ekf_speed.h"
 
 
 /**********************************************************************************************************************
@@ -159,53 +141,7 @@
 /** @} */
 
 
-/**********************************************************************************************************************
- * \defgroup DFC_EKFDefaults  EKF noise defaults -- populated by DFC_Controller_Init
- *
- * \details  These values seed EKF_Speed_Params_T inside DFC_State_T.
- *           Override via DFC_Controller_SetEKFParams() after Init if needed.
- * @{
- *********************************************************************************************************************/
 
-/** \brief EKF current process noise [A^2]                               */
-#define DFC_EKF_Q_I          ((MatrixFloat)1.0e-4f)
-
-/** \brief EKF speed process noise [(rad/s)^2]                           */
-#define DFC_EKF_Q_OMEGA      ((MatrixFloat)1.0e-2f)
-
-/** \brief EKF angle process noise [rad^2]                               */
-#define DFC_EKF_Q_THETA      ((MatrixFloat)1.0e-4f)
-
-/** \brief EKF current measurement noise [A^2]                           */
-#define DFC_EKF_R_I          ((MatrixFloat)1.0e-4f)
-
-/** \brief EKF initial current covariance [A^2]                          */
-#define DFC_EKF_P0_I         ((MatrixFloat)1.0f)
-
-/** \brief EKF initial speed covariance [(rad/s)^2]                      */
-#define DFC_EKF_P0_OMEGA     ((MatrixFloat)100.0f)
-
-/** \brief EKF initial angle covariance [rad^2]                          */
-#define DFC_EKF_P0_THETA     ((MatrixFloat)1.0f)
-
-/** @} */
-
-
-/**********************************************************************************************************************
- * \enum   DFC_ObserverMode_T
- * \brief  Speed observer back-end selection.
- *
- * \details Switch at runtime via DFC_Controller_SetObserverMode().
- *          The change takes effect on the next DFC_Controller_Step() call.
- *          Default after DFC_Controller_Init() is DFC_OBS_SMO (0), which
- *          preserves the original production behaviour exactly.
- *********************************************************************************************************************/
-typedef enum
-{
-    DFC_OBS_SMO   = 0U,   /**< SMO only -- original production mode          */
-    DFC_OBS_EKF   = 1U,   /**< EKF only -- smooth estimate, higher CPU cost  */
-    DFC_OBS_BLEND = 2U    /**< Convex blend: (1-w)*SMO + w*EKF, w=obs_blend_w */
-} DFC_ObserverMode_T;
 
 
 /**********************************************************************************************************************
@@ -272,20 +208,14 @@ typedef struct
  * \brief  Complete Differential Flatness Controller state.
  *
  * \details All sub-states are owned by value (no heap allocation).
- *          The EKF sub-state is always allocated; it runs only when
- *          obs_mode is DFC_OBS_EKF or DFC_OBS_BLEND.
  *********************************************************************************************************************/
 typedef struct
 {
     /*--- Speed estimation ---*/
     DFC_SpeedFusion_T  fusion;          /**< Complementary filter state              */
     DFC_SMO_T          smo;             /**< Sliding Mode Observer state             */
-    DFC_EKF_Speed_T    ekf;             /**< EKF observer state                      */
-    EKF_Speed_Params_T ekf_params;      /**< EKF noise / motor parameters            */
 
     /*--- Observer mode selector (written by DFC_Controller_SetObserverMode) ---*/
-    DFC_ObserverMode_T obs_mode;        /**< Active observer back-end                */
-    MatrixFloat        obs_blend_w;     /**< Blend weight: 0.0 = SMO, 1.0 = EKF     */
 
     /*--- Delayed voltages for SMO (z-1) ---*/
     MatrixFloat v_alpha_prev;           /**< Alpha voltage one step ago [V]          */
@@ -311,7 +241,6 @@ typedef struct
     MatrixFloat log_alpha;              /**< Fusion weight                            */
     MatrixFloat log_omega_e;            /**< Active observer mechanical speed [rad/s] -- drives P-loop */
     MatrixFloat log_omega_smo;          /**< SMO mechanical speed estimate [rad/s]   */
-    MatrixFloat log_omega_ekf;          /**< EKF mechanical speed estimate [rad/s]   */
     uint32_T    log_counter;            /**< Step counter                            */
     MatrixFloat log_next_time;          /**< Next log threshold [s]                  */
 
@@ -326,8 +255,7 @@ typedef struct
 /**
  * \brief   Initialise all controller state.  Call once before the ISR starts.
  *
- * \details Zeroes DFC_State_T, initialises transform blocks, seeds EKF params
- *          from motor #defines, and sets obs_mode = DFC_OBS_SMO.
+ * \details Zeroes DFC_State_T, initialises transform blocks.
  *
  * \param[out] s   Controller state.  Must not be NULL.
  * \param[in]  dt  Nominal sampling period [s].  Stored for reference only.
@@ -365,35 +293,14 @@ extern void DFC_Controller_Reset(
  * \details Safe to call while the motor is running.  The new mode takes
  *          effect on the next DFC_Controller_Step() call.
  *
- *          When switching from DFC_OBS_SMO to DFC_OBS_EKF or DFC_OBS_BLEND
- *          the EKF state is seeded from the current encoder IIR speed and
- *          SMO angle, and step_count is set past EKF_WARMUP so the output
- *          is live immediately with no 20 ms blind period.  Speed control
- *          remains closed-loop through the transition.
  *
  * \param[in,out] s     Controller state.
  * \param[in]     mode  Observer mode to activate.
  * \param[in]     blend_w  Blend weight [0.0, 1.0].  Used only in
  *                         DFC_OBS_BLEND mode.  Clamped internally.
  */
-extern void DFC_Controller_SetObserverMode(
-    DFC_State_T              * const s,
-    const DFC_ObserverMode_T          mode,
-    const MatrixFloat                 blend_w);
-
 /**
- * \brief   Override EKF noise / motor parameters after Init.
- *
- * \details Copies src into s->ekf_params and re-initialises the EKF state
- *          so the new covariance takes effect immediately.
- *
- * \param[in,out] s    Controller state.
- * \param[in]     src  New parameter set.  Must not be NULL.
  */
-extern void DFC_Controller_SetEKFParams(
-    DFC_State_T              * const s,
-    const EKF_Speed_Params_T * const src);
-
 /**
  * \brief   Read the latest 1 kHz diagnostic snapshot.
  *
@@ -405,7 +312,6 @@ extern void DFC_Controller_SetEKFParams(
  * \param[out] alpha          SpeedFusion weight.
  * \param[out] omega_e        Fused mechanical speed [rad/s] (= electrical / p_poles).
  * \param[out] omega_smo      SMO mechanical speed estimate [rad/s].
- * \param[out] omega_ekf      EKF mechanical speed estimate [rad/s].
  */
 extern void DFC_Controller_GetDiagnostics(
     const DFC_State_T * const s,
@@ -415,8 +321,7 @@ extern void DFC_Controller_GetDiagnostics(
     MatrixFloat       * const iq,
     MatrixFloat       * const alpha,
     MatrixFloat       * const omega_e,
-    MatrixFloat       * const omega_smo,
-    MatrixFloat       * const omega_ekf);
+    MatrixFloat       * const omega_smo);
 
 /** @} */
 

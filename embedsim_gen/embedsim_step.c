@@ -77,7 +77,7 @@ void EmbedSim_Step(
         y_dfc[0] = y_dfc_out.v_alpha / DFC_V_MAX;
         y_dfc[1] = y_dfc_out.v_beta / DFC_V_MAX;
 
-    /* --- svpwm_pack (SVPWMPackBlock) --- */
+    /* --- svpwm_pack (SVPWMPackBlockDT) --- */
     u_svpwm_pack[0] = y_dfc[0];
     u_svpwm_pack[1] = y_dfc[1];
     SVPWMPack_Step(&svpwm_pack_state, u_svpwm_pack, dt, y_svpwm_pack);

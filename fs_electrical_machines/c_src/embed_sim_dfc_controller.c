@@ -13,12 +13,11 @@
  *            The EKF executes only in DFC_OBS_EKF and DFC_OBS_BLEND to avoid
  *            burning ISR budget in the default DFC_OBS_SMO production mode.
  *
- * \version   2.0.0
+ * \version   3.0.0
  * \copyright Copyright (C) EmbedSim 2025
  *********************************************************************************************************************/
 
 #include "embed_sim_dfc_controller.h"
-#include "embed_sim_ekf_speed.h"
 #include <math.h>
 #include <string.h>
 
@@ -64,7 +63,6 @@ static void DFC_VoltageLaw(
     MatrixFloat * const vd,
     MatrixFloat * const vq);
 
-static void DFC_EKFParams_Init(EKF_Speed_Params_T * const p);
 
 
 /**********************************************************************************************************************
@@ -389,37 +387,6 @@ static void DFC_VoltageLaw(
 
 
 /*--------------------------------------------------------------------------------------------------------------------
- * DFC_EKFParams_Init -- populate EKF_Speed_Params_T from motor #defines
- *------------------------------------------------------------------------------------------------------------------*/
-static void DFC_EKFParams_Init(EKF_Speed_Params_T * const p)
-{
-    if (p == NULL)
-    {
-        return;
-    }
-
-    p->R_s       = DFC_R_S;
-    p->L_d       = DFC_L_D;
-    p->L_q       = DFC_L_Q;
-    p->lambda_pm = DFC_LAMBDA_PM;
-    p->p_poles   = DFC_P_POLES;
-
-    p->q_i       = DFC_EKF_Q_I;
-    p->q_omega   = DFC_EKF_Q_OMEGA;
-    p->q_theta   = DFC_EKF_Q_THETA;
-    p->r_i       = DFC_EKF_R_I;
-
-    p->p0_i      = DFC_EKF_P0_I;
-    p->p0_omega  = DFC_EKF_P0_OMEGA;
-    p->p0_theta  = DFC_EKF_P0_THETA;
-}
-
-
-/**********************************************************************************************************************
- * Public API
- *********************************************************************************************************************/
-
-/*--------------------------------------------------------------------------------------------------------------------
  * DFC_Controller_Init
  *------------------------------------------------------------------------------------------------------------------*/
 void DFC_Controller_Init(DFC_State_T * const s, const MatrixFloat dt)
@@ -429,106 +396,52 @@ void DFC_Controller_Init(DFC_State_T * const s, const MatrixFloat dt)
         return;
     }
 
-    (void)memset(s, 0, sizeof(DFC_State_T));
+    /*--- SpeedFusion state ---*/
+    s->fusion.theta_m_prev   = DFC_ZERO_F;
+    s->fusion.omega_enc_filt = DFC_ZERO_F;
+    s->fusion.omega_e_prev   = DFC_ZERO_F;
+    s->fusion.alpha          = DFC_ZERO_F;
+    s->fusion.omega_enc_mech = DFC_ZERO_F;
 
+    /*--- SMO state ---*/
+    s->smo.i_hat_alpha  = DFC_ZERO_F;
+    s->smo.i_hat_beta   = DFC_ZERO_F;
+    s->smo.e_hat_alpha  = DFC_ZERO_F;
+    s->smo.e_hat_beta   = DFC_ZERO_F;
+    s->smo.theta_e_hat  = DFC_ZERO_F;
+    s->smo.omega_e_hat  = DFC_ZERO_F;
+    s->smo.omega_e_filt = DFC_ZERO_F;
+    s->smo.theta_e_prev = DFC_ZERO_F;
+
+    /*--- Delayed voltages (z-1 for SMO) ---*/
+    s->v_alpha_prev = DFC_ZERO_F;
+    s->v_beta_prev  = DFC_ZERO_F;
+
+    /*--- Reference trajectory ---*/
+    s->iq_ref_prev = DFC_ZERO_F;
+    s->diq_filt    = DFC_ZERO_F;
+
+    /*--- Warmup counter ---*/
+    s->smo_warmup_cnt = 0U;
+
+    /*--- Coordinate transforms ---*/
     Clarke_Init(&s->clarke_state);
     Park_Init(&s->park_state);
     InvPark_Init(&s->inv_park_state);
 
-    /* Observer mode: default to production SMO */
-    s->obs_mode    = DFC_OBS_SMO;
-    s->obs_blend_w = DFC_ZERO_F;
-
-    /* Seed EKF params from motor #defines and initialise EKF state */
-    DFC_EKFParams_Init(&s->ekf_params);
-    EKF_Speed_Init(&s->ekf, &s->ekf_params);
-
-    /* Seed internal theta_e_hat from SMO so first innovation is small.
-     * At true cold start smo.theta_e_hat = 0 (memset), which is fine.
-     * After DFC_Controller_Reset() the SMO retains its last good angle. */
-    s->ekf.theta_e_hat = s->smo.theta_e_hat;
-
+    /*--- Diagnostic log ---*/
+    s->log_speed_ref = DFC_ZERO_F;
+    s->log_iq_ref    = DFC_ZERO_F;
+    s->log_id        = DFC_ZERO_F;
+    s->log_iq        = DFC_ZERO_F;
+    s->log_alpha     = DFC_ZERO_F;
+    s->log_omega_e   = DFC_ZERO_F;
+    s->log_omega_smo = DFC_ZERO_F;
+    s->log_counter   = 0U;
     s->log_next_time = DFC_LOG_INTERVAL;
 
-    (void)dt;   /* Retained for API consistency */
+    (void)dt;
 }
-
-
-/*--------------------------------------------------------------------------------------------------------------------
- * DFC_Controller_SetObserverMode
- *------------------------------------------------------------------------------------------------------------------*/
-void DFC_Controller_SetObserverMode(
-    DFC_State_T              * const s,
-    const DFC_ObserverMode_T          mode,
-    const MatrixFloat                 blend_w)
-{
-    MatrixFloat w;
-
-    if (s == NULL)
-    {
-        return;
-    }
-
-    /* Transitioning SMO -> EKF or SMO -> BLEND: seed the EKF state
-     * from the current SMO / encoder values so the observer starts
-     * warm and the warmup gate (step_count > EKF_WARMUP) is bypassed
-     * immediately.  Without seeding, omega_meas_mech = 0 for 20 ms,
-     * speed_err saturates iq_ref, and the motor runs away.           */
-    if ((mode == DFC_OBS_EKF) || (mode == DFC_OBS_BLEND))
-    {
-        if (s->obs_mode == DFC_OBS_SMO)
-        {
-            /* Re-initialise covariance but keep state zero first */
-            EKF_Speed_Reset(&s->ekf, &s->ekf_params);
-
-            /* Seed state from current encoder + SMO estimates */
-            s->ekf.x[0]        = DFC_ZERO_F;                 /* id  ~ 0 at MTPA      */
-            s->ekf.x[1]        = s->iq_ref_prev;             /* iq  ~ last reference */
-            s->ekf.x[2]        = s->fusion.omega_enc_mech;   /* omega_m from encoder */
-            s->ekf.theta_e_hat = s->smo.theta_e_hat;         /* angle from SMO       */
-
-            /* Mark as past warmup so output is live immediately */
-            s->ekf.step_count = EKF_WARMUP + 1U;
-            s->ekf.omega_m    = s->fusion.omega_enc_mech;
-            s->ekf.theta_e    = s->smo.theta_e_hat;
-        }
-        else
-        {
-            /* EKF already running -- preserve accumulated state */
-        }
-    }
-    else
-    {
-        /* Switching back to SMO -- no EKF state action required */
-    }
-
-    /* Clamp blend weight to [0, 1] */
-    w = blend_w;
-    if (w < DFC_ZERO_F) { w = DFC_ZERO_F; }
-    else if (w > DFC_ONE_F) { w = DFC_ONE_F; }
-    else { /* Within range */ }
-
-    s->obs_mode    = mode;
-    s->obs_blend_w = w;
-}
-
-
-/*--------------------------------------------------------------------------------------------------------------------
- * DFC_Controller_SetEKFParams
- *------------------------------------------------------------------------------------------------------------------*/
-void DFC_Controller_SetEKFParams(
-    DFC_State_T              * const s,
-    const EKF_Speed_Params_T * const src)
-{
-    if ((s == NULL) || (src == NULL))
-    {
-        return;
-    }
-
-    (void)memcpy(&s->ekf_params, src, sizeof(EKF_Speed_Params_T));
-    EKF_Speed_Reset(&s->ekf, &s->ekf_params);
-}
-
 
 /*--------------------------------------------------------------------------------------------------------------------
  * DFC_Controller_Step
@@ -542,7 +455,6 @@ void DFC_Controller_Step(
     MatrixFloat i_alpha, i_beta;
     MatrixFloat id_meas, iq_meas;
     MatrixFloat theta_e, omega_e, omega_meas_mech, omega_smo_e;
-    MatrixFloat omega_ekf_mech;
     MatrixFloat speed_err, iq_ref, diq_dt, vd, vq;
     MatrixFloat lpf_alpha;
     const MatrixFloat diq_tau = DFC_DIQ_TAU;
@@ -566,23 +478,6 @@ void DFC_Controller_Step(
                  dt, s->smo_warmup_cnt,
                  &omega_smo_e);
 
-    /*--- EKF: runs only in DFC_OBS_EKF and DFC_OBS_BLEND modes.
-     *    Gated to avoid the trig + matrix cost at 20 kHz in production
-     *    DFC_OBS_SMO mode.  Switch mode first, EKF warms up in ~20 ms. ---*/
-    if ((s->obs_mode == DFC_OBS_EKF) || (s->obs_mode == DFC_OBS_BLEND))
-    {
-        EKF_Speed_Step(&s->ekf,
-                       u->ia, u->ib, u->ic,
-                       s->v_alpha_prev, s->v_beta_prev,
-                       dt,
-                       &s->ekf_params);
-        omega_ekf_mech = s->ekf.omega_m;
-    }
-    else
-    {
-        omega_ekf_mech = DFC_ZERO_F;   /* MISRA 15.7 */
-    }
-
     /*--- SpeedFusion: encoder + active observer -> theta_e, omega_e ---*/
     DFC_SpeedFusion_Update(&s->fusion,
                            u->theta_m,
@@ -592,29 +487,7 @@ void DFC_Controller_Step(
                            &omega_e,
                            &omega_meas_mech);
 
-    /*--- Observer mode selector: choose mechanical speed for P-loop ---*/
-    if (s->obs_mode == DFC_OBS_EKF)
-    {
-        /* During EKF warmup gate omega_m = 0, which would saturate iq_ref.
-         * Fall back to encoder IIR speed until the EKF output is live.  */
-        if (s->ekf.step_count > EKF_WARMUP)
-        {
-            omega_meas_mech = omega_ekf_mech;
-        }
-        else
-        {
-            omega_meas_mech = s->fusion.omega_enc_filt;   /* encoder fallback */
-        }
-    }
-    else if (s->obs_mode == DFC_OBS_BLEND)
-    {
-        omega_meas_mech = ((DFC_ONE_F - s->obs_blend_w) * omega_meas_mech)
-                        + (s->obs_blend_w * omega_ekf_mech);
-    }
-    else
-    {
-        /* DFC_OBS_SMO: omega_meas_mech already set by SpeedFusion */
-    }
+    /* omega_meas_mech set by SpeedFusion */
 
     /*--- Speed P-loop -> iq_ref ---*/
     speed_err = u->omega_ref_mech - omega_meas_mech;
@@ -671,7 +544,6 @@ void DFC_Controller_Step(
             s->log_alpha      = s->fusion.alpha;
             s->log_omega_e    = omega_meas_mech;  /* active observer output -- drives P-loop */
             s->log_omega_smo  = omega_smo_e / (MatrixFloat)DFC_P_POLES;
-            s->log_omega_ekf  = omega_ekf_mech;
             s->log_next_time += DFC_LOG_INTERVAL;
         }
         else
@@ -691,8 +563,6 @@ void DFC_Controller_Step(
  *------------------------------------------------------------------------------------------------------------------*/
 void DFC_Controller_Reset(DFC_State_T * const s)
 {
-    DFC_ObserverMode_T saved_mode;
-    MatrixFloat        saved_blend_w;
 
     if (s == NULL)
     {
@@ -701,13 +571,9 @@ void DFC_Controller_Reset(DFC_State_T * const s)
 
     /* Preserve observer selection across reset so AURIX overlay settings
      * survive a fault-recovery restart without manual rewrite. */
-    saved_mode    = s->obs_mode;
-    saved_blend_w = s->obs_blend_w;
 
     DFC_Controller_Init(s, DFC_ZERO_F);
 
-    s->obs_mode    = saved_mode;
-    s->obs_blend_w = saved_blend_w;
 }
 
 
@@ -722,8 +588,7 @@ void DFC_Controller_GetDiagnostics(
     MatrixFloat       * const iq,
     MatrixFloat       * const alpha,
     MatrixFloat       * const omega_e,
-    MatrixFloat       * const omega_smo,
-    MatrixFloat       * const omega_ekf)
+    MatrixFloat       * const omega_smo)
 {
     if ((s             != NULL) &&
         (speed_ref_rpm != NULL) &&
@@ -732,8 +597,7 @@ void DFC_Controller_GetDiagnostics(
         (iq            != NULL) &&
         (alpha         != NULL) &&
         (omega_e       != NULL) &&
-        (omega_smo     != NULL) &&
-        (omega_ekf     != NULL))
+        (omega_smo     != NULL))
     {
         *speed_ref_rpm = s->log_speed_ref;
         *iq_ref        = s->log_iq_ref;
@@ -742,7 +606,6 @@ void DFC_Controller_GetDiagnostics(
         *alpha         = s->log_alpha;
         *omega_e       = s->log_omega_e;
         *omega_smo     = s->log_omega_smo;
-        *omega_ekf     = s->log_omega_ekf;
     }
     else
     {
