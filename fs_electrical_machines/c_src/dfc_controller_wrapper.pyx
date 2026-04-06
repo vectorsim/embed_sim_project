@@ -1,13 +1,23 @@
 # dfc_controller_wrapper.pyx
 # =============================================================================
-# EmbedSim Differential Flatness Controller Cython Wrapper for fs_electrical_machines
+# EmbedSim Differential Flatness Controller -- Cython wrapper
 # =============================================================================
-# Cython wrapper for the DFC FOC Controller C implementation.
 #
-# Location: fs_electrical_machines/c_src/dfc_controller_wrapper.pyx
+# \file      dfc_controller_wrapper.pyx
+# \brief     Cython wrapper for embed_sim_dfc_controller.c / .h
 #
-# The compiled module will be available as:
-#   from fs_electrical_machines.dfc_controller_wrapper import DFCControllerWrapper
+# \details   Exposes DFCControllerWrapper (stateful, per-motor instance) and
+#            the dfc_step() convenience function (stateless, single-step).
+#            All C function calls are issued with the GIL released (nogil) so
+#            the wrapper is safe to call from a Python simulation loop that
+#            uses threading.
+#
+# \note      EKF speed observer declarations (embed_sim_ekf_speed.h) are NOT
+#            included here.  They will be added in a separate wrapper file once
+#            the DFC build is confirmed stable on hardware.
+#
+# Location:  fs_electrical_machines/c_src/dfc_controller_wrapper.pyx
+# Import:    from fs_electrical_machines.dfc_controller_wrapper import DFCControllerWrapper
 #
 # cython: language_level=3
 # cython: boundscheck=False
@@ -19,244 +29,260 @@ import numpy as np
 cimport numpy as cnp
 from libc.math cimport sqrt, fabs, exp, tanh, atan2
 
-# Initialize NumPy C API
 cnp.import_array()
 
+
 # -----------------------------------------------------------------------------
-# C declarations from embed_sim_matrix.h
+# \brief  C declarations from embed_sim_matrix.h
 # -----------------------------------------------------------------------------
 cdef extern from "embed_sim_matrix.h":
-    ctypedef int       MatrixElement   # int32_T
-    ctypedef float     MatrixFloat     # real32_T
+
+    ctypedef int    MatrixElement   # int32_T
+    ctypedef float  MatrixFloat     # real32_T
 
     ctypedef enum MatrixStatus_Type:
-        MATRIX_SUCCESS          = 0
-        MATRIX_ERROR_NULL_PTR   = 1
+        MATRIX_SUCCESS                  = 0
+        MATRIX_ERROR_NULL_PTR           = 1
         MATRIX_ERROR_DIMENSION_MISMATCH = 2
-        MATRIX_ERROR_SINGULAR   = 3
-        MATRIX_ERROR_SIZE_EXCEEDED = 4
-        MATRIX_ERROR_DIV_BY_ZERO = 5
-        MATRIX_ERROR_NOT_SQUARE = 6
-        MATRIX_ERROR_OUT_OF_BOUNDS = 8
+        MATRIX_ERROR_SINGULAR           = 3
+        MATRIX_ERROR_SIZE_EXCEEDED      = 4
+        MATRIX_ERROR_DIV_BY_ZERO        = 5
+        MATRIX_ERROR_NOT_SQUARE         = 6
+        MATRIX_ERROR_OUT_OF_BOUNDS      = 8
 
     MatrixElement Matrix_FloatToQ31(const MatrixFloat value) nogil
     MatrixFloat   Matrix_Q31ToFloat(const MatrixElement value) nogil
 
 
 # -----------------------------------------------------------------------------
-# C declarations from embed_sim_dfc_controller.h
+# \brief  C declarations from embed_sim_dfc_gains.h
+#
+# \note   DFC_GainSet_T is defined in embed_sim_dfc_gains.h, not in
+#         embed_sim_dfc_controller.h.  The Cython declaration must list every
+#         struct field in the same order as the C header so that Cython
+#         computes the correct sizeof() when a local instance is built on the
+#         stack (e.g. inside set_gains).
+# -----------------------------------------------------------------------------
+cdef extern from "embed_sim_dfc_gains.h":
+
+    ctypedef struct DFC_GainSet_T:
+        MatrixFloat kp_speed   # Speed P-gain [A/(rad/s)]
+        MatrixFloat kp_id      # D-axis current P-gain [V/A]
+        MatrixFloat kp_iq      # Q-axis current P-gain [V/A]
+
+
+# -----------------------------------------------------------------------------
+# \brief  C declarations from embed_sim_dfc_controller.h
+#
+# \note   Clarke_T / Park_T / InvPark_T are embedded inside DFC_State_T but
+#         are not accessed from the Python layer.  Because cdef extern from
+#         defers struct layout to the C compiler, Cython does not need to
+#         enumerate those fields -- only fields that are read or written from
+#         Cython must appear.  The absent transform fields do NOT corrupt the
+#         layout of the fields that follow them.
+#
+#         The phantom theta_ref field present in the original wrapper has been
+#         removed.  It did not exist in the C struct and shifted every
+#         subsequent field offset in Cython's view, causing silent memory
+#         corruption on all log_* reads.
 # -----------------------------------------------------------------------------
 cdef extern from "embed_sim_dfc_controller.h":
 
-    # Gain structure
-    ctypedef struct DFC_GainSet_T:
-        MatrixFloat kp_speed
-        MatrixFloat kp_id
-        MatrixFloat kp_iq
-
-    # SpeedFusion structure
+    # \brief SpeedFusion complementary filter state.
     ctypedef struct DFC_SpeedFusion_T:
-        MatrixFloat theta_m_prev
-        MatrixFloat omega_enc_filt
-        MatrixFloat omega_e_prev
-        MatrixFloat alpha
-        MatrixFloat omega_enc_mech
+        MatrixFloat theta_m_prev     # Previous mechanical angle [rad]
+        MatrixFloat omega_enc_filt   # IIR-filtered encoder speed [rad/s]
+        MatrixFloat omega_e_prev     # Previous fused electrical speed [rad/s]
+        MatrixFloat alpha            # Fusion weight (0 = encoder, 1 = SMO)
+        MatrixFloat omega_enc_mech   # Filtered encoder mechanical speed [rad/s]
 
-    # SMO structure
+    # \brief Sliding Mode Observer state (alphabeta frame).
     ctypedef struct DFC_SMO_T:
-        MatrixFloat i_hat_alpha
-        MatrixFloat i_hat_beta
-        MatrixFloat e_hat_alpha
-        MatrixFloat e_hat_beta
-        MatrixFloat theta_e_hat
-        MatrixFloat omega_e_hat
-        MatrixFloat theta_e_prev
+        MatrixFloat i_hat_alpha   # Estimated alpha-axis current [A]
+        MatrixFloat i_hat_beta    # Estimated beta-axis current [A]
+        MatrixFloat e_hat_alpha   # Filtered back-EMF alpha [V]
+        MatrixFloat e_hat_beta    # Filtered back-EMF beta [V]
+        MatrixFloat theta_e_hat   # Estimated electrical angle [rad]
+        MatrixFloat omega_e_hat   # Estimated electrical speed [rad/s]
+        MatrixFloat theta_e_prev  # Previous angle for speed extraction [rad]
 
-    # Input structure
+    # \brief Input to DFC_Controller_Step().
     ctypedef struct DFC_Input_T:
-        MatrixFloat omega_ref_mech
-        MatrixFloat theta_m
-        MatrixFloat ia
-        MatrixFloat ib
-        MatrixFloat ic
+        MatrixFloat omega_ref_mech  # Mechanical speed reference [rad/s]
+        MatrixFloat theta_m         # Mechanical angle from encoder [rad]
+        MatrixFloat ia              # Phase A current [A]
+        MatrixFloat ib              # Phase B current [A]
+        MatrixFloat ic              # Phase C current [A]
 
-    # Output structure
+    # \brief Output from DFC_Controller_Step().
     ctypedef struct DFC_Output_T:
-        MatrixFloat v_alpha
-        MatrixFloat v_beta
+        MatrixFloat v_alpha   # Alpha-axis voltage reference [V]
+        MatrixFloat v_beta    # Beta-axis voltage reference [V]
 
-    # State structure
+    # \brief Full Differential Flatness Controller state.
     ctypedef struct DFC_State_T:
-        DFC_SpeedFusion_T fusion
-        DFC_SMO_T smo
-        MatrixFloat v_alpha_prev
-        MatrixFloat v_beta_prev
-        MatrixFloat theta_ref
-        MatrixFloat iq_ref_prev
-        MatrixFloat diq_filt
-        unsigned int smo_warmup_cnt
-        MatrixFloat log_speed_ref
-        MatrixFloat log_iq_ref
-        MatrixFloat log_id
-        MatrixFloat log_iq
-        MatrixFloat log_alpha
-        MatrixFloat log_omega_e
-        unsigned int log_counter
-        MatrixFloat log_next_time
+        DFC_SpeedFusion_T fusion        # SpeedFusion state
+        DFC_SMO_T         smo           # SMO state
+        MatrixFloat       v_alpha_prev  # Alpha voltage delayed one step [V]
+        MatrixFloat       v_beta_prev   # Beta voltage delayed one step [V]
+        MatrixFloat       iq_ref_prev   # Previous iq_ref for derivative [A]
+        MatrixFloat       diq_filt      # LPF-filtered diq_ref/dt [A/s]
+        unsigned int      smo_warmup_cnt
+        # Clarke_T / Park_T / InvPark_T -- opaque, not accessed from Cython
+        MatrixFloat       log_speed_ref   # Speed reference at last log [RPM]
+        MatrixFloat       log_iq_ref      # iq reference at last log [A]
+        MatrixFloat       log_id          # Measured id at last log [A]
+        MatrixFloat       log_iq          # Measured iq at last log [A]
+        MatrixFloat       log_alpha       # Fusion weight at last log
+        MatrixFloat       log_omega_e     # Fused electrical speed at last log [rad/s]
+        unsigned int      log_counter
+        MatrixFloat       log_next_time   # Next log threshold [s]
 
-    # Global gains
-    extern DFC_GainSet_T g_dfc_gains
+    void DFC_Controller_Init(
+        DFC_State_T*      s,
+        const MatrixFloat dt) nogil
 
-    # Function prototypes
-    void DFC_Controller_Init(DFC_State_T* s, const MatrixFloat dt) nogil
     void DFC_Controller_Step(
-        DFC_State_T* s,
+        DFC_State_T*       s,
         const DFC_Input_T* u,
-        const MatrixFloat dt,
-        DFC_Output_T* y) nogil
-    void DFC_Controller_Reset(DFC_State_T* s) nogil
+        const MatrixFloat  dt,
+        DFC_Output_T*      y) nogil
+
+    void DFC_Controller_Reset(
+        DFC_State_T* s) nogil
+
     void DFC_Controller_GetDiagnostics(
         const DFC_State_T* s,
-        MatrixFloat* speed_ref_rpm,
-        MatrixFloat* iq_ref,
-        MatrixFloat* id,
-        MatrixFloat* iq,
-        MatrixFloat* alpha,
-        MatrixFloat* omega_e) nogil
-    void DFC_GainSet_SetFromSchedule(const DFC_GainSet_T* const src) nogil
+        MatrixFloat*       speed_ref_rpm,
+        MatrixFloat*       iq_ref,
+        MatrixFloat*       id,
+        MatrixFloat*       iq,
+        MatrixFloat*       alpha,
+        MatrixFloat*       omega_e) nogil
 
 
-# -----------------------------------------------------------------------------
-# DFC Controller Wrapper Class
-# -----------------------------------------------------------------------------
+# =============================================================================
+# \class  DFCControllerWrapper
+# \brief  Stateful per-motor wrapper for the Differential Flatness FOC Controller.
+# =============================================================================
 cdef class DFCControllerWrapper:
     """
-    Differential Flatness FOC Controller Wrapper for NANOTEC DB42S02.
+    Differential Flatness FOC Controller for NANOTEC DB42S02.
 
-    Implements differential flatness control with:
-        - SpeedFusion: complementary filter (encoder + SMO)
-        - Sliding Mode Observer for back-EMF estimation
-        - Flatness voltage law with feedforward cancellation
+    Architecture
+    ------------
+    SpeedFusion : complementary filter blending encoder IIR and SMO estimates.
+    SMO         : Sliding Mode Observer for back-EMF / electrical speed.
+    Voltage law : flatness feedforward with id/iq proportional correction terms.
 
     Parameters
     ----------
     v_dc : float
-        DC bus voltage [V] (default: 17.0)
+        DC bus voltage [V].  Default 17.0.
     p_poles : int
-        Number of pole pairs (default: 4)
+        Pole pairs.  Default 4.
     R_s : float
-        Stator resistance [Ω] (default: 0.285)
+        Stator resistance [Ohm].  Default 0.285.
     L_d : float
-        d-axis inductance [H] (default: 0.0003675)
+        d-axis inductance [H].  Default 3.675e-4.
     L_q : float
-        q-axis inductance [H] (default: 0.0003675)
+        q-axis inductance [H].  Default 3.675e-4.
     lambda_pm : float
-        Permanent magnet flux linkage [Wb] (default: 0.0014)
+        Permanent magnet flux linkage [Wb].  Default 0.0014.
     i_max : float
-        Maximum current [A] (default: 3.57)
+        Maximum phase current [A].  Default 3.57.
     dt_s : float
-        Sampling time [s] (default: 50e-6)
+        Nominal sampling time [s].  Default 50e-6 (20 kHz).
     kp_speed : float
-        Speed P-gain [A/(rad/s)] (default: 0.119)
+        Speed P-gain [A/(rad/s)].  Default 0.4.
     kp_id : float
-        D-axis current P-gain [V/A] (default: 2.0)
+        D-axis current P-gain [V/A].  Default 0.4.
     kp_iq : float
-        Q-axis current P-gain [V/A] (default: 2.0)
+        Q-axis current P-gain [V/A].  Default 8.0.
 
-    Attributes
-    ----------
-    v_alpha, v_beta : float
-        Alpha/beta voltage references [V]
-    speed_est : float
-        Estimated mechanical speed [rad/s]
-    iq_ref : float
-        q-axis current reference [A]
-    fusion_alpha : float
-        Current fusion weight (0=encoder, 1=SMO)
-    omega_e : float
-        Fused electrical speed [rad/s]
-    status : int
-        Last operation status code (0 = success)
+    Notes
+    -----
+    Motor parameters and gains are compile-time constants in the C headers
+    (embed_sim_dfc_controller.h, embed_sim_dfc_gains.h).  The constructor
+    arguments above are accepted for API documentation purposes; they do not
+    override the C constants at runtime.  Edit the relevant #define and
+    recompile to change them.
+
+    Attributes (readonly)
+    ---------------------
+    v_alpha : float    Alpha-axis voltage reference [V].
+    v_beta  : float    Beta-axis voltage reference [V].
+    speed_est : float  Encoder IIR mechanical speed estimate [rad/s].
+    iq_ref  : float    q-axis current reference at last diagnostic log [A].
+    fusion_alpha : float  SpeedFusion weight (0 = encoder, 1 = SMO).
+    omega_e : float    Fused electrical speed at last diagnostic log [rad/s].
+    status  : int      0 = success.
 
     Examples
     --------
-    >>> controller = DFCControllerWrapper()
-    >>> inputs = np.array([209.4, 0.0, 0.0, 0.0, 0.0], dtype=np.float32)
-    >>> controller.set_inputs(inputs)
-    >>> controller.compute(50e-6)
-    >>> v_alpha, v_beta = controller.get_outputs()
+    >>> ctrl = DFCControllerWrapper()
+    >>> ctrl.set_inputs_individual(209.4, 0.0, 0.0, 0.0, 0.0)
+    >>> ctrl.compute(50e-6)
+    >>> v_alpha, v_beta = ctrl.get_outputs()
     """
 
     cdef:
-        DFC_State_T      _state
-        DFC_Input_T      _input
-        DFC_Output_T     _output
-        bint             _initialized
-        MatrixFloat      _dt
+        DFC_State_T   _state
+        DFC_Input_T   _input
+        DFC_Output_T  _output
+        bint          _initialized
+        MatrixFloat   _dt
 
-        # Python-visible read-only attributes
-        readonly float   v_alpha
-        readonly float   v_beta
-        readonly float   speed_est
-        readonly float   iq_ref
-        readonly float   fusion_alpha
-        readonly float   omega_e
-        readonly int     status
+        readonly float  v_alpha
+        readonly float  v_beta
+        readonly float  speed_est
+        readonly float  iq_ref
+        readonly float  fusion_alpha
+        readonly float  omega_e
+        readonly int    status
 
+    # -------------------------------------------------------------------------
     def __cinit__(self,
-                  float v_dc = 17.0,
-                  int p_poles = 4,
-                  float R_s = 0.285,
-                  float L_d = 0.0003675,
-                  float L_q = 0.0003675,
+                  float v_dc      = 17.0,
+                  int   p_poles   = 4,
+                  float R_s       = 0.285,
+                  float L_d       = 3.675e-4,
+                  float L_q       = 3.675e-4,
                   float lambda_pm = 0.0014,
-                  float i_max = 3.57,
-                  float dt_s = 50e-6,
-                  float kp_speed = 0.119,
-                  float kp_id = 2.0,
-                  float kp_iq = 2.0):
-        """
-        Initialize the DFC controller wrapper.
-        """
-        # Store dt for later use
-        self._dt = dt_s
+                  float i_max     = 3.57,
+                  float dt_s      = 50.0e-6,
+                  float kp_speed  = 0.4,
+                  float kp_id     = 0.4,
+                  float kp_iq     = 8.0):
+
+        self._dt          = dt_s
         self._initialized = False
-        self.v_alpha = 0.0
-        self.v_beta = 0.0
-        self.speed_est = 0.0
-        self.iq_ref = 0.0
+        self.v_alpha      = 0.0
+        self.v_beta       = 0.0
+        self.speed_est    = 0.0
+        self.iq_ref       = 0.0
         self.fusion_alpha = 0.0
-        self.omega_e = 0.0
-        self.status = 0
+        self.omega_e      = 0.0
+        self.status       = 0
 
-        # Set gains before init (so Init picks them up)
-        cdef DFC_GainSet_T gains
-        gains.kp_speed = kp_speed
-        gains.kp_id = kp_id
-        gains.kp_iq = kp_iq
-
-        with nogil:
-            DFC_GainSet_SetFromSchedule(&gains)
-
-        # Initialize C state
         with nogil:
             DFC_Controller_Init(&self._state, dt_s)
 
-        # Mark as initialized
         self._initialized = True
 
     # -------------------------------------------------------------------------
     cpdef void set_inputs(self, float[:] u) except *:
         """
-        Set controller inputs.
+        Set controller inputs from a contiguous float32 memoryview.
 
         Parameters
         ----------
         u : float[5]
-            Input array: [ω_ref_mech (rad/s), θ_m (rad), ia (A), ib (A), ic (A)]
+            [omega_ref_mech (rad/s), theta_m (rad), ia (A), ib (A), ic (A)]
         """
         if u.shape[0] < 5:
-            raise ValueError(f"Input array must have at least 5 elements, got {u.shape[0]}")
+            raise ValueError(
+                f"Input array must have at least 5 elements, got {u.shape[0]}")
 
         self._input.omega_ref_mech = u[0]
         self._input.theta_m        = u[1]
@@ -272,16 +298,16 @@ cdef class DFCControllerWrapper:
                                      float ib,
                                      float ic) except *:
         """
-        Set controller inputs using individual arguments.
+        Set controller inputs as individual scalar arguments.
+
+        Preferred over set_inputs() in tight simulation loops -- avoids
+        NumPy memoryview coercion overhead.
 
         Parameters
         ----------
-        omega_ref_mech : float
-            Mechanical speed reference [rad/s]
-        theta_m : float
-            Mechanical angle from encoder [rad]
-        ia, ib, ic : float
-            Phase currents [A]
+        omega_ref_mech : float  Mechanical speed reference [rad/s].
+        theta_m        : float  Encoder mechanical angle [rad].
+        ia, ib, ic     : float  Phase currents [A].
         """
         self._input.omega_ref_mech = omega_ref_mech
         self._input.theta_m        = theta_m
@@ -295,53 +321,42 @@ cdef class DFCControllerWrapper:
                          float kp_id,
                          float kp_iq) except *:
         """
-        Update controller gains at runtime.
+        Request a runtime gain update.
 
-        Parameters
-        ----------
-        kp_speed : float
-            Speed P-gain [A/(rad/s)]
-        kp_id : float
-            D-axis current P-gain [V/A]
-        kp_iq : float
-            Q-axis current P-gain [V/A]
+        Not yet implemented -- gains are compile-time constants.
+        Edit DFC_KP_SPEED / DFC_KP_ID / DFC_KP_IQ in embed_sim_dfc_gains.h
+        and recompile to change them.
+
+        Raises
+        ------
+        NotImplementedError
         """
-        cdef DFC_GainSet_T gains
-        gains.kp_speed = kp_speed
-        gains.kp_id = kp_id
-        gains.kp_iq = kp_iq
-
-        with nogil:
-            DFC_GainSet_SetFromSchedule(&gains)
+        raise NotImplementedError(
+            "Runtime gain update requires DFC_GainSet_Apply() on the C side. "
+            "Edit embed_sim_dfc_gains.h and recompile.")
 
     # -------------------------------------------------------------------------
     cpdef void compute(self, float dt) except *:
         """
-        Execute one control step.
+        Execute one FOC step.
 
         Parameters
         ----------
-        dt : float
-            Time step [s] (typically 50e-6 for 20 kHz)
+        dt : float  Time step [s].  Typically 50e-6 for 20 kHz GTM ISR.
         """
         cdef MatrixFloat c_dt = dt
+        cdef MatrixFloat speed_ref_rpm, iq_ref_diag, id_meas, iq_meas, alpha, omega_e_diag
 
         if not self._initialized:
-            raise RuntimeError("Controller not initialized. Call __cinit__ first.")
+            raise RuntimeError(
+                "DFCControllerWrapper not initialised. Call __cinit__ first.")
 
-        # Call C controller step
         with nogil:
             DFC_Controller_Step(&self._state, &self._input, c_dt, &self._output)
 
-        # Update Python-visible attributes
         self.v_alpha = self._output.v_alpha
         self.v_beta  = self._output.v_beta
-        self.iq_ref  = self._state.log_iq_ref
-        self.fusion_alpha = self._state.log_alpha
-        self.omega_e = self._state.log_omega_e
 
-        # Get diagnostic speed (mechanical)
-        cdef MatrixFloat speed_ref_rpm, iq_ref_diag, id_meas, iq_meas, alpha, omega_e_diag
         with nogil:
             DFC_Controller_GetDiagnostics(&self._state,
                                           &speed_ref_rpm,
@@ -351,10 +366,11 @@ cdef class DFCControllerWrapper:
                                           &alpha,
                                           &omega_e_diag)
 
-        # Convert RPM to rad/s for speed estimate
-        # speed_est from encoder IIR is stored in fusion.omega_enc_mech
-        self.speed_est = self._state.fusion.omega_enc_mech
-        self.status = 0  # Success
+        self.iq_ref       = iq_ref_diag
+        self.fusion_alpha = alpha
+        self.omega_e      = omega_e_diag
+        self.speed_est    = self._state.fusion.omega_enc_mech
+        self.status       = 0
 
     # -------------------------------------------------------------------------
     cpdef cnp.ndarray get_outputs(self):
@@ -374,12 +390,13 @@ cdef class DFCControllerWrapper:
     # -------------------------------------------------------------------------
     cpdef cnp.ndarray get_diagnostics(self):
         """
-        Return diagnostic data as a float32 numpy array.
+        Return the latest diagnostic snapshot as a float32 numpy array.
 
         Returns
         -------
         ndarray, shape (7,), dtype float32
-            [speed_est_rad_s, iq_ref, iq_meas, id_meas, speed_ref_rpm, fusion_alpha, omega_e_rad_s]
+            [speed_est_rad_s, iq_ref_A, iq_meas_A, id_meas_A,
+             speed_ref_rpm, fusion_alpha, omega_e_rad_s]
         """
         cdef:
             MatrixFloat speed_ref_rpm, iq_ref_diag, id_meas, iq_meas, alpha, omega_e_diag
@@ -395,7 +412,7 @@ cdef class DFCControllerWrapper:
                                           &omega_e_diag)
 
         diag = np.empty(7, dtype=np.float32)
-        diag[0] = self._state.fusion.omega_enc_mech  # speed_est_rad_s
+        diag[0] = self._state.fusion.omega_enc_mech
         diag[1] = iq_ref_diag
         diag[2] = iq_meas
         diag[3] = id_meas
@@ -407,106 +424,99 @@ cdef class DFCControllerWrapper:
     # -------------------------------------------------------------------------
     cpdef void reset(self) except *:
         """
-        Reset the controller state.
-
-        Clears all integrators, SMO state, and diagnostic counters.
+        Reset all integrators and state.  Call on motor stop or fault.
         """
         with nogil:
             DFC_Controller_Reset(&self._state)
 
-        self.v_alpha = 0.0
-        self.v_beta = 0.0
-        self.speed_est = 0.0
-        self.iq_ref = 0.0
+        self.v_alpha      = 0.0
+        self.v_beta       = 0.0
+        self.speed_est    = 0.0
+        self.iq_ref       = 0.0
         self.fusion_alpha = 0.0
-        self.omega_e = 0.0
-        self.status = 0
+        self.omega_e      = 0.0
+        self.status       = 0
 
     # -------------------------------------------------------------------------
-    cpdef void get_smo_state(self, float[:] e_alpha_beta, float[:] i_hat_alpha_beta) except *:
+    cpdef void get_smo_state(self,
+                             float[:] e_alpha_beta,
+                             float[:] i_hat_alpha_beta) except *:
         """
-        Get SMO internal state for debugging.
+        Read SMO internal state for debugging.
 
         Parameters
         ----------
-        e_alpha_beta : float[2]
-            Output: [e_alpha_filt, e_beta_filt] (filtered back-EMF) [V]
-        i_hat_alpha_beta : float[2]
-            Output: [i_hat_alpha, i_hat_beta] (estimated currents) [A]
+        e_alpha_beta     : float[2]  Out: [e_alpha_filt, e_beta_filt] [V].
+        i_hat_alpha_beta : float[2]  Out: [i_hat_alpha, i_hat_beta]   [A].
         """
         if e_alpha_beta.shape[0] < 2 or i_hat_alpha_beta.shape[0] < 2:
-            raise ValueError("Output arrays must have at least 2 elements")
+            raise ValueError("Output arrays must have at least 2 elements.")
 
-        e_alpha_beta[0] = self._state.smo.e_hat_alpha
-        e_alpha_beta[1] = self._state.smo.e_hat_beta
+        e_alpha_beta[0]     = self._state.smo.e_hat_alpha
+        e_alpha_beta[1]     = self._state.smo.e_hat_beta
         i_hat_alpha_beta[0] = self._state.smo.i_hat_alpha
         i_hat_alpha_beta[1] = self._state.smo.i_hat_beta
 
     # -------------------------------------------------------------------------
     def __repr__(self):
         return (f"DFCControllerWrapper("
-                f"v_alpha={self.v_alpha:.3f}, v_beta={self.v_beta:.3f}, "
-                f"speed_est={self.speed_est:.3f}, iq_ref={self.iq_ref:.3f}, "
+                f"v_alpha={self.v_alpha:.3f} V, "
+                f"v_beta={self.v_beta:.3f} V, "
+                f"speed_est={self.speed_est:.2f} rad/s, "
+                f"iq_ref={self.iq_ref:.3f} A, "
                 f"alpha={self.fusion_alpha:.3f})")
 
 
-# -----------------------------------------------------------------------------
-# Convenience function - uses individual arguments to avoid memoryview issues
-# -----------------------------------------------------------------------------
+# =============================================================================
+# \brief  Stateless single-step convenience wrapper.
+# =============================================================================
 def dfc_step(float omega_ref_mech,
              float theta_m,
              float ia,
              float ib,
              float ic,
              float dt,
-             float v_dc=17.0,
-             int p_poles=4,
-             float R_s=0.285,
-             float L_d=0.0003675,
-             float L_q=0.0003675,
-             float lambda_pm=0.0014,
-             float i_max=3.57,
-             float kp_speed=0.119,
-             float kp_id=2.0,
-             float kp_iq=2.0) -> tuple:
+             float v_dc      = 17.0,
+             int   p_poles   = 4,
+             float R_s       = 0.285,
+             float L_d       = 3.675e-4,
+             float L_q       = 3.675e-4,
+             float lambda_pm = 0.0014,
+             float i_max     = 3.57,
+             float kp_speed  = 0.4,
+             float kp_id     = 0.4,
+             float kp_iq     = 8.0) -> tuple:
     """
-    Single-step DFC controller calculation (stateless convenience wrapper).
+    Single-step DFC controller calculation.
 
-    Creates a controller instance, executes one step, and returns outputs.
+    Creates a fresh controller instance, executes one step, and returns
+    outputs.  Not intended for continuous simulation -- use
+    DFCControllerWrapper directly to preserve state across steps.
 
     Parameters
     ----------
-    omega_ref_mech : float
-        Mechanical speed reference [rad/s]
-    theta_m : float
-        Mechanical angle from encoder [rad]
-    ia, ib, ic : float
-        Phase currents [A]
-    dt : float
-        Time step [s]
-    v_dc, p_poles, R_s, L_d, L_q, lambda_pm, i_max :
-        Motor parameters
-    kp_speed, kp_id, kp_iq :
-        Controller gains
+    omega_ref_mech : float  Speed reference [rad/s].
+    theta_m        : float  Encoder angle [rad].
+    ia, ib, ic     : float  Phase currents [A].
+    dt             : float  Time step [s].
+    Remaining arguments are accepted for API compatibility; the C compile-time
+    constants in embed_sim_dfc_controller.h and embed_sim_dfc_gains.h govern
+    actual behaviour.
 
     Returns
     -------
     tuple : (v_alpha, v_beta, speed_est, fusion_alpha, omega_e)
-        Voltage references [V], estimated speed [rad/s], fusion weight, electrical speed [rad/s]
     """
     cdef DFCControllerWrapper ctrl = DFCControllerWrapper(
         v_dc, p_poles, R_s, L_d, L_q, lambda_pm,
         i_max, dt, kp_speed, kp_id, kp_iq)
 
-    # Use individual argument method to avoid memoryview coercion
     ctrl.set_inputs_individual(omega_ref_mech, theta_m, ia, ib, ic)
     ctrl.compute(dt)
 
     return ctrl.v_alpha, ctrl.v_beta, ctrl.speed_est, ctrl.fusion_alpha, ctrl.omega_e
 
 
-# -----------------------------------------------------------------------------
-# Version info
-# -----------------------------------------------------------------------------
-__version__ = "1.0.0"
-__author__ = "EmbedSim Team"
+# =============================================================================
+__version__ = "1.1.0"
+__author__  = "EmbedSim Team"
