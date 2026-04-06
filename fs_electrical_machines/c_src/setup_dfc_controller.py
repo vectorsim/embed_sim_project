@@ -6,6 +6,7 @@ Builds the dfc_controller_wrapper Cython extension.
 Sources compiled into this extension:
     dfc_controller_wrapper.pyx    — Cython wrapper
     embed_sim_dfc_controller.c    — DFC FOC controller implementation
+    embed_sim_ekf_speed.c         — EKF speed observer (NEW)
     embed_sim_coordinate_transform.c — Clarke/Park transforms
     embed_sim_matrix.c            — MatrixFloat type + Q31 infrastructure
 
@@ -35,12 +36,38 @@ print(f"Package directory     : {_PKG}")
 print(f"Python version        : {sys.version_info.major}.{sys.version_info.minor}")
 print("=" * 60)
 
+# Check if all required source files exist
+required_sources = [
+    "dfc_controller_wrapper.pyx",
+    "embed_sim_dfc_controller.c",
+    "embed_sim_ekf_speed.c",           # EKF implementation
+    "embed_sim_coordinate_transform.c",
+    "embed_sim_matrix.c",
+]
+
+missing_sources = []
+for src in required_sources:
+    src_path = _HERE / src
+    if not src_path.exists():
+        missing_sources.append(str(src_path))
+        print(f"⚠ WARNING: Missing source file: {src_path}")
+    else:
+        print(f"✓ Found: {src}")
+
+if missing_sources:
+    print("\n" + "!" * 60)
+    print("ERROR: Missing required source files. Build will likely fail.")
+    print("!" * 60)
+
+print("=" * 60)
+
 # Define the extension module
 ext = Extension(
     name="dfc_controller_wrapper",
     sources=[
         str(_HERE / "dfc_controller_wrapper.pyx"),
         str(_HERE / "embed_sim_dfc_controller.c"),
+        str(_HERE / "embed_sim_ekf_speed.c"),      # <-- ADDED: EKF implementation
         str(_HERE / "embed_sim_coordinate_transform.c"),
         str(_HERE / "embed_sim_matrix.c"),
     ],
@@ -58,8 +85,8 @@ ext = Extension(
 
 setup(
     name="dfc_controller_wrapper",
-    version="1.0.0",
-    description="EmbedSim Differential Flatness FOC Controller Module",
+    version="2.0.0",  # <-- Version bump to match controller version
+    description="EmbedSim Differential Flatness FOC Controller Module with EKF Support",
     author="EmbedSim Team",
     ext_modules=cythonize(
         [ext],
@@ -77,4 +104,5 @@ setup(
 
 print("\n" + "=" * 60)
 print("Build configuration complete")
+print(f"Extension version: 2.0.0 (EKF observer mode enabled)")
 print("=" * 60)

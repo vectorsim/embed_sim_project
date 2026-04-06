@@ -22,6 +22,8 @@ file_list = [
     "embed_sim_dfc_gains.h",
     "embed_sim_dfc_controller.h",
     "embed_sim_dfc_controller.c",
+    "embed_sim_ekf_speed.h",
+    "embed_sim_ekf_speed.c",
 
 
 ]
