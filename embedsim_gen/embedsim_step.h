@@ -59,7 +59,7 @@ typedef struct
 } EmbedSim_Output_T;
 
 /* Block headers */
-#include "embed_sim_smc_controller.h"
+#include "embed_sim_dfc_controller.h"
 #include "embed_sim_motor_utility_blocks.h"
 #include "embed_sim_sv_pwm.h"
 

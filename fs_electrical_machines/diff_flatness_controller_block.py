@@ -211,15 +211,12 @@ class DFControllerBlock(VectorBlock):
     step_func = "DFC_Controller_Step"
     state_struct = "DFC_State_T"
     init_func = "DFC_Controller_Init"
+    C_INIT_ARGS = ["dt_s"]
     C_SOURCES = [
         "embed_sim_dfc_controller.c",
-        "embed_sim_coordinate_transform.c",
-        "embed_sim_matrix.c",
     ]
     C_HEADERS = [
         "embed_sim_dfc_controller.h",
-        "embed_sim_coordinate_transform.h",
-        "embed_sim_matrix.h",
     ]
 
     # Cython wrapper metadata
