@@ -60,7 +60,7 @@ void EmbedSim_Step(
         /* --- dfc_controller (DFControllerBlock) --- */
         /* DFC_Controller_Step() outputs physical voltages [V].                */
         /* The SVPWM block expects normalised [-1,+1] references.              */
-        /* The caller must divide by SVPWM_GAIN = V_DC/2 before SVPWM.         */
+        /* Divide by DFC_V_MAX = DFC_V_DC / sqrt(3) before SVPWM.             */
         DFC_Input_T   u_dfc;
         DFC_Output_T  y_dfc_out;
         real32_T      y_dfc[2];
@@ -73,9 +73,9 @@ void EmbedSim_Step(
 
         DFC_Controller_Step(&dfc_state, &u_dfc, dt, &y_dfc_out);
 
-        /* Convert physical voltages to normalised for SVPWM */
+        /* Normalise: physical [V] -> SVPWM [-1, +1] */
         y_dfc[0] = y_dfc_out.v_alpha / DFC_V_MAX;
-        y_dfc[1] = y_dfc_out.v_beta / DFC_V_MAX;
+        y_dfc[1] = y_dfc_out.v_beta  / DFC_V_MAX;
 
     /* --- svpwm_pack (SVPWMPackBlockDT) --- */
     u_svpwm_pack[0] = y_dfc[0];
