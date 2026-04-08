@@ -1167,6 +1167,81 @@ class EmbedSim:
         for b in self.dynamic_blocks:
             b.state = initial_states[b] + (self.dt / 6.0) * (b.k1 + 2 * b.k2 + 2 * b.k3 + b.k4)
 
+    def _integrate_dynamics_heun(self, t: float) -> None:
+        """
+        Advance all dynamic block states by one timestep using Heun's method
+        (explicit trapezoidal rule, second-order Runge-Kutta).
+
+        Heun's method is the simplest second-order predictor-corrector scheme.
+        It evaluates the derivative twice per step — once at the start of the
+        interval (predictor, identical to an Euler step) and once at the
+        predicted end-point (corrector).  The final state is the average of
+        the two slopes, giving O(dt²) local truncation error — one order
+        better than Euler at the cost of one extra block-graph evaluation.
+
+        Derivation:
+          k1 = f(x(t),        u(t))           ← slope at start  (Euler slope)
+          k2 = f(x(t)+dt·k1,  u(t+dt))        ← slope at predicted end-point
+          x(t+dt) = x(t) + (dt/2)·(k1 + k2)  ← trapezoidal average
+
+        Butcher tableau:
+           0  │  0    0
+           1  │  1    0
+          ────┼──────────
+              │ 1/2  1/2
+
+        Accuracy vs. cost comparison (per timestep):
+          Euler  — 1 derivative eval,  1 block-graph pass,  O(dt)   error
+          Heun   — 2 derivative evals, 2 block-graph passes, O(dt²) error
+          RK4    — 4 derivative evals, 4 block-graph passes, O(dt⁴) error
+
+        When to choose Heun over RK4:
+          • The system is non-stiff and moderately smooth.
+          • Wall-clock time matters and RK4 is too expensive.
+          • Euler produces visible drift but RK4 is overkill.
+          Heun hits the sweet spot for many motor-control FOC simulations
+          where the electrical time constant is short but not extreme.
+
+        Args:
+            t: Current simulation time in seconds.
+
+        Note:
+            Like RK4, Heun calls ``_compute_all_blocks()`` once extra per
+            timestep (for the corrector stage).  VectorDelay (LoopBreaker)
+            zero-fallbacks during that sub-step are silent by design — the
+            same suppression logic applied in _compute_all_blocks() covers
+            the Heun corrector pass transparently.
+        """
+        # ── Save x(t) for every dynamic block ────────────────────────────────
+        initial_states = {}
+        for b in self.dynamic_blocks:
+            initial_states[b] = b.state.copy()
+
+        # ── Stage 1 — k1: derivative at (t, x(t)) ────────────────────────────
+        # The block graph has already been evaluated at t by _compute_all_blocks()
+        # in run() before this method is called, so inp.output is current.
+        for b in self.dynamic_blocks:
+            input_values = [inp.output for inp in b.inputs] if b.inputs else None
+            b.k1 = b.get_derivative(t, input_values)
+
+        # ── Predictor — Euler step to x̃(t+dt) ────────────────────────────────
+        for b in self.dynamic_blocks:
+            b.state = initial_states[b] + self.dt * b.k1
+
+        # Re-evaluate the block graph at the predicted state / t+dt so that
+        # inp.output reflects x̃(t+dt) for every dynamic block's downstream.
+        self._compute_all_blocks(t + self.dt)
+
+        # ── Stage 2 — k2: derivative at (t+dt, x̃(t+dt)) ─────────────────────
+        for b in self.dynamic_blocks:
+            input_values = [inp.output for inp in b.inputs] if b.inputs else None
+            b.k2 = b.get_derivative(t + self.dt, input_values)
+
+        # ── Corrector — trapezoidal average ───────────────────────────────────
+        # x(t+dt) = x(t) + (dt/2)·(k1 + k2)
+        for b in self.dynamic_blocks:
+            b.state = initial_states[b] + (self.dt / 2.0) * (b.k1 + b.k2)
+
     def run(self, verbose: bool = True, progress_bar: bool = True) -> None:
         """
         Execute the simulation from t = 0 to t = T.
@@ -1175,7 +1250,7 @@ class EmbedSim:
           For each timestep t in [0, T) with step dt:
             1. Compute all block outputs in topological order.
             2. Record monitored signals via scope.record(t).
-            3. Integrate dynamic block states (Euler or RK4).
+            3. Integrate dynamic block states (Euler, Heun, or RK4).
           After the loop, one final compute + record at t = T ensures the
           last sample is always captured.
 
@@ -1247,6 +1322,8 @@ class EmbedSim:
                 self._integrate_dynamics_euler(t)
             elif self.solver == ODESolver.RK4:
                 self._integrate_dynamics_rk4(t)
+            elif self.solver == ODESolver.HEUN:
+                self._integrate_dynamics_heun(t)
 
             # Progress
             if progress_bar and step % max(1, steps // 20) == 0:

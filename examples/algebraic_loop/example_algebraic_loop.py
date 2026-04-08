@@ -233,7 +233,7 @@ try:
         sinks  = [fb_out],
         T      = T_SIM,
         dt     = DT,
-        solver = ODESolver.EULER,
+        solver = ODESolver.HEUN,
     )
     print("  [UNEXPECTED] No error raised — loop not detected.")
 
@@ -315,7 +315,7 @@ sim = EmbedSim(
     sinks  = [loop_out],
     T      = T_SIM,
     dt     = DT,
-    solver = ODESolver.RK4,
+    solver = ODESolver.HEUN,
 )
 sim.scope.add(sin_src,   label="Sine")
 sim.scope.add(loop_sum,  label="Sum")
