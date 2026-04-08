@@ -1020,8 +1020,21 @@ class EmbedSim:
           2. Iterate through ``self.blocks`` in order and call each block's
              ``compute(t, dt, input_values)`` method.  Input values are
              gathered from the ``output`` attribute of connected upstream
-             blocks.  A zero signal is substituted as a fallback if an
-             upstream block's output is still None.
+             blocks.
+
+        Zero-fallback policy:
+          If an upstream block's output is still None two cases are possible:
+
+          a) The current block IS a LoopBreaker (e.g. VectorDelay).
+             A LoopBreaker is placed FIRST in the execution order by the DFS
+             precisely so it can supply its stored previous-step value before
+             its own upstream has run.  The zero fallback is therefore expected
+             and correct — it is silently substituted with no warning.
+
+          b) The current block is an ordinary (non-LoopBreaker) block.
+             A None upstream here is unexpected and indicates a wiring error or
+             a missing block in the graph.  A WARNING is emitted so the user
+             can investigate.
 
         Args:
             t: Current simulation time in seconds passed to every block's
@@ -1047,8 +1060,14 @@ class EmbedSim:
                 for inp in block.inputs:
                     if inp.output is not None:
                         input_values.append(inp.output)
+                    elif isinstance(block, LoopBreaker):
+                        # Expected: a LoopBreaker runs before its upstream by
+                        # design.  Substitute zero silently — the block returns
+                        # its stored last_output anyway, not this value.
+                        input_values.append(VectorSignal([0.0]))
                     else:
-                        # Use zero signal as fallback
+                        # Unexpected: an ordinary block has a None upstream.
+                        # This indicates a wiring error — warn the user.
                         self.logger.warning(
                             f"  zero-fallback input: block '{block.name}' "
                             f"← upstream '{inp.name}' has no output yet at t={t:.6f}"

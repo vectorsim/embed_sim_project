@@ -36,13 +36,6 @@ def get_embedsim_import_path() -> str:
     return str(get_project_root())
 
 
-def get_modelica_path(name: str) -> str:
-    """
-    Returns full path to a Modelica file in examples/rlc_fmu/modelica.
-    """
-    root = get_project_root()
-    return str(root / "examples" / "rlc_fmu" / "modelica" / name)
-
 def get_current_parent() -> Path:
     """
     Returns current parent directory of the current Python process.
