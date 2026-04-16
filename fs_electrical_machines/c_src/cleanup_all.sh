@@ -8,6 +8,7 @@
 #   - SMC Controller
 #   - Motor Utility Blocks
 #   - Coordinate Transform
+#   - MPC Controller  # NEW
 # =============================================================================
 
 set -euo pipefail
@@ -23,7 +24,7 @@ cd "$SCRIPT_DIR"
 
 # Counter for tracking failures
 FAILED=0
-TOTAL=5
+TOTAL=6  # UPDATED: now 6 targets (was 5)
 
 # Colors for output (optional)
 RED='\033[0;31m'
@@ -122,6 +123,24 @@ fi
 echo ""
 
 # -----------------------------------------------------------------------------
+# 6. Clean MPC Controller  # NEW
+# -----------------------------------------------------------------------------
+echo -e "${YELLOW}[6/$TOTAL] Cleaning MPC Controller...${NC}"
+echo "----------------------------------------"
+if [[ -f "$SCRIPT_DIR/cleanup_mpc_controller.sh" ]]; then
+    if bash "$SCRIPT_DIR/cleanup_mpc_controller.sh"; then
+        echo -e "${GREEN}MPC Controller cleanup completed${NC}"
+    else
+        echo -e "${RED}[WARNING] MPC Controller cleanup reported errors${NC}"
+        ((FAILED++))
+    fi
+else
+    echo -e "${RED}[ERROR] cleanup_mpc_controller.sh not found!${NC}"
+    ((FAILED++))
+fi
+echo ""
+
+# -----------------------------------------------------------------------------
 # Summary
 # -----------------------------------------------------------------------------
 echo "============================================================"
@@ -137,6 +156,7 @@ if [[ $FAILED -eq 0 ]]; then
     echo "  - SMC Controller"
     echo "  - Motor Utility Blocks"
     echo "  - Coordinate Transform"
+    echo "  - MPC Controller"
 else
     echo -e "${RED}Status: $FAILED of $TOTAL cleanups had issues.${NC}"
     echo "Please check the output above for details."

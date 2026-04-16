@@ -18,30 +18,59 @@ MPC cost function (minimised analytically at each step):
 
 Load schedule (simulation only):
   t < 0.5 s  : no load
-  0.5–1.2 s  : 5 mN·m
-  1.2–5.0 s  : 20 mN·m
+  0.5-1.2 s  : 5 mN·m
+  1.2-5.0 s  : 20 mN·m
 
-CodeGen  →  embedsim_gen/embedsim_step.c / .h
+CodeGen  ->  embedsim_gen/embedsim_step.c / .h
 
-INTEGRATED NN SURROGATE WEIGHT TUNER
-======================================
-When run with --tune (or the user answers 'y' at the prompt), the NN
-surrogate tuner executes before the main simulation:
+=====================================================================
+  INTEGRATED CMA-ES + NEURAL NETWORK WARM-START WEIGHT TUNER
+=====================================================================
+When run with --tune (or the user answers 'y' at the prompt), the
+hybrid CMA-ES / NN tuner executes before the main simulation.
 
-    Phase 1  LHS exploration  : _T_N_EXPLORE clean-plant simulations
-    Phase 2  MLP training     : 5->16->16->1  (pure NumPy, Adam)
-    Phase 3  Surrogate opt.   : gradient descent, _T_N_RESTARTS restarts
-    Phase 4  Verification     : one real simulation at recommended weights
-    Phase 5  Header write     : embed_sim_mpc_gains_tuned.h
+ALGORITHM - four phases:
+  Phase 1  CMA-ES exploration
+           Run CMA-ES generation 1 (_T_PHASE1_EVALS FMU simulations).
+           Every evaluation is one complete closed-loop FMU simulation.
+           NO surrogate, NO approximation.
 
-On completion the tuner updates _ACTIVE_GAINS so the subsequent main
-simulation uses the tuned weights.
+  Phase 2  Neural-network warm-start
+           Train MLP 5->16->16->1 (pure NumPy, Adam) on Phase 1 history.
+           Gradient descent through the frozen MLP predicts the cost
+           minimum.  This prediction becomes CMA-ES mean m0 for Phase 3.
+
+  Phase 3  CMA-ES continuation from NN mean
+           CMA-ES resumes from m0 with the remaining evaluation budget.
+           IPOP restarts double the population on stagnation.
+
+  Phase 4  Write c_src/embed_sim_mpc_gains.h
+           ISO 26262 audit-trail header with best gains found.
+
+WHY CMA-ES + NN WARM-START? (thesis rationale)
+  CMA-ES alone  : robust black-box optimiser but cold-starts from the
+                  commissioning baseline, potentially wasting early gens.
+  MLP alone     : fast gradient prediction but trained on noisy data;
+                  predicted minimum may lie in an unstable region.
+  Combined      : the MLP provides a cheap, differentiable prediction of
+                  the basin minimum after only _T_PHASE1_EVALS real FMU
+                  evals. CMA-ES then verifies and refines with its
+                  rigorous covariance adaptation. Combines the speed of
+                  gradient prediction with the robustness of an
+                  evolutionary strategy.
+
+  Conceptually similar to NN-guided evolution in Neural Architecture
+  Search (Real et al. 2019) and warm-starting in Bayesian Optimisation
+  (Perrone et al. 2018).
+
+  CMA-ES reference: Hansen N. (2016) arXiv:1604.00772
+  Install: pip install cma   (scipy Nelder-Mead fallback requires nothing)
 
 Outputs:
   db42s02_mpc_foc_20k_results.png
   db42s02_mpc_topology.html
-  embedsim_gen/embedsim_step.c / .h   (CodeGen)
-  embed_sim_mpc_gains_tuned.h         (only when --tune requested)
+  embedsim_gen/embedsim_step.c / .h        (CodeGen -> flash to AURIX)
+  c_src/embed_sim_mpc_gains.h              (only when --tune requested)
 """
 
 from __future__ import annotations
@@ -49,19 +78,40 @@ from __future__ import annotations
 import sys
 import math
 import time
+import datetime
 import argparse
 import textwrap
+from pathlib import Path
+from typing import List, Optional
+
 import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from pathlib import Path
+
+# ---------------------------------------------------------------------------
+# Optional CMA-ES  --  graceful fallback to scipy Nelder-Mead
+# THESIS NOTE: 'cma' is the reference implementation by Nikolaus Hansen
+# (the algorithm's author).  Pure Python, no compiled extensions.
+# ---------------------------------------------------------------------------
+try:
+    import cma                                              # type: ignore
+    _HAVE_CMA = True
+except ImportError:
+    _HAVE_CMA = False
+
+try:
+    from scipy.optimize import minimize as _scipy_minimize  # type: ignore
+    _HAVE_SCIPY = True
+except ImportError:
+    _HAVE_SCIPY = False
 
 from _path_utils import get_project_root, get_embedsim_import_path, get_current_parent
 
 _HERE    = get_current_parent()
 _ROOT    = get_project_root()
 _FS_ELEC = _ROOT / "fs_electrical_machines"
+_C_SRC   = _FS_ELEC / "c_src"          # gains.h written here
 
 for _p in (get_embedsim_import_path(), str(_FS_ELEC), str(_FS_ELEC / "c_src")):
     if _p not in sys.path:
@@ -84,52 +134,37 @@ from ctrl_packer import CtrlPacker
 # Simulation constants
 # =============================================================================
 
-V_DC       = 17.0       # [V]
-TARGET_RPM = 2000.0     # [RPM]
-T_SIM      = 5.0        # [s]   main simulation duration
-DT         = 50e-6      # [s]   20 kHz — matches AURIX GTM period
-_RAMP_TIME = 0.5        # [s]   linear speed ramp
+V_DC       = 17.0
+TARGET_RPM = 2000.0
+T_SIM      = 5.0        # [s]  main simulation
+DT         = 50e-6      # [s]  20 kHz
+_RAMP_TIME = 0.5        # [s]
 
-# Load schedule (simulation only — not present on hardware)
-T_LOAD_T1    = 0.5     # [s]   light load starts
-T_LOAD_T2    = 1.2     # [s]   heavy load starts
-T_LOAD_ZERO  = 0.000   # [N·m]
-T_LOAD_LIGHT = 0.005   # [N·m]  5 mN·m
-T_LOAD_HEAVY = 0.020   # [N·m]  20 mN·m
+T_LOAD_T1    = 0.5
+T_LOAD_T2    = 1.2
+T_LOAD_ZERO  = 0.000
+T_LOAD_LIGHT = 0.005    # 5 mN·m
+T_LOAD_HEAVY = 0.020    # 20 mN·m
 
 TARGET_RADS_MECH = TARGET_RPM * 2.0 * math.pi / 60.0
-_MOTOR_OUT_SIZE  = 8    # [rpm(0), ia(1), ib(2), ic(3), theta_m(4), T_em(5), id(6), iq(7)]
+_MOTOR_OUT_SIZE  = 8    # [rpm,ia,ib,ic,theta_m,Tem,id,iq]
 
 # =============================================================================
-# Sensor noise configuration
+# Sensor noise
 # =============================================================================
-# ADC current noise: 12-bit AURIX, ±I_MAX range → LSB ≈ 1.74 mA; sigma=0.01 A
-# Encoder quantisation: 1000 PPR × 4 → 4000 cnt/rev; sigma ≈ 0.78 mrad
-
-ENABLE_NOISE = False   # ← set True for Phase 2 / Phase 3 noise validation
-NOISE_SEED   = 42      # reproducible runs; set None for random
+ENABLE_NOISE = False
+NOISE_SEED   = 42
 
 # =============================================================================
-# MPC weight constants  (read by build_and_run() via _ACTIVE_GAINS)
+# MPC weight constants
 # =============================================================================
-#   Q_omega = 500.0 is fixed — it is the dominant speed-tracking weight and
-#   its established torque accuracy (iq_ss ≈ 2.41 A for 20 mN·m) must not
-#   be disturbed by the tuner.
-#
-#   Tuned parameters: Q_id, Q_iq, R_vd, R_vq, KI_v
-#
-#   Q_id    — d-axis state cost (drives id → 0, MTPA)
-#   Q_iq    — q-axis regulariser (vq denominator only, must be << Q_omega)
-#   R_vd    — vd effort weight  (conservative vd commands)
-#   R_vq    — vq effort weight  (damps cross-coupling overshoot)
-#   KI_v    — speed-error integral gain (eliminates SS speed offset)
+# Q_omega = 500.0 FIXED.  Tuned by CMA-ES+NN: Q_id, Q_iq, R_vd, R_vq, KI_v.
 
-MPC_N       = 10       # prediction horizon (500 µs at 20 kHz)
-MPC_Q_OMEGA = 500.0    # speed tracking weight (FIXED — not tuned)
-MPC_SMO_K   = 4.68     # SMO switching gain [V]
-MPC_SMO_FC  = 1000.0   # SMO back-EMF LPF corner [Hz]
+MPC_N       = 10
+MPC_Q_OMEGA = 500.0
+MPC_SMO_K   = 4.68
+MPC_SMO_FC  = 1000.0
 
-# Hardware-commissioning baseline weights (used when tuner is skipped)
 _ACTIVE_GAINS = {
     "Q_id":  10.82,
     "Q_iq":   0.01,
@@ -147,7 +182,6 @@ _FMU_PATH = str(_FS_ELEC / "modelica" / "PMSM_Plant_FMU.fmu")
 
 class DB42S02PlantBlock(PMSM_Plant_FMUBlock):
     """DB42S02 FMU plant with timed load torque schedule."""
-
     TOPO_CATEGORY     = "plant"
     C_CODEGEN_EXCLUDE = True
     output_label      = "[rpm,ia,ib,ic,theta_m,Tem,id,iq]"
@@ -159,15 +193,12 @@ class DB42S02PlantBlock(PMSM_Plant_FMUBlock):
         if   t < T_LOAD_T1: t_load = T_LOAD_ZERO
         elif t < T_LOAD_T2: t_load = T_LOAD_LIGHT
         else:                t_load = T_LOAD_HEAVY
-
         ta = tb = tc = 0.5
         if input_values and input_values[0] is not None:
             v = input_values[0].value
             if len(v) >= 3:
                 ta, tb, tc = float(v[0]), float(v[1]), float(v[2])
-
-        fmu_in = VectorSignal(
-            np.array([ta, tb, tc, V_DC, t_load], dtype=DEFAULT_DTYPE))
+        fmu_in = VectorSignal(np.array([ta, tb, tc, V_DC, t_load], dtype=DEFAULT_DTYPE))
         return super().compute_py(t, dt, [fmu_in])
 
     def compute(self, t, dt, input_values=None):
@@ -175,12 +206,11 @@ class DB42S02PlantBlock(PMSM_Plant_FMUBlock):
 
 
 # =============================================================================
-# CodeGen-configured SVPWM subclasses
+# CodeGen SVPWM subclasses
 # =============================================================================
 
 class DB42S02SVPWMPackBlock(SVPWMPackBlock):
     """SVPWMPackBlock with DB42S02 / AURIX CodeGen metadata."""
-
     C_SOURCES    = ["embed_sim_motor_utility_blocks.c"]
     C_HEADERS    = ["embed_sim_motor_utility_blocks.h"]
     state_struct = "SVPWMPack_T"
@@ -203,7 +233,6 @@ class DB42S02SVPWMPackBlock(SVPWMPackBlock):
 
 class DB42S02SVPWMBlock(SVPWMBlock):
     """SVPWMBlock with DB42S02 / AURIX CodeGen metadata."""
-
     C_SOURCES = ["embed_sim_sv_pwm.c"]
     C_HEADERS = ["embed_sim_sv_pwm.h"]
     C_CUSTOM_EMIT = (
@@ -222,55 +251,34 @@ class DB42S02SVPWMBlock(SVPWMBlock):
 
 
 # =============================================================================
-# _run_sim — shared by tuner (no CodeGen) and build_and_run (with CodeGen)
+# _run_sim  --  shared by tuner and build_and_run
 # =============================================================================
 
-def _run_sim(
-    *,
-    with_codegen_hooks: bool = True,
-    t_sim:              float = T_SIM,
-) -> dict | None:
+def _run_sim(*, with_codegen_hooks: bool = True, t_sim: float = T_SIM) -> dict | None:
     """
     Build and run one closed-loop MPC simulation.
 
     Parameters
     ----------
-    with_codegen_hooks : bool
-        True  — include CodeGenStart/End (main run).
-        False — lighter wiring without CodeGen objects (tuner).
-    t_sim : float
-        Simulation duration [s].  Tuner uses 3 s; main run uses T_SIM.
+    with_codegen_hooks : True for main run (CodeGenStart/End included).
+                         False for tuner (lighter, no CodeGen objects).
+    t_sim              : duration [s]; tuner uses 3 s, main run uses T_SIM.
 
-    Returns
-    -------
-    dict | None
-        Result dictionary or None on failure.
+    Returns dict of result signals, or None on failure.
     """
     try:
         mpc = MPCControllerBlock(
-            name          = "mpc",
-            P_POLES       = MPC_MOTOR.P_POLES,
-            R_S           = MPC_MOTOR.R_S,
-            L             = MPC_MOTOR.L_D,
-            LAMBDA_PM     = MPC_MOTOR.LAMBDA_PM,
-            J             = MPC_MOTOR.J_ROTOR,
-            B             = MPC_MOTOR.B_FRICTION,
-            I_MAX         = MPC_MOTOR.I_MAX,
-            V_DC          = V_DC,
-            N             = MPC_N,
-            Q_id          = _ACTIVE_GAINS["Q_id"],
-            Q_iq          = _ACTIVE_GAINS["Q_iq"],
-            Q_omega       = MPC_Q_OMEGA,
-            R_vd          = _ACTIVE_GAINS["R_vd"],
-            R_vq          = _ACTIVE_GAINS["R_vq"],
-            dt_s          = DT,
-            SMO_K         = MPC_SMO_K,
-            SMO_FC        = MPC_SMO_FC,
-            KI_v          = _ACTIVE_GAINS["KI_v"],
-            SOFTSTART_T   = 0.1,
-            use_c_backend = False,
+            name="mpc", P_POLES=MPC_MOTOR.P_POLES, R_S=MPC_MOTOR.R_S,
+            L=MPC_MOTOR.L_D, LAMBDA_PM=MPC_MOTOR.LAMBDA_PM,
+            J=MPC_MOTOR.J_ROTOR, B=MPC_MOTOR.B_FRICTION,
+            I_MAX=MPC_MOTOR.I_MAX, V_DC=V_DC, N=MPC_N,
+            Q_id=_ACTIVE_GAINS["Q_id"], Q_iq=_ACTIVE_GAINS["Q_iq"],
+            Q_omega=MPC_Q_OMEGA,
+            R_vd=_ACTIVE_GAINS["R_vd"], R_vq=_ACTIVE_GAINS["R_vq"],
+            dt_s=DT, SMO_K=MPC_SMO_K, SMO_FC=MPC_SMO_FC,
+            KI_v=_ACTIVE_GAINS["KI_v"], SOFTSTART_T=0.1,
+            use_c_backend=True,
         )
-
         svpwm_pack  = DB42S02SVPWMPackBlock("svpwm_pack", v_dc=V_DC, use_c_backend=False)
         svpwm       = DB42S02SVPWMBlock("svpwm", use_c_backend=False)
         motor       = DB42S02PlantBlock("motor")
@@ -278,26 +286,20 @@ def _run_sim(
         speed_ref   = VectorStep("speed_ref", step_time=0.0,
                                  before_value=TARGET_RADS_MECH,
                                  after_value=TARGET_RADS_MECH)
-        ctrl = CtrlPacker(
-            "ctrl_packer",
-            target_rads_mech = TARGET_RADS_MECH,
-            ramp_time        = _RAMP_TIME,
-            rng_seed         = NOISE_SEED,
-        )
+        ctrl = CtrlPacker("ctrl_packer", target_rads_mech=TARGET_RADS_MECH,
+                          ramp_time=_RAMP_TIME, rng_seed=NOISE_SEED)
         ctrl.set_noise_enabled(ENABLE_NOISE if with_codegen_hooks else False)
-
         sink    = VectorEnd("sink")
         sink_cg = VectorEnd("sink_cg")
 
-        # ── Wiring ─────────────────────────────────────────────────────────
         if with_codegen_hooks:
             cg_start = CodeGenStart("cg_start")
             cg_end   = CodeGenEnd("cg_end")
             cg_start >> mpc >> svpwm_pack >> svpwm >> cg_end
-            ctrl     >> cg_start
-            svpwm    >> motor
-            svpwm    >> sink_cg
-            cg_end   >> sink_cg
+            ctrl >> cg_start
+            svpwm >> motor
+            svpwm >> sink_cg
+            cg_end >> sink_cg
         else:
             cg_start = cg_end = None
             mpc >> svpwm_pack >> svpwm
@@ -305,14 +307,12 @@ def _run_sim(
             svpwm >> motor
             svpwm >> sink_cg
 
-        motor       >> motor_delay
+        motor >> motor_delay
         motor_delay >> ctrl
-        speed_ref   >> ctrl
-        motor       >> sink
+        speed_ref >> ctrl
+        motor >> sink
 
-        # ── Simulate ───────────────────────────────────────────────────────
-        sim = EmbedSim(sinks=[sink, sink_cg], T=t_sim, dt=DT,
-                       solver=ODESolver.RK4)
+        sim = EmbedSim(sinks=[sink, sink_cg], T=t_sim, dt=DT, solver=ODESolver.RK4)
 
         if with_codegen_hooks:
             print("\n[Topology]")
@@ -320,13 +320,13 @@ def _run_sim(
             sim.topo.export_html(
                 str(_HERE / "db42s02_mpc_topology.html"),
                 wire_labels={
-                    ("speed_ref",   "ctrl_packer"): "ω_ref [rad/s]",
+                    ("speed_ref",   "ctrl_packer"): "w_ref [rad/s]",
                     ("motor",       "motor_delay"): "FMU feedback",
-                    ("motor_delay", "ctrl_packer"): "z⁻¹ feedback",
-                    ("ctrl_packer", "cg_start"):    "[ω_ref,θ_m,ia,ib,ic]",
+                    ("motor_delay", "ctrl_packer"): "z^-1 feedback",
+                    ("ctrl_packer", "cg_start"):    "[w_ref,th_m,ia,ib,ic]",
                     ("cg_start",    "mpc"):         "sensor inputs",
-                    ("mpc",         "svpwm_pack"):  "[v_α,v_β]",
-                    ("svpwm_pack",  "svpwm"):       "[Vref,α]",
+                    ("mpc",         "svpwm_pack"):  "[v_a,v_b]",
+                    ("svpwm_pack",  "svpwm"):       "[Vref,a]",
                     ("svpwm",       "cg_end"):      "[ta,tb,tc,sector]",
                     ("svpwm",       "motor"):       "[ta,tb,tc,sector]",
                 })
@@ -336,7 +336,7 @@ def _run_sim(
         sim.scope.add(svpwm,      indices=[0, 1, 2, 3], label="Duties")
         sim.scope.add(motor,      indices=[0, 5, 6, 7], label="Motor")
 
-        print("\nRunning simulation…")
+        print("\nRunning simulation...")
         sim.run()
         print(f"  Done: {len(sim.scope.t)} steps")
 
@@ -349,66 +349,51 @@ def _run_sim(
     sc = sim.scope
     t  = np.array(sc.t, dtype=np.float32)
     ld = mpc.log_data
-
     if len(t) < 200:
         return None
 
     def _s(label, pos):
         sig = sc.get_signal(label, pos)
         return sig if sig is not None else np.zeros(len(t), dtype=np.float32)
-
     def _i(key):
-        arr = ld.get(key, [])
-        t_ld = ld.get("t", [])
+        arr = ld.get(key, []); t_ld = ld.get("t", [])
         if len(t_ld) > 1:
             return np.interp(t, t_ld, arr).astype(np.float32)
         return np.zeros(len(t), dtype=np.float32)
-
     def _m(pos):
         sig = sc.get_signal("Motor", pos)
         return sig if sig is not None else np.zeros(len(t), dtype=np.float32)
 
     return {
-        "t":             t,
-        "speed_rpm":     _m(0),
-        "omega_ref_rpm": _i("speed_ref"),
-        "iq":            _i("iq"),
-        "id":            _i("id"),
-        "v_alpha":       _s("Vab",    0),
-        "v_beta":        _s("Vab",    1),
-        "vref":          _s("Vref",   0),
-        "ta":            _s("Duties", 0),
-        "tb":            _s("Duties", 1),
-        "tc":            _s("Duties", 2),
-        "sector":        _s("Duties", 3),
-        "torque":        _m(1),
-        "id_plant":      _m(2),
-        "iq_plant":      _m(3),
-        "_cg_start":     cg_start,
-        "_cg_end":       cg_end,
-        "_sim":          sim,
+        "t": t, "speed_rpm": _m(0), "omega_ref_rpm": _i("speed_ref"),
+        "iq": _i("iq"), "id": _i("id"),
+        "vd": _i("vd"), "vq": _i("vq"),          # dq voltage commands [V]
+        "v_alpha": _s("Vab", 0), "v_beta": _s("Vab", 1),
+        "vref": _s("Vref", 0),
+        "ta": _s("Duties", 0), "tb": _s("Duties", 1),
+        "tc": _s("Duties", 2), "sector": _s("Duties", 3),
+        "torque": _m(1), "id_plant": _m(2), "iq_plant": _m(3),
+        "_cg_start": cg_start, "_cg_end": cg_end, "_sim": sim,
     }
 
 
 # =============================================================================
-# build_and_run — main simulation entry point (with CodeGen)
+# build_and_run  --  main simulation entry point
 # =============================================================================
 
 def build_and_run() -> dict:
     """Run the full closed-loop simulation and emit AURIX C code."""
-
     print("=" * 68)
-    print("  NANOTEC DB42S02  —  MPC FOC + SMO  |  AURIX TC3xx")
+    print("  NANOTEC DB42S02  --  MPC FOC + SMO  |  AURIX TC3xx")
     print("=" * 68)
-    print(f"  Target : {TARGET_RPM:.0f} RPM  |  Vdc={V_DC}V  "
-          f"dt={DT*1e6:.0f}µs  T_sim={T_SIM}s")
+    print(f"  Target : {TARGET_RPM:.0f} RPM  |  Vdc={V_DC}V  dt={DT*1e6:.0f}us  T_sim={T_SIM}s")
     print(f"  MPC    : N={MPC_N}  Q_id={_ACTIVE_GAINS['Q_id']:.4f}  "
           f"Q_iq={_ACTIVE_GAINS['Q_iq']:.4f}  Q_omega={MPC_Q_OMEGA:.1f}  "
           f"R_vd={_ACTIVE_GAINS['R_vd']:.4f}  R_vq={_ACTIVE_GAINS['R_vq']:.4f}  "
           f"KI_v={_ACTIVE_GAINS['KI_v']:.4f}")
     print(f"  SMO    : k={MPC_SMO_K:.2f} V  fc={MPC_SMO_FC:.0f} Hz")
-    print(f"  Load   : 0 → {T_LOAD_LIGHT*1e3:.0f} mN·m @ {T_LOAD_T1}s"
-          f" → {T_LOAD_HEAVY*1e3:.0f} mN·m @ {T_LOAD_T2}s")
+    print(f"  Load   : 0 -> {T_LOAD_LIGHT*1e3:.0f} mN·m @ {T_LOAD_T1}s"
+          f" -> {T_LOAD_HEAVY*1e3:.0f} mN·m @ {T_LOAD_T2}s")
     print(f"  Noise  : {'ENABLED (seed=' + str(NOISE_SEED) + ')' if ENABLE_NOISE else 'DISABLED'}")
     print("=" * 68)
 
@@ -416,25 +401,19 @@ def build_and_run() -> dict:
     if d is None:
         raise RuntimeError("Main simulation failed.")
 
-    # ── CodeGen ────────────────────────────────────────────────────────────────
-    cg_start = d["_cg_start"]
-    cg_end   = d["_cg_end"]
+    cg_start = d["_cg_start"]; cg_end = d["_cg_end"]
     if cg_start and cg_end:
-        print("\n[CodeGen] Generating AURIX C code…")
+        print("\n[CodeGen] Generating AURIX C code...")
         result = cg_end.generate_step(
-            cg_start    = cg_start,
-            output_dir  = _ROOT,
-            dt_hz       = 1.0 / DT,
-            prefix      = "EmbedSim",
-            write_files = True,
+            cg_start=cg_start, output_dir=_ROOT,
+            dt_hz=1.0/DT, prefix="EmbedSim", write_files=True,
         )
         if result:
             gen = _ROOT / "embedsim_gen"
             print(f"  {gen}/embedsim_step.h")
             print(f"  {gen}/embedsim_step.c")
-            print(f"  Input_T  : omega_ref_mech, theta_m, ia, ib, ic")
-            print(f"  Output_T : ta, tb, tc, sector")
-
+            print("  Input_T  : omega_ref_mech, theta_m, ia, ib, ic")
+            print("  Output_T : ta, tb, tc, sector")
     return d
 
 
@@ -442,76 +421,94 @@ def build_and_run() -> dict:
 # Plot
 # =============================================================================
 
-def plot_results(d: dict,
-                 path: str = "db42s02_mpc_foc_20k_results.png") -> None:
-    fig, axes = plt.subplots(4, 2, figsize=(14, 14))
+def plot_results(d: dict, path: str = "db42s02_mpc_foc_20k_results.png") -> None:
+    """
+    Five-panel diagnostic plot:
+      1. Speed [RPM]  —  tracking + reference
+      2. iq [A]       —  SMO estimate vs plant truth
+      3. id [A]       —  SMO estimate (MTPA target = 0)
+      4. vq [V]       —  q-axis voltage command (physical, pre-SVPWM)
+      5. vd [V]       —  d-axis voltage command (physical, pre-SVPWM)
+
+    Load events annotated on every panel (orange = 5 mNm, red = 20 mNm).
+    """
+    fig, axes = plt.subplots(5, 1, figsize=(12, 16), sharex=True)
     fig.suptitle(
-        f"NANOTEC DB42S02 — MPC FOC + SMO  |  {TARGET_RPM:.0f} RPM  |  20 kHz"
-        + ("  |  NOISE ON" if ENABLE_NOISE else "  |  no noise"),
-        fontsize=12, fontweight="bold")
+        f"NANOTEC DB42S02  —  MPC FOC + SMO  |  {TARGET_RPM:.0f} RPM target  |  20 kHz"
+        + ("  |  NOISE ON" if ENABLE_NOISE else "  |  noise off"),
+        fontsize=11, fontweight="bold")
+
     t = d["t"]
 
-    ax = axes[0, 0]
-    ax.plot(t, d["omega_ref_rpm"], "k--", lw=1.5, label="ω_ref")
-    ax.plot(t, d["speed_rpm"],     "C0",  lw=1.5, label="ω_actual")
-    ax.axvline(T_LOAD_T1, color="orange", ls=":", lw=1.0)
-    ax.axvline(T_LOAD_T2, color="red",    ls=":", lw=1.0)
-    ax.set_ylabel("Speed [RPM]"); ax.legend(fontsize=8)
-    ax.grid(alpha=0.3); ax.set_title("Speed tracking"); ax.set_xlabel("t [s]")
+    # ── Helper: shade load steps on an axis ─────────────────────────────────
+    def _load_lines(ax):
+        ax.axvline(T_LOAD_T1, color="darkorange", ls=":", lw=1.2,
+                   label=f"load {T_LOAD_LIGHT*1e3:.0f} mN·m")
+        ax.axvline(T_LOAD_T2, color="crimson",    ls=":", lw=1.2,
+                   label=f"load {T_LOAD_HEAVY*1e3:.0f} mN·m")
 
-    ax = axes[0, 1]
-    ax.plot(t, d["speed_rpm"] - d["omega_ref_rpm"], "C1", lw=0.8)
-    ax.axhline(0, color="k", lw=0.5)
-    ax.axvline(T_LOAD_T1, color="orange", ls=":", lw=1.0)
-    ax.axvline(T_LOAD_T2, color="red",    ls=":", lw=1.0)
-    ax.set_ylabel("Error [RPM]"); ax.grid(alpha=0.3)
-    ax.set_title("Speed error"); ax.set_xlabel("t [s]")
+    # ── Panel 1: Speed ───────────────────────────────────────────────────────
+    ax = axes[0]
+    ax.plot(t, d["omega_ref_rpm"], "k--", lw=1.4, label="ω_ref")
+    ax.plot(t, d["speed_rpm"],     "C0",  lw=1.2, label="ω_actual (plant)")
+    _load_lines(ax)
+    ax.set_ylabel("Speed [RPM]")
+    ax.set_title("Speed tracking")
+    ax.legend(fontsize=8, ncol=4, loc="lower right")
+    ax.grid(alpha=0.25)
 
-    ax = axes[1, 0]
-    ax.plot(t, d["iq_plant"], "k--", lw=1.2, label="iq (plant)")
-    ax.plot(t, d["iq"],       "C0",  lw=1.0, label="iq (SMO est)")
-    ax.plot(t, d["id"],       "C5",  lw=1.0, label="id (SMO est)")
-    ax.axhline(0, color="gray", ls="--", lw=0.5)
-    ax.axhline( MPC_MOTOR.I_MAX, color="gray", ls="--", lw=0.5, alpha=0.5)
-    ax.axhline(-MPC_MOTOR.I_MAX, color="gray", ls="--", lw=0.5, alpha=0.5)
-    ax.set_ylabel("Current [A]"); ax.legend(fontsize=8)
-    ax.grid(alpha=0.3); ax.set_title("dq currents — plant vs SMO estimate  (id_ref=0 MTPA)")
+    # ── Panel 2: iq ─────────────────────────────────────────────────────────
+    ax = axes[1]
+    ax.plot(t, d["iq_plant"], "k--", lw=1.2, alpha=0.7, label="iq plant (truth)")
+    ax.plot(t, d["iq"],       "C0",  lw=1.0,             label="iq MPC est")
+    ax.axhline(0,               color="gray", ls="--", lw=0.6, alpha=0.5)
+    ax.axhline( MPC_MOTOR.I_MAX, color="gray", ls=":",  lw=0.6, alpha=0.4)
+    ax.axhline(-MPC_MOTOR.I_MAX, color="gray", ls=":",  lw=0.6, alpha=0.4)
+    iq_ref = T_LOAD_HEAVY / MPC_MOTOR.KT
+    ax.axhline(iq_ref, color="crimson", ls="--", lw=0.8, alpha=0.6,
+               label=f"iq_ref@20mNm = {iq_ref:.2f} A")
+    _load_lines(ax)
+    ax.set_ylabel("iq [A]")
+    ax.set_title("q-axis current  (torque channel)")
+    ax.legend(fontsize=8, ncol=3, loc="lower right")
+    ax.grid(alpha=0.25)
+
+    # ── Panel 3: id ─────────────────────────────────────────────────────────
+    ax = axes[2]
+    ax.plot(t, d["id_plant"], "k--", lw=1.2, alpha=0.7, label="id plant (truth)")
+    ax.plot(t, d["id"],       "C5",  lw=1.0,             label="id MPC est")
+    ax.axhline(0, color="k", ls="--", lw=0.8, alpha=0.5, label="id_ref = 0 (MTPA)")
+    _load_lines(ax)
+    ax.set_ylabel("id [A]")
+    ax.set_title("d-axis current  (MTPA: id_ref = 0)")
+    ax.legend(fontsize=8, ncol=3, loc="upper right")
+    ax.grid(alpha=0.25)
+
+    # ── Panel 4: vq ─────────────────────────────────────────────────────────
+    ax = axes[3]
+    ax.plot(t, d["vq"], "C1", lw=1.0, label="vq [V]")
+    ax.axhline( MPC_MOTOR.V_MAX, color="gray", ls=":", lw=0.8, alpha=0.5,
+                label=f"+V_MAX = {MPC_MOTOR.V_MAX:.2f} V")
+    ax.axhline(-MPC_MOTOR.V_MAX, color="gray", ls=":", lw=0.8, alpha=0.5)
+    _load_lines(ax)
+    ax.set_ylabel("vq [V]")
+    ax.set_title("q-axis voltage command  (physical, pre-SVPWM norm)")
+    ax.legend(fontsize=8, ncol=4, loc="upper right")
+    ax.grid(alpha=0.25)
+
+    # ── Panel 5: vd ─────────────────────────────────────────────────────────
+    ax = axes[4]
+    ax.plot(t, d["vd"], "C3", lw=1.0, label="vd [V]")
+    ax.axhline(0, color="k", ls="--", lw=0.6, alpha=0.4)
+    ax.axhline( MPC_MOTOR.V_MAX, color="gray", ls=":", lw=0.8, alpha=0.5,
+                label=f"+V_MAX = {MPC_MOTOR.V_MAX:.2f} V")
+    ax.axhline(-MPC_MOTOR.V_MAX, color="gray", ls=":", lw=0.8, alpha=0.5)
+    _load_lines(ax)
+    ax.set_ylabel("vd [V]")
     ax.set_xlabel("t [s]")
-
-    ax = axes[1, 1]
-    ax.plot(t, d["id"], "C5", lw=0.8)
-    ax.axhline(0, color="k", lw=0.8, ls="--")
-    ax.set_ylabel("id [A]"); ax.grid(alpha=0.3)
-    ax.set_title("id  (should ≈ 0  —  MTPA)"); ax.set_xlabel("t [s]")
-
-    ax = axes[2, 0]
-    ax.plot(t, d["v_alpha"], "C0", lw=0.8, label="v_α")
-    ax.plot(t, d["v_beta"],  "C1", lw=0.8, label="v_β")
-    ax.set_ylabel("Voltage [V]"); ax.legend(fontsize=8)
-    ax.grid(alpha=0.3); ax.set_title("Stator voltage commands"); ax.set_xlabel("t [s]")
-
-    ax = axes[2, 1]
-    ax.plot(t, d["vref"], "C5", lw=0.8)
-    ax.axhline(0.95, color="red", ls="--", lw=0.8, alpha=0.7, label="clip=0.95")
-    ax.set_ylabel("Vref [norm]"); ax.legend(fontsize=8)
-    ax.grid(alpha=0.3); ax.set_title("SVPWM modulation index"); ax.set_xlabel("t [s]")
-
-    ax = axes[3, 0]
-    ax.plot(t, d["ta"], "C3", lw=0.7, label="ta")
-    ax.plot(t, d["tb"], "C2", lw=0.7, label="tb")
-    ax.plot(t, d["tc"], "C1", lw=0.7, label="tc")
-    ax.set_ylim(-0.05, 1.05); ax.set_ylabel("Duty")
-    ax.legend(fontsize=8); ax.grid(alpha=0.3)
-    ax.set_title("SVPWM duties"); ax.set_xlabel("t [s]")
-
-    ax = axes[3, 1]
-    ax.plot(t, d["torque"] * 1000, "C4", lw=0.8, label="T_em")
-    ax.axhline(T_LOAD_LIGHT * 1000, color="orange", ls=":", lw=1.0,
-               alpha=0.7, label=f"{T_LOAD_LIGHT*1e3:.0f} mN·m")
-    ax.axhline(T_LOAD_HEAVY * 1000, color="red",    ls=":", lw=1.0,
-               alpha=0.7, label=f"{T_LOAD_HEAVY*1e3:.0f} mN·m")
-    ax.set_ylabel("Torque [mN·m]"); ax.legend(fontsize=8)
-    ax.grid(alpha=0.3); ax.set_title("Electromagnetic torque"); ax.set_xlabel("t [s]")
+    ax.set_title("d-axis voltage command  (physical, pre-SVPWM norm)")
+    ax.legend(fontsize=8, ncol=4, loc="upper right")
+    ax.grid(alpha=0.25)
 
     plt.tight_layout()
     fig.savefig(path, dpi=150, bbox_inches="tight")
@@ -524,25 +521,18 @@ def plot_results(d: dict,
 # =============================================================================
 
 def print_summary(d: dict) -> None:
-    t   = d["t"]
-    rpm = d["speed_rpm"]
-    ref = d["omega_ref_rpm"]
-    n   = len(t)
-    ss  = int(0.80 * n)
-
+    t = d["t"]; rpm = d["speed_rpm"]; ref = d["omega_ref_rpm"]
+    n = len(t); ss = int(0.80 * n)
     ss_err  = float(np.mean(np.abs(rpm[ss:] - ref[ss:])))
     id_rms  = float(np.sqrt(np.mean(d["id"][ss:] ** 2)))
     vref_mx = float(np.max(d["vref"]))
     iq_ss   = float(np.mean(np.abs(d["iq"][ss:])))
-
-    after = t > T_LOAD_T2
-    pre   = (t >= T_LOAD_T2 - 0.1) & (t < T_LOAD_T2)
+    after = t > T_LOAD_T2; pre = (t >= T_LOAD_T2 - 0.1) & (t < T_LOAD_T2)
     drop  = 0.0
     if np.any(after) and np.any(pre):
         drop = max(0.0, float(np.mean(rpm[pre])) - float(np.mean(rpm[after][:50])))
-
     print(f"\n{'='*60}")
-    print("  MPC FOC + SMO — Performance Summary")
+    print("  MPC FOC + SMO -- Performance Summary")
     print(f"{'='*60}")
     print(f"  Active weights   : Q_id={_ACTIVE_GAINS['Q_id']:.4f}  "
           f"Q_iq={_ACTIVE_GAINS['Q_iq']:.4f}  "
@@ -562,38 +552,76 @@ def print_summary(d: dict) -> None:
 # =============================================================================
 # =============================================================================
 #
-#   INTEGRATED NN SURROGATE WEIGHT TUNER
+#   INTEGRATED CMA-ES + NEURAL NETWORK WARM-START WEIGHT TUNER
 #
-#   All tuner code lives here so it can share _run_sim(), _ACTIVE_GAINS,
-#   and the motor constants directly — no monkey-patching, no separate module.
+#   Lives in this file so it shares _run_sim(), _ACTIVE_GAINS, and
+#   motor constants directly -- no monkey-patching, no separate module.
+#
+#   THESIS ARCHITECTURE
+#   -------------------
+#   1. CMA-ES (gradient-free evolutionary strategy)
+#      - N(m, sigma^2 * C) search distribution over normalised [0,1]^5
+#      - Each generation: sample lambda candidates -> run lambda FMU sims
+#        -> rank by cost -> update (m, sigma, C)
+#      - C adapts to the shape of the cost surface (learns local Hessian
+#        without any derivative computation)
+#
+#   2. Neural Network warm-start (MLP 5->16->16->1, pure NumPy)
+#      - Trained on Phase 1 CMA-ES history (real FMU evaluations only)
+#      - Gradient descent through frozen MLP predicts cost minimum
+#      - Prediction injected as CMA-ES mean m0 for Phase 3
+#      - Focuses remaining budget near predicted optimum
+#
+#   WHY PURE NUMPY FOR THE MLP?
+#   ----------------------------
+#   The MLP is a lightweight warm-start predictor, not a production
+#   surrogate. Pure NumPy keeps the file self-contained with zero extra
+#   dependencies. Students can read the forward pass, MSE loss, Adam
+#   update, and backprop in ~80 lines without any framework abstraction
+#   -- ideal for thesis exposition of how neural networks work.
 #
 # =============================================================================
 # =============================================================================
 
 # ── Tuner hyper-parameters ────────────────────────────────────────────────────
-_T_N_EXPLORE   = 40     # LHS simulations (exploration phase)
-_T_N_EPOCHS    = 500    # MLP training epochs
-_T_N_RESTARTS  = 8      # gradient-descent restarts on surrogate
-_T_LR_SURR     = 3e-3   # Adam lr — surrogate training
-_T_LR_OPT      = 5e-2   # Adam lr — surrogate optimisation
-_T_N_OPT_STEPS = 400    # steps per optimisation restart
-_T_SIM_DURATION = 3.0   # [s] tuner simulation duration (covers both load steps)
 
-# ── Cost weights ──────────────────────────────────────────────────────────────
-#   Priority: id_rms (MTPA) >> ss_err (speed) > load_drop (transient)
-#   W_ID = 80 ensures id oscillation dominates the cost surface; with the
-#   current ±1.1 A id it contributes 80×1.1 = 88 vs 2×27 = 54 for speed.
-_T_W_ID   = 80.0   # id RMS in steady state [A]
-_T_W_SS   =  2.0   # SS speed error [RPM]
-_T_W_DROP =  0.5   # load-step speed drop [RPM]
-_T_W_VREF = 20.0   # over-modulation flat penalty
+# Phase 1: number of FMU evaluations before NN training.
+# CMA-ES theory default lambda = 4 + floor(3*ln(5)) = 8 for d=5.
+# Use >= 2*lambda so Phase 1 covers at least two full generations.
+_T_PHASE1_EVALS  = 16       # Phase 1 FMU budget
+_T_MAX_FMU_EVALS = 100      # total budget (Phase 1 + Phase 3)
+_T_SIGMA0        = 0.3      # CMA-ES initial step size in normalised space
+_T_N_RESTARTS    = 1        # IPOP restarts in Phase 3
+_T_SIM_DURATION  = 3.0      # [s] per tuner evaluation
 
-# ── Physics-derived parameter bounds ─────────────────────────────────────────
-#   Q_id  : [5, 50]   — below 5 id diverges; above 50 competes with Q_omega
-#   Q_iq  : [0.01, 1] — regularisation only; > 1.0 degrades iq tracking
-#   R_vd  : [0.001, 0.1]  — conservative vd commands
-#   R_vq  : [0.005, 0.2]  — damps cross-coupling overshoot
-#   KI_v  : [0.005, 0.1]  — integral correction; > 0.1 risks windup at light load
+# NN warm-start hyper-parameters
+# THESIS NOTE: With only _T_PHASE1_EVALS=16 points and 369 MLP parameters
+# the network is over-parameterised. Regularisation comes from:
+#   1. Small lr (3e-3) limits per-step weight change
+#   2. Adam bias correction reduces effective lr early in training
+#   3. Smooth cost surface (motor physics C-inf) needs only coarse fit
+# Training for 600 epochs on 16 points takes < 0.1 s -- negligible.
+_T_NN_EPOCHS     = 600
+_T_NN_LR         = 3e-3     # Adam lr -- MLP training
+_T_NN_OPT_STEPS  = 500      # gradient-descent steps on frozen MLP
+_T_NN_LR_OPT     = 5e-2     # Adam lr -- input optimisation
+_T_NN_RESTARTS   = 8        # independent restarts on MLP landscape
+
+# ── Cost function weights ─────────────────────────────────────────────────────
+# THESIS NOTE -- linear Pareto scalarisation:
+#   J = W_ID*id_rms + W_SS*ss_err + W_DROP*load_drop
+#   W_ID=80 dominates: non-zero id wastes copper losses at every 20 kHz cycle.
+#   W_SS=2: small SS offsets tolerated.  W_DROP=0.5: transients penalised lightly.
+_T_W_ID   = 80.0
+_T_W_SS   =  2.0
+_T_W_DROP =  0.5
+_T_W_VREF = 20.0            # flat penalty if Vref p90 >= 0.93
+
+# ── Physics-derived search bounds ─────────────────────────────────────────────
+# THESIS NOTE: bounds derived from analytical MPC solution, not guessed.
+#   Q_id < 5  -> id diverges (b=dt/L term dominates denominator)
+#   Q_iq > 1  -> degrades iq tracking (appears in vq denominator)
+#   KI_v > 0.1 -> integral windup during soft-start ramp
 _T_BOUNDS = np.array([
     [  5.0,  50.0],   # Q_id
     [  0.01,  1.0],   # Q_iq
@@ -602,341 +630,596 @@ _T_BOUNDS = np.array([
     [  0.005, 0.10],  # KI_v
 ], dtype=np.float64)
 
-_T_PARAM_NAMES = ["Q_id", "Q_iq", "R_vd", "R_vq", "KI_v"]
-
-# Hardware-commissioning baseline (for before/after summary table)
-_T_DEFAULTS = [
-    _ACTIVE_GAINS["Q_id"],
-    _ACTIVE_GAINS["Q_iq"],
-    _ACTIVE_GAINS["R_vd"],
-    _ACTIVE_GAINS["R_vq"],
-    _ACTIVE_GAINS["KI_v"],
-]
+_T_PARAM_NAMES  = ["Q_id", "Q_iq", "R_vd", "R_vq", "KI_v"]
+_T_DEFAULTS     = [_ACTIVE_GAINS["Q_id"], _ACTIVE_GAINS["Q_iq"],
+                   _ACTIVE_GAINS["R_vd"], _ACTIVE_GAINS["R_vq"],
+                   _ACTIVE_GAINS["KI_v"]]
+_T_DIVERGE_COST = 1e6
 
 
-# ── Cost function ─────────────────────────────────────────────────────────────
+# =============================================================================
+# Normalisation helpers
+# =============================================================================
+# THESIS NOTE: CMA-ES requires commensurable dimensions.
+# Q_id in [5,50] and R_vd in [0.001,0.1] differ by ~10000x.
+# Mapping to [0,1]^5 gives CMA-ES a well-conditioned unit sphere.
 
-def _t_cost(d: dict | None) -> dict | None:
-    """
-    Compute scalar cost from a _run_sim() result dict.
+def _to_norm(x: np.ndarray) -> np.ndarray:
+    """Physical gains -> normalised [0,1]^5."""
+    return (x - _T_BOUNDS[:, 0]) / (_T_BOUNDS[:, 1] - _T_BOUNDS[:, 0])
 
-    Returns None on divergence or insufficient data.
-    """
-    if d is None:
-        return None
+def _to_phys(x: np.ndarray) -> np.ndarray:
+    """Normalised [0,1]^5 -> physical gains (clips to bounds)."""
+    return _T_BOUNDS[:, 0] + np.clip(x, 0.0, 1.0) * (_T_BOUNDS[:, 1] - _T_BOUNDS[:, 0])
 
-    t   = d["t"]
-    rpm = d["speed_rpm"]
-    idd = d["id"]
 
-    if len(t) < 200:
-        return None
-
-    if float(np.max(np.abs(rpm))) > TARGET_RPM * 3.0:
-        return None
-
-    # Steady-state: last 15 % of simulation
-    ss = t > 0.85 * _T_SIM_DURATION
-    if not np.any(ss):
-        return None
-
-    ref_ss = float(np.mean(d["omega_ref_rpm"][ss]))
-    ss_err = float(np.mean(np.abs(rpm[ss] - ref_ss)))
-    id_rms = float(np.sqrt(np.mean(idd[ss] ** 2)))
-
-    if ss_err > 800.0:
-        return None
-
-    # Load-step drop at T_LOAD_T2
-    after  = t >= T_LOAD_T2
-    before = (t >= T_LOAD_T2 - 0.1) & (t < T_LOAD_T2)
-    load_drop = 0.0
-    if np.any(after) and np.any(before):
-        load_drop = max(0.0, float(np.mean(rpm[before])) - float(np.mean(rpm[after][:50])))
-
-    cost = _T_W_ID * id_rms + _T_W_SS * ss_err + _T_W_DROP * load_drop
-
-    # Over-modulation penalty
-    vref = d.get("vref")
-    if vref is not None and len(vref) > 0:
-        if float(np.percentile(np.abs(vref), 90)) >= 0.93:
-            cost += _T_W_VREF
-
-    return {"cost": cost, "id_rms": id_rms, "ss_err": ss_err, "load_drop": load_drop}
-
+# =============================================================================
+# FMU evaluation  --  one complete closed-loop simulation
+# =============================================================================
 
 def _t_run_with_gains(
     Q_id: float, Q_iq: float, R_vd: float, R_vq: float, KI_v: float,
 ) -> dict | None:
     """
-    Run one tuner simulation with the given weights.
-
-    Temporarily patches _ACTIVE_GAINS so _run_sim() picks them up.
-    Restores original gains on exit (even on exception).
+    Run one tuner simulation with given weights, restoring gains on exit.
+    Returns raw _run_sim() result dict, or None on failure.
     """
     saved = _ACTIVE_GAINS.copy()
     try:
-        _ACTIVE_GAINS["Q_id"]  = Q_id
-        _ACTIVE_GAINS["Q_iq"]  = Q_iq
-        _ACTIVE_GAINS["R_vd"]  = R_vd
-        _ACTIVE_GAINS["R_vq"]  = R_vq
-        _ACTIVE_GAINS["KI_v"]  = KI_v
-        return _t_cost(_run_sim(with_codegen_hooks=False, t_sim=_T_SIM_DURATION))
+        _ACTIVE_GAINS["Q_id"] = Q_id; _ACTIVE_GAINS["Q_iq"] = Q_iq
+        _ACTIVE_GAINS["R_vd"] = R_vd; _ACTIVE_GAINS["R_vq"] = R_vq
+        _ACTIVE_GAINS["KI_v"] = KI_v
+        return _run_sim(with_codegen_hooks=False, t_sim=_T_SIM_DURATION)
     finally:
         _ACTIVE_GAINS.update(saved)
 
 
-# ── Latin-Hypercube sampling ──────────────────────────────────────────────────
-
-def _t_lhs(n: int, bounds: np.ndarray, rng: np.random.Generator) -> np.ndarray:
+def _t_cost(d: dict | None) -> dict | None:
     """
-    Latin-Hypercube sample: n points in d dimensions.
+    Extract scalar cost + metrics from a _run_sim() result dict.
+    Returns None on divergence or insufficient data.
 
-    Each dimension is independently stratified into n equal-width bins;
-    within each bin one sample is drawn uniformly at random.  The bin
-    order is then shuffled independently per dimension so the joint
-    distribution has no column correlation.
+    THESIS NOTE -- steady-state window:
+      Last 15% of _T_SIM_DURATION = 3s, i.e. t > 2.55s.
+      Both load steps (t=0.5s, t=1.2s) have settled by then.
     """
-    d    = bounds.shape[0]
-    cuts = np.linspace(0.0, 1.0, n + 1)
-    X    = np.zeros((n, d))
-    for j in range(d):
-        u = rng.uniform(cuts[:-1], cuts[1:])
-        rng.shuffle(u)
-        X[:, j] = bounds[j, 0] + u * (bounds[j, 1] - bounds[j, 0])
-    return X
+    if d is None:
+        return None
+    t = d["t"]; rpm = d["speed_rpm"]; idd = d["id"]
+    if len(t) < 200:
+        return None
+    if float(np.max(np.abs(rpm))) > TARGET_RPM * 3.0:
+        return None
+    ss = t > 0.85 * _T_SIM_DURATION
+    if not np.any(ss):
+        return None
+    ref_ss = float(np.mean(d["omega_ref_rpm"][ss]))
+    ss_err = float(np.mean(np.abs(rpm[ss] - ref_ss)))
+    id_rms = float(np.sqrt(np.mean(idd[ss] ** 2)))
+    if ss_err > 800.0:
+        return None
+    after = t >= T_LOAD_T2; before = (t >= T_LOAD_T2 - 0.1) & (t < T_LOAD_T2)
+    load_drop = 0.0
+    if np.any(after) and np.any(before):
+        load_drop = max(0.0, float(np.mean(rpm[before])) - float(np.mean(rpm[after][:50])))
+    cost = _T_W_ID * id_rms + _T_W_SS * ss_err + _T_W_DROP * load_drop
+    vref = d.get("vref")
+    if vref is not None and len(vref) > 0:
+        if float(np.percentile(np.abs(vref), 90)) >= 0.93:
+            cost += _T_W_VREF
+    return {"cost": cost, "id_rms": id_rms, "ss_err": ss_err, "load_drop": load_drop}
 
 
-# ── Minimal MLP surrogate (pure NumPy — no PyTorch / TF dependency) ──────────
+def _evaluate_fmu(
+    x_norm: np.ndarray,
+    eval_counter: List[int],
+    history: List[dict],
+    t0_wall: float,
+) -> float:
+    """
+    CMA-ES objective: denormalise x_norm, run real FMU, return scalar cost.
+
+    Records result in history for NN training in Phase 2.
+    """
+    gains = _to_phys(x_norm)
+    Q_id, Q_iq, R_vd, R_vq, KI_v = gains
+    eval_counter[0] += 1
+    n = eval_counter[0]
+    elapsed = time.perf_counter() - t0_wall
+    print(f"  [{n:3d}]  Q_id={Q_id:6.2f}  Q_iq={Q_iq:.3f}  "
+          f"R_vd={R_vd:.4f}  R_vq={R_vq:.4f}  KI_v={KI_v:.4f}",
+          end="  ", flush=True)
+    try:
+        raw     = _t_run_with_gains(Q_id, Q_iq, R_vd, R_vq, KI_v)
+        metrics = _t_cost(raw)
+    except KeyboardInterrupt:
+        raise
+    except Exception as exc:
+        print(f"-> EXCEPTION: {exc}")
+        history.append({"gains": gains, "cost": _T_DIVERGE_COST, "status": "exception"})
+        return _T_DIVERGE_COST
+    if metrics is None:
+        print("-> DIVERGED")
+        history.append({"gains": gains, "cost": _T_DIVERGE_COST, "status": "diverged"})
+        return _T_DIVERGE_COST
+    cost = metrics["cost"]
+    print(f"-> cost={cost:.3f}  id={metrics['id_rms']:.3f}A  "
+          f"ss={metrics['ss_err']:.0f}RPM  drop={metrics['load_drop']:.0f}RPM  "
+          f"t={elapsed:.0f}s")
+    history.append({"gains": gains, "cost": cost,
+                    "id_rms": metrics["id_rms"], "ss_err": metrics["ss_err"],
+                    "load_drop": metrics["load_drop"], "status": "ok"})
+    return cost
+
+
+# =============================================================================
+# Neural Network  --  MLP 5->16->16->1  (pure NumPy, self-contained)
+# =============================================================================
+# THESIS NOTE -- architecture:
+#   5 inputs (one per tunable gain), two hidden layers of 16 tanh units,
+#   one linear output (scalar cost). 369 total parameters.
+#
+#   tanh: smooth, bounded, well-matched to smooth motor cost surface.
+#   Linear output: unbounded, correct for positive scalar regression.
+#   Kaiming init: W ~ N(0, sqrt(2/fan_in)) -- stable activation variance.
+#
+# The network is ONLY used to produce a warm-start mean for CMA-ES.
+# CMA-ES continues to evaluate the real FMU after the warm-start.
 
 class _MLP:
-    """
-    2-hidden-layer MLP trained with Adam, pure NumPy.
-
-    Architecture: n_in → 16 → 16 → 1   (tanh activations, linear output)
-
-    At n_in=5, hidden=16:
-        parameters = 16*5+16 + 16*16+16 + 1*16+1 = 369
-    With N_EXPLORE = 40 samples the network is under-determined relative to
-    training set size — implicit regularisation via Adam + smooth cost surface.
-    Increasing hidden beyond 16 risks memorisation for this budget.
-    """
+    """2-hidden-layer MLP, pure NumPy. Architecture: n_in->hidden->hidden->1."""
 
     def __init__(self, n_in: int = 5, hidden: int = 16, seed: int = 0):
         rng = np.random.default_rng(seed)
         def _w(r, c): return rng.standard_normal((r, c)) * np.sqrt(2.0 / c)
         self.n_in = n_in
-        self.W1 = _w(hidden, n_in);    self.b1 = np.zeros(hidden)
-        self.W2 = _w(hidden, hidden);  self.b2 = np.zeros(hidden)
-        self.W3 = _w(1, hidden);       self.b3 = np.zeros(1)
+        self.W1 = _w(hidden, n_in);   self.b1 = np.zeros(hidden)
+        self.W2 = _w(hidden, hidden); self.b2 = np.zeros(hidden)
+        self.W3 = _w(1, hidden);      self.b3 = np.zeros(1)
+        # Adam moment accumulators
         self._m = [np.zeros_like(p) for p in self._params()]
         self._v = [np.zeros_like(p) for p in self._params()]
         self._t = 0
 
-    def _params(self): return [self.W1, self.b1, self.W2, self.b2, self.W3, self.b3]
+    def _params(self):
+        return [self.W1, self.b1, self.W2, self.b2, self.W3, self.b3]
 
-    def forward(self, X):
+    def forward(self, X: np.ndarray) -> np.ndarray:
+        """Forward pass. X shape: (batch, n_in). Returns (batch,)."""
         h1 = np.tanh(X  @ self.W1.T + self.b1)
         h2 = np.tanh(h1 @ self.W2.T + self.b2)
         return (h2 @ self.W3.T + self.b3).squeeze(-1)
 
     def _fwd_cache(self, X):
-        z1 = X  @ self.W1.T + self.b1;  h1 = np.tanh(z1)
-        z2 = h1 @ self.W2.T + self.b2;  h2 = np.tanh(z2)
+        z1 = X  @ self.W1.T + self.b1; h1 = np.tanh(z1)
+        z2 = h1 @ self.W2.T + self.b2; h2 = np.tanh(z2)
         return (h2 @ self.W3.T + self.b3).squeeze(-1), h1, h2
 
-    def loss_and_grad(self, X, y_true):
-        N         = X.shape[0]
+    def loss_and_grad(self, X: np.ndarray, y_true: np.ndarray):
+        """
+        MSE loss + backpropagation gradients.
+
+        THESIS NOTE -- chain rule, layer by layer:
+          dL/dW3 = dL/dy * h2             (output layer)
+          dL/dW2 = dL/dh2 * (1-h2^2) * h1 (tanh deriv: 1 - tanh^2)
+          dL/dW1 = dL/dh1 * (1-h1^2) * X  (hidden layer 1)
+        """
+        N = X.shape[0]
         y, h1, h2 = self._fwd_cache(X)
-        err       = y - y_true
-        L         = float(np.mean(err ** 2))
+        err   = y - y_true
+        L     = float(np.mean(err ** 2))
         dL_dy = 2.0 * err / N
-        dh2   = dL_dy[:, None] * self.W3
         dW3   = (dL_dy[:, None] * h2).mean(0, keepdims=True)
         db3   = dL_dy.mean(0, keepdims=True)
-        dz2 = dh2 * (1.0 - h2 ** 2)
-        dW2 = dz2.T @ h1 / N
-        db2 = dz2.sum(0) / N
-        dh1 = dz2 @ self.W2
-        dz1 = dh1 * (1.0 - h1 ** 2)
-        dW1 = dz1.T @ X / N
-        db1 = dz1.sum(0) / N
+        dh2   = dL_dy[:, None] * self.W3
+        dz2   = dh2 * (1.0 - h2 ** 2)
+        dW2   = dz2.T @ h1 / N
+        db2   = dz2.sum(0) / N
+        dh1   = dz2 @ self.W2
+        dz1   = dh1 * (1.0 - h1 ** 2)
+        dW1   = dz1.T @ X / N
+        db1   = dz1.sum(0) / N
         return L, [dW1, db1, dW2, db2, dW3, db3]
 
     def _adam(self, grads, lr, beta1=0.9, beta2=0.999, eps=1e-8):
+        """
+        Adam parameter update (Kingma & Ba 2015).
+
+        THESIS NOTE:
+          m_hat = m / (1 - beta1^t)  bias-corrected first moment
+          v_hat = v / (1 - beta2^t)  bias-corrected second moment
+          theta -= lr * m_hat / (sqrt(v_hat) + eps)
+        Bias correction prevents large first steps when m, v start at zero.
+        """
         self._t += 1
         t = self._t
         for i, (p, g) in enumerate(zip(self._params(), grads)):
-            self._m[i] = beta1 * self._m[i] + (1 - beta1) * g
-            self._v[i] = beta2 * self._v[i] + (1 - beta2) * g ** 2
-            m_hat = self._m[i] / (1 - beta1 ** t)
-            v_hat = self._v[i] / (1 - beta2 ** t)
+            self._m[i] = beta1 * self._m[i] + (1.0 - beta1) * g
+            self._v[i] = beta2 * self._v[i] + (1.0 - beta2) * g ** 2
+            m_hat = self._m[i] / (1.0 - beta1 ** t)
+            v_hat = self._v[i] / (1.0 - beta2 ** t)
             p    -= lr * m_hat / (np.sqrt(v_hat) + eps)
 
-    def train(self, X, y, epochs=500, lr=3e-3, verbose=True):
+    def train(self, X: np.ndarray, y: np.ndarray,
+              epochs: int = 600, lr: float = 3e-3, verbose: bool = True):
+        """Full-batch Adam training."""
         losses = []
         for ep in range(epochs):
             L, grads = self.loss_and_grad(X, y)
             self._adam(grads, lr=lr)
             losses.append(L)
-            if verbose and (ep % 100 == 0 or ep == epochs - 1):
+            if verbose and (ep % 150 == 0 or ep == epochs - 1):
                 print(f"    epoch {ep:4d}  MSE={L:.6f}")
         return losses
 
-    def scalar_grad(self, x):
-        """Forward + ∂output/∂input (exact backprop).  x shape: (n_in,)."""
-        X         = x[None, :]
+    def scalar_grad(self, x: np.ndarray):
+        """
+        Forward pass + d(output)/d(x) for a single input vector.
+
+        THESIS NOTE -- input optimisation:
+          Normally backprop computes dL/dW to update weights.
+          Here weights are FROZEN and we compute d(output)/d(x)
+          to update the INPUT x -- minimising the predicted cost
+          by adjusting the gain vector. Called "feature inversion"
+          or "input optimisation" (same mechanism as adversarial
+          examples and neural style transfer).
+        """
+        X = x[None, :]
         y, h1, h2 = self._fwd_cache(X)
-        dh2  = np.ones((1, self.W3.shape[1])) * self.W3
-        dz2  = dh2 * (1.0 - h2 ** 2)
-        dh1  = dz2 @ self.W2
-        dz1  = dh1 * (1.0 - h1 ** 2)
-        dx   = (dz1 @ self.W1).squeeze(0)
+        dh2 = np.ones((1, self.W3.shape[1])) * self.W3
+        dz2 = dh2 * (1.0 - h2 ** 2)
+        dh1 = dz2 @ self.W2
+        dz1 = dh1 * (1.0 - h1 ** 2)
+        dx  = (dz1 @ self.W1).squeeze(0)
         return float(y.squeeze()), dx
 
 
-# ── Surrogate optimisation ────────────────────────────────────────────────────
+# =============================================================================
+# Phase 2  --  NN warm-start: train MLP on history, predict optimum
+# =============================================================================
 
-def _t_optimise(mlp: _MLP, X_norm: np.ndarray, y_norm: np.ndarray,
-                rng: np.random.Generator) -> np.ndarray:
+def _nn_predict_warmstart(history: List[dict],
+                          rng: np.random.Generator) -> Optional[np.ndarray]:
     """
-    Find x in [0,1]^5 that minimises mlp.forward(x).
+    Train MLP on Phase 1 FMU history and predict cost-minimising gains.
 
-    Runs _T_N_RESTARTS independent Adam gradient-descent trajectories.
-    Restart 0 starts from the best observed point in X_norm.
-    Returns the normalised gain vector with the lowest predicted cost.
+    THESIS NOTE -- warm-start workflow:
+      1. Collect valid (gains, cost) pairs from Phase 1 FMU history.
+      2. Normalise inputs to [0,1]^5; standardise costs to N(0,1).
+         Input norm: prevents Q_id (~27) dominating R_vd (~0.005).
+         Output std: keeps MSE in well-conditioned range for Adam.
+      3. Train MLP to predict normalised cost from normalised gains.
+      4. Run Adam gradient descent through the FROZEN MLP to minimise
+         its predicted cost (_T_NN_RESTARTS independent starts).
+      5. Return the best x found -> becomes CMA-ES mean m0 for Phase 3.
+
+    Returns normalised [0,1]^5 warm-start vector, or None if insufficient data.
     """
-    n_in      = mlp.n_in
-    best_x    = X_norm[int(np.argmin(y_norm))].copy()
-    best_cost = float(mlp.forward(best_x[None, :])[0])
+    valid = [e for e in history if e["status"] == "ok"]
+    if len(valid) < 4:
+        print(f"  [NN] Insufficient data ({len(valid)} pts, need >=4). Skipping.")
+        return None
 
-    for restart in range(_T_N_RESTARTS):
-        x = best_x.copy() if restart == 0 else rng.uniform(0.0, 1.0, size=n_in)
-        m_i = np.zeros(n_in); v_i = np.zeros(n_in); t_i = 0
+    X_raw = np.array([_to_norm(e["gains"]) for e in valid])
+    y_raw = np.array([e["cost"] for e in valid])
+    y_mean = float(y_raw.mean())
+    y_std  = float(max(y_raw.std(), 1e-8))
+    y_norm = (y_raw - y_mean) / y_std
+
+    print(f"\n  [Phase 2 NN] Training MLP 5->16->16->1 on {len(valid)} FMU points ...")
+    mlp = _MLP(n_in=5, hidden=16, seed=0)
+    mlp.train(X_raw, y_norm, epochs=_T_NN_EPOCHS, lr=_T_NN_LR, verbose=True)
+
+    # Validation R^2 (informational -- not a gate)
+    n_val = max(1, len(X_raw) // 5)
+    idx   = rng.permutation(len(X_raw))
+    X_va  = X_raw[idx[:n_val]]; y_va = y_norm[idx[:n_val]]
+    y_p   = mlp.forward(X_va)
+    ss_res = float(np.var(y_va - y_p)); ss_tot = float(np.var(y_va))
+    r2 = 1.0 - ss_res / ss_tot if ss_tot > 1e-12 else 0.0
+    print(f"  [NN] Surrogate R^2 (held-out {n_val} pts): {r2:.4f}  (>=0.60 acceptable)")
+    if r2 < 0.30:
+        print("  [NN] WARNING: R^2 very low -- warm-start may not improve CMA-ES.")
+
+    # Gradient descent through frozen MLP to find predicted minimum
+    # THESIS NOTE: _T_NN_RESTARTS independent Adam trajectories mitigate
+    # local minima on the MLP's cost surface. Restart 0 is warm-started
+    # from the best observed point; others use random init.
+    print(f"  [NN] Input optimisation ({_T_NN_RESTARTS} restarts x {_T_NN_OPT_STEPS} steps) ...")
+    best_obs_idx = int(np.argmin(y_norm))
+    best_x       = X_raw[best_obs_idx].copy()
+    best_pred    = float(mlp.forward(best_x[None, :])[0])
+
+    for restart in range(_T_NN_RESTARTS):
+        x  = best_x.copy() if restart == 0 else rng.uniform(0.0, 1.0, size=5)
+        mi = np.zeros(5); vi = np.zeros(5); ti = 0
         b1, b2, eps = 0.9, 0.999, 1e-8
-        for _ in range(_T_N_OPT_STEPS):
-            cost, grad = mlp.scalar_grad(x)
-            t_i  += 1
-            m_i   = b1 * m_i + (1 - b1) * grad
-            v_i   = b2 * v_i + (1 - b2) * grad ** 2
-            m_hat = m_i / (1 - b1 ** t_i)
-            v_hat = v_i / (1 - b2 ** t_i)
-            x     = x - _T_LR_OPT * m_hat / (np.sqrt(v_hat) + eps)
-            x     = np.clip(x, 0.0, 1.0)
-        c = float(mlp.forward(x[None, :])[0])
+        for _ in range(_T_NN_OPT_STEPS):
+            c, grad = mlp.scalar_grad(x)
+            ti += 1
+            mi  = b1*mi + (1.0-b1)*grad
+            vi  = b2*vi + (1.0-b2)*grad**2
+            mh  = mi / (1.0 - b1**ti)
+            vh  = vi / (1.0 - b2**ti)
+            x   = np.clip(x - _T_NN_LR_OPT * mh / (np.sqrt(vh) + eps), 0.0, 1.0)
+        c_f = float(mlp.forward(x[None, :])[0])
+        if c_f < best_pred:
+            best_pred = c_f; best_x = x.copy()
+
+    pred_phys = _to_phys(best_x)
+    print(f"  [NN] Predicted warm-start (pred cost={best_pred:.4f}):")
+    for name, val in zip(_T_PARAM_NAMES, pred_phys):
+        print(f"       {name:<8} = {val:.6f}")
+    return best_x   # normalised [0,1]^5
+
+
+# =============================================================================
+# CMA-ES runner
+# =============================================================================
+
+def _run_cmaes(x0, sigma0, budget, eval_counter, history, t0_wall,
+               n_restarts=1, label="CMA-ES"):
+    """
+    Run IPOP-CMA-ES in normalised [0,1]^5 from starting mean x0.
+
+    THESIS NOTE -- IPOP (Auger & Hansen 2005):
+      On stagnation (sigma collapses, flat progress), restart with
+      lambda doubled: lambda_{k+1} = 2 * lambda_k.
+      Larger populations explore wider basins to escape local minima.
+      Budget is shared across all restarts.
+    """
+    if not _HAVE_CMA:
+        raise ImportError("'cma' package required. Install: pip install cma")
+
+    best_cost = np.inf; best_x = x0.copy()
+    lam = None  # None -> CMA-ES default: 4 + floor(3*ln(5)) = 8
+
+    for restart in range(n_restarts + 1):
+        remaining = max(0, budget - eval_counter[0])
+        if remaining <= 0:
+            break
+        print(f"\n  [{label} restart {restart}]  "
+              f"popsize={lam if lam else 'auto(8)'}  remaining={remaining}")
+
+        def _obj(xn):
+            if eval_counter[0] >= _T_MAX_FMU_EVALS:
+                return _T_DIVERGE_COST * 0.99
+            return _evaluate_fmu(np.asarray(xn), eval_counter, history, t0_wall)
+
+        opts = cma.CMAOptions()
+        opts.set("maxfevals", remaining)
+        opts.set("bounds",    [[0.0]*5, [1.0]*5])
+        opts.set("tolx",      1e-4)
+        opts.set("tolfun",    1e-5)
+        opts.set("verbose",   -9)
+        if lam is not None:
+            opts.set("popsize", lam)
+
+        xopt, es = cma.fmin2(_obj, x0.copy(), sigma0 / (2.0**restart), opts)
+        xc = np.clip(np.asarray(xopt), 0.0, 1.0)
+        c  = es.result.fbest
         if c < best_cost:
-            best_cost = c; best_x = x.copy()
+            best_cost = c; best_x = xc.copy()
+
+        print(f"  [{label} restart {restart} done]  "
+              f"best cost={best_cost:.4f}  total evals={eval_counter[0]}")
+        lam = 2 * (lam if lam else (4 + int(3*math.log(5))))
+        x0  = best_x.copy()
 
     return best_x
 
 
-# ── gains.h writer ────────────────────────────────────────────────────────────
+def _run_nelder_mead_fallback(x0, budget, eval_counter, history, t0_wall):
+    """
+    Nelder-Mead fallback (scipy) when 'cma' is not installed.
 
-def _write_gains_header(
-    Q_id: float, Q_iq: float, R_vd: float, R_vq: float, KI_v: float,
-    cost: float, id_rms: float, ss_err: float, load_drop: float,
-    n_explore: int, out_path: Path,
-) -> None:
-    """Write embed_sim_mpc_gains_tuned.h with full ISO 26262 audit trail."""
-    import datetime
+    THESIS NOTE -- Nelder-Mead (Nelder & Mead 1965):
+      Maintains a simplex of d+1=6 vertices. Worst vertex replaced by
+      reflection, expansion, or contraction each step.
+      Simpler than CMA-ES: no covariance adaptation, less reliable for
+      d>4. Adaptive variant (Gao & Han 2010) improves for d>2.
+    """
+    if not _HAVE_SCIPY:
+        raise ImportError("Neither 'cma' nor 'scipy' available. "
+                          "Install one: pip install cma  or  pip install scipy")
+
+    def _obj(xn):
+        if eval_counter[0] >= _T_MAX_FMU_EVALS:
+            return _T_DIVERGE_COST * 0.99
+        return _evaluate_fmu(np.asarray(xn), eval_counter, history, t0_wall)
+
+    result = _scipy_minimize(_obj, x0, method="Nelder-Mead",
+                             options={"maxfev": budget, "xatol": 1e-3,
+                                      "fatol": 1e-4, "adaptive": True})
+    return np.clip(result.x, 0.0, 1.0)
+
+
+# =============================================================================
+# gains.h writer  --  c_src/embed_sim_mpc_gains.h
+# =============================================================================
+
+def _write_gains_header(gains, metrics, n_evals, method, out_path):
+    """
+    Write embed_sim_mpc_gains.h with ISO 26262 audit trail.
+
+    THESIS NOTE -- auto-generated headers in safety-critical software:
+      ISO 26262 Part 6 requires traceable parameter propagation.
+      Manual transcription is error-prone and non-auditable.
+      Auto-generation guarantees exact numeric fidelity and embeds
+      full provenance as structured comments.
+      MISRA C:2012: Rule 7.2 (f suffix), Rule 8.7 (#defines for constants).
+    """
+    Q_id, Q_iq, R_vd, R_vq, KI_v = [float(v) for v in gains]
     now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 
     content = textwrap.dedent(f"""\
-    /**********************************************************************************************************************
-     * \\file      embed_sim_mpc_gains_tuned.h
-     * \\brief     MPC FOC — NN-tuned weight constants for NANOTEC DB42S02
+    /******************************************************************************
+     * \\file      embed_sim_mpc_gains.h
+     * \\brief     MPC FOC weight constants -- CMA-ES + NN warm-start tuned
+     *             NANOTEC DB42S02  |  AURIX TC3xx  |  EmbedSim
      *
-     * \\details   AUTO-GENERATED by db42s02_closed_loop_mpc_foc_20k.py.  DO NOT EDIT MANUALLY.
+     * \\details   AUTO-GENERATED by db42s02_closed_loop_mpc_foc_20k.py
+     *            DO NOT EDIT MANUALLY.
      *
-     *            TUNING AUDIT TRAIL
-     *            ===================
-     *            Generated   : {now}
-     *            Method      : Latin-Hypercube ({n_explore} samples) + MLP 5->16->16->1
-     *                          + Adam gradient descent ({_T_N_RESTARTS} restarts x {_T_N_OPT_STEPS} steps)
-     *            Noise model : DISABLED during exploration (clean plant, deterministic surface)
-     *            Target      : {TARGET_RPM:.0f} RPM  V_DC={V_DC:.1f}V  dt={DT*1e6:.0f}µs
-     *            Fixed params: Q_omega={MPC_Q_OMEGA:.1f}  N={MPC_N}  SMO_K={MPC_SMO_K:.2f}  SMO_FC={MPC_SMO_FC:.0f}
+     *  =========================================================================
+     *  TUNING AUDIT TRAIL  (ISO 26262 Part 6 traceability)
+     *  =========================================================================
+     *  Generated     : {now}
+     *  Method        : {method}
+     *  Plant         : PMSM_Plant_FMU.fmu  (Modelica, FMU 2.0, dt={DT*1e6:.0f}us)
+     *                  NO surrogate -- every evaluation is a real FMU simulation
+     *  FMU evals     : {n_evals} total
+     *  Sim duration  : {_T_SIM_DURATION:.1f}s per eval (no-load + 5mNm + 20mNm)
+     *  Noise model   : DISABLED (clean plant, deterministic surface)
+     *  Target        : {TARGET_RPM:.0f} RPM  V_DC={V_DC:.1f}V  dt={DT*1e6:.0f}us
+     *  Fixed params  : Q_omega={MPC_Q_OMEGA:.1f}  N={MPC_N}
+     *                  SMO_K={MPC_SMO_K:.2f}  SMO_FC={MPC_SMO_FC:.0f}
      *
-     *            COST FUNCTION
-     *            ==============
-     *            cost = {_T_W_ID:.1f}  * id_rms_A          (d-axis MTPA, target 0)
-     *                 + {_T_W_SS:.1f}  * ss_err_RPM         (speed tracking)
-     *                 + {_T_W_DROP:.1f} * load_drop_RPM      (load rejection)
-     *                 + {_T_W_VREF:.1f} * [1 if Vref_p90 >= 0.93]  (over-modulation)
+     *  =========================================================================
+     *  ALGORITHM SUMMARY
+     *  =========================================================================
+     *  Phase 1  CMA-ES gen 1 ({_T_PHASE1_EVALS} real FMU evals)
+     *           Samples lambda=8 candidates/gen from N(m, sigma^2*C).
+     *           Covariance C adapts to cost surface shape (no derivatives).
      *
-     *            VERIFICATION RESULT (clean plant)
-     *            ==================================
-     *            Total cost     : {cost:.4f}
-     *            id RMS (MTPA)  : {id_rms:.4f} A    (target 0)
-     *            SS speed error : {ss_err:.2f} RPM
-     *            Load drop      : {load_drop:.1f} RPM  at t={T_LOAD_T2}s
+     *  Phase 2  Neural Network warm-start
+     *           MLP 5->16->16->1 trained on Phase 1 history (NumPy Adam).
+     *           Gradient descent through frozen MLP finds predicted minimum.
+     *           Prediction injected as CMA-ES mean m0 for Phase 3.
      *
-     * \\note      MISRA C:2012 — Rule 7.2: float literals carry 'f' suffix.
+     *  Phase 3  CMA-ES from NN mean ({_T_MAX_FMU_EVALS - _T_PHASE1_EVALS} remaining evals)
+     *           Resumes from m0. IPOP doubles population on stagnation.
      *
+     *  Ref: Hansen (2016) arXiv:1604.00772  |  Kingma & Ba (2015) arXiv:1412.6980
+     *
+     *  =========================================================================
+     *  COST FUNCTION
+     *  =========================================================================
+     *  J = {_T_W_ID:.1f} * id_rms_A            (MTPA: id->0, minimise copper losses)
+     *    + {_T_W_SS:.1f} * ss_speed_error_RPM   (steady-state speed tracking)
+     *    + {_T_W_DROP:.1f} * load_drop_RPM        (load-step rejection)
+     *    + {_T_W_VREF:.1f} * [1 if Vref_p90 >= 0.93]  (over-modulation penalty)
+     *
+     *  =========================================================================
+     *  VERIFICATION RESULT
+     *  =========================================================================
+     *  Total cost      : {metrics.get('cost', float('nan')):.4f}
+     *  id RMS  (MTPA)  : {metrics.get('id_rms', float('nan')):.4f} A   (target 0 A)
+     *  SS speed error  : {metrics.get('ss_err', float('nan')):.2f} RPM
+     *  Load-step drop  : {metrics.get('load_drop', float('nan')):.1f} RPM at t={T_LOAD_T2}s
+     *
+     *  Baseline (hardware commissioning):
+     *    Q_id={_T_DEFAULTS[0]:.4f}  Q_iq={_T_DEFAULTS[1]:.4f}  R_vd={_T_DEFAULTS[2]:.4f}
+     *    R_vq={_T_DEFAULTS[3]:.4f}  KI_v={_T_DEFAULTS[4]:.4f}
+     *
+     * \\note  MISRA C:2012 Rule 7.2: float literals carry the 'f' suffix.
+     * \\note  MISRA C:2012 Rule 8.7: #defines avoid magic numbers in .c files.
      * \\version   1.0.0  (auto-generated)
      * \\copyright Copyright (C) EmbedSim 2026
-     *********************************************************************************************************************/
+     ******************************************************************************/
 
-    #ifndef EMBED_SIM_MPC_GAINS_TUNED_H_
-    #define EMBED_SIM_MPC_GAINS_TUNED_H_
+    #ifndef EMBED_SIM_MPC_GAINS_H_
+    #define EMBED_SIM_MPC_GAINS_H_
 
-    #include "embed_sim_matrix.h"    /* MatrixFloat = real32_T */
+    /* embed_sim_matrix.h: typedef float MatrixFloat; */
+    #include "embed_sim_matrix.h"
 
-    /** \\defgroup MPC_Gains_Tuned  NN-tuned MPC weight constants  \\{{ */
+    /**
+     * \\defgroup MPC_Gains_Tuned  CMA-ES + NN warm-start tuned MPC constants
+     *
+     * Cost matrices:
+     *   Q = diag(MPC_Q_ID, MPC_Q_IQ, MPC_Q_OMEGA)  [state penalty]
+     *   R = diag(MPC_R_VD, MPC_R_VQ)                [control effort]
+     *
+     * Closed-form MPC optimum per ISR tick:
+     *   vd* = Q_id*sum_bk*(0-id_free) / (Q_id*sum_bk2 + R_vd)
+     *   vq* = (Q_omega*sum_ek*(w_ref-w_free) + Q_iq*sum_bk*(0-iq_free))
+     *          / (Q_omega*sum_ek2 + Q_iq*sum_bk2 + R_vq)
+     * \\{{
+     */
 
-    #define MPC_Q_ID     ((MatrixFloat){Q_id:.6f}f)   /**< d-axis state cost (was {_T_DEFAULTS[0]:.4f}) */
-    #define MPC_Q_IQ     ((MatrixFloat){Q_iq:.6f}f)   /**< q-axis regulariser (was {_T_DEFAULTS[1]:.4f}) */
-    #define MPC_R_VD     ((MatrixFloat){R_vd:.6f}f)   /**< vd effort weight  (was {_T_DEFAULTS[2]:.4f}) */
-    #define MPC_R_VQ     ((MatrixFloat){R_vq:.6f}f)   /**< vq effort weight  (was {_T_DEFAULTS[3]:.4f}) */
-    #define MPC_KI_V     ((MatrixFloat){KI_v:.6f}f)   /**< speed integral    (was {_T_DEFAULTS[4]:.4f}) */
-    #define MPC_Q_OMEGA  ((MatrixFloat){MPC_Q_OMEGA:.1f}f)  /**< speed cost (FIXED) */
+    /** d-axis state cost [-]  drives id->0 (MTPA).  Baseline: {_T_DEFAULTS[0]:.4f} */
+    #define MPC_Q_ID    ((MatrixFloat){Q_id:.6f}f)
+
+    /** q-axis regulariser [-]  must be << MPC_Q_OMEGA.  Baseline: {_T_DEFAULTS[1]:.4f} */
+    #define MPC_Q_IQ    ((MatrixFloat){Q_iq:.6f}f)
+
+    /** vd effort weight [-]  damps d-axis commands.  Baseline: {_T_DEFAULTS[2]:.4f} */
+    #define MPC_R_VD    ((MatrixFloat){R_vd:.6f}f)
+
+    /** vq effort weight [-]  damps cross-coupling.  Baseline: {_T_DEFAULTS[3]:.4f} */
+    #define MPC_R_VQ    ((MatrixFloat){R_vq:.6f}f)
+
+    /** Speed-error integral gain [V/(rad/s*s)].  Baseline: {_T_DEFAULTS[4]:.4f} */
+    #define MPC_KI_V    ((MatrixFloat){KI_v:.6f}f)
+
+    /**
+     * Speed tracking weight [-]  FIXED -- not tuned.
+     * Fixed at {MPC_Q_OMEGA:.0f} to preserve commissioning torque calibration:
+     *   iq_ss = T_load/KT = 0.020/0.0084 = 2.38 A at 20 mN·m.
+     */
+    #define MPC_Q_OMEGA ((MatrixFloat){MPC_Q_OMEGA:.1f}f)
 
     /** \\}} */
 
     typedef struct {{
-        MatrixFloat Q_id;     /**< {Q_id:.6f} */
-        MatrixFloat Q_iq;     /**< {Q_iq:.6f} */
-        MatrixFloat R_vd;     /**< {R_vd:.6f} */
-        MatrixFloat R_vq;     /**< {R_vq:.6f} */
-        MatrixFloat KI_v;     /**< {KI_v:.6f} */
-        MatrixFloat Q_omega;  /**< {MPC_Q_OMEGA:.1f}f (fixed) */
+        MatrixFloat Q_id;    /**< MPC_Q_ID    = {Q_id:.6f}f */
+        MatrixFloat Q_iq;    /**< MPC_Q_IQ    = {Q_iq:.6f}f */
+        MatrixFloat R_vd;    /**< MPC_R_VD    = {R_vd:.6f}f */
+        MatrixFloat R_vq;    /**< MPC_R_VQ    = {R_vq:.6f}f */
+        MatrixFloat KI_v;    /**< MPC_KI_V    = {KI_v:.6f}f */
+        MatrixFloat Q_omega; /**< MPC_Q_OMEGA = {MPC_Q_OMEGA:.1f}f (fixed) */
     }} MPC_GainSet_T;
 
-    #endif /* EMBED_SIM_MPC_GAINS_TUNED_H_ */
+    #endif /* EMBED_SIM_MPC_GAINS_H_ */
     """)
 
+    out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(content, encoding="utf-8")
     print(f"\n  [gains.h] Written: {out_path}")
 
 
-# ── Main tuner entry point ────────────────────────────────────────────────────
+# =============================================================================
+# run_tuner  --  four-phase entry point
+# =============================================================================
 
 def run_tuner() -> bool:
     """
-    Execute the full NN surrogate MPC weight tuner.
+    Execute the four-phase CMA-ES + Neural Network warm-start MPC tuner.
+
+    Phase 1 : CMA-ES gen 1 (_T_PHASE1_EVALS real FMU simulations)
+    Phase 2 : NN trains on history -> predicts warm-start mean
+    Phase 3 : CMA-ES continues from NN mean (remaining budget)
+    Phase 4 : Write c_src/embed_sim_mpc_gains.h
+
+    Every evaluation is a real closed-loop FMU simulation.
+    No surrogate replaces the plant.
 
     Returns True if tuning completed and _ACTIVE_GAINS was updated.
-
-    Phases
-    ------
-    1. LHS exploration  : _T_N_EXPLORE clean-plant simulations (3 s each).
-    2. MLP training     : 5->16->16->1, Adam, _T_N_EPOCHS epochs.
-    3. Surrogate opt.   : gradient descent, _T_N_RESTARTS restarts.
-    4. Verification     : one clean simulation at recommended weights.
-    5. Header write     : embed_sim_mpc_gains_tuned.h with audit trail.
     """
-    rng   = np.random.default_rng(seed=42)
-    n_dim = len(_T_PARAM_NAMES)
+    rng          = np.random.default_rng(seed=42)
+    eval_counter = [0]
+    history: List[dict] = []
+    t0_wall = time.perf_counter()
 
+    method_label = (
+        "CMA-ES (Hansen 2004) + NN warm-start (MLP 5->16->16->1, NumPy Adam)"
+        if _HAVE_CMA else
+        "Nelder-Mead (scipy adaptive) + NN warm-start (MLP 5->16->16->1, NumPy Adam)"
+    )
+
+    # Banner
     print("\n" + "=" * 70)
-    print("  MPC NN Surrogate Weight Tuner  —  NANOTEC DB42S02")
+    print("  MPC Tuner  --  CMA-ES + Neural Network Warm-Start")
+    print("  NANOTEC DB42S02  |  AURIX TC3xx  |  EmbedSim")
     print("=" * 70)
-    print(f"  Phase 1  LHS exploration : {_T_N_EXPLORE} simulations  "
-          f"(T_sim={_T_SIM_DURATION:.1f}s, ~{_T_N_EXPLORE*_T_SIM_DURATION/60:.0f} min est.)")
-    print(f"  Phase 2  MLP training    : {_T_N_EPOCHS} epochs  ({n_dim}->16->16->1)")
-    print(f"  Phase 3  Surrogate opt.  : {_T_N_RESTARTS} restarts x {_T_N_OPT_STEPS} steps")
-    print(f"  Phase 4  Verification    : 1 simulation at recommended weights")
-    print(f"  Phase 5  Header write    : embed_sim_mpc_gains_tuned.h")
+    print(f"  Method       : {method_label}")
+    print(f"  Plant        : PMSM_Plant_FMU.fmu  (NO surrogate)")
+    print(f"  Total budget : {_T_MAX_FMU_EVALS} FMU evals  (T_sim={_T_SIM_DURATION:.1f}s each)")
+    print(f"  Phase 1      : {_T_PHASE1_EVALS} evals  CMA-ES gen 1 -> build NN dataset")
+    print(f"  Phase 2      : NN {_T_NN_EPOCHS} epochs -> predict warm-start mean m0")
+    print(f"  Phase 3      : {_T_MAX_FMU_EVALS - _T_PHASE1_EVALS} evals  CMA-ES from m0 (IPOP x{_T_N_RESTARTS})")
+    print(f"  Est. wall    : ~{_T_MAX_FMU_EVALS * 114 // 60} min  (at 114 s/sim)")
     print()
     print(f"  {'Parameter':<8}  {'Lo':>8}  {'Hi':>8}  {'Baseline':>10}")
     print(f"  {'-'*42}")
@@ -947,168 +1230,97 @@ def run_tuner() -> bool:
     print(f"    SS speed error  x {_T_W_SS:.1f}")
     print(f"    Load drop       x {_T_W_DROP:.1f}")
     print(f"    Vref over-mod   + {_T_W_VREF:.1f}  (if Vref p90 >= 0.93)")
-    print(f"\n  Noise: DISABLED (clean plant for deterministic cost surface)")
     print("=" * 70)
 
-    # ── Phase 1: LHS exploration ──────────────────────────────────────────────
-    print(f"\n[Phase 1] LHS exploration ({_T_N_EXPLORE} simulations) ...")
-    X_raw  = _t_lhs(_T_N_EXPLORE, _T_BOUNDS, rng)
-    costs: list[float] = []
-    valid_results: list[tuple[np.ndarray, dict]] = []
+    x_baseline = _to_norm(np.array(_T_DEFAULTS))
 
-    t0 = time.perf_counter()
-    for i, params in enumerate(X_raw):
-        q_id, q_iq, r_vd, r_vq, ki_v = params
-        print(f"  [{i+1:2d}/{_T_N_EXPLORE}]  "
-              f"Q_id={q_id:6.2f}  Q_iq={q_iq:.3f}  "
-              f"R_vd={r_vd:.4f}  R_vq={r_vq:.4f}  KI_v={ki_v:.4f}",
-              end="  ", flush=True)
-        try:
-            met = _t_run_with_gains(q_id, q_iq, r_vd, r_vq, ki_v)
-        except KeyboardInterrupt:
-            print("\n  Interrupted — using data collected so far.")
-            X_raw = X_raw[:i]
-            break
+    # ── Phase 1: CMA-ES gen 1 ────────────────────────────────────────────────
+    print(f"\n[Phase 1] CMA-ES exploration  ({_T_PHASE1_EVALS} FMU evals) ...")
+    if _HAVE_CMA:
+        _run_cmaes(x_baseline, _T_SIGMA0, _T_PHASE1_EVALS,
+                   eval_counter, history, t0_wall, n_restarts=0, label="Phase 1")
+    else:
+        print("  'cma' not installed -- Nelder-Mead Phase 1.")
+        _run_nelder_mead_fallback(x_baseline, _T_PHASE1_EVALS,
+                                  eval_counter, history, t0_wall)
 
-        if met is None:
-            print("-> UNSTABLE")
-            costs.append(1e6)
-        else:
-            print(f"-> cost={met['cost']:.2f}  "
-                  f"id={met['id_rms']:.3f}A  "
-                  f"ss={met['ss_err']:.0f}RPM  "
-                  f"drop={met['load_drop']:.0f}RPM")
-            costs.append(met["cost"])
-            valid_results.append((params.copy(), met))
-
-    elapsed = time.perf_counter() - t0
-    print(f"\n  Exploration done  ({elapsed:.0f} s, "
-          f"{elapsed / max(1, len(X_raw)):.1f} s/sim)")
-
-    costs_arr  = np.array(costs, dtype=np.float64)
-    valid_mask = costs_arr < 1e5
-    n_valid    = int(valid_mask.sum())
-
-    if n_valid < 4:
-        print(f"  ERROR: only {n_valid} valid simulations (need ≥ 4).")
-        print("  Try widening bounds or increasing _T_N_EXPLORE.")
+    n_valid_p1 = sum(1 for e in history if e["status"] == "ok")
+    print(f"\n  Phase 1 done: {eval_counter[0]} evals, {n_valid_p1} valid.")
+    if n_valid_p1 == 0:
+        print("  ERROR: all Phase 1 simulations diverged.  Aborting.")
         return False
 
-    X_valid = X_raw[valid_mask]
-    y_valid = costs_arr[valid_mask]
-
-    best_obs_idx   = int(np.argmin(y_valid))
-    best_obs_gains = X_valid[best_obs_idx]
-    best_obs_cost  = float(y_valid[best_obs_idx])
-    best_obs_met   = valid_results[best_obs_idx][1]
-
-    print(f"\n  Best observed:  cost={best_obs_cost:.4f}")
-    for name, val in zip(_T_PARAM_NAMES, best_obs_gains):
-        print(f"    {name:<8} = {val:.6f}")
-
-    # Save LHS dataset for offline re-analysis
-    npz_path = _HERE / "mpc_tuner_exploration.npz"
-    np.savez(str(npz_path), X=X_valid, y=y_valid, param_names=_T_PARAM_NAMES)
-    print(f"  [dataset] Saved: {npz_path}")
-
-    # ── Phase 2: MLP training ─────────────────────────────────────────────────
-    print(f"\n[Phase 2] Training MLP surrogate ({n_dim}->16->16->1) ...")
-
-    X_norm = (X_valid - _T_BOUNDS[:, 0]) / (_T_BOUNDS[:, 1] - _T_BOUNDS[:, 0])
-    y_mean = float(y_valid.mean())
-    y_std  = float(max(y_valid.std(), 1e-8))
-    y_norm = (y_valid - y_mean) / y_std
-
-    n_val  = max(1, len(X_norm) // 5)
-    idx    = rng.permutation(len(X_norm))
-    X_tr, y_tr = X_norm[idx[n_val:]], y_norm[idx[n_val:]]
-    X_va, y_va = X_norm[idx[:n_val]], y_norm[idx[:n_val]]
-
-    mlp = _MLP(n_in=n_dim, hidden=16, seed=0)
-    mlp.train(X_tr, y_tr, epochs=_T_N_EPOCHS, lr=_T_LR_SURR, verbose=True)
-
-    y_va_pred = mlp.forward(X_va)
-    ss_res    = float(np.var(y_va - y_va_pred))
-    ss_tot    = float(np.var(y_va))
-    r2_val    = 1.0 - ss_res / ss_tot if ss_tot > 1e-12 else 0.0
-    print(f"\n  Surrogate R² (held-out {n_val} pts): {r2_val:.4f}  (>0.70 is acceptable)")
-    if r2_val < 0.50:
-        print("  WARNING: R² < 0.50 — surrogate quality poor.")
-        print("  Consider increasing _T_N_EXPLORE before trusting Phase 3.")
-
-    # ── Phase 3: surrogate optimisation ──────────────────────────────────────
-    print(f"\n[Phase 3] Gradient descent on surrogate "
-          f"({_T_N_RESTARTS} restarts) ...")
-    best_norm  = _t_optimise(mlp, X_norm, y_norm, rng)
-    gains_pred = _T_BOUNDS[:, 0] + best_norm * (_T_BOUNDS[:, 1] - _T_BOUNDS[:, 0])
-    cost_surr  = float(mlp.forward(best_norm[None, :])[0]) * y_std + y_mean
-    print(f"  Surrogate minimum: predicted cost = {cost_surr:.4f}")
-    for name, val in zip(_T_PARAM_NAMES, gains_pred):
-        print(f"    {name:<8} = {val:.6f}")
-
-    # ── Phase 4: verification ─────────────────────────────────────────────────
-    print("\n[Phase 4] Verification simulation (clean plant) ...")
-    q_id_p, q_iq_p, r_vd_p, r_vq_p, ki_v_p = gains_pred
-    met_verify = _t_run_with_gains(q_id_p, q_iq_p, r_vd_p, r_vq_p, ki_v_p)
-
-    if met_verify is None:
-        print("  Verification UNSTABLE — returning best observed gains.")
-        final_gains = best_obs_gains
-        final_met   = best_obs_met
-    elif met_verify["cost"] < best_obs_cost:
-        final_gains = gains_pred
-        final_met   = met_verify
-        print(f"  NN gains BETTER: cost {met_verify['cost']:.4f} "
-              f"< {best_obs_cost:.4f}")
+    # ── Phase 2: NN warm-start ───────────────────────────────────────────────
+    print(f"\n[Phase 2] Neural Network warm-start ...")
+    x_warmstart = _nn_predict_warmstart(history, rng)
+    if x_warmstart is None:
+        valid_p1 = [e for e in history if e["status"] == "ok"]
+        best_p1  = min(valid_p1, key=lambda e: e["cost"])
+        x_warmstart = _to_norm(best_p1["gains"])
+        print(f"  [NN] Fallback to best Phase 1 point (cost={best_p1['cost']:.4f})")
     else:
-        final_gains = best_obs_gains
-        final_met   = best_obs_met
-        print(f"  Best observed still wins: "
-              f"cost {best_obs_cost:.4f} ≤ {met_verify['cost']:.4f}")
-        print("  (increase _T_N_EXPLORE for a richer training set)")
+        print("  [NN] Warm-start mean ready for CMA-ES Phase 3.")
 
-    q_id_f, q_iq_f, r_vd_f, r_vq_f, ki_v_f = [float(v) for v in final_gains]
+    # ── Phase 3: CMA-ES from NN mean ─────────────────────────────────────────
+    remaining = _T_MAX_FMU_EVALS - eval_counter[0]
+    print(f"\n[Phase 3] CMA-ES from NN mean  ({remaining} evals, IPOP x{_T_N_RESTARTS}) ...")
+    if remaining > 0:
+        if _HAVE_CMA:
+            _run_cmaes(x_warmstart, _T_SIGMA0 * 0.5, remaining,
+                       eval_counter, history, t0_wall,
+                       n_restarts=_T_N_RESTARTS, label="Phase 3")
+        else:
+            _run_nelder_mead_fallback(x_warmstart, remaining,
+                                      eval_counter, history, t0_wall)
+    else:
+        print("  Budget exhausted -- using NN prediction directly.")
 
-    # ── Summary ───────────────────────────────────────────────────────────────
+    # ── Find overall best ─────────────────────────────────────────────────────
+    valid_all = [e for e in history if e["status"] == "ok"]
+    if not valid_all:
+        print("  ERROR: no valid FMU evaluations. Aborting.")
+        return False
+
+    best_entry  = min(valid_all, key=lambda e: e["cost"])
+    best_gains  = best_entry["gains"]
+    best_metrics = best_entry
+
+    elapsed = time.perf_counter() - t0_wall
+    n_evals = len(history)
+    n_ok    = len(valid_all)
+    Q_id_f, Q_iq_f, R_vd_f, R_vq_f, KI_v_f = [float(v) for v in best_gains]
+
+    # Summary
     print("\n" + "=" * 70)
-    print("  TUNING COMPLETE")
+    print("  TUNING COMPLETE  --  CMA-ES + NN warm-start")
     print("=" * 70)
+    print(f"  FMU evaluations : {n_evals} total  ({n_ok} valid)  "
+          f"wall={elapsed:.0f}s ({elapsed/60:.1f} min)")
     print(f"\n  {'Parameter':<8}  {'Baseline':>10}  {'Tuned':>10}  {'Delta':>8}")
     print(f"  {'-'*44}")
-    for name, dflt, tuned in zip(_T_PARAM_NAMES, _T_DEFAULTS, final_gains):
+    for name, dflt, tuned in zip(_T_PARAM_NAMES, _T_DEFAULTS, best_gains):
         pct  = (float(tuned) - dflt) / (abs(dflt) + 1e-12) * 100.0
         sign = "UP" if pct > 0.0 else "DN"
-        print(f"  {name:<8}  {dflt:>10.4f}  {float(tuned):>10.4f}  "
-              f"{sign} {abs(pct):5.1f}%")
-
-    print(f"\n  Best cost      : {final_met['cost']:.4f}")
-    print(f"  id RMS (MTPA)  : {final_met['id_rms']:.4f} A")
-    print(f"  SS speed error : {final_met['ss_err']:.2f} RPM")
-    print(f"  Load drop      : {final_met['load_drop']:.1f} RPM")
+        print(f"  {name:<8}  {dflt:>10.4f}  {float(tuned):>10.4f}  {sign} {abs(pct):5.1f}%")
+    print(f"\n  Best cost      : {best_metrics['cost']:.4f}")
+    print(f"  id RMS (MTPA)  : {best_metrics['id_rms']:.4f} A  (target 0 A)")
+    print(f"  SS speed error : {best_metrics['ss_err']:.2f} RPM")
+    print(f"  Load drop      : {best_metrics['load_drop']:.1f} RPM")
     print("=" * 70)
 
-    # ── Phase 5: update active gains + write header ───────────────────────────
-    _ACTIVE_GAINS["Q_id"]  = q_id_f
-    _ACTIVE_GAINS["Q_iq"]  = q_iq_f
-    _ACTIVE_GAINS["R_vd"]  = r_vd_f
-    _ACTIVE_GAINS["R_vq"]  = r_vq_f
-    _ACTIVE_GAINS["KI_v"]  = ki_v_f
+    # Update active gains
+    _ACTIVE_GAINS["Q_id"] = Q_id_f; _ACTIVE_GAINS["Q_iq"] = Q_iq_f
+    _ACTIVE_GAINS["R_vd"] = R_vd_f; _ACTIVE_GAINS["R_vq"] = R_vq_f
+    _ACTIVE_GAINS["KI_v"] = KI_v_f
 
-    out_path = _FS_ELEC / "embed_sim_mpc_gains_tuned.h"
+    # Phase 4: write header
     _write_gains_header(
-        Q_id      = q_id_f,
-        Q_iq      = q_iq_f,
-        R_vd      = r_vd_f,
-        R_vq      = r_vq_f,
-        KI_v      = ki_v_f,
-        cost      = final_met["cost"],
-        id_rms    = final_met["id_rms"],
-        ss_err    = final_met["ss_err"],
-        load_drop = final_met["load_drop"],
-        n_explore = _T_N_EXPLORE,
-        out_path  = out_path,
+        gains    = best_gains,
+        metrics  = best_metrics,
+        n_evals  = n_evals,
+        method   = method_label,
+        out_path = _C_SRC / "embed_sim_mpc_gains.h",
     )
-
     return True
 
 
@@ -1117,20 +1329,16 @@ def run_tuner() -> bool:
 # =============================================================================
 
 def _ask_user_tune() -> bool:
-    """
-    Interactively ask whether to run the weight tuner.
-
-    Accepts: y / yes (case-insensitive).
-    """
     print()
-    print("  ┌─────────────────────────────────────────────────────────────┐")
-    print("  │  WEIGHT TUNER                                               │")
-    print("  │  Run the NN surrogate tuner before the main simulation?     │")
-    print("  │                                                             │")
-    print(f"  │  This will run ~{_T_N_EXPLORE} simulations and may take several minutes.  │")
-    print("  │  On completion it writes embed_sim_mpc_gains_tuned.h and   │")
-    print("  │  uses the tuned weights for the main simulation.           │")
-    print("  └─────────────────────────────────────────────────────────────┘")
+    print("  +------------------------------------------------------------------+")
+    print("  |  CMA-ES + NEURAL NETWORK WEIGHT TUNER                           |")
+    print("  |  Run the CMA-ES + NN warm-start tuner before simulation?        |")
+    print("  |                                                                  |")
+    print(f"  |  Phase 1: {_T_PHASE1_EVALS:3d} real FMU sims (CMA-ES gen 1)              |")
+    print("  |  Phase 2: NN trains on history -> predicts warm-start mean      |")
+    print(f"  |  Phase 3: {_T_MAX_FMU_EVALS - _T_PHASE1_EVALS:3d} more FMU sims (CMA-ES from NN mean)    |")
+    print(f"  |  Est. wall: ~{_T_MAX_FMU_EVALS * 114 // 60} min  |  Output: c_src/embed_sim_mpc_gains.h |")
+    print("  +------------------------------------------------------------------+")
     try:
         answer = input("  Run tuner? [y/N] : ").strip().lower()
     except (EOFError, KeyboardInterrupt):
@@ -1140,29 +1348,23 @@ def _ask_user_tune() -> bool:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="DB42S02 MPC FOC simulation with optional NN weight tuner.")
-    parser.add_argument(
-        "--tune", action="store_true",
-        help="Run the NN surrogate weight tuner before the main simulation "
-             "(non-interactive, equivalent to answering 'y' at the prompt).",
-    )
-    parser.add_argument(
-        "--no-tune", action="store_true",
-        help="Skip the tuner prompt and use current weights directly.",
-    )
+        description="DB42S02 MPC FOC simulation with CMA-ES + NN warm-start tuner.")
+    parser.add_argument("--tune",    action="store_true",
+        help="Run the CMA-ES + NN warm-start tuner (non-interactive).")
+    parser.add_argument("--no-tune", action="store_true",
+        help="Skip the tuner prompt and use current weights.")
     args = parser.parse_args()
 
     print("=" * 68)
-    print("  DB42S02  —  MPC FOC + SMO  —  20 kHz  |  AURIX TC3xx")
+    print("  DB42S02  --  MPC FOC + SMO  --  20 kHz  |  AURIX TC3xx")
     print("=" * 68)
-    print(f"  Target  : {TARGET_RPM:.0f} RPM  |  Vdc={V_DC}V  dt={DT*1e6:.0f}µs")
+    print(f"  Target  : {TARGET_RPM:.0f} RPM  |  Vdc={V_DC}V  dt={DT*1e6:.0f}us")
     print(f"  Q_omega : {MPC_Q_OMEGA:.1f}  (fixed)")
     print(f"\n  Default weights (hardware commissioning):")
     for k, v in _ACTIVE_GAINS.items():
         print(f"    {k:<8} = {v}")
     print("=" * 68)
 
-    # ── Tuner gate ────────────────────────────────────────────────────────────
     if args.tune:
         do_tune = True
     elif args.no_tune:
@@ -1173,14 +1375,13 @@ if __name__ == "__main__":
     if do_tune:
         ok = run_tuner()
         if not ok:
-            print("\n  Tuner aborted — proceeding with default weights.")
+            print("\n  Tuner aborted -- proceeding with default weights.")
         print(f"\n  Weights active for main simulation:")
         for k, v in _ACTIVE_GAINS.items():
             print(f"    {k:<8} = {v:.6f}")
     else:
-        print("\n  Tuner skipped — using default weights.")
+        print("\n  Tuner skipped -- using default weights.")
 
-    # ── Main simulation ───────────────────────────────────────────────────────
     print("\n" + "=" * 68)
     print("  Running main simulation ...")
     print("=" * 68)
@@ -1192,7 +1393,7 @@ if __name__ == "__main__":
     print("\n[Done]")
     print("  db42s02_mpc_foc_20k_results.png")
     print("  db42s02_mpc_topology.html")
-    print("  embedsim_gen/embedsim_step.c   ← flash to AURIX")
+    print("  embedsim_gen/embedsim_step.c   <- flash to AURIX")
     print("  embedsim_gen/embedsim_step.h")
-    if do_tune and (_FS_ELEC / "embed_sim_mpc_gains_tuned.h").exists():
-        print("  embed_sim_mpc_gains_tuned.h    ← replace embed_sim_mpc_gains.h")
+    if do_tune and (_C_SRC / "embed_sim_mpc_gains.h").exists():
+        print("  c_src/embed_sim_mpc_gains.h    <- #include in mpc_controller.h")

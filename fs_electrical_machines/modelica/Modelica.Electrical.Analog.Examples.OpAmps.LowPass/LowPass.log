@@ -1,0 +1,26 @@
+<p>/home/epl05/EMProject/fs_electrical_machines/modelica/Modelica.Electrical.Analog.Examples.OpAmps.LowPass/LowPass -port=36255 -logFormat=xmltcp -startTime=0 -stopTime=1 -stepSize=0.001 -tolerance=1e-06 -s=dassl -outputFormat=mat -variableFilter=.* -r=/home/epl05/EMProject/fs_electrical_machines/modelica/Modelica.Electrical.Analog.Examples.OpAmps.LowPass/LowPass_res.mat -w -lv=LOG_STDOUT,LOG_ASSERT,LOG_STATS -inputPath=/home/epl05/EMProject/fs_electrical_machines/modelica/Modelica.Electrical.Analog.Examples.OpAmps.LowPass -outputPath=/home/epl05/EMProject/fs_electrical_machines/modelica/Modelica.Electrical.Analog.Examples.OpAmps.LowPass</p>
+LOG_SUCCESS		| info	 | <p>The initialization finished successfully without homotopy method.</p>
+LOG_STATS		| info	 | <p>### STATISTICS ###</p>
+|		| |	 | | <p>timer</p>
+|		| |	 | | | <p>  0.00150075s          reading init.xml</p>
+|		| |	 | | | <p>  0.00058534s          reading info.xml</p>
+|		| |	 | | | <p> 0.000225587s [  0.2%] pre-initialization</p>
+|		| |	 | | | <p> 0.000111607s [  0.1%] initialization</p>
+|		| |	 | | | <p>  7.3613e-05s [  0.1%] steps</p>
+|		| |	 | | | <p>   0.0158208s [ 12.9%] solver (excl. callbacks)</p>
+|		| |	 | | | <p>  0.00547228s [  4.5%] creating output-file</p>
+|		| |	 | | | <p>   0.0168039s [ 13.7%] event-handling</p>
+|		| |	 | | | <p>   0.0017655s [  1.4%] overhead</p>
+|		| |	 | | | <p>   0.0824557s [ 67.2%] simulation</p>
+|		| |	 | | | <p>    0.122729s [100.0%] total</p>
+|		| |	 | | <p>events</p>
+|		| |	 | | | <p>   40 state events</p>
+|		| |	 | | | <p>    0 time events</p>
+|		| |	 | | <p>solver: dassl</p>
+|		| |	 | | | <p> 1044 steps taken</p>
+|		| |	 | | | <p> 1278 calls of functionODE</p>
+|		| |	 | | | <p>  584 evaluations of jacobian</p>
+|		| |	 | | | <p>    4 error test failures</p>
+|		| |	 | | | <p>    0 convergence test failures</p>
+|		| |	 | | | <p>0.0118089s time of jacobian evaluation</p>
+LOG_SUCCESS		| info	 | <p>The simulation finished successfully.</p>

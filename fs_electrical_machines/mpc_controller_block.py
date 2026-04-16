@@ -647,15 +647,42 @@ class MPCControllerBlock(VectorBlock):
         return float(out.value[0]), float(out.value[1])
 
     # -----------------------------------------------------------------------
-    # _clamp  —  C: MPC_Clamp()
+    # _clamp_sym  —  C: MPC_Clamp(value, limit)
+    # -----------------------------------------------------------------------
+    @staticmethod
+    def _clamp_sym(x: float, limit: float) -> float:
+        """
+        Symmetric clamp to [-limit, +limit].
+        C counterpart: MPC_Clamp() in embed_sim_mpc_controller.c.
+
+        Mirrors exactly:
+            static MatrixFloat MPC_Clamp(const MatrixFloat value,
+                                          const MatrixFloat limit)
+            { return (value > limit) ? limit : (value < -limit) ? -limit : value; }
+        """
+        if x > limit:
+            return limit
+        if x < -limit:
+            return -limit
+        return x   # C: else { /* no action */ }
+
+    # -----------------------------------------------------------------------
+    # _clamp  —  C: MPC_ClampMinMax(value, min_val, max_val)
     # -----------------------------------------------------------------------
     @staticmethod
     def _clamp(x: float, lo: float, hi: float) -> float:
         """
-        Saturate x to [lo, hi].
-        C counterpart: MPC_Clamp() in embed_sim_mpc_controller.c.
+        Asymmetric clamp to [lo, hi].
+        C counterpart: MPC_ClampMinMax() in embed_sim_mpc_controller.c.
+
+        Mirrors exactly:
+            static MatrixFloat MPC_ClampMinMax(const MatrixFloat value,
+                                                const MatrixFloat min_val,
+                                                const MatrixFloat max_val)
+        Note: _clamp(-x, x) is equivalent to _clamp_sym(x, x) — both are kept
+        so call sites can use the most readable form.
         """
-        return max(lo, min(hi, x))   # C: return fmaxf(lo, fminf(hi, x));
+        return max(lo, min(hi, x))   # C: fmaxf(min_val, fminf(max_val, value))
 
     # -----------------------------------------------------------------------
     # _solve_mpc  —  C: MPC_SolveMPC()
@@ -688,8 +715,8 @@ class MPCControllerBlock(VectorBlock):
         dt_J:    float = dt / self.J                       # [rad/s per N·m]
 
         # ---- Free-run trajectory (u = 0) ------------------------------------
-        id_free:    float = self._clamp(x0.id, -self.I_MAX, self.I_MAX)
-        iq_free:    float = self._clamp(x0.iq, -self.I_MAX, self.I_MAX)
+        id_free:    float = self._clamp_sym(x0.id, self.I_MAX)
+        iq_free:    float = self._clamp_sym(x0.iq, self.I_MAX)
         omega_free: float = x0.omega
 
         # ---- Step-response / gradient accumulators --------------------------
@@ -704,8 +731,13 @@ class MPCControllerBlock(VectorBlock):
         for _ in range(self.N):
             # ---- Cross-coupling disturbances --------------------------------
             # C: f_d = dt*inv_L*(omega_e*MPC_L*iq_free);
+            # FIX: f_q must include -omega_e*LAMBDA_PM (permanent-magnet BEMF).
+            # Without it the free-run q-axis trajectory misses the dominant BEMF
+            # component (1.17 V at 2000 RPM), causing vq_mpc to be too small and
+            # iq_SS -> 0 under load.  Mirrors the same fix in embed_sim_mpc_controller.c.
+            # C: f_q = dt*inv_L*((-omega_e*MPC_L*id_free) - (omega_e*MPC_LAMBDA_PM));
             f_d:     float = dt * inv_L * ( omega_e * self.L * iq_free)
-            f_q:     float = dt * inv_L * (-omega_e * self.L * id_free)
+            f_q:     float = dt * inv_L * ((-omega_e * self.L * id_free) - (omega_e * self.LAMBDA_PM))
             f_omega: float = dt_J * (self.KT * iq_free - self.B * omega_free)
 
             # ---- Propagate free-run states ----------------------------------
@@ -713,8 +745,8 @@ class MPCControllerBlock(VectorBlock):
             id_free    = a * id_free    + f_d
             iq_free    = a * iq_free    + f_q
             omega_free = omega_free     + f_omega
-            id_free    = self._clamp(id_free, -self.I_MAX, self.I_MAX)
-            iq_free    = self._clamp(iq_free, -self.I_MAX, self.I_MAX)
+            id_free    = self._clamp_sym(id_free, self.I_MAX)
+            iq_free    = self._clamp_sym(iq_free, self.I_MAX)
 
             # ---- Step-response update ----------------------------------------
             # C: bk = bk*a + b;
@@ -740,9 +772,10 @@ class MPCControllerBlock(VectorBlock):
         )
 
         # ---- BEMF feedforward + hexagon clamp --------------------------------
-        # C: vd = MPC_Clamp(vd_mpc + ed_hat, -MPC_V_MAX, MPC_V_MAX);
-        vd: float = self._clamp(vd_mpc + ed_hat, -self.V_MAX, self.V_MAX)
-        vq: float = self._clamp(vq_mpc + eq_hat, -self.V_MAX, self.V_MAX)
+        # C: *vd = MPC_Clamp(vd_mpc + ed_hat, MPC_V_MAX);
+        # C: *vq = MPC_Clamp(vq_mpc + eq_hat, MPC_V_MAX);
+        vd: float = self._clamp_sym(vd_mpc + ed_hat, self.V_MAX)
+        vq: float = self._clamp_sym(vq_mpc + eq_hat, self.V_MAX)
 
         return vd, vq
 
@@ -866,10 +899,11 @@ class MPCControllerBlock(VectorBlock):
 
         # ---- Step 8: Physical BEMF clamp ------------------------------------
         # C: bemf_max = fabsf(omega_e) * MPC_LAMBDA_PM;
+        # C: ed_hat = MPC_Clamp(ed_hat_raw, bemf_max);  ← symmetric ±bemf_max
         omega_e:  float = float(self.P_POLES) * omega_m
         bemf_max: float = abs(omega_e) * self.LAMBDA_PM
-        ed_hat: float = self._clamp(ed_hat_raw, -bemf_max, bemf_max)
-        eq_hat: float = self._clamp(eq_hat_raw, -bemf_max, bemf_max)
+        ed_hat: float = self._clamp_sym(ed_hat_raw, bemf_max)
+        eq_hat: float = self._clamp_sym(eq_hat_raw, bemf_max)
 
         # ---- Step 9: Soft-start ramp ----------------------------------------
         # C: s->iq_limit = fminf(MPC_I_MAX, s->iq_limit + MPC_I_MAX*dt/MPC_SOFTSTART_T);
@@ -877,28 +911,34 @@ class MPCControllerBlock(VectorBlock):
                              self._iq_limit + self.I_MAX * _dt / self.SOFTSTART_T)
 
         # ---- Step 10: MPC solver ---------------------------------------------
-        # C: MPC_SolveMPC(&s->solver, x0, omega_ref_mech, ed_hat, eq_hat, dt, &vd, &vq);
-        id0: float = self._clamp(id_meas, -self.I_MAX, self.I_MAX)
-        iq0: float = self._clamp(iq_meas, -self.I_MAX, self.I_MAX)
+        # C: x0.id = MPC_Clamp(id_meas, MPC_I_MAX);  ← symmetric
+        # C: x0.iq = MPC_Clamp(iq_meas, MPC_I_MAX);  ← symmetric
+        id0: float = self._clamp_sym(id_meas, self.I_MAX)
+        iq0: float = self._clamp_sym(iq_meas, self.I_MAX)
         x0 = MPC_State(id0, iq0, omega_m)
         vd, vq = self._solve_mpc(x0, omega_ref_mech, ed_hat, eq_hat, _dt)
 
         # ---- Step 11: Soft-start vq limit ------------------------------------
         # C: vq_lim = (s->iq_limit / MPC_I_MAX) * MPC_V_MAX;
+        # C: vq = MPC_Clamp(vq, vq_lim);  ← symmetric ±vq_lim
         vq_lim: float = (self._iq_limit / self.I_MAX) * self.V_MAX
-        vq = self._clamp(vq, -vq_lim, vq_lim)
+        vq = self._clamp_sym(vq, vq_lim)
 
         # ---- Step 12: Speed-error integral correction (anti-windup) ---------
         # C: s->speed_err_integral += (omega_ref_mech - omega_m) * dt;
+        # C: head    = MPC_ClampMinMax(MPC_V_MAX - fabsf(vq), 0, MPC_V_MAX)
+        # C: int_max = head / (MPC_KI_V + 1e-30f)
+        # C: s->speed_err_integral = MPC_Clamp(s->speed_err_integral, int_max)  ← sym
+        # C: vq = MPC_Clamp(vq + MPC_KI_V * s->speed_err_integral, MPC_V_MAX)  ← sym
         speed_err: float = omega_ref_mech - omega_m
         self._speed_err_integral += speed_err * _dt
         head    = self._clamp(self.V_MAX - abs(vq), 0.0, self.V_MAX)
         int_max = head / (self.KI_v + 1e-30)
-        self._speed_err_integral = self._clamp(
-            self._speed_err_integral, -int_max, int_max
+        self._speed_err_integral = self._clamp_sym(
+            self._speed_err_integral, int_max
         )
-        vq = self._clamp(
-            vq + self.KI_v * self._speed_err_integral, -self.V_MAX, self.V_MAX
+        vq = self._clamp_sym(
+            vq + self.KI_v * self._speed_err_integral, self.V_MAX
         )
 
         # ---- Step 13: Inverse Park  dq → αβ ---------------------------------
@@ -911,9 +951,10 @@ class MPCControllerBlock(VectorBlock):
         self._v_beta_prev  = v_beta
 
         # ---- Step 15: Normalise for SVPWM  [V] → [-1, +1] ------------------
-        # C: y->v_alpha = MPC_Clamp(v_alpha / MPC_SVPWM_GAIN, -1.0f, 1.0f);
-        v_alpha_out: float = self._clamp(v_alpha / self.SVPWM_GAIN, -1.0, 1.0)
-        v_beta_out:  float = self._clamp(v_beta  / self.SVPWM_GAIN, -1.0, 1.0)
+        # C: y->v_alpha = MPC_Clamp(v_alpha / MPC_SVPWM_GAIN, MPC_ONE_F);  ← sym
+        # C: y->v_beta  = MPC_Clamp(v_beta  / MPC_SVPWM_GAIN, MPC_ONE_F);  ← sym
+        v_alpha_out: float = self._clamp_sym(v_alpha / self.SVPWM_GAIN, 1.0)
+        v_beta_out:  float = self._clamp_sym(v_beta  / self.SVPWM_GAIN, 1.0)
 
         # ---- Step 16: Diagnostic log ----------------------------------------
         self._log_step(t, omega_ref_mech, omega_m, id_meas, iq_meas,
@@ -967,6 +1008,49 @@ class MPCControllerBlock(VectorBlock):
         self._wrapper.set_inputs(inputs)
         self._wrapper.compute(float(dt))
         outputs = self._wrapper.get_outputs()   # [v_alpha [-], v_beta [-]]
+
+        # ── Populate Python log_data from C diagnostics ───────────────────────
+        # C backend does NOT call _log_step() so log_data stays empty unless we
+        # pull from the wrapper here.  This fixes:
+        #   - performance summary showing iq SS = 0.000 A (reads log_data["iq"])
+        #   - console progress display being silent during C-backend runs
+        # GetDiagnostics() only updates every MPC_DIAG_STEPS=20 ticks; we mirror
+        # that gate here with the same _log_next timestamp used by _log_step().
+        # C: MPC_DIAG_STEPS = 20  ->  1 kHz log rate at 20 kHz ISR.
+        if t >= self._log_next:
+            diag = self._wrapper.get_diagnostics()
+            # diag layout: [speed_ref_rpm, speed_rpm, id_meas, iq_meas, vd, vq]
+            # C: MPC_Controller_GetDiagnostics() arg order (fixed by FIX 2 in wrapper)
+            speed_ref_rpm = float(diag[0])   # [RPM]
+            speed_rpm     = float(diag[1])   # [RPM]
+            id_meas_log   = float(diag[2])   # [A]
+            iq_meas_log   = float(diag[3])   # [A]
+            vd_log        = float(diag[4])   # [V]
+            vq_log        = float(diag[5])   # [V]
+
+            self.log_data["t"].append(t)
+            self.log_data["speed_ref"].append(speed_ref_rpm)
+            self.log_data["speed"].append(speed_rpm)
+            self.log_data["id"].append(id_meas_log)
+            self.log_data["iq"].append(iq_meas_log)
+            self.log_data["vd"].append(vd_log)
+            self.log_data["vq"].append(vq_log)
+            self._log_next += self.DIAG_STEPS * self._dt
+
+            # Console progress -- same cadence as compute_py()._log_step()
+            n = len(self.log_data["t"])
+            print_interval = 10 if t < 0.5 else 500
+            if n % print_interval == 1:
+                v_alpha_phys = float(outputs[0]) * self.SVPWM_GAIN
+                v_beta_phys  = float(outputs[1]) * self.SVPWM_GAIN
+                v_mag = math.hypot(v_alpha_phys, v_beta_phys)
+                print(
+                    f"[MPC t={t:.3f}s]  "
+                    f"rpm={speed_rpm:+8.1f}  "
+                    f"id={id_meas_log:+7.3f}A  iq={iq_meas_log:+7.3f}A  "
+                    f"vd={vd_log:+6.3f}V  vq={vq_log:+6.3f}V  "
+                    f"|Vab|={v_mag:.3f}V  limit={self._iq_limit:.2f}A"
+                )
 
         self.output = VectorSignal(outputs, self.name)
         return self.output

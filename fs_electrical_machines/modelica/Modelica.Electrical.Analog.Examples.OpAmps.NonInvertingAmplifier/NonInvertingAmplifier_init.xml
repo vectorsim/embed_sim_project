@@ -1,0 +1,1327 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+
+<!-- description of the model interface using an extention of the FMI standard -->
+<fmiModelDescription
+  fmiVersion                          = "1.0"
+
+  modelName                           = "Modelica.Electrical.Analog.Examples.OpAmps.NonInvertingAmplifier"
+  modelIdentifier                     = "Modelica_Electrical_Analog_Examples_OpAmps_NonInvertingAmplifier"
+
+  OPENMODELICAHOME                    = "/usr/bin/.."
+
+  guid                                = "{3fc8e3d2-f7dd-494b-8994-392e057444ab}"
+
+  description                         = "Non-inverting amplifier"
+  generationTool                      = "OpenModelica Compiler OpenModelica 1.26.3~1-g7583224"
+  generationDateAndTime               = "2026-04-16T07:59:34Z"
+
+  variableNamingConvention            = "structured"
+
+  numberOfEventIndicators             = "5"  cmt_numberOfEventIndicators             = "NG:       number of zero crossings,                           FMI"
+  numberOfTimeEvents                  = "0"  cmt_numberOfTimeEvents                  = "NG_SAM:   number of zero crossings that are samples,          OMC"
+
+  numberOfInputVariables              = "0"  cmt_numberOfInputVariables              = "NI:       number of inputvar on topmodel,                     OMC"
+  numberOfOutputVariables             = "0"  cmt_numberOfOutputVariables             = "NO:       number of outputvar on topmodel,                    OMC"
+
+  numberOfExternalObjects             = "0"  cmt_numberOfExternalObjects             = "NEXT:     number of external objects,                         OMC"
+  numberOfFunctions                   = "0"  cmt_numberOfFunctions                   = "NFUNC:    number of functions used by the simulation,         OMC"
+
+  numberOfContinuousStates            = "0"  cmt_numberOfContinuousStates            = "NX:       number of states,                                   FMI"
+  numberOfRealAlgebraicVariables      = "25"  cmt_numberOfRealAlgebraicVariables      = "NY:       number of real variables,                           OMC"
+  numberOfRealAlgebraicAliasVariables = "35"  cmt_numberOfRealAlgebraicAliasVariables = "NA:       number of alias variables,                          OMC"
+  numberOfRealParameters              = "36"  cmt_numberOfRealParameters              = "NP:       number of parameters,                               OMC"
+
+  numberOfIntegerAlgebraicVariables   = "1"  cmt_numberOfIntegerAlgebraicVariables   = "NYINT:    number of alg. int variables,                       OMC"
+  numberOfIntegerAliasVariables       = "0"  cmt_numberOfIntegerAliasVariables       = "NAINT:    number of alias int variables,                      OMC"
+  numberOfIntegerParameters           = "3"  cmt_numberOfIntegerParameters           = "NPINT:    number of int parameters,                           OMC"
+
+  numberOfStringAlgebraicVariables    = "0"  cmt_numberOfStringAlgebraicVariables    = "NYSTR:    number of alg. string variables,                    OMC"
+  numberOfStringAliasVariables        = "0"  cmt_numberOfStringAliasVariables        = "NASTR:    number of alias string variables,                   OMC"
+  numberOfStringParameters            = "0"  cmt_numberOfStringParameters            = "NPSTR:    number of string parameters,                        OMC"
+
+  numberOfBooleanAlgebraicVariables   = "1"  cmt_numberOfBooleanAlgebraicVariables   = "NYBOOL:   number of alg. bool variables,                      OMC"
+  numberOfBooleanAliasVariables       = "0"  cmt_numberOfBooleanAliasVariables       = "NABOOL:   number of alias bool variables,                     OMC"
+  numberOfBooleanParameters           = "4"  cmt_numberOfBooleanParameters           = "NPBOOL:   number of bool parameters,                          OMC" >
+
+
+  <!-- startTime, stopTime, tolerance are FMI specific, all others are OMC specific -->
+  <DefaultExperiment
+    startTime      = "0"
+    stopTime       = "1"
+    stepSize       = "0.001"
+    tolerance      = "1e-06"
+    solver         = "dassl"
+    outputFormat   = "mat"
+    variableFilter = ".*" />
+
+  <!-- variables in the model -->
+  <ModelVariables>
+
+  <ScalarVariable
+    name = "buffer.i2"
+    valueReference = "1000"
+    description = "Current flowing from pos. to neg. pin of port 2"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "0" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/FourPin.mo" startLine = "6" startColumn = "3" endLine = "6" endColumn = "66" fileWritable = "true">
+    <Real fixed="true" useNominal="false" unit="A" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.n2.i"
+    valueReference = "1001"
+    description = "Current flowing into the pin"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "1" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/NegativePin.mo" startLine = "9" startColumn = "3" endLine = "14" endColumn = "61" fileWritable = "true">
+    <Real fixed="true" useNominal="false" unit="A" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.opAmp.i_s"
+    valueReference = "1002"
+    description = "Supply current"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "2" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Ideal/IdealizedOpAmpLimited.mo" startLine = "21" startColumn = "3" endLine = "21" endColumn = "50" fileWritable = "true">
+    <Real start="0.0" fixed="false" useNominal="false" unit="A" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.opAmp.in_n.i"
+    valueReference = "1003"
+    description = "Current flowing into the pin"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "3" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/NegativePin.mo" startLine = "9" startColumn = "3" endLine = "14" endColumn = "61" fileWritable = "true">
+    <Real fixed="true" useNominal="false" unit="A" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.opAmp.in_p.i"
+    valueReference = "1004"
+    description = "Current flowing into the pin"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "4" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/PositivePin.mo" startLine = "9" startColumn = "3" endLine = "14" endColumn = "61" fileWritable = "true">
+    <Real fixed="true" useNominal="false" unit="A" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.opAmp.p_in"
+    valueReference = "1005"
+    description = "Input power"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "5" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Ideal/IdealizedOpAmpLimited.mo" startLine = "18" startColumn = "3" endLine = "18" endColumn = "60" fileWritable = "true">
+    <Real fixed="true" useNominal="false" unit="W" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.opAmp.p_s"
+    valueReference = "1006"
+    description = "Supply power"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "6" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Ideal/IdealizedOpAmpLimited.mo" startLine = "20" startColumn = "3" endLine = "20" endColumn = "46" fileWritable = "true">
+    <Real start="0.0" fixed="false" useNominal="false" unit="W" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.opAmp.simplifiedExpr"
+    valueReference = "1007"
+    description = "Simplified expression for homotopy-based initialization"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "7" classType = "rAlg"
+    isProtected = "true" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Ideal/IdealizedOpAmpLimited.mo" startLine = "40" startColumn = "3" endLine = "40" endColumn = "86" fileWritable = "true">
+    <Real fixed="true" useNominal="false" unit="V" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.opAmp.v_in"
+    valueReference = "1008"
+    description = "Input voltage difference"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "8" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "true"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Ideal/IdealizedOpAmpLimited.mo" startLine = "16" startColumn = "3" endLine = "16" endColumn = "61" fileWritable = "true">
+    <Real fixed="false" useNominal="false" unit="V" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.p2.i"
+    valueReference = "1009"
+    description = "Current flowing into the pin"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "9" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/PositivePin.mo" startLine = "9" startColumn = "3" endLine = "14" endColumn = "61" fileWritable = "true">
+    <Real fixed="true" useNominal="false" unit="A" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.r1.LossPower"
+    valueReference = "1010"
+    description = "Loss power leaving component via heatPort"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "10" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/ConditionalHeatPort.mo" startLine = "13" startColumn = "3" endLine = "13" endColumn = "65" fileWritable = "true">
+    <Real start="0.0" fixed="false" useNominal="false" unit="W" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.r1.R_actual"
+    valueReference = "1011"
+    description = "Actual resistance = R*(1 + alpha*(T_heatPort - T_ref))"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "11" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Basic/Resistor.mo" startLine = "11" startColumn = "3" endLine = "12" endColumn = "61" fileWritable = "true">
+    <Real fixed="true" useNominal="false" unit="Ohm" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.r1.v"
+    valueReference = "1012"
+    description = "Voltage drop of the two pins (= p.v - n.v)"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "12" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/TwoPin.mo" startLine = "3" startColumn = "3" endLine = "3" endColumn = "60" fileWritable = "true">
+    <Real start="0.0" fixed="false" useNominal="false" unit="V" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.r2.LossPower"
+    valueReference = "1013"
+    description = "Loss power leaving component via heatPort"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "13" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/ConditionalHeatPort.mo" startLine = "13" startColumn = "3" endLine = "13" endColumn = "65" fileWritable = "true">
+    <Real start="0.0" fixed="false" useNominal="false" unit="W" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.r2.R_actual"
+    valueReference = "1014"
+    description = "Actual resistance = R*(1 + alpha*(T_heatPort - T_ref))"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "14" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Basic/Resistor.mo" startLine = "11" startColumn = "3" endLine = "12" endColumn = "61" fileWritable = "true">
+    <Real fixed="true" useNominal="false" unit="Ohm" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.r2.i"
+    valueReference = "1015"
+    description = "Current flowing from pin p to pin n"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "15" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/OnePort.mo" startLine = "5" startColumn = "3" endLine = "5" endColumn = "53" fileWritable = "true">
+    <Real start="0.0" fixed="false" useNominal="false" unit="A" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.r2.v"
+    valueReference = "1016"
+    description = "Voltage drop of the two pins (= p.v - n.v)"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "16" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/TwoPin.mo" startLine = "3" startColumn = "3" endLine = "3" endColumn = "60" fileWritable = "true">
+    <Real start="0.0" fixed="false" useNominal="false" unit="V" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.v2"
+    valueReference = "1017"
+    description = "Voltage drop of port 2 (= p2.v - n2.v)"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "17" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/FourPin.mo" startLine = "4" startColumn = "3" endLine = "4" endColumn = "57" fileWritable = "true">
+    <Real start="0.0" fixed="false" useNominal="false" unit="V" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "ground.p.v"
+    valueReference = "1018"
+    description = "Potential at the pin"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "18" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/Pin.mo" startLine = "3" startColumn = "3" endLine = "8" endColumn = "61" fileWritable = "true">
+    <Real fixed="true" useNominal="false" unit="V" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vIn.i"
+    valueReference = "1019"
+    description = "Current flowing from pin p to pin n"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "19" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/OnePort.mo" startLine = "5" startColumn = "3" endLine = "5" endColumn = "53" fileWritable = "true">
+    <Real fixed="true" useNominal="false" unit="A" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vIn.p.i"
+    valueReference = "1020"
+    description = "Current flowing into the pin"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "20" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/PositivePin.mo" startLine = "9" startColumn = "3" endLine = "14" endColumn = "61" fileWritable = "true">
+    <Real fixed="true" useNominal="false" unit="A" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vIn.v"
+    valueReference = "1021"
+    description = "Voltage drop of the two pins (= p.v - n.v)"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "21" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/TwoPin.mo" startLine = "3" startColumn = "3" endLine = "3" endColumn = "60" fileWritable = "true">
+    <Real fixed="false" useNominal="false" unit="V" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vOut.n.i"
+    valueReference = "1022"
+    description = "Current flowing into the pin"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "22" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/NegativePin.mo" startLine = "9" startColumn = "3" endLine = "14" endColumn = "61" fileWritable = "true">
+    <Real fixed="true" useNominal="false" unit="A" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vOut.p.i"
+    valueReference = "1023"
+    description = "Current flowing into the pin"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "23" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/PositivePin.mo" startLine = "9" startColumn = "3" endLine = "14" endColumn = "61" fileWritable = "true">
+    <Real fixed="true" useNominal="false" unit="A" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vIn.signalSource.T_start"
+    valueReference = "1024"
+    description = "Start time of current period"
+    variability = "discrete" isDiscrete = "true"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "24" classType = "rAlg"
+    isProtected = "true" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Blocks/Sources.mo" startLine = "912" startColumn = "5" endLine = "912" endColumn = "51" fileWritable = "true">
+    <Real fixed="false" useNominal="false" unit="s" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "Vin"
+    valueReference = "1025"
+    description = "Amplitude of input voltage"
+    variability = "parameter" isDiscrete = "true"
+    causality = "parameter" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "0" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Examples/OpAmps/NonInvertingAmplifier.mo" startLine = "4" startColumn = "3" endLine = "4" endColumn = "58" fileWritable = "true">
+    <Real start="5.0" fixed="true" useNominal="false" unit="V" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.R1"
+    valueReference = "1026"
+    description = "Resistance at negative pin(s)"
+    variability = "parameter" isDiscrete = "true"
+    causality = "parameter" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "1" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Examples/OpAmps/OpAmpCircuits/Buffer.mo" startLine = "5" startColumn = "3" endLine = "5" endColumn = "66" fileWritable = "true">
+    <Real start="1000.0" fixed="true" useNominal="false" unit="Ohm" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.R2"
+    valueReference = "1027"
+    description = "Calculated resistance to reach desired amplification k"
+    variability = "parameter" isDiscrete = "true"
+    causality = "calculatedParameter" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "2" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Examples/OpAmps/OpAmpCircuits/Buffer.mo" startLine = "6" startColumn = "3" endLine = "6" endColumn = "97" fileWritable = "true">
+    <Real fixed="true" useNominal="false" unit="Ohm" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.V0"
+    valueReference = "1028"
+    description = "No-load amplification"
+    variability = "parameter" isDiscrete = "true"
+    causality = "parameter" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "3" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Examples/OpAmps/OpAmpCircuits/PartialOpAmp.mo" startLine = "7" startColumn = "3" endLine = "7" endColumn = "52" fileWritable = "true">
+    <Real start="15000.0" fixed="true" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.Vns"
+    valueReference = "1029"
+    description = "Negative supply"
+    variability = "parameter" isDiscrete = "true"
+    causality = "parameter" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "4" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Examples/OpAmps/OpAmpCircuits/PartialOpAmp.mo" startLine = "6" startColumn = "3" endLine = "6" endColumn = "49" fileWritable = "true">
+    <Real start="-15.0" fixed="true" useNominal="false" unit="V" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.Vps"
+    valueReference = "1030"
+    description = "Positive supply"
+    variability = "parameter" isDiscrete = "true"
+    causality = "parameter" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "5" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Examples/OpAmps/OpAmpCircuits/PartialOpAmp.mo" startLine = "5" startColumn = "3" endLine = "5" endColumn = "49" fileWritable = "true">
+    <Real start="15.0" fixed="true" useNominal="false" unit="V" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.k"
+    valueReference = "1031"
+    description = "Desired amplification"
+    variability = "parameter" isDiscrete = "true"
+    causality = "parameter" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "6" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Examples/OpAmps/OpAmpCircuits/Buffer.mo" startLine = "4" startColumn = "3" endLine = "4" endColumn = "58" fileWritable = "true">
+    <Real start="2.0" fixed="true" useNominal="false" min="0.0" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.opAmp.V0"
+    valueReference = "1032"
+    description = "No-load amplification"
+    variability = "parameter" isDiscrete = "true"
+    causality = "calculatedParameter" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "7" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Ideal/IdealizedOpAmpLimited.mo" startLine = "3" startColumn = "3" endLine = "3" endColumn = "52" fileWritable = "true">
+    <Real fixed="true" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.opAmp.Vns"
+    valueReference = "1033"
+    description = "Negative supply voltage"
+    variability = "parameter" isDiscrete = "true"
+    causality = "calculatedParameter" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "8" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Ideal/IdealizedOpAmpLimited.mo" startLine = "8" startColumn = "3" endLine = "9" endColumn = "46" fileWritable = "true">
+    <Real fixed="true" useNominal="false" unit="V" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.opAmp.Vps"
+    valueReference = "1034"
+    description = "Positive supply voltage"
+    variability = "parameter" isDiscrete = "true"
+    causality = "calculatedParameter" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "9" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Ideal/IdealizedOpAmpLimited.mo" startLine = "6" startColumn = "3" endLine = "7" endColumn = "46" fileWritable = "true">
+    <Real fixed="true" useNominal="false" unit="V" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.r1.R"
+    valueReference = "1035"
+    description = "Resistance at temperature T_ref"
+    variability = "parameter" isDiscrete = "true"
+    causality = "calculatedParameter" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "10" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Basic/Resistor.mo" startLine = "3" startColumn = "3" endLine = "4" endColumn = "38" fileWritable = "true">
+    <Real fixed="true" useNominal="false" unit="Ohm" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.r1.T"
+    valueReference = "1036"
+    description = "Fixed device temperature if useHeatPort = false"
+    variability = "parameter" isDiscrete = "true"
+    causality = "calculatedParameter" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "11" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/ConditionalHeatPort.mo" startLine = "7" startColumn = "3" endLine = "8" endColumn = "97" fileWritable = "true">
+    <Real fixed="true" useNominal="true" nominal="300.0" min="0.0" unit="K" displayUnit="degC" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.r1.T_ref"
+    valueReference = "1037"
+    description = "Reference temperature"
+    variability = "parameter" isDiscrete = "true"
+    causality = "parameter" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "12" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Basic/Resistor.mo" startLine = "5" startColumn = "3" endLine = "5" endColumn = "64" fileWritable = "true">
+    <Real start="300.15" fixed="true" useNominal="true" nominal="300.0" min="0.0" unit="K" displayUnit="degC" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.r1.alpha"
+    valueReference = "1038"
+    description = "Temperature coefficient of resistance (R_actual = R*(1 + alpha*(T_heatPort - T_ref))"
+    variability = "parameter" isDiscrete = "true"
+    causality = "parameter" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "13" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Basic/Resistor.mo" startLine = "6" startColumn = "3" endLine = "7" endColumn = "91" fileWritable = "true">
+    <Real start="0.0" fixed="true" useNominal="false" unit="1/K" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.r2.R"
+    valueReference = "1039"
+    description = "Resistance at temperature T_ref"
+    variability = "parameter" isDiscrete = "true"
+    causality = "calculatedParameter" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "14" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Basic/Resistor.mo" startLine = "3" startColumn = "3" endLine = "4" endColumn = "38" fileWritable = "true">
+    <Real fixed="true" useNominal="false" unit="Ohm" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.r2.T"
+    valueReference = "1040"
+    description = "Fixed device temperature if useHeatPort = false"
+    variability = "parameter" isDiscrete = "true"
+    causality = "calculatedParameter" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "15" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/ConditionalHeatPort.mo" startLine = "7" startColumn = "3" endLine = "8" endColumn = "97" fileWritable = "true">
+    <Real fixed="true" useNominal="true" nominal="300.0" min="0.0" unit="K" displayUnit="degC" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.r2.T_ref"
+    valueReference = "1041"
+    description = "Reference temperature"
+    variability = "parameter" isDiscrete = "true"
+    causality = "parameter" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "16" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Basic/Resistor.mo" startLine = "5" startColumn = "3" endLine = "5" endColumn = "64" fileWritable = "true">
+    <Real start="300.15" fixed="true" useNominal="true" nominal="300.0" min="0.0" unit="K" displayUnit="degC" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.r2.alpha"
+    valueReference = "1042"
+    description = "Temperature coefficient of resistance (R_actual = R*(1 + alpha*(T_heatPort - T_ref))"
+    variability = "parameter" isDiscrete = "true"
+    causality = "parameter" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "17" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Basic/Resistor.mo" startLine = "6" startColumn = "3" endLine = "7" endColumn = "91" fileWritable = "true">
+    <Real start="0.0" fixed="true" useNominal="false" unit="1/K" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "f"
+    valueReference = "1043"
+    description = "Frequency of input voltage"
+    variability = "parameter" isDiscrete = "true"
+    causality = "parameter" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "18" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Examples/OpAmps/NonInvertingAmplifier.mo" startLine = "5" startColumn = "3" endLine = "5" endColumn = "59" fileWritable = "true">
+    <Real start="10.0" fixed="true" useNominal="false" unit="Hz" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vIn.V"
+    valueReference = "1044"
+    description = "Amplitude of trapezoid"
+    variability = "parameter" isDiscrete = "true"
+    causality = "calculatedParameter" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "19" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Sources/TrapezoidVoltage.mo" startLine = "3" startColumn = "3" endLine = "3" endColumn = "59" fileWritable = "true">
+    <Real fixed="true" useNominal="false" unit="V" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vIn.falling"
+    valueReference = "1045"
+    description = "Falling duration of trapezoid"
+    variability = "parameter" isDiscrete = "true"
+    causality = "calculatedParameter" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "20" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Sources/TrapezoidVoltage.mo" startLine = "8" startColumn = "3" endLine = "9" endColumn = "36" fileWritable = "true">
+    <Real fixed="true" useNominal="false" min="0.0" unit="s" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vIn.offset"
+    valueReference = "1046"
+    description = "Voltage offset"
+    variability = "parameter" isDiscrete = "true"
+    causality = "calculatedParameter" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "21" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/VoltageSource.mo" startLine = "8" startColumn = "3" endLine = "8" endColumn = "49" fileWritable = "true">
+    <Real fixed="true" useNominal="false" unit="V" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vIn.period"
+    valueReference = "1047"
+    description = "Time for one period"
+    variability = "parameter" isDiscrete = "true"
+    causality = "calculatedParameter" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "22" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Sources/TrapezoidVoltage.mo" startLine = "10" startColumn = "3" endLine = "11" endColumn = "26" fileWritable = "true">
+    <Real fixed="true" useNominal="false" min="2.2250738585072014e-308" unit="s" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vIn.rising"
+    valueReference = "1048"
+    description = "Rising duration of trapezoid"
+    variability = "parameter" isDiscrete = "true"
+    causality = "calculatedParameter" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "23" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Sources/TrapezoidVoltage.mo" startLine = "4" startColumn = "3" endLine = "5" endColumn = "35" fileWritable = "true">
+    <Real fixed="true" useNominal="false" min="0.0" unit="s" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vIn.signalSource.T_falling"
+    valueReference = "1049"
+    description = "End time of falling phase within one period"
+    variability = "parameter" isDiscrete = "true"
+    causality = "calculatedParameter" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "24" classType = "rPar"
+    isProtected = "true" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Blocks/Sources.mo" startLine = "910" startColumn = "5" endLine = "911" endColumn = "52" fileWritable = "true">
+    <Real fixed="true" useNominal="false" unit="s" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vIn.signalSource.T_rising"
+    valueReference = "1050"
+    description = "End time of rising phase within one period"
+    variability = "parameter" isDiscrete = "true"
+    causality = "calculatedParameter" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "25" classType = "rPar"
+    isProtected = "true" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Blocks/Sources.mo" startLine = "906" startColumn = "5" endLine = "907" endColumn = "51" fileWritable = "true">
+    <Real fixed="true" useNominal="false" unit="s" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vIn.signalSource.T_width"
+    valueReference = "1051"
+    description = "End time of width phase within one period"
+    variability = "parameter" isDiscrete = "true"
+    causality = "calculatedParameter" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "26" classType = "rPar"
+    isProtected = "true" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Blocks/Sources.mo" startLine = "908" startColumn = "5" endLine = "909" endColumn = "50" fileWritable = "true">
+    <Real fixed="true" useNominal="false" unit="s" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vIn.signalSource.amplitude"
+    valueReference = "1052"
+    description = "Amplitude of trapezoid"
+    variability = "parameter" isDiscrete = "true"
+    causality = "calculatedParameter" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "27" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Blocks/Sources.mo" startLine = "892" startColumn = "5" endLine = "893" endColumn = "103" fileWritable = "true">
+    <Real fixed="true" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vIn.signalSource.falling"
+    valueReference = "1053"
+    description = "Falling duration of trapezoid"
+    variability = "parameter" isDiscrete = "true"
+    causality = "calculatedParameter" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "28" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Blocks/Sources.mo" startLine = "898" startColumn = "5" endLine = "899" endColumn = "38" fileWritable = "true">
+    <Real fixed="true" useNominal="false" min="0.0" unit="s" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vIn.signalSource.offset"
+    valueReference = "1054"
+    description = "Offset of output signal y"
+    variability = "parameter" isDiscrete = "true"
+    causality = "calculatedParameter" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "29" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Blocks/Interfaces.mo" startLine = "479" startColumn = "5" endLine = "479" endColumn = "56" fileWritable = "true">
+    <Real fixed="true" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vIn.signalSource.period"
+    valueReference = "1055"
+    description = "Time for one period"
+    variability = "parameter" isDiscrete = "true"
+    causality = "calculatedParameter" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "30" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Blocks/Sources.mo" startLine = "900" startColumn = "5" endLine = "901" endColumn = "28" fileWritable = "true">
+    <Real fixed="true" useNominal="false" min="2.2250738585072014e-308" unit="s" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vIn.signalSource.rising"
+    valueReference = "1056"
+    description = "Rising duration of trapezoid"
+    variability = "parameter" isDiscrete = "true"
+    causality = "calculatedParameter" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "31" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Blocks/Sources.mo" startLine = "894" startColumn = "5" endLine = "895" endColumn = "37" fileWritable = "true">
+    <Real fixed="true" useNominal="false" min="0.0" unit="s" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vIn.signalSource.startTime"
+    valueReference = "1057"
+    description = "Output y = offset for time &lt; startTime"
+    variability = "parameter" isDiscrete = "true"
+    causality = "calculatedParameter" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "32" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Blocks/Interfaces.mo" startLine = "480" startColumn = "5" endLine = "480" endColumn = "75" fileWritable = "true">
+    <Real fixed="true" useNominal="false" unit="s" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vIn.signalSource.width"
+    valueReference = "1058"
+    description = "Width duration of trapezoid"
+    variability = "parameter" isDiscrete = "true"
+    causality = "calculatedParameter" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "33" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Blocks/Sources.mo" startLine = "896" startColumn = "5" endLine = "897" endColumn = "36" fileWritable = "true">
+    <Real fixed="true" useNominal="false" min="0.0" unit="s" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vIn.startTime"
+    valueReference = "1059"
+    description = "Time offset"
+    variability = "parameter" isDiscrete = "true"
+    causality = "calculatedParameter" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "34" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/VoltageSource.mo" startLine = "9" startColumn = "3" endLine = "9" endColumn = "46" fileWritable = "true">
+    <Real fixed="true" useNominal="false" unit="s" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vIn.width"
+    valueReference = "1060"
+    description = "Width duration of trapezoid"
+    variability = "parameter" isDiscrete = "true"
+    causality = "calculatedParameter" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "35" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Sources/TrapezoidVoltage.mo" startLine = "6" startColumn = "3" endLine = "7" endColumn = "34" fileWritable = "true">
+    <Real fixed="true" useNominal="false" min="0.0" unit="s" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.i1"
+    valueReference = "1061"
+    description = "Current flowing from pos. to neg. pin of port 1"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "alias" aliasVariable="buffer.opAmp.in_p.i" aliasVariableId="4"
+    classIndex = "0" classType = "rAli"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/FourPin.mo" startLine = "5" startColumn = "3" endLine = "5" endColumn = "66" fileWritable = "true">
+    <Real fixed="false" useNominal="false" unit="A" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.n1.i"
+    valueReference = "1062"
+    description = "Current flowing into the pin"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "negatedAlias" aliasVariable="buffer.r2.i" aliasVariableId="62"
+    classIndex = "1" classType = "rAli"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/NegativePin.mo" startLine = "9" startColumn = "3" endLine = "14" endColumn = "61" fileWritable = "true">
+    <Real fixed="false" useNominal="false" unit="A" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.n1.v"
+    valueReference = "1063"
+    description = "Potential at the pin"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "alias" aliasVariable="ground.p.v" aliasVariableId="18"
+    classIndex = "2" classType = "rAli"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/NegativePin.mo" startLine = "3" startColumn = "3" endLine = "8" endColumn = "61" fileWritable = "true">
+    <Real fixed="false" useNominal="false" unit="V" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.n2.v"
+    valueReference = "1064"
+    description = "Potential at the pin"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "alias" aliasVariable="ground.p.v" aliasVariableId="18"
+    classIndex = "3" classType = "rAli"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/NegativePin.mo" startLine = "3" startColumn = "3" endLine = "8" endColumn = "61" fileWritable = "true">
+    <Real fixed="false" useNominal="false" unit="V" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.opAmp.in_n.v"
+    valueReference = "1065"
+    description = "Potential at the pin"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "alias" aliasVariable="buffer.r1.v" aliasVariableId="12"
+    classIndex = "4" classType = "rAli"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/NegativePin.mo" startLine = "3" startColumn = "3" endLine = "8" endColumn = "61" fileWritable = "true">
+    <Real fixed="false" useNominal="false" unit="V" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.opAmp.in_p.v"
+    valueReference = "1066"
+    description = "Potential at the pin"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "alias" aliasVariable="vIn.v" aliasVariableId="21"
+    classIndex = "5" classType = "rAli"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/PositivePin.mo" startLine = "3" startColumn = "3" endLine = "8" endColumn = "61" fileWritable = "true">
+    <Real fixed="false" useNominal="false" unit="V" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.opAmp.out.i"
+    valueReference = "1067"
+    description = "Current flowing into the pin"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "negatedAlias" aliasVariable="buffer.r2.i" aliasVariableId="67"
+    classIndex = "6" classType = "rAli"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/PositivePin.mo" startLine = "9" startColumn = "3" endLine = "14" endColumn = "61" fileWritable = "true">
+    <Real start="0.0" fixed="false" useNominal="false" unit="A" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.opAmp.out.v"
+    valueReference = "1068"
+    description = "Potential at the pin"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "alias" aliasVariable="buffer.v2" aliasVariableId="17"
+    classIndex = "7" classType = "rAli"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/PositivePin.mo" startLine = "3" startColumn = "3" endLine = "8" endColumn = "61" fileWritable = "true">
+    <Real fixed="false" useNominal="false" unit="V" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.opAmp.p_out"
+    valueReference = "1069"
+    description = "Output power"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "negatedAlias" aliasVariable="buffer.opAmp.p_s" aliasVariableId="69"
+    classIndex = "8" classType = "rAli"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Ideal/IdealizedOpAmpLimited.mo" startLine = "19" startColumn = "3" endLine = "19" endColumn = "44" fileWritable = "true">
+    <Real fixed="false" useNominal="false" unit="W" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.opAmp.v_out"
+    valueReference = "1070"
+    description = "Output voltage to ground"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "alias" aliasVariable="buffer.v2" aliasVariableId="17"
+    classIndex = "9" classType = "rAli"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Ideal/IdealizedOpAmpLimited.mo" startLine = "17" startColumn = "3" endLine = "17" endColumn = "52" fileWritable = "true">
+    <Real fixed="false" useNominal="false" unit="V" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.opAmp.vns"
+    valueReference = "1071"
+    description = "Negative supply voltage"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "alias" aliasVariable="buffer.opAmp.Vns" aliasVariableId="33"
+    classIndex = "10" classType = "rAli"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Ideal/IdealizedOpAmpLimited.mo" startLine = "15" startColumn = "3" endLine = "15" endColumn = "43" fileWritable = "true">
+    <Real fixed="false" useNominal="false" unit="V" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.opAmp.vps"
+    valueReference = "1072"
+    description = "Positive supply voltage"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "alias" aliasVariable="buffer.opAmp.Vps" aliasVariableId="34"
+    classIndex = "11" classType = "rAli"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Ideal/IdealizedOpAmpLimited.mo" startLine = "14" startColumn = "3" endLine = "14" endColumn = "43" fileWritable = "true">
+    <Real fixed="false" useNominal="false" unit="V" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.p1.i"
+    valueReference = "1073"
+    description = "Current flowing into the pin"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "alias" aliasVariable="buffer.opAmp.in_p.i" aliasVariableId="4"
+    classIndex = "12" classType = "rAli"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/PositivePin.mo" startLine = "9" startColumn = "3" endLine = "14" endColumn = "61" fileWritable = "true">
+    <Real fixed="false" useNominal="false" unit="A" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.p1.v"
+    valueReference = "1074"
+    description = "Potential at the pin"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "alias" aliasVariable="vIn.v" aliasVariableId="21"
+    classIndex = "13" classType = "rAli"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/PositivePin.mo" startLine = "3" startColumn = "3" endLine = "8" endColumn = "61" fileWritable = "true">
+    <Real fixed="false" useNominal="false" unit="V" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.p2.v"
+    valueReference = "1075"
+    description = "Potential at the pin"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "alias" aliasVariable="buffer.v2" aliasVariableId="17"
+    classIndex = "14" classType = "rAli"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/PositivePin.mo" startLine = "3" startColumn = "3" endLine = "8" endColumn = "61" fileWritable = "true">
+    <Real fixed="false" useNominal="false" unit="V" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.r1.T_heatPort"
+    valueReference = "1076"
+    description = "Temperature of heatPort"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "alias" aliasVariable="buffer.r1.T" aliasVariableId="36"
+    classIndex = "15" classType = "rAli"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/ConditionalHeatPort.mo" startLine = "14" startColumn = "3" endLine = "14" endColumn = "54" fileWritable = "true">
+    <Real start="288.15" fixed="false" useNominal="true" nominal="300.0" min="0.0" unit="K" displayUnit="degC" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.r1.i"
+    valueReference = "1077"
+    description = "Current flowing from pin p to pin n"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "alias" aliasVariable="buffer.r2.i" aliasVariableId="15"
+    classIndex = "16" classType = "rAli"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/OnePort.mo" startLine = "5" startColumn = "3" endLine = "5" endColumn = "53" fileWritable = "true">
+    <Real fixed="false" useNominal="false" unit="A" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.r1.n.i"
+    valueReference = "1078"
+    description = "Current flowing into the pin"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "negatedAlias" aliasVariable="buffer.r2.i" aliasVariableId="78"
+    classIndex = "17" classType = "rAli"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/NegativePin.mo" startLine = "9" startColumn = "3" endLine = "14" endColumn = "61" fileWritable = "true">
+    <Real fixed="false" useNominal="false" unit="A" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.r1.n.v"
+    valueReference = "1079"
+    description = "Potential at the pin"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "alias" aliasVariable="ground.p.v" aliasVariableId="18"
+    classIndex = "18" classType = "rAli"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/NegativePin.mo" startLine = "3" startColumn = "3" endLine = "8" endColumn = "61" fileWritable = "true">
+    <Real fixed="false" useNominal="false" unit="V" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.r1.p.i"
+    valueReference = "1080"
+    description = "Current flowing into the pin"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "alias" aliasVariable="buffer.r2.i" aliasVariableId="15"
+    classIndex = "19" classType = "rAli"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/PositivePin.mo" startLine = "9" startColumn = "3" endLine = "14" endColumn = "61" fileWritable = "true">
+    <Real fixed="false" useNominal="false" unit="A" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.r1.p.v"
+    valueReference = "1081"
+    description = "Potential at the pin"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "alias" aliasVariable="buffer.r1.v" aliasVariableId="12"
+    classIndex = "20" classType = "rAli"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/PositivePin.mo" startLine = "3" startColumn = "3" endLine = "8" endColumn = "61" fileWritable = "true">
+    <Real fixed="false" useNominal="false" unit="V" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.r2.T_heatPort"
+    valueReference = "1082"
+    description = "Temperature of heatPort"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "alias" aliasVariable="buffer.r2.T" aliasVariableId="40"
+    classIndex = "21" classType = "rAli"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/ConditionalHeatPort.mo" startLine = "14" startColumn = "3" endLine = "14" endColumn = "54" fileWritable = "true">
+    <Real start="288.15" fixed="false" useNominal="true" nominal="300.0" min="0.0" unit="K" displayUnit="degC" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.r2.n.i"
+    valueReference = "1083"
+    description = "Current flowing into the pin"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "negatedAlias" aliasVariable="buffer.r2.i" aliasVariableId="83"
+    classIndex = "22" classType = "rAli"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/NegativePin.mo" startLine = "9" startColumn = "3" endLine = "14" endColumn = "61" fileWritable = "true">
+    <Real fixed="false" useNominal="false" unit="A" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.r2.n.v"
+    valueReference = "1084"
+    description = "Potential at the pin"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "alias" aliasVariable="buffer.r1.v" aliasVariableId="12"
+    classIndex = "23" classType = "rAli"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/NegativePin.mo" startLine = "3" startColumn = "3" endLine = "8" endColumn = "61" fileWritable = "true">
+    <Real fixed="false" useNominal="false" unit="V" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.r2.p.i"
+    valueReference = "1085"
+    description = "Current flowing into the pin"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "alias" aliasVariable="buffer.r2.i" aliasVariableId="15"
+    classIndex = "24" classType = "rAli"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/PositivePin.mo" startLine = "9" startColumn = "3" endLine = "14" endColumn = "61" fileWritable = "true">
+    <Real fixed="false" useNominal="false" unit="A" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.r2.p.v"
+    valueReference = "1086"
+    description = "Potential at the pin"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "alias" aliasVariable="buffer.v2" aliasVariableId="17"
+    classIndex = "25" classType = "rAli"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/PositivePin.mo" startLine = "3" startColumn = "3" endLine = "8" endColumn = "61" fileWritable = "true">
+    <Real fixed="false" useNominal="false" unit="V" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.v1"
+    valueReference = "1087"
+    description = "Voltage drop of port 1 (= p1.v - n1.v)"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "alias" aliasVariable="vIn.v" aliasVariableId="21"
+    classIndex = "26" classType = "rAli"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/FourPin.mo" startLine = "3" startColumn = "3" endLine = "3" endColumn = "57" fileWritable = "true">
+    <Real fixed="false" useNominal="false" unit="V" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "ground.p.i"
+    valueReference = "1088"
+    description = "Current flowing into the pin"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "alias" aliasVariable="buffer.r2.i" aliasVariableId="15"
+    classIndex = "27" classType = "rAli"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/Pin.mo" startLine = "9" startColumn = "3" endLine = "14" endColumn = "61" fileWritable = "true">
+    <Real fixed="false" useNominal="false" unit="A" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vIn.n.i"
+    valueReference = "1089"
+    description = "Current flowing into the pin"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "alias" aliasVariable="buffer.opAmp.in_p.i" aliasVariableId="4"
+    classIndex = "28" classType = "rAli"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/NegativePin.mo" startLine = "9" startColumn = "3" endLine = "14" endColumn = "61" fileWritable = "true">
+    <Real fixed="false" useNominal="false" unit="A" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vIn.n.v"
+    valueReference = "1090"
+    description = "Potential at the pin"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "alias" aliasVariable="ground.p.v" aliasVariableId="18"
+    classIndex = "29" classType = "rAli"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/NegativePin.mo" startLine = "3" startColumn = "3" endLine = "8" endColumn = "61" fileWritable = "true">
+    <Real fixed="false" useNominal="false" unit="V" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vIn.p.v"
+    valueReference = "1091"
+    description = "Potential at the pin"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "alias" aliasVariable="vIn.v" aliasVariableId="21"
+    classIndex = "30" classType = "rAli"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/PositivePin.mo" startLine = "3" startColumn = "3" endLine = "8" endColumn = "61" fileWritable = "true">
+    <Real fixed="false" useNominal="false" unit="V" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vIn.signalSource.y"
+    valueReference = "1092"
+    description = "Connector of Real output signal"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "alias" aliasVariable="vIn.v" aliasVariableId="21"
+    classIndex = "31" classType = "rAli"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Blocks/Interfaces.mo" startLine = "300" startColumn = "5" endLine = "301" endColumn = "56" fileWritable = "true">
+    <Real fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vOut.n.v"
+    valueReference = "1093"
+    description = "Potential at the pin"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "alias" aliasVariable="ground.p.v" aliasVariableId="18"
+    classIndex = "32" classType = "rAli"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/NegativePin.mo" startLine = "3" startColumn = "3" endLine = "8" endColumn = "61" fileWritable = "true">
+    <Real fixed="false" useNominal="false" unit="V" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vOut.p.v"
+    valueReference = "1094"
+    description = "Potential at the pin"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "alias" aliasVariable="buffer.v2" aliasVariableId="17"
+    classIndex = "33" classType = "rAli"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/PositivePin.mo" startLine = "3" startColumn = "3" endLine = "8" endColumn = "61" fileWritable = "true">
+    <Real fixed="false" useNominal="false" unit="V" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vOut.v"
+    valueReference = "1095"
+    description = "Voltage between pin p and n (= p.v - n.v) as output signal"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "alias" aliasVariable="buffer.v2" aliasVariableId="17"
+    classIndex = "34" classType = "rAli"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Sensors/VoltageSensor.mo" startLine = "9" startColumn = "3" endLine = "14" endColumn = "23" fileWritable = "true">
+    <Real fixed="false" useNominal="false" unit="V" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vIn.signalSource.count"
+    valueReference = "1096"
+    description = "Period count"
+    variability = "discrete" isDiscrete = "true"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "0" classType = "iAlg"
+    isProtected = "true" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Blocks/Sources.mo" startLine = "913" startColumn = "5" endLine = "913" endColumn = "33" fileWritable = "true">
+    <Integer fixed="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.opAmp.homotopyType"
+    valueReference = "1097"
+    description = "Simplified model for homotopy-based initialization"
+    variability = "parameter" isDiscrete = "true"
+    causality = "calculatedParameter" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "0" classType = "iPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Ideal/IdealizedOpAmpLimited.mo" startLine = "12" startColumn = "3" endLine = "13" endColumn = "63" fileWritable = "true">
+    <Integer start="1" fixed="true" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vIn.nperiod"
+    valueReference = "1098"
+    description = "Number of periods (&lt; 0 means infinite number of periods)"
+    variability = "parameter" isDiscrete = "true"
+    causality = "parameter" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "1" classType = "iPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Sources/TrapezoidVoltage.mo" startLine = "12" startColumn = "3" endLine = "13" endColumn = "63" fileWritable = "true">
+    <Integer start="-1" fixed="true" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vIn.signalSource.nperiod"
+    valueReference = "1099"
+    description = "Number of periods (&lt; 0 means infinite number of periods)"
+    variability = "parameter" isDiscrete = "true"
+    causality = "calculatedParameter" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "2" classType = "iPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Blocks/Sources.mo" startLine = "902" startColumn = "5" endLine = "903" endColumn = "65" fileWritable = "true">
+    <Integer fixed="true" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "$whenCondition1"
+    valueReference = "1100"
+    description = "time &gt;= /*Real*/(pre(vIn.signalSource.count) + 1) * vIn.signalSource.period + vIn.signalSource.startTime"
+    variability = "discrete" isDiscrete = "true"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "0" classType = "bAlg"
+    isProtected = "true" hideResult = "true" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Blocks/Sources.mo" startLine = "922" startColumn = "7" endLine = "922" endColumn = "29" fileWritable = "true">
+    <Boolean fixed="true" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.opAmp.strict"
+    valueReference = "1101"
+    description = "= true, if strict limits with noEvent(..)"
+    variability = "parameter" isDiscrete = "true"
+    causality = "calculatedParameter" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "0" classType = "bPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Ideal/IdealizedOpAmpLimited.mo" startLine = "10" startColumn = "3" endLine = "11" endColumn = "79" fileWritable = "true">
+    <Boolean start="true" fixed="true" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.opAmp.useSupply"
+    valueReference = "1102"
+    description = "Use supply pins (otherwise constant supply)"
+    variability = "parameter" isDiscrete = "true"
+    causality = "calculatedParameter" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "1" classType = "bPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Ideal/IdealizedOpAmpLimited.mo" startLine = "4" startColumn = "3" endLine = "5" endColumn = "77" fileWritable = "true">
+    <Boolean start="false" fixed="true" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.r1.useHeatPort"
+    valueReference = "1103"
+    description = "= true, if heatPort is enabled"
+    variability = "parameter" isDiscrete = "true"
+    causality = "calculatedParameter" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "2" classType = "bPar"
+    isProtected = "false" hideResult = "true" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/ConditionalHeatPort.mo" startLine = "5" startColumn = "3" endLine = "6" endColumn = "69" fileWritable = "true">
+    <Boolean start="false" fixed="true" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "buffer.r2.useHeatPort"
+    valueReference = "1104"
+    description = "= true, if heatPort is enabled"
+    variability = "parameter" isDiscrete = "true"
+    causality = "calculatedParameter" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "3" classType = "bPar"
+    isProtected = "false" hideResult = "true" isEncrypted = "false" initNonlinear = "false"
+    fileName = "/home/epl05/.openmodelica/libraries/Modelica 4.1.0+maint.om/Electrical/Analog/Interfaces/ConditionalHeatPort.mo" startLine = "5" startColumn = "3" endLine = "6" endColumn = "69" fileWritable = "true">
+    <Boolean start="false" fixed="true" />
+  </ScalarVariable>
+
+
+
+  </ModelVariables>
+
+
+</fmiModelDescription>
+

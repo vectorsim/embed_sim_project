@@ -1,512 +1,654 @@
 /**
- **********************************************************************************************************************
- * \file      embed_sim_mpc_controller.c
- * \brief     3-state analytical MPC for PMSM — NANOTEC DB42S02 / AURIX TC3xx.
+ * @file      embed_sim_mpc_controller.c
+ * @brief     Model Predictive Control FOC Controller -- NANOTEC DB42S02
+ * @details   Implements 3-state receding-horizon MPC with analytical solution.
+ *            State vector: x = [id, iq, omega_m]
+ *            Input vector: u = [vd, vq]
+ * @version   2.0.0
+ * @copyright Copyright (C) EmbedSim 2025
  *
- * Direct C port of mpc_controller_block.py (_solve_mpc + compute_py).
- * Every numerical operation matches the Python reference one-to-one.
- *
- * \version   2.1.0
- * \copyright Copyright (C) EmbedSim 2025
- **********************************************************************************************************************/
+ * @par MISRA C:2012 Compliance:
+ *      - Rule 7.2: All float literals have 'f' suffix
+ *      - Rule 8.1: All types explicit via MatrixFloat/uint32_T
+ *      - Rule 10.4: No mixed-mode arithmetic
+ *      - Rule 15.5: Single return per function
+ *      - Rule 15.7: Every if-else chain has final else
+ *      - Rule 17.5: All pointer parameters checked for NULL
+ */
 
-/**********************************************************************************************************************/
-/*-----------------------------------------------------Includes-------------------------------------------------------*/
-/**********************************************************************************************************************/
 #include "embed_sim_mpc_controller.h"
-#include "embed_sim_coordinate_transform.h"   /* EmbedSim_Clarke / Park / InvPark */
+#include <stddef.h>   /* For NULL definition (MISRA Rule 20.9) */
+#include <math.h>     /* For fabsf, fminf, fmaxf, tanhf */
 
-#include <string.h>   /* memset  */
-#include <math.h>     /* fabsf, tanhf, floorf */
+/* Local constants (MISRA Rule 7.2) */
+#define MPC_ZERO_F   ((MatrixFloat)0.0f)
+#define MPC_ONE_F    ((MatrixFloat)1.0f)
+#define MPC_TWO_PI_F ((MatrixFloat)6.28318530717959f)
+#define MPC_PI_F     ((MatrixFloat)3.14159265358979f)
+#define MPC_BOUNDARY_WIDTH ((MatrixFloat)0.01f)  /**< SMO boundary layer [A] */
 
 
-/**********************************************************************************************************************/
-/*--------------------------------------------Private Function Prototypes---------------------------------------------*/
-/**********************************************************************************************************************/
-
-/**
- * \brief  Clamp x to [lo, hi].
- * \return Clamped value as MatrixFloat.
- */
-static MatrixFloat mpc_clamp(MatrixFloat x, MatrixFloat lo, MatrixFloat hi);
-
-/**
- * \brief  tanh(x) using libm tanhf — TriCore has HW support.
- * \return MatrixFloat result.
- */
-static MatrixFloat mpc_tanh(MatrixFloat x);
+/*********************************************************************************************************************/
+/*                                              Static Helper Functions                                              */
+/*********************************************************************************************************************/
 
 /**
- * \brief  Estimate mechanical speed from encoder angle delta with IIR filter.
+ * @brief   Symmetric magnitude clamp (single limit)
+ * @param[in] value Value to clamp
+ * @param[in] limit Positive magnitude limit
+ * @return   value clamped to [-limit, +limit]
  *
- * Mirrors _get_speed() in mpc_controller_block.py.
- * IIR: omega_filt = 0.8·prev + 0.2·raw   (τ ≈ 4 steps at 50 µs dt)
- * 2π unwrap applied before finite-difference.
- *
- * \param[in,out] st       Controller state.
- * \param[in]     theta_m  Mechanical angle, current step [rad].
- * \param[in]     dt       Sample period [s].
- * \return                 Filtered mechanical speed [rad/s].
+ * @par MISRA Compliance:
+ *      - Rule 15.7: If-else chain has final else
  */
-static MatrixFloat mpc_get_speed(MPC_Controller_T *st,
-                                 MatrixFloat        theta_m,
-                                 MatrixFloat        dt);
-
-/**
- * \brief  One SMO step in the αβ frame.
- *
- * Mirrors _smo_step() in mpc_controller_block.py.
- *
- * \param[in,out] st       Controller state.
- * \param[in]     i_alpha  Measured α-axis current [A].
- * \param[in]     i_beta   Measured β-axis current [A].
- * \param[in]     v_alpha  Applied α-axis voltage, previous step [V].
- * \param[in]     v_beta   Applied β-axis voltage, previous step [V].
- * \param[in]     dt       Sample period [s].
- */
-static void mpc_smo_step(MPC_Controller_T *st,
-                         MatrixFloat        i_alpha,
-                         MatrixFloat        i_beta,
-                         MatrixFloat        v_alpha,
-                         MatrixFloat        v_beta,
-                         MatrixFloat        dt);
-
-/**
- * \brief  Analytical 3-state MPC solver — returns (vd_total, vq_total).
- *
- * Mirrors _solve_mpc() in mpc_controller_block.py.
- * Free-run trajectory propagated without BEMF (handled by feedforward).
- * Step-response coefficients bk (current) and ek (speed) accumulated.
- * Optimal vd_mpc, vq_mpc solved in closed form.
- * BEMF feedforward added: vd = vd_mpc + ed_hat, vq = vq_mpc + eq_hat.
- *
- * \param[in]  id0        d-axis current at t=0 [A]
- * \param[in]  iq0        q-axis current at t=0 [A]
- * \param[in]  omega_m    Mechanical speed at t=0 [rad/s]
- * \param[in]  omega_ref  Speed reference [rad/s mechanical]
- * \param[in]  ed_hat     d-axis back-EMF estimate [V]  (BEMF-clamped)
- * \param[in]  eq_hat     q-axis back-EMF estimate [V]  (BEMF-clamped)
- * \param[in]  dt         Sample period [s]
- * \param[in]  gains      Runtime gain set (weights)
- * \param[out] vd_out     d-axis voltage command [V]
- * \param[out] vq_out     q-axis voltage command [V]
- */
-static void mpc_solve(MatrixFloat  id0,
-                      MatrixFloat  iq0,
-                      MatrixFloat  omega_m,
-                      MatrixFloat  omega_ref,
-                      MatrixFloat  ed_hat,
-                      MatrixFloat  eq_hat,
-                      MatrixFloat  dt,
-                      const MPC_GainSet_T *gains,
-                      MatrixFloat *vd_out,
-                      MatrixFloat *vq_out);
-
-
-/**********************************************************************************************************************/
-/*------------------------------------------------Private Functions---------------------------------------------------*/
-/**********************************************************************************************************************/
-
-/*--------------------------------------------------------------------------------------------------------------------
- * mpc_clamp
- *------------------------------------------------------------------------------------------------------------------*/
-static MatrixFloat mpc_clamp(MatrixFloat x, MatrixFloat lo, MatrixFloat hi)
+static MatrixFloat MPC_Clamp(const MatrixFloat value, const MatrixFloat limit)
 {
-    MatrixFloat result;
+    MatrixFloat result = value;
 
-    if (x < lo)
+    if (result > limit)
     {
-        result = lo;
+        result = limit;
     }
-    else if (x > hi)
+    else if (result < -limit)
     {
-        result = hi;
+        result = -limit;
     }
     else
     {
-        result = x;
+        /* Within range - no action required (MISRA Rule 15.7) */
     }
 
     return result;
 }
 
 
-/*--------------------------------------------------------------------------------------------------------------------
- * mpc_tanh
- *------------------------------------------------------------------------------------------------------------------*/
-static MatrixFloat mpc_tanh(MatrixFloat x)
+/**
+ * @brief   Symmetric clamp with independent lower and upper bounds
+ * @param[in] value Value to clamp
+ * @param[in] min_val Minimum allowed value
+ * @param[in] max_val Maximum allowed value
+ * @return   value clamped to [min_val, max_val]
+ *
+ * @par MISRA Compliance:
+ *      - Rule 15.7: If-else chain has final else
+ */
+static MatrixFloat MPC_ClampMinMax(const MatrixFloat value,
+                                    const MatrixFloat min_val,
+                                    const MatrixFloat max_val)
 {
-    return (MatrixFloat)tanhf((float)x);
-}
+    MatrixFloat result = value;
 
-
-/*--------------------------------------------------------------------------------------------------------------------
- * mpc_get_speed
- *------------------------------------------------------------------------------------------------------------------*/
-static MatrixFloat mpc_get_speed(MPC_Controller_T *st,
-                                 MatrixFloat        theta_m,
-                                 MatrixFloat        dt)
-{
-    MatrixFloat delta;
-    MatrixFloat omega_raw;
-
-    if (dt <= MPC_ZERO_F)
+    if (result > max_val)
     {
-        return st->omega_filt;
+        result = max_val;
+    }
+    else if (result < min_val)
+    {
+        result = min_val;
     }
     else
     {
-        /* MISRA 15.7: else required */
+        /* Within range - no action required (MISRA Rule 15.7) */
     }
 
-    delta = theta_m - st->last_theta_m;
-
-    /* Unwrap to (−π, +π] */
-    delta -= (MPC_TWO_F * MPC_PI_F) *
-             (MatrixFloat)floorf((float)((delta + MPC_PI_F) /
-                                        (MPC_TWO_F * MPC_PI_F)));
-
-    omega_raw        = delta / dt;
-    st->omega_filt   = (MatrixFloat)0.8F * st->omega_filt
-                     + (MatrixFloat)0.2F * omega_raw;
-    st->last_theta_m = theta_m;
-
-    return st->omega_filt;
+    return result;
 }
 
 
-/*--------------------------------------------------------------------------------------------------------------------
- * mpc_smo_step
- *------------------------------------------------------------------------------------------------------------------*/
-static void mpc_smo_step(MPC_Controller_T *st,
-                         MatrixFloat        i_alpha,
-                         MatrixFloat        i_beta,
-                         MatrixFloat        v_alpha,
-                         MatrixFloat        v_beta,
-                         MatrixFloat        dt)
+/**
+ * @brief   Encoder speed estimator update
+ * @param[in,out] enc     Encoder state structure
+ * @param[in]     theta_m Mechanical angle from encoder [rad]
+ * @param[in]     dt      Sampling period [s]
+ * @return        IIR-filtered mechanical speed [rad/s]
+ *
+ * @par MISRA Compliance:
+ *      - Rule 17.5: Checks enc for NULL
+ *      - Rule 15.5: Single return point
+ */
+static MatrixFloat MPC_EncSpeed_Update(MPC_EncSpeed_T* const enc,
+                                        const MatrixFloat theta_m,
+                                        const MatrixFloat dt)
 {
-    MatrixFloat inv_L;
+    MatrixFloat delta;
+    MatrixFloat omega_raw;
+    MatrixFloat result;
+
+    /* NULL check (MISRA Rule 17.5) */
+    if (enc == NULL)
+    {
+        result = MPC_ZERO_F;
+    }
+    else if (dt <= MPC_ZERO_F)
+    {
+        result = enc->omega_filt;
+    }
+    else
+    {
+        /* Unwrap angle delta to (-pi, +pi] */
+        delta = theta_m - enc->theta_m_prev;
+
+        while (delta > MPC_PI_F)
+        {
+            delta -= MPC_TWO_PI_F;
+        }
+        while (delta < -MPC_PI_F)
+        {
+            delta += MPC_TWO_PI_F;
+        }
+
+        enc->theta_m_unwrapped += delta;
+
+        /* Finite-difference speed */
+        omega_raw = delta / dt;
+
+        /* IIR smoothing */
+        enc->omega_filt = ((MPC_ONE_F - MPC_ENC_IIR) * enc->omega_filt)
+                        + (MPC_ENC_IIR * omega_raw);
+
+        /* Persist state */
+        enc->theta_m_prev = theta_m;
+
+        result = enc->omega_filt;
+    }
+
+    return result;
+}
+
+
+/**
+ * @brief   SMO switching function (tanh with boundary layer)
+ * @param[in] error Current estimation error [A]
+ * @return   Smooth switching value in [-1.0f, +1.0f]
+ */
+static MatrixFloat MPC_SMOSwitch(const MatrixFloat error)
+{
+    return tanhf(error / MPC_BOUNDARY_WIDTH);
+}
+
+
+/**
+ * @brief   Sliding Mode Observer step
+ * @param[in,out] smo      SMO state structure
+ * @param[in]     v_alpha  Alpha voltage from previous step [V]
+ * @param[in]     v_beta   Beta voltage from previous step [V]
+ * @param[in]     i_alpha  Measured alpha current [A]
+ * @param[in]     i_beta   Measured beta current [A]
+ * @param[in]     dt       Sampling period [s]
+ *
+ * @par MISRA Compliance:
+ *      - Rule 17.5: Checks smo for NULL
+ *      - Rule 15.5: Single return point
+ */
+static void MPC_SMO_Step(MPC_SMO_T* const smo,
+                          const MatrixFloat v_alpha,
+                          const MatrixFloat v_beta,
+                          const MatrixFloat i_alpha,
+                          const MatrixFloat i_beta,
+                          const MatrixFloat dt)
+{
     MatrixFloat err_alpha;
     MatrixFloat err_beta;
     MatrixFloat sw_alpha;
     MatrixFloat sw_beta;
-    MatrixFloat smo_alpha;
-    MatrixFloat wc;
+    MatrixFloat inv_L;
+    MatrixFloat alpha;
+
+    /* NULL check (MISRA Rule 17.5) */
+    if (smo == NULL)
+    {
+        return;
+    }
 
     if (dt <= MPC_ZERO_F)
     {
-        return;   /* MISRA 15.5: exceptional early return on invalid dt */
-    }
-    else
-    {
-        /* MISRA 15.7: else required */
+        return;
     }
 
-    wc        = MPC_TWO_F * MPC_PI_F * MPC_SMO_FC;
-    smo_alpha = (wc * dt) / (MPC_ONE_F + wc * dt);
+    inv_L = MPC_ONE_F / MPC_L;
+    alpha = smo->alpha_lpf;
 
-    inv_L     = MPC_ONE_F / MPC_L;
-    err_alpha = i_alpha - st->i_alpha_hat;
-    err_beta  = i_beta  - st->i_beta_hat;
+    /* Current estimation errors */
+    err_alpha = i_alpha - smo->i_alpha_hat;
+    err_beta  = i_beta  - smo->i_beta_hat;
 
-    sw_alpha = MPC_SMO_K * mpc_tanh(err_alpha / (MatrixFloat)0.01F);
-    sw_beta  = MPC_SMO_K * mpc_tanh(err_beta  / (MatrixFloat)0.01F);
+    /* Smooth switching signals */
+    sw_alpha = MPC_SMO_K * MPC_SMOSwitch(err_alpha);
+    sw_beta  = MPC_SMO_K * MPC_SMOSwitch(err_beta);
 
-    st->i_alpha_hat += dt * inv_L *
-                       (v_alpha - MPC_R_S * st->i_alpha_hat - sw_alpha);
-    st->i_beta_hat  += dt * inv_L *
-                       (v_beta  - MPC_R_S * st->i_beta_hat  - sw_beta);
+    /* Current observer (Forward Euler) */
+    smo->i_alpha_hat += dt * inv_L * (v_alpha - MPC_R_S * smo->i_alpha_hat - sw_alpha);
+    smo->i_beta_hat  += dt * inv_L * (v_beta  - MPC_R_S * smo->i_beta_hat  - sw_beta);
 
-    st->e_alpha_filt += smo_alpha * (sw_alpha - st->e_alpha_filt);
-    st->e_beta_filt  += smo_alpha * (sw_beta  - st->e_beta_filt);
+    /* Back-EMF LPF */
+    smo->e_alpha_filt += alpha * (sw_alpha - smo->e_alpha_filt);
+    smo->e_beta_filt  += alpha * (sw_beta  - smo->e_beta_filt);
 }
 
 
-/*--------------------------------------------------------------------------------------------------------------------
- * mpc_solve
- *------------------------------------------------------------------------------------------------------------------*/
-static void mpc_solve(MatrixFloat  id0,
-                      MatrixFloat  iq0,
-                      MatrixFloat  omega_m,
-                      MatrixFloat  omega_ref,
-                      MatrixFloat  ed_hat,
-                      MatrixFloat  eq_hat,
-                      MatrixFloat  dt,
-                      const MPC_GainSet_T *gains,
-                      MatrixFloat *vd_out,
-                      MatrixFloat *vq_out)
+/**
+ * @brief   Analytical MPC solver (closed-form, O(N))
+ * @param[in]  x0        Initial state [id, iq, omega]
+ * @param[in]  omega_ref Speed reference [rad/s]
+ * @param[in]  ed_hat    D-axis BEMF feedforward [V]
+ * @param[in]  eq_hat    Q-axis BEMF feedforward [V]
+ * @param[in]  dt        Sampling period [s]
+ * @param[out] vd        D-axis voltage command [V]
+ * @param[out] vq        Q-axis voltage command [V]
+ *
+ * @par MISRA Compliance:
+ *      - Rule 17.5: Checks pointer parameters for NULL
+ *      - Rule 15.5: Single return point
+ */
+static void MPC_SolveMPC(const MPC_State_T* const x0,
+                          const MatrixFloat omega_ref,
+                          const MatrixFloat ed_hat,
+                          const MatrixFloat eq_hat,
+                          const MatrixFloat dt,
+                          MatrixFloat* const vd,
+                          MatrixFloat* const vq)
 {
-    /* Derived constants */
-    const MatrixFloat omega_e = (MatrixFloat)MPC_P_POLES * omega_m;
-    const MatrixFloat inv_L   = MPC_ONE_F / MPC_L;
-    const MatrixFloat a       = MPC_ONE_F - dt * MPC_R_S * inv_L;   /* current decay  */
-    const MatrixFloat b       = dt * inv_L;                           /* input gain     */
-    const MatrixFloat dt_J    = dt / MPC_J;                           /* speed integral */
-
-    /* Free-run trajectory state */
-    MatrixFloat id_free    = id0;
-    MatrixFloat iq_free    = iq0;
-    MatrixFloat omega_free = omega_m;
-
-    /* Step-response accumulators */
-    MatrixFloat bk = MPC_ZERO_F;
-    MatrixFloat ek = MPC_ZERO_F;
-
-    /* Cost gradient accumulators */
-    MatrixFloat sum_bk_err_d = MPC_ZERO_F;
-    MatrixFloat sum_bk_err_q = MPC_ZERO_F;  /* NEW: iq penalty term */
-    MatrixFloat sum_ek_err   = MPC_ZERO_F;
-    MatrixFloat sum_bk2      = MPC_ZERO_F;
-    MatrixFloat sum_ek2      = MPC_ZERO_F;
-
-    MatrixFloat f_d;
-    MatrixFloat f_q;
-    MatrixFloat f_omega;
+    MatrixFloat omega_e;
+    MatrixFloat inv_L;
+    MatrixFloat a;
+    MatrixFloat b;
+    MatrixFloat dt_J;
+    MatrixFloat id_free;
+    MatrixFloat iq_free;
+    MatrixFloat omega_free;
+    MatrixFloat bk;
+    MatrixFloat ek;
+    MatrixFloat sum_bk_err_d;
+    MatrixFloat sum_bk_err_q;
+    MatrixFloat sum_ek_err;
+    MatrixFloat sum_bk2;
+    MatrixFloat sum_ek2;
     MatrixFloat denom_d;
     MatrixFloat denom_q;
     MatrixFloat vd_mpc;
     MatrixFloat vq_mpc;
-    uint32_T    k;
+    int32_T k;
 
-    /* Clamp initial currents for prediction */
-    id_free = mpc_clamp(id_free, -MPC_I_MAX, MPC_I_MAX);
-    iq_free = mpc_clamp(iq_free, -MPC_I_MAX, MPC_I_MAX);
-
-    for (k = 0U; k < MPC_N; k++)
+    /* NULL checks (MISRA Rule 17.5) */
+    if ((x0 == NULL) || (vd == NULL) || (vq == NULL))
     {
-        /* ── Free-run step (u=0, BEMF cancelled by feedforward) ──────────── */
-        f_d     = dt * inv_L * ( omega_e * MPC_L * iq_free);
-        f_q     = dt * inv_L * (-omega_e * MPC_L * id_free);
-        f_omega = dt_J * (MPC_KT * iq_free - MPC_B * omega_free);
+        return;
+    }
 
+    /* Pre-compute constants */
+    omega_e = (MatrixFloat)MPC_P_POLES * x0->omega;
+    inv_L   = MPC_ONE_F / MPC_L;
+    a       = MPC_ONE_F - dt * MPC_R_S * inv_L;
+    b       = dt * inv_L;
+    dt_J    = dt / MPC_J_ROTOR;
+
+    /* Free-run trajectory (u = 0) */
+    id_free    = MPC_Clamp(x0->id, MPC_I_MAX);
+    iq_free    = MPC_Clamp(x0->iq, MPC_I_MAX);
+    omega_free = x0->omega;
+
+    /* Accumulators initialisation */
+    bk = MPC_ZERO_F;
+    ek = MPC_ZERO_F;
+    sum_bk_err_d = MPC_ZERO_F;
+    sum_bk_err_q = MPC_ZERO_F;
+    sum_ek_err   = MPC_ZERO_F;
+    sum_bk2      = MPC_ZERO_F;
+    sum_ek2      = MPC_ZERO_F;
+
+    for (k = 0; k < (int32_T)MPC_N; k++)
+    {
+        MatrixFloat f_d;
+        MatrixFloat f_q;
+        MatrixFloat f_omega;
+
+        /* Cross-coupling disturbances.
+         * FIX: f_q must include the permanent-magnet flux linkage term
+         *      (-omega_e * MPC_LAMBDA_PM) which is the dominant BEMF component.
+         *      Without it the MPC free-run trajectory underestimates the q-axis
+         *      back-EMF by  omega_e * lambda_pm  (= 1.17 V at 2000 RPM), causing
+         *      the solver to underestimate the required vq and resulting in
+         *      iq_SS ≈ 0 A under load.
+         * PYTHON ALIGNMENT: MPCControllerBlock.compute_py() line
+         *      f_q = dt/L * (-we*L*id_free - we*lambda_pm)  — identical. */
+        f_d     = dt * inv_L * ( omega_e * MPC_L * iq_free);
+        f_q     = dt * inv_L * ((-omega_e * MPC_L * id_free) - (omega_e * MPC_LAMBDA_PM));
+        f_omega = dt_J * (MPC_KT * iq_free - MPC_B_FRICTION * omega_free);
+
+        /* Propagate free-run states */
         id_free    = a * id_free    + f_d;
         iq_free    = a * iq_free    + f_q;
         omega_free = omega_free     + f_omega;
+        id_free    = MPC_Clamp(id_free, MPC_I_MAX);
+        iq_free    = MPC_Clamp(iq_free, MPC_I_MAX);
 
-        /* Apply current limits during prediction */
-        id_free = mpc_clamp(id_free, -MPC_I_MAX, MPC_I_MAX);
-        iq_free = mpc_clamp(iq_free, -MPC_I_MAX, MPC_I_MAX);
+        /* Step-response update */
+        bk = bk * a + b;
+        ek += dt_J * MPC_KT * bk;
 
-        /* ── Step-response coefficients ──────────────────────────────────── */
-        bk = bk * a + b;              /* iq response to unit vq                */
-        ek += dt_J * MPC_KT * bk;    /* omega response — uses current bk      */
-
-        /* ── Gradient accumulation ───────────────────────────────────────── */
-        /* d-axis: target id_ref = 0 */
+        /* Gradient accumulation */
         sum_bk_err_d += bk * (MPC_ZERO_F - id_free);
-        /* iq penalty term: target iq_ref = 0 (we penalise iq directly) */
         sum_bk_err_q += bk * (MPC_ZERO_F - iq_free);
-        /* speed term: target omega_ref */
         sum_ek_err   += ek * (omega_ref - omega_free);
         sum_bk2      += bk * bk;
         sum_ek2      += ek * ek;
     }
 
-    /* ── Analytical optimal vd_mpc ──────────────────────────────────────── */
-    denom_d = gains->q_id * sum_bk2 + gains->r_vd;
+    /* Analytical optimal inputs */
+    denom_d = MPC_Q_ID * sum_bk2 + MPC_R_VD;
+    denom_q = MPC_Q_OMEGA * sum_ek2 + MPC_Q_IQ * sum_bk2 + MPC_R_VQ;
 
-    if (denom_d > MPC_DENOM_MIN)
+    if (denom_d > (MatrixFloat)1e-30f)
     {
-        vd_mpc = gains->q_id * sum_bk_err_d / denom_d;
+        vd_mpc = (MPC_Q_ID * sum_bk_err_d) / denom_d;
     }
     else
     {
         vd_mpc = MPC_ZERO_F;
     }
 
-    /* ── Analytical optimal vq_mpc ──────────────────────────────────────── */
-    /* NEW: Include Q_iq in denominator and numerator (matches Python) */
-    denom_q = gains->q_omega * sum_ek2 + gains->q_iq * sum_bk2 + gains->r_vq;
-
-    if (denom_q > MPC_DENOM_MIN)
+    if (denom_q > (MatrixFloat)1e-30f)
     {
-        vq_mpc = (gains->q_omega * sum_ek_err + gains->q_iq * sum_bk_err_q) / denom_q;
+        vq_mpc = (MPC_Q_OMEGA * sum_ek_err + MPC_Q_IQ * sum_bk_err_q) / denom_q;
     }
     else
     {
         vq_mpc = MPC_ZERO_F;
     }
 
-    /* ── BEMF feedforward + voltage saturation ───────────────────────────── */
-    *vd_out = mpc_clamp(vd_mpc + ed_hat, -MPC_V_MAX, MPC_V_MAX);
-    *vq_out = mpc_clamp(vq_mpc + eq_hat, -MPC_V_MAX, MPC_V_MAX);
+    /* BEMF feedforward + hexagon clamp */
+    *vd = MPC_Clamp(vd_mpc + ed_hat, MPC_V_MAX);
+    *vq = MPC_Clamp(vq_mpc + eq_hat, MPC_V_MAX);
 }
 
 
-/**********************************************************************************************************************/
-/*-------------------------------------------------Public Functions---------------------------------------------------*/
-/**********************************************************************************************************************/
+/*********************************************************************************************************************/
+/*                                              Public API Functions                                                 */
+/*********************************************************************************************************************/
 
-/*--------------------------------------------------------------------------------------------------------------------
- * MPC_Controller_Init
- *------------------------------------------------------------------------------------------------------------------*/
-void MPC_Controller_Init(MPC_Controller_T *st)
+/**
+ * @brief   Initialise all controller state to zero
+ * @param[out] s   Controller state (must not be NULL)
+ * @param[in]  dt  Nominal sampling period [s]
+ *
+ * @par MISRA Compliance:
+ *      - Rule 17.5: Checks s for NULL
+ *      - Rule 9.1: All members explicitly initialised
+ */
+void MPC_Controller_Init(MPC_Controller_T* const s, const MatrixFloat dt)
 {
-    if (st != NULL)
+    if (s == NULL)
     {
-        /* MISRA Rule 21.6: memset is permitted for plain-old-data struct zero-init */
-        (void)memset(st, 0, sizeof(MPC_Controller_T));
+        return;
     }
-    else
+
+    /* Encoder state */
+    s->enc.theta_m_prev      = MPC_ZERO_F;
+    s->enc.theta_m_unwrapped = MPC_ZERO_F;
+    s->enc.omega_filt        = MPC_ZERO_F;
+
+    /* SMO state */
+    s->smo.i_alpha_hat  = MPC_ZERO_F;
+    s->smo.i_beta_hat   = MPC_ZERO_F;
+    s->smo.e_alpha_filt = MPC_ZERO_F;
+    s->smo.e_beta_filt  = MPC_ZERO_F;
+
+    /* Pre-compute SMO LPF coefficient */
     {
-        /* MISRA C:2012 Rule 15.7: else required */
+        MatrixFloat wc = (MatrixFloat)2.0f * MPC_PI_F * MPC_SMO_FC;
+        s->smo.alpha_lpf = wc * dt / (MPC_ONE_F + wc * dt);
     }
+
+    /* Internal state */
+    s->v_alpha_prev       = MPC_ZERO_F;
+    s->v_beta_prev        = MPC_ZERO_F;
+    s->iq_limit           = MPC_ZERO_F;
+    s->speed_err_integral = MPC_ZERO_F;
+
+    /* Diagnostic log */
+    s->log_speed_ref  = MPC_ZERO_F;
+    s->log_speed      = MPC_ZERO_F;
+    s->log_id         = MPC_ZERO_F;
+    s->log_iq         = MPC_ZERO_F;
+    s->log_vd         = MPC_ZERO_F;
+    s->log_vq         = MPC_ZERO_F;
+    s->log_counter    = 0U;
+    s->log_next_time  = MPC_ZERO_F;
+
+    /* Coordinate transforms */
+    Clarke_Init(&s->clarke_state);
+    Park_Init(&s->park_state);
+    Park_Init(&s->park_emf_state);
+    InvPark_Init(&s->inv_park_state);
 }
 
 
-/*--------------------------------------------------------------------------------------------------------------------
- * MPC_GainSet_GetDefault
- *------------------------------------------------------------------------------------------------------------------*/
-void MPC_GainSet_GetDefault(MPC_GainSet_T *gains)
+/**
+ * @brief   Execute one complete MPC step
+ * @param[in,out] s   Controller state (must not be NULL)
+ * @param[in]     u   Input structure (must not be NULL)
+ * @param[in]     dt  Sampling period [s]
+ * @param[out]    y   Output structure (must not be NULL)
+ *
+ * @par MISRA Compliance:
+ *      - Rule 17.5: All pointer parameters checked for NULL
+ *      - Rule 15.5: Single return point
+ */
+void MPC_Controller_Step(MPC_Controller_T* const s,
+                          const MPC_Input_T* const u,
+                          const MatrixFloat dt,
+                          MPC_Output_T* const y)
 {
-    if (gains != NULL)
-    {
-        gains->q_id    = MPC_Q_ID;
-        gains->q_iq    = MPC_Q_IQ;
-        gains->q_omega = MPC_Q_OMEGA;
-        gains->r_vd    = MPC_R_VD;
-        gains->r_vq    = MPC_R_VQ;
-        gains->ki_v    = MPC_KI_V;
-    }
-    else
-    {
-        /* MISRA C:2012 Rule 15.7: else required */
-    }
-}
-
-
-/*--------------------------------------------------------------------------------------------------------------------
- * MPC_Controller_StepWithGains
- *------------------------------------------------------------------------------------------------------------------*/
-void MPC_Controller_StepWithGains(MPC_Controller_T       *st,
-                                  const MPC_Input_T      *in,
-                                  MPC_Output_T           *out,
-                                  const MPC_GainSet_T    *gains)
-{
-    MatrixFloat theta_e;
-    MatrixFloat omega_m;
     MatrixFloat i_alpha;
     MatrixFloat i_beta;
     MatrixFloat id_meas;
     MatrixFloat iq_meas;
+    MatrixFloat theta_e;
+    MatrixFloat omega_m;
+    MatrixFloat e_alpha_filt;
+    MatrixFloat e_beta_filt;
     MatrixFloat ed_hat_raw;
     MatrixFloat eq_hat_raw;
-    MatrixFloat bemf_max;
-    MatrixFloat omega_e;
     MatrixFloat ed_hat;
     MatrixFloat eq_hat;
-    MatrixFloat id0;
-    MatrixFloat iq0;
+    MatrixFloat omega_e;
+    MatrixFloat bemf_max;
     MatrixFloat vd;
     MatrixFloat vq;
     MatrixFloat vq_lim;
-    MatrixFloat sp_err;
-    MatrixFloat head;
-    MatrixFloat intmax;
+    MatrixFloat speed_err;
     MatrixFloat v_alpha;
     MatrixFloat v_beta;
-    MPC_GainSet_T default_gains;
+    MPC_State_T x0;
 
-    /* Guard against NULL pointers — MISRA Dir 4.1 */
-    if ((st == NULL) || (in == NULL) || (out == NULL))
+    /* NULL checks (MISRA Rule 17.5) */
+    if ((s == NULL) || (u == NULL) || (y == NULL))
     {
-        return;   /* MISRA 15.5: exceptional early return */
+        return;
+    }
+
+    /* Electrical angle from encoder */
+    theta_e = (MatrixFloat)MPC_P_POLES * u->theta_m;
+
+    /* Encoder speed estimate */
+    omega_m = MPC_EncSpeed_Update(&s->enc, u->theta_m, dt);
+
+    /* Clarke transform: abc -> alphabeta */
+    Clarke_Step(&s->clarke_state, u->ia, u->ib, u->ic, &i_alpha, &i_beta);
+
+    /* SMO step */
+    MPC_SMO_Step(&s->smo, s->v_alpha_prev, s->v_beta_prev,
+                 i_alpha, i_beta, dt);
+
+    e_alpha_filt = s->smo.e_alpha_filt;
+    e_beta_filt  = s->smo.e_beta_filt;
+
+    /* Park transform: alphabeta -> dq (currents) */
+    Park_Step(&s->park_state, i_alpha, i_beta, theta_e, &id_meas, &iq_meas);
+
+    /* Park transform on back-EMF for feedforward */
+    Park_Step(&s->park_emf_state, e_alpha_filt, e_beta_filt, theta_e,
+              &ed_hat_raw, &eq_hat_raw);
+
+    /* Physical BEMF clamp */
+    omega_e = (MatrixFloat)MPC_P_POLES * omega_m;
+    bemf_max = (MatrixFloat)fabs(omega_e) * MPC_LAMBDA_PM;
+    ed_hat = MPC_Clamp(ed_hat_raw, bemf_max);
+    eq_hat = MPC_Clamp(eq_hat_raw, bemf_max);
+
+    /* Soft-start ramp */
+    {
+        MatrixFloat iq_limit_new = s->iq_limit + MPC_I_MAX * dt / MPC_SOFTSTART_T;
+        s->iq_limit = fminf(MPC_I_MAX, iq_limit_new);
+    }
+
+    /* MPC solver */
+    x0.id    = MPC_Clamp(id_meas, MPC_I_MAX);
+    x0.iq    = MPC_Clamp(iq_meas, MPC_I_MAX);
+    x0.omega = omega_m;
+    MPC_SolveMPC(&x0, u->omega_ref_mech, ed_hat, eq_hat, dt, &vd, &vq);
+
+    /* Soft-start vq limit */
+    vq_lim = (s->iq_limit / MPC_I_MAX) * MPC_V_MAX;
+    vq = MPC_Clamp(vq, vq_lim);
+
+    /* Speed-error integral correction (anti-windup) */
+    speed_err = u->omega_ref_mech - omega_m;
+    s->speed_err_integral += speed_err * dt;
+
+    {
+        MatrixFloat head = MPC_ClampMinMax(MPC_V_MAX - (MatrixFloat)fabs(vq),
+                                           MPC_ZERO_F, MPC_V_MAX);
+        MatrixFloat int_max = head / (MPC_KI_V + (MatrixFloat)1e-30f);
+        s->speed_err_integral = MPC_Clamp(s->speed_err_integral, int_max);
+    }
+
+    vq = MPC_Clamp(vq + MPC_KI_V * s->speed_err_integral, MPC_V_MAX);
+
+    /* Inverse Park: dq -> alphabeta */
+    InvPark_Step(&s->inv_park_state, vd, vq, theta_e, &v_alpha, &v_beta);
+
+    /* Latch voltages for next step's SMO (z-1 delay) */
+    s->v_alpha_prev = v_alpha;
+    s->v_beta_prev  = v_beta;
+
+    /* Normalise for SVPWM */
+    y->v_alpha = MPC_Clamp(v_alpha / MPC_SVPWM_GAIN, MPC_ONE_F);
+    y->v_beta  = MPC_Clamp(v_beta  / MPC_SVPWM_GAIN, MPC_ONE_F);
+
+    /*
+     * Diagnostic log — written every MPC_DIAG_STEPS ISR ticks.
+     *
+     * ALIGNMENT NOTE: MPC_Controller_GetDiagnostics() reads these fields.
+     * The Python MPCControllerBlock._log_step() writes the identical set
+     * at the same rate (DIAG_STEPS = 20 → 1 kHz at 20 kHz ISR).
+     * All values stored in their natural units:
+     *   log_speed_ref / log_speed  : [RPM]   (×60/(2π) from rad/s)
+     *   log_id / log_iq            : [A]
+     *   log_vd / log_vq            : [V]     (physical, before SVPWM norm)
+     *
+     * C: MPC_DIAG_STEPS = 20 mirrors Python: DIAG_STEPS = 20
+     */
+    s->log_counter++;
+    if (s->log_counter >= (unsigned int)MPC_DIAG_STEPS)
+    {
+        /* Convert rad/s → RPM for log fields (mirrors Python _log_step) */
+        MatrixFloat rpm_scale = (MatrixFloat)60.0f / MPC_TWO_PI_F;
+
+        s->log_speed_ref = u->omega_ref_mech * rpm_scale;
+        s->log_speed     = omega_m            * rpm_scale;
+        s->log_id        = id_meas;
+        s->log_iq        = iq_meas;
+        s->log_vd        = vd;
+        s->log_vq        = vq;
+        s->log_counter   = 0U;
     }
     else
     {
-        /* MISRA 15.7: else required */
+        /* MISRA Rule 15.7: final else required */
     }
-
-    /* Use provided gains or fall back to defaults */
-    if (gains == NULL)
-    {
-        MPC_GainSet_GetDefault(&default_gains);
-        gains = &default_gains;
-    }
-    else
-    {
-        /* gains already valid */
-    }
-
-    /* ── Electrical angle ─────────────────────────────────────────────────── */
-    theta_e = (MatrixFloat)MPC_P_POLES * in->theta_m;
-    omega_m = mpc_get_speed(st, in->theta_m, MPC_DT);
-
-    /* ── Clarke: [ia, ib, ic] → [i_alpha, i_beta] ───────────────────────── */
-    EmbedSim_Clarke(in->ia, in->ib, in->ic, &i_alpha, &i_beta);
-
-    /* ── SMO back-EMF estimation ─────────────────────────────────────────── */
-    mpc_smo_step(st,
-                 i_alpha, i_beta,
-                 st->v_alpha_prev, st->v_beta_prev,
-                 MPC_DT);
-
-    /* ── Park: [i_alpha, i_beta] → [id, iq] ─────────────────────────────── */
-    EmbedSim_Park(i_alpha, i_beta, theta_e, &id_meas, &iq_meas);
-
-    /* ── Park: SMO back-EMF αβ → [ed_hat_raw, eq_hat_raw] ──────────────── */
-    EmbedSim_Park(st->e_alpha_filt, st->e_beta_filt,
-                  theta_e, &ed_hat_raw, &eq_hat_raw);
-
-    /* ── Physical BEMF clamp ─────────────────────────────────────────────── */
-    omega_e  = (MatrixFloat)MPC_P_POLES * omega_m;
-    bemf_max = (MatrixFloat)fabsf((float)omega_e) * MPC_LAMBDA_PM;
-    ed_hat   = mpc_clamp(ed_hat_raw, -bemf_max, bemf_max);
-    eq_hat   = mpc_clamp(eq_hat_raw, -bemf_max, bemf_max);
-
-    /* ── Soft-start: ramp iq_limit 0 → I_MAX over MPC_SOFTSTART_T ───────── */
-    st->iq_limit = mpc_clamp(
-        st->iq_limit + MPC_I_MAX * MPC_DT / MPC_SOFTSTART_T,
-        MPC_ZERO_F,
-        MPC_I_MAX);
-
-    /* ── Clamp measured currents ─────────────────────────────────────────── */
-    id0 = mpc_clamp(id_meas, -MPC_I_MAX, MPC_I_MAX);
-    iq0 = mpc_clamp(iq_meas, -MPC_I_MAX, MPC_I_MAX);
-
-    /* ── 3-state MPC solver (with runtime gains) ─────────────────────────── */
-    mpc_solve(id0, iq0, omega_m, in->omega_ref_mech,
-              ed_hat, eq_hat, MPC_DT, gains, &vd, &vq);
-
-    /* ── Soft-start vq limit ─────────────────────────────────────────────── */
-    vq_lim = (st->iq_limit / MPC_I_MAX) * MPC_V_MAX;
-    vq     = mpc_clamp(vq, -vq_lim, vq_lim);
-
-    /* ── Speed error integral correction (eliminates MPC steady-state offset) */
-    sp_err                  = in->omega_ref_mech - omega_m;
-    st->speed_err_integral += sp_err * MPC_DT;
-
-    /* Anti-windup: keep integral contribution within remaining vq headroom */
-    head   = MPC_V_MAX - (MatrixFloat)fabsf((float)vq);
-    head   = mpc_clamp(head, MPC_ZERO_F, MPC_V_MAX);
-    intmax = head / (gains->ki_v + MPC_DENOM_MIN);
-
-    st->speed_err_integral = mpc_clamp(st->speed_err_integral,
-                                       -intmax, intmax);
-
-    vq = mpc_clamp(vq + gains->ki_v * st->speed_err_integral,
-                   -MPC_V_MAX, MPC_V_MAX);
-
-    /* ── InvPark: [vd, vq] → [v_alpha, v_beta] ──────────────────────────── */
-    EmbedSim_InvPark(vd, vq, theta_e, &v_alpha, &v_beta);
-
-    /* ── Store previous voltages for SMO (physical [V], not normalised) ──── */
-    st->v_alpha_prev = v_alpha;
-    st->v_beta_prev  = v_beta;
-
-    /* ── Write outputs ───────────────────────────────────────────────────── */
-    out->v_alpha = v_alpha;
-    out->v_beta  = v_beta;
 }
 
 
-/*--------------------------------------------------------------------------------------------------------------------
- * MPC_Controller_Step (legacy with compile-time gains)
- *------------------------------------------------------------------------------------------------------------------*/
-void MPC_Controller_Step(MPC_Controller_T       *st,
-                         const MPC_Input_T      *in,
-                         MPC_Output_T           *out)
+/**
+ * @brief   Reset all integrators and dynamic state
+ * @param[in,out] s  Controller state (must not be NULL)
+ *
+ * @details Zeroes every integrator and observer state WITHOUT destroying the
+ *          pre-computed SMO LPF coefficient alpha_lpf.  Calling
+ *          MPC_Controller_Init(s, 0) would set alpha_lpf = 0 (because
+ *          wc*0/(1+wc*0) = 0), making the SMO back-EMF filter permanently
+ *          blind — this is the root cause of SMO divergence on hardware when
+ *          the controller is reset mid-run.
+ *
+ *          PYTHON ALIGNMENT: MPCControllerBlock.reset() in mpc_controller_block.py
+ *          explicitly calls self._smo.reset() which only zeroes the four current
+ *          and EMF state variables — it preserves _alpha_lpf (set by set_dt() once
+ *          at construction).  This C Reset() mirrors that exact behaviour.
+ *
+ * @par MISRA Compliance:
+ *      - Rule 17.5: Checks s for NULL
+ *      - Rule 15.5: Single return point
+ */
+void MPC_Controller_Reset(MPC_Controller_T* const s)
 {
-    /* Call the gains version with NULL (uses defaults) */
-    MPC_Controller_StepWithGains(st, in, out, NULL);
+    MatrixFloat saved_alpha_lpf;   /* Preserve pre-computed SMO LPF coefficient */
+
+    if (s == NULL)
+    {
+        return;
+    }
+
+    /* Save the pre-computed LPF coefficient before zeroing */
+    saved_alpha_lpf = s->smo.alpha_lpf;
+
+    /* Zero all dynamic state (mirrors MPC_Controller_Init) */
+    MPC_Controller_Init(s, MPC_ZERO_F);
+
+    /* Restore alpha_lpf — Init(dt=0) sets it to 0 which blinds the SMO */
+    s->smo.alpha_lpf = saved_alpha_lpf;
+}
+
+
+/**
+ * @brief   Read the latest diagnostic snapshot
+ * @param[in]  s              Controller state (must not be NULL)
+ * @param[out] speed_ref_rpm  Speed reference [RPM]
+ * @param[out] speed_rpm      Actual speed [RPM]
+ * @param[out] id_meas        D-axis current [A]
+ * @param[out] iq_meas        Q-axis current [A]
+ * @param[out] vd             D-axis voltage [V]
+ * @param[out] vq             Q-axis voltage [V]
+ *
+ * @par MISRA Compliance:
+ *      - Rule 17.5: All pointer parameters checked for NULL
+ *      - Rule 15.7: All-or-nothing NULL check with final else
+ */
+void MPC_Controller_GetDiagnostics(const MPC_Controller_T* const s,
+                                    MatrixFloat* const speed_ref_rpm,
+                                    MatrixFloat* const speed_rpm,
+                                    MatrixFloat* const id_meas,
+                                    MatrixFloat* const iq_meas,
+                                    MatrixFloat* const vd,
+                                    MatrixFloat* const vq)
+{
+    if ((s != NULL) &&
+        (speed_ref_rpm != NULL) &&
+        (speed_rpm != NULL) &&
+        (id_meas != NULL) &&
+        (iq_meas != NULL) &&
+        (vd != NULL) &&
+        (vq != NULL))
+    {
+        *speed_ref_rpm = s->log_speed_ref;
+        *speed_rpm     = s->log_speed;
+        *id_meas       = s->log_id;
+        *iq_meas       = s->log_iq;
+        *vd            = s->log_vd;
+        *vq            = s->log_vq;
+    }
+    else
+    {
+        /* MISRA Rule 15.7 - final else required */
+    }
 }

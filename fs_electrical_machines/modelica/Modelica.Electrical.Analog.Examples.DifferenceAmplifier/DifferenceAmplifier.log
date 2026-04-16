@@ -1,0 +1,26 @@
+<p>/home/epl05/EMProject/fs_electrical_machines/modelica/Modelica.Electrical.Analog.Examples.DifferenceAmplifier/DifferenceAmplifier -port=38963 -logFormat=xmltcp -startTime=0 -stopTime=1e-08 -stepSize=2e-11 -tolerance=1e-06 -s=dassl -outputFormat=mat -variableFilter=.* -r=/home/epl05/EMProject/fs_electrical_machines/modelica/Modelica.Electrical.Analog.Examples.DifferenceAmplifier/DifferenceAmplifier_res.mat -w -lv=LOG_STDOUT,LOG_ASSERT,LOG_STATS -inputPath=/home/epl05/EMProject/fs_electrical_machines/modelica/Modelica.Electrical.Analog.Examples.DifferenceAmplifier -outputPath=/home/epl05/EMProject/fs_electrical_machines/modelica/Modelica.Electrical.Analog.Examples.DifferenceAmplifier</p>
+LOG_SUCCESS		| info	 | <p>The initialization finished successfully without homotopy method.</p>
+LOG_STATS		| info	 | <p>### STATISTICS ###</p>
+|		| |	 | | <p>timer</p>
+|		| |	 | | | <p>  0.00394422s          reading init.xml</p>
+|		| |	 | | | <p> 0.000420305s          reading info.xml</p>
+|		| |	 | | | <p> 0.000264768s [  0.5%] pre-initialization</p>
+|		| |	 | | | <p> 0.000181657s [  0.3%] initialization</p>
+|		| |	 | | | <p>    7.48e-05s [  0.1%] steps</p>
+|		| |	 | | | <p>  0.00600772s [ 10.6%] solver (excl. callbacks)</p>
+|		| |	 | | | <p>   0.0032259s [  5.7%] creating output-file</p>
+|		| |	 | | | <p>  0.00495224s [  8.7%] event-handling</p>
+|		| |	 | | | <p> 0.000918972s [  1.6%] overhead</p>
+|		| |	 | | | <p>   0.0412172s [ 72.5%] simulation</p>
+|		| |	 | | | <p>   0.0568433s [100.0%] total</p>
+|		| |	 | | <p>events</p>
+|		| |	 | | | <p>    1 state events</p>
+|		| |	 | | | <p>    0 time events</p>
+|		| |	 | | <p>solver: dassl</p>
+|		| |	 | | | <p>  414 steps taken</p>
+|		| |	 | | | <p>  688 calls of functionODE</p>
+|		| |	 | | | <p>   49 evaluations of jacobian</p>
+|		| |	 | | | <p>   15 error test failures</p>
+|		| |	 | | | <p>    0 convergence test failures</p>
+|		| |	 | | | <p>0.00857588s time of jacobian evaluation</p>
+LOG_SUCCESS		| info	 | <p>The simulation finished successfully.</p>
