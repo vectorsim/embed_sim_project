@@ -1,0 +1,1418 @@
+	; Module start
+	.compiler_version	"TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler v1.1r8 Build 22011964"
+	.compiler_invocation	"ctc -f cc5528a --dep-file=embed_sim_coordinate_transform.d -c99 --fp-model=3cflnrSTz -D__CPU__=tc38x -D__CPU_TC38X__ --core=tc1.6.2 --fp-model=+float -D__CPU__=tc38x -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\Display -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\Display\\\\App -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\Display\\\\Configuration -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\Display\\\\Interrupts -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\Display\\\\MCUInit -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\OSTasks -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\OneEye -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\PmsmFoc -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\PmsmFoc\\\\Configuration -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\PmsmFoc\\\\Configuration\\\\Controller_card -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\PmsmFoc\\\\Configuration\\\\Inverter_card -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\PmsmFoc\\\\Configuration\\\\Motors -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\PmsmFoc\\\\ControlModules -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\PmsmFoc\\\\EmbedSim -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\PmsmFoc\\\\ExtDevInit -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\PmsmFoc\\\\Interrupts -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\PmsmFoc\\\\Libraries -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\PmsmFoc\\\\Libraries\\\\Math -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\PmsmFoc\\\\Libraries\\\\MotorDrive -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\PmsmFoc\\\\MCUInit -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\AppSw\\\\PmsmFoc\\\\MidSys -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Configurations -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\ExtDevDrivers -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\ExtDevDrivers\\\\TLE9180 -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\ExtDevDrivers\\\\TLE9180\\\\Tricore -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\ExtDevDrivers\\\\TLF35584 -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\ExtDevDrivers\\\\TLF35584\\\\Tricore -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Infra -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Infra\\\\Platform -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Infra\\\\Platform\\\\Tricore -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Infra\\\\Platform\\\\Tricore\\\\Compilers -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Infra\\\\Sfr -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Infra\\\\Sfr\\\\TC38A -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Infra\\\\Sfr\\\\TC38A\\\\_Reg -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Infra\\\\Ssw -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Infra\\\\Ssw\\\\TC38A -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Infra\\\\Ssw\\\\TC38A\\\\Tricore -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Service -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Service\\\\CpuGeneric -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Service\\\\CpuGeneric\\\\If -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Service\\\\CpuGeneric\\\\StdIf -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Service\\\\CpuGeneric\\\\SysSe -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Service\\\\CpuGeneric\\\\SysSe\\\\Bsp -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Service\\\\CpuGeneric\\\\SysSe\\\\Comm -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Service\\\\CpuGeneric\\\\SysSe\\\\Math -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\Service\\\\CpuGeneric\\\\_Utilities -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Asclin -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Asclin\\\\Asc -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Asclin\\\\Std -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Cpu -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Cpu\\\\Irq -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Cpu\\\\Std -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Cpu\\\\Trap -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Dma -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Dma\\\\Dma -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Dma\\\\Std -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Edsadc -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Edsadc\\\\Edsadc -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Edsadc\\\\Std -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Evadc -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Evadc\\\\Adc -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Evadc\\\\Std -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Gpt12 -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Gpt12\\\\IncrEnc -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Gpt12\\\\Std -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Gtm -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Gtm\\\\Std -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Gtm\\\\Tom -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Gtm\\\\Tom\\\\PwmHl -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Gtm\\\\Tom\\\\Timer -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Gtm\\\\Trig -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Mtu -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Mtu\\\\Std -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Pms -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Pms\\\\Std -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Port -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Port\\\\Std -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Qspi -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Qspi\\\\SpiMaster -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Qspi\\\\Std -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Scu -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Scu\\\\Std -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Src -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Src\\\\Std -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Stm -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\Stm\\\\Std -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\_Impl -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\_Lib -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\_Lib\\\\DataHandling -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\iLLD\\\\TC38A\\\\Tricore\\\\_PinMap -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\oneeye_lib -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\oneeye_lib\\\\arduino -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\oneeye_lib\\\\aurix -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\oneeye_lib\\\\aurix\\\\illd -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\oneeye_lib\\\\cy -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\oneeye_lib\\\\cy\\\\pdl -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\oneeye_lib\\\\xmc -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\oneeye_lib\\\\xmc\\\\xmcdaveapp -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\Libraries\\\\oneeye_lib\\\\xmc\\\\xmclib -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\OS -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\OS\\\\FreeRTOS -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\OS\\\\FreeRTOS\\\\include -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\OS\\\\FreeRTOS\\\\portable -IC:\\\\Aurix_EmbedSim\\\\AURIX_TC3x_Motor_Control_SDK\\\\OS\\\\FreeRTOS\\\\portable\\\\TriCore -g2 -w544 -w557 -t4 --language=+volatile -N0 -O0 -Y0 -Z0 --compact-max-size=200 --misrac-version=2012 -o embed_sim_coordinate_transform.src ../embed_sim_coordinate_transform.c"
+	.compiler_name		"ctc"
+	;source	'../embed_sim_coordinate_transform.c'
+
+	
+$TC162
+	
+	.sdecl	'.text.embed_sim_coordinate_transform.Clarke_Init',code,cluster('Clarke_Init')
+	.sect	'.text.embed_sim_coordinate_transform.Clarke_Init'
+	.align	2
+	
+	.global	Clarke_Init
+; Function Clarke_Init
+.L24:
+Clarke_Init:	.type	func
+	jz.a	a4,.L2
+.L179:
+	mov	d4,#0
+.L180:
+	mov	d5,#4
+	call	memset
+.L141:
+	j	.L3
+.L2:
+.L3:
+	ret
+.L83:
+	
+__Clarke_Init_function_end:
+	.size	Clarke_Init,__Clarke_Init_function_end-Clarke_Init
+.L47:
+	; End of function
+	
+	.sdecl	'.text.embed_sim_coordinate_transform.Clarke_Step',code,cluster('Clarke_Step')
+	.sect	'.text.embed_sim_coordinate_transform.Clarke_Step'
+	.align	2
+	
+	.global	Clarke_Step
+; Function Clarke_Step
+.L26:
+Clarke_Step:	.type	func
+	jz.a	a5,.L4
+.L185:
+	jz.a	a6,.L5
+.L186:
+	st.w	[a5],d4
+.L187:
+	movh	d15,#16384
+.L188:
+	madd.f	d15,d4,d5,d15
+.L189:
+	mov.u	d0,#52538
+	addih	d0,d0,#16147
+.L190:
+	mul.f	d15,d15,d0
+.L191:
+	st.w	[a6],d15
+.L192:
+	j	.L6
+.L5:
+.L4:
+.L6:
+	ret
+.L86:
+	
+__Clarke_Step_function_end:
+	.size	Clarke_Step,__Clarke_Step_function_end-Clarke_Step
+.L52:
+	; End of function
+	
+	.sdecl	'.text.embed_sim_coordinate_transform.Park_Init',code,cluster('Park_Init')
+	.sect	'.text.embed_sim_coordinate_transform.Park_Init'
+	.align	2
+	
+	.global	Park_Init
+; Function Park_Init
+.L28:
+Park_Init:	.type	func
+	jz.a	a4,.L7
+.L197:
+	mov	d4,#0
+.L198:
+	mov	d5,#4
+	call	memset
+.L142:
+	j	.L8
+.L7:
+.L8:
+	ret
+.L97:
+	
+__Park_Init_function_end:
+	.size	Park_Init,__Park_Init_function_end-Park_Init
+.L57:
+	; End of function
+	
+	.sdecl	'.text.embed_sim_coordinate_transform.Park_Step',code,cluster('Park_Step')
+	.sect	'.text.embed_sim_coordinate_transform.Park_Step'
+	.align	2
+	
+	.global	Park_Step
+; Function Park_Step
+.L30:
+Park_Step:	.type	func
+	mov	d15,d4
+.L145:
+	mov	e8,d6,d5
+	mov.aa	a15,a5
+.L147:
+	mov.aa	a12,a6
+.L148:
+	jz.a	a15,.L9
+.L203:
+	jz.a	a12,.L10
+.L149:
+	mov	d4,d9
+.L143:
+	call	cosf
+.L144:
+	mov	d10,d2
+.L151:
+	mov	d4,d9
+.L152:
+	call	sinf
+.L150:
+	mul.f	d0,d8,d2
+.L153:
+	madd.f	d0,d0,d15,d10
+.L204:
+	st.w	[a15],d0
+.L205:
+	insn.t	d15,d15:31,d15:31
+.L146:
+	mul.f	d0,d8,d10
+.L154:
+	madd.f	d15,d0,d15,d2
+.L206:
+	st.w	[a12],d15
+.L207:
+	j	.L11
+.L10:
+.L9:
+.L11:
+	ret
+.L100:
+	
+__Park_Step_function_end:
+	.size	Park_Step,__Park_Step_function_end-Park_Step
+.L62:
+	; End of function
+	
+	.sdecl	'.text.embed_sim_coordinate_transform.InvPark_Init',code,cluster('InvPark_Init')
+	.sect	'.text.embed_sim_coordinate_transform.InvPark_Init'
+	.align	2
+	
+	.global	InvPark_Init
+; Function InvPark_Init
+.L32:
+InvPark_Init:	.type	func
+	jz.a	a4,.L12
+.L212:
+	mov	d4,#0
+.L213:
+	mov	d5,#4
+	call	memset
+.L155:
+	j	.L13
+.L12:
+.L13:
+	ret
+.L112:
+	
+__InvPark_Init_function_end:
+	.size	InvPark_Init,__InvPark_Init_function_end-InvPark_Init
+.L67:
+	; End of function
+	
+	.sdecl	'.text.embed_sim_coordinate_transform.InvPark_Step',code,cluster('InvPark_Step')
+	.sect	'.text.embed_sim_coordinate_transform.InvPark_Step'
+	.align	2
+	
+	.global	InvPark_Step
+; Function InvPark_Step
+.L34:
+InvPark_Step:	.type	func
+	mov	d15,d4
+.L158:
+	mov	e8,d6,d5
+	mov.aa	a15,a5
+.L160:
+	mov.aa	a12,a6
+.L161:
+	jz.a	a15,.L14
+.L218:
+	jz.a	a12,.L15
+.L162:
+	mov	d4,d9
+.L157:
+	call	cosf
+.L156:
+	mov	d10,d2
+.L164:
+	mov	d4,d9
+.L165:
+	call	sinf
+.L163:
+	mul.f	d0,d15,d10
+.L166:
+	msub.f	d0,d0,d8,d2
+.L167:
+	st.w	[a15],d0
+.L168:
+	mul.f	d0,d8,d10
+.L169:
+	madd.f	d15,d0,d15,d2
+.L159:
+	st.w	[a12],d15
+.L219:
+	j	.L16
+.L15:
+.L14:
+.L16:
+	ret
+.L115:
+	
+__InvPark_Step_function_end:
+	.size	InvPark_Step,__InvPark_Step_function_end-InvPark_Step
+.L72:
+	; End of function
+	
+	.sdecl	'.text.embed_sim_coordinate_transform.InvClarke_Init',code,cluster('InvClarke_Init')
+	.sect	'.text.embed_sim_coordinate_transform.InvClarke_Init'
+	.align	2
+	
+	.global	InvClarke_Init
+; Function InvClarke_Init
+.L36:
+InvClarke_Init:	.type	func
+	jz.a	a4,.L17
+.L224:
+	mov	d4,#0
+.L225:
+	mov	d5,#4
+	call	memset
+.L170:
+	j	.L18
+.L17:
+.L18:
+	ret
+.L127:
+	
+__InvClarke_Init_function_end:
+	.size	InvClarke_Init,__InvClarke_Init_function_end-InvClarke_Init
+.L77:
+	; End of function
+	
+	.sdecl	'.text.embed_sim_coordinate_transform.InvClarke_Step',code,cluster('InvClarke_Step')
+	.sect	'.text.embed_sim_coordinate_transform.InvClarke_Step'
+	.align	2
+	
+	.global	InvClarke_Step
+; Function InvClarke_Step
+.L38:
+InvClarke_Step:	.type	func
+	jz.a	a5,.L19
+.L230:
+	jz.a	a6,.L20
+.L231:
+	jz.a	a7,.L21
+.L232:
+	st.w	[a5],d4
+.L233:
+	movh	d15,#48896
+.L234:
+	mov.u	d0,#46039
+	addih	d0,d0,#16221
+.L235:
+	mul.f	d0,d5,d0
+.L236:
+	madd.f	d15,d0,d4,d15
+.L237:
+	st.w	[a6],d15
+.L238:
+	movh	d15,#48896
+.L239:
+	mul.f	d15,d4,d15
+.L240:
+	mov.u	d0,#46039
+	addih	d0,d0,#16221
+.L241:
+	msub.f	d15,d15,d5,d0
+.L242:
+	st.w	[a7],d15
+.L243:
+	j	.L22
+.L21:
+.L20:
+.L19:
+.L22:
+	ret
+.L130:
+	
+__InvClarke_Step_function_end:
+	.size	InvClarke_Step,__InvClarke_Step_function_end-InvClarke_Step
+.L82:
+	; End of function
+	
+	.calls	'Clarke_Init','memset'
+	.calls	'Park_Init','memset'
+	.calls	'Park_Step','cosf'
+	.calls	'Park_Step','sinf'
+	.calls	'InvPark_Init','memset'
+	.calls	'InvPark_Step','cosf'
+	.calls	'InvPark_Step','sinf'
+	.calls	'InvClarke_Init','memset'
+	.calls	'Clarke_Init','',0
+	.calls	'Clarke_Step','',0
+	.calls	'Park_Init','',0
+	.calls	'Park_Step','',0
+	.calls	'InvPark_Init','',0
+	.calls	'InvPark_Step','',0
+	.calls	'InvClarke_Init','',0
+	.extern	sinf
+	.extern	cosf
+	.extern	memset
+	.calls	'InvClarke_Step','',0
+	.sdecl	'.debug_info',debug
+	.sect	'.debug_info'
+.L40:
+	.word	775
+	.half	3
+	.word	.L41
+	.byte	4
+.L39:
+	.byte	1
+	.byte	'../embed_sim_coordinate_transform.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Aurix_EmbedSim\\AURIX_TC3x_Motor_Control_SDK\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L42
+.L89:
+	.byte	2
+	.byte	'float',0,4,4,3,1,61,9,4,4
+	.byte	'dummy',0
+	.word	203
+	.byte	4,2,35,0,0,5
+	.word	212
+.L84:
+	.byte	6
+	.word	233
+.L87:
+	.byte	6
+	.word	233
+	.byte	5
+	.word	203
+.L93:
+	.byte	6
+	.word	248
+.L95:
+	.byte	6
+	.word	248
+	.byte	3,1,72,9,4,4
+	.byte	'dummy',0
+	.word	203
+	.byte	4,2,35,0,0,5
+	.word	263
+.L98:
+	.byte	6
+	.word	284
+.L101:
+	.byte	6
+	.word	284
+.L106:
+	.byte	6
+	.word	248
+.L108:
+	.byte	6
+	.word	248
+	.byte	3,1,83,9,4,4
+	.byte	'dummy',0
+	.word	203
+	.byte	4,2,35,0,0,5
+	.word	309
+.L113:
+	.byte	6
+	.word	330
+.L116:
+	.byte	6
+	.word	330
+.L121:
+	.byte	6
+	.word	248
+.L123:
+	.byte	6
+	.word	248
+	.byte	3,1,94,9,4,4
+	.byte	'dummy',0
+	.word	203
+	.byte	4,2,35,0,0,5
+	.word	355
+.L128:
+	.byte	6
+	.word	376
+.L131:
+	.byte	6
+	.word	376
+.L135:
+	.byte	6
+	.word	248
+.L137:
+	.byte	6
+	.word	248
+.L139:
+	.byte	6
+	.word	248
+	.byte	7
+	.byte	'sinf',0,2,89,25
+	.word	203
+	.byte	1,1,1,1,8,2,89,43
+	.word	203
+	.byte	0,7
+	.byte	'cosf',0,2,92,25
+	.word	203
+	.byte	1,1,1,1,8,2,92,43
+	.word	203
+	.byte	0,9
+	.byte	'void',0,5
+	.word	458
+	.byte	2
+	.byte	'int',0,4,5,2
+	.byte	'unsigned int',0,4,7,7
+	.byte	'memset',0,3,56,17
+	.word	464
+	.byte	1,1,1,1,8,3,56,33
+	.word	464
+	.byte	8,3,56,36
+	.word	469
+	.byte	8,3,56,41
+	.word	476
+	.byte	0,10
+	.byte	'__size_t',0,4,1,1
+	.word	476
+	.byte	11,1,5
+	.word	553
+	.byte	10
+	.byte	'__codeptr',0,4,1,1
+	.word	555
+	.byte	10
+	.byte	'int32_T',0,5,44,28
+	.word	469
+	.byte	10
+	.byte	'uint32_T',0,5,45,28
+	.word	476
+	.byte	10
+	.byte	'real32_T',0,5,52,28
+	.word	203
+	.byte	2
+	.byte	'char',0,1,6,10
+	.byte	'char_T',0,5,65,28
+	.word	628
+	.byte	10
+	.byte	'MatrixElement',0,6,63,17
+	.word	469
+	.byte	10
+	.byte	'MatrixFloat',0,6,71,18
+	.word	203
+	.byte	10
+	.byte	'Clarke_T',0,1,64,3
+	.word	212
+	.byte	10
+	.byte	'Park_T',0,1,75,3
+	.word	263
+	.byte	10
+	.byte	'InvPark_T',0,1,86,3
+	.word	309
+	.byte	10
+	.byte	'InvClarke_T',0,1,97,3
+	.word	355
+	.byte	10
+	.byte	'size_t',0,3,29,25
+	.word	476
+	.byte	0
+	.sdecl	'.debug_abbrev',debug
+	.sect	'.debug_abbrev'
+.L41:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,16,6,0,0,2,36,0,3,8,11,15,62,15,0,0,3,19,1,58,15,59,15,57,15,11,15
+	.byte	0,0,4,13,0,3,8,73,19,11,15,56,9,0,0,5,15,0,73,19,0,0,6,38,0,73,19,0,0,7,46,1,3,8,58,15,59,15,57,15,73
+	.byte	19,54,15,39,12,63,12,60,12,0,0,8,5,0,58,15,59,15,57,15,73,19,0,0,9,59,0,3,8,0,0,10,22,0,3,8,58,15,59,15
+	.byte	57,15,73,19,0,0,11,21,0,54,15,0,0,0
+	.sdecl	'.debug_line',debug
+	.sect	'.debug_line'
+.L42:
+	.word	.L172-.L171
+.L171:
+	.half	3
+	.word	.L174-.L173
+.L173:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1
+	.byte	'C:\\Infineon\\AURIX-Studio-1.10.28\\tools\\Compilers\\Tasking_1.1r8\\ctc\\include\\',0,0
+	.byte	'..\\embed_sim_coordinate_transform.h',0,0,0,0
+	.byte	'math.h',0,1,0,0
+	.byte	'string.h',0,1,0,0
+	.byte	'../embed_sim_coordinate_transform.c',0,0,0,0
+	.byte	'..\\embed_sim_sys_types.h',0,0,0,0
+	.byte	'..\\embed_sim_matrix.h',0,0,0,0,0
+.L174:
+.L172:
+	.sdecl	'.debug_info',debug,cluster('Clarke_Init')
+	.sect	'.debug_info'
+.L43:
+	.word	264
+	.half	3
+	.word	.L44
+	.byte	4,1
+	.byte	'../embed_sim_coordinate_transform.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Aurix_EmbedSim\\AURIX_TC3x_Motor_Control_SDK\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L46,.L45
+	.byte	2
+	.word	.L39
+	.byte	3
+	.byte	'Clarke_Init',0,1,82,6,1,1,1
+	.word	.L24,.L83,.L23
+	.byte	4
+	.byte	's',0,1,82,35
+	.word	.L84,.L85
+	.byte	5
+	.word	.L24,.L83
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('Clarke_Init')
+	.sect	'.debug_abbrev'
+.L44:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('Clarke_Init')
+	.sect	'.debug_line'
+.L45:
+	.word	.L176-.L175
+.L175:
+	.half	3
+	.word	.L178-.L177
+.L177:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../embed_sim_coordinate_transform.c',0,0,0,0,0
+.L178:
+	.byte	5,5,7,0,5,2
+	.word	.L24
+	.byte	3,211,0,1,5,25,7,9
+	.half	.L179-.L24
+	.byte	3,2,1,5,28,9
+	.half	.L180-.L179
+	.byte	1,5,45,9
+	.half	.L141-.L180
+	.byte	1,5,1,9
+	.half	.L3-.L141
+	.byte	3,6,1,7,9
+	.half	.L47-.L3
+	.byte	0,1,1
+.L176:
+	.sdecl	'.debug_ranges',debug,cluster('Clarke_Init')
+	.sect	'.debug_ranges'
+.L46:
+	.word	-1,.L24,0,.L47-.L24,0,0
+	.sdecl	'.debug_info',debug,cluster('Clarke_Step')
+	.sect	'.debug_info'
+.L48:
+	.word	352
+	.half	3
+	.word	.L49
+	.byte	4,1
+	.byte	'../embed_sim_coordinate_transform.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Aurix_EmbedSim\\AURIX_TC3x_Motor_Control_SDK\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L51,.L50
+	.byte	2
+	.word	.L39
+	.byte	3
+	.byte	'Clarke_Step',0,1,102,6,1,1,1
+	.word	.L26,.L86,.L25
+	.byte	4
+	.byte	's',0,1,103,28
+	.word	.L87,.L88
+	.byte	4
+	.byte	'ia',0,1,104,28
+	.word	.L89,.L90
+	.byte	4
+	.byte	'ib',0,1,105,28
+	.word	.L89,.L91
+	.byte	4
+	.byte	'ic',0,1,106,28
+	.word	.L89,.L92
+	.byte	4
+	.byte	'alpha_out',0,1,107,28
+	.word	.L93,.L94
+	.byte	4
+	.byte	'beta_out',0,1,108,28
+	.word	.L95,.L96
+	.byte	5
+	.word	.L26,.L86
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('Clarke_Step')
+	.sect	'.debug_abbrev'
+.L49:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('Clarke_Step')
+	.sect	'.debug_line'
+.L50:
+	.word	.L182-.L181
+.L181:
+	.half	3
+	.word	.L184-.L183
+.L183:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../embed_sim_coordinate_transform.c',0,0,0,0,0
+.L184:
+	.byte	5,9,7,0,5,2
+	.word	.L26
+	.byte	3,239,0,1,5,42,7,9
+	.half	.L185-.L26
+	.byte	1,5,20,7,9
+	.half	.L186-.L185
+	.byte	3,7,1,5,42,9
+	.half	.L187-.L186
+	.byte	3,1,1,5,26,9
+	.half	.L188-.L187
+	.byte	1,5,56,9
+	.half	.L189-.L188
+	.byte	1,5,54,9
+	.half	.L190-.L189
+	.byte	1,5,20,9
+	.half	.L191-.L190
+	.byte	1,5,17,9
+	.half	.L192-.L191
+	.byte	3,126,1,5,1,9
+	.half	.L6-.L192
+	.byte	3,8,1,7,9
+	.half	.L52-.L6
+	.byte	0,1,1
+.L182:
+	.sdecl	'.debug_ranges',debug,cluster('Clarke_Step')
+	.sect	'.debug_ranges'
+.L51:
+	.word	-1,.L26,0,.L52-.L26,0,0
+	.sdecl	'.debug_info',debug,cluster('Park_Init')
+	.sect	'.debug_info'
+.L53:
+	.word	264
+	.half	3
+	.word	.L54
+	.byte	4,1
+	.byte	'../embed_sim_coordinate_transform.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Aurix_EmbedSim\\AURIX_TC3x_Motor_Control_SDK\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L56,.L55
+	.byte	2
+	.word	.L39
+	.byte	3
+	.byte	'Park_Init',0,1,132,1,6,1,1,1
+	.word	.L28,.L97,.L27
+	.byte	4
+	.byte	's',0,1,132,1,31
+	.word	.L98,.L99
+	.byte	5
+	.word	.L28,.L97
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('Park_Init')
+	.sect	'.debug_abbrev'
+.L54:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('Park_Init')
+	.sect	'.debug_line'
+.L55:
+	.word	.L194-.L193
+.L193:
+	.half	3
+	.word	.L196-.L195
+.L195:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../embed_sim_coordinate_transform.c',0,0,0,0,0
+.L196:
+	.byte	5,5,7,0,5,2
+	.word	.L28
+	.byte	3,133,1,1,5,25,7,9
+	.half	.L197-.L28
+	.byte	3,2,1,5,28,9
+	.half	.L198-.L197
+	.byte	1,5,43,9
+	.half	.L142-.L198
+	.byte	1,5,1,9
+	.half	.L8-.L142
+	.byte	3,6,1,7,9
+	.half	.L57-.L8
+	.byte	0,1,1
+.L194:
+	.sdecl	'.debug_ranges',debug,cluster('Park_Init')
+	.sect	'.debug_ranges'
+.L56:
+	.word	-1,.L28,0,.L57-.L28,0,0
+	.sdecl	'.debug_info',debug,cluster('Park_Step')
+	.sect	'.debug_info'
+.L58:
+	.word	397
+	.half	3
+	.word	.L59
+	.byte	4,1
+	.byte	'../embed_sim_coordinate_transform.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Aurix_EmbedSim\\AURIX_TC3x_Motor_Control_SDK\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L61,.L60
+	.byte	2
+	.word	.L39
+	.byte	3
+	.byte	'Park_Step',0,1,152,1,6,1,1,1
+	.word	.L30,.L100,.L29
+	.byte	4
+	.byte	's',0,1,153,1,28
+	.word	.L101,.L102
+	.byte	4
+	.byte	'alpha',0,1,154,1,28
+	.word	.L89,.L103
+	.byte	4
+	.byte	'beta',0,1,155,1,28
+	.word	.L89,.L104
+	.byte	4
+	.byte	'theta',0,1,156,1,28
+	.word	.L89,.L105
+	.byte	4
+	.byte	'd_out',0,1,157,1,28
+	.word	.L106,.L107
+	.byte	4
+	.byte	'q_out',0,1,158,1,28
+	.word	.L108,.L109
+	.byte	5
+	.word	.L30,.L100
+	.byte	6
+	.byte	'cos_t',0,1,160,1,17
+	.word	.L89,.L110
+	.byte	6
+	.byte	'sin_t',0,1,161,1,17
+	.word	.L89,.L111
+	.byte	0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('Park_Step')
+	.sect	'.debug_abbrev'
+.L59:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0,0,6,52,0,3
+	.byte	8,58,15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('Park_Step')
+	.sect	'.debug_line'
+.L60:
+	.word	.L200-.L199
+.L199:
+	.half	3
+	.word	.L202-.L201
+.L201:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../embed_sim_coordinate_transform.c',0,0,0,0,0
+.L202:
+	.byte	5,6,7,0,5,2
+	.word	.L30
+	.byte	3,151,1,1,5,9,9
+	.half	.L148-.L30
+	.byte	3,13,1,5,35,7,9
+	.half	.L203-.L148
+	.byte	1,5,22,7,9
+	.half	.L149-.L203
+	.byte	3,2,1,5,15,9
+	.half	.L144-.L149
+	.byte	1,5,22,9
+	.half	.L151-.L144
+	.byte	3,1,1,5,43,9
+	.half	.L150-.L151
+	.byte	3,2,1,5,35,9
+	.half	.L153-.L150
+	.byte	1,5,16,9
+	.half	.L204-.L153
+	.byte	1,5,19,9
+	.half	.L205-.L204
+	.byte	3,1,1,5,43,9
+	.half	.L146-.L205
+	.byte	1,5,35,9
+	.half	.L154-.L146
+	.byte	1,5,16,9
+	.half	.L206-.L154
+	.byte	1,5,28,9
+	.half	.L207-.L206
+	.byte	3,124,1,5,1,9
+	.half	.L11-.L207
+	.byte	3,10,1,7,9
+	.half	.L62-.L11
+	.byte	0,1,1
+.L200:
+	.sdecl	'.debug_ranges',debug,cluster('Park_Step')
+	.sect	'.debug_ranges'
+.L61:
+	.word	-1,.L30,0,.L62-.L30,0,0
+	.sdecl	'.debug_info',debug,cluster('InvPark_Init')
+	.sect	'.debug_info'
+.L63:
+	.word	267
+	.half	3
+	.word	.L64
+	.byte	4,1
+	.byte	'../embed_sim_coordinate_transform.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Aurix_EmbedSim\\AURIX_TC3x_Motor_Control_SDK\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L66,.L65
+	.byte	2
+	.word	.L39
+	.byte	3
+	.byte	'InvPark_Init',0,1,183,1,6,1,1,1
+	.word	.L32,.L112,.L31
+	.byte	4
+	.byte	's',0,1,183,1,37
+	.word	.L113,.L114
+	.byte	5
+	.word	.L32,.L112
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('InvPark_Init')
+	.sect	'.debug_abbrev'
+.L64:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('InvPark_Init')
+	.sect	'.debug_line'
+.L65:
+	.word	.L209-.L208
+.L208:
+	.half	3
+	.word	.L211-.L210
+.L210:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../embed_sim_coordinate_transform.c',0,0,0,0,0
+.L211:
+	.byte	5,5,7,0,5,2
+	.word	.L32
+	.byte	3,184,1,1,5,25,7,9
+	.half	.L212-.L32
+	.byte	3,2,1,5,28,9
+	.half	.L213-.L212
+	.byte	1,5,46,9
+	.half	.L155-.L213
+	.byte	1,5,1,9
+	.half	.L13-.L155
+	.byte	3,6,1,7,9
+	.half	.L67-.L13
+	.byte	0,1,1
+.L209:
+	.sdecl	'.debug_ranges',debug,cluster('InvPark_Init')
+	.sect	'.debug_ranges'
+.L66:
+	.word	-1,.L32,0,.L67-.L32,0,0
+	.sdecl	'.debug_info',debug,cluster('InvPark_Step')
+	.sect	'.debug_info'
+.L68:
+	.word	400
+	.half	3
+	.word	.L69
+	.byte	4,1
+	.byte	'../embed_sim_coordinate_transform.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Aurix_EmbedSim\\AURIX_TC3x_Motor_Control_SDK\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L71,.L70
+	.byte	2
+	.word	.L39
+	.byte	3
+	.byte	'InvPark_Step',0,1,203,1,6,1,1,1
+	.word	.L34,.L115,.L33
+	.byte	4
+	.byte	's',0,1,204,1,28
+	.word	.L116,.L117
+	.byte	4
+	.byte	'd',0,1,205,1,28
+	.word	.L89,.L118
+	.byte	4
+	.byte	'q',0,1,206,1,28
+	.word	.L89,.L119
+	.byte	4
+	.byte	'theta',0,1,207,1,28
+	.word	.L89,.L120
+	.byte	4
+	.byte	'alpha_out',0,1,208,1,28
+	.word	.L121,.L122
+	.byte	4
+	.byte	'beta_out',0,1,209,1,28
+	.word	.L123,.L124
+	.byte	5
+	.word	.L34,.L115
+	.byte	6
+	.byte	'cos_t',0,1,211,1,17
+	.word	.L89,.L125
+	.byte	6
+	.byte	'sin_t',0,1,212,1,17
+	.word	.L89,.L126
+	.byte	0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('InvPark_Step')
+	.sect	'.debug_abbrev'
+.L69:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0,0,6,52,0,3
+	.byte	8,58,15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('InvPark_Step')
+	.sect	'.debug_line'
+.L70:
+	.word	.L215-.L214
+.L214:
+	.half	3
+	.word	.L217-.L216
+.L216:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../embed_sim_coordinate_transform.c',0,0,0,0,0
+.L217:
+	.byte	5,6,7,0,5,2
+	.word	.L34
+	.byte	3,202,1,1,5,9,9
+	.half	.L161-.L34
+	.byte	3,13,1,5,42,7,9
+	.half	.L218-.L161
+	.byte	1,5,22,7,9
+	.half	.L162-.L218
+	.byte	3,2,1,5,15,9
+	.half	.L156-.L162
+	.byte	1,5,22,9
+	.half	.L164-.L156
+	.byte	3,1,1,5,25,9
+	.half	.L163-.L164
+	.byte	3,2,1,5,34,9
+	.half	.L166-.L163
+	.byte	1,5,20,9
+	.half	.L167-.L166
+	.byte	1,5,39,9
+	.half	.L168-.L167
+	.byte	3,1,1,5,34,9
+	.half	.L169-.L168
+	.byte	1,5,20,9
+	.half	.L159-.L169
+	.byte	1,5,28,9
+	.half	.L219-.L159
+	.byte	3,124,1,5,1,9
+	.half	.L16-.L219
+	.byte	3,10,1,7,9
+	.half	.L72-.L16
+	.byte	0,1,1
+.L215:
+	.sdecl	'.debug_ranges',debug,cluster('InvPark_Step')
+	.sect	'.debug_ranges'
+.L71:
+	.word	-1,.L34,0,.L72-.L34,0,0
+	.sdecl	'.debug_info',debug,cluster('InvClarke_Init')
+	.sect	'.debug_info'
+.L73:
+	.word	269
+	.half	3
+	.word	.L74
+	.byte	4,1
+	.byte	'../embed_sim_coordinate_transform.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Aurix_EmbedSim\\AURIX_TC3x_Motor_Control_SDK\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L76,.L75
+	.byte	2
+	.word	.L39
+	.byte	3
+	.byte	'InvClarke_Init',0,1,234,1,6,1,1,1
+	.word	.L36,.L127,.L35
+	.byte	4
+	.byte	's',0,1,234,1,41
+	.word	.L128,.L129
+	.byte	5
+	.word	.L36,.L127
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('InvClarke_Init')
+	.sect	'.debug_abbrev'
+.L74:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('InvClarke_Init')
+	.sect	'.debug_line'
+.L75:
+	.word	.L221-.L220
+.L220:
+	.half	3
+	.word	.L223-.L222
+.L222:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../embed_sim_coordinate_transform.c',0,0,0,0,0
+.L223:
+	.byte	5,5,7,0,5,2
+	.word	.L36
+	.byte	3,235,1,1,5,25,7,9
+	.half	.L224-.L36
+	.byte	3,2,1,5,28,9
+	.half	.L225-.L224
+	.byte	1,5,48,9
+	.half	.L170-.L225
+	.byte	1,5,1,9
+	.half	.L18-.L170
+	.byte	3,6,1,7,9
+	.half	.L77-.L18
+	.byte	0,1,1
+.L221:
+	.sdecl	'.debug_ranges',debug,cluster('InvClarke_Init')
+	.sect	'.debug_ranges'
+.L76:
+	.word	-1,.L36,0,.L77-.L36,0,0
+	.sdecl	'.debug_info',debug,cluster('InvClarke_Step')
+	.sect	'.debug_info'
+.L78:
+	.word	366
+	.half	3
+	.word	.L79
+	.byte	4,1
+	.byte	'../embed_sim_coordinate_transform.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\Aurix_EmbedSim\\AURIX_TC3x_Motor_Control_SDK\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L81,.L80
+	.byte	2
+	.word	.L39
+	.byte	3
+	.byte	'InvClarke_Step',0,1,255,1,6,1,1,1
+	.word	.L38,.L130,.L37
+	.byte	4
+	.byte	's',0,1,128,2,28
+	.word	.L131,.L132
+	.byte	4
+	.byte	'alpha',0,1,129,2,28
+	.word	.L89,.L133
+	.byte	4
+	.byte	'beta',0,1,130,2,28
+	.word	.L89,.L134
+	.byte	4
+	.byte	'va_out',0,1,131,2,28
+	.word	.L135,.L136
+	.byte	4
+	.byte	'vb_out',0,1,132,2,28
+	.word	.L137,.L138
+	.byte	4
+	.byte	'vc_out',0,1,133,2,28
+	.word	.L139,.L140
+	.byte	5
+	.word	.L38,.L130
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('InvClarke_Step')
+	.sect	'.debug_abbrev'
+.L79:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('InvClarke_Step')
+	.sect	'.debug_line'
+.L80:
+	.word	.L227-.L226
+.L226:
+	.half	3
+	.word	.L229-.L228
+.L228:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../embed_sim_coordinate_transform.c',0,0,0,0,0
+.L229:
+	.byte	5,9,7,0,5,2
+	.word	.L38
+	.byte	3,136,2,1,5,37,7,9
+	.half	.L230-.L38
+	.byte	1,5,57,7,9
+	.half	.L231-.L230
+	.byte	1,5,17,7,9
+	.half	.L232-.L231
+	.byte	3,2,1,5,20,9
+	.half	.L233-.L232
+	.byte	3,1,1,5,41,9
+	.half	.L234-.L233
+	.byte	1,5,55,9
+	.half	.L235-.L234
+	.byte	1,5,38,9
+	.half	.L236-.L235
+	.byte	1,5,17,9
+	.half	.L237-.L236
+	.byte	1,5,20,9
+	.half	.L238-.L237
+	.byte	3,1,1,5,31,9
+	.half	.L239-.L238
+	.byte	1,5,41,9
+	.half	.L240-.L239
+	.byte	1,5,38,9
+	.half	.L241-.L240
+	.byte	1,5,17,9
+	.half	.L242-.L241
+	.byte	1,5,25,9
+	.half	.L243-.L242
+	.byte	3,126,1,5,1,9
+	.half	.L22-.L243
+	.byte	3,8,1,7,9
+	.half	.L82-.L22
+	.byte	0,1,1
+.L227:
+	.sdecl	'.debug_ranges',debug,cluster('InvClarke_Step')
+	.sect	'.debug_ranges'
+.L81:
+	.word	-1,.L38,0,.L82-.L38,0,0
+	.sdecl	'.debug_loc',debug,cluster('Clarke_Init')
+	.sect	'.debug_loc'
+.L23:
+	.word	-1,.L24,0,.L83-.L24
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L85:
+	.word	-1,.L24,0,.L141-.L24
+	.half	1
+	.byte	100
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('Clarke_Step')
+	.sect	'.debug_loc'
+.L25:
+	.word	-1,.L26,0,.L86-.L26
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L94:
+	.word	-1,.L26,0,.L86-.L26
+	.half	1
+	.byte	101
+	.word	0,0
+.L96:
+	.word	-1,.L26,0,.L86-.L26
+	.half	1
+	.byte	102
+	.word	0,0
+.L90:
+	.word	-1,.L26,0,.L86-.L26
+	.half	1
+	.byte	84
+	.word	0,0
+.L91:
+	.word	-1,.L26,0,.L86-.L26
+	.half	1
+	.byte	85
+	.word	0,0
+.L92:
+	.word	-1,.L26,0,.L86-.L26
+	.half	1
+	.byte	86
+	.word	0,0
+.L88:
+	.word	-1,.L26,0,.L86-.L26
+	.half	1
+	.byte	100
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('InvClarke_Init')
+	.sect	'.debug_loc'
+.L35:
+	.word	-1,.L36,0,.L127-.L36
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L129:
+	.word	-1,.L36,0,.L170-.L36
+	.half	1
+	.byte	100
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('InvClarke_Step')
+	.sect	'.debug_loc'
+.L37:
+	.word	-1,.L38,0,.L130-.L38
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L133:
+	.word	-1,.L38,0,.L130-.L38
+	.half	1
+	.byte	84
+	.word	0,0
+.L134:
+	.word	-1,.L38,0,.L130-.L38
+	.half	1
+	.byte	85
+	.word	0,0
+.L132:
+	.word	-1,.L38,0,.L130-.L38
+	.half	1
+	.byte	100
+	.word	0,0
+.L136:
+	.word	-1,.L38,0,.L130-.L38
+	.half	1
+	.byte	101
+	.word	0,0
+.L138:
+	.word	-1,.L38,0,.L130-.L38
+	.half	1
+	.byte	102
+	.word	0,0
+.L140:
+	.word	-1,.L38,0,.L130-.L38
+	.half	1
+	.byte	103
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('InvPark_Init')
+	.sect	'.debug_loc'
+.L31:
+	.word	-1,.L32,0,.L112-.L32
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L114:
+	.word	-1,.L32,0,.L155-.L32
+	.half	1
+	.byte	100
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('InvPark_Step')
+	.sect	'.debug_loc'
+.L33:
+	.word	-1,.L34,0,.L115-.L34
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L122:
+	.word	-1,.L34,0,.L156-.L34
+	.half	1
+	.byte	101
+	.word	.L160-.L34,.L115-.L34
+	.half	1
+	.byte	111
+	.word	0,0
+.L124:
+	.word	-1,.L34,0,.L156-.L34
+	.half	1
+	.byte	102
+	.word	.L161-.L34,.L115-.L34
+	.half	1
+	.byte	108
+	.word	0,0
+.L125:
+	.word	-1,.L34,.L156-.L34,.L163-.L34
+	.half	1
+	.byte	82
+	.word	.L164-.L34,.L16-.L34
+	.half	1
+	.byte	90
+	.word	0,0
+.L118:
+	.word	-1,.L34,0,.L157-.L34
+	.half	1
+	.byte	84
+	.word	.L158-.L34,.L159-.L34
+	.half	1
+	.byte	95
+	.word	0,0
+.L119:
+	.word	-1,.L34,0,.L156-.L34
+	.half	1
+	.byte	85
+	.word	.L166-.L34,.L167-.L34
+	.half	1
+	.byte	88
+	.word	.L168-.L34,.L169-.L34
+	.half	1
+	.byte	88
+	.word	0,0
+.L117:
+	.word	-1,.L34,0,.L156-.L34
+	.half	1
+	.byte	100
+	.word	0,0
+.L126:
+	.word	-1,.L34,.L163-.L34,.L16-.L34
+	.half	1
+	.byte	82
+	.word	0,0
+.L120:
+	.word	-1,.L34,0,.L157-.L34
+	.half	1
+	.byte	86
+	.word	.L162-.L34,.L157-.L34
+	.half	1
+	.byte	89
+	.word	.L157-.L34,.L156-.L34
+	.half	1
+	.byte	84
+	.word	.L164-.L34,.L165-.L34
+	.half	1
+	.byte	89
+	.word	.L165-.L34,.L163-.L34
+	.half	1
+	.byte	84
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('Park_Init')
+	.sect	'.debug_loc'
+.L27:
+	.word	-1,.L28,0,.L97-.L28
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L99:
+	.word	-1,.L28,0,.L142-.L28
+	.half	1
+	.byte	100
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('Park_Step')
+	.sect	'.debug_loc'
+.L29:
+	.word	-1,.L30,0,.L100-.L30
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L103:
+	.word	-1,.L30,0,.L143-.L30
+	.half	1
+	.byte	84
+	.word	.L145-.L30,.L146-.L30
+	.half	1
+	.byte	95
+	.word	0,0
+.L104:
+	.word	-1,.L30,0,.L144-.L30
+	.half	1
+	.byte	85
+	.word	.L150-.L30,.L153-.L30
+	.half	1
+	.byte	88
+	.word	.L146-.L30,.L154-.L30
+	.half	1
+	.byte	88
+	.word	0,0
+.L110:
+	.word	-1,.L30,.L144-.L30,.L150-.L30
+	.half	1
+	.byte	82
+	.word	.L151-.L30,.L11-.L30
+	.half	1
+	.byte	90
+	.word	0,0
+.L107:
+	.word	-1,.L30,0,.L144-.L30
+	.half	1
+	.byte	101
+	.word	.L147-.L30,.L100-.L30
+	.half	1
+	.byte	111
+	.word	0,0
+.L109:
+	.word	-1,.L30,0,.L144-.L30
+	.half	1
+	.byte	102
+	.word	.L148-.L30,.L100-.L30
+	.half	1
+	.byte	108
+	.word	0,0
+.L102:
+	.word	-1,.L30,0,.L144-.L30
+	.half	1
+	.byte	100
+	.word	0,0
+.L111:
+	.word	-1,.L30,.L150-.L30,.L11-.L30
+	.half	1
+	.byte	82
+	.word	0,0
+.L105:
+	.word	-1,.L30,0,.L143-.L30
+	.half	1
+	.byte	86
+	.word	.L149-.L30,.L143-.L30
+	.half	1
+	.byte	89
+	.word	.L143-.L30,.L144-.L30
+	.half	1
+	.byte	84
+	.word	.L151-.L30,.L152-.L30
+	.half	1
+	.byte	89
+	.word	.L152-.L30,.L150-.L30
+	.half	1
+	.byte	84
+	.word	0,0
+	.sdecl	'.debug_frame',debug
+	.sect	'.debug_frame'
+.L244:
+	.word	48
+	.word	-1
+	.byte	3,0,2,1,27,12,26,0,8,26,8,27,8,30,8,29,8,28,8,16,8,17,8,24,8,25,8,31,8,32,8,33,8,34,8,35,8,36,8,37,8,38
+	.byte	8,39
+	.sdecl	'.debug_frame',debug,cluster('Clarke_Init')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L244,.L24,.L83-.L24
+	.sdecl	'.debug_frame',debug,cluster('Clarke_Step')
+	.sect	'.debug_frame'
+	.word	20
+	.word	.L244,.L26,.L86-.L26
+	.byte	8,18,8,19,8,20,8,23
+	.sdecl	'.debug_frame',debug,cluster('Park_Init')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L244,.L28,.L97-.L28
+	.sdecl	'.debug_frame',debug,cluster('Park_Step')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L244,.L30,.L100-.L30
+	.sdecl	'.debug_frame',debug,cluster('InvPark_Init')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L244,.L32,.L112-.L32
+	.sdecl	'.debug_frame',debug,cluster('InvPark_Step')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L244,.L34,.L115-.L34
+	.sdecl	'.debug_frame',debug,cluster('InvClarke_Init')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L244,.L36,.L127-.L36
+	.sdecl	'.debug_frame',debug,cluster('InvClarke_Step')
+	.sect	'.debug_frame'
+	.word	20
+	.word	.L244,.L38,.L130-.L38
+	.byte	8,18,8,19,8,20,0,0
+	; Module end

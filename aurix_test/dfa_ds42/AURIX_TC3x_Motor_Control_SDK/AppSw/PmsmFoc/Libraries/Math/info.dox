@@ -1,0 +1,4 @@
+/**
+ * \defgroup mod_cpu_arithmetics Number processing
+ * \ingroup IfxLld_Cpu
+ */
