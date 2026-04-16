@@ -30,8 +30,8 @@
 
 #include "embed_sim_sys_types.h"   /* real32_T */
 
-/* Sample period for a 10000 Hz control loop */
-#define EMBEDSIM_DT  (0.0001000000f)
+/* Sample period for a 20000 Hz control loop */
+#define EMBEDSIM_DT  (0.0000500000f)
 
 /**
  * EmbedSim_Input_T
@@ -39,8 +39,11 @@
  */
 typedef struct
 {
-    real32_T magnitude;
-    real32_T angle_rad;
+    real32_T omega_ref_mech;                            /**< Mechanical speed reference [rad/s]; range [0, ~314] for 0-3000 RPM */
+    real32_T theta_m;                                   /**< Mechanical rotor angle [rad]; accumulating (NOT wrapped), from encoder */
+    real32_T ia;                                        /**< Phase-A current from ADC [A]; range [-SMC_I_MAX, +SMC_I_MAX] */
+    real32_T ib;                                        /**< Phase-B current from ADC [A]; range [-SMC_I_MAX, +SMC_I_MAX] */
+    real32_T ic;                                        /**< Phase-C current from ADC [A]; range [-SMC_I_MAX, +SMC_I_MAX] */
 } EmbedSim_Input_T;
 
 /**
@@ -56,6 +59,8 @@ typedef struct
 } EmbedSim_Output_T;
 
 /* Block headers */
+#include "embed_sim_mpc_controller.h"
+#include "embed_sim_motor_utility_blocks.h"
 #include "embed_sim_sv_pwm.h"
 
 extern void EmbedSim_Init(void);

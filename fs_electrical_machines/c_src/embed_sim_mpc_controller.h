@@ -12,12 +12,14 @@
  *
  * Cost function (minimised analytically at each 50 µs step):
  *   J = Σ_{k=1}^{N} [ Q_id · id_k²
+ *                    + Q_iq · iq_k²
  *                    + Q_omega · (omega_k − omega_ref)²
  *                    + R_vd · vd²  +  R_vq · vq² ]
  *
  * Closed-form solution (O(N), no iteration):
  *   vd_mpc = Q_id   · Σ bk·(0      − id_free_k) / (Q_id   · Σ bk² + R_vd)
- *   vq_mpc = Q_omega· Σ ek·(ω_ref  − ω_free_k ) / (Q_omega· Σ ek² + R_vq)
+ *   vq_mpc = (Q_omega· Σ ek·(ω_ref  − ω_free_k) + Q_iq·Σ bk·(0 − iq_free_k))
+ *            / (Q_omega·Σ ek² + Q_iq·Σ bk² + R_vq)
  *
  *   bk  = accumulated iq step-response to unit vq (constant over horizon)
  *   ek  = Σ_{j≤k} (dt/J)·KT·bj  (omega response)
@@ -41,7 +43,7 @@
  *  - State held in a single MPC_Controller_T struct (caller owns).
  *  - MatrixFloat used throughout (AURIX TriCore has hardware FPU).
  *
- * \version   2.0.0
+ * \version   2.1.0
  * \copyright Copyright (C) EmbedSim 2025
  **********************************************************************************************************************/
 
@@ -77,6 +79,7 @@
 #define MPC_N          (10U)                      /**< Prediction horizon (steps)  */
 #define MPC_DT         ((MatrixFloat)50.0e-6F)   /**< Sample period [s]           */
 #define MPC_Q_ID       ((MatrixFloat)10.0F)      /**< id cost weight              */
+#define MPC_Q_IQ       ((MatrixFloat)10.0F)      /**< iq cost weight              */
 #define MPC_Q_OMEGA    ((MatrixFloat)500.0F)     /**< speed cost weight           */
 #define MPC_R_VD       ((MatrixFloat)0.01F)      /**< vd effort weight            */
 #define MPC_R_VQ       ((MatrixFloat)0.01F)      /**< vq effort weight            */
@@ -172,6 +175,24 @@ typedef struct
 } MPC_Output_T;
 
 
+/**
+ * \struct MPC_GainSet_T
+ * \brief  Runtime-configurable MPC gains.
+ *
+ * Allows runtime tuning without recompilation. Mirrors all solver
+ * weight parameters.
+ */
+typedef struct
+{
+    MatrixFloat  q_id;      /**< id cost weight (default: MPC_Q_ID = 10.0)     */
+    MatrixFloat  q_iq;      /**< iq cost weight (default: MPC_Q_IQ = 10.0)     */
+    MatrixFloat  q_omega;   /**< speed cost weight (default: MPC_Q_OMEGA = 500.0) */
+    MatrixFloat  r_vd;      /**< vd effort weight (default: MPC_R_VD = 0.01)   */
+    MatrixFloat  r_vq;      /**< vq effort weight (default: MPC_R_VQ = 0.01)   */
+    MatrixFloat  ki_v;      /**< Speed integral gain (default: MPC_KI_V = 0.03) */
+} MPC_GainSet_T;
+
+
 /**********************************************************************************************************************/
 /*------------------------------------------------Function Prototypes-------------------------------------------------*/
 /**********************************************************************************************************************/
@@ -183,7 +204,7 @@ typedef struct
 extern void MPC_Controller_Init(MPC_Controller_T *st);
 
 /**
- * \brief  Run one 50 µs MPC step.
+ * \brief  Run one 50 µs MPC step with compile-time gains.
  * \param  st   Persistent state (updated in-place, must not be NULL).
  * \param  in   Sensor inputs for this step (must not be NULL).
  * \param  out  Voltage commands written here (must not be NULL).
@@ -191,6 +212,24 @@ extern void MPC_Controller_Init(MPC_Controller_T *st);
 extern void MPC_Controller_Step(MPC_Controller_T       *st,
                                 const MPC_Input_T      *in,
                                 MPC_Output_T           *out);
+
+/**
+ * \brief  Run one 50 µs MPC step with runtime gains.
+ * \param  st   Persistent state (updated in-place, must not be NULL).
+ * \param  in   Sensor inputs for this step (must not be NULL).
+ * \param  out  Voltage commands written here (must not be NULL).
+ * \param  gains  Runtime gain set (must not be NULL).
+ */
+extern void MPC_Controller_StepWithGains(MPC_Controller_T       *st,
+                                         const MPC_Input_T      *in,
+                                         MPC_Output_T           *out,
+                                         const MPC_GainSet_T    *gains);
+
+/**
+ * \brief  Get default gain set.
+ * \param  gains  Output pointer to fill with default gains.
+ */
+extern void MPC_GainSet_GetDefault(MPC_GainSet_T *gains);
 
 
 #endif /* EMBED_SIM_MPC_CONTROLLER_H */

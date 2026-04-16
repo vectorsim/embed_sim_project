@@ -6,28 +6,7 @@
  * Direct C port of mpc_controller_block.py (_solve_mpc + compute_py).
  * Every numerical operation matches the Python reference one-to-one.
  *
- * Scalar type convention
- * ──────────────────────
- * All floating-point scalars use MatrixFloat (≡ real32_T, IEEE 754 single
- * precision) as established in embed_sim_matrix.h.  No bare C99 'float'
- * appears anywhere in this translation unit.  Integer loop counters and
- * dimension fields use uint32_T from embed_sim_sys_types.h.
- *
- * Every literal carries the 'F' suffix to prevent implicit double promotion
- * (MISRA C:2012 Rule 10.6) and is cast to MatrixFloat via the MPC_ZERO_F /
- * MPC_ONE_F family of macros defined in the header.
- *
- * MISRA C:2012 compliance
- * ────────────────────────
- *  Rule 8.4  : All external-linkage identifiers declared in the header.
- *  Rule 14.4 : No implicit bool conversions.
- *  Rule 15.5 : Single point of exit per function.
- *  Rule 15.7 : Mandatory else clauses on all if-else chains.
- *  Rule 17.3 : No implicit function declarations.
- *  Rule 21.3 : No dynamic memory (malloc/free).
- *  Dir 4.1   : Run-time failures handled by clamping, never by UB.
- *
- * \version   2.0.0
+ * \version   2.1.0
  * \copyright Copyright (C) EmbedSim 2025
  **********************************************************************************************************************/
 
@@ -108,6 +87,7 @@ static void mpc_smo_step(MPC_Controller_T *st,
  * \param[in]  ed_hat     d-axis back-EMF estimate [V]  (BEMF-clamped)
  * \param[in]  eq_hat     q-axis back-EMF estimate [V]  (BEMF-clamped)
  * \param[in]  dt         Sample period [s]
+ * \param[in]  gains      Runtime gain set (weights)
  * \param[out] vd_out     d-axis voltage command [V]
  * \param[out] vq_out     q-axis voltage command [V]
  */
@@ -118,6 +98,7 @@ static void mpc_solve(MatrixFloat  id0,
                       MatrixFloat  ed_hat,
                       MatrixFloat  eq_hat,
                       MatrixFloat  dt,
+                      const MPC_GainSet_T *gains,
                       MatrixFloat *vd_out,
                       MatrixFloat *vq_out);
 
@@ -251,6 +232,7 @@ static void mpc_solve(MatrixFloat  id0,
                       MatrixFloat  ed_hat,
                       MatrixFloat  eq_hat,
                       MatrixFloat  dt,
+                      const MPC_GainSet_T *gains,
                       MatrixFloat *vd_out,
                       MatrixFloat *vq_out)
 {
@@ -272,8 +254,9 @@ static void mpc_solve(MatrixFloat  id0,
 
     /* Cost gradient accumulators */
     MatrixFloat sum_bk_err_d = MPC_ZERO_F;
-    MatrixFloat sum_bk2      = MPC_ZERO_F;
+    MatrixFloat sum_bk_err_q = MPC_ZERO_F;  /* NEW: iq penalty term */
     MatrixFloat sum_ek_err   = MPC_ZERO_F;
+    MatrixFloat sum_bk2      = MPC_ZERO_F;
     MatrixFloat sum_ek2      = MPC_ZERO_F;
 
     MatrixFloat f_d;
@@ -284,6 +267,10 @@ static void mpc_solve(MatrixFloat  id0,
     MatrixFloat vd_mpc;
     MatrixFloat vq_mpc;
     uint32_T    k;
+
+    /* Clamp initial currents for prediction */
+    id_free = mpc_clamp(id_free, -MPC_I_MAX, MPC_I_MAX);
+    iq_free = mpc_clamp(iq_free, -MPC_I_MAX, MPC_I_MAX);
 
     for (k = 0U; k < MPC_N; k++)
     {
@@ -296,23 +283,31 @@ static void mpc_solve(MatrixFloat  id0,
         iq_free    = a * iq_free    + f_q;
         omega_free = omega_free     + f_omega;
 
+        /* Apply current limits during prediction */
+        id_free = mpc_clamp(id_free, -MPC_I_MAX, MPC_I_MAX);
+        iq_free = mpc_clamp(iq_free, -MPC_I_MAX, MPC_I_MAX);
+
         /* ── Step-response coefficients ──────────────────────────────────── */
         bk = bk * a + b;              /* iq response to unit vq                */
         ek += dt_J * MPC_KT * bk;    /* omega response — uses current bk      */
 
         /* ── Gradient accumulation ───────────────────────────────────────── */
-        sum_bk_err_d += bk * (MPC_ZERO_F  - id_free);
-        sum_ek_err   += ek * (omega_ref   - omega_free);
+        /* d-axis: target id_ref = 0 */
+        sum_bk_err_d += bk * (MPC_ZERO_F - id_free);
+        /* iq penalty term: target iq_ref = 0 (we penalise iq directly) */
+        sum_bk_err_q += bk * (MPC_ZERO_F - iq_free);
+        /* speed term: target omega_ref */
+        sum_ek_err   += ek * (omega_ref - omega_free);
         sum_bk2      += bk * bk;
         sum_ek2      += ek * ek;
     }
 
     /* ── Analytical optimal vd_mpc ──────────────────────────────────────── */
-    denom_d = MPC_Q_ID    * sum_bk2 + MPC_R_VD;
+    denom_d = gains->q_id * sum_bk2 + gains->r_vd;
 
     if (denom_d > MPC_DENOM_MIN)
     {
-        vd_mpc = MPC_Q_ID * sum_bk_err_d / denom_d;
+        vd_mpc = gains->q_id * sum_bk_err_d / denom_d;
     }
     else
     {
@@ -320,11 +315,12 @@ static void mpc_solve(MatrixFloat  id0,
     }
 
     /* ── Analytical optimal vq_mpc ──────────────────────────────────────── */
-    denom_q = MPC_Q_OMEGA * sum_ek2 + MPC_R_VQ;
+    /* NEW: Include Q_iq in denominator and numerator (matches Python) */
+    denom_q = gains->q_omega * sum_ek2 + gains->q_iq * sum_bk2 + gains->r_vq;
 
     if (denom_q > MPC_DENOM_MIN)
     {
-        vq_mpc = MPC_Q_OMEGA * sum_ek_err / denom_q;
+        vq_mpc = (gains->q_omega * sum_ek_err + gains->q_iq * sum_bk_err_q) / denom_q;
     }
     else
     {
@@ -359,11 +355,33 @@ void MPC_Controller_Init(MPC_Controller_T *st)
 
 
 /*--------------------------------------------------------------------------------------------------------------------
- * MPC_Controller_Step
+ * MPC_GainSet_GetDefault
  *------------------------------------------------------------------------------------------------------------------*/
-void MPC_Controller_Step(MPC_Controller_T       *st,
-                         const MPC_Input_T      *in,
-                         MPC_Output_T           *out)
+void MPC_GainSet_GetDefault(MPC_GainSet_T *gains)
+{
+    if (gains != NULL)
+    {
+        gains->q_id    = MPC_Q_ID;
+        gains->q_iq    = MPC_Q_IQ;
+        gains->q_omega = MPC_Q_OMEGA;
+        gains->r_vd    = MPC_R_VD;
+        gains->r_vq    = MPC_R_VQ;
+        gains->ki_v    = MPC_KI_V;
+    }
+    else
+    {
+        /* MISRA C:2012 Rule 15.7: else required */
+    }
+}
+
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * MPC_Controller_StepWithGains
+ *------------------------------------------------------------------------------------------------------------------*/
+void MPC_Controller_StepWithGains(MPC_Controller_T       *st,
+                                  const MPC_Input_T      *in,
+                                  MPC_Output_T           *out,
+                                  const MPC_GainSet_T    *gains)
 {
     MatrixFloat theta_e;
     MatrixFloat omega_m;
@@ -387,6 +405,7 @@ void MPC_Controller_Step(MPC_Controller_T       *st,
     MatrixFloat intmax;
     MatrixFloat v_alpha;
     MatrixFloat v_beta;
+    MPC_GainSet_T default_gains;
 
     /* Guard against NULL pointers — MISRA Dir 4.1 */
     if ((st == NULL) || (in == NULL) || (out == NULL))
@@ -396,6 +415,17 @@ void MPC_Controller_Step(MPC_Controller_T       *st,
     else
     {
         /* MISRA 15.7: else required */
+    }
+
+    /* Use provided gains or fall back to defaults */
+    if (gains == NULL)
+    {
+        MPC_GainSet_GetDefault(&default_gains);
+        gains = &default_gains;
+    }
+    else
+    {
+        /* gains already valid */
     }
 
     /* ── Electrical angle ─────────────────────────────────────────────────── */
@@ -434,9 +464,9 @@ void MPC_Controller_Step(MPC_Controller_T       *st,
     id0 = mpc_clamp(id_meas, -MPC_I_MAX, MPC_I_MAX);
     iq0 = mpc_clamp(iq_meas, -MPC_I_MAX, MPC_I_MAX);
 
-    /* ── 3-state MPC solver ──────────────────────────────────────────────── */
+    /* ── 3-state MPC solver (with runtime gains) ─────────────────────────── */
     mpc_solve(id0, iq0, omega_m, in->omega_ref_mech,
-              ed_hat, eq_hat, MPC_DT, &vd, &vq);
+              ed_hat, eq_hat, MPC_DT, gains, &vd, &vq);
 
     /* ── Soft-start vq limit ─────────────────────────────────────────────── */
     vq_lim = (st->iq_limit / MPC_I_MAX) * MPC_V_MAX;
@@ -449,12 +479,12 @@ void MPC_Controller_Step(MPC_Controller_T       *st,
     /* Anti-windup: keep integral contribution within remaining vq headroom */
     head   = MPC_V_MAX - (MatrixFloat)fabsf((float)vq);
     head   = mpc_clamp(head, MPC_ZERO_F, MPC_V_MAX);
-    intmax = head / (MPC_KI_V + MPC_DENOM_MIN);
+    intmax = head / (gains->ki_v + MPC_DENOM_MIN);
 
     st->speed_err_integral = mpc_clamp(st->speed_err_integral,
                                        -intmax, intmax);
 
-    vq = mpc_clamp(vq + MPC_KI_V * st->speed_err_integral,
+    vq = mpc_clamp(vq + gains->ki_v * st->speed_err_integral,
                    -MPC_V_MAX, MPC_V_MAX);
 
     /* ── InvPark: [vd, vq] → [v_alpha, v_beta] ──────────────────────────── */
@@ -467,4 +497,16 @@ void MPC_Controller_Step(MPC_Controller_T       *st,
     /* ── Write outputs ───────────────────────────────────────────────────── */
     out->v_alpha = v_alpha;
     out->v_beta  = v_beta;
+}
+
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * MPC_Controller_Step (legacy with compile-time gains)
+ *------------------------------------------------------------------------------------------------------------------*/
+void MPC_Controller_Step(MPC_Controller_T       *st,
+                         const MPC_Input_T      *in,
+                         MPC_Output_T           *out)
+{
+    /* Call the gains version with NULL (uses defaults) */
+    MPC_Controller_StepWithGains(st, in, out, NULL);
 }
