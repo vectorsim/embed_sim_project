@@ -22,6 +22,10 @@ file_list = [
     "embed_sim_dfc_gains.h",
     "embed_sim_dfc_controller.h",
     "embed_sim_dfc_controller.c",
+    "embed_sim_mpc_gains.h",
+    "embed_sim_mpc_controller.h",
+    "embed_sim_mpc_controller.c",
+
 
 
 ]

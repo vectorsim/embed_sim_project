@@ -64,8 +64,20 @@
  *            SMO speed deviates by more than DFC_SMO_PLAUS_BAND -- this catches
  *            residual spikes that survive the omega_e_hat clamp inside DFC_SMO_Step.
  *
- * \version   3.0.0
+ * \version   3.2.0
  * \copyright Copyright (C) EmbedSim 2025
+ *
+ * \par Change history
+ *   v3.2.0  Fix 3: DFC_VoltageLaw() -- d-axis PI integral action.
+ *           New DFC_State_T.id_integral [V] zeroed in Init/Reset.
+ *           DFC_KI_ID = DFC_KP_ID*0.10, DFC_ID_INT_LIMIT = 2.0 V in gains.h.
+ *           Conditional anti-windup: integrator frozen when |vd_out| = DFC_V_MAX.
+ *           DFC_VoltageLaw() signature extended with DFC_State_T* and dt args.
+ *
+ *   v3.1.0  Fix 1: DFC_VoltageLaw() -- d-axis-priority voltage saturation (kept).
+ *
+ *   v3.1.0  Fix 2 REVERTED: iq_ref->iq_meas caused speed-loop collapse.
+ *           iq_ref retained; DC id bias now eliminated by Fix 3 integrator.
  *********************************************************************************************************************/
 
 
@@ -128,11 +140,13 @@ static void DFC_SMO_Step(
     MatrixFloat         * const omega_e_smo);
 
 static void DFC_VoltageLaw(
-    MatrixFloat   iq_ref,
-    MatrixFloat   diq_dt,
-    MatrixFloat   id_meas,
-    MatrixFloat   iq_meas,
-    MatrixFloat   omega_e,
+    DFC_State_T * const s,
+    MatrixFloat         iq_ref,
+    MatrixFloat         diq_dt,
+    MatrixFloat         id_meas,
+    MatrixFloat         iq_meas,
+    MatrixFloat         omega_e,
+    MatrixFloat         dt,
     MatrixFloat * const vd,
     MatrixFloat * const vq);
 
@@ -677,14 +691,23 @@ static void DFC_SMO_Step(
  *          adds them to the output.  The feedback gains only need to correct
  *          model mismatch and disturbances, not fight the steady-state coupling.
  *
- *          D-AXIS VOLTAGE EQUATION:
+ *          D-AXIS VOLTAGE EQUATION (Fix 1 + Fix 3):
  *
- *            vd = -omega_e * Lq * iq_ref          [decoupling: cancels q->d coupling]
- *               + Kp_id * (0 - id_meas)           [id = 0 enforcement (MTPA)]
+ *            vd = -omega_e * Lq * iq_ref          [flatness: cancels q->d coupling]
+ *               + Kp_id * (0 - id_meas)           [proportional: id = 0 MTPA]
+ *               + id_integral                     [integral Fix 3: eliminates DC bias]
  *
- *          The term -omega_e * Lq * iq_ref is the voltage that the d-axis winding
- *          "sees" from q-axis current through mutual inductance.  Pre-injecting it
- *          prevents id from rising when speed or iq changes.
+ *          iq_ref (not iq_meas) is used in the decoupling term.  Using iq_meas
+ *          was tested and caused speed-loop collapse: ADC noise on iq_meas
+ *          propagated through vd -> v_alpha_prev -> SMO -> SpeedFusion.
+ *          The residual omega_e*Lq*(iq_meas - iq_ref) is a DC disturbance at
+ *          steady state; the id_integral integrator is what eliminates it.
+ *
+ *          INTEGRAL ACTION (Fix 3):
+ *          ==========================
+ *          id_integral += DFC_KI_ID * dt * (0 - id_meas)
+ *          id_integral  = clamp(id_integral, +/-DFC_ID_INT_LIMIT)
+ *          Anti-windup: integrator frozen when vd_out hits the DFC_V_MAX clamp.
  *
  *          Q-AXIS VOLTAGE EQUATION:
  *
@@ -698,15 +721,19 @@ static void DFC_SMO_Step(
  *          perfect.  The Kp_iq term corrects for R error, lambda_pm error, and
  *          disturbances.
  *
- *          VOLTAGE SATURATION (HEXAGON CONSTRAINT):
- *          ==========================================
- *          The inverter cannot produce voltages beyond V_DC / sqrt(3) per phase.
- *          If the commanded voltage vector magnitude exceeds this limit, both
- *          vd and vq are scaled by the same factor so that:
- *            - The voltage vector stays within the hexagon.
- *            - The vd/vq ratio (and hence the current angle) is preserved.
- *          This is a simple circle approximation to the hexagon; it is
- *          conservative but avoids over-modulation artefacts at high speed.
+ *          VOLTAGE SATURATION -- PRIORITY-BASED (v3.1):
+ *          ==============================================
+ *          Fix 1 (v3.1): replaced proportional circle clipping with d-axis-priority
+ *          saturation.  The old proportional approach attenuated the small vd
+ *          correction by the same scale factor as the large vq, collapsing Kp_id
+ *          authority precisely when heavy load demands most of the voltage budget.
+ *
+ *          New approach:
+ *            Step 1 -- vd clamped to [-V_MAX, +V_MAX] (full id-correction authority).
+ *            Step 2 -- vq_max = sqrt(V_MAX^2 - vd^2)  (remaining headroom).
+ *            Step 3 -- vq clamped to [-vq_max, +vq_max].
+ *
+ *          When not saturated this is identical to the old path (no clamp fires).
  *
  * \param[in]  iq_ref    Q-axis current reference [A].
  * \param[in]  diq_dt    LPF-filtered derivative of iq_ref [A/s].
@@ -717,56 +744,138 @@ static void DFC_SMO_Step(
  * \param[out] vq        Q-axis voltage reference [V].
  *------------------------------------------------------------------------------------------------------------------*/
 static void DFC_VoltageLaw(
-    const MatrixFloat   iq_ref,
-    const MatrixFloat   diq_dt,
-    const MatrixFloat   id_meas,
-    const MatrixFloat   iq_meas,
-    const MatrixFloat   omega_e,
+    DFC_State_T       * const s,
+    const MatrixFloat         iq_ref,
+    const MatrixFloat         diq_dt,
+    const MatrixFloat         id_meas,
+    const MatrixFloat         iq_meas,
+    const MatrixFloat         omega_e,
+    const MatrixFloat         dt,
     MatrixFloat       * const vd,
     MatrixFloat       * const vq)
 {
-    MatrixFloat vd_out, vq_out, magnitude, scale;
+    MatrixFloat vd_out, vq_out, vq_max, vd_sq;
+    MatrixFloat id_error;              /* [A]  id tracking error = id_ref - id_meas = 0 - id_meas */
+    MatrixFloat vd_unsaturated;        /* [V]  vd before priority clamp (needed for anti-windup)  */
 
-    if ((vd == NULL) || (vq == NULL))
+    if ((s == NULL) || (vd == NULL) || (vq == NULL))
     {
         return;
     }
 
-    /* ---- D-axis: decoupling + MTPA enforcement ---- */
-    /* id_ref = 0 (MTPA for SPMSM with no reluctance saliency).
-     * The -omega_e * Lq * iq_ref term exactly cancels the q->d cross-coupling,
-     * making the d-axis dynamics purely: L*did/dt = vd - R*id + [small residual].
-     * Kp_id then drives id to zero against model mismatch and transients.      */
-    vd_out = -(omega_e * DFC_L_Q * iq_ref)
-             + (DFC_KP_ID * (DFC_ZERO_F - id_meas));
+    /* ---- D-axis: decoupling + MTPA enforcement + integral action (Fix 3) ----
+     *
+     * id_ref = 0 A (MTPA for SPMSM: no reluctance saliency, Ld = Lq).
+     *
+     * Voltage law:
+     *   vd = -omega_e * Lq * iq_ref        [flatness: cancels q->d cross-coupling]
+     *      + Kp_id * (0 - id_meas)         [proportional: corrects transient id error]
+     *      + id_integral                   [integral Fix 3: eliminates DC id offset]
+     *
+     * NOTE: iq_ref (not iq_meas) in the decoupling term.  Using iq_meas was tested
+     * and caused speed-loop collapse because Park-transform ADC noise propagated
+     * through vd -> v_alpha_prev -> SMO -> SpeedFusion.  iq_ref is smooth (speed
+     * P-loop output) and does not inject noise.  The residual
+     * omega_e*Lq*(iq_meas - iq_ref) is a DC component at steady state; the
+     * integrator id_integral is exactly what handles this DC term.              */
+    id_error = DFC_ZERO_F - id_meas;   /* [A]  id_ref = 0 (MTPA) */
+
+    vd_out = -(omega_e * DFC_L_Q * iq_ref)     /* [V] cross-coupling cancel  */
+             + (DFC_KP_ID * id_error)           /* [V] proportional action    */
+             + s->id_integral;                  /* [V] integral action Fix 3  */
+
+    vd_unsaturated = vd_out;           /* save before clamping for anti-windup */
 
     /* ---- Q-axis: flatness feedforward + residual feedback ---- */
     /* Physical interpretation of each term:
-     *   R * iq_ref             : voltage needed to push iq_ref through winding resistance
-     *   Lq * diq_dt            : voltage needed to change iq (di/dt across inductance)
-     *   omega_e * lambda_pm    : back-EMF cancellation (motor generates this opposing voltage)
-     *   Kp_iq * (iq_ref - iq)  : correction for modelling error and ADC noise              */
-    vq_out = (DFC_R_S * iq_ref)
-           + (DFC_L_Q * diq_dt)
-           + (omega_e * DFC_LAMBDA_PM)
+     *   R * iq_ref             : voltage to overcome winding resistance at iq_ref
+     *   Lq * diq_dt            : voltage to ramp iq (di/dt across inductance)
+     *   omega_e * lambda_pm    : back-EMF cancellation at current speed
+     *   Kp_iq * (iq_ref - iq)  : proportional correction for model mismatch + ADC noise */
+    vq_out = (DFC_R_S   * iq_ref)
+           + (DFC_L_Q   * diq_dt)
+           + (omega_e   * DFC_LAMBDA_PM)
            + (DFC_KP_IQ * (iq_ref - iq_meas));
 
-    /* ---- Voltage saturation (circle inscribed in SVPWM hexagon) ---- */
-    /* Maximum deliverable phase voltage = Vdc / sqrt(3).
-     * If ||[vd, vq]|| > V_MAX, scale both down proportionally.
-     * Proportional scaling preserves the dq current angle (= id/iq ratio),
-     * which is important for MTPA (id = 0) operation at the voltage limit. */
-    magnitude = sqrtf(vd_out * vd_out + vq_out * vq_out);
+    /* ---- Voltage saturation: d-axis priority, q-axis gets remainder (Fix 1) ----
+     *
+     * Step 1 -- vd clamped to [-V_MAX, +V_MAX] independently.
+     *           Gives the id-correction path full voltage budget regardless of vq.
+     *
+     * Step 2 -- remaining headroom: vq_max = sqrt(V_MAX^2 - vd^2).
+     *           Follows from the circle constraint ||(vd,vq)|| <= V_MAX once vd fixed.
+     *
+     * Step 3 -- vq clamped to [-vq_max, +vq_max].
+     *
+     * When not saturated (typical) neither clamp fires; output identical to pre-Fix-1.
+     * MISRA C:2012 Rule 15.7: all if-else chains have a final else.           */
 
-    if (magnitude > DFC_V_MAX)
+    /* Step 1: clamp vd */
+    if (vd_out > DFC_V_MAX)
     {
-        scale  = DFC_V_MAX / magnitude;
-        vd_out *= scale;
-        vq_out *= scale;
+        vd_out = DFC_V_MAX;
+    }
+    else if (vd_out < -DFC_V_MAX)
+    {
+        vd_out = -DFC_V_MAX;
     }
     else
     {
-        /* Within hexagon -- no saturation required */
+        /* vd within range -- no action */
+    }
+
+    /* Step 2: remaining headroom for vq */
+    vd_sq  = vd_out * vd_out;                          /* [V^2] always >= 0 after clamp */
+    vq_max = sqrtf(DFC_V_MAX * DFC_V_MAX - vd_sq);     /* [V]   always >= 0            */
+
+    /* Step 3: clamp vq */
+    if (vq_out > vq_max)
+    {
+        vq_out = vq_max;
+    }
+    else if (vq_out < -vq_max)
+    {
+        vq_out = -vq_max;
+    }
+    else
+    {
+        /* vq within headroom -- no action */
+    }
+
+    /* ---- d-axis integrator update with conditional anti-windup (Fix 3) ----
+     *
+     * Conditional integration: update id_integral only when vd is NOT saturated.
+     * When vd_out = vd_unsaturated the clamp did not fire; the integrator may
+     * accumulate.  When they differ the clamp fired; freezing the integrator
+     * prevents it from winding up further in the wrong direction.
+     *
+     * This is equivalent to the "back-calculation" anti-windup structure but
+     * simpler: instead of subtracting the saturation error, we just don't add.
+     *
+     * Additional hard clamp: id_integral bounded to ±DFC_ID_INT_LIMIT = ±2.0 V
+     * regardless of saturation, preventing pathological accumulation at startup. */
+    if (vd_out == vd_unsaturated)
+    {
+        /* Not saturated: update integrator */
+        s->id_integral += DFC_KI_ID * dt * id_error;
+
+        /* Hard clamp */
+        if (s->id_integral > DFC_ID_INT_LIMIT)
+        {
+            s->id_integral = DFC_ID_INT_LIMIT;
+        }
+        else if (s->id_integral < -DFC_ID_INT_LIMIT)
+        {
+            s->id_integral = -DFC_ID_INT_LIMIT;
+        }
+        else
+        {
+            /* Within clamp -- no action */
+        }
+    }
+    else
+    {
+        /* Saturated: freeze integrator (anti-windup) */
     }
 
     *vd = vd_out;
@@ -821,6 +930,9 @@ void DFC_Controller_Init(DFC_State_T * const s, const MatrixFloat dt)
     s->smo.omega_e_hat  = DFC_ZERO_F;   /* Raw speed (gated by warmup counter)       */
     s->smo.omega_e_filt = DFC_ZERO_F;   /* LPF-smoothed speed                        */
     s->smo.theta_e_prev = DFC_ZERO_F;   /* Previous angle for finite-difference      */
+
+    /*--- d-axis PI integrator (Fix 3) ---*/
+    s->id_integral = DFC_ZERO_F;   /* Zero on cold start; Reset() calls Init() */
 
     /*--- Delayed voltages (z-1 for SMO) ---*/
     /* The SMO uses the voltage commanded in the *previous* step because the
@@ -993,8 +1105,8 @@ void DFC_Controller_Step(
     /* ---- 8. Flatness voltage law: dq voltages ---- */
     /* Computes the DFC voltage commands with feedforward + feedback.
      * See DFC_VoltageLaw for full derivation.                        */
-    DFC_VoltageLaw(iq_ref, s->diq_filt,
-                   id_meas, iq_meas, omega_e,
+    DFC_VoltageLaw(s, iq_ref, s->diq_filt,
+                   id_meas, iq_meas, omega_e, dt,
                    &vd, &vq);
 
     /* ---- 9. Inverse Park: dq -> alphabeta voltage ---- */

@@ -16,8 +16,13 @@ matching DFC_Controller_Step() in the C implementation exactly:
       Feedback: SpeedFusion (encoder IIR + SMO blend)
 
     INNER LOOP D  — id [A] -> vd [V]
-      vd = -omega_e * L_Q * iq_ref          [flatness decoupling]
-         + Kp_id * (0 - id_meas)            [MTPA enforcement]
+      vd = -omega_e * L_Q * iq_ref           [flatness decoupling]
+         + Kp_id * (0 - id_meas)             [proportional MTPA]
+         + id_integral                       [integral Fix 3: eliminates DC bias]
+           id_integral += Ki_id * dt * (0 - id_meas)
+           id_integral  = clamp(id_integral, +/-id_int_limit)
+           frozen when vd saturated (anti-windup)
+      Priority saturation: vd clamped first, vq gets sqrt(V_MAX^2 - vd^2).
 
     INNER LOOP Q  — iq [A] -> vq [V]
       vq = R_S*iq_ref + L_Q*diq/dt + omega_e*LAMBDA_PM   [flatness feedforward]
@@ -445,7 +450,12 @@ class SlidingModeObserver:
             delta += 2.0 * math.pi
 
         # ---- Speed from finite-difference (gated by warmup) ----------------
-        # C: if ((dt > DFC_ZERO_F) && (warmup_cnt > DFC_SMO_WARMUP_STEPS))
+        # Fix 4: increment warmup counter BEFORE the gate test to match the C
+        # execution order in DFC_Controller_Step(), which increments
+        # smo_warmup_cnt before passing it to DFC_SMO_Step().
+        # (Previously the increment was inside the step, giving a 1-step lag.)
+        # C: s->smo_warmup_cnt++ [in DFC_Controller_Step];
+        #    if ((dt > DFC_ZERO_F) && (warmup_cnt > DFC_SMO_WARMUP_STEPS))
         self._warmup_cnt += 1
         if dt > 0.0 and self._warmup_cnt > self.warmup_steps:
             self.omega_e_hat = delta / dt   # [rad/s elec]
@@ -616,6 +626,8 @@ class DFControllerBlock(VectorBlock):
         self.Kp_speed  = Kp_speed           # [A/(rad/s)]
         self.Kp_id     = Kp_id              # [V/A]
         self.Kp_iq     = Kp_iq              # [V/A]
+        self.Ki_id     = Kp_id * 0.30       # [V/(A*s)]  C: DFC_KI_ID = DFC_KP_ID*0.30  Ti~3.3s
+        self.id_int_limit = 2.0             # [V]         C: DFC_ID_INT_LIMIT = 2.0
         self.diq_tau   = diq_tau            # [s]
 
         # ---- VectorBlock metadata ------------------------------------------
@@ -656,6 +668,7 @@ class DFControllerBlock(VectorBlock):
         self._v_beta_prev:  float = 0.0   # [V]    C: s->v_beta_prev
         self._iq_ref_prev:  float = 0.0   # [A]    C: s->iq_ref_prev
         self._diq_filt:     float = 0.0   # [A/s]  C: s->diq_filt
+        self._id_integral:  float = 0.0   # [V]    C: s->id_integral (Fix 3)
 
         # ---- Diagnostic log (mirrors DFC_Controller_GetDiagnostics() keys) -
         self.log_data: dict = {
@@ -679,7 +692,8 @@ class DFControllerBlock(VectorBlock):
         print(f"[DFC]   Motor : R={R_S} Ohm, L={L_D*1e3:.4f} mH, "
               f"lambda_pm={LAMBDA_PM*1e3:.2f} mWb, p={P_POLES}")
         print(f"[DFC]   Gains : Kp_speed={Kp_speed:.4f} A/(rad/s), "
-              f"Kp_id={Kp_id:.2f} V/A, Kp_iq={Kp_iq:.2f} V/A")
+              f"Kp_id={Kp_id:.2f} V/A, Ki_id={self.Ki_id:.4f} V/(A*s), "
+              f"Kp_iq={Kp_iq:.2f} V/A")
         print(f"[DFC]   SMO   : K={smo_k:.1f} V, tau={smo_tau*1e3:.1f} ms, "
               f"omega_max={smo_omega_max:.0f} rad/s elec")
         print(f"[DFC]   Fusion: omega_lo={fusion_omega_lo:.0f} rad/s, "
@@ -767,6 +781,7 @@ class DFControllerBlock(VectorBlock):
         id_meas: float,   # [A]        measured d-axis current
         iq_meas: float,   # [A]        measured q-axis current
         omega_e: float,   # [rad/s elec] fused electrical speed
+        _dt:     float,   # [s]          step period (for integrator update)
     ) -> Tuple[float, float]:
         """
         Compute dq-frame voltage references from the flatness voltage law.
@@ -781,8 +796,14 @@ class DFControllerBlock(VectorBlock):
                    + omega_e * LAMBDA_PM            [back-EMF cancellation]
                    + Kp_iq * (iq_ref - iq_meas)    [residual error correction]
 
-        Both components are proportionally scaled if ||[vd, vq]|| > V_MAX,
-        preserving the id/iq ratio (MTPA angle) under voltage saturation.
+        VOLTAGE SATURATION — priority-based (vd preserved, vq clipped):
+        When ||[vd, vq]|| > V_MAX the inverter is voltage-limited.
+        The d-axis (id correction) is given priority: vd is clamped to V_MAX
+        first, then vq receives the remaining headroom:
+            vq_max = sqrt(V_MAX^2 - vd^2)
+        This ensures Kp_id always has full authority to enforce id = 0 (MTPA),
+        preventing the load-dependent id bias that arises with proportional
+        scaling when vq dominates the voltage vector.
 
         Returns
         -------
@@ -791,13 +812,20 @@ class DFControllerBlock(VectorBlock):
 
         C counterpart: DFC_VoltageLaw() in embed_sim_dfc_controller.c.
         """
-        # ---- D-axis: decoupling + MTPA enforcement -------------------------
-        # id_ref = 0 A (MTPA for SPMSM with Ld = Lq)
-        # C: vd_out = -(omega_e*DFC_L_Q*iq_ref) + (DFC_KP_ID*(0-id_meas));
+        # ---- D-axis: decoupling + MTPA enforcement + integral (Fix 3) ------
+        # id_ref = 0 A (MTPA for SPMSM with Ld = Lq).
+        # iq_ref (not iq_meas) in the decoupling term — iq_meas injects ADC noise
+        # through vd -> v_alpha_prev -> SMO -> SpeedFusion (tested, caused collapse).
+        # The residual omega_e*Lq*(iq_meas - iq_ref) is a DC disturbance at steady
+        # state; the id_integral integrator (Fix 3) is what eliminates it.
+        # C: vd_out = -(omega_e*DFC_L_Q*iq_ref) + (DFC_KP_ID*id_error) + id_integral;
+        id_error: float = 0.0 - id_meas   # [A]  id_ref = 0
         vd: float = (
-            -omega_e * self.L_Q * iq_ref
-            + self.Kp_id * (0.0 - id_meas)
+            -omega_e * self.L_Q * iq_ref            # [V]  cross-coupling cancel
+            + self.Kp_id * id_error                 # [V]  proportional MTPA
+            + self._id_integral                     # [V]  integral Fix 3
         )
+        vd_unsaturated: float = vd          # save before clamp for anti-windup
 
         # ---- Q-axis: flatness feedforward + residual feedback --------------
         # C: vq_out = (DFC_R_S*iq_ref) + (DFC_L_Q*diq_dt)
@@ -809,15 +837,31 @@ class DFControllerBlock(VectorBlock):
             + self.Kp_iq  * (iq_ref - iq_meas)
         )
 
-        # ---- Voltage saturation (circle inscribed in SVPWM hexagon) --------
-        # Proportional scaling preserves current angle (id/iq ratio) at limit.
-        # C: magnitude = sqrtf(vd*vd + vq*vq);
-        #    if (magnitude > DFC_V_MAX) { scale = DFC_V_MAX/magnitude; ... }
-        mag: float = math.sqrt(vd * vd + vq * vq)
-        if mag > self.V_MAX:
-            scale: float = self.V_MAX / mag
-            vd *= scale
-            vq *= scale
+        # ---- Voltage saturation — priority: vd first, vq gets remainder ----
+        # Fix 1: d-axis-priority saturation — Kp_id always has full authority.
+        # Step 1: clamp vd to V_MAX.
+        # Step 2: remaining headroom vq_max = sqrt(V_MAX^2 - vd^2).
+        # Step 3: clamp vq to vq_max.
+        # C counterpart: DFC_VoltageLaw() priority-clamp block.
+        vd = max(-self.V_MAX, min(self.V_MAX, vd))    # [V]  Step 1
+        vq_max: float = math.sqrt(
+            max(0.0, self.V_MAX * self.V_MAX - vd * vd)
+        )                                              # [V]  Step 2
+        vq = max(-vq_max, min(vq_max, vq))             # [V]  Step 3
+
+        # ---- d-axis integrator update with conditional anti-windup (Fix 3) --
+        # Conditional integration: update only when vd was NOT saturated.
+        # C: if (vd_out == vd_unsaturated) { id_integral += KI_ID*dt*id_error; }
+        # dt is passed in as _dt from compute_py — use self.dt_s as fallback.
+        _dt_int: float = _dt if _dt > 0.0 else self.dt_s
+        if vd == vd_unsaturated:                        # not saturated
+            self._id_integral += self.Ki_id * _dt_int * id_error
+            self._id_integral = max(
+                -self.id_int_limit,
+                min(self.id_int_limit, self._id_integral)
+            )
+        else:
+            pass   # saturated — freeze integrator (anti-windup)
 
         return vd, vq
 
@@ -953,7 +997,7 @@ class DFControllerBlock(VectorBlock):
 
         # ---- Step 8: Flatness voltage law ----------------------------------
         # C: DFC_VoltageLaw(iq_ref, s->diq_filt, id_meas, iq_meas, omega_e, &vd, &vq);
-        vd, vq = self._df_control(iq_ref, diq_ref_dt, id_meas, iq_meas, omega_e)  # [V], [V]
+        vd, vq = self._df_control(iq_ref, diq_ref_dt, id_meas, iq_meas, omega_e, _dt)  # [V], [V]
 
         # ---- Step 9: Inverse Park — dq -> αβ voltage -----------------------
         # C: InvPark_Step(&s->inv_park_state, vd, vq, theta_e, &y->v_alpha, &y->v_beta);
@@ -1053,6 +1097,7 @@ class DFControllerBlock(VectorBlock):
         self._v_beta_prev  = 0.0   # [V]
         self._iq_ref_prev  = 0.0   # [A]
         self._diq_filt     = 0.0   # [A/s]
+        self._id_integral  = 0.0   # [V]   C: s->id_integral (Fix 3)
 
         # Coordinate transform sub-blocks
         self._ct_clarke.reset()
@@ -1130,7 +1175,8 @@ class DFControllerBlock(VectorBlock):
         return (
             f"DFControllerBlock('{self.name}', backend={backend}, "
             f"Kp_speed={self.Kp_speed} A/(rad/s), "
-            f"Kp_id={self.Kp_id} V/A, Kp_iq={self.Kp_iq} V/A)"
+            f"Kp_id={self.Kp_id} V/A, Ki_id={self.Ki_id:.4f} V/(A*s), "
+            f"Kp_iq={self.Kp_iq} V/A)"
         )
 
 

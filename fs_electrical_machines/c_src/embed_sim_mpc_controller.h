@@ -120,6 +120,7 @@ void MPC_Controller_GetDiagnostics(const MPC_Controller_T* s,
                                    MatrixFloat* id_meas,
                                    MatrixFloat* iq_meas,
                                    MatrixFloat* vd,
-                                   MatrixFloat* vq);
+                                   MatrixFloat* vq,
+                                   MatrixFloat* iq_limit);
 
 #endif /* EMBED_SIM_MPC_CONTROLLER_H_ */

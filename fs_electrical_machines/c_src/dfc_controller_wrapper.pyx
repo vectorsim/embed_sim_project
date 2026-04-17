@@ -60,6 +60,7 @@ cdef extern from "embed_sim_dfc_gains.h":
         MatrixFloat kp_speed
         MatrixFloat kp_id
         MatrixFloat kp_iq
+        MatrixFloat ki_id       # d-axis integral gain [V/(A*s)]  Fix 3
 
 
 # -----------------------------------------------------------------------------
@@ -107,6 +108,7 @@ cdef extern from "embed_sim_dfc_controller.h":
         MatrixFloat       v_beta_prev
         MatrixFloat       iq_ref_prev
         MatrixFloat       diq_filt
+        MatrixFloat       id_integral    # d-axis PI integrator [V]  Fix 3
         unsigned int      smo_warmup_cnt
         # Clarke_T / Park_T / InvPark_T -- opaque
         MatrixFloat       log_speed_ref
@@ -544,5 +546,5 @@ def dfc_step(float omega_ref_mech,
 
 
 # =============================================================================
-__version__ = "3.0.0"
+__version__ = "3.2.0"
 __author__  = "EmbedSim Team"

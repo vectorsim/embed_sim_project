@@ -619,6 +619,8 @@ void MPC_Controller_Reset(MPC_Controller_T* const s)
  * @param[out] iq_meas        Q-axis current [A]
  * @param[out] vd             D-axis voltage [V]
  * @param[out] vq             Q-axis voltage [V]
+ * @param[out] iq_limit       Soft-start iq ceiling; ramps 0→I_MAX over
+ *                            MPC_SOFTSTART_T [s] then holds at I_MAX [A]
  *
  * @par MISRA Compliance:
  *      - Rule 17.5: All pointer parameters checked for NULL
@@ -630,7 +632,8 @@ void MPC_Controller_GetDiagnostics(const MPC_Controller_T* const s,
                                     MatrixFloat* const id_meas,
                                     MatrixFloat* const iq_meas,
                                     MatrixFloat* const vd,
-                                    MatrixFloat* const vq)
+                                    MatrixFloat* const vq,
+                                    MatrixFloat* const iq_limit)
 {
     if ((s != NULL) &&
         (speed_ref_rpm != NULL) &&
@@ -638,7 +641,8 @@ void MPC_Controller_GetDiagnostics(const MPC_Controller_T* const s,
         (id_meas != NULL) &&
         (iq_meas != NULL) &&
         (vd != NULL) &&
-        (vq != NULL))
+        (vq != NULL) &&
+        (iq_limit != NULL))
     {
         *speed_ref_rpm = s->log_speed_ref;
         *speed_rpm     = s->log_speed;
@@ -646,6 +650,7 @@ void MPC_Controller_GetDiagnostics(const MPC_Controller_T* const s,
         *iq_meas       = s->log_iq;
         *vd            = s->log_vd;
         *vq            = s->log_vq;
+        *iq_limit      = s->iq_limit;
     }
     else
     {

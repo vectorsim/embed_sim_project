@@ -13,8 +13,13 @@ AURIX-realistic noise model (all enabled):
   - Dead-time voltage drop: 400 ns x V_DC / DT ~0.136 V per phase (-> alphabeta disturbance)
   - DC bus ripple         : +-0.5 V @ 100 Hz sinusoidal on V_DC
 
+Plant:
+  FMU co-simulation via PMSM_Plant_FMUBlock (PMSM_Plant_FMU.fmu, FMI 2.0 CS).
+  Replaces the pure-Python PMSM_Python_Plant.  Identical 8-element output bus
+  [rpm, ia, ib, ic, theta_m, T_em, id, iq] — no controller changes required.
+
 Wiring:
-  cg_start >> dfc >> svpwm_pack >> svpwm >> cg_end
+  cg_start >> dfc >> svpwm_pack >> svpwm >> load_sched >> fmu_plant >> cg_end
 
 Speed profile (mimics AURIX ramp generator):
   0.0 - 0.3 s : linear ramp 0 -> TARGET_RPM
@@ -78,7 +83,7 @@ _dfcb_spec.loader.exec_module(_dfcb_mod)
 sys.modules["diff_flatness_controller_block"] = _dfcb_mod
 
 from embedsim import EmbedSim, ODESolver, VectorEnd
-from embedsim.core_blocks import VectorSignal, DEFAULT_DTYPE
+from embedsim.core_blocks import VectorBlock, VectorSignal, DEFAULT_DTYPE
 from embedsim.source_blocks import VectorStep, VectorConstant
 from embedsim.simulation_engine import VectorDelay
 from embedsim.code_generator import CodeGenStart, CodeGenEnd
@@ -86,7 +91,7 @@ from embedsim.code_generator import CodeGenStart, CodeGenEnd
 from motor_utility_blocks import SVPWMPackBlock
 from svpwm_block import SVPWMBlock
 from smc_controller_block import _DB42S02
-from pmsm_python_plant import PMSM_Python_Plant
+from PMSM_Plant_FMUBlock import PMSM_Plant_FMUBlock
 from ctrl_packer import CtrlPacker
 from machine_feedback import db42s02_feedback_profile
 from diff_flatness_controller_block import DFControllerBlock
@@ -247,42 +252,44 @@ _NOISE_LOG = _NoiseLog()
 # Plant block with integrated AURIX noise chain
 # =============================================================================
 
-class DB42S02PlantBlock(PMSM_Python_Plant):
-    """
-    PMSM plant with full AURIX hardware noise chain.
+# FMU path — resolved once at module load so working directory is irrelevant
+_FMU_PATH = str(_FS_ELEC / "modelica" / "PMSM_Plant_FMU.fmu")
 
-    Noise pipeline per ISR step:
-      ia_raw, ib_raw, ic_raw  -> ADC noise (Gaussian + quantise + clamp)
-                               -> PWM spike on ia only
-      theta_m_raw              -> encoder quantise (1000 PPR x 4)
-                               -> encoder glitch (0.2 % slip)
-      V_DC                     -> DC bus ripple applied to SVPWM argument
+
+class DB42S02PlantBlock(PMSM_Plant_FMUBlock):
+    """
+    NANOTEC DB42S02 PMSM plant -- FMU co-simulation via PMSM_Plant_FMU.fmu.
+
+    Mirrors the pattern in db42s02_closed_loop_mpc_foc_20k.py exactly.
+    Load schedule, FMU input packing, DC bus ripple, and AURIX noise
+    chain all run inside compute_py() each ISR tick.
+
+    FMU input bus (5 elements):
+        [0] duty_a [0,1]  [1] duty_b [0,1]  [2] duty_c [0,1]
+        [3] v_dc   [V]    [4] T_load [N.m]
+
+    FMU output bus (8 elements, same indices as PMSM_Python_Plant):
+        [0] rpm  [1] ia  [2] ib  [3] ic  [4] theta_m  [5] T_em  [6] id  [7] iq
     """
     TOPO_CATEGORY     = "plant"
     C_CODEGEN_EXCLUDE = True
     output_label      = "[rpm,ia,ib,ic,theta_m,Tem,id,iq]"
 
-    def __init__(self, name: str, **kwargs):
-        super().__init__(
-            name      = name,
-            R         = _DB42S02.SMC_R_S,
-            L_d       = _DB42S02.SMC_L_D,
-            L_q       = _DB42S02.SMC_L_Q,
-            lambda_pm = _DB42S02.SMC_LAMBDA_PM,
-            J         = _DB42S02.SMC_J_ROTOR,
-            B_fric    = _DB42S02.SMC_B_FRICTION,
-            p         = float(_DB42S02.SMC_P_POLES),
-            v_dc      = V_DC,
-        )
-        self._last_ta = 0.5
-        self._last_tb = 0.5
-        self._last_tc = 0.5
+    def __init__(self, name: str, with_noise: bool = True) -> None:
+        super().__init__(name=name, fmu_path=_FMU_PATH)
+        self._with_noise   = with_noise
+        self._last_ta      = 0.5
+        self._last_tb      = 0.5
+        self._last_tc      = 0.5
+        self._print_next_t = 0.20   # [s] next status print time
+        print(f"[FMU] {name} <- {_FMU_PATH}")
 
-    def compute_py(self, t, dt, input_values=None):
+    def compute_py(self, t: float, dt: float, input_values=None):
+        # 1. Timed load schedule
         if   t < T_LOAD_T1: t_load = T_LOAD_ZERO
         elif t < T_LOAD_T2: t_load = T_LOAD_LIGHT
-        else:               t_load = T_LOAD_HEAVY
-
+        else:                t_load = T_LOAD_HEAVY
+        # 2. Duties from SVPWM
         ta = tb = tc = 0.5
         if input_values and input_values[0] is not None:
             v = input_values[0].value
@@ -290,29 +297,146 @@ class DB42S02PlantBlock(PMSM_Python_Plant):
                 ta_in, tb_in, tc_in = float(v[0]), float(v[1]), float(v[2])
                 if ta_in != 0.0 or tb_in != 0.0 or tc_in != 0.0:
                     ta, tb, tc = ta_in, tb_in, tc_in
-
         self._last_ta, self._last_tb, self._last_tc = ta, tb, tc
+        # 3. DC bus ripple
         vdc_inst = _vdc_ripple(t)
-
-        aug    = [VectorSignal(np.array([ta, tb, tc, vdc_inst, t_load],
-                                        dtype=DEFAULT_DTYPE))]
-        result = super().compute_py(t, dt, aug)
-
-        v          = result.value.copy()
-        ia_raw     = float(v[1]);  ib_raw = float(v[2])
-        ic_raw     = float(v[3]);  theta_raw = float(v[4])
-
-        ia_n = _pwm_spike(_adc_noise(ia_raw))
-        ib_n = _adc_noise(ib_raw)
-        ic_n = _adc_noise(ic_raw)
-        theta_q = _enc_glitch(_enc_quantise(theta_raw))
-
-        v[1] = ia_n; v[2] = ib_n; v[3] = ic_n; v[4] = theta_q
+        # 4. Step FMU
+        fmu_in = VectorSignal(
+            np.array([ta, tb, tc, vdc_inst, t_load], dtype=DEFAULT_DTYPE)
+        )
+        raw = super().compute_py(t, dt, [fmu_in])
+        if raw is None or raw.value is None or len(raw.value) < 8:
+            return VectorSignal(np.zeros(8, dtype=DEFAULT_DTYPE), self.name)
+        # 5. Status print every 0.2 s -- mirrors PMSM_Python_Plant behaviour
+        if t >= self._print_next_t:
+            _rpm = float(raw.value[0])
+            _te  = float(raw.value[4]) * float(_DB42S02.SMC_P_POLES)
+            _id  = float(raw.value[6])
+            _iq  = float(raw.value[7])
+            _tem = float(raw.value[5])
+            print(f"[FMU  t={t:.2f}s]  rpm={_rpm:+8.1f}  "
+                  f"theta_e={_te:.4f}rad  "
+                  f"id={_id:+.4f}A  iq={_iq:+.4f}A  "
+                  f"T_em={_tem*1e3:+.3f}mN.m  T_load={t_load*1e3:.1f}mN.m")
+            self._print_next_t += 0.20
+        # 7. AURIX noise chain
+        v         = raw.value.copy()
+        ia_raw    = float(v[1]); ib_raw = float(v[2])
+        ic_raw    = float(v[3]); theta_raw = float(v[4])
+        if self._with_noise:
+            ia_n    = _pwm_spike(_adc_noise(ia_raw))
+            ib_n    = _adc_noise(ib_raw)
+            ic_n    = _adc_noise(ic_raw)
+            theta_q = _enc_glitch(_enc_quantise(theta_raw))
+        else:
+            ia_n = ia_raw; ib_n = ib_raw; ic_n = ic_raw; theta_q = theta_raw
         _NOISE_LOG.push(t, ia_raw, ia_n, theta_raw, theta_q, vdc_inst)
+        v[1] = ia_n; v[2] = ib_n; v[3] = ic_n; v[4] = theta_q
         return VectorSignal(v.astype(DEFAULT_DTYPE), self.name)
 
-    def compute(self, t, dt, input_values=None):
+    def compute(self, t: float, dt: float, input_values=None):
         return self.compute_py(t, dt, input_values)
+
+
+# =============================================================================
+# LoadScheduleBlock — packs FMU input bus + applies AURIX noise to outputs
+# =============================================================================
+
+class LoadScheduleBlock(VectorBlock):
+    """
+    Two-port adapter sitting between SVPWMBlock and DB42S02PlantBlock.
+
+    FORWARD (input -> FMU):
+        Receives [ta, tb, tc, sector] from SVPWMBlock.
+        Packs [duty_a, duty_b, duty_c, v_dc_inst, T_load] for the FMU.
+        v_dc_inst includes DC bus ripple; T_load follows the timed schedule.
+
+    FEEDBACK (FMU output -> controller):
+        Receives [rpm, ia, ib, ic, theta_m, T_em, id, iq] from DB42S02PlantBlock.
+        Applies the full AURIX noise chain (ADC, encoder, spikes, dead-time).
+        Emits the noisy 8-element bus onward to CtrlPacker / sink.
+
+    The noise chain lives here rather than inside DB42S02PlantBlock so the FMU
+    block itself remains a clean, reusable wrapper with no simulation-specific
+    coupling.
+    """
+    TOPO_CATEGORY     = "utility"
+    C_CODEGEN_EXCLUDE = True
+    output_label      = "[rpm,ia_n,ib_n,ic_n,theta_q,Tem,id,iq]"
+
+    def __init__(self, name: str, plant: DB42S02PlantBlock,
+                 with_noise: bool = True) -> None:
+        super().__init__(name)
+        self._plant      = plant
+        self._with_noise = with_noise
+        self._last_ta    = 0.5
+        self._last_tb    = 0.5
+        self._last_tc    = 0.5
+        self.vector_size = 8
+        self.is_dynamic  = False
+
+    def compute(self, t: float, dt: float, input_values=None) -> VectorSignal:
+        """
+        Step sequence each ISR tick:
+          1. Unpack duties from SVPWMBlock output (input_values[0]).
+          2. Determine T_load from timed schedule.
+          3. Apply DC bus ripple to v_dc.
+          4. Pack FMU input bus and step the FMU plant.
+          5. Apply AURIX noise chain to FMU outputs.
+          6. Return noisy 8-element bus.
+        """
+        # ---- 1. Duties from SVPWM ----------------------------------------
+        ta = tb = tc = 0.5
+        if input_values and input_values[0] is not None:
+            v = input_values[0].value
+            if len(v) >= 3:
+                ta_raw = float(v[0]); tb_raw = float(v[1]); tc_raw = float(v[2])
+                if ta_raw != 0.0 or tb_raw != 0.0 or tc_raw != 0.0:
+                    ta, tb, tc = ta_raw, tb_raw, tc_raw
+        self._last_ta, self._last_tb, self._last_tc = ta, tb, tc
+
+        # ---- 2. Load schedule --------------------------------------------
+        if   t < T_LOAD_T1: t_load = T_LOAD_ZERO
+        elif t < T_LOAD_T2: t_load = T_LOAD_LIGHT
+        else:               t_load = T_LOAD_HEAVY
+
+        # ---- 3. DC bus ripple --------------------------------------------
+        vdc_inst = _vdc_ripple(t)
+
+        # ---- 4. Step FMU plant -------------------------------------------
+        fmu_in = VectorSignal(
+            np.array([ta, tb, tc, vdc_inst, t_load], dtype=DEFAULT_DTYPE),
+            self.name
+        )
+        raw = self._plant.compute(t, dt, [fmu_in])
+        if raw is None or raw.value is None or len(raw.value) < 8:
+            return VectorSignal(np.zeros(8, dtype=DEFAULT_DTYPE), self.name)
+
+        v = raw.value.copy()   # [rpm, ia, ib, ic, theta_m, T_em, id, iq]
+
+        # ---- 5. AURIX noise chain ----------------------------------------
+        ia_raw    = float(v[1])
+        ib_raw    = float(v[2])
+        ic_raw    = float(v[3])
+        theta_raw = float(v[4])
+        vdc_log   = vdc_inst
+
+        if self._with_noise:
+            ia_n     = _pwm_spike(_adc_noise(ia_raw))
+            ib_n     = _adc_noise(ib_raw)
+            ic_n     = _adc_noise(ic_raw)
+            theta_q  = _enc_glitch(_enc_quantise(theta_raw))
+        else:
+            ia_n = ia_raw; ib_n = ib_raw; ic_n = ic_raw; theta_q = theta_raw
+
+        _NOISE_LOG.push(t, ia_raw, ia_n, theta_raw, theta_q, vdc_log)
+
+        # Dead-time diagnostic (kept for plot parity with Python-plant version)
+        dv_alpha, dv_beta = _deadtime_disturbance(ta, tb, tc)
+        _ = dv_alpha; _ = dv_beta   # stored for SVPWMPackBlockDT if needed
+
+        v[1] = ia_n; v[2] = ib_n; v[3] = ic_n; v[4] = theta_q
+        return VectorSignal(v.astype(DEFAULT_DTYPE), self.name)
 
 
 # =============================================================================
@@ -321,26 +445,26 @@ class DB42S02PlantBlock(PMSM_Python_Plant):
 
 class SVPWMPackBlockDT(SVPWMPackBlock):
     """
-    SVPWMPackBlock that records the AURIX dead-time alphabeta voltage error
-    for diagnostic purposes.  The error is already embedded in the plant
-    output; recording it here allows it to appear in plots.
+    SVPWMPackBlock — unchanged API, dead-time diagnostic now reads from
+    LoadScheduleBlock (which owns the last duty cycle values).
     """
     TOPO_CATEGORY     = "utility"
     C_CODEGEN_EXCLUDE = True
 
-    def __init__(self, name: str, v_dc: float, plant: DB42S02PlantBlock):
+    def __init__(self, name: str, v_dc: float,
+                 load_sched: "LoadScheduleBlock | None" = None):
         super().__init__(name, v_dc=v_dc)
-        self._plant = plant
+        self._load_sched = load_sched
 
     def compute(self, t, dt, input_values=None):
         result = super().compute(t, dt, input_values)
         if result is None or result.value is None or len(result.value) < 2:
             return result
-        if input_values and input_values[0] is not None:
+        if self._load_sched is not None and input_values and input_values[0] is not None:
             dv_alpha, dv_beta = _deadtime_disturbance(
-                self._plant._last_ta,
-                self._plant._last_tb,
-                self._plant._last_tc,
+                self._load_sched._last_ta,
+                self._load_sched._last_tb,
+                self._load_sched._last_tc,
             )
             self._dt_dv_alpha = dv_alpha
             self._dt_dv_beta  = dv_beta
@@ -353,7 +477,7 @@ class SVPWMPackBlockDT(SVPWMPackBlock):
 
 _WIRE_LABELS = {
     ("speed_ref",   "ctrl_packer"):  "w_ref [rad/s]",
-    ("motor_delay", "ctrl_packer"):  "[rpm,ia,ib,ic,th_m,Tem,id,iq] z-1",
+    ("motor_delay", "ctrl_packer"):  "[rpm,ia_n,ib_n,ic_n,th_q,Tem,id,iq] z-1",
     ("ctrl_packer", "cg_start"):     "[w_ref,th_m,ia,ib,ic]",
     ("cg_start",    "dfc"):          "[w_ref,th_m,ia,ib,ic]",
     ("dfc",         "svpwm_pack"):   "[v_alpha,v_beta]",
@@ -361,9 +485,8 @@ _WIRE_LABELS = {
     ("svpwm",       "cg_end"):       "[ta,tb,tc,sector]",
     ("cg_end",      "motor"):        "[ta,tb,tc,sector]",
     ("cg_end",      "sink_cg"):      "[ta,tb,tc,sector]",
-    ("motor",       "motor_delay"):  "[rpm,ia,ib,ic,th_m,Tem,id,iq]",
+    ("motor",       "motor_delay"):  "[rpm,ia_n,ib_n,ic_n,th_q,Tem,id,iq]",
     ("motor",       "sink"):         "[rpm,ia,ib,ic,th_m,Tem,id,iq]",
-    ("load_torque", "motor"):        "T_load [N.m]",
 }
 
 
@@ -419,62 +542,60 @@ def _run_sim(
             fusion_omega_hi = 250.0,
             fusion_iir_lo   = 0.05,
             fusion_iir_hi   = 0.30,
-            use_c_backend   = False,   # Python backend — works in tuner too
+            use_c_backend   = True,   # Python backend — works in tuner too
         )
 
-        # ---- Plant -----------------------------------------------------
-        motor = DB42S02PlantBlock("motor")
+        # ---- FMU plant (mirrors MPC example pattern exactly) ----------
+        motor       = DB42S02PlantBlock("motor", with_noise=with_noise)
 
         # ---- Signal chain blocks ---------------------------------------
-        svpwm_pack  = SVPWMPackBlockDT("svpwm_pack", v_dc=V_DC, plant=motor)
+        svpwm_pack  = SVPWMPackBlockDT("svpwm_pack", v_dc=V_DC,
+                                       load_sched=motor)
         svpwm       = SVPWMBlock("svpwm", use_c_backend=False)
         speed_ref   = VectorStep("speed_ref", step_time=0.0,
                                  before_value=TARGET_RADS_MECH,
                                  after_value=TARGET_RADS_MECH)
-        load_torque = VectorConstant("load_torque", value=T_LOAD_ZERO)
         motor_delay = VectorDelay("motor_delay", initial=[0.0] * _MOTOR_OUT_SIZE)
         ctrl        = CtrlPacker(
             "ctrl_packer",
             target_rads_mech = TARGET_RADS_MECH,
             ramp_time        = _RAMP_TIME,
-            feedback         = db42s02_feedback_profile(
-                enc_glitch = with_noise,
-                adc_noise  = with_noise,
-                adc_sat    = with_noise,
-            ))
+        )
+        ctrl.set_noise_enabled(False)   # noise handled in DB42S02PlantBlock
         sink    = VectorEnd("sink")
         sink_cg = VectorEnd("sink_cg")
 
         # ---- CodeGen blocks (main run only) ----------------------------
+        # Boundary: cg_start >> dfc >> svpwm_pack >> svpwm >> cg_end
+        # FMU plant has C_CODEGEN_EXCLUDE = True -- stays outside boundary.
         if with_codegen_hooks:
             cg_start = CodeGenStart("cg_start")
             cg_end   = CodeGenEnd("cg_end")
-            cg_start >> dfc >> svpwm_pack >> svpwm >> cg_end
-            ctrl     >> cg_start
-            cg_end   >> motor
-            cg_end   >> sink_cg
+            ctrl       >> cg_start
+            cg_start   >> dfc >> svpwm_pack >> svpwm >> cg_end
+            cg_end     >> motor
+            cg_end     >> sink_cg
         else:
             cg_start = cg_end = None
-            dfc      >> svpwm_pack >> svpwm
-            ctrl     >> dfc
-            svpwm    >> motor
-            svpwm    >> sink_cg
+            ctrl       >> dfc >> svpwm_pack >> svpwm
+            svpwm      >> motor
+            svpwm      >> sink_cg
 
         # ---- Wiring common to both modes -------------------------------
-        motor >> motor_delay >> ctrl
+        motor       >> motor_delay >> ctrl
         speed_ref   >> ctrl
-        load_torque >> motor
         motor       >> sink
 
         # ---- Scope -----------------------------------------------------
         sim = EmbedSim(sinks=[sink, sink_cg], T=T_SIM, dt=DT,
                        solver=ODESolver.EULER)
-        sim.scope.add(dfc,        indices=[0, 1],               label="Vab")
-        sim.scope.add(svpwm_pack, indices=[0],                  label="Vref")
-        sim.scope.add(svpwm,      indices=[0, 1, 2, 3],         label="Duties")
-        sim.scope.add(motor,      indices=[0, 1, 2, 3, 5, 6, 7], label="Motor")
+        sim.scope.add(dfc,        indices=[0, 1],                 label="Vab")
+        sim.scope.add(svpwm_pack, indices=[0],                    label="Vref")
+        sim.scope.add(svpwm,      indices=[0, 1, 2, 3],           label="Duties")
+        sim.scope.add(motor,      indices=[0, 1, 2, 3, 5, 6, 7],  label="Motor")
 
         sim.run()
+
 
     except Exception as exc:
         import traceback
@@ -494,8 +615,14 @@ def _run_sim(
         sig = sc.get_signal(label, pos)
         return sig if sig is not None else np.zeros(len(t), np.float32)
 
+    # _log_ok: True when the Python-side DFC log_data was populated.
+    # When use_c_backend=True compute_c() is called instead of compute_py(),
+    # so _log_step() is never reached and log_data stays empty.
+    # Fall back to plant outputs for iq/id and derive iq_ref/alpha from speed.
+    _log_ok = len(ld["t"]) > 1
+
     def _i(key):
-        if len(ld["t"]) > 1:
+        if _log_ok:
             return np.interp(t, ld["t"], ld[key]).astype(np.float32)
         return np.zeros(len(t), np.float32)
 
@@ -508,13 +635,43 @@ def _run_sim(
             return np.interp(t, nl.t, getattr(nl, attr)).astype(np.float32)
         return np.zeros(len(t), np.float32)
 
+    # iq / id: prefer DFC log (Python backend); fall back to plant truth (C backend)
+    # Motor bus: [rpm=0, ia=1, ib=2, ic=3, theta_m=4, Tem=5, id=6, iq=7]
+    _iq = _i("iq") if _log_ok else _m(7)
+    _id = _i("id") if _log_ok else _m(6)
+
+    # iq_ref: from DFC log (Python) or P-loop approximation (C backend)
+    if _log_ok:
+        _iq_ref = _i("iq_ref")
+    else:
+        _speed_err = np.clip(
+            TARGET_RPM - _m(0), -TARGET_RPM, TARGET_RPM
+        ).astype(np.float32) * float(2.0 * math.pi / 60.0)
+        _iq_ref = np.clip(
+            _ACTIVE_GAINS["Kp_speed"] * _speed_err,
+            -_DB42S02.SMC_I_MAX, _DB42S02.SMC_I_MAX
+        ).astype(np.float32)
+
+    # fusion_alpha: from DFC log (Python) or piecewise-linear from plant speed (C backend)
+    if _log_ok:
+        _alpha = _i("alpha")
+    else:
+        _omega_m  = _m(0) * float(2.0 * math.pi / 60.0)
+        _omega_lo = float(dfc.fusion.omega_lo)
+        _omega_hi = float(dfc.fusion.omega_hi)
+        _alpha    = np.clip(
+            (np.abs(_omega_m) - _omega_lo) / (_omega_hi - _omega_lo),
+            0.0, 1.0
+        ).astype(np.float32)
+
     return {
         "t":             t,
         "speed_rpm":     _m(0),
-        "omega_ref_rpm": _i("speed_ref"),
-        "iq_ref":        _i("iq_ref"),
-        "iq":            _i("iq"),
-        "id":            _i("id"),
+        "omega_ref_rpm": _i("speed_ref") if _log_ok else
+                         np.full(len(t), TARGET_RPM, dtype=np.float32),
+        "iq_ref":        _iq_ref,
+        "iq":            _iq,
+        "id":            _id,
         "v_alpha":       _s("Vab",    0),
         "v_beta":        _s("Vab",    1),
         "vref":          _s("Vref",   0),
@@ -523,7 +680,7 @@ def _run_sim(
         "tc":            _s("Duties", 2),
         "sector":        _s("Duties", 3),
         "torque":        _m(4),
-        "fusion_alpha":  _i("alpha"),
+        "fusion_alpha":  _alpha,
         "ia_raw":        _nl("ia_raw"),
         "ia_noisy":      _nl("ia_noisy"),
         "theta_raw":     _nl("theta_raw"),

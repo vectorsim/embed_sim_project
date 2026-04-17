@@ -9,6 +9,7 @@ REM   2. motor_utility_blocks  (embed_sim_motor_utility_blocks.c)
 REM   3. smc_controller        (embed_sim_smc_controller.c + coord transform + matrix)
 REM   4. svpwm                 (embed_sim_sv_pwm.c + matrix)
 REM   5. dfc_controller        (dfc_controller_wrapper)
+REM   6. mpc_controller        (mpc_controller_wrapper)
 REM
 REM Usage:
 REM   cd fs_electrical_machines\c_src
@@ -59,7 +60,7 @@ if "%CLEAN_ONLY%"=="1" goto :clean_only
 REM ---------------------------------------------------------------------------
 REM Verify each sub-script exists before starting
 REM ---------------------------------------------------------------------------
-set "TARGETS=coordinate_transform motor_utility_blocks smc_controller svpwm dfc_controller"
+set "TARGETS=coordinate_transform motor_utility_blocks smc_controller svpwm dfc_controller mpc_controller"
 set "MISSING=0"
 for %%t in (%TARGETS%) do (
     if not exist "%SCRIPT_DIR%\build_%%t.bat" (
@@ -112,7 +113,9 @@ for /r "%SCRIPT_DIR%" %%f in (*.pyd *.so *.c *.html) do (
             if /i "%%~nxf" neq "setup_smc_controller.py" (
                 if /i "%%~nxf" neq "setup_svpwm.py" (
                     if /i "%%~nxf" neq "setup_dfc_controller.py" (
-                        del /f /q "%%f" 2>nul
+                        if /i "%%~nxf" neq "setup_mpc_controller.py" (
+                            del /f /q "%%f" 2>nul
+                        )
                     )
                 )
             )
@@ -159,7 +162,7 @@ if defined FAILED (
     echo %GREEN%%BOLD%All targets built successfully!%RESET%
     echo.
     echo Quick import check:
-    echo   python -c "from fs_electrical_machines.coordinate_transform_wrapper import EmbedSimCoordinateTransform; from fs_electrical_machines.smc_controller_wrapper import SMCControllerWrapper; from fs_electrical_machines.svpwm_wrapper import EmbedSimSVPWM; from motor_utility_blocks import SpeedRampBlock; from fs_electrical_machines.dfc_controller_wrapper import DFCControllerWrapper; print('All imports OK')"
+    echo   python -c "from fs_electrical_machines.coordinate_transform_wrapper import EmbedSimCoordinateTransform; from fs_electrical_machines.smc_controller_wrapper import SMCControllerWrapper; from fs_electrical_machines.svpwm_wrapper import EmbedSimSVPWM; from motor_utility_blocks import SpeedRampBlock; from fs_electrical_machines.dfc_controller_wrapper import DFCControllerWrapper; from fs_electrical_machines.mpc_controller_wrapper import MPCControllerWrapper; print('All imports OK')"
     echo.
     pause
     exit /b 0

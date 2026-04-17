@@ -25,12 +25,17 @@
  *            during the 20 ms SMO warmup transient and complicates fault recovery.
  *            The P-only design is deliberate and sufficient for this application.
  *
- *            WHY P-ONLY FOR CURRENT?
- *            ========================
- *            KP_ID and KP_IQ correct only the residual error caused by parameter
- *            mismatch (R ±20 %, lambda_pm ±10 %) and ADC noise.  The flatness terms
- *            handle steady state.  A small proportional gain is sufficient and
- *            avoids integrator wind-up entirely.
+ *            WHY P+I FOR D-AXIS (Fix 3)?
+ *            ================================
+ *            KP_ID corrects model mismatch and ADC noise on the d-axis (id).
+ *            However the flatness decoupling term -omega_e*Lq*iq_ref leaves a
+ *            residual DC disturbance omega_e*Lq*(iq_meas - iq_ref) that a
+ *            proportional gain alone cannot eliminate at steady state.
+ *            DFC_KI_ID adds a slow integrator (Ti = 3.3 s) that drives id to
+ *            zero against this DC load-dependent offset.
+ *            KP_IQ remains P-only: the q-axis flatness feedforward is accurate
+ *            enough that no DC error persists, and the SMO phase lag is already
+ *            corrected by the high KP_IQ bandwidth.
  *
  *            GAIN TUNING GUIDE
  *            ==================
@@ -55,7 +60,7 @@
  *              Rule  8.1  : all types are explicit via the MatrixFloat typedef.
  *              Rule 20.10 : no token-pasting operators used.
  *
- * \version   2.0.0
+ * \version   2.1.0
  * \copyright Copyright (C) EmbedSim 2025
  *********************************************************************************************************************/
 
@@ -166,6 +171,51 @@
  *********************************************************************************************************************/
 #define DFC_KP_IQ     ((MatrixFloat)8.0f)
 
+/**********************************************************************************************************************
+ * \brief  D-axis current integral gain (Fix 3).
+ *
+ * \details Eliminates the steady-state id offset that the proportional term
+ *          DFC_KP_ID alone cannot reject.
+ *
+ *          Under heavy load the flatness decoupling leaves a residual DC
+ *          disturbance on the d-axis.  An integrator is required to drive
+ *          id to zero against a DC input.
+ *
+ *          Value: DFC_KI_ID = DFC_KP_ID * 0.30
+ *            = 0.4 * 0.30 = 0.12  V/(A*s)
+ *
+ *          This gives ~1 decade separation between the P and I crossover
+ *          frequencies while converging within the 5-second simulation window.
+ *
+ *          Integrator time constant:
+ *            Ti_id [s] = DFC_KP_ID / DFC_KI_ID = 0.4 / 0.12 = 3.3 s
+ *          At 20 kHz the integrator acts on a timescale of ~3.3 s, fast enough
+ *          to visibly reduce the load-dependent id offset within 5 seconds while
+ *          remaining well separated from the ms-timescale P-loop transients.
+ *
+ * \units   V / (A * s)  =  V/(A*s)
+ *********************************************************************************************************************/
+#define DFC_KI_ID     (DFC_KP_ID * (MatrixFloat)0.30f)   /* Ti = 1/0.30 * (1/KP_ID) ~ 3.3 s */
+
+/**********************************************************************************************************************
+ * \brief  Magnitude clamp for the d-axis integrator state.
+ *
+ * \details The id_integral accumulator is clamped to ±DFC_ID_INT_LIMIT [V]
+ *          to prevent excessive wind-up during the SMO warmup transient or
+ *          during sustained voltage saturation.
+ *
+ *          Derivation:
+ *            At maximum speed and rated iq, the d-axis decoupling residual is:
+ *              delta_vd = omega_e_max * Lq * (iq_meas - iq_ref)
+ *                       = 838 * 368e-6 * 0.5  [A, worst-case iq error]
+ *                       = 0.15 V
+ *            A 2.0 V clamp provides 13x margin, ensuring the integrator can
+ *            reject the DC offset without saturating the d-axis voltage budget.
+ *
+ * \units   V  (volt)
+ *********************************************************************************************************************/
+#define DFC_ID_INT_LIMIT  ((MatrixFloat)2.0f)
+
 /** \} */  /* end defgroup DFC_Gains */
 
 
@@ -208,6 +258,12 @@ typedef struct
                               *   Law: vq += kp_iq * (iq_ref - iq_meas).
                               *   Nominal: DFC_KP_IQ = 8.0 V/A.
                               *   Closed-loop q-axis BW: kp_iq / Lq = 21739 rad/s.*/
+
+    MatrixFloat ki_id;       /**< D-axis current I-gain [V/(A*s)] (Fix 3).
+                              *   Law: id_integral += ki_id * dt * id_error.
+                              *        vd += id_integral.
+                              *   Nominal: DFC_KI_ID = DFC_KP_ID * 0.30 = 0.12 V/(A*s).
+                              *   Set to 0.0 to disable integral action (P-only). */
 } DFC_GainSet_T;
 
 /** \} */  /* end defgroup DFC_GainSet */

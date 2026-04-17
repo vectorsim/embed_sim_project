@@ -400,7 +400,6 @@ class MPCControllerBlock(VectorBlock):
     # ---- EmbedSim CodeGen interface ----------------------------------------
     NUM_INPUTS  = 1
     OUTPUT_SIZE = 2
-
     # Input bus layout — matches MPC_Input_T and DFC_Input_T field order
     INPUT_NAMES = ["omega_ref_mech", "theta_m", "ia", "ib", "ic"]
     INPUT_KEEP  = [0, 1, 2, 3, 4]
@@ -418,29 +417,29 @@ class MPCControllerBlock(VectorBlock):
     state_struct = "MPC_Controller_T"       # C: MPC_Controller_T
     step_func    = "MPC_Controller_Step"    # C: MPC_Controller_Step()
     init_func    = "MPC_Controller_Init"    # C: MPC_Controller_Init()
+    C_INIT_ARGS  = ["dt_s"]                  # C: MPC_Controller_Init(state, dt)
     C_SOURCES    = ["embed_sim_mpc_controller.c"]
     C_HEADERS    = ["embed_sim_mpc_controller.h"]
 
-    # Custom C snippet emitted into embedsim_loop.c by the code generator
-    C_CUSTOM_EMIT = (
-        "    /* --- mpc (MPCControllerBlock) --- */\n"
-        "    {\n"
-        "        MPC_Input_T   u_mpc;\n"
-        "        MPC_Output_T  y_mpc_out;\n"
-        "        real32_T      y_mpc[2];\n"
-        "\n"
-        "        u_mpc.omega_ref_mech = in->omega_ref_mech;\n"
-        "        u_mpc.theta_m        = in->theta_m;\n"
-        "        u_mpc.ia             = in->ia;\n"
-        "        u_mpc.ib             = in->ib;\n"
-        "        u_mpc.ic             = in->ic;\n"
-        "\n"
-        "        MPC_Controller_Step(&mpc_state, &u_mpc, dt, &y_mpc_out);\n"
-        "\n"
-        "        y_mpc[0] = y_mpc_out.v_alpha;\n"
-        "        y_mpc[1] = y_mpc_out.v_beta;\n"
-        "    }"
-    )
+    # C_CUSTOM_EMIT: emitted verbatim — same pattern as DFControllerBlock.
+    # Declarations inside the snippet; both v_alpha and v_beta wired so
+    # downstream SVPWMPack receives u_svpwm_pack[2] correctly.
+    C_CUSTOM_EMIT = """\
+        /* --- mpc (MPCControllerBlock) --- */
+        MPC_Input_T   u_mpc;
+        MPC_Output_T  y_mpc_out;
+        real32_T      y_mpc[2];
+
+        u_mpc.omega_ref_mech = in->omega_ref_mech;
+        u_mpc.theta_m        = in->theta_m;
+        u_mpc.ia             = in->ia;
+        u_mpc.ib             = in->ib;
+        u_mpc.ic             = in->ic;
+
+        MPC_Controller_Step(&mpc_state, &u_mpc, dt, &y_mpc_out);
+
+        y_mpc[0] = y_mpc_out.v_alpha;
+        y_mpc[1] = y_mpc_out.v_beta;"""
 
     # Diagnostic log density: every N steps at 20 kHz
     DIAG_STEPS: int = 20   # → 1 kHz log rate  C: MPC_DIAG_STEPS
@@ -508,7 +507,7 @@ class MPCControllerBlock(VectorBlock):
         self.Q_omega = float(Q_omega) # [-]
         self.R_vd    = float(R_vd)    # [-]
         self.R_vq    = float(R_vq)    # [-]
-        self._dt     = float(dt_s)    # [s]
+        self.dt_s    = float(dt_s)    # [s]  # Used by C code generator
 
         # ---- Integral correction parameters --------------------------------
         self.KI_v        = float(KI_v)        # [V/(rad/s·s)]
@@ -534,7 +533,7 @@ class MPCControllerBlock(VectorBlock):
             k_smo = float(SMO_K),
             fc    = float(SMO_FC),
         )
-        self._smo.set_dt(self._dt)   # pre-compute alpha_lpf
+        self._smo.set_dt(self.dt_s)   # pre-compute alpha_lpf
 
         # ---- Internal state (mirrors MPC_Controller_T scalar fields) -------
         self._v_alpha_prev:       float = 0.0  # [V]   C: s->v_alpha_prev
@@ -544,15 +543,28 @@ class MPCControllerBlock(VectorBlock):
 
         # ---- Diagnostic log (mirrors MPC_Controller_GetDiagnostics() keys) -
         self.log_data: dict = {
-            "t":         [],   # [s]    simulation time
-            "speed_ref": [],   # [RPM]  C: s->log_speed_ref
-            "speed":     [],   # [RPM]  C: s->log_speed
-            "id":        [],   # [A]    C: s->log_id
-            "iq":        [],   # [A]    C: s->log_iq
-            "vd":        [],   # [V]    C: s->log_vd
-            "vq":        [],   # [V]    C: s->log_vq
+            "t":           [],   # [s]    simulation time
+            "speed_ref":   [],   # [RPM]  C: s->log_speed_ref
+            "speed":       [],   # [RPM]  C: s->log_speed
+            "id":          [],   # [A]    C: s->log_id
+            "iq":          [],   # [A]    C: s->log_iq
+            "vd":          [],   # [V]    C: s->log_vd
+            "vq":          [],   # [V]    C: s->log_vq
+            # ---- Convergence / limit diagnostics (thesis performance metrics) -
+            "ss_ramp":     [],   # [A]    soft-start ramp level (0 → I_MAX over SOFTSTART_T)
+            "i_lim_circle":[],   # [A]    MTPA current headroom: sqrt(I_MAX²−id²) − |iq|
+            "id_var":      [],   # [A²]   running variance of id over last _CONV_WIN samples
+            "iq_var":      [],   # [A²]   running variance of iq over last _CONV_WIN samples
         }
         self._log_next: float = 0.0   # [s]  next log timestamp
+
+        # ---- Convergence variance window (thesis: short-horizon id oscillation) -
+        # Window length = 50 log samples @ 1 kHz → 50 ms rolling window.
+        # Chosen to span ~3 electrical time constants (τ_e = L/R = 1.29 ms each)
+        # so transient spikes are visible but steady-state oscillation dominates.
+        self._CONV_WIN: int = 50
+        self._id_buf: List[float] = []   # circular buffer for id variance
+        self._iq_buf: List[float] = []   # circular buffer for iq variance
 
         # ---- C backend wrapper ---------------------------------------------
         self._wrapper = None
@@ -592,7 +604,7 @@ class MPCControllerBlock(VectorBlock):
             self._wrapper = MPCControllerWrapper(
                 self.V_DC, self.P_POLES,
                 self.R_S, self.L, self.LAMBDA_PM,
-                self.I_MAX, self._dt,
+                self.I_MAX, self.dt_s,
                 self.N, self.Q_id, self.Q_iq, self.Q_omega,
                 self.R_vd, self.R_vq,
                 self._smo.k_smo, self._smo.fc,
@@ -793,6 +805,7 @@ class MPCControllerBlock(VectorBlock):
         vq:             float,
         v_alpha:        float,
         v_beta:         float,
+        ss_ramp:        float,   # [A]  soft-start ramp level (self._iq_limit)
     ) -> None:
         """
         Append one diagnostic sample and emit console progress.
@@ -800,11 +813,53 @@ class MPCControllerBlock(VectorBlock):
         Log rate: DIAG_STEPS = 20 → 1 kHz at 20 kHz ISR rate.
         Console: every 10 ms for t < 0.5 s, then every 500 ms.
 
+        Fields logged beyond the C MPC_Controller_GetDiagnostics() baseline:
+          ss_ramp      : soft-start iq ceiling, ramping 0→I_MAX over SOFTSTART_T.
+                         This is the quantity printed as ``limit=`` in the console.
+                         At t=0 it is 0; it reaches I_MAX after SOFTSTART_T seconds.
+          i_lim_circle : MTPA current headroom on the circle ||i||₂ ≤ I_MAX:
+                           i_lim_circle = sqrt(I_MAX² − id²) − |iq|
+                         Positive → headroom available; negative → overcurrent.
+                         Useful for thesis: shows how much iq capacity remains for
+                         torque after the id oscillation has consumed its share.
+          id_var       : rolling variance of id over the last _CONV_WIN log samples
+                         (50 ms window at 1 kHz log rate).  Non-zero steady-state
+                         variance is the quantitative signature of the short-horizon
+                         id limit-cycle; thesis expectation: σ²(id) ≈ (0.2 A)² = 0.04 A²
+                         at N=10 horizon, reducing toward 0 as N→∞ or Q_id→∞.
+          iq_var       : same window for iq.  Should converge to ≈ 0 in steady state
+                         when speed is regulated (iq tracks load torque iq_ref).
+
         C counterpart: MPC_Controller_LogDiag() in embed_sim_mpc_controller.c.
         """
         if t < self._log_next:
             return
 
+        # ---- Circle limit (MTPA headroom) -----------------------------------
+        # sqrt(I_MAX²−id²) is the maximum iq allowed without violating the
+        # current limit circle ||[id,iq]||₂ ≤ I_MAX.  Subtract |iq_meas|
+        # to get the signed headroom: positive = capacity available.
+        id_sq       = id_meas * id_meas
+        i_max_sq    = self.I_MAX * self.I_MAX
+        iq_max_circ = math.sqrt(max(0.0, i_max_sq - id_sq))  # [A]
+        i_lim_circle = iq_max_circ - abs(iq_meas)             # [A]  headroom
+
+        # ---- Running variance (convergence quality) --------------------------
+        self._id_buf.append(id_meas)
+        self._iq_buf.append(iq_meas)
+        if len(self._id_buf) > self._CONV_WIN:
+            self._id_buf.pop(0)
+            self._iq_buf.pop(0)
+        n_buf = len(self._id_buf)
+        if n_buf >= 2:
+            id_mean = sum(self._id_buf) / n_buf
+            iq_mean = sum(self._iq_buf) / n_buf
+            id_var  = sum((x - id_mean) ** 2 for x in self._id_buf) / (n_buf - 1)
+            iq_var  = sum((x - iq_mean) ** 2 for x in self._iq_buf) / (n_buf - 1)
+        else:
+            id_var = iq_var = 0.0
+
+        # ---- Append to log --------------------------------------------------
         # C: s->log_speed_ref[idx] = omega_ref * 60.0f / MPC_TWO_PI_F;
         self.log_data["t"].append(t)
         self.log_data["speed_ref"].append(omega_ref_mech * 60.0 / (2.0 * math.pi))
@@ -813,18 +868,30 @@ class MPCControllerBlock(VectorBlock):
         self.log_data["iq"].append(iq_meas)
         self.log_data["vd"].append(vd)
         self.log_data["vq"].append(vq)
-        self._log_next += self.DIAG_STEPS * self._dt
+        self.log_data["ss_ramp"].append(ss_ramp)
+        self.log_data["i_lim_circle"].append(i_lim_circle)
+        self.log_data["id_var"].append(id_var)
+        self.log_data["iq_var"].append(iq_var)
+        self._log_next += self.DIAG_STEPS * self.dt_s
 
         n = len(self.log_data["t"])
         print_interval = 10 if t < 0.5 else 500
         if n % print_interval == 1:
             v_mag = math.hypot(v_alpha, v_beta)
+            id_sigma = math.sqrt(id_var)
+            iq_sigma = math.sqrt(iq_var)
+            # NOTE: ``ss_ramp`` is the soft-start iq ceiling (0→I_MAX ramp).
+            # At t<SOFTSTART_T it is correctly small — that is expected behaviour,
+            # not a bug.  ``i_circle`` shows the circle-headroom independently.
             print(
                 f"[MPC t={t:.3f}s]  "
                 f"rpm={omega_m * 60.0 / (2.0 * math.pi):+8.1f}  "
                 f"id={id_meas:+7.3f}A  iq={iq_meas:+7.3f}A  "
                 f"vd={vd:+6.3f}V  vq={vq:+6.3f}V  "
-                f"|Vab|={v_mag:.3f}V  limit={self._iq_limit:.2f}A"
+                f"|Vab|={v_mag:.3f}V  "
+                f"ss={ss_ramp:.3f}A  "
+                f"i_circle={i_lim_circle:+.3f}A  "
+                f"σ(id)={id_sigma:.4f}A  σ(iq)={iq_sigma:.4f}A"
             )
 
     # -----------------------------------------------------------------------
@@ -860,7 +927,7 @@ class MPCControllerBlock(VectorBlock):
             self.output = VectorSignal(zero.copy(), self.name)
             return self.output
 
-        _dt: float = dt if dt > 0.0 else self._dt
+        _dt: float = dt if dt > 0.0 else self.dt_s
 
         # ---- Step 1: Unpack input bus ----------------------------------------
         # C: omega_ref_mech = in->omega_ref_mech;
@@ -957,8 +1024,14 @@ class MPCControllerBlock(VectorBlock):
         v_beta_out:  float = self._clamp_sym(v_beta  / self.SVPWM_GAIN, 1.0)
 
         # ---- Step 16: Diagnostic log ----------------------------------------
+        # Pass self._iq_limit as ss_ramp so _log_step() can display the soft-start
+        # ceiling alongside the circle headroom and convergence variance.
+        # NOTE: self._iq_limit was already updated in Step 9 this tick, so the
+        # value logged here is the CURRENT ramp level (post-update), which is
+        # what the C MPC_Controller_LogDiag() logs via s->iq_limit.
         self._log_step(t, omega_ref_mech, omega_m, id_meas, iq_meas,
-                       vd, vq, v_alpha, v_beta)
+                       vd, vq, v_alpha, v_beta,
+                       ss_ramp=self._iq_limit)
 
         self.output = VectorSignal(
             np.array([v_alpha_out, v_beta_out], dtype=np.float32), self.name
@@ -1019,7 +1092,7 @@ class MPCControllerBlock(VectorBlock):
         # C: MPC_DIAG_STEPS = 20  ->  1 kHz log rate at 20 kHz ISR.
         if t >= self._log_next:
             diag = self._wrapper.get_diagnostics()
-            # diag layout: [speed_ref_rpm, speed_rpm, id_meas, iq_meas, vd, vq]
+            # diag layout: [speed_ref_rpm, speed_rpm, id_meas, iq_meas, vd, vq, iq_limit]
             # C: MPC_Controller_GetDiagnostics() arg order (fixed by FIX 2 in wrapper)
             speed_ref_rpm = float(diag[0])   # [RPM]
             speed_rpm     = float(diag[1])   # [RPM]
@@ -1027,6 +1100,31 @@ class MPCControllerBlock(VectorBlock):
             iq_meas_log   = float(diag[3])   # [A]
             vd_log        = float(diag[4])   # [V]
             vq_log        = float(diag[5])   # [V]
+            # diag[6] = iq_limit (ss_ramp): soft-start ceiling, ramps 0→I_MAX over
+            # SOFTSTART_T then holds at I_MAX.  Always present now that the C wrapper
+            # exposes it; the guard is retained for safety with pre-rebuild binaries.
+            ss_ramp_log = float(diag[6]) if len(diag) > 6 else 0.0  # [A]
+
+            # ---- Circle limit (MTPA headroom) --------------------------------
+            id_sq_log       = id_meas_log * id_meas_log
+            i_max_sq        = self.I_MAX * self.I_MAX
+            iq_max_circ_log = math.sqrt(max(0.0, i_max_sq - id_sq_log))
+            i_lim_circle_log = iq_max_circ_log - abs(iq_meas_log)
+
+            # ---- Running variance (convergence quality) ----------------------
+            self._id_buf.append(id_meas_log)
+            self._iq_buf.append(iq_meas_log)
+            if len(self._id_buf) > self._CONV_WIN:
+                self._id_buf.pop(0)
+                self._iq_buf.pop(0)
+            n_buf = len(self._id_buf)
+            if n_buf >= 2:
+                id_mean_c = sum(self._id_buf) / n_buf
+                iq_mean_c = sum(self._iq_buf) / n_buf
+                id_var_c  = sum((x - id_mean_c) ** 2 for x in self._id_buf) / (n_buf - 1)
+                iq_var_c  = sum((x - iq_mean_c) ** 2 for x in self._iq_buf) / (n_buf - 1)
+            else:
+                id_var_c = iq_var_c = 0.0
 
             self.log_data["t"].append(t)
             self.log_data["speed_ref"].append(speed_ref_rpm)
@@ -1035,7 +1133,11 @@ class MPCControllerBlock(VectorBlock):
             self.log_data["iq"].append(iq_meas_log)
             self.log_data["vd"].append(vd_log)
             self.log_data["vq"].append(vq_log)
-            self._log_next += self.DIAG_STEPS * self._dt
+            self.log_data["ss_ramp"].append(ss_ramp_log)
+            self.log_data["i_lim_circle"].append(i_lim_circle_log)
+            self.log_data["id_var"].append(id_var_c)
+            self.log_data["iq_var"].append(iq_var_c)
+            self._log_next += self.DIAG_STEPS * self.dt_s
 
             # Console progress -- same cadence as compute_py()._log_step()
             n = len(self.log_data["t"])
@@ -1044,12 +1146,17 @@ class MPCControllerBlock(VectorBlock):
                 v_alpha_phys = float(outputs[0]) * self.SVPWM_GAIN
                 v_beta_phys  = float(outputs[1]) * self.SVPWM_GAIN
                 v_mag = math.hypot(v_alpha_phys, v_beta_phys)
+                id_sigma_c = math.sqrt(id_var_c)
+                iq_sigma_c = math.sqrt(iq_var_c)
                 print(
                     f"[MPC t={t:.3f}s]  "
                     f"rpm={speed_rpm:+8.1f}  "
                     f"id={id_meas_log:+7.3f}A  iq={iq_meas_log:+7.3f}A  "
                     f"vd={vd_log:+6.3f}V  vq={vq_log:+6.3f}V  "
-                    f"|Vab|={v_mag:.3f}V  limit={self._iq_limit:.2f}A"
+                    f"|Vab|={v_mag:.3f}V  "
+                    f"ss={ss_ramp_log:.3f}A  "
+                    f"i_circle={i_lim_circle_log:+.3f}A  "
+                    f"σ(id)={id_sigma_c:.4f}A  σ(iq)={iq_sigma_c:.4f}A"
                 )
 
         self.output = VectorSignal(outputs, self.name)
@@ -1100,6 +1207,10 @@ class MPCControllerBlock(VectorBlock):
 
         # Diagnostic log
         self.log_data = {k: [] for k in self.log_data}
+
+        # Convergence variance buffers
+        self._id_buf = []
+        self._iq_buf = []
 
         # C backend wrapper
         if self._wrapper is not None:

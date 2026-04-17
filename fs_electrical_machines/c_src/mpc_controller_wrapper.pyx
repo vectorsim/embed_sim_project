@@ -144,7 +144,8 @@ cdef extern from "embed_sim_mpc_controller.h":
         MatrixFloat* id_meas,         # [A]
         MatrixFloat* iq_meas,         # [A]
         MatrixFloat* vd,              # [V]
-        MatrixFloat* vq               # [V]
+        MatrixFloat* vq,              # [V]
+        MatrixFloat* iq_limit         # [A]  soft-start ramp ceiling
     ) nogil
 
 
@@ -395,6 +396,7 @@ cdef class MPCControllerWrapper:
         cdef MatrixFloat iq_meas
         cdef MatrixFloat vd
         cdef MatrixFloat vq
+        cdef MatrixFloat iq_limit_discard   # iq_limit not used here; read by get_diagnostics()
 
         if not self._initialized:
             raise RuntimeError("Controller not initialised.")
@@ -420,7 +422,8 @@ cdef class MPCControllerWrapper:
                 &id_meas,         # [A]
                 &iq_meas,         # [A]
                 &vd,              # [V]
-                &vq               # [V]
+                &vq,              # [V]
+                &iq_limit_discard # [A]  not used here; retrieved via get_diagnostics()
             )
 
         # Store [RPM] directly — no conversion
@@ -453,17 +456,18 @@ cdef class MPCControllerWrapper:
 
         Returns
         -------
-        ndarray shape (6,):
+        ndarray shape (7,):
             [0] speed_ref_rpm [RPM]   ← FIX: was [1] in old code
             [1] speed_rpm     [RPM]   ← FIX: was [0] in old code
             [2] id_meas       [A]
             [3] iq_meas       [A]
             [4] vd            [V]
             [5] vq            [V]
+            [6] iq_limit      [A]  soft-start ramp ceiling (0→I_MAX over SOFTSTART_T)
 
         ALIGNMENT: index order matches MPC_Controller_GetDiagnostics() argument
-        order and MPCControllerBlock.get_diagnostics() return dict key order:
-            { speed_ref_rpm: 0, speed_rpm: 1, id_meas: 2, iq_meas: 3, vd: 4, vq: 5 }
+        order and MPCControllerBlock.compute_c() ss_ramp_log extraction:
+            ss_ramp_log = float(diag[6]) if len(diag) > 6 else 0.0
         """
         cdef:
             MatrixFloat speed_ref_rpm
@@ -472,6 +476,7 @@ cdef class MPCControllerWrapper:
             MatrixFloat iq_meas
             MatrixFloat vd
             MatrixFloat vq
+            MatrixFloat iq_limit_val
             cnp.ndarray[cnp.float32_t, ndim=1] diag
 
         with nogil:
@@ -482,10 +487,11 @@ cdef class MPCControllerWrapper:
                 &id_meas,
                 &iq_meas,
                 &vd,
-                &vq
+                &vq,
+                &iq_limit_val
             )
 
-        diag = np.empty(6, dtype=np.float32)
+        diag = np.empty(7, dtype=np.float32)
         # FIX: index 0 = speed_ref_rpm, index 1 = speed_rpm
         # Old code had these swapped: diag[0]=speed_rpm, diag[1]=speed_ref_rpm
         diag[0] = speed_ref_rpm   # [RPM]
@@ -494,6 +500,7 @@ cdef class MPCControllerWrapper:
         diag[3] = iq_meas         # [A]
         diag[4] = vd              # [V]
         diag[5] = vq              # [V]
+        diag[6] = iq_limit_val    # [A]  soft-start ramp ceiling
         return diag
 
     # -------------------------------------------------------------------------

@@ -15,12 +15,18 @@
  *                Feedback source: SpeedFusion (encoder IIR + SMO blend)
  *
  *              INNER LOOP D -- id [A] -> vd [V]
- *                vd = -omega_e * Lq * iq_ref          [flatness decoupling]
- *                   + KP_ID * (0 - id_meas)           [MTPA enforcement]
+ *                vd = -omega_e * Lq * iq_ref                        [flatness decoupling]
+ *                   + KP_ID * (0 - id_meas)                         [proportional MTPA]
+ *                   + id_integral  (Fix 3, integral action)         [eliminates DC bias]
+ *                       id_integral += KI_ID * dt * (0 - id_meas)
+ *                       id_integral  = clamp(id_integral, +/-ID_INT_LIMIT)
+ *                       frozen when |vd_out| = DFC_V_MAX  (anti-windup)
+ *                Priority saturation: vd clamped first, vq gets remainder.
  *
  *              INNER LOOP Q -- iq [A] -> vq [V]
  *                vq = R*iq_ref + Lq*diq/dt + omega_e*lambda_pm  [flatness feedforward]
  *                   + KP_IQ * (iq_ref - iq_meas)                [residual correction]
+ *                Clamped to sqrt(V_MAX^2 - vd^2) after d-axis priority.
  *
  *            SPEED ESTIMATION -- SpeedFusion
  *            ================================
@@ -59,8 +65,16 @@
  *              Rule 15.5  : single return per function.
  *              Rule 15.7  : every if-else chain has a final else.
  *
- * \version   3.0.0
+ * \version   3.2.0
  * \copyright Copyright (C) EmbedSim 2025
+ *
+ * \par Change history
+ *   v3.2.0  Fix 3: DFC_VoltageLaw() -- integral action on id error.
+ *           New field DFC_State_T.id_integral; new defines DFC_KI_ID, DFC_ID_INT_LIMIT.
+ *           Conditional anti-windup: integrator frozen when vd at DFC_V_MAX.
+ *   v3.1.0  Fix 1: DFC_VoltageLaw() -- d-axis-priority voltage saturation (kept).
+ *   v3.1.0  Fix 2: iq_meas decoupling -- REVERTED (caused speed-loop collapse).
+ *   v3.1.0  Fix 4: Python SlidingModeObserver -- warmup counter timing aligned to C.
  *********************************************************************************************************************/
 
 #ifndef EMBED_SIM_DFC_CONTROLLER_H_
@@ -447,6 +461,7 @@
 /** \} */  /* end defgroup DFC_CtrlParams */
 
 
+
 /*********************************************************************************************************************/
 /*-------------------------------------------------Data Structures---------------------------------------------------*/
 /*********************************************************************************************************************/
@@ -596,10 +611,11 @@ typedef struct
  *            DFC_SMO_T         :  8 fields *  4 = 32 bytes
  *            Delayed voltages  :  2 fields *  4 =  8 bytes
  *            Reference state   :  2 fields *  4 =  8 bytes
+ *            d-axis integrator :  1 field  *  4 =  4 bytes  [Fix 3]
  *            Warmup counter    :  1 field  *  4 =  4 bytes
  *            Transform states  :  ~12 bytes (Clarke + Park + InvPark)
  *            Diagnostic log    :  7 floats + 2 uint32 = 36 bytes
- *            Total             :  ~ 120 bytes
+ *            Total             :  ~ 124 bytes
  *********************************************************************************************************************/
 typedef struct
 {
@@ -623,6 +639,14 @@ typedef struct
     MatrixFloat diq_filt;               /**< LPF-filtered diq_ref/dt [A/s].
                                          *   Feeds the Lq * diq/dt flatness term in vq.
                                          *   Clamped to I_MAX / DIQ_TAU = 3570 A/s.           */
+
+    /*--- d-axis integrator (Fix 3) ---*/
+    MatrixFloat id_integral;            /**< d-axis PI integrator accumulator [V].
+                                         *   Accumulates Ki_id * id_error * dt each step.
+                                         *   Zeroed by DFC_Controller_Init() / Reset().
+                                         *   Clamped to ±DFC_ID_INT_LIMIT = ±2.0 V.
+                                         *   Not updated when vd_out is at DFC_V_MAX
+                                         *   (conditional anti-windup).               */
 
     /*--- Warmup counter ---*/
     uint32_T smo_warmup_cnt;            /**< ISR steps since DFC_Controller_Init() [dimensionless].
@@ -708,7 +732,9 @@ extern void DFC_Controller_Init(
  *            5. Speed P-loop: omega_ref [rad/s]  ->  iq_ref [A].
  *            6. Current derivative LPF           ->  diq_filt [A/s].
  *            7. Park: i_alpha [A], i_beta [A]    ->  id_meas [A], iq_meas [A].
- *            8. Flatness voltage law             ->  vd [V], vq [V].
+ *            8. Flatness voltage law (v3.1):
+ *               - d-axis decoupling uses iq_meas (not iq_ref) for exact cancellation.
+ *               - Priority saturation: vd clamped first, vq gets sqrt(V_MAX^2 - vd^2).
  *            9. Inverse Park: vd [V], vq [V]     ->  v_alpha [V], v_beta [V].
  *           10. Latch v_alpha_prev, v_beta_prev for next step's SMO.
  *           11. Diagnostic log snapshot at 1 kHz.
