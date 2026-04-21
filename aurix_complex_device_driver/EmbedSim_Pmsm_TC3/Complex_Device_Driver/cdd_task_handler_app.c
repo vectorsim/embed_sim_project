@@ -36,6 +36,7 @@
  * Includes
  *********************************************************************************************************************/
 #include "cdd_task_handler_app.h"
+#include "cdd_gpio_app.h"
 
 /**********************************************************************************************************************
  * Private Macros — Rate-Divider Reload Values
@@ -137,9 +138,9 @@ void Task_100ms(void)
 
 /*--------------------------------------------------------------------------------------------------------------------
  * Task_1s  — 1 Hz   (budget: < 1 s cumulative)
- * Typical:  watchdog service, heartbeat LED, logging, IPC status telemetry
+ * HeartBeat LED
  *------------------------------------------------------------------------------------------------------------------*/
 void Task_1s(void)
 {
-    /* TODO: add 1 s application logic here */
+    GPIO_Toggle_LED_P33_4();
 }

@@ -45,7 +45,7 @@
  * Installs Stm_00_Cmp_00_Isr into the CPU0 vector table at priority
  * STM0_CMP0_IR_SRPN using the TASKING HI:/LO: relocation syntax.
  *********************************************************************************************************************/
-IFX_INTERRUPT(Stm_00_Cmp_00_Isr, 0, STM0_CMP0_IR_SRPN);
+IFX_INTERRUPT(Stm_00_Cmp_00_Isr, 0, STM0_CMP0_IR_SRPN);    /* STM0_CMP0_IR_SRPN */
 
 /**********************************************************************************************************************
  * Private Macros — Time-Constant Table Indices
