@@ -57,7 +57,6 @@
 /**********************************************************************************************************************
  * Numerical Utility
  *********************************************************************************************************************/
-#define MISRA_TRUE              (0x1U == 0x1U)
 #define EPSILON_ZERO            (1.0e-10f)
 
 /**********************************************************************************************************************
@@ -83,6 +82,12 @@
  * All CDD interrupt priorities are defined here and nowhere else.
  * Use these constants in every SRC register write and IFX_INTERRUPT() call.
  *********************************************************************************************************************/
+
+/**
+ * Macro to register interrupt routine
+ */
+
+#define EMBED_SIM_INTERRUPT(Isr, VectabNum, Prio) void __interrupt(Prio) __vector_table(VectabNum) Isr(void)
 
 /* GPT12 encoder zero-pulse  —  CPU0, registered by IfxGpt12_IncrEnc_initConfig */
 #define CORE_00_GPT12_ENCODER_ZERO_SRPN         (20U)

@@ -63,7 +63,7 @@
  *********************************************************************************************************************/
 
 /* CORE_01_ATOM_00_CH_00_CL_SRPN = 80 — literal required by TASKING IFX_INTERRUPT */
-IFX_INTERRUPT(GTM_Atom_00_Ch_00_Isr, 1, 80);
+EMBED_SIM_INTERRUPT(GTM_Atom_00_Ch_00_Isr, 0x1, CORE_01_ATOM_00_CH_00_CL_SRPN);
 
 /**********************************************************************************************************************
  * ISR Body — FOC 20 kHz control loop
@@ -84,7 +84,7 @@ void GTM_Atom_00_Ch_00_Isr(void)
 /** \brief  ATOM SOMP mode value (Signal Output Mode PWM)                       */
 #define ATOM_MODE_SOMP              (0x2U)
 
-/** \brief  TOUTSEL mux value for GTM ATOM alternate output function             */
+/** \brief  TOUTSEL mux value for GTM ATOM alternate output function            */
 #define TOUTSEL_GTM_ATOM            (0x02U)
 
 
@@ -107,7 +107,7 @@ static uint32_T Period_Ticks_G;
 /** \brief  Control loop half-period  [CMU CLK0 ticks]                          */
 static uint32_T Half_Period_Ticks_G;
 
-/** \brief  Control loop sample time  [s]                                        */
+/** \brief  Control loop sample time  [s]                                       */
 static real32_T Sample_Time_G;
 
 /**********************************************************************************************************************
@@ -175,15 +175,15 @@ void Initialize_GTM_Module(void)
     endisCtrl.U = GTM_ATOM0_AGC_ENDIS_CTRL.U;
     outenCtrl.U = GTM_ATOM0_AGC_OUTEN_CTRL.U;
 
-    /* ================================================================== */
-    /* MASTER CHANNEL — ATOM0_CH0                                          */
-    /* Centre-aligned SOMP carrier.  CCU1 fires at half-period → CPU1 ISR  */
+    /* ==================================================================   */
+    /* MASTER CHANNEL — ATOM0_CH0                                           */
+    /* Centre-aligned SOMP carrier.  CCU1 fires at half-period → CPU1 ISR   */
     /* Output: P00.0 scope probe                                            */
-    /* ================================================================== */
+    /* ==================================================================   */
 
     /* M1. Configure channel control */
     chCtrl.U              = GTM_ATOM0_CH0_CTRL.U;
-    chCtrl.B.MODE         = ATOM_MODE_SOMP;   /* centre-aligned PWM              */
+    chCtrl.B.MODE         = ATOM_MODE_SOMP;   /* centre-aligned PWM               */
     chCtrl.B.RST_CCU0     = 0x0U;             /* master does not self-reset       */
     chCtrl.B.TRIGOUT      = 0x1U;             /* expose CCU0 event to slaves      */
     chCtrl.B.ARU_EN       = 0x0U;
@@ -195,7 +195,7 @@ void Initialize_GTM_Module(void)
     GTM_ATOM0_CH0_SR0.B.SR0 = Period_Ticks_G;
     GTM_ATOM0_CH0_SR1.B.SR1 = Half_Period_Ticks_G;
 
-    /* M3. Enable CCU1 interrupt, pulse mode                               */
+    /* M3. Enable CCU1 interrupt, pulse mode  */
     chIrqEn.U                 = GTM_ATOM0_CH0_IRQ_EN.U;
     chIrqEn.B.CCU0TC_IRQ_EN   = 0x0U;
     chIrqEn.B.CCU1TC_IRQ_EN   = 0x1U;         /* CCU1 fires at half-period        */
@@ -219,11 +219,11 @@ void Initialize_GTM_Module(void)
     endisCtrl.B.ENDIS_CTRL0 = 0x2U;
     outenCtrl.B.OUTEN_CTRL0 = 0x2U;
 
-    /* ================================================================== */
-    /* ADC RESOLVER TRIGGER — ATOM0_CH3                                    */
+    /* ==================================================================        */
+    /* ADC RESOLVER TRIGGER — ATOM0_CH3                                          */
     /* Valley-aligned → EVADC G3 (SIN+ AN24), G11 (COS+ AN19), G8 (VOLT_DC AN40) */
-    /* Internal trigger only — no physical pin                              */
-    /* ================================================================== */
+    /* Internal trigger only — no physical pin                                   */
+    /* ==================================================================        */
 
     /* R1. Configure channel control — slave, resets on master CCU0 event  */
     chCtrl.U              = GTM_ATOM0_CH3_CTRL.U;

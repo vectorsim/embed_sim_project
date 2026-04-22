@@ -37,7 +37,6 @@
 #include "cdd_config.h"
 #include "ifxStm_reg.h"
 #include "ifxSrc_reg.h"
-#include "Bsp.h"
 
 /**********************************************************************************************************************
  * Interrupt Vector Table Entry
@@ -45,7 +44,7 @@
  * Installs Stm_00_Cmp_00_Isr into the CPU0 vector table at priority
  * STM0_CMP0_IR_SRPN using the TASKING HI:/LO: relocation syntax.
  *********************************************************************************************************************/
-IFX_INTERRUPT(Stm_00_Cmp_00_Isr, 0, STM0_CMP0_IR_SRPN);    /* STM0_CMP0_IR_SRPN */
+EMBED_SIM_INTERRUPT(Stm_00_Cmp_00_Isr, 0, STM0_CMP0_IR_SRPN);    /* STM0_CMP0_IR_SRPN */
 
 /**********************************************************************************************************************
  * Private Macros — Time-Constant Table Indices
@@ -102,15 +101,15 @@ static void Init_Time_Table(uint64_T stm_freq);
  */
 void Stm_00_Cmp_00_Isr(void)
 {
-    uint32_T prev_ir_state;
+    uint32_T entry_time = Get_Lower_System_Time(); /* snapshot at entry */
 
-    /* Dispatch software task scheduler (defined in cdd_task_handler_app.c) */
     System_Tick_Handler();
 
-    /* Rearm: next compare = now + 1 ms, atomically */
-    prev_ir_state = Disable_CPU_Interrupt();
-    STM0_CMP0.B.CMPVAL = Get_Lower_System_Time() + (uint32_T)TimeConst_1ms;
-    Restore_CPU_Interrupt(prev_ir_state);
+    uint32_T elapsed   = Get_Lower_System_Time() - entry_time; /* wraps safely */
+    uint32_T periods   = (elapsed / (uint32_T)TimeConst_1ms) + 1U;
+    uint32_T next_cmp  = entry_time + (periods * (uint32_T)TimeConst_1ms);
+
+    STM0_CMP0.B.CMPVAL = next_cmp;
 }
 
 /**********************************************************************************************************************
@@ -158,14 +157,10 @@ uint64_T Get_System_Time(void)
 {
     uint64_T lower_sys_time;
     uint64_T upper_sys_time;
-    uint32_T prev_ir_state;
 
     /* Read TIM0 first — hardware latches upper bits into CAP (ds2 P.60)     */
-    prev_ir_state  = Disable_CPU_Interrupt();
     lower_sys_time = (uint64_T)STM0_TIM0.U;
     upper_sys_time = (uint64_T)STM0_CAP.U;
-    Restore_CPU_Interrupt(prev_ir_state);
-
     upper_sys_time = (upper_sys_time << 0x20U) | lower_sys_time;
 
     return upper_sys_time;
