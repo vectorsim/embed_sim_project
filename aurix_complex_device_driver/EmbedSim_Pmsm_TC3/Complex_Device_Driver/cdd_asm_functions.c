@@ -36,8 +36,8 @@
  * ASM_Cmp_And_Swap
  *------------------------------------------------------------------------------------------------------------------*/
 uint32_T ASM_Cmp_And_Swap(uint32_T *Reg_Ptr,
-                           uint32_T  New_Reg_Value,
-                           uint32_T  Current_Reg_Value)
+                          uint32_T  New_Reg_Value,
+                          uint32_T  Current_Reg_Value)
 {
     volatile uint32_T reg_value;
 

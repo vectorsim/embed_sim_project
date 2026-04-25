@@ -1,0 +1,3 @@
+C:/EmbedSimProject/embed_sim_project/examples/dc_motor_fmu/modelica/DCMotor76ec/405.fmutmp/sources/../binaries/win64/libDCMotor.dll.a
+C:/EmbedSimProject/embed_sim_project/examples/dc_motor_fmu/modelica/DCMotor76ec/405.fmutmp/sources/../binaries/win64/DCMotor.dll
+C:/EmbedSimProject/embed_sim_project/examples/dc_motor_fmu/modelica/DCMotor76ec/405.fmutmp/sources/../binaries/win64/libwinpthread-1.dll

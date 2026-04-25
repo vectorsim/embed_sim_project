@@ -117,7 +117,7 @@ static real32_T Sample_Time_G;
 /*--------------------------------------------------------------------------------------------------------------------
  * Initialize_GTM_Module
  *
- * Flat Infineon-pattern init — see EGTM_ATOM_3_Phase_Inverter_HRPWM.c.
+ * Flat Infineon-pattern init
  *
  * All interim structs are declared at the top.
  * Structs shared across phase blocks (dtmCtrl, glbCtrl, fupdCtrl, endisCtrl,
@@ -147,13 +147,6 @@ void Initialize_GTM_Module(void)
     Ifx_GTM_ATOM_AGC_ENDIS_CTRL endisCtrl;   /* shared — accumulated, written back once */
     Ifx_GTM_ATOM_AGC_OUTEN_CTRL outenCtrl;   /* shared — accumulated, written back once */
 
-    /* ------------------------------------------------------------------ */
-    /* Pre-compute timing constants from live CMU CLK0 frequency           */
-    /* ------------------------------------------------------------------ */
-    Period_Ticks_G      = (uint32_T)((real32_T)GTM_CMU_CLK0_FREQUENCY /
-                                      (real32_T)BMC_SWC3_ED_CONTROL_FREQUENCY);
-    Half_Period_Ticks_G = Period_Ticks_G / 2U;
-    Sample_Time_G       = 1.0f / (real32_T)BMC_SWC3_ED_CONTROL_FREQUENCY;
 
     /* ------------------------------------------------------------------ */
     /* Enable GTM module clock and CMU CLK0                                */
@@ -162,10 +155,32 @@ void Initialize_GTM_Module(void)
     Clear_CPU_WDT_EndInit();
     GTM_CLC.B.DISR = 0x0U;                /* enable GTM module clock  ds2 P.61  */
     Set_CPU_WDT_EndInit();
+    while (GTM_CLC.B.DISS != 0x0U)       /* wait for module clock active        */
+    {
+        Nop_Delay(1U, 1U);
+    }
 
-    while (GTM_CLC.B.DISS != 0x0U) {}     /* wait for module clock active        */
+    GTM_CTRL.B.RF_PROT = 0x0U;   /* SW RST (global), SW interrupt FORCINT, and SW RAM reset functionality is enabled ds2 P.109 */
+    GTM_CCM0_PROT.B.CLS_PROT = 0x0U; /* Write protection of cluster configuration registers is enabled ds2 195 */
 
-    GTM_CMU_CLK_EN.B.EN_CLK0 = 0x2U;      /* enable CMU CLK0          ds2 P.184  */
+    /* Cluster is enabled with out clock divider */
+    GTM_CLS_CLK_CFG.B.CLS0_CLK_DIV = 0x1U;  /* ds2 P.122 */
+
+    /* All CMU Clocks are Disabled First */
+    GTM_CMU_CLK_EN.U = 0x55555555;   /* ds2 P.184 */
+    /* Set CMU CLK00 frequency */
+    Set_GTM_CMU_CLK_00_Frequency(GTM_CMU_CLK0_FREQUENCY);
+    /* Enable CMU CLK00 */
+    GTM_CMU_CLK_EN.B.EN_CLK0 = 0x2U;      /* enable CMU CLK0 ds2 P.184  */
+
+    /* ------------------------------------------------------------------ */
+    /* Pre-compute timing constants from live CMU CLK0 frequency          */
+    /* ------------------------------------------------------------------ */
+    Period_Ticks_G      = (uint32_T)((real32_T)GTM_CMU_CLK0_FREQUENCY /
+                                     (real32_T)BMC_SWC3_ED_CONTROL_FREQUENCY);
+    Half_Period_Ticks_G = Period_Ticks_G / 2U;
+    Sample_Time_G       = 1.0f / (real32_T)BMC_SWC3_ED_CONTROL_FREQUENCY;
+
 
     /* ------------------------------------------------------------------ */
     /* Read shared interim structs once — modified per-channel below       */

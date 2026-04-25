@@ -92,7 +92,10 @@ static void GPIO_Configure_GD9180_Pins(void);
 void GPIO_Configure_GTM_Master_P00_0(void)
 {
     P00_IOCR0.B.PC0 = GPIO_PC_PP_ALT1;
-    P00_PDR0.B.PD0  = GPIO_PD_SPEED3;
+
+    Clear_CPU_WDT_EndInit();
+    P00_PDR0.B.PD0  = GPIO_PD_SPEED3;    /* P00_PDR0 is EndInit-protected        */
+    Set_CPU_WDT_EndInit();
 }
 
 /*--------------------------------------------------------------------------------------------------------------------
@@ -104,7 +107,10 @@ void GPIO_Configure_GTM_Master_P00_0(void)
 void GPIO_Configure_GTM_PhaseU_LS_P00_2(void)
 {
     P00_IOCR0.B.PC2 = GPIO_PC_PP_ALT1;
-    P00_PDR0.B.PD2  = GPIO_PD_SPEED3;
+
+    Clear_CPU_WDT_EndInit();
+    P00_PDR0.B.PD2  = GPIO_PD_SPEED3;    /* P00_PDR0 is EndInit-protected        */
+    Set_CPU_WDT_EndInit();
 }
 
 /*--------------------------------------------------------------------------------------------------------------------
@@ -116,7 +122,10 @@ void GPIO_Configure_GTM_PhaseU_LS_P00_2(void)
 void GPIO_Configure_GTM_PhaseU_HS_P00_3(void)
 {
     P00_IOCR0.B.PC3 = GPIO_PC_PP_ALT1;
-    P00_PDR0.B.PD3  = GPIO_PD_SPEED3;
+
+    Clear_CPU_WDT_EndInit();
+    P00_PDR0.B.PD3  = GPIO_PD_SPEED3;    /* P00_PDR0 is EndInit-protected        */
+    Set_CPU_WDT_EndInit();
 }
 
 /*--------------------------------------------------------------------------------------------------------------------
@@ -128,7 +137,10 @@ void GPIO_Configure_GTM_PhaseU_HS_P00_3(void)
 void GPIO_Configure_GTM_PhaseV_LS_P00_4(void)
 {
     P00_IOCR4.B.PC4 = GPIO_PC_PP_ALT1;
-    P00_PDR0.B.PD4  = GPIO_PD_SPEED3;
+
+    Clear_CPU_WDT_EndInit();
+    P00_PDR0.B.PD4  = GPIO_PD_SPEED3;    /* P00_PDR0 is EndInit-protected        */
+    Set_CPU_WDT_EndInit();
 }
 
 /*--------------------------------------------------------------------------------------------------------------------
@@ -140,7 +152,10 @@ void GPIO_Configure_GTM_PhaseV_LS_P00_4(void)
 void GPIO_Configure_GTM_PhaseV_HS_P00_5(void)
 {
     P00_IOCR4.B.PC5 = GPIO_PC_PP_ALT1;
-    P00_PDR0.B.PD5  = GPIO_PD_SPEED3;
+
+    Clear_CPU_WDT_EndInit();
+    P00_PDR0.B.PD5  = GPIO_PD_SPEED3;    /* P00_PDR0 is EndInit-protected        */
+    Set_CPU_WDT_EndInit();
 }
 
 /*--------------------------------------------------------------------------------------------------------------------
@@ -152,7 +167,10 @@ void GPIO_Configure_GTM_PhaseV_HS_P00_5(void)
 void GPIO_Configure_GTM_PhaseW_LS_P00_6(void)
 {
     P00_IOCR4.B.PC6 = GPIO_PC_PP_ALT1;
-    P00_PDR0.B.PD6  = GPIO_PD_SPEED3;
+
+    Clear_CPU_WDT_EndInit();
+    P00_PDR0.B.PD6  = GPIO_PD_SPEED3;    /* P00_PDR0 is EndInit-protected        */
+    Set_CPU_WDT_EndInit();
 }
 
 /*--------------------------------------------------------------------------------------------------------------------
@@ -164,7 +182,10 @@ void GPIO_Configure_GTM_PhaseW_LS_P00_6(void)
 void GPIO_Configure_GTM_PhaseW_HS_P00_7(void)
 {
     P00_IOCR4.B.PC7 = GPIO_PC_PP_ALT1;
-    P00_PDR0.B.PD7  = GPIO_PD_SPEED3;
+
+    Clear_CPU_WDT_EndInit();
+    P00_PDR0.B.PD7  = GPIO_PD_SPEED3;    /* P00_PDR0 is EndInit-protected        */
+    Set_CPU_WDT_EndInit();
 }
 
 /*--------------------------------------------------------------------------------------------------------------------
@@ -177,8 +198,12 @@ void GPIO_Configure_GTM_PhaseW_HS_P00_7(void)
 void GPIO_Configure_ISR_Timing_P14_5(void)
 {
     P14_IOCR4.B.PC5 = GPIO_PC_PP_GP;
-    P14_PDR0.B.PD5  = GPIO_PD_SPEED1;
-    P14_OMR.B.PCL5  = 0x1U;           /* drive LOW on init                    */
+
+    Clear_CPU_WDT_EndInit();
+    P14_PDR0.B.PD5  = GPIO_PD_SPEED1;    /* P14_PDR0 is EndInit-protected        */
+    Set_CPU_WDT_EndInit();
+
+    P14_OMR.B.PCL5  = 0x1U;              /* drive LOW on init                    */
 }
 
 /*--------------------------------------------------------------------------------------------------------------------
@@ -218,21 +243,27 @@ static void GPIO_Configure_GD9180_Pins(void)
 {
     /* P20.0 /INH — output, push-pull GP, speed-1, init LOW */
     P20_IOCR0.B.PC0 = GPIO_PC_PP_GP;
-    P20_PDR0.B.PD0  = GPIO_PD_SPEED1;
+    Clear_CPU_WDT_EndInit();
+    P20_PDR0.B.PD0  = GPIO_PD_SPEED1;    /* P20_PDR0 is EndInit-protected        */
+    Set_CPU_WDT_EndInit();
     P20_OMR.B.PCL0  = 0x1U;
 
     /* P33.10 /SOFF — output, push-pull GP, speed-1, init HIGH (/SOFF=HIGH = normal path) */
     P33_IOCR8.B.PC10 = GPIO_PC_PP_GP;
-    P33_PDR1.B.PD10  = GPIO_PD_SPEED1;
+    Clear_CPU_WDT_EndInit();
+    P33_PDR1.B.PD10  = GPIO_PD_SPEED1;   /* P33_PDR1 is EndInit-protected        */
+    Set_CPU_WDT_EndInit();
     P33_OMR.B.PS10   = 0x1U;
 
     /* P33.11 ENA — output, push-pull GP, speed-1, init LOW */
     P33_IOCR8.B.PC11 = GPIO_PC_PP_GP;
-    P33_PDR1.B.PD11  = GPIO_PD_SPEED1;
+    Clear_CPU_WDT_EndInit();
+    P33_PDR1.B.PD11  = GPIO_PD_SPEED1;   /* P33_PDR1 is EndInit-protected        */
+    Set_CPU_WDT_EndInit();
     P33_OMR.B.PCL11  = 0x1U;
 
     /* P15.2 /ERR — input, pull-up (0x02 = input pull-up device) */
-    P15_IOCR0.B.PC2 = 0x02U;
+    P15_IOCR0.B.PC2 = 0x02U;             /* IOCR is not EndInit-protected        */
 }
 
 /*--------------------------------------------------------------------------------------------------------------------

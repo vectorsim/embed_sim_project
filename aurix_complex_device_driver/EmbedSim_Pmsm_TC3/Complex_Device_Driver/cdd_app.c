@@ -37,7 +37,6 @@
 #include "cdd_gpio_app.h"       /* GPIO / LED init                                 # C: GPIO_Init_LED_P33()       */
 #include "cdd_gtm_app.h"        /* GTM PWM init                                    # C: GTM_Init_PWM_TOM()        */
 
-
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
 /*********************************************************************************************************************/
@@ -106,6 +105,8 @@ void Initialize_Pmsm_App(void)
         /* STM wrapper is void; a misconfigured STM will manifest as a missing
          * 20 kHz interrupt and is caught by the application watchdog.         */
     }
+
+    Initialize_GTM_Module();
 
     /*--- Latch final status ----------------------------------------------------------------------------------   */
     if (b_ok == TRUE)
