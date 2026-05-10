@@ -1,0 +1,567 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+
+<!-- description of the model interface using an extention of the FMI standard -->
+<fmiModelDescription
+  fmiVersion                          = "1.0"
+
+  modelName                           = "PMSM_Plant_FMU"
+  modelIdentifier                     = "PMSM_Plant_FMU"
+
+  OPENMODELICAHOME                    = "C:/Program Files/OpenModelica1.26.3-64bit"
+
+  guid                                = "{ef180eb3-c386-450d-b4cc-76dfc3336dcc}"
+
+  description                         = ""
+  generationTool                      = "OpenModelica Compiler OpenModelica v1.26.3 (64-bit)"
+  generationDateAndTime               = "2026-05-07T16:25:23Z"
+
+  variableNamingConvention            = "structured"
+
+  numberOfEventIndicators             = "0"  cmt_numberOfEventIndicators             = "NG:       number of zero crossings,                           FMI"
+  numberOfTimeEvents                  = "0"  cmt_numberOfTimeEvents                  = "NG_SAM:   number of zero crossings that are samples,          OMC"
+
+  numberOfInputVariables              = "5"  cmt_numberOfInputVariables              = "NI:       number of inputvar on topmodel,                     OMC"
+  numberOfOutputVariables             = "8"  cmt_numberOfOutputVariables             = "NO:       number of outputvar on topmodel,                    OMC"
+
+  numberOfExternalObjects             = "0"  cmt_numberOfExternalObjects             = "NEXT:     number of external objects,                         OMC"
+  numberOfFunctions                   = "0"  cmt_numberOfFunctions                   = "NFUNC:    number of functions used by the simulation,         OMC"
+
+  numberOfContinuousStates            = "4"  cmt_numberOfContinuousStates            = "NX:       number of states,                                   FMI"
+  numberOfRealAlgebraicVariables      = "28"  cmt_numberOfRealAlgebraicVariables      = "NY:       number of real variables,                           OMC"
+  numberOfRealAlgebraicAliasVariables = "1"  cmt_numberOfRealAlgebraicAliasVariables = "NA:       number of alias variables,                          OMC"
+  numberOfRealParameters              = "7"  cmt_numberOfRealParameters              = "NP:       number of parameters,                               OMC"
+
+  numberOfIntegerAlgebraicVariables   = "0"  cmt_numberOfIntegerAlgebraicVariables   = "NYINT:    number of alg. int variables,                       OMC"
+  numberOfIntegerAliasVariables       = "0"  cmt_numberOfIntegerAliasVariables       = "NAINT:    number of alias int variables,                      OMC"
+  numberOfIntegerParameters           = "1"  cmt_numberOfIntegerParameters           = "NPINT:    number of int parameters,                           OMC"
+
+  numberOfStringAlgebraicVariables    = "0"  cmt_numberOfStringAlgebraicVariables    = "NYSTR:    number of alg. string variables,                    OMC"
+  numberOfStringAliasVariables        = "0"  cmt_numberOfStringAliasVariables        = "NASTR:    number of alias string variables,                   OMC"
+  numberOfStringParameters            = "0"  cmt_numberOfStringParameters            = "NPSTR:    number of string parameters,                        OMC"
+
+  numberOfBooleanAlgebraicVariables   = "0"  cmt_numberOfBooleanAlgebraicVariables   = "NYBOOL:   number of alg. bool variables,                      OMC"
+  numberOfBooleanAliasVariables       = "0"  cmt_numberOfBooleanAliasVariables       = "NABOOL:   number of alias bool variables,                     OMC"
+  numberOfBooleanParameters           = "0"  cmt_numberOfBooleanParameters           = "NPBOOL:   number of bool parameters,                          OMC" >
+
+
+  <!-- startTime, stopTime, tolerance are FMI specific, all others are OMC specific -->
+  <DefaultExperiment
+    startTime      = "0"
+    stopTime       = "1"
+    stepSize       = "0.002"
+    tolerance      = "1e-06"
+    solver         = "dassl"
+    outputFormat   = "mat"
+    variableFilter = ".*" />
+
+  <!-- variables in the model -->
+  <ModelVariables>
+
+  <ScalarVariable
+    name = "i_d"
+    valueReference = "1000"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "0" classType = "rSta"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "17" startColumn = "3" endLine = "17" endColumn = "22" fileWritable = "true">
+    <Real start="0.0" fixed="true" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "i_q"
+    valueReference = "1001"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "1" classType = "rSta"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "18" startColumn = "3" endLine = "18" endColumn = "22" fileWritable = "true">
+    <Real start="0.0" fixed="true" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "omega_m"
+    valueReference = "1002"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "2" classType = "rSta"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "19" startColumn = "3" endLine = "19" endColumn = "26" fileWritable = "true">
+    <Real start="0.0" fixed="true" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "theta_e"
+    valueReference = "1003"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "3" classType = "rSta"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "20" startColumn = "3" endLine = "20" endColumn = "26" fileWritable = "true">
+    <Real start="0.0" fixed="true" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "der(i_d)"
+    valueReference = "1004"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "0" classType = "rDer"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "17" startColumn = "3" endLine = "17" endColumn = "22" fileWritable = "true">
+    <Real fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "der(i_q)"
+    valueReference = "1005"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "1" classType = "rDer"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "18" startColumn = "3" endLine = "18" endColumn = "22" fileWritable = "true">
+    <Real fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "der(omega_m)"
+    valueReference = "1006"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "2" classType = "rDer"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "19" startColumn = "3" endLine = "19" endColumn = "26" fileWritable = "true">
+    <Real fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "der(theta_e)"
+    valueReference = "1007"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "3" classType = "rDer"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "20" startColumn = "3" endLine = "20" endColumn = "26" fileWritable = "true">
+    <Real fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "$cse1"
+    valueReference = "1008"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "0" classType = "rAlg"
+    isProtected = "true" hideResult = "true" isEncrypted = "false" initNonlinear = "false"
+    fileName = "" startLine = "0" startColumn = "0" endLine = "0" endColumn = "0" fileWritable = "true">
+    <Real fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "$cse2"
+    valueReference = "1009"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "1" classType = "rAlg"
+    isProtected = "true" hideResult = "true" isEncrypted = "false" initNonlinear = "false"
+    fileName = "" startLine = "0" startColumn = "0" endLine = "0" endColumn = "0" fileWritable = "true">
+    <Real fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "T_em"
+    valueReference = "1010"
+    variability = "continuous" isDiscrete = "false"
+    causality = "output" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "2" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "27" startColumn = "3" endLine = "27" endColumn = "19" fileWritable = "true">
+    <Real start="0.0" fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "T_load"
+    valueReference = "1011"
+    variability = "continuous" isDiscrete = "false"
+    causality = "input" isValueChangeable = "true"
+    inputIndex = "0"
+    alias = "noAlias"
+    classIndex = "3" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "15" startColumn = "3" endLine = "15" endColumn = "31" fileWritable = "true">
+    <Real start="0.0" fixed="true" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "duty_a"
+    valueReference = "1012"
+    variability = "continuous" isDiscrete = "false"
+    causality = "input" isValueChangeable = "true"
+    inputIndex = "1"
+    alias = "noAlias"
+    classIndex = "4" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "11" startColumn = "3" endLine = "11" endColumn = "31" fileWritable = "true">
+    <Real start="0.5" fixed="true" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "duty_b"
+    valueReference = "1013"
+    variability = "continuous" isDiscrete = "false"
+    causality = "input" isValueChangeable = "true"
+    inputIndex = "2"
+    alias = "noAlias"
+    classIndex = "5" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "12" startColumn = "3" endLine = "12" endColumn = "31" fileWritable = "true">
+    <Real start="0.5" fixed="true" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "duty_c"
+    valueReference = "1014"
+    variability = "continuous" isDiscrete = "false"
+    causality = "input" isValueChangeable = "true"
+    inputIndex = "3"
+    alias = "noAlias"
+    classIndex = "6" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "13" startColumn = "3" endLine = "13" endColumn = "31" fileWritable = "true">
+    <Real start="0.5" fixed="true" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "i_beta"
+    valueReference = "1015"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "7" classType = "rAlg"
+    isProtected = "true" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "35" startColumn = "3" endLine = "35" endColumn = "23" fileWritable = "true">
+    <Real fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "ia"
+    valueReference = "1016"
+    variability = "continuous" isDiscrete = "false"
+    causality = "output" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "8" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "23" startColumn = "3" endLine = "23" endColumn = "17" fileWritable = "true">
+    <Real fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "ib"
+    valueReference = "1017"
+    variability = "continuous" isDiscrete = "false"
+    causality = "output" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "9" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "24" startColumn = "3" endLine = "24" endColumn = "17" fileWritable = "true">
+    <Real fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "ic"
+    valueReference = "1018"
+    variability = "continuous" isDiscrete = "false"
+    causality = "output" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "10" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "25" startColumn = "3" endLine = "25" endColumn = "17" fileWritable = "true">
+    <Real fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "id_out"
+    valueReference = "1019"
+    variability = "continuous" isDiscrete = "false"
+    causality = "output" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "11" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "28" startColumn = "3" endLine = "28" endColumn = "27" fileWritable = "true">
+    <Real start="0.0" fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "iq_out"
+    valueReference = "1020"
+    variability = "continuous" isDiscrete = "false"
+    causality = "output" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "12" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "29" startColumn = "3" endLine = "29" endColumn = "27" fileWritable = "true">
+    <Real start="0.0" fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "omega_e"
+    valueReference = "1021"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "13" classType = "rAlg"
+    isProtected = "true" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "36" startColumn = "3" endLine = "36" endColumn = "15" fileWritable = "true">
+    <Real start="0.0" fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "rpm"
+    valueReference = "1022"
+    variability = "continuous" isDiscrete = "false"
+    causality = "output" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "14" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "22" startColumn = "3" endLine = "22" endColumn = "18" fileWritable = "true">
+    <Real start="0.0" fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "theta_m"
+    valueReference = "1023"
+    variability = "continuous" isDiscrete = "false"
+    causality = "output" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "15" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "26" startColumn = "3" endLine = "26" endColumn = "22" fileWritable = "true">
+    <Real start="0.0" fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "v_alpha"
+    valueReference = "1024"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "16" classType = "rAlg"
+    isProtected = "true" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "34" startColumn = "3" endLine = "34" endColumn = "33" fileWritable = "true">
+    <Real start="0.0" fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "v_beta"
+    valueReference = "1025"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "17" classType = "rAlg"
+    isProtected = "true" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "34" startColumn = "3" endLine = "34" endColumn = "33" fileWritable = "true">
+    <Real start="0.0" fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "v_d"
+    valueReference = "1026"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "18" classType = "rAlg"
+    isProtected = "true" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "34" startColumn = "3" endLine = "34" endColumn = "33" fileWritable = "true">
+    <Real fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "v_dc"
+    valueReference = "1027"
+    variability = "continuous" isDiscrete = "false"
+    causality = "input" isValueChangeable = "true"
+    inputIndex = "4"
+    alias = "noAlias"
+    classIndex = "19" classType = "rAlg"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "14" startColumn = "3" endLine = "14" endColumn = "30" fileWritable = "true">
+    <Real start="17.0" fixed="true" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "v_neutral"
+    valueReference = "1028"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "20" classType = "rAlg"
+    isProtected = "true" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "32" startColumn = "3" endLine = "32" endColumn = "41" fileWritable = "true">
+    <Real start="8.5" fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "v_q"
+    valueReference = "1029"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "21" classType = "rAlg"
+    isProtected = "true" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "34" startColumn = "3" endLine = "34" endColumn = "33" fileWritable = "true">
+    <Real fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "va"
+    valueReference = "1030"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "22" classType = "rAlg"
+    isProtected = "true" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "33" startColumn = "3" endLine = "33" endColumn = "18" fileWritable = "true">
+    <Real start="0.0" fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "va_leg"
+    valueReference = "1031"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "23" classType = "rAlg"
+    isProtected = "true" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "32" startColumn = "3" endLine = "32" endColumn = "41" fileWritable = "true">
+    <Real start="8.5" fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vb"
+    valueReference = "1032"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "24" classType = "rAlg"
+    isProtected = "true" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "33" startColumn = "3" endLine = "33" endColumn = "18" fileWritable = "true">
+    <Real start="0.0" fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vb_leg"
+    valueReference = "1033"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "25" classType = "rAlg"
+    isProtected = "true" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "32" startColumn = "3" endLine = "32" endColumn = "41" fileWritable = "true">
+    <Real start="8.5" fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vc"
+    valueReference = "1034"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "26" classType = "rAlg"
+    isProtected = "true" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "33" startColumn = "3" endLine = "33" endColumn = "18" fileWritable = "true">
+    <Real start="0.0" fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "vc_leg"
+    valueReference = "1035"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "noAlias"
+    classIndex = "27" classType = "rAlg"
+    isProtected = "true" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "32" startColumn = "3" endLine = "32" endColumn = "41" fileWritable = "true">
+    <Real start="8.5" fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "B_fric"
+    valueReference = "1036"
+    variability = "parameter" isDiscrete = "true"
+    causality = "parameter" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "0" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "7" startColumn = "3" endLine = "7" endColumn = "31" fileWritable = "true">
+    <Real start="1e-6" fixed="true" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "J"
+    valueReference = "1037"
+    variability = "parameter" isDiscrete = "true"
+    causality = "parameter" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "1" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "6" startColumn = "3" endLine = "6" endColumn = "28" fileWritable = "true">
+    <Real start="2.4e-6" fixed="true" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "L_d"
+    valueReference = "1038"
+    variability = "parameter" isDiscrete = "true"
+    causality = "parameter" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "2" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "3" startColumn = "3" endLine = "3" endColumn = "32" fileWritable = "true">
+    <Real start="1.25e-4" fixed="true" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "L_q"
+    valueReference = "1039"
+    variability = "parameter" isDiscrete = "true"
+    causality = "parameter" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "3" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "4" startColumn = "3" endLine = "4" endColumn = "32" fileWritable = "true">
+    <Real start="1.25e-4" fixed="true" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "R"
+    valueReference = "1040"
+    variability = "parameter" isDiscrete = "true"
+    causality = "parameter" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "4" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "2" startColumn = "3" endLine = "2" endColumn = "26" fileWritable = "true">
+    <Real start="0.19" fixed="true" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "lambda_pm"
+    valueReference = "1041"
+    variability = "parameter" isDiscrete = "true"
+    causality = "parameter" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "5" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "5" startColumn = "3" endLine = "5" endColumn = "36" fileWritable = "true">
+    <Real start="0.0014" fixed="true" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "v_dc_nom"
+    valueReference = "1042"
+    variability = "parameter" isDiscrete = "true"
+    causality = "parameter" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "6" classType = "rPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "9" startColumn = "3" endLine = "9" endColumn = "33" fileWritable = "true">
+    <Real start="17.0" fixed="true" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "i_alpha"
+    valueReference = "1043"
+    variability = "continuous" isDiscrete = "false"
+    causality = "local" isValueChangeable = "false"
+    alias = "alias" aliasVariable="ia" aliasVariableId="16"
+    classIndex = "0" classType = "rAli"
+    isProtected = "true" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "35" startColumn = "3" endLine = "35" endColumn = "23" fileWritable = "true">
+    <Real fixed="false" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "p"
+    valueReference = "1044"
+    variability = "parameter" isDiscrete = "true"
+    causality = "parameter" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "0" classType = "iPar"
+    isProtected = "false" hideResult = "" isEncrypted = "false" initNonlinear = "false"
+    fileName = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica/PMSM_Motor.mo" startLine = "8" startColumn = "3" endLine = "8" endColumn = "26" fileWritable = "true">
+    <Integer start="4" fixed="true" />
+  </ScalarVariable>
+
+
+
+  </ModelVariables>
+
+
+</fmiModelDescription>
+

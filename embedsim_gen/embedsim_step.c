@@ -11,16 +11,13 @@
 #include <string.h>   /* memcpy, memset */
 #include <math.h>     /* fabsf, atan2f, sqrtf */
 #include "embedsim_step.h"
-#include "embed_sim_dfc_controller.h"
-#include "embed_sim_motor_utility_blocks.h"
-#include "embed_sim_sv_pwm.h"
+#include "pi_buck_controller.h"
 
 /* ── Block state structs ──────────────────────────────────────
  * Internal linkage — not exposed in the .h.
  * MISRA C:2012 Rule 8.7: static, TU-local only.
  * ──────────────────────────────────────────────────────────── */
-static DFC_State_T dfc_state;   /* Rule 8.7: internal linkage */
-static SVPWMPack_T svpwm_pack_state;   /* Rule 8.7: internal linkage */
+static PI_Buck_Block_T pi_buck_state;   /* Rule 8.7: internal linkage */
 
 
 /* ================================================================
@@ -31,8 +28,7 @@ static SVPWMPack_T svpwm_pack_state;   /* Rule 8.7: internal linkage */
  */
 void EmbedSim_Init(void)
 {
-    DFC_Controller_Init(&dfc_state, 0.00005000f);
-    SVPWMPack_Init(&svpwm_pack_state, 17.00000000f);
+    PI_Buck_Init(&pi_buck_state);
 }
 
 
@@ -51,60 +47,24 @@ void EmbedSim_Step(
 )
 {
     /* ── Unpack inputs ────────────────────────────────── */
+    const real32_T vref = in->vref;
+    const real32_T fb_delay = in->fb_delay;
 
     /* ── Local variable declarations (MISRA C:2012 Rule 8.1) ── */
-    real32_T u_svpwm_pack[2];
-    real32_T y_svpwm_pack[3];
 
     /* ── Block chain ──────────────────────────────────────── */
-        /* --- dfc_controller (DFControllerBlock) --- */
-        /* DFC_Controller_Step() outputs physical voltages [V].                */
-        /* The SVPWM block expects normalised [-1,+1] references.              */
-        /* Divide by DFC_V_MAX = DFC_V_DC / sqrt(3) before SVPWM.             */
-        DFC_Input_T   u_dfc;
-        DFC_Output_T  y_dfc_out;
-        real32_T      y_dfc[2];
+    /* [buck] Python-only block — no C step function. Replace with hand-written C or add C_SOURCES + step_func. */
 
-        u_dfc.omega_ref_mech = in->omega_ref_mech;
-        u_dfc.theta_m        = in->theta_m;
-        u_dfc.ia             = in->ia;
-        u_dfc.ib             = in->ib;
-        u_dfc.ic             = in->ic;
+    /* [fb_delay] Python-only block — no C step function. Replace with hand-written C or add C_SOURCES + step_func. */
 
-        DFC_Controller_Step(&dfc_state, &u_dfc, dt, &y_dfc_out);
-
-        /* Normalise: physical [V] -> SVPWM [-1, +1] */
-        y_dfc[0] = y_dfc_out.v_alpha / DFC_V_MAX;
-        y_dfc[1] = y_dfc_out.v_beta  / DFC_V_MAX;
-
-    /* --- svpwm_pack (SVPWMPackBlockDT) --- */
-    u_svpwm_pack[0] = y_dfc[0];
-    u_svpwm_pack[1] = y_dfc[1];
-    SVPWMPack_Step(&svpwm_pack_state, u_svpwm_pack, dt, y_svpwm_pack);
-
-
-      /* --- svpwm (svpwm) — SVM_CalculateDutyCycle --- */
-      {
-          SVM_DutyCycle_Type svm_duty;
-          MatrixStatus_Type  svm_status;
-
-          /* Default values (duty cycles = 0.5 for safe state) */
-          out->ta = 0.5f;
-          out->tb = 0.5f;
-          out->tc = 0.5f;
-          out->sector = 0U;
-
-          svm_status = SVM_CalculateDutyCycle(
-                           y_svpwm_pack[0],   /* modulation index */
-                           y_svpwm_pack[1],       /* angle [rad] */
-                           &svm_duty);
-          if (svm_status == MATRIX_SUCCESS)
-          {
-              out->ta = (real32_T)svm_duty.ta / (real32_T)Q31_ONE;
-              out->tb = (real32_T)svm_duty.tb / (real32_T)Q31_ONE;
-              out->tc = (real32_T)svm_duty.tc / (real32_T)Q31_ONE;
-              out->sector = (uint8_T)svm_duty.sector;
-          }
-      }
+    /* --- pi_buck (PI_BuckBlock) --- */
+    {
+        PI_Buck_Input_T  u_pi_buck;
+        PI_Buck_Output_T y_pi_buck;
+        u_pi_buck.V_ref  = in->vref;
+        u_pi_buck.V_meas = in->fb_delay;
+        PI_Buck_Compute(&pi_buck_state, &u_pi_buck, dt, &y_pi_buck);
+        out->pi_buck = y_pi_buck.duty;
+    }
 
 }

@@ -2,7 +2,7 @@
  * @file      embed_sim_mpc_controller.h
  * @brief     Model Predictive Control FOC Controller -- NANOTEC DB42S02
  * @details   3-state receding-horizon MPC with SMO and encoder speed estimation
- * @version   2.0.0
+ * @version   2.0.1
  * @copyright Copyright (C) EmbedSim 2025
  */
 
@@ -41,6 +41,25 @@
  * PYTHON ALIGNMENT: MPCControllerBlock.DIAG_STEPS = 20 in mpc_controller_block.py
  */
 #define MPC_DIAG_STEPS  (20U)
+
+/*
+ * Fixed architectural parameters -- not tuned by CMA-ES.
+ *
+ * MPC_N          : Prediction horizon (loop count in MPC free-run solver).
+ *                  PYTHON ALIGNMENT: MPC_N = 10 in db42s02_closed_loop_mpc_foc_20k.py
+ *
+ * MPC_ENC_IIR    : First-order IIR coefficient for encoder finite-difference speed.
+ *                  omega_filt = (1 - MPC_ENC_IIR)*omega_filt + MPC_ENC_IIR*omega_raw
+ *                  At 20 kHz: alpha=0.05 → ~160 Hz bandwidth.
+ *
+ * MPC_SOFTSTART_T: Soft-start ramp duration [s].  iq_limit ramps from 0 to
+ *                  MPC_I_MAX over this interval at each ISR tick:
+ *                  iq_limit += MPC_I_MAX * dt / MPC_SOFTSTART_T
+ *                  PYTHON ALIGNMENT: MPCControllerBlock(SOFTSTART_T=0.1)
+ */
+#define MPC_N           (10U)
+#define MPC_ENC_IIR     ((MatrixFloat)0.05f)
+#define MPC_SOFTSTART_T ((MatrixFloat)0.1f)
 
 
 /* MPC solver state structure */
