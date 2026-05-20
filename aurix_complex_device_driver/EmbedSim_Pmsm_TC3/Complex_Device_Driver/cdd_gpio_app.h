@@ -6,14 +6,14 @@
  * \details     Owns IOCR + PDR configuration for every port pin driven by the
  *              CDD layer.  Pin groups:
  *
- *              GTM ATOM outputs (TOUTSEL alt-function, push-pull, speed 3):
- *                  P00.0   ATOM0_CH0    master scope probe / trigger
- *                  P00.2   ATOM0_CH5-L  DTM0_CH0 IL1  low-side  Phase U
- *                  P00.3   ATOM0_CH5-H  DTM0_CH0 /IH1 high-side Phase U
- *                  P00.4   ATOM0_CH6-L  DTM0_CH1 IL2  low-side  Phase V
- *                  P00.5   ATOM0_CH6-H  DTM0_CH1 /IH2 high-side Phase V
- *                  P00.6   ATOM0_CH7-L  DTM0_CH2 IL3  low-side  Phase W
- *                  P00.7   ATOM0_CH7-H  DTM0_CH2 /IH3 high-side Phase W
+ *              GTM ATOM outputs (TOUTSEL 0x02 alt-function, push-pull, speed 3):
+ *                  P00.0   ATOM0_CH0  → CDTM0_DTM4_0 → TOUT9   master scope probe
+ *                  P00.2   ATOM0_CH1  → CDTM0_DTM4_1 → TOUT11  IL1  low-side  Phase U
+ *                  P00.3   ATOM0_CH2  → CDTM0_DTM4_2 → TOUT12  /IH1 high-side Phase U
+ *                  P00.4   ATOM0_CH3  → CDTM0_DTM4_3 → TOUT13  IL2  low-side  Phase V
+ *                  P00.5   ATOM0_CH4  → CDTM0_DTM5_0 → TOUT14  /IH2 high-side Phase V
+ *                  P00.6   ATOM0_CH5  → CDTM0_DTM5_1 → TOUT15  IL3  low-side  Phase W
+ *                  P00.7   ATOM0_CH6  → CDTM0_DTM5_2 → TOUT16  /IH3 high-side Phase W
  *
  *              ISR timing / debug (push-pull, speed 1):
  *                  P14.5   ISR timing probe  (toggle in EVADC_G2_Isr)
@@ -24,8 +24,10 @@
  *              Note: P02.6/7/8 (GPT12 encoder) are configured exclusively by
  *              IfxGpt12_IncrEnc_init() and are NOT touched here.
  *
- *              Note: QSPI4 pins (P22.0/1/2/3) are configured exclusively by
- *              IfxQspi_SpiMaster_initModule() and are NOT touched here.
+ *              Note: QSPI4 pins (P22.0/1/2/3) are configured by
+ *              GPIO_Configure_QSPI4_Pins() which MUST be called before
+ *              CDD_Qspi_Init().  In bare-metal builds IfxQspi_SpiMaster_initModule()
+ *              is NOT used, so the pin mux must be set manually here.
  *
  * \note        MISRA C:2012 compliance:
  *              - Rule  8.5 : One declaration per function
@@ -54,25 +56,25 @@
  * corresponding GTM_TOUTSELx.B.SELy write so the sequencing is explicit.
  *********************************************************************************************************************/
 
-/** \brief  P00.0 — ATOM0_CH0 master PWM output / scope probe              */
+/** \brief  P00.0 — ATOM0_CH0 → CDTM0_DTM4_0 → TOUT9  master PWM / scope probe  */
 extern void GPIO_Configure_GTM_Master_P00_0(void);
 
-/** \brief  P00.2 — DTM0_CH0 IL1 (low-side Phase U, active HIGH)           */
+/** \brief  P00.2 — ATOM0_CH1 → CDTM0_DTM4_1 → TOUT11  IL1  low-side  Phase U   */
 extern void GPIO_Configure_GTM_PhaseU_LS_P00_2(void);
 
-/** \brief  P00.3 — DTM0_CH0 /IH1 (high-side Phase U, active LOW inverted) */
+/** \brief  P00.3 — ATOM0_CH2 → CDTM0_DTM4_2 → TOUT12  /IH1 high-side Phase U   */
 extern void GPIO_Configure_GTM_PhaseU_HS_P00_3(void);
 
-/** \brief  P00.4 — DTM0_CH1 IL2 (low-side Phase V, active HIGH)           */
+/** \brief  P00.4 — ATOM0_CH3 → CDTM0_DTM4_3 → TOUT13  IL2  low-side  Phase V   */
 extern void GPIO_Configure_GTM_PhaseV_LS_P00_4(void);
 
-/** \brief  P00.5 — DTM0_CH1 /IH2 (high-side Phase V, active LOW inverted) */
+/** \brief  P00.5 — ATOM0_CH4 → CDTM0_DTM5_0 → TOUT14  /IH2 high-side Phase V   */
 extern void GPIO_Configure_GTM_PhaseV_HS_P00_5(void);
 
-/** \brief  P00.6 — DTM0_CH2 IL3 (low-side Phase W, active HIGH)           */
+/** \brief  P00.6 — ATOM0_CH5 → CDTM0_DTM5_1 → TOUT15  IL3  low-side  Phase W   */
 extern void GPIO_Configure_GTM_PhaseW_LS_P00_6(void);
 
-/** \brief  P00.7 — DTM0_CH2 /IH3 (high-side Phase W, active LOW inverted) */
+/** \brief  P00.7 — ATOM0_CH6 → CDTM0_DTM5_2 → TOUT16  /IH3 high-side Phase W   */
 extern void GPIO_Configure_GTM_PhaseW_HS_P00_7(void);
 
 /**********************************************************************************************************************
@@ -102,6 +104,27 @@ typedef enum
     GPIO_LEVEL_LOW  = 0U,   /**< \brief Drive output LOW   */
     GPIO_LEVEL_HIGH = 1U    /**< \brief Drive output HIGH  */
 } GPIO_Level_T;
+
+/**********************************************************************************************************************
+ * Function Prototypes — QSPI4 Pin Mux  (P22.0 / P22.1 / P22.2 / P22.3)
+ *
+ * Must be called from Initialize_Inverter() BEFORE CDD_Qspi_Init().
+ * In the bare-metal build, IfxQspi_SpiMaster_initModule() is not used,
+ * so the QSPI4 alternate-function mux is not set automatically.
+ *
+ * Pin map (AP32541 / TC38x port alt-function table):
+ *   P22.0   QSPI4_MTSR  MOSI  output alt-func 1
+ *   P22.1   QSPI4_MRST  MISO  input  no pull
+ *   P22.2   QSPI4_SLSO3 CS    output alt-func 2  (IfxQspi4_SLSO3_P22_2_OUT)
+ *   P22.3   QSPI4_SCLK  SCLK  output alt-func 1
+ *********************************************************************************************************************/
+
+/** \brief  Configures P20.0 (/INH), P33.10 (/SOFF), P33.11 (ENA), P15.2 (/ERR).
+ *          Called from Initialize_GPIO_Module() before CDD_Tle9180_Init().  */
+extern void GPIO_Configure_GD9180_Pins(void);
+
+/** \brief  Configures P22.0/1/2/3 for QSPI4 alternate function.  */
+extern void GPIO_Configure_QSPI4_Pins(void);
 
 /**********************************************************************************************************************
  * Function Prototypes — TLE9180D Gate Driver Control Pins

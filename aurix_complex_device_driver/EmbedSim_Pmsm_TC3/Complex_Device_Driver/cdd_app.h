@@ -1,33 +1,34 @@
 /**********************************************************************************************************************
  * \file        cdd_app.h
- * \brief       PMSM application top-level initialisation interface for AURIX TC3xx.
+ * \brief       PMSM application top-level interface — CDD_APP_t is the central state hub.
  *
- * \details     This module is the single entry-point called by the OS/startup layer to bring up all
- *              Complex Device Driver (CDD) sub-modules required for PMSM Field-Oriented Control.
- *              Sub-modules initialised in dependency order:
- *                 1. GPIO  – LED diagnostic outputs (Port 33)
- *                 2. STM   – System Timer for 20 kHz FOC ISR scheduling
- *                 3. GTM   – PWM generation (TOM channels, three-phase inverter)
- *                 4. EVADC – Phase-current and DC-link voltage acquisition
- *                 5. ENCODER – Quadrature encoder position/speed interface
+ * \details     CDD_APP_t is the single structure shared across all CDD sub-modules.
+ *              It carries:
+ *                  - Initialisation status of the application and the inverter
+ *                  - Three-phase PWM duty cycles (replaces the retired GTM_PWM_Duty_T)
  *
- *              Controller build is selected at compile-time via the CDD_CTRL_SELECT macro:
- *                 CDD_CTRL_SMC  (0) – Sliding Mode Controller          # C: smc_controller.h
- *                 CDD_CTRL_DFC  (1) – Differential Flatness Controller  # C: dfc_controller.h
- *                 CDD_CTRL_MPC  (2) – Model Predictive Controller       # C: mpc_controller.h
+ *              Sub-modules initialised in dependency order by Initialize_Pmsm_App():
+ *                  1. GPIO    — LED diagnostic outputs (Port 33)
+ *                  2. STM     — System Timer for 20 kHz FOC ISR scheduling
+ *                  3. GTM     — CMU CLK0 + ATOM0 PWM (CH0–CH7), ISR armed (SRE=0)
+ *                  4. INVERTER— QSPI4 init + TLE9180D startup (SPI config, normal mode)
+ *                  5. START   — HOST_TRIG (PWM live) → bridge enable → ISR arm (SRE=1)
  *
- * \note        MISRA C:2012 deviation record — this file:
- *              [D-14.4] Boolean conditions in #if directives use integer macros (CDD_CTRL_SELECT).
- *                       Rationale: compile-time controller selection; no runtime Boolean involved.
- *              [D-20.9] Use of #if is necessary for multi-controller build configuration.
- *                       Rationale: feature-selection pattern; no equivalent without directives.
+ *              Controller build selected at compile-time via CDD_CTRL_SELECT:
+ *                  CDD_CTRL_SMC (0) — Sliding Mode Controller
+ *                  CDD_CTRL_DFC (1) — Differential Flatness Controller
+ *                  CDD_CTRL_MPC (2) — Model Predictive Controller (default)
  *
- * \version     1.0.0
- * \date        2025-01-01
+ * \note        MISRA C:2012 deviation record:
+ *              [D-14.4] #if directives use integer macros (CDD_CTRL_SELECT).
+ *              [D-20.9] #if is necessary for multi-controller build selection.
+ *
+ * \version     1.1.0
+ * \date        2025-05-18
  * \author      EmbedSim / EV Light Vehicle Foundation
  *
  * \copyright   Copyright (C) 2025 EmbedSim — EV Light Vehicle Foundation, Jaffna, Sri Lanka.
- *              Licensed under the MIT License. See LICENSE file in project root.
+ *              Licensed under the MIT License.
  *********************************************************************************************************************/
 
 #ifndef CDD_APP_H
@@ -36,32 +37,30 @@
 /*********************************************************************************************************************/
 /*-----------------------------------------------------Includes------------------------------------------------------*/
 /*********************************************************************************************************************/
-#include "Ifx_Types.h"          /* AURIX platform types: uint8, uint16, uint32, float32, boolean  */
-#include "cdd_stm_app.h"        /* STM module interface   # C: Initialize_STM_Module()            */
-#include "cdd_gpio_app.h"       /* GPIO module interface  # C: GPIO_Init_LED_P33()                */
-#include "cdd_gtm_app.h"        /* GTM/PWM module interface # C: GTM_Init_PWM_TOM()               */
-
+#include "embed_sim_sys_types.h"   /* uint8_T, uint32_T, real32_T, boolean_T     */
+#include "cdd_stm_app.h"           /* Initialize_STM_Module()                     */
+#include "cdd_gpio_app.h"          /* GPIO_Init_LED_P33()                         */
+#include "cdd_gtm_app.h"           /* Initialize_GTM_Module(), Start_GTM_Module() */
 
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
 /*********************************************************************************************************************/
 
-/** \brief  Module version — Major.Minor.Patch encoded as 0xMMmmPP [dimensionless] */
-#define CDD_APP_VERSION         (0x010000UL)
+/** \brief  Module version [dimensionless] */
+#define CDD_APP_VERSION             (0x010100UL)
 
-/** \brief  Controller build-select token [dimensionless].
+/** \brief  Controller build-select token.
  *          Pass -DCDD_CTRL_SELECT=<n> on the compiler command line, or define here.
- *          0 = SMC  |  1 = DFC  |  2 = MPC                                        */
+ *          0 = SMC | 1 = DFC | 2 = MPC                                             */
 #ifndef CDD_CTRL_SELECT
-    #define CDD_CTRL_SELECT     (2)     /* Default: MPC */
+    #define CDD_CTRL_SELECT         (2)   /* Default: MPC */
 #endif
 
-#define CDD_CTRL_SMC            (0)     /**< Sliding Mode Controller token          [dimensionless] */
-#define CDD_CTRL_DFC            (1)     /**< Differential Flatness Controller token [dimensionless] */
-#define CDD_CTRL_MPC            (2)     /**< Model Predictive Controller token      [dimensionless] */
+#define CDD_CTRL_SMC                (0)   /**< Sliding Mode Controller token          [dimensionless] */
+#define CDD_CTRL_DFC                (1)   /**< Differential Flatness Controller token [dimensionless] */
+#define CDD_CTRL_MPC                (2)   /**< Model Predictive Controller token      [dimensionless] */
 
-/** \brief  Compile-time assert: CDD_CTRL_SELECT must be in {0,1,2}               */
-/* MISRA C:2012 Rule 20.9 deviation — see file header deviation record [D-20.9]   */
+/** \brief  Compile-time guard: CDD_CTRL_SELECT must be in {0, 1, 2}               */
 #if ((CDD_CTRL_SELECT) != CDD_CTRL_SMC)  && \
     ((CDD_CTRL_SELECT) != CDD_CTRL_DFC)  && \
     ((CDD_CTRL_SELECT) != CDD_CTRL_MPC)
@@ -69,28 +68,100 @@
 #endif
 
 /** \brief  FOC ISR period [us] — must match STM compare-match configuration       */
-#define CDD_APP_FOC_PERIOD_US   (50.0F)
+#define CDD_APP_FOC_PERIOD_US       (50.0F)
 
-/** \brief  Number of sub-modules initialised by Initialize_Pmsm_App()            [dimensionless] */
-#define CDD_APP_NUM_SUBMODULES  (5U)
+/** \brief  Number of sub-modules initialised by Initialize_Pmsm_App()            */
+#define CDD_APP_NUM_SUBMODULES      (5U)
+
+/**
+ * \brief  Convenience macro: direct access to the application init status field.
+ *
+ * \details Allows legacy-style code to write/read CDD_APP_INIT_STATUS_G without
+ *          knowing the struct field name.  Expands to an lvalue; safe for both
+ *          read and assignment.
+ */
+#define CDD_APP_INIT_STATUS_G       (CDD_App_G.CDDAppInitStatus)
 
 /*********************************************************************************************************************/
 /*-------------------------------------------------Data Structures---------------------------------------------------*/
 /*********************************************************************************************************************/
 
 /**
- * \brief  Initialisation status codes returned by CDD_App_GetInitStatus().
+ * \brief  Application-level initialisation status codes.
  */
 typedef enum
 {
-    CDD_APP_INIT_OK          = 0U,  /**< All sub-modules initialised successfully  [dimensionless] */
-    CDD_APP_INIT_PENDING     = 1U,  /**< Initialisation not yet called             [dimensionless] */
-    CDD_APP_INIT_ERR_GPIO    = 2U,  /**< GPIO sub-module init failed               [dimensionless] */
-    CDD_APP_INIT_ERR_STM     = 3U,  /**< STM sub-module init failed                [dimensionless] */
-    CDD_APP_INIT_ERR_GTM     = 4U,  /**< GTM sub-module init failed                [dimensionless] */
-    CDD_APP_INIT_ERR_ADC     = 5U,  /**< ADC sub-module init failed                [dimensionless] */
-    CDD_APP_INIT_ERR_ENCODER = 6U   /**< Encoder sub-module init failed            [dimensionless] */
+    CDD_APP_INIT_OK          = 0U,   /**< All sub-modules initialised successfully  [dimensionless] */
+    CDD_APP_INIT_PENDING     = 1U,   /**< Initialisation not yet called             [dimensionless] */
+    CDD_APP_INIT_ERR_GPIO    = 2U,   /**< GPIO sub-module init failed               [dimensionless] */
+    CDD_APP_INIT_ERR_STM     = 3U,   /**< STM sub-module init failed                [dimensionless] */
+    CDD_APP_INIT_ERR_GTM     = 4U,   /**< GTM sub-module init failed                [dimensionless] */
+    CDD_APP_INIT_ERR_ADC     = 5U,   /**< ADC sub-module init failed                [dimensionless] */
+    CDD_APP_INIT_ERR_ENCODER = 6U,   /**< Encoder sub-module init failed            [dimensionless] */
+    CDD_APP_INIT_ERR_INV     = 7U    /**< Inverter (TLE9180D) init failed           [dimensionless] */
 } CDD_App_InitStatus_t;
+
+/**
+ * \brief  Inverter (TLE9180D) initialisation status codes.
+ */
+typedef enum
+{
+    CDD_INV_INIT_PENDING = 0U,   /**< GD9180_Startup() not yet called            [dimensionless] */
+    CDD_INV_INIT_OK      = 1U,   /**< Device in normal operation mode            [dimensionless] */
+    CDD_INV_INIT_ERR     = 2U    /**< Startup sequence failed (ERR or SPI fault) [dimensionless] */
+} CDD_Inverter_Status_t;
+
+/**
+ * \brief  Central application state structure.
+ *
+ * \details All CDD sub-modules read and write through this single structure.
+ *          The global instance CDD_App_G is declared below and defined in cdd_app.c.
+ *
+ *          Three-phase PWM duty cycles (DutyU / DutyV / DutyW) replace the
+ *          retired GTM_PWM_Duty_T.  The open-loop controller and (later) the
+ *          closed-loop FOC controller both write these fields; the GTM driver
+ *          reads them via GTM_Set_PWM_Duty().
+ *
+ *          Duty cycle convention:
+ *              0.0F — zero voltage (transistor fully OFF for that leg)
+ *              0.5F — zero voltage vector (centre of carrier)
+ *              1.0F — full voltage (transistor fully ON for that leg)
+ */
+typedef struct
+{
+    /** \brief  Application-level init status   [CDD_App_InitStatus_t] */
+    CDD_App_InitStatus_t    CDDAppInitStatus;
+
+    /** \brief  Inverter (TLE9180D) init status [CDD_Inverter_Status_t] */
+    CDD_Inverter_Status_t   CDDInverterStatus;
+
+    /** \brief  Phase U PWM duty cycle          [0.0 .. 1.0] */
+    real32_T                DutyU;
+
+    /** \brief  Phase V PWM duty cycle          [0.0 .. 1.0] */
+    real32_T                DutyV;
+
+    /** \brief  Phase W PWM duty cycle          [0.0 .. 1.0] */
+    real32_T                DutyW;
+
+    /** \brief  GTM ATOM0 carrier period in CMU CLK0 ticks
+     *          = GTM_CMU_CLK0_FREQUENCY / CDD_CONTROL_LOOP_FREQUENCY  [CLK0 ticks] */
+    uint32_T                PeriodTicks;
+
+    /** \brief  Half of PeriodTicks — centre of carrier  [CLK0 ticks] */
+    uint32_T                HalfPeriodTicks;
+
+    /** \brief  Control loop sample time = 1 / CDD_CONTROL_LOOP_FREQUENCY  [s] */
+    real32_T                SampleTime;
+
+} CDD_APP_t;
+
+/*********************************************************************************************************************/
+/*------------------------------------------------Global Instance-----------------------------------------------------*/
+/*********************************************************************************************************************/
+
+/** \brief  Central application state — defined in cdd_app.c, shared across all CDDs. */
+extern CDD_APP_t   CDD_App_G;
 
 /*********************************************************************************************************************/
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
@@ -100,41 +171,45 @@ typedef enum
  * \brief   Top-level PMSM application initialisation.
  *
  * \details Initialises all CDD sub-modules in strict dependency order:
- *          GPIO → STM → GTM → ADC → ENCODER.
- *          Must be called exactly once from the OS startup hook, before any
- *          scheduler or ISR activation.  Re-entrant call behaviour is undefined.
+ *              GPIO → STM → GTM → INVERTER → START → ISR ARM
  *
- *          Internal state: sets g_cdd_app_init_status to CDD_APP_INIT_OK on
- *          success, or to the first failing sub-module error code on failure.
+ *          Must be called exactly once from the OS/startup hook before any
+ *          scheduler or ISR activation.  Re-entrant call is rejected silently.
  *
  * \pre     CPU clock and PLL configured; iLLD BSP initialised.
- * \post    All sub-module hardware is ready; STM ISR may fire after this returns.
+ * \post    GTM PWM is live, TLE9180D bridge outputs enabled, ISR firing at 20 kHz.
  *
  * \return  void
- *
- * \note    MISRA C:2012 Rule 15.5 — single exit point maintained via status flag.
- *
- * # C: GPIO_Init_LED_P33(), Initialize_STM_Module(), GTM_Init_PWM_TOM(),
- *       ADC_Init_PhaseCurrents(), Encoder_Init_QEP()
  */
 extern void Initialize_Pmsm_App(void);
 
 /**
- * \brief   Return the initialisation status set by Initialize_Pmsm_App().
+ * \brief   Initialises the power inverter sub-system (QSPI4 + TLE9180D).
  *
- * \return  CDD_App_InitStatus_t  Status code [dimensionless].
- *          CDD_APP_INIT_PENDING if Initialize_Pmsm_App() has not been called.
+ * \details Sequence:
+ *              1. CDD_Qspi_Init()      — QSPI4 master mode, 24-bit, ~5 MHz
+ *              2. GD9180_Init_Pins()   — INH=LOW, ENA=LOW, /SOFF=HIGH (safe default)
+ *              3. GD9180_Startup()     — full TLE9180D power-up + SPI config batch
  *
- * # C: g_cdd_app_init_status
+ *          Sets CDD_App_G.CDDInverterStatus = CDD_INV_INIT_OK on success,
+ *          CDD_INV_INIT_ERR on failure.
+ *
+ *          Note: GD9180_Enable_Outputs() (ENA = HIGH) is NOT called here.
+ *          It is called by Initialize_Pmsm_App() after Start_GTM_Module()
+ *          so that the bridge outputs are never enabled before PWM is live.
+ *
+ * \return  void
  */
-extern CDD_App_InitStatus_t CDD_App_GetInitStatus(void);
+extern void Initialize_Inverter(void);
+
+
+extern  uint32_T Start_Pmsm_App(void);
+
 
 /**
- * \brief   Return the active controller token selected at build time.
- *
- * \return  uint8_t  CDD_CTRL_SMC (0), CDD_CTRL_DFC (1), or CDD_CTRL_MPC (2)
- *                   [dimensionless].
+ * \brief   Returns the current application initialisation status.
+ * \return  CDD_App_InitStatus_t
  */
-//extern uint8_t CDD_App_GetActiveController(void);
+extern CDD_App_InitStatus_t CDD_App_GetInitStatus(void);
 
 #endif /* CDD_APP_H */

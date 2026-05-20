@@ -3,64 +3,28 @@
  * \brief       System-wide configuration constants and interrupt SRPN table
  *              for AURIX TC3xx bare-metal CDD layer.
  *
- * \details     Provides:
- *              - Mathematical and unit-conversion constants
- *              - Compile-time clock frequency constants
- *              - Complete SRPN (Service Request Priority Number) table for all
- *                CDD interrupts — one authoritative location, no duplication
- *
- *              IFX_INTERRUPT() vector registrations live in the .c file that
- *              owns each ISR body — NOT here.  Including IFX_INTERRUPT() in a
- *              header produces multiple-definition linker errors when the header
- *              is included by more than one translation unit.
- *
- *              SRPN assignment policy (TC3xx, 8-bit SRPN, 0=lowest, 255=highest):
- *
- *                  Priority band    SRPN    TOS   ISR / owner
- *                  ───────────────  ──────  ────  ─────────────────────────────
- *                  GPT12 encoder    20      CPU0  IfxGpt12_IncrEnc_init (iLLD)
- *                  STM0 tick        50      CPU0  Stm_00_Cmp_00_Isr (stm_app.c)
- *                  QSPI4 TX/RX/ERR  55-57   CPU0  IfxQspi_SpiMaster (iLLD)
- *                  QSPI2 TX/RX/ERR  60-62   CPU0  IfxQspi_SpiMaster (iLLD)
- *                  GTM ATOM0 CH0    80      CPU1  GTM_Atom_00_Ch_00_Isr (gtm_app.c)
- *                  EVADC G0 Ph-U    90      CPU1  EVADC_G0_Isr (evadc_app.c)
- *                  EVADC G1 Ph-V    91      CPU1  EVADC_G1_Isr (evadc_app.c)
- *                  EVADC G2 Ph-W    92      CPU1  EVADC_G2_Isr (evadc_app.c)
- *                  EVADC G8 DC-lnk  95      CPU1  EVADC_G8_Isr (evadc_app.c)
- *
- * \note        MISRA C:2012 Rule 8.5: IFX_INTERRUPT() must NOT appear in this
- *              header.  Place each ISR registration in its owning .c file.
- *
  * \copyright   Copyright (C) EmbedSim Project / Paul Abraham 2024
- *              https://github.com/vectorsim/embed_sim_project
  *              SPDX-License-Identifier: MIT
  *********************************************************************************************************************/
 
 #ifndef CDD_CONFIG_H_
 #define CDD_CONFIG_H_
 
-/**********************************************************************************************************************
- * Includes
- *********************************************************************************************************************/
 #include "embed_sim_sys_types.h"
 
 /**********************************************************************************************************************
  * Mathematical Constants
  *********************************************************************************************************************/
-#define PI                      (3.141592653589793)
-#define RAD_360                 (6.283185307179586)
-#define RAD_270                 (4.712388980384690)
-#define RAD_240                 (4.188790204786391)
-#define RAD_120                 (2.094395102393195)
-#define RAD_90                  (1.570796326794897)
+#define PI          (3.141592653589793)
+#define RAD_360     (6.283185307179586)
+#define RAD_270     (4.712388980384690)
+#define RAD_240     (4.188790204786391)
+#define RAD_120     (2.094395102393195)
+#define RAD_90      (1.570796326794897)
+#define EPSILON_ZERO (1.0e-10f)
 
 /**********************************************************************************************************************
- * Numerical Utility
- *********************************************************************************************************************/
-#define EPSILON_ZERO            (1.0e-10f)
-
-/**********************************************************************************************************************
- * Clock Frequency Constants  [Hz]
+ * Clock Frequencies [Hz]
  *********************************************************************************************************************/
 #define MHZ_300                 (300000000.0f)
 #define MHZ_200                 (200000000.0f)
@@ -71,70 +35,98 @@
 #define MHZ_5                     (5000000.0f)
 #define MHZ_1                     (1000000.0f)
 
-#define EVR_OSC_FREQUENCY       MHZ_100     /**< \brief EVR oscillator  [Hz]        */
-#define XTAL_OSC_FREQUENCY      MHZ_20      /**< \brief External crystal [Hz]        */
-#define SYSCLK_OSC_FREQUENCY    MHZ_20      /**< \brief System clock    [Hz]        */
-#define GTM_CMU_CLK0_FREQUENCY  MHZ_200     /**< \brief GTM CMU CLK0   [Hz]        */
+#define EVR_OSC_FREQUENCY       MHZ_100
+#define XTAL_OSC_FREQUENCY      MHZ_20
+#define SYSCLK_OSC_FREQUENCY    MHZ_20
+#define GTM_CMU_CLK0_FREQUENCY  MHZ_200
 
 /**********************************************************************************************************************
- * SRPN Table (Service Request Priority Numbers)
- *
- * All CDD interrupt priorities are defined here and nowhere else.
- * Use these constants in every SRC register write and IFX_INTERRUPT() call.
+ * ISR Macro + SRPN Table
  *********************************************************************************************************************/
+#define EMBED_SIM_INTERRUPT(Isr, VectabNum, Prio) \
+    void __interrupt(Prio) __vector_table(VectabNum) Isr(void)
 
-/**
- * Macro to register interrupt routine
- */
-
-#define EMBED_SIM_INTERRUPT(Isr, VectabNum, Prio) void __interrupt(Prio) __vector_table(VectabNum) Isr(void)
-
-/* GPT12 encoder zero-pulse  —  CPU0, registered by IfxGpt12_IncrEnc_initConfig */
 #define CORE_00_GPT12_ENCODER_ZERO_SRPN         (20U)
-
-/* STM0 1 ms tick  —  CPU0  (cdd_stm_app.c) */
 #define STM0_CMP0_IR_SRPN                       (50U)
-
-/* QSPI4 TLE9180D SPI  —  CPU0, registered by iLLD IfxQspi_SpiMaster */
 #define CORE_00_QSPI4_TX_SRPN                   (55U)
 #define CORE_00_QSPI4_RX_SRPN                   (56U)
 #define CORE_00_QSPI4_ERR_SRPN                  (57U)
-
-/* QSPI2 TLF35584 SPI  —  CPU0, registered by iLLD IfxQspi_SpiMaster */
 #define CORE_00_QSPI2_TX_SRPN                   (60U)
 #define CORE_00_QSPI2_RX_SRPN                   (61U)
 #define CORE_00_QSPI2_ERR_SRPN                  (62U)
-
-/* GTM ATOM0_CH0 FOC control loop 20 kHz  —  CPU1  (cdd_gtm_app.c) */
 #define CORE_01_ATOM_00_CH_00_CL_SRPN           (80U)
+#define CORE_01_ADC_PHASE_U_SRPN                (90U)
+#define CORE_01_ADC_PHASE_V_SRPN                (91U)
+#define CORE_01_ADC_PHASE_W_SRPN                (92U)
+#define CORE_01_ADC_G_08_CH_08_DC_LINK_SRPN     (95U)
 
-/* EVADC phase current + DC-link  —  CPU1  (cdd_evadc_app.c) */
-#define CORE_01_ADC_PHASE_U_SRPN                (90U)   /**< \brief G0 AN00 Phase U  */
-#define CORE_01_ADC_PHASE_V_SRPN                (91U)   /**< \brief G1 AN08 Phase V  */
-#define CORE_01_ADC_PHASE_W_SRPN                (92U)   /**< \brief G2 AN16 Phase W  */
-#define CORE_01_ADC_G_08_CH_08_DC_LINK_SRPN     (95U)   /**< \brief G8 AN40 DC-link  */
+/**********************************************************************************************************************
+ * GTM Software Dead-Time
+ *
+ * At 200 MHz CMU CLK0 (5 ns/tick):  28 ticks = 140 ns.
+ *
+ * The software dead-time creates a CONTROLLED OVERLAP at each switching edge:
+ *   LS turns OFF:  sr1_ls = sr1_hs + DT  (DT ticks after HS turns ON)
+ *   LS turns ON:   sr0_ls = sr0_hs - DT  (DT ticks before HS turns OFF)
+ *
+ * The TLE9180D resolves this 140 ns overlap with its own 107 ns internal
+ * dead-time (Dt_hs = Dt_ls = 0x00 in SPI config), preventing actual MOSFET
+ * shoot-through.  Configure fm_in_diag = WARNING so the IC does not fault
+ * during the brief overlap.
+ *********************************************************************************************************************/
+#ifndef CDD_GTM_SW_DEAD_TIME_TICKS
+#define CDD_GTM_SW_DEAD_TIME_TICKS      (28U)   /* 140 ns */
+#endif
 
+/**
+ * \brief  ADC valley trigger offset from CCU0 reset [CLK0 ticks].
+ *         ATOM0_CH7 SR1.  CCU1 fires this many ticks after carrier valley.
+ *         40 ticks = 200 ns.  Must be > CDD_GTM_SW_DEAD_TIME_TICKS (140 ns).
+ */
+#ifndef CDD_GTM_ADC_VALLEY_OFFSET_TICKS
+#define CDD_GTM_ADC_VALLEY_OFFSET_TICKS (40U)   /* 200 ns */
+#endif
+
+/**********************************************************************************************************************
+ * GTM Gate-Driver HS Polarity Flag
+ *
+ * Selects the ATOM SL bit value for ALL three HS channels (CH2, CH4, CH6).
+ *
+ * In TC38x ATOM SOMC, the output state machine is:
+ *     ~SL   immediately after AGC-master reset and after CM0  (= gate OFF)
+ *      SL   from CM1 to CM0                                   (= gate ON)
+ *
+ * CDD_GTM_HS_ACTIVE_LOW = 1U  (DEFAULT — TLE9180D AP32541, /IHx active LOW)
+ *     Gate OFF = pin HIGH = ~SL  →  SL = 0   (ATOM_HS_CH_SL = 0x0U)
+ *     Gate ON  = pin LOW  =  SL
+ *     Initial state: ~SL = 1 → /IH = HIGH → HS gate OFF ✓ (safe at startup)
+ *
+ * CDD_GTM_HS_ACTIVE_LOW = 0U  (standard gate driver, IHx active HIGH)
+ *     Gate OFF = pin LOW  = ~SL  →  SL = 1   (ATOM_HS_CH_SL = 0x1U)
+ *     Gate ON  = pin HIGH =  SL
+ *     Initial state: ~SL = 0 → IH = LOW → HS gate OFF ✓ (safe at startup)
+ *
+ * LS channels (ILx active HIGH) always use SL = 0x0U regardless of this flag.
+ *     Initial state: ~SL = ~0 = 1 → IL = HIGH → LS gate ON (active freewheeling
+ *     while HS is still OFF at startup — no shoot-through risk).
+ *********************************************************************************************************************/
+#ifndef CDD_GTM_HS_ACTIVE_LOW
+#define CDD_GTM_HS_ACTIVE_LOW   (1U)   /* TLE9180D /IHx active LOW (default) */
+#endif
 
 /**********************************************************************************************************************
  * Control Loop Frequency
  *********************************************************************************************************************/
-
-/** \brief  FOC control loop (PWM) frequency  [Hz]  — 20 kHz centre-aligned   */
-#ifndef BMC_SWC3_ED_CONTROL_FREQUENCY
-#define BMC_SWC3_ED_CONTROL_FREQUENCY   (20000U)
+#ifndef CDD_CONTROL_LOOP_FREQUENCY
+#define CDD_CONTROL_LOOP_FREQUENCY   (20000U)   /* 20 kHz */
 #endif
 
 /**********************************************************************************************************************
- * EVADC Service Request Enable Flags
- *
- * Written to SRC_VDACxx_SRx.B.SRE.  Set to 1U to enable the interrupt,
- * 0U to configure the channel without enabling the ISR (e.g. during debug).
+ * EVADC SR Enable
  *********************************************************************************************************************/
-#define EVADC_ENABLE_PHASE_U_SR         (1U)    /**< \brief G0 Phase U SR enable  */
-#define EVADC_ENABLE_PHASE_V_SR         (1U)    /**< \brief G1 Phase V SR enable  */
-#define EVADC_ENABLE_PHASE_W_SR         (1U)    /**< \brief G2 Phase W SR enable  */
-#define EVADC_ENABLE_DC_LINK_SR         (1U)    /**< \brief G8 DC-link  SR enable  */
-
-
+#define EVADC_ENABLE_PHASE_U_SR     (1U)
+#define EVADC_ENABLE_PHASE_V_SR     (1U)
+#define EVADC_ENABLE_PHASE_W_SR     (1U)
+#define EVADC_ENABLE_DC_LINK_SR     (1U)
 
 #endif /* CDD_CONFIG_H_ */

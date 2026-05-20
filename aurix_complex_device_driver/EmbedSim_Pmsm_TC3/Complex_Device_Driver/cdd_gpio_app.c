@@ -61,6 +61,12 @@
 /** \brief  Push-pull output, alternate function 1  (GTM ATOM TOUT routing)  */
 #define GPIO_PC_PP_ALT1         (0x11U)
 
+/** \brief  Push-pull output, alternate function 2  (QSPI4 SLSO3 routing)    */
+#define GPIO_PC_PP_ALT2         (0x12U)
+
+/** \brief  Input, no pull device  (QSPI4 MRST / MISO)                       */
+#define GPIO_PC_INPUT_NP        (0x00U)
+
 /** \brief  Push-pull output, general-purpose  (debug / ISR timing probe)    */
 #define GPIO_PC_PP_GP           (0x10U)
 
@@ -77,11 +83,47 @@
 /**********************************************************************************************************************
  * Private Function Prototypes
  *********************************************************************************************************************/
-static void GPIO_Configure_GD9180_Pins(void);
+void GPIO_Configure_GD9180_Pins(void);
 
 /**********************************************************************************************************************
  * Public Function Implementations
  *********************************************************************************************************************/
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * GPIO_Configure_QSPI4_Pins
+ * Configures P22.0/1/2/3 for QSPI4 alternate functions.
+ *
+ * Called from Initialize_Inverter() BEFORE CDD_Qspi_Init().
+ * In the bare-metal build IfxQspi_SpiMaster_initModule() is not used, so the
+ * QSPI4 pin mux is never set automatically — without this function SCLK, MOSI,
+ * and CS remain as reset-state floating inputs and no SPI signal leaves the MCU.
+ *
+ * Alt-function assignments (TC38x UM port table / iLLD IfxQspi_PinMap.c):
+ *   P22.0   QSPI4_MTSR  (MOSI)   PP alt-func 1  → IOCR0.PC0 = 0x11
+ *   P22.1   QSPI4_MRST  (MISO)   input no pull  → IOCR0.PC1 = 0x00
+ *   P22.2   QSPI4_SLSO3 (CS)     PP alt-func 2  → IOCR0.PC2 = 0x12
+ *                                  (IfxQspi4_SLSO3_P22_2_OUT confirms alt-func 2)
+ *   P22.3   QSPI4_SCLK  (SCLK)   PP alt-func 1  → IOCR0.PC3 = 0x11
+ *------------------------------------------------------------------------------------------------------------------*/
+void GPIO_Configure_QSPI4_Pins(void)
+{
+    /* All four IOCR writes first — IOCR is NOT EndInit-protected.
+     * Grouping avoids repeated read-modify-write on adjacent fields and makes
+     * the pin configuration atomic from a reader's perspective.             */
+    P22_IOCR0.B.PC0 = GPIO_PC_PP_ALT1;    /* MOSI: push-pull alt-func 1    */
+    P22_IOCR0.B.PC1 = GPIO_PC_INPUT_NP;   /* MISO: input, no pull          */
+    P22_IOCR0.B.PC2 = GPIO_PC_PP_ALT2;    /* CS  : push-pull alt-func 2    */
+    P22_IOCR0.B.PC3 = GPIO_PC_PP_ALT1;    /* SCLK: push-pull alt-func 1    */
+
+    /* All PDR writes in a single EndInit pair — PDR IS EndInit-protected.
+     * P22.1 (MISO) is an input; PDR has no effect and is intentionally
+     * skipped.                                                               */
+    Clear_CPU_WDT_EndInit();
+    P22_PDR0.B.PD0 = GPIO_PD_SPEED3;      /* MOSI speed-3                  */
+    P22_PDR0.B.PD2 = GPIO_PD_SPEED3;      /* CS   speed-3                  */
+    P22_PDR0.B.PD3 = GPIO_PD_SPEED3;      /* SCLK speed-3                  */
+    Set_CPU_WDT_EndInit();
+}
 
 /*--------------------------------------------------------------------------------------------------------------------
  * GPIO_Configure_GTM_Master_P00_0
@@ -239,7 +281,7 @@ void GPIO_Toggle_ISR_Timing_P14_5(void)
 /*--------------------------------------------------------------------------------------------------------------------
  * GPIO_Configure_GD9180_Pins  (called from Initialize_GPIO_Module)
  *------------------------------------------------------------------------------------------------------------------*/
-static void GPIO_Configure_GD9180_Pins(void)
+void GPIO_Configure_GD9180_Pins(void)
 {
     /* P20.0 /INH — output, push-pull GP, speed-1, init LOW */
     P20_IOCR0.B.PC0 = GPIO_PC_PP_GP;

@@ -55,7 +55,7 @@
 #define GPT12_RESOLUTION_FACTOR         (IfxGpt12_IncrEnc_ResolutionFactor_fourFold)
 
 /** \brief  Update period passed to iLLD  [s]  = 1 / 20000 Hz               */
-#define GPT12_UPDATE_PERIOD             (1.0f / (float32)BMC_SWC3_ED_CONTROL_FREQUENCY)
+#define GPT12_UPDATE_PERIOD             (1.0f / (float32)CDD_CONTROL_LOOP_FREQUENCY)
 
 /** \brief  Speed mode threshold  [rad/s]  — above: pulse-count, below: time-diff */
 #define GPT12_SPEED_THRESHOLD           (10.0f)
