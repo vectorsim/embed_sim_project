@@ -1,46 +1,64 @@
 /**********************************************************************************************************************
  * \file        cdd_qspi_app.h
- * \brief       QSPI4 SPI exchange interface for the TLE9180D gate driver.
+ * \brief       QSPI4 bare-metal driver — public interface.
  *
- * \details     Bare-metal flat-register driver (no iLLD SpiMaster layer).
- *              Provides a single blocking 24-bit exchange function used by
- *              cdd_gate_driver_9180.c.
+ * \details     Hardware: AP32541 Motor Control Power Board
+ *                  P22.0  QSPI4_MTSR  MOSI   alt-func 1
+ *                  P22.1  QSPI4_MRST  MISO   input, no pull
+ *                  P22.2  QSPI4_SLSO3 CS     alt-func 2  (SLSO channel 3)
+ *                  P22.3  QSPI4_SCLK  SCLK   alt-func 1
  *
- *              Hardware  (AP32541 Table 16):
- *                  SCLK P22.3, MOSI P22.0, MISO P22.1, CS P22.2
+ *              5 MHz, MODE 0, 24-bit MSB-first, polling (no DMA, no IRQ).
+ *              No iLLD driver layer — direct register access via ifxQspi_reg.h.
  *
- * \note        MISRA C:2012 compliance:
- *              - Rule  8.5 : One declaration per function
- *              - Rule  8.6 : Definitions in cdd_qspi_app.c
+ * \note        MISRA C:2012: Rules 8.5, 8.6, 15.5.
  *
  * \copyright   Copyright (C) EmbedSim Project / Paul Abraham 2024
- *              https://github.com/vectorsim/embed_sim_project
  *              SPDX-License-Identifier: MIT
  *********************************************************************************************************************/
 
 #ifndef CDD_QSPI_APP_H_
 #define CDD_QSPI_APP_H_
 
+#include "cdd_config.h"   /* embed_sim_sys_types.h + embed_sim_compiler.h */
+
 /**********************************************************************************************************************
- * Includes
+ * Return Codes
  *********************************************************************************************************************/
-#include "cdd_config.h"
-#include "IfxQspi_reg.h"
+
+#define CDD_QSPI_OK             (0x0U)   /**< Frame exchange succeeded        [dimensionless] */
+#define CDD_QSPI_ERR_TIMEOUT    (0x1U)   /**< RX FIFO timeout — frame lost    [dimensionless] */
 
 /**********************************************************************************************************************
  * Function Prototypes
  *********************************************************************************************************************/
 
 /**
- * \brief   Transmits one 24-bit SPI frame to the TLE9180D and receives the response.
+ * \brief   One-time QSPI4 hardware initialisation (master, 5 MHz, MODE 0, 24-bit).
  *
- * \details Blocking.  Writes BACON + DATAENTRY0, waits for RX interrupt flag,
- *          reads RXEXIT.  Uses QSPI4 channel 4 (ECON4, CS = P22.2 SLSO4.2).
+ * \details ENDINIT-protected CLC access handled internally via cdd_sys_utility.h.
+ *          Call once before the first CddQspi4_Exchange().
  *
- * \param   Tx_Frame   24-bit MOSI word
- * \param   Rx_Frame   Pointer to receive the 24-bit MISO response
- * \return  1 if transfer completed without error, 0 on SPI error
+ * \return  void
  */
-extern uint32_T QSPI_TLE9180_Exchange(uint32_T Tx_Frame, uint32_T * const Rx_Frame);
+extern void CddQspi4_Init(void);
+
+/**
+ * \brief   Blocking SPI exchange: transmit and receive \p Count × 24-bit frames.
+ *
+ * \details Frames processed one at a time.  BACON.LAST set on the final frame
+ *          to deassert CS after the transfer.  Both buffers must be at least
+ *          Count words long.
+ *
+ * \param[in]  TxBuf   Pointer to transmit words (24-bit payload in bits [23:0]).
+ * \param[out] RxBuf   Pointer to receive word buffer.
+ * \param[in]  Count   Number of frames to exchange (>= 1)  [dimensionless]
+ *
+ * \return  CDD_QSPI_OK (0x0U) on success, CDD_QSPI_ERR_TIMEOUT (0x1U) on failure.
+ */
+extern uint32_T CddQspi4_Exchange(
+    P2CONST(uint32_T, AUTOMATIC, CDD_APPL_DATA) TxBuf,
+    P2VAR  (uint32_T, AUTOMATIC, CDD_APPL_DATA) RxBuf,
+    uint32_T Count);
 
 #endif /* CDD_QSPI_APP_H_ */

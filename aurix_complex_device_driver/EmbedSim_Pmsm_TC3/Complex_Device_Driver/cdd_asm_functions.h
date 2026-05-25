@@ -24,7 +24,7 @@
 /**********************************************************************************************************************
  * Includes
  *********************************************************************************************************************/
-#include "cdd_config.h"
+#include "cdd_config.h"   /* embed_sim_sys_types.h + embed_sim_compiler.h */
 
 /**********************************************************************************************************************
  * Function Prototypes
@@ -33,34 +33,33 @@
 /**
  * \brief   Atomic compare-and-swap on a 32-bit memory location.
  *
- * \details If *Reg_Ptr == Current_Reg_Value, atomically writes New_Reg_Value
- *          to *Reg_Ptr.  In either case the original value of *Reg_Ptr before
- *          the operation is returned (CMPSWAP.W semantics, TC3xx ISA P.3-45).
+ * \details If *RegPtr == CurrentRegVal, atomically writes NewRegVal to *RegPtr.
+ *          In either case the original value of *RegPtr before the operation is
+ *          returned (CMPSWAP.W semantics, TC3xx ISA P.3-45).
  *
- * \param   Reg_Ptr             Pointer to the target 32-bit location
- * \param   New_Reg_Value       Value to write if the compare succeeds
- * \param   Current_Reg_Value   Expected current value of *Reg_Ptr
- * \return  Value of *Reg_Ptr before the operation
+ * \param[in,out] RegPtr       Pointer to the target 32-bit location
+ * \param[in]     NewRegVal    Value to write if the compare succeeds
+ * \param[in]     CurrentRegVal Expected current value of *RegPtr
+ * \return  Value of *RegPtr before the operation  [dimensionless]
  */
-extern uint32_T ASM_Cmp_And_Swap(uint32_T *Reg_Ptr,
-                                  uint32_T  New_Reg_Value,
-                                  uint32_T  Current_Reg_Value);
+extern uint32_T CddAsm_CmpAndSwap(P2VAR(uint32_T, AUTOMATIC, CDD_APPL_DATA) RegPtr,
+                                   uint32_T NewRegVal,
+                                   uint32_T CurrentRegVal);
 
 /**
  * \brief   Atomic load-modify-store on a 32-bit memory location.
  *
- * \details Performs the operation:
- *              *Reg_Ptr = (*Reg_Ptr & ~Mask) | (Data & Mask)
+ * \details Performs:  *RegPtr = (*RegPtr & ~Mask) | (Data & Mask)
  *          atomically using the LDMST instruction (TC3xx ISA P.3-88).
  *          Only bits set in Mask are affected.
  *
- * \param   Reg_Ptr   Pointer to the target 32-bit location
- * \param   Mask      Bitmask selecting the bits to modify (1 = modifiable)
- * \param   Data      New data for the masked bits
- * \return  None
+ * \param[in,out] RegPtr  Pointer to the target 32-bit location (volatile)
+ * \param[in]     Mask    Bitmask selecting bits to modify (1 = modifiable)
+ * \param[in]     Data    New data for the masked bits
+ * \return  void
  */
-extern void ASM_Load_Mode_Store(volatile uint32_T *Reg_Ptr,
-                                uint32_T           Mask,
-                                uint32_T           Data);
+extern void CddAsm_LdmSt(P2VAR(volatile uint32_T, AUTOMATIC, CDD_APPL_DATA) RegPtr,
+                          uint32_T Mask,
+                          uint32_T Data);
 
 #endif /* CDD_ASM_FUNCTIONS_H_ */

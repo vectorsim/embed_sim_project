@@ -2,26 +2,29 @@
  * \file        cdd_stm_app.c
  * \brief       Implementation of cdd_stm_app.h — STM0 driver.
  *
- * \details     Responsibilities of this file:
+ * \details     Responsibilities:
  *              1. Build the time-constant table from the live fSTM frequency.
  *              2. Configure STM0 Compare-0 for a 1 ms periodic interrupt.
- *              3. ISR: call System_Tick_Handler() (owned by cdd_task_handler_app)
- *                      then rearm the compare register for the next 1 ms.
+ *              3. ISR: call System_Tick_Handler() then rearm the compare register.
  *
- *              The software task scheduler (1 ms / 10 ms / 100 ms / 1 s) is
- *              intentionally separated into cdd_task_handler_app.c so that
- *              application tasks can be modified without touching the STM driver.
- *
- *              ISR rearm strategy:
- *                  next_cmp = Get_Lower_System_Time() + TimeConst_1ms
- *              Unsigned 32-bit wrap at 2^32 is correct — the STM compare
- *              register follows the same wrap, so no special handling needed.
+ *              ISR rearm strategy (drift-free):
+ *                  elapsed = now - entry_time          (wraps correctly, uint32)
+ *                  periods = (elapsed / 1ms_ticks) + 1
+ *                  next    = entry_time + periods * 1ms
  *
  * \note        MISRA C:2012 compliance:
  *              - Rule  8.9  : File-scope variables limited to this TU
  *              - Rule 14.4  : All if-conditions use explicit comparison
  *              - Rule 15.5  : Single exit point per function
  *              - Rule 17.2  : No recursion
+ *
+ *              MISRA C:2012 deviations:
+ *              - DEV-STM-001  Rule 8.4  : Stm_00_Cmp_00_Isr has no matching extern
+ *                             declaration; installed via EMBED_SIM_INTERRUPT() only.
+ *              - DEV-STM-003  Rule 10.5 : Hardware register fields (.U) cast to uint64_T.
+ *                             PRQA S 0303 applied at each tagged site.
+ *              - DEV-STM-004  Rule 10.3 : (uint32_T)TimeConst_1ms narrows uint64_T to 32 bits;
+ *                             safe for all fSTM ≤ 4.3 GHz.  PRQA S 4342 applied.
  *
  * \copyright   Copyright (C) EmbedSim Project / Paul Abraham 2024
  *              https://github.com/vectorsim/embed_sim_project
@@ -41,52 +44,27 @@
 /**********************************************************************************************************************
  * Interrupt Vector Table Entry
  *
- * Installs Stm_00_Cmp_00_Isr into the CPU0 vector table at priority
- * STM0_CMP0_IR_SRPN using the TASKING HI:/LO: relocation syntax.
+ * MISRA DEV-STM-001 (Rule 8.4): No extern declaration for this symbol in the header.
+ * The ISR is installed exclusively through EMBED_SIM_INTERRUPT() into the .traptab section.
  *********************************************************************************************************************/
-EMBED_SIM_INTERRUPT(Stm_00_Cmp_00_Isr, 0, STM0_CMP0_IR_SRPN);    /* STM0_CMP0_IR_SRPN */
-
-/**********************************************************************************************************************
- * Private Macros — Time-Constant Table Indices
- *********************************************************************************************************************/
-#define TIMER_COUNT         (11U)   /**< \brief Total number of pre-computed time constants */
-
-#define TIMER_INDEX_10NS    (0U)    /**< \brief Index:  10 ns  */
-#define TIMER_INDEX_100NS   (1U)    /**< \brief Index: 100 ns  */
-#define TIMER_INDEX_1US     (2U)    /**< \brief Index:   1 us  */
-#define TIMER_INDEX_10US    (3U)    /**< \brief Index:  10 us  */
-#define TIMER_INDEX_100US   (4U)    /**< \brief Index: 100 us  */
-#define TIMER_INDEX_1MS     (5U)    /**< \brief Index:   1 ms  */
-#define TIMER_INDEX_10MS    (6U)    /**< \brief Index:  10 ms  */
-#define TIMER_INDEX_100MS   (7U)    /**< \brief Index: 100 ms  */
-#define TIMER_INDEX_1S      (8U)    /**< \brief Index:   1 s   */
-#define TIMER_INDEX_10S     (9U)    /**< \brief Index:  10 s   */
-#define TIMER_INDEX_100S    (10U)   /**< \brief Index: 100 s   */
-
-/** \brief  Accessor macros for the pre-computed tick table                     */
-#define TimeConst_10ns      (Sys_Tick_Time_Table_G[TIMER_INDEX_10NS])
-#define TimeConst_100ns     (Sys_Tick_Time_Table_G[TIMER_INDEX_100NS])
-#define TimeConst_1us       (Sys_Tick_Time_Table_G[TIMER_INDEX_1US])
-#define TimeConst_10us      (Sys_Tick_Time_Table_G[TIMER_INDEX_10US])
-#define TimeConst_100us     (Sys_Tick_Time_Table_G[TIMER_INDEX_100US])
-#define TimeConst_1ms       (Sys_Tick_Time_Table_G[TIMER_INDEX_1MS])
-#define TimeConst_10ms      (Sys_Tick_Time_Table_G[TIMER_INDEX_10MS])
-#define TimeConst_100ms     (Sys_Tick_Time_Table_G[TIMER_INDEX_100MS])
-#define TimeConst_1s        (Sys_Tick_Time_Table_G[TIMER_INDEX_1S])
-#define TimeConst_10s       (Sys_Tick_Time_Table_G[TIMER_INDEX_10S])
-#define TimeConst_100s      (Sys_Tick_Time_Table_G[TIMER_INDEX_100S])
+EMBED_SIM_INTERRUPT(Stm_00_Cmp_00_Isr, 0, STM0_CMP0_IR_SRPN);
 
 /**********************************************************************************************************************
  * Private Variables
  *********************************************************************************************************************/
 
-/** \brief  Pre-computed STM tick counts for each time constant  [STM ticks]   */
-static uint64_T Sys_Tick_Time_Table_G[TIMER_COUNT];
+/**
+ * \brief  Pre-computed STM tick counts for each time constant  [STM ticks].
+ *
+ * \details Populated once in CddStm_InitTimeTable() from the live fSTM frequency.
+ *          Declared extern in cdd_stm_app.h; accessed via TimeConst_xxx macros.
+ */
+uint64_T CddStm_TimeTable_G[TIMER_COUNT];
 
 /**********************************************************************************************************************
- * Private Function Prototypes
+ * Private Function Prototype
  *********************************************************************************************************************/
-static void Init_Time_Table(uint64_T stm_freq);
+STATIC void CddStm_InitTimeTable(uint64_T StmFreq);
 
 /**********************************************************************************************************************
  * ISR
@@ -95,21 +73,26 @@ static void Init_Time_Table(uint64_T stm_freq);
 /**
  * \brief   STM0 Compare-0 ISR — fires every 1 ms.
  *
- * \details Dispatches to System_Tick_Handler() then rearms the compare
- *          register inside a brief critical section to prevent a race between
- *          reading TIM0 and writing CMP0.
+ * \details Dispatches to System_Tick_Handler() then rearms the compare register.
+ *
+ * \note    MISRA DEV-STM-004 (Rule 10.3): (uint32_T)TimeConst_1ms narrows uint64_T.
+ *          Safe for fSTM ≤ 4.3 GHz.  PRQA S 4342.
  */
 void Stm_00_Cmp_00_Isr(void)
 {
-    uint32_T entry_time = Get_Lower_System_Time(); /* snapshot at entry */
+    uint32_T entry_time = CddStm_GetTimeLow();   /* snapshot at ISR entry   */
+    uint32_T elapsed    = 0U;
+    uint32_T periods    = 0U;
+    uint32_T next_cmp   = 0U;
 
     System_Tick_Handler();
 
-    uint32_T elapsed   = Get_Lower_System_Time() - entry_time; /* wraps safely */
-    uint32_T periods   = (elapsed / (uint32_T)TimeConst_1ms) + 1U;
-    uint32_T next_cmp  = entry_time + (periods * (uint32_T)TimeConst_1ms);
+    elapsed  = CddStm_GetTimeLow() - entry_time;                              /* wraps safely — uint32 modular arithmetic  */
+    periods  = (elapsed / (uint32_T)TimeConst_1ms) + 1U;                     /* PRQA S 4342 */ /* MD_STM_4342_TimeConst_1ms_32bit */
+    next_cmp = entry_time + (periods * (uint32_T)TimeConst_1ms);             /* PRQA S 4342 */ /* MD_STM_4342_TimeConst_1ms_32bit */
 
     STM0_CMP0.B.CMPVAL = next_cmp;
+    STM0_ISCR.B.CMP0IRR = 0x1U;   /* Clear STM compare interrupt flag */
 }
 
 /**********************************************************************************************************************
@@ -117,62 +100,97 @@ void Stm_00_Cmp_00_Isr(void)
  *********************************************************************************************************************/
 
 /*--------------------------------------------------------------------------------------------------------------------
- * Initialize_STM_Module
+ * CddStm_Init
  *------------------------------------------------------------------------------------------------------------------*/
-void Initialize_STM_Module(void)
+void CddStm_Init(void)
 {
-    uint64_T stm_frequency;
+    uint64_T stm_freq;
 
-    stm_frequency = (uint64_T)Get_STM_Frequency();
+    stm_freq = (uint64_T)CddSys_GetStmFreq();
+    CddStm_InitTimeTable(stm_freq);
 
-    Init_Time_Table(stm_frequency);
-
-    /* Configure Compare Match Control Register (ds2 P.68)
-     * MSIZE0  = 0x1F : CMP0 compares all 32 bits [31:0]
-     * MSTART0 = 0x00 : bit 0 of STM is the lowest compared bit */
-    STM0_CMCON.B.MSIZE0  = 0x1FU;
+    /* Configure STM0_CMCON: compare register 0, 32-bit compare width (MSTART=0, MSIZE=31) */
     STM0_CMCON.B.MSTART0 = 0x0U;
+    STM0_CMCON.B.MSIZE0  = 0x1FU;
 
-    /* Route compare match to interrupt output STMIR0 (ds2 P.68)             */
-    STM0_ICR.B.CMP0OS = 0x0U;
+    /* ICR: CMP0 active, rising-edge trigger */
+    STM0_ICR.B.CMP0OS = 0x0U;   /* compare trigger on rising edge */
 
-    /* Configure Service Request node (TC3xx AppNote appx1 P.409)            */
-    SRC_STM0SR0.B.SRPN = STM0_CMP0_IR_SRPN;    /* Priority                  */
-    SRC_STM0SR0.B.TOS  = 0x0U;                  /* Type of service: CPU0     */
-    SRC_STM0SR0.B.CLRR = 0x1U;                  /* Clear any pending request */
-    SRC_STM0SR0.B.SRE  = 0x1U;                  /* Enable service request    */
+    /* Service request: arm SRC, enable SR */
+    SRC_STM0SR0.B.SRPN = STM0_CMP0_IR_SRPN;
+    SRC_STM0SR0.B.TOS  = 0x0U;   /* CPU0 */
+    SRC_STM0SR0.B.CLRR = 0x1U;   /* Clear any pending request */
+    SRC_STM0SR0.B.SRE  = 0x1U;   /* Enable service request    */
 
-    /* Disarm: write current_time >> 1 so CMP0 cannot fire during setup      */
-    STM0_CMP0.B.CMPVAL = (Get_Lower_System_Time() >> 0x1U);
+    /* Disarm: write TIM0 >> 1 so CMP0 is firmly in the past during setup. */
+    STM0_CMP0.B.CMPVAL = (CddStm_GetTimeLow() >> 0x1U);
 
-    /* Enable compare output, then load the real first compare value          */
+    /* Enable compare output, then load the real first compare value. */
     STM0_ICR.B.CMP0EN  = 0x1U;
-    STM0_CMP0.B.CMPVAL = Get_Lower_System_Time() + (uint32_T)TimeConst_1ms;
+    STM0_CMP0.B.CMPVAL = CddStm_GetTimeLow() + (uint32_T)TimeConst_1ms; /* PRQA S 4342 */
 }
 
 /*--------------------------------------------------------------------------------------------------------------------
- * Get_System_Time
+ * CddStm_GetTime
+ *
+ * MISRA DEV-STM-003 (Rule 10.5 / PRQA S 0303):
+ * STM0_TIM0.U and STM0_CAP.U are hardware-register bitfield unions.
+ * Cast to uint64_T is intentional for 64-bit reconstruction.
  *------------------------------------------------------------------------------------------------------------------*/
-uint64_T Get_System_Time(void)
+uint64_T CddStm_GetTime(void)
 {
     uint64_T lower_sys_time;
     uint64_T upper_sys_time;
 
-    /* Read TIM0 first — hardware latches upper bits into CAP (ds2 P.60)     */
-    lower_sys_time = (uint64_T)STM0_TIM0.U;
-    upper_sys_time = (uint64_T)STM0_CAP.U;
+    /* Read TIM0 first — hardware latches upper bits into CAP (ds2 P.60) */
+    lower_sys_time = (uint64_T)STM0_TIM0.U; /* PRQA S 0303 */
+    upper_sys_time = (uint64_T)STM0_CAP.U;  /* PRQA S 0303 */
+
+    /* Reconstruct: CAP holds bits [63:32]; TIM0 holds bits [31:0] */
     upper_sys_time = (upper_sys_time << 0x20U) | lower_sys_time;
 
     return upper_sys_time;
 }
 
 /*--------------------------------------------------------------------------------------------------------------------
- * Get_Lower_System_Time
+ * CddStm_GetTimeLow
+ *
+ * Reading TIM0 latches the upper 32 bits into STM0_CAP as a hardware side-effect.
+ * Must therefore always precede any CddStm_GetTime() call within the same critical section.
  *------------------------------------------------------------------------------------------------------------------*/
-uint32_T Get_Lower_System_Time(void)
+uint32_T CddStm_GetTimeLow(void)
 {
-    /* Reading TIM0 also latches CAP — must precede any Get_System_Time call  */
     return STM0_TIM0.U;
+}
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * CddStm_GetDeadline
+ *------------------------------------------------------------------------------------------------------------------*/
+uint64_T CddStm_GetDeadline(uint64_T TimeOut)
+{
+    uint64_T dead_line = CddStm_GetTime() + TimeOut;
+
+    return dead_line;
+}
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * CddStm_IsDeadlineElapsed
+ *
+ * MISRA Rule 14.4: `now > dead_line` produces an essentially Boolean result
+ * assigned to uint32_T.  Explicit 0x0U / 0x1U encoding avoids an implicit
+ * Boolean-to-integer conversion warning.
+ *------------------------------------------------------------------------------------------------------------------*/
+uint32_T CddStm_IsDeadlineElapsed(uint64_T DeadLine)
+{
+    uint64_T now        = CddStm_GetTime();
+    uint32_T is_elapsed = 0x0U;
+
+    if (now > DeadLine)
+    {
+        is_elapsed = 0x1U;
+    }
+
+    return is_elapsed;
 }
 
 /**********************************************************************************************************************
@@ -180,19 +198,27 @@ uint32_T Get_Lower_System_Time(void)
  *********************************************************************************************************************/
 
 /*--------------------------------------------------------------------------------------------------------------------
- * Init_Time_Table
+ * CddStm_InitTimeTable
+ *
+ * All divisions are exact integer divisions; fractional ticks truncated toward zero.
+ * At fSTM = 300 MHz:
+ *   10 ns  →  3 ticks  (300 000 000 / 100 000 000)
+ *   10 s   →  3 000 000 000 ticks  (fits uint64)
+ *
+ * MISRA Rule 7.2 / 10.3: Divisors on the right are uint32 literals; stm_freq
+ * (uint64_T) is promoted in the division — no truncation in the dividend.
  *------------------------------------------------------------------------------------------------------------------*/
-static void Init_Time_Table(uint64_T stm_freq)
+STATIC void CddStm_InitTimeTable(uint64_T StmFreq)
 {
-    Sys_Tick_Time_Table_G[TIMER_INDEX_10NS]  = stm_freq / (1000000000U / 10U);
-    Sys_Tick_Time_Table_G[TIMER_INDEX_100NS] = stm_freq / (1000000000U / 100U);
-    Sys_Tick_Time_Table_G[TIMER_INDEX_1US]   = stm_freq / 1000000U;
-    Sys_Tick_Time_Table_G[TIMER_INDEX_10US]  = stm_freq / 100000U;
-    Sys_Tick_Time_Table_G[TIMER_INDEX_100US] = stm_freq / 10000U;
-    Sys_Tick_Time_Table_G[TIMER_INDEX_1MS]   = stm_freq / 1000U;
-    Sys_Tick_Time_Table_G[TIMER_INDEX_10MS]  = stm_freq / 100U;
-    Sys_Tick_Time_Table_G[TIMER_INDEX_100MS] = stm_freq / 10U;
-    Sys_Tick_Time_Table_G[TIMER_INDEX_1S]    = stm_freq;
-    Sys_Tick_Time_Table_G[TIMER_INDEX_10S]   = stm_freq * 10U;
-    Sys_Tick_Time_Table_G[TIMER_INDEX_100S]  = stm_freq * 100U;
+    CddStm_TimeTable_G[TIMER_INDEX_10NS]  = StmFreq / (1000000000U / 10U);    /* ÷ 100 000 000 → ~3 ticks @ 300 MHz  */
+    CddStm_TimeTable_G[TIMER_INDEX_100NS] = StmFreq / (1000000000U / 100U);   /* ÷  10 000 000 → ~30 ticks           */
+    CddStm_TimeTable_G[TIMER_INDEX_1US]   = StmFreq / 1000000U;               /* ÷       1 000 → 300 ticks           */
+    CddStm_TimeTable_G[TIMER_INDEX_10US]  = StmFreq / 100000U;                /* ÷         100 → 3 000 ticks         */
+    CddStm_TimeTable_G[TIMER_INDEX_100US] = StmFreq / 10000U;                 /* ÷          10 → 30 000 ticks        */
+    CddStm_TimeTable_G[TIMER_INDEX_1MS]   = StmFreq / 1000U;                  /*              → 300 000 ticks ← ISR  */
+    CddStm_TimeTable_G[TIMER_INDEX_10MS]  = StmFreq / 100U;                   /*              → 3 000 000 ticks      */
+    CddStm_TimeTable_G[TIMER_INDEX_100MS] = StmFreq / 10U;                    /*              → 30 000 000 ticks     */
+    CddStm_TimeTable_G[TIMER_INDEX_1S]    = StmFreq;                          /*              → 300 000 000 ticks    */
+    CddStm_TimeTable_G[TIMER_INDEX_10S]   = StmFreq * 10U;                    /* × 10         → 3 000 000 000 ticks  */
+    CddStm_TimeTable_G[TIMER_INDEX_100S]  = StmFreq * 100U;                   /* × 100        → 30 000 000 000 ticks */
 }

@@ -128,7 +128,7 @@ static MCQ_Status_T MCQ_Enqueue_High_(MCQ_Queue_T     * const Queue_Ptr,
     uint32_T     prev;
 
     /* Atomically claim: if high_valid == FREE write OCCUPIED, return previous  */
-    prev = ASM_Cmp_And_Swap((uint32_T *)&Queue_Ptr->high_valid,
+    prev = CddAsm_CmpAndSwap((uint32_T *)&Queue_Ptr->high_valid,
                              MCQ_HIGH_SLOT_OCCUPIED,
                              MCQ_HIGH_SLOT_FREE);
 
@@ -187,7 +187,7 @@ static MCQ_Status_T MCQ_Enqueue_Normal_(MCQ_Queue_T     * const Queue_Ptr,
         next_wr = current_wr + 1U;
 
         /* Attempt to reserve: if wr_idx == current_wr, advance to next_wr     */
-        prev = ASM_Cmp_And_Swap((uint32_T *)&Queue_Ptr->wr_idx,
+        prev = CddAsm_CmpAndSwap((uint32_T *)&Queue_Ptr->wr_idx,
                                  next_wr,
                                  current_wr);
 

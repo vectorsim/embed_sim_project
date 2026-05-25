@@ -5,7 +5,7 @@
  * \details     Implements CMPSWAP.W and LDMST atomic primitives using TASKING
  *              inline assembler for AURIX TC3xx.
  *
- *              Register allocation convention used here:
+ *              Register allocation convention:
  *                E8  = extended register pair (D8 = low word, D9 = high word)
  *                CMPSWAP.W [An]off, En  :  D(n)   = new value
  *                                          D(n+1) = compare value (current)
@@ -33,18 +33,18 @@
  *********************************************************************************************************************/
 
 /*--------------------------------------------------------------------------------------------------------------------
- * ASM_Cmp_And_Swap
+ * CddAsm_CmpAndSwap
  *------------------------------------------------------------------------------------------------------------------*/
-uint32_T ASM_Cmp_And_Swap(uint32_T *Reg_Ptr,
-                          uint32_T  New_Reg_Value,
-                          uint32_T  Current_Reg_Value)
+uint32_T CddAsm_CmpAndSwap(P2VAR(uint32_T, AUTOMATIC, CDD_APPL_DATA) RegPtr,
+                            uint32_T NewRegVal,
+                            uint32_T CurrentRegVal)
 {
     volatile uint32_T reg_value;
 
     __asm
     (
         /* Load operands into extended register pair E8:
-         *   D8 = new value    (lower word of CMPSWAP pair)
+         *   D8 = new value     (lower word of CMPSWAP pair)
          *   D9 = compare value (upper word of CMPSWAP pair) */
         "mov        d8,  %2          \n\t"
         "mov        d9,  %3          \n\t"
@@ -57,9 +57,9 @@ uint32_T ASM_Cmp_And_Swap(uint32_T *Reg_Ptr,
         /* Outputs */
         : "=d" (reg_value)              /* %0 : previous register value     */
         /* Inputs */
-        : "a"  (Reg_Ptr),               /* %1 : target address register      */
-          "d"  (New_Reg_Value),         /* %2 : new value to write           */
-          "d"  (Current_Reg_Value)      /* %3 : expected current value       */
+        : "a"  (RegPtr),                /* %1 : target address register      */
+          "d"  (NewRegVal),             /* %2 : new value to write           */
+          "d"  (CurrentRegVal)          /* %3 : expected current value       */
         /* Clobbers — E8 is modified by the instruction */
         :
     );
@@ -68,11 +68,11 @@ uint32_T ASM_Cmp_And_Swap(uint32_T *Reg_Ptr,
 }
 
 /*--------------------------------------------------------------------------------------------------------------------
- * ASM_Load_Mode_Store
+ * CddAsm_LdmSt
  *------------------------------------------------------------------------------------------------------------------*/
-void ASM_Load_Mode_Store(volatile uint32_T *Reg_Ptr,
-                         uint32_T           Mask,
-                         uint32_T           Data)
+void CddAsm_LdmSt(P2VAR(volatile uint32_T, AUTOMATIC, CDD_APPL_DATA) RegPtr,
+                  uint32_T Mask,
+                  uint32_T Data)
 {
     __asm
     (
@@ -82,13 +82,13 @@ void ASM_Load_Mode_Store(volatile uint32_T *Reg_Ptr,
         "mov        d8,  %2          \n\t"
         "mov        d9,  %1          \n\t"
         /* Atomic load-modify-store:
-         * *Reg_Ptr = (*Reg_Ptr & ~D9) | (D8 & D9) */
+         * *RegPtr = (*RegPtr & ~D9) | (D8 & D9) */
         "ldmst      [%0]0x0, e8      \n\t"
 
         /* No output operands */
         :
         /* Inputs */
-        : "a"  (Reg_Ptr),               /* %0 : target address register      */
+        : "a"  (RegPtr),                /* %0 : target address register      */
           "d"  (Mask),                  /* %1 : bitmask                      */
           "d"  (Data)                   /* %2 : data for masked bits         */
         /* Clobbers */

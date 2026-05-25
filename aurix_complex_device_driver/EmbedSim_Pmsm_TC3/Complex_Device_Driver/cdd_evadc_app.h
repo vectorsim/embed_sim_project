@@ -2,19 +2,15 @@
  * \file        cdd_evadc_app.h
  * \brief       EVADC driver interface for 3-phase FOC sensor readout on AURIX TC3xx.
  *
- * \details     Four EVADC channels are configured, all GTM-triggered:
+ * \details     Four EVADC channels configured, all GTM-triggered:
  *
  *              Phase current sensing (triggered by ATOM0_CH4 via ADCTRIG0):
- *                  G0_C0  AN00  Phase U current   -> Meas.IPhU
- *                  G1_C0  AN08  Phase V current   -> Meas.IPhV
- *                  G2_C0  AN16  Phase W current   -> Meas.IPhW
+ *                  G0_C0  AN00  Phase U current   → CddEvadc_Meas_T.IPhU
+ *                  G1_C0  AN08  Phase V current   → CddEvadc_Meas_T.IPhV
+ *                  G2_C0  AN16  Phase W current   → CddEvadc_Meas_T.IPhW
  *
  *              DC-link voltage (triggered by ATOM0_CH3 via ADCTRIG3):
- *                  G8_C8  AN40  DC-link voltage   -> Meas.UDcLink
- *
- *              Resolver channels (G3 AN24, G11 AN19) are not present on the
- *              DB42S02 motorkit.  Position/speed acquisition uses the GPT12
- *              incremental encoder on P02.6/7/8 via cdd_gpt12_app.
+ *                  G8_C8  AN40  DC-link voltage   → CddEvadc_Meas_T.UDcLink
  *
  * \note        MISRA C:2012 compliance:
  *              - Rule  8.5 : One declaration per function
@@ -28,10 +24,7 @@
 #ifndef CDD_EVADC_APP_H_
 #define CDD_EVADC_APP_H_
 
-/**********************************************************************************************************************
- * Includes
- *********************************************************************************************************************/
-#include "cdd_config.h"
+#include "cdd_config.h"   /* embed_sim_sys_types.h + embed_sim_compiler.h */
 
 /**********************************************************************************************************************
  * Data Types
@@ -41,9 +34,8 @@
  * \brief   Sensor measurement result structure.
  *
  * \details All values are in physical units after ADC full-scale scaling:
- *              IPhU/V/W  = phase current voltage  [V]   (0..ADC_MAX_VOLTAGE)
- *              SinP/CosP = resolver signal voltage [V]
- *              UDcLink   = DC-link voltage          [V]  (scaled by resistor divider)
+ *              IPhU/V/W  = phase current voltage  [V]  (0..ADC_MAX_VOLTAGE)
+ *              UDcLink   = DC-link voltage          [V]
  */
 typedef struct
 {
@@ -51,7 +43,7 @@ typedef struct
     volatile real32_T   IPhV;       /**< \brief Phase V current sense voltage  [V] */
     volatile real32_T   IPhW;       /**< \brief Phase W current sense voltage  [V] */
     volatile real32_T   UDcLink;    /**< \brief DC-link voltage                [V] */
-} EVADC_Meas_T;
+} CddEvadc_Meas_T;
 
 /**********************************************************************************************************************
  * Function Prototypes
@@ -59,25 +51,26 @@ typedef struct
 
 /**
  * \brief   Initialises CONVCTRL, EVADC global config, calibration, and all
- *          six measurement channels.
+ *          measurement channels.
  *
  * \details Call after cdd_gpio_app and before GTM triggers are enabled.
  *          Blocks until hardware calibration completes for all groups.
  *
- * \return  None
+ * \return  void
  */
-extern void Initialize_EVADC_Module(void);
+extern void CddEvadc_Init(void);
 
 /**
- * \brief   Reads all six ADC result registers into the measurement structure.
+ * \brief   Reads all four ADC result registers into the measurement structure.
  *
- * \details Each channel is read only if the Valid Flag (VF) is set.
+ * \details Each channel read only if the Valid Flag (VF) is set.
  *          If VF is not set the previous value is retained.
- *          Call from the control loop ISR (GTM_ATOM_00_CH_00_ISR).
+ *          Call from the control loop ISR (GTM_Atom_00_Ch_00_Isr).
  *
- * \param   Meas_Ptr   Pointer to the measurement result structure
- * \return  None
+ * \param[in,out] MeasPtr  Pointer to the measurement result structure.
+ * \return  void
  */
-extern void Read_EVADC_Sensor_Measurement(volatile EVADC_Meas_T * const Meas_Ptr);
+extern void CddEvadc_ReadSensorMeas(
+    P2VAR(volatile CddEvadc_Meas_T, AUTOMATIC, CDD_APPL_DATA) MeasPtr);
 
 #endif /* CDD_EVADC_APP_H_ */

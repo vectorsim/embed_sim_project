@@ -34,26 +34,26 @@
 /** \brief  Lock bit value in WDTCPUxCON0.LCK / WDTSCON0.LCK  */
 #define WDT_LOCKED              (0x1U)
 
-/** \brief  ENDINIT active (protected registers locked)         */
+/** \brief  ENDINIT active (protected registers locked)          */
 #define WDT_ENDINIT_SET         (0x1U)
 
-/** \brief  ENDINIT cleared (protected registers accessible)    */
+/** \brief  ENDINIT cleared (protected registers accessible)     */
 #define WDT_ENDINIT_CLEAR       (0x0U)
 
-/** \brief  PLL1 divider disabled flag in SCU_CCUCON1           */
+/** \brief  PLL1 divider disabled flag in SCU_CCUCON1            */
 #define PLL1_DIV_DISABLED       (0x0U)
 
-/** \brief  CMU CLK enabled status in GTM_CMU_CLK_EN            */
+/** \brief  CMU CLK enabled status in GTM_CMU_CLK_EN             */
 #define CMU_CLK_ENABLED         (0x3U)
 
-/** \brief  GTM clock source is 2*fSPB when GTMDIV == 1         */
+/** \brief  GTM clock source is 2*fSPB when GTMDIV == 1          */
 #define GTM_SRC_2XSPB           (0x1U)
 
 /**********************************************************************************************************************
  * Function Implementations — Core Identification
  *********************************************************************************************************************/
 
-uint32_T Get_Core_Id(void)
+uint32_T CddSys_GetCoreId(void)
 {
     return (uint32_T)__mfcr(CPU_CORE_ID);
 }
@@ -62,7 +62,7 @@ uint32_T Get_Core_Id(void)
  * Function Implementations — Busy-Wait
  *********************************************************************************************************************/
 
-void Nop_Delay(uint32_T InnerLoop, uint32_T OuterLoop)
+void CddSys_NopDelay(uint32_T InnerLoop, uint32_T OuterLoop)
 {
     uint32_T i;
     uint32_T j;
@@ -80,7 +80,7 @@ void Nop_Delay(uint32_T InnerLoop, uint32_T OuterLoop)
  * Function Implementations — Watchdog Password
  *********************************************************************************************************************/
 
-uint32_T Get_CPU_00_WDT_Pwd(void)
+uint32_T CddSys_GetWdt00Pwd(void)
 {
     uint32_T pwd;
     /* Bits [7:2] are stored inverted in the register (ds1 P.975) */
@@ -89,7 +89,7 @@ uint32_T Get_CPU_00_WDT_Pwd(void)
     return pwd;
 }
 
-uint32_T Get_CPU_01_WDT_Pwd(void)
+uint32_T CddSys_GetWdt01Pwd(void)
 {
     uint32_T pwd;
     pwd  = SCU_WDTCPU1CON0.B.PW;
@@ -97,7 +97,7 @@ uint32_T Get_CPU_01_WDT_Pwd(void)
     return pwd;
 }
 
-uint32_T Get_Safety_WDT_Pwd(void)
+uint32_T CddSys_GetSafetyWdtPwd(void)
 {
     uint32_T pwd;
     pwd  = SCU_WDTSCON0.B.PW;
@@ -109,13 +109,13 @@ uint32_T Get_Safety_WDT_Pwd(void)
  * Function Implementations — CPU0 Watchdog EndInit
  *********************************************************************************************************************/
 
-void Clear_CPU_00_WDT_EndInit(void)
+void CddSys_ClearWdt00EndInit(void)
 {
     uint32_T pwd;
 
-    pwd = Get_CPU_00_WDT_Pwd();
+    pwd = CddSys_GetWdt00Pwd();
 
-    /* Step 1: unlock the register if it is currently locked (ds1 P.974) */
+    /* Step 1: unlock the register if currently locked (ds1 P.974) */
     if (SCU_WDTCPU0CON0.B.LCK == WDT_LOCKED)
     {
         #pragma nomisrac   /* Rule 10.7, 12.2: hardware password protocol */
@@ -128,24 +128,23 @@ void Clear_CPU_00_WDT_EndInit(void)
 
     /* Step 2: clear ENDINIT and lock the register */
     #pragma nomisrac   /* Rule 10.7, 12.2: hardware password protocol */
-    SCU_WDTCPU0CON0.U = (0x0U << 0x0U)                        |   /* ENDINIT = 0 (cleared)          */
-                        (0x1U << 0x1U)                        |   /* LCK = 1    (lock)              */
+    SCU_WDTCPU0CON0.U = (0x0U << 0x0U)                        |   /* ENDINIT = 0 (cleared)         */
+                        (0x1U << 0x1U)                        |   /* LCK = 1    (lock)             */
                         (pwd  << 0x2U)                        |
                         (SCU_WDTCPU0CON0.B.REL << 16U);
     #pragma nomisrac restore
 
-    /* Wait until ENDINIT is confirmed cleared */
     while (SCU_WDTCPU0CON0.B.ENDINIT != WDT_ENDINIT_CLEAR)
     {
-        Nop_Delay(0x1U, 0x1U);
+        CddSys_NopDelay(0x1U, 0x1U);
     }
 }
 
-void Set_CPU_00_WDT_EndInit(void)
+void CddSys_SetWdt00EndInit(void)
 {
     uint32_T pwd;
 
-    pwd = Get_CPU_00_WDT_Pwd();
+    pwd = CddSys_GetWdt00Pwd();
 
     /* Step 1: unlock */
     if (SCU_WDTCPU0CON0.B.LCK == WDT_LOCKED)
@@ -168,26 +167,26 @@ void Set_CPU_00_WDT_EndInit(void)
 
     while (SCU_WDTCPU0CON0.B.ENDINIT != WDT_ENDINIT_SET)
     {
-        Nop_Delay(0x1U, 0x1U);
+        CddSys_NopDelay(0x1U, 0x1U);
     }
 }
 
-void Disable_CPU_00_WDT(void)
+void CddSys_DisableWdt00(void)
 {
-    Clear_CPU_00_WDT_EndInit();
+    CddSys_ClearWdt00EndInit();
     SCU_WDTCPU0CON1.B.DR = 0x1U;   /* Disable request (ds1 P.980) */
-    Set_CPU_00_WDT_EndInit();
+    CddSys_SetWdt00EndInit();
 }
 
 /**********************************************************************************************************************
  * Function Implementations — CPU1 Watchdog EndInit
  *********************************************************************************************************************/
 
-void Clear_CPU_01_WDT_EndInit(void)
+void CddSys_ClearWdt01EndInit(void)
 {
     uint32_T pwd;
 
-    pwd = Get_CPU_01_WDT_Pwd();
+    pwd = CddSys_GetWdt01Pwd();
 
     if (SCU_WDTCPU1CON0.B.LCK == WDT_LOCKED)
     {
@@ -208,15 +207,15 @@ void Clear_CPU_01_WDT_EndInit(void)
 
     while (SCU_WDTCPU1CON0.B.ENDINIT != WDT_ENDINIT_CLEAR)
     {
-        Nop_Delay(0x1U, 0x1U);
+        CddSys_NopDelay(0x1U, 0x1U);
     }
 }
 
-void Set_CPU_01_WDT_EndInit(void)
+void CddSys_SetWdt01EndInit(void)
 {
     uint32_T pwd;
 
-    pwd = Get_CPU_01_WDT_Pwd();
+    pwd = CddSys_GetWdt01Pwd();
 
     if (SCU_WDTCPU1CON0.B.LCK == WDT_LOCKED)
     {
@@ -237,44 +236,55 @@ void Set_CPU_01_WDT_EndInit(void)
 
     while (SCU_WDTCPU1CON0.B.ENDINIT != WDT_ENDINIT_SET)
     {
-        Nop_Delay(0x1U, 0x1U);
+        CddSys_NopDelay(0x1U, 0x1U);
     }
 }
 
-void Disable_CPU_01_WDT(void)
+void CddSys_DisableWdt01(void)
 {
-    Clear_CPU_01_WDT_EndInit();
+    CddSys_ClearWdt01EndInit();
     SCU_WDTCPU1CON1.B.DR = 0x1U;
-    Set_CPU_01_WDT_EndInit();
+    CddSys_SetWdt01EndInit();
 }
 
 /**********************************************************************************************************************
  * Function Implementations — CPU Watchdog Dispatch (core-agnostic)
  *********************************************************************************************************************/
 
-void Clear_CPU_WDT_EndInit(void)
+void CddSys_ClearWdtEndInit(void)
 {
     uint32_T core_id;
 
-    core_id = Get_Core_Id();
+    core_id = CddSys_GetCoreId();
     switch (core_id)
     {
-        case 0U: Clear_CPU_00_WDT_EndInit(); break;
-        case 1U: Clear_CPU_01_WDT_EndInit(); break;
-        default: /* no action — unsupported core */  break;
+        case 0x0U:
+            CddSys_ClearWdt00EndInit();
+            break;
+        case 0x1U:
+            CddSys_ClearWdt01EndInit();
+            break;
+        default:
+            /* Unknown core — no action (MISRA 16.4: default required) */
+            break;
     }
 }
 
-void Set_CPU_WDT_EndInit(void)
+void CddSys_SetWdtEndInit(void)
 {
     uint32_T core_id;
 
-    core_id = Get_Core_Id();
+    core_id = CddSys_GetCoreId();
     switch (core_id)
     {
-        case 0U: Set_CPU_00_WDT_EndInit(); break;
-        case 1U: Set_CPU_01_WDT_EndInit(); break;
-        default: /* no action */ break;
+        case 0x0U:
+            CddSys_SetWdt00EndInit();
+            break;
+        case 0x1U:
+            CddSys_SetWdt01EndInit();
+            break;
+        default:
+            break;
     }
 }
 
@@ -282,11 +292,11 @@ void Set_CPU_WDT_EndInit(void)
  * Function Implementations — Safety Watchdog EndInit
  *********************************************************************************************************************/
 
-void Clear_Safety_WDT_EndInit(void)
+void CddSys_ClearSafetyWdtEndInit(void)
 {
     uint32_T pwd;
 
-    pwd = Get_Safety_WDT_Pwd();
+    pwd = CddSys_GetSafetyWdtPwd();
 
     if (SCU_WDTSCON0.B.LCK == WDT_LOCKED)
     {
@@ -294,7 +304,7 @@ void Clear_Safety_WDT_EndInit(void)
         SCU_WDTSCON0.U = (0x1U << 0x0U)                       |
                          (0x0U << 0x1U)                       |
                          (pwd  << 0x2U)                       |
-                         (SCU_WDTSCON0.B.REL << 0x10U);
+                         (SCU_WDTSCON0.B.REL << 16U);
         #pragma nomisrac restore
     }
 
@@ -302,20 +312,20 @@ void Clear_Safety_WDT_EndInit(void)
     SCU_WDTSCON0.U = (0x0U << 0x0U)                           |
                      (0x1U << 0x1U)                           |
                      (pwd  << 0x2U)                           |
-                     (SCU_WDTSCON0.B.REL << 0x10U);
+                     (SCU_WDTSCON0.B.REL << 16U);
     #pragma nomisrac restore
 
     while (SCU_WDTSCON0.B.ENDINIT != WDT_ENDINIT_CLEAR)
     {
-        Nop_Delay(0x1U, 0x1U);
+        CddSys_NopDelay(0x1U, 0x1U);
     }
 }
 
-void Set_Safety_WDT_EndInit(void)
+void CddSys_SetSafetyWdtEndInit(void)
 {
     uint32_T pwd;
 
-    pwd = Get_Safety_WDT_Pwd();
+    pwd = CddSys_GetSafetyWdtPwd();
 
     if (SCU_WDTSCON0.B.LCK == WDT_LOCKED)
     {
@@ -323,7 +333,7 @@ void Set_Safety_WDT_EndInit(void)
         SCU_WDTSCON0.U = (0x1U << 0x0U)                       |
                          (0x0U << 0x1U)                       |
                          (pwd  << 0x2U)                       |
-                         (SCU_WDTSCON0.B.REL << 0x10U);
+                         (SCU_WDTSCON0.B.REL << 16U);
         #pragma nomisrac restore
     }
 
@@ -331,125 +341,149 @@ void Set_Safety_WDT_EndInit(void)
     SCU_WDTSCON0.U = (0x1U << 0x0U)                           |
                      (0x1U << 0x1U)                           |
                      (pwd  << 0x2U)                           |
-                     (SCU_WDTSCON0.B.REL << 0x10U);
+                     (SCU_WDTSCON0.B.REL << 16U);
     #pragma nomisrac restore
 
     while (SCU_WDTSCON0.B.ENDINIT != WDT_ENDINIT_SET)
     {
-        Nop_Delay(0x1U, 0x1U);
+        CddSys_NopDelay(0x1U, 0x1U);
     }
 }
 
-void Disable_Safety_WDT(void)
+void CddSys_DisableSafetyWdt(void)
 {
-    Clear_Safety_WDT_EndInit();
-    SCU_WDTSCON1.B.DR = 0x1U;   /* ds1 P.977 */
-    Set_Safety_WDT_EndInit();
+    CddSys_ClearSafetyWdtEndInit();
+    SCU_WDTSCON1.B.DR = 0x1U;
+    CddSys_SetSafetyWdtEndInit();
 }
 
 /**********************************************************************************************************************
- * Function Implementations — Clock Tree
+ * Function Implementations — Clock Tree Frequency Interrogation
  *********************************************************************************************************************/
 
-real64_T Get_EVR_Frequency(void)         { return EVR_OSC_FREQUENCY;    }
-real64_T Get_SysClk_Frequency(void)      { return SYSCLK_OSC_FREQUENCY; }
-real64_T Get_External_OSC_Frequency(void){ return XTAL_OSC_FREQUENCY;   }
-
-real64_T Get_Primary_OSC_Frequency(void)
+real64_T CddSys_GetEvrFreq(void)
 {
-    real64_T osc_freq;
-    uint32_T osc_sel;
+    return (real64_T)EVR_OSC_FREQUENCY;
+}
 
-    osc_sel = SCU_SYSPLLCON0.B.INSEL;   /* ds1 P.1085 */
-    switch (osc_sel)
+real64_T CddSys_GetSysClkFreq(void)
+{
+    return (real64_T)SYSCLK_OSC_FREQUENCY;
+}
+
+real64_T CddSys_GetExtOscFreq(void)
+{
+    return (real64_T)XTAL_OSC_FREQUENCY;
+}
+
+real64_T CddSys_GetPrimaryOscFreq(void)
+{
+    real64_T freq;
+
+    switch (SCU_SYSPLLCON0.B.INSEL)
     {
-        case 0x0U:  osc_freq = Get_EVR_Frequency();           break;
-        case 0x1U:  osc_freq = Get_External_OSC_Frequency();  break;
-        case 0x2U:  osc_freq = Get_SysClk_Frequency();        break;
-        default:    osc_freq = 0.0f;                          break;
+        case 0x0U:  freq = CddSys_GetEvrFreq();    break;
+        case 0x1U:  freq = CddSys_GetExtOscFreq(); break;
+        case 0x2U:  freq = CddSys_GetSysClkFreq(); break;
+        default:    freq = 0.0f;                    break;
     }
-    return osc_freq;
+    return freq;
 }
 
-real64_T Get_SYS_PLL_00_Frequency(void)
+real64_T CddSys_GetPll00Freq(void)
 {
-    /* fPLL0 = (N * fOSC) / (P * K2)   ds1 P.1031 */
-    real64_T n = (real64_T)SCU_SYSPLLCON0.B.NDIV + 1.0f;
-    real64_T p = (real64_T)SCU_SYSPLLCON0.B.PDIV + 1.0f;
-    real64_T k2= (real64_T)SCU_SYSPLLCON1.B.K2DIV + 1.0f;
-    return (Get_Primary_OSC_Frequency() * n) / (p * k2);
+    real64_T pll_freq;
+    real64_T n_div;
+    real64_T p_div;
+    real64_T k2_div;
+
+    n_div    = (real64_T)(SCU_SYSPLLCON0.B.NDIV + 1U);
+    p_div    = (real64_T)(SCU_SYSPLLCON0.B.PDIV + 1U);
+    k2_div   = (real64_T)(SCU_SYSPLLCON1.B.K2DIV + 1U);
+
+    if ((p_div <= 0.0f) || (k2_div <= 0.0f))
+    {
+        pll_freq = 0.0f;
+    }
+    else
+    {
+        pll_freq = (n_div * CddSys_GetPrimaryOscFreq()) / (p_div * k2_div);
+    }
+    return pll_freq;
 }
 
-real64_T Get_SYS_PLL_01_Frequency(void)
+real64_T CddSys_GetPll01Freq(void)
 {
-    real64_T n = (real64_T)SCU_PERPLLCON0.B.NDIV + 1.0f;
-    real64_T p = (real64_T)SCU_PERPLLCON0.B.PDIV + 1.0f;
-    real64_T k2= (real64_T)SCU_PERPLLCON1.B.K2DIV + 1.0f;
-    return (Get_Primary_OSC_Frequency() * n) / (p * k2);
+    real64_T pll_freq;
+    real64_T k3_div;
+
+    if (SCU_CCUCON1.B.PLL1DIVDIS == PLL1_DIV_DISABLED)
+    {
+        k3_div   = (real64_T)(SCU_PERPLLCON1.B.K3DIV + 1U);
+        pll_freq = CddSys_GetPll00Freq() / k3_div;
+    }
+    else
+    {
+        pll_freq = 0.0f;
+    }
+    return pll_freq;
 }
 
-real64_T Get_Source_00_Frequency(void)
+real64_T CddSys_GetSrc00Freq(void)
 {
     real64_T freq;
 
     switch (SCU_CCUCON0.B.CLKSEL)
     {
-        case 0x0U:  freq = Get_Primary_OSC_Frequency();   break;
-        case 0x1U:  freq = Get_SYS_PLL_00_Frequency();   break;
-        default:    freq = 0.0f;                          break;
+        case 0x1U:  freq = CddSys_GetPll00Freq();  break;
+        case 0x0U:  /* fall-through */
+        default:    freq = CddSys_GetEvrFreq();     break;
     }
     return freq;
 }
 
-real64_T Get_Source_01_Frequency(void)
+real64_T CddSys_GetSrc01Freq(void)
 {
     real64_T freq;
 
     switch (SCU_CCUCON0.B.CLKSEL)
     {
-        case 0x0U:
-            freq = Get_Primary_OSC_Frequency();
-            break;
-        case 0x1U:
-            freq = Get_SYS_PLL_01_Frequency();
-            if (SCU_CCUCON1.B.PLL1DIVDIS == PLL1_DIV_DISABLED)
-            {
-                freq = freq / 2.0f;
-            }
-            break;
-        default:
-            freq = 0.0f;
-            break;
+        case 0x1U:  freq = CddSys_GetPll01Freq();  break;
+        case 0x0U:  /* fall-through */
+        default:    freq = CddSys_GetEvrFreq();     break;
+    }
+
+    if ((SCU_CCUCON0.B.LPDIV != 0x0U) && (SCU_CCUCON0.B.LPDIV != 0x1U))
+    {
+        freq = freq / 2.0f;
     }
     return freq;
 }
 
-real64_T Get_ADC_Frequency(void) { return Get_Source_01_Frequency(); }
-
-real64_T Get_SRI_Frequency(void)
+real64_T CddSys_GetSriFreq(void)
 {
-    real64_T source_freq = Get_Source_00_Frequency();
+    real64_T source_freq = CddSys_GetSrc00Freq();
     real64_T sri_freq;
 
-    switch (SCU_CCUCON0.B.LPDIV)   /* ds1 P.1049 */
+    switch (SCU_CCUCON0.B.LPDIV)
     {
         case 0x0U:
             sri_freq = (0x0U == SCU_CCUCON0.B.SRIDIV) ? 0.0f :
                        source_freq / (real64_T)SCU_CCUCON0.B.SRIDIV;
             break;
-        case 0x1U:  sri_freq = source_freq / 30.0f;  break;
-        case 0x2U:  sri_freq = source_freq / 60.0f;  break;
-        case 0x3U:  sri_freq = source_freq / 120.0f; break;
-        case 0x4U:  sri_freq = source_freq / 240.0f; break;
-        default:    sri_freq = 0.0f;                 break;
+        case 0x1U:  sri_freq = source_freq / 30.0f;   break;
+        case 0x2U:  sri_freq = source_freq / 60.0f;   break;
+        case 0x3U:  sri_freq = source_freq / 120.0f;  break;
+        case 0x4U:  sri_freq = source_freq / 240.0f;  break;
+        default:    sri_freq = 0.0f;                   break;
     }
     return sri_freq;
 }
 
-real64_T Get_CPU_Frequency(void)
+real64_T CddSys_GetCpuFreq(void)
 {
-    real64_T cpu_freq = Get_SRI_Frequency();
-    uint32_T cpu_div  = SCU_CCUCON6.B.CPU0DIV;   /* ds1 P.1060 */
+    real64_T cpu_freq = CddSys_GetSriFreq();
+    uint32_T cpu_div  = SCU_CCUCON6.B.CPU0DIV;
 
     if (0x0U != cpu_div)
     {
@@ -458,21 +492,21 @@ real64_T Get_CPU_Frequency(void)
     return cpu_freq;
 }
 
-real32_T Get_STM_Frequency(void)
+real64_T CddSys_GetStmFreq(void)
 {
     real64_T stm_freq = 0.0f;
     uint32_T stm_div  = SCU_CCUCON0.B.STMDIV;
 
     if (0x0U != stm_div)
     {
-        stm_freq = Get_Source_00_Frequency() / (real64_T)stm_div;
+        stm_freq = CddSys_GetSrc00Freq() / (real64_T)stm_div;
     }
-    return (real32_T)stm_freq;
+    return stm_freq;
 }
 
-real64_T Get_SPB_Frequency(void)
+real64_T CddSys_GetSpbFreq(void)
 {
-    real64_T source_freq = Get_Source_00_Frequency();
+    real64_T source_freq = CddSys_GetSrc00Freq();
     real64_T spb_freq;
 
     switch (SCU_CCUCON0.B.LPDIV)
@@ -481,37 +515,37 @@ real64_T Get_SPB_Frequency(void)
             spb_freq = (SCU_CCUCON0.B.SPBDIV < 0x2U) ? 0.0f :
                        source_freq / (real64_T)SCU_CCUCON0.B.SPBDIV;
             break;
-        case 0x1U:  spb_freq = source_freq / 30.0f;  break;
-        case 0x2U:  spb_freq = source_freq / 60.0f;  break;
-        case 0x3U:  spb_freq = source_freq / 120.0f; break;
-        case 0x4U:  spb_freq = source_freq / 240.0f; break;
-        default:    spb_freq = 0.0f;                 break;
+        case 0x1U:  spb_freq = source_freq / 30.0f;   break;
+        case 0x2U:  spb_freq = source_freq / 60.0f;   break;
+        case 0x3U:  spb_freq = source_freq / 120.0f;  break;
+        case 0x4U:  spb_freq = source_freq / 240.0f;  break;
+        default:    spb_freq = 0.0f;                   break;
     }
     return spb_freq;
 }
 
-real64_T Get_GTM_Source_Frequency(void)
+real64_T CddSys_GetGtmSrcFreq(void)
 {
     if (GTM_SRC_2XSPB == SCU_CCUCON0.B.GTMDIV)
     {
-        return 2.0f * Get_SPB_Frequency();
+        return 2.0f * CddSys_GetSpbFreq();
     }
-    return Get_Source_00_Frequency();
+    return CddSys_GetSrc00Freq();
 }
 
-real64_T Get_GTM_Frequency(void)
+real64_T CddSys_GetGtmFreq(void)
 {
     real64_T gtm_freq = 0.0f;
     uint32_T gtm_div  = SCU_CCUCON0.B.GTMDIV;
 
     if (0x0U != gtm_div)
     {
-        gtm_freq = Get_GTM_Source_Frequency() / (real64_T)gtm_div;
+        gtm_freq = CddSys_GetGtmSrcFreq() / (real64_T)gtm_div;
     }
     return gtm_freq;
 }
 
-real64_T Get_GTM_Cluster_Frequency(void)
+real64_T CddSys_GetGtmClusterFreq(void)
 {
     uint32_T cluster_div = GTM_CLS_CLK_CFG.B.CLS0_CLK_DIV;
 
@@ -519,10 +553,10 @@ real64_T Get_GTM_Cluster_Frequency(void)
     {
         return 0.0f;
     }
-    return Get_GTM_Frequency() / (real64_T)cluster_div;
+    return CddSys_GetGtmFreq() / (real64_T)cluster_div;
 }
 
-real64_T Get_GTM_CMU_Global_Frequency(void)
+real64_T CddSys_GetGtmCmuGlobalFreq(void)
 {
     real64_T numerator   = (real64_T)GTM_CMU_GCLK_NUM.B.GCLK_NUM;
     real64_T denominator = (real64_T)GTM_CMU_GCLK_DEN.B.GCLK_DEN;
@@ -531,17 +565,42 @@ real64_T Get_GTM_CMU_Global_Frequency(void)
     {
         return 0.0f;
     }
-    return (denominator / numerator) * Get_GTM_Cluster_Frequency();
+    return (denominator / numerator) * CddSys_GetGtmClusterFreq();
+}
+
+real64_T CddSys_GetAdcFreq(void)
+{
+    return CddSys_GetSrc01Freq();
+}
+
+real64_T CddSys_GetQspiFreq(void)
+{
+    real64_T source   = 0.0f;
+    real64_T freq     = 0.0f;
+    uint32_T qspi_div = SCU_CCUCON1.B.QSPIDIV;
+
+    switch (SCU_CCUCON1.B.CLKSELQSPI)
+    {
+        case 0x1U:  source = CddSys_GetSrc00Freq();  break;
+        case 0x2U:  source = CddSys_GetSrc01Freq();  break;
+        default:    source = 0.0f;                    break;
+    }
+
+    if (0x0U != qspi_div)
+    {
+        freq = source / (real64_T)qspi_div;
+    }
+    return freq;
 }
 
 /**********************************************************************************************************************
  * Function Implementations — GTM CMU CLK0
  *********************************************************************************************************************/
 
-void Set_GTM_CMU_CLK_00_Frequency(real64_T CMU_CLK_00_Frequency)
+void CddSys_SetGtmCmuClk00Freq(real64_T CmuClk00Freq)
 {
-    real64_T cmu_global_freq = Get_GTM_CMU_Global_Frequency();
-    real64_T cmu_divider     = (cmu_global_freq / CMU_CLK_00_Frequency) - 1.0f;
+    real64_T cmu_global_freq = CddSys_GetGtmCmuGlobalFreq();
+    real64_T cmu_divider     = (cmu_global_freq / CmuClk00Freq) - 1.0f;
     uint32_T clk_cnt         = (uint32_T)cmu_divider;
 
     /* Round to nearest integer */
@@ -550,21 +609,21 @@ void Set_GTM_CMU_CLK_00_Frequency(real64_T CMU_CLK_00_Frequency)
         clk_cnt++;
     }
 
-    Clear_CPU_WDT_EndInit();
+    CddSys_ClearWdtEndInit();
     GTM_CMU_CLK_0_CTRL.B.CLK_CNT = clk_cnt;   /* ds2 P.186 */
-    Set_CPU_WDT_EndInit();
+    CddSys_SetWdtEndInit();
 
     GTM_CMU_CLK_EN.B.EN_CLK0 = 0x2U;           /* ds2 P.184 */
 }
 
-real64_T Get_GTM_CMU_CLK_00_Frequency(void)
+real64_T CddSys_GetGtmCmuClk00Freq(void)
 {
     real64_T cmu_clk_freq = 0.0f;
 
     if (CMU_CLK_ENABLED == GTM_CMU_CLK_EN.B.EN_CLK0)
     {
         real64_T clk_div = (real64_T)GTM_CMU_CLK_0_CTRL.B.CLK_CNT + 1.0f;
-        cmu_clk_freq = Get_GTM_CMU_Global_Frequency() / clk_div;
+        cmu_clk_freq = CddSys_GetGtmCmuGlobalFreq() / clk_div;
     }
     return cmu_clk_freq;
 }
@@ -573,16 +632,16 @@ real64_T Get_GTM_CMU_CLK_00_Frequency(void)
  * Function Implementations — CPU Interrupt Control
  *********************************************************************************************************************/
 
-uint32_T Is_CPU_Interrupt_Enabled(void)
+uint32_T CddSys_IsIrqEnabled(void)
 {
     Ifx_CPU_ICR icr_reg;
     icr_reg.U = (uint32_T)__mfcr(CPU_ICR);
     return (0x1U == icr_reg.B.IE) ? 1U : 0U;
 }
 
-uint32_T Disable_CPU_Interrupt(void)
+uint32_T CddSys_DisableIrq(void)
 {
-    uint32_T prev_state = Is_CPU_Interrupt_Enabled();
+    uint32_T prev_state = CddSys_IsIrqEnabled();
     if (1U == prev_state)
     {
         __disable();
@@ -590,9 +649,9 @@ uint32_T Disable_CPU_Interrupt(void)
     return prev_state;
 }
 
-void Restore_CPU_Interrupt(uint32_T Previous_State)
+void CddSys_RestoreIrq(uint32_T PrevState)
 {
-    if (1U == Previous_State)
+    if (1U == PrevState)
     {
         __enable();
     }
@@ -602,18 +661,33 @@ void Restore_CPU_Interrupt(uint32_T Previous_State)
  * Function Implementations — Spinlock
  *********************************************************************************************************************/
 
-uint32_T Acquire_Spin_Lock(uint32_T * const Lock_Ptr)
+uint32_T CddSys_AcquireSpinLock(CONSTP2VAR(uint32_T, AUTOMATIC, CDD_APPL_DATA) LockPtr)
 {
-    uint32_T alleged_free  = 0U;   /* Expected: lock is free */
+    uint32_T alleged_free;
     uint32_T prev_value;
 
-    prev_value = ASM_Cmp_And_Swap(Lock_Ptr, 1U, alleged_free);
+    alleged_free = 0U;   /* Expected: lock is free */
+    prev_value   = CddAsm_CmpAndSwap(LockPtr, 1U, alleged_free);
 
-    /* If previous value matched alleged_free, swap succeeded -> locked */
+    /* If previous value matched alleged_free, swap succeeded → locked */
     return (prev_value == alleged_free) ? 1U : 0U;
 }
 
-void Release_Spin_Lock(uint32_T * const Lock_Ptr)
+void CddSys_ReleaseSpinLock(CONSTP2VAR(uint32_T, AUTOMATIC, CDD_APPL_DATA) LockPtr)
 {
-    *Lock_Ptr = 0U;
+    *LockPtr = 0U;
+}
+
+uint32_T CddSys_AreEqual(real32_T Lhs, real32_T Rhs, real32_T Epsilon)
+{
+    real32_T diff   = Lhs - Rhs;
+    uint32_T result = 0U;
+
+    if (diff < 0.0f)
+    {
+        diff = -diff;
+    }
+    result = (diff <= Epsilon) ? 1U : 0U;
+
+    return result;
 }
