@@ -6,14 +6,26 @@
  * \details     Owns IOCR + PDR configuration for every port pin driven by the
  *              CDD layer.  Pin groups:
  *
- *              GTM ATOM outputs (TOUTSEL 0x02 alt-function, push-pull, speed 3):
- *                  P00.0   ATOM0_CH0  → CDTM0_DTM4_0 → TOUT9   master scope probe
- *                  P00.2   ATOM0_CH1  → CDTM0_DTM4_1 → TOUT11  IL1  low-side  Phase U
- *                  P00.3   ATOM0_CH2  → CDTM0_DTM4_2 → TOUT12  /IH1 high-side Phase U
- *                  P00.4   ATOM0_CH3  → CDTM0_DTM4_3 → TOUT13  IL2  low-side  Phase V
- *                  P00.5   ATOM0_CH4  → CDTM0_DTM5_0 → TOUT14  /IH2 high-side Phase V
- *                  P00.6   ATOM0_CH5  → CDTM0_DTM5_1 → TOUT15  IL3  low-side  Phase W
- *                  P00.7   ATOM0_CH6  → CDTM0_DTM5_2 → TOUT16  /IH3 high-side Phase W
+ *              GTM ATOM outputs (alt-func O1, push-pull, speed-3):
+ *                  P00.0   ATOM0_CH0  → CDTM0_DTM4_0 → TOUT9   master scope probe  [PC=0x11, appx2 M6]
+ *                  P00.2   ATOM0_CH1  → CDTM0_DTM4_1 → TOUT11  IL1  low-side  Phase U  [PC=0x11, appx2 N6]
+ *                  P00.3   ATOM0_CH2  → CDTM0_DTM4_2 → TOUT12  /IH1 high-side Phase U  [PC=0x11, appx2 N5]
+ *                  P00.4   ATOM0_CH3  → CDTM0_DTM4_3 → TOUT13  IL2  low-side  Phase V  [PC=0x11, appx2 P6]
+ *                  P00.5   ATOM0_CH4  → CDTM0_DTM5_0 → TOUT14  /IH2 high-side Phase V  [PC=0x11, appx2 P5]
+ *                  P00.6   ATOM0_CH5  → CDTM0_DTM5_1 → TOUT15  IL3  low-side  Phase W  [PC=0x11, appx2 P4]
+ *                  P00.7   ATOM0_CH6  → CDTM0_DTM5_2 → TOUT16  /IH3 high-side Phase W  [PC=0x11, appx2 R6]
+ *
+ *              QSPI4 (alt-func O3, push-pull outputs; MISO = input no-pull):
+ *                  P22.0  MOSI  QSPI4_MTSR   O3  [PC=0x13, appx2 W25]
+ *                  P22.1  MISO  QSPI4_MRST   input, pull-down        [PC=0x01, appx2 W24]
+ *                  P22.2  CS    QSPI4_SLSO3  O3  [PC=0x13, appx2 Y25]
+ *                  P22.3  SCLK  QSPI4_SCLK   O3  [PC=0x13, appx2 Y24]
+ *
+ *              TLE9180D gate driver control (push-pull GP, speed 1):
+ *                  P20.0   /INH   active-LOW inhibit   (init LOW  = sleep)
+ *                  P33.10  /SOFF  active-LOW safe-off  (init HIGH = normal)
+ *                  P33.11   ENA   active-HIGH enable   (init LOW  = disabled)
+ *                  P15.2   /ERR   active-LOW error flag (input, pull-up)
  *
  *              ISR timing / debug (push-pull, speed 1):
  *                  P14.5   ISR timing probe (toggle in EVADC_G2_Isr)
@@ -89,27 +101,47 @@ extern void CddGpio_ConfigIsrTiming_P14_5(void);
 extern void CddGpio_ToggleIsrTiming_P14_5(void);
 
 /**********************************************************************************************************************
- * Function Prototypes — QSPI4 Pin Mux  (P22.0 / P22.1 / P22.2 / P22.3)
+ * Function Prototypes — QSPI4 Pin Mux Helpers  (P22.0 / P22.1 / P22.2 / P22.3)
  *
- * Must be called from CddApp_InitInverter() BEFORE CddQspi4_Init().
- * Pin map: P22.0 MOSI alt-func 1 | P22.1 MISO input | P22.2 CS alt-func 2 | P22.3 SCLK alt-func 1
+ * Must be called from CddApp_InitInverter() BEFORE CddQspi4_Init(),
+ * in the order: MOSI → MISO → CS → SCLK.
  *********************************************************************************************************************/
 
-/** \brief  Configures P20.0 (/INH), P33.10 (/SOFF), P33.11 (ENA), P15.2 (/ERR).
- *          Call before CddTle9180_Init(). */
-extern void CddGpio_ConfigGd9180Pins(void);
+/** \brief  P22.0 — QSPI4_MTSR  push-pull alt-func 3 (O3), speed-3  [PC=0x13, appx2 W25] */
+extern void CddGpio_ConfigQspi4Mosi_P22_0(void);
 
-/** \brief  Configures P22.0/1/2/3 for QSPI4 alternate function.  */
-extern void CddGpio_ConfigQspi4Pins(void);
+/** \brief  P22.1 — QSPI4_MRST  input, pull-down                             [PC=0x01, appx2 W24] */
+extern void CddGpio_ConfigQspi4Miso_P22_1(void);
+
+/** \brief  P22.2 — QSPI4_SLSO3 push-pull alt-func 3 (O3), speed-3  [PC=0x13, appx2 Y25] */
+extern void CddGpio_ConfigQspi4Cs_P22_2(void);
+
+/** \brief  P22.3 — QSPI4_SCLK  push-pull alt-func 3 (O3), speed-3  [PC=0x13, appx2 Y24] */
+extern void CddGpio_ConfigQspi4Sclk_P22_3(void);
 
 /**********************************************************************************************************************
- * Function Prototypes — TLE9180D Gate Driver Control Pins
+ * Function Prototypes — TLE9180D Gate Driver Pin Mux Helpers
+ *
+ * Must be called from CddApp_InitInverter() BEFORE CddTle9180_Init(),
+ * in the order: INH → SOFF → ENA → ERR.
  *
  *   P20.0   /INH   active-LOW inhibit   — LOW = sleep, HIGH = active
- *   P33.11  ENA    active-HIGH enable   — HIGH = outputs enabled
  *   P33.10  /SOFF  active-LOW safe-off  — LOW = safe-off state
- *   P15.2   /ERR   active-LOW error     — input
+ *   P33.11  ENA    active-HIGH enable   — HIGH = outputs enabled
+ *   P15.2   /ERR   active-LOW error     — input, pull-up
  *********************************************************************************************************************/
+
+/** \brief  P20.0  /INH   push-pull GP, speed-1, init LOW (gate driver sleep) */
+extern void CddGpio_ConfigGd9180Inh_P20_0(void);
+
+/** \brief  P33.10 /SOFF  push-pull GP, speed-1, init HIGH (normal operation) */
+extern void CddGpio_ConfigGd9180Soff_P33_10(void);
+
+/** \brief  P33.11  ENA   push-pull GP, speed-1, init LOW (outputs disabled)  */
+extern void CddGpio_ConfigGd9180Ena_P33_11(void);
+
+/** \brief  P15.2  /ERR   input with pull-up device                           */
+extern void CddGpio_ConfigGd9180Err_P15_2(void);
 
 /** \brief  Drives P20.0 (/INH) to the requested level.   */
 extern void CddGpio_SetInh_P20_0(CddGpio_Level_T Level);

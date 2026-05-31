@@ -55,7 +55,7 @@
  *********************************************************************************************************************/
 
 /* CORE_01_ATOM_00_CH_00_CL_SRPN = 80 — literal value required by TASKING IFX_INTERRUPT */
-EMBED_SIM_INTERRUPT(GTM_Atom_00_Ch_00_Isr, 0x0U, CORE_01_ATOM_00_CH_00_CL_SRPN);
+EMBED_SIM_INTERRUPT(GTM_Atom_00_Ch_00_Isr, 0x0U, CORE_00_ATOM_00_CH_00_CL_SRPN);
 
 /**********************************************************************************************************************
  * Private Macros
@@ -175,7 +175,7 @@ void GTM_Atom_00_Ch_00_Isr(void)
         CddGtm_OpenLoopRun(OL_State_G.omega_e);
     }
 
-    CddGtm_SetPwmDuty(&CddApp_G);
+
     /*
      * else: closed-loop FOC — replace with:
      *     EmbedSim_Step(&CddApp_G);
@@ -235,7 +235,7 @@ void CddGtm_Init(void)
 
     /* M4. Service request node: SRE=0 (not yet enabled) */
     srcCfg.U      = SRC_GTM_ATOM0_0.U;
-    srcCfg.B.SRPN = CORE_01_ATOM_00_CH_00_CL_SRPN;
+    srcCfg.B.SRPN = CORE_00_ATOM_00_CH_00_CL_SRPN;
     srcCfg.B.TOS  = 0x0U;
     srcCfg.B.CLRR = 0x1U;
     srcCfg.B.SRE  = 0x0U;

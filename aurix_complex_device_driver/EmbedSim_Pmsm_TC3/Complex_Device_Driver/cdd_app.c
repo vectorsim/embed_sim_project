@@ -2,32 +2,40 @@
  * \file        cdd_app.c
  * \brief       PMSM application top-level initialisation implementation for AURIX TC3xx.
  *
- * \details     Implements CddApp_Init() — the single startup entry-point that
- *              brings up all CDD sub-modules in strict dependency order.
+ * \details     Implements CddApp_Init() and CddApp_Start() — the two startup entry-points
+ *              that bring up all CDD sub-modules in strict dependency order.
  *
- *              Startup sequence:
- *                  1. GPIO            — LED diagnostic outputs (Port 33)
- *                  2. STM             — 20 kHz FOC ISR scheduling
- *                  3. GTM CMU/ATOM    — PWM carrier + 6-channel phase drive; ISR armed (SRE=0)
- *                  4. INVERTER        — QSPI4 init + TLE9180D SPI configuration + normal mode
- *                  5. START           — GTM HOST_TRIG (PWM live)
- *                  6. BRIDGE ENABLE   — CddTle9180_AssertEnable() (ENA = HIGH)
- *                  7. ISR ARM         — SRC_GTM_ATOM0_0.B.SRE = 1U (20 kHz ISR fires)
+ *              Startup sequence (actual code order):
+ *                  1. GPIO            — CddGpio_InitLed_P33(): LED diagnostic outputs (Port 33)
+ *                  2. STM             — CddStm_Init(): System Timer for 20 kHz FOC ISR
+ *                  3. INVERTER        — CddTle9180_Startup(): QSPI4 init + TLE9180D GPIO
+ *                                       power-on sequence (INH/ENA//SOFF) + 13-frame SPI
+ *                                       configuration batch + NORMAL mode verification
+ *                  4. GTM CLK ENABLE  — GTM_CLC.DISR=0: release GTM module clock gate
+ *                  5. GTM CMU CLK0    — CddSys_SetGtmCmuClk00Freq(): CMU CLK0 = 200 MHz
+ *                  6. GTM ATOM0       — CddGtm_Init(): ATOM0 CH0–CH5 complementary PWM;
+ *                                       ISR service request armed but not yet firing (SRE=0)
+ *              --- CddApp_Start() completes the sequence ---
+ *                  7. PWM LIVE        — CddGtm_Start(): HOST_TRIG; PWM carrier goes live
+ *                  8. BRIDGE ENABLE   — CddTle9180_AssertEnable(): ENA = HIGH; gate
+ *                                       drive outputs active on AP32541
+ *                  9. ISR ARM         — SRC_GTM_ATOM0_0.B.SRE = 1U: 20 kHz FOC ISR fires
  *
- *              This ordering guarantees that bridge output transistors are never
- *              energised before the GTM PWM carrier is live, and the ISR never
- *              fires before the inverter is fully configured.
+ *              The split between CddApp_Init() and CddApp_Start() guarantees that
+ *              bridge output transistors are never energised before the GTM PWM carrier
+ *              is live, and the ISR never fires before the inverter has reached NORMAL
+ *              operating mode.
  *
  * \note        MISRA C:2012 deviation record:
- *              [D-8.9]      CddApp_G has file scope; module-lifetime diagnostic state
- *                           accessed by multiple translation units via extern in cdd_app.h.
- *              [D-15.5]     CddApp_Init() achieves a single exit point by absorbing
- *                           the re-entrant guard into b_ok at function entry.  All seven
- *                           startup steps execute inside one if(b_ok == 1U) block.
- *                           No return statement appears inside the function body.
+ *              [D-8.9]      CddApp_G has file scope; module-lifetime state accessed by
+ *                           multiple translation units via extern in cdd_app.h.
+ *              [D-15.5]     CddApp_Init() achieves a single exit point by absorbing the
+ *                           re-entrant guard into ok at function entry.  All startup steps
+ *                           execute inside one if(ok == 0x1U) block.  No return statement
+ *                           appears inside the function body.
  *              [D-2.2-CMU]  gtm_cmu_frequency is declared volatile.  The assigned value
- *                           is not read in production code paths but is inspected live
- *                           via the AURIX debugger during CMU CLK0 bring-up verification.
+ *                           is not read in production code paths but is inspected live via
+ *                           the AURIX debugger during CMU CLK0 bring-up verification.
  *                           The volatile qualifier prevents the assignment from being
  *                           optimised away and renders Rule 2.2 inapplicable.
  *
@@ -42,22 +50,12 @@
 /**********************************************************************************************************************
  * Includes
  *********************************************************************************************************************/
-/*
- * cdd_app.h already pulls in cdd_stm_app.h, cdd_gpio_app.h, and cdd_gtm_app.h.
- * Those three headers are NOT re-included here to avoid redundant declarations
- * visible to static analysis tools.  (MISRA C:2012 Advisory — include-once principle.)
- */
-#include "cdd_app.h"                  /* Own interface — always first                                     */
-#include "cdd_tle9180_app.h"          /* CddTle9180_Startup(), CddTle9180_AssertEnable(), CddTle9180_T      */
-/* cdd_qspi_app.h is NOT included here: CddQspi4_Init() is called internally by
- * CddTle9180_Startup() -> CddTle9180_Init().  A direct call from this module
- * would double-initialise the QSPI4 peripheral.                                */
-#include "cdd_sys_utility.h"          /* CddSys_NopDelay(), CddSys_ClearWdtEndInit(),
-                                         CddSys_SetWdtEndInit(), CddSys_SetGtmCmuClk00Freq(),
-                                         CddSys_GetGtmCmuClk00Freq()                                      */
-#include "IfxGtm_reg.h"               /* GTM_CLC, GTM_CTRL, GTM_CCM0_PROT, GTM_CLS_CLK_CFG,
-                                         GTM_CMU_CLK_EN                                                    */
-#include "IfxSrc_reg.h"               /* SRC_GTM_ATOM0_0                                                  */
+#include "cdd_app.h"
+#include "cdd_tle9180_app.h"
+#include "cdd_sys_utility.h"
+#include "IfxGtm_reg.h"
+#include "IfxSrc_reg.h"
+#include "IfxScuCcu.h"
 
 /**********************************************************************************************************************
  * Private Variables
@@ -65,169 +63,204 @@
 
 /*
  * Central application state — all CDD sub-modules read/write through this.
- * Initialised to CDDAPP_INIT_PENDING so the guard in CddApp_Init()
- * detects re-entrant or repeated calls via the b_ok evaluation at entry.
+ * Zero-initialised by the C runtime (.bss section); CDDAPP_INIT_PENDING = 0U so the
+ * re-entrant guard in CddApp_Init() is correct from reset without an explicit initialiser.
  *
- * MISRA C:2012 Rule 8.9 deviation [D-8.9]: file scope is required because
- * the structure must persist for the module lifetime and be accessible from
- * multiple translation units via the extern declaration in cdd_app.h.
+ * MISRA C:2012 Rule 8.9 deviation [D-8.9]: file scope is required because the structure
+ * must persist for the module lifetime and be accessible from multiple translation units
+ * via the extern declaration in cdd_app.h.
  */
-CddApp_T   CddApp_G =
-{
-    CDDAPP_INIT_PENDING,    /* CDDAppInitStatus  */
-    CDDINV_INIT_PENDING,    /* CDDInverterStatus */
-    0.6F,                   /* DutyU             */
-    0.6F,                   /* DutyV             */
-    0.6F,                   /* DutyW             */
-    0U,                     /* PeriodTicks       */
-    0U,                     /* HalfPeriodTicks   */
-    0.0F                    /* SampleTime        */
-};
+CddApp_T   CddApp_G;
 
-/*
- * TLE9180D runtime handle — private to this module.
- * Static storage guarantees zero-initialisation per ISO C99 §6.7.8:10.
- * Internal linkage is correct: CddApp_InitInverter() and the cyclic fault
- * monitor pass this handle by pointer to cdd_tle9180_app functions.
- * MISRA C:2012 Rule 8.9: internal linkage — no deviation required.
+/**********************************************************************************************************************
+ * Private Function Prototypes
+ *********************************************************************************************************************/
+
+/**
+ * \brief   Initialise the power inverter sub-system (TLE9180D gate driver).
+ *
+ * \details Calls CddTle9180_Startup() which executes the full three-phase sequence:
+ *              1. CddTle9180_Init()        — QSPI4 master init (24-bit, ~5 MHz) + GPIO
+ *                                            power-on sequence: ENA=HIGH, /INH toggle for
+ *                                            forced SLEEP (1 s), then exit SLEEP → IDLE,
+ *                                            /SOFF=HIGH.
+ *              2. CddTle9180_Configure()   — 13-frame SPI write batch: GEN_CFG1/2,
+ *                                            TL_VDH, TL_CBVCC, FM1/3/4/6, CONF_SIG lock,
+ *                                            OP_GAIN1/2/3, OP_OCL.
+ *              3. CddTle9180_IsNormalMode()— 2-frame STATUS pipeline read; verifies
+ *                                            norm_m=1 and CONFVALID=1 in the receive header.
+ *
+ * \note    CddTle9180_AssertEnable() (ENA = HIGH; gate drive outputs active) is NOT called
+ *          here.  It is called by CddApp_Start() after CddGtm_Start() so that the bridge
+ *          output transistors are never energised before the GTM PWM carrier is live.
+ *
+ * \return  0x1U  TLE9180D reached NORMAL operating mode.
+ *          0x0U  Startup failed (SPI error, or device did not confirm NORMAL mode).
  */
-static CddTle9180_T CddTle9180_G;
+STATIC uint32_T CddApp_InitInverter(void);
 
 /**********************************************************************************************************************
  * Function Implementations
  *********************************************************************************************************************/
 
 /*--------------------------------------------------------------------------------------------------------------------
- * \brief   Top-level PMSM application initialisation.
- * \details Full contract in cdd_app.h.
- *          Startup order: GPIO → STM → GTM → INVERTER → HOST_TRIG → BRIDGE ENABLE → ISR ARM.
- *          The re-entrant guard is absorbed into b_ok at function entry so that all
- *          seven steps execute inside a single if(b_ok == 1U) block with no internal
- *          return statement.  MISRA C:2012 Rule 15.5 is therefore satisfied — deviation
- *          [D-15.5] documents this pattern.
+ * CddApp_Init
+ *
+ * Top-level PMSM application initialisation.  Full contract in cdd_app.h.
+ *
+ * Startup order: GPIO → STM → INVERTER → GTM CLK → GTM CMU → GTM ATOM.
+ * The re-entrant guard is absorbed into ok at function entry so that all steps
+ * execute inside a single if(ok == 0x1U) block with no internal return statement.
+ * MISRA C:2012 Rule 15.5 is therefore satisfied — deviation [D-15.5].
  *------------------------------------------------------------------------------------------------------------------*/
 void CddApp_Init(void)
 {
-    /*
-     * MISRA C:2012 Rule 2.2 deviation [D-2.2-CMU]:
-     * gtm_cmu_frequency is volatile.  It receives the resolved CMU CLK0 frequency
-     * from CddSys_GetGtmCmuClk00Freq() and is inspected live via the AURIX debugger
-     * during bring-up.  The volatile qualifier is the side-effect that satisfies
-     * Rule 2.2; the value is intentionally not consumed in production code.
-     */
-    volatile real32_T gtm_cmu_frequency;
-    uint32_T          b_ok;
+    volatile uint32_T ok;
 
-    /*
-     * Guard — absorbed into b_ok (Rule 15.5 deviation [D-15.5]).
-     * b_ok = 1U : first call, status is PENDING   → proceed with all steps.
-     * b_ok = 0U : repeated or re-entrant call      → if-block is skipped entirely.
-     * No return statement is used inside this function.
-     */
-    b_ok = (CDDAPP_INIT_STATUS_G == CDDAPP_INIT_PENDING) ? 1U : 0U;
+    /* Initialise duty cycles to 50% (zero-voltage vector) before anything else */
+    CddApp_G.DTC   = CDDAPP_DTC_NONE;
+    CddApp_G.DutyU = 0.5F;
+    CddApp_G.DutyV = 0.5F;
+    CddApp_G.DutyW = 0.5F;
 
-    if (b_ok == 1U)
+    /* Re-entrant / repeated call guard: CDDAPP_INIT_PENDING = 0 (set by .bss at reset) */
+    ok = ((CddApp_G.CDDAppStatus == CDDAPP_INIT_PENDING) ? 0x1U : 0x0U);
+
+    if (ok == 0x1U)
     {
-        /*--- Step 1: GPIO — LED diagnostic outputs (Port 33) -------------------------------------------*/
-        CddGpio_InitLed_P33();
-        /*
-         * Wrapper is void; HW fault manifests as missing LED toggle, detected
-         * by the application watchdog supervisor.
-         */
-
-        /*--- Step 2: STM — System Timer for 20 kHz FOC ISR scheduling ---------------------------------*/
-        CddStm_Init();
-        /*
-         * Wrapper is void; misconfiguration manifests as a missing 20 kHz interrupt,
-         * detected by the application watchdog supervisor.
-         */
-
-        /*--- Step 3: GTM — CMU CLK0 bring-up + ATOM0 PWM init -----------------------------------------*/
-
-        /* Enable GTM module clock — GTM_CLC is ENDINIT-protected */
-        CddSys_ClearWdtEndInit();
-        GTM_CLC.B.DISR = 0x0U;
-        CddSys_SetWdtEndInit();
-        while (GTM_CLC.B.DISS != 0x0U)
+        /* ── Step 1: CPU frequency check ──────────────────────────────────────────────── */
+        ok = (CddSys_AreEqual64(CddSys_GetCpuFreq(), MHZ_300, EPSILON_ZERO) ? 0x1U : 0x0U);
+        if (ok != 0x1U)
         {
-            CddSys_NopDelay(1U, 1U);
+            CddApp_G.CDDAppStatus = CDDAPP_INIT_ERR_CLK;
+            CddApp_G.DTC          = CDDAPP_DTC_CPU_FREQ;
         }
 
-        /* Disable write protection on cluster configuration registers */
-        GTM_CTRL.B.RF_PROT       = 0x0U;
-        GTM_CCM0_PROT.B.CLS_PROT = 0x0U;
+        /* ── Step 2: STM frequency check ──────────────────────────────────────────────── */
+        if (ok == 0x1U)
+        {
+            ok = (CddSys_AreEqual64(CddSys_GetStmFreq(), MHZ_100, EPSILON_ZERO) ? 0x1U : 0x0U);
+            if (ok != 0x1U)
+            {
+                CddApp_G.CDDAppStatus = CDDAPP_INIT_ERR_STM;
+                CddApp_G.DTC          = CDDAPP_DTC_STM_FREQ;
+            }
+            else
+            {
+                /* ── Step 2 init: GPIO (LED diagnostics) + STM ────────────────────────── */
+                CddGpio_InitLed_P33();    /* Port 33 LED outputs for diagnostic indication */
+                CddStm_Init();            /* STM compare-match for 20 kHz FOC ISR deadline */
+                CddApp_G.CDDAppStatus = CDDAPP_INIT_DONE_STM;
+            }
+        }
 
-        /* Enable cluster 0 with no additional clock divider (User Manual P.122) */
-        GTM_CLS_CLK_CFG.B.CLS0_CLK_DIV = 0x1U;
+        /* ── Step 3: QSPI frequency check + inverter init ─────────────────────────────── */
+        if (ok == 0x1U)
+        {
+            ok = (CddSys_AreEqual64(CddSys_GetQspiFreq(), MHZ_200, EPSILON_ZERO) ? 0x1U : 0x0U);
+            if (ok != 0x1U)
+            {
+                CddApp_G.CDDAppStatus = CDDAPP_INIT_ERR_INV;
+                CddApp_G.DTC          = CDDAPP_DTC_QSPI_FREQ;
+            }
+            else
+            {
+                /* CddTle9180_Startup(): Init → Configure → IsNormalMode */
+                ok = CddApp_InitInverter();
+                if (ok != 0x1U)
+                {
+                    CddApp_G.CDDAppStatus = CDDAPP_INIT_ERR_INV;
+                    CddApp_G.DTC          = CDDAPP_DTC_INV_STARTUP;
+                }
+                else
+                {
+                    CddApp_G.CDDAppStatus = CDDAPP_INIT_DONE_INV;
+                }
+            }
+        }
 
-        /* Disable all CMU clocks first, then program CLK0 to GTM_CMU_CLK0_FREQUENCY */
-        GTM_CMU_CLK_EN.U = 0x55555555U;
-        CddSys_SetGtmCmuClk00Freq(GTM_CMU_CLK0_FREQUENCY);
-        gtm_cmu_frequency = (real32_T)CddSys_GetGtmCmuClk00Freq();   /* [D-2.2-CMU] */
+        /* ── Step 4: GTM frequency check ──────────────────────────────────────────────── */
+        if (ok == 0x1U)
+        {
+            ok = (CddSys_AreEqual64(CddSys_GetGtmFreq(), MHZ_200, EPSILON_ZERO) ? 0x1U : 0x0U);
+            if (ok != 0x1U)
+            {
+                CddApp_G.CDDAppStatus = CDDAPP_INIT_ERR_GTM;
+                CddApp_G.DTC          = CDDAPP_DTC_GTM_FREQ;
+            }
+            else
+            {
+                /* ── Step 4 init: Release GTM module clock gate ───────────────────────── */
+                CddSys_ClearCpuWdtEndInit();
+                GTM_CLC.B.DISR = 0x0U;       /* request clock enable                     */
+                CddSys_SetCpuWdtEndInit();
+                while (GTM_CLC.B.DISS != 0x0U)
+                {
+                    CddSys_NopDelay(1U, 1U);  /* wait for clock to be running             */
+                }
 
-        /* Initialise GTM ATOM0 channels CH0–CH7; ISR service request is armed (SRE=0 — not yet firing) */
-        CddGtm_Init();
+                /* Disable write protection on cluster configuration registers */
+                GTM_CTRL.B.RF_PROT       = 0x0U;
+                GTM_CCM0_PROT.B.CLS_PROT = 0x0U;
 
-        /*--- Step 4: INVERTER — QSPI4 init + TLE9180D SPI configuration + normal mode -----------------*/
-        /* CddApp_InitInverter(); */
+                /* Enable cluster 0 with no additional divider (UM p.122) */
+                GTM_CLS_CLK_CFG.B.CLS0_CLK_DIV = 0x1U;
 
-        /*--- Step 5: START — GTM HOST_TRIG, PWM carrier live before bridge is enabled -----------------*/
-        CddGtm_Start();
+                /* ── Step 5: Disable all CMU clocks, program CLK0 = 200 MHz ─────────── */
+                GTM_CMU_CLK_EN.U = 0x55555555U;                     /* disable all clocks */
+                CddSys_SetGtmCmuClk00Freq(GTM_CMU_CLK0_FREQUENCY);  /* set CLK0 = 200 MHz */
 
-        /*--- Step 6: BRIDGE ENABLE — assert ENA high; bridge output transistors now driven by PWM -----*/
-        CddTle9180_AssertEnable();
+                /* Verify CMU CLK0 frequency after programming */
+                ok = (CddSys_AreEqual64(CddSys_GetGtmCmuClk00Freq(), MHZ_200, EPSILON_ZERO) ? 0x1U : 0x0U);
+                if (ok != 0x1U)
+                {
+                    CddApp_G.CDDAppStatus = CDDAPP_INIT_ERR_GTM;
+                    CddApp_G.DTC          = CDDAPP_DTC_GTM_CMU0_FREQ;
+                }
+            }
+        }
 
+        /* ── Step 6: GTM ATOM0 PWM init ───────────────────────────────────────────────── */
+        if (ok == 0x1U)
+        {
+            /* ATOM0 CH0–CH5: complementary PWM pairs (UH/UL, VH/VL, WH/WL).
+             * ISR service request is configured here but SRE=0 — ISR does not fire
+             * until CddApp_Start() sets SRE=1 after the PWM carrier is live.          */
+            CddGtm_Init();
+            CddApp_G.CDDAppStatus = CDDAPP_INIT_DONE_GTM;
+            CddApp_G.CDDAppStatus = CDDAPP_INIT_OK;
+            CddApp_Start();
 
-        /*--- Latch final status: all seven startup steps completed successfully -----------------------*/
-        CDDAPP_INIT_STATUS_G = CDDAPP_INIT_OK;
-
-    } /* end if (b_ok == 1U) */
-    /*
-     * else: CDDAPP_INIT_STATUS_G retains CDDAPP_INIT_PENDING.
-     * The caller detects the outcome via CddApp_GetInitStatus().
-     */
+        }
+    }
 }
 
 /*--------------------------------------------------------------------------------------------------------------------
- * \brief   Inverter sub-system initialisation (QSPI4 + TLE9180D).
- * \details Full contract in cdd_app.h.
- *          CddTle9180_AssertEnable() (ENA = HIGH) is deliberately NOT called here.
- *          It is called by CddApp_Init() at Step 6, after CddGtm_Start() at Step 5,
- *          so that bridge output transistors are never energised before the PWM
- *          carrier is live.
+ * CddApp_InitInverter
+ *
+ * Thin wrapper that calls CddTle9180_Startup() and propagates the return value.
+ * CddTle9180_Startup() is the correct entry-point: it runs Init → Configure →
+ * IsNormalMode as one atomic operation and returns 0x1U only if the TLE9180D
+ * has confirmed norm_m=1 and CONFVALID=1 in the STATUS register pipeline read.
  *------------------------------------------------------------------------------------------------------------------*/
-void CddApp_InitInverter(void)
+STATIC uint32_T CddApp_InitInverter(void)
 {
-    uint32_T result;
+    volatile uint32_T errorCode;
 
-    /*
-     * Configure QSPI4 GPIO pins before the TLE9180 driver touches the bus.
-     * MOSI=P22.0, MISO=P22.1, CS=P22.2 (SLSO3), SCLK=P22.3.
-     * INH=LOW, ENA=LOW, /SOFF=HIGH — safe-state before SPI bring-up.
-     */
-    CddGpio_ConfigQspi4Pins();
-
-    /*
-     * CddTle9180_Startup() is the convenience wrapper:
-     *   Init (calls CddQspi4_Init internally) → Configure → IsNormalMode.
-     * CddQspi4_Init() is therefore NOT called separately here.
-     * Return value 0x1U = NORMAL mode reached; 0x0U = startup failed.
-     * MISRA C:2012 Rule 17.7: return value captured and used to set CDDInverterStatus.
-     */
-    result = CddTle9180_Startup(&CddTle9180_G);
-
-    if (result == 1U)
-    {
-        CddApp_G.CDDInverterStatus = CDDINV_INIT_OK;
-    }
-    else
-    {
-        CddApp_G.CDDInverterStatus = CDDINV_INIT_ERR;
-    }
+    return CddTle9180_Startup(&CddApp_G.Inverter, &errorCode);
 }
 
 /*--------------------------------------------------------------------------------------------------------------------
- * \brief   Start the PMSM application (re-trigger HOST_TRIG).
+ * CddApp_Start
+ *
+ * Completes the startup sequence after CddApp_Init() has returned CDDAPP_INIT_OK:
+ *   1. CddGtm_Start()             — HOST_TRIG; GTM ATOM0 PWM carrier goes live.
+ *   2. CddTle9180_AssertEnable()  — ENA = HIGH; TLE9180D gate drive outputs become
+ *                                   active.  Called after HOST_TRIG so that the bridge
+ *                                   transistors are never energised into an undefined
+ *                                   PWM state.
+ *   3. SRC_GTM_ATOM0_0.B.SRE=1U  — Arms the GTM ATOM0 CH0 interrupt; 20 kHz FOC ISR
+ *                                   begins firing on the next compare-match event.
  *------------------------------------------------------------------------------------------------------------------*/
 uint32_T CddApp_Start(void)
 {
@@ -235,9 +268,12 @@ uint32_T CddApp_Start(void)
 
     started = 0x0U;
 
-    if (CddApp_G.CDDAppInitStatus == CDDAPP_INIT_OK)
+    if (CddApp_G.CDDAppStatus == CDDAPP_INIT_OK)
     {
-        CddGtm_Start();
+        CddGtm_OpenLoopSetRpm(800,0.3);
+
+       CddTle9180_AssertEnable();             /* Step 7: gate drive outputs active       */
+       CddGtm_Start();                        /* Step 8: PWM carrier live               */
         started = 0x1U;
     }
 
@@ -245,9 +281,9 @@ uint32_T CddApp_Start(void)
 }
 
 /*--------------------------------------------------------------------------------------------------------------------
- * \brief   Return the current application initialisation status.
+ * CddApp_GetInitStatus
  *------------------------------------------------------------------------------------------------------------------*/
-CddApp_InitStatus_T CddApp_GetInitStatus(void)
+CddApp_Status_T CddApp_GetInitStatus(void)
 {
-    return CDDAPP_INIT_STATUS_G;
+    return CddApp_G.CDDAppStatus;
 }

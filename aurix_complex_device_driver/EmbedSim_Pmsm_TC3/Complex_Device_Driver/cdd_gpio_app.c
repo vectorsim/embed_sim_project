@@ -9,10 +9,11 @@
  *                  PDRx  — pad driver strength (automotive speed class)
  *
  *              IOCR PC field encoding (ds1 P.1011):
- *                  0x11  push-pull output alt-func 1  (GTM ATOM TOUT)
- *                  0x12  push-pull output alt-func 2  (QSPI4 CS)
+ *                  0x11  push-pull output alt-func 1  (GTM ATOM TOUT — O1)
+ *                  0x13  push-pull output alt-func 3  (QSPI4 MTSR/SLSO3/SCLK — O3)
  *                  0x10  push-pull output general      (debug GPIO)
  *                  0x00  input, no pull device         (QSPI4 MISO)
+ *                  0x02  input, pull-up device         (/ERR input)
  *
  *              PDR PD field encoding (ds1 P.1017):
  *                  0x3   automotive CMOS speed-3  (~80 pF, GTM outputs)
@@ -33,49 +34,46 @@
 #include "IfxPort_reg.h"
 
 /**********************************************************************************************************************
- * Private Macros — IOCR PC field values
+ * QSPI4 Pin Mux Helpers
  *********************************************************************************************************************/
 
-/** \brief  Push-pull output, alternate function 1  (GTM ATOM TOUT routing)  */
-#define GPIO_PC_PP_ALT1         (0x11U)
-
-/** \brief  Push-pull output, alternate function 2  (QSPI4 SLSO3 routing)    */
-#define GPIO_PC_PP_ALT2         (0x12U)
-
-/** \brief  Input, no pull device  (QSPI4 MRST / MISO)                       */
-#define GPIO_PC_INPUT_NP        (0x00U)
-
-/** \brief  Push-pull output, general-purpose  (debug / ISR timing probe)    */
-#define GPIO_PC_PP_GP           (0x10U)
-
-/**********************************************************************************************************************
- * Private Macros — PDR PD field values
- *********************************************************************************************************************/
-
-/** \brief  Automotive CMOS speed-3  (~80 pF, GTM switching)                 */
-#define GPIO_PD_SPEED3          (0x3U)
-
-/** \brief  Automotive CMOS speed-1  (low-speed debug output)                */
-#define GPIO_PD_SPEED1          (0x0U)
-
-/**********************************************************************************************************************
- * QSPI4 Pin Mux
- *********************************************************************************************************************/
-
-void CddGpio_ConfigQspi4Pins(void)
+void CddGpio_ConfigQspi4Mosi_P22_0(void)
 {
-    /* IOCR (not EndInit-protected) */
-    P22_IOCR0.B.PC0 = GPIO_PC_PP_ALT1;    /* MOSI: push-pull alt-func 1    */
-    P22_IOCR0.B.PC1 = GPIO_PC_INPUT_NP;   /* MISO: input, no pull          */
-    P22_IOCR0.B.PC2 = GPIO_PC_PP_ALT2;    /* CS  : push-pull alt-func 2    */
-    P22_IOCR0.B.PC3 = GPIO_PC_PP_ALT1;    /* SCLK: push-pull alt-func 1    */
+    /* QSPI4_MTSR = O3 → PC = 0x13 (push-pull alt-func 3)  appx2 W25 */
+    P22_IOCR0.B.PC0 = 0x13U;
+    CddSys_ClearCpuWdtEndInit();
+    P22_PDR0.B.PD0 = 0x2U;
+    P22_PDR0.B.PL0 = 0x0U;
+    CddSys_SetCpuWdtEndInit();
+}
 
-    /* PDR (EndInit-protected) */
-    CddSys_ClearWdtEndInit();
-    P22_PDR0.B.PD0 = GPIO_PD_SPEED3;      /* MOSI speed-3                  */
-    P22_PDR0.B.PD2 = GPIO_PD_SPEED3;      /* CS   speed-3                  */
-    P22_PDR0.B.PD3 = GPIO_PD_SPEED3;      /* SCLK speed-3                  */
-    CddSys_SetWdtEndInit();
+void CddGpio_ConfigQspi4Miso_P22_1(void)
+{
+    /* QSPI4_MRST input — PC = 0x01 (input, pull-down)  appx2 W24
+     * Pull-down defines a safe idle level between frames; tri-state (0x00)
+     * leaves MISO floating when TLE9180D is not driving.                    */
+    P22_IOCR0.B.PC1 = 0x01U;
+    /* Input pin — PDR write not required */
+}
+
+void CddGpio_ConfigQspi4Cs_P22_2(void)
+{
+    /* QSPI4_SLSO3 = O3 → PC = 0x13 (push-pull alt-func 3)  appx2 Y25 */
+    P22_IOCR0.B.PC2 = 0x13U;
+    CddSys_ClearCpuWdtEndInit();
+    P22_PDR0.B.PD2  = 0x2U;
+    P22_PDR0.B.PL2  = 0x0U;
+    CddSys_SetCpuWdtEndInit();
+}
+
+void CddGpio_ConfigQspi4Sclk_P22_3(void)
+{
+    /* QSPI4_SCLK = O3 → PC = 0x13 (push-pull alt-func 3)  appx2 Y24 */
+    P22_IOCR0.B.PC3 = 0x13U;
+    CddSys_ClearCpuWdtEndInit();
+    P22_PDR0.B.PD3  = 0x2U;
+    P22_PDR0.B.PL3  = 0x0U;
+    CddSys_SetCpuWdtEndInit();
 }
 
 /**********************************************************************************************************************
@@ -84,58 +82,65 @@ void CddGpio_ConfigQspi4Pins(void)
 
 void CddGpio_ConfigGtmMaster_P00_0(void)
 {
-    P00_IOCR0.B.PC0 = GPIO_PC_PP_ALT1;
-    CddSys_ClearWdtEndInit();
-    P00_PDR0.B.PD0  = GPIO_PD_SPEED3;
-    CddSys_SetWdtEndInit();
+    /* GTM_TOUT9 = O1 → PC = 0x11 (push-pull alt-func 1)  appx2 M6 */
+    P00_IOCR0.B.PC0 = 0x11U;
+    CddSys_ClearCpuWdtEndInit();
+    P00_PDR0.B.PD0  = 0x3U;
+    CddSys_SetCpuWdtEndInit();
 }
 
 void CddGpio_ConfigGtmPhaseULs_P00_2(void)
 {
-    P00_IOCR0.B.PC2 = GPIO_PC_PP_ALT1;
-    CddSys_ClearWdtEndInit();
-    P00_PDR0.B.PD2  = GPIO_PD_SPEED3;
-    CddSys_SetWdtEndInit();
+    /* GTM_TOUT11 = O1 → PC = 0x11 (push-pull alt-func 1)  appx2 N6 */
+    P00_IOCR0.B.PC2 = 0x11U;
+    CddSys_ClearCpuWdtEndInit();
+    P00_PDR0.B.PD2  = 0x3U;
+    CddSys_SetCpuWdtEndInit();
 }
 
 void CddGpio_ConfigGtmPhaseUHs_P00_3(void)
 {
-    P00_IOCR0.B.PC3 = GPIO_PC_PP_ALT1;
-    CddSys_ClearWdtEndInit();
-    P00_PDR0.B.PD3  = GPIO_PD_SPEED3;
-    CddSys_SetWdtEndInit();
+    /* GTM_TOUT12 = O1 → PC = 0x11 (push-pull alt-func 1)  appx2 N5 */
+    P00_IOCR0.B.PC3 = 0x11U;
+    CddSys_ClearCpuWdtEndInit();
+    P00_PDR0.B.PD3  = 0x3U;
+    CddSys_SetCpuWdtEndInit();
 }
 
 void CddGpio_ConfigGtmPhaseVLs_P00_4(void)
 {
-    P00_IOCR4.B.PC4 = GPIO_PC_PP_ALT1;
-    CddSys_ClearWdtEndInit();
-    P00_PDR0.B.PD4  = GPIO_PD_SPEED3;
-    CddSys_SetWdtEndInit();
+    /* GTM_TOUT13 = O1 → PC = 0x11 (push-pull alt-func 1)  appx2 P6 */
+    P00_IOCR4.B.PC4 = 0x11U;
+    CddSys_ClearCpuWdtEndInit();
+    P00_PDR0.B.PD4  = 0x3U;
+    CddSys_SetCpuWdtEndInit();
 }
 
 void CddGpio_ConfigGtmPhaseVHs_P00_5(void)
 {
-    P00_IOCR4.B.PC5 = GPIO_PC_PP_ALT1;
-    CddSys_ClearWdtEndInit();
-    P00_PDR0.B.PD5  = GPIO_PD_SPEED3;
-    CddSys_SetWdtEndInit();
+    /* GTM_TOUT14 = O1 → PC = 0x11 (push-pull alt-func 1)  appx2 P5 */
+    P00_IOCR4.B.PC5 = 0x11U;
+    CddSys_ClearCpuWdtEndInit();
+    P00_PDR0.B.PD5  = 0x3U;
+    CddSys_SetCpuWdtEndInit();
 }
 
 void CddGpio_ConfigGtmPhaseWLs_P00_6(void)
 {
-    P00_IOCR4.B.PC6 = GPIO_PC_PP_ALT1;
-    CddSys_ClearWdtEndInit();
-    P00_PDR0.B.PD6  = GPIO_PD_SPEED3;
-    CddSys_SetWdtEndInit();
+    /* GTM_TOUT15 = O1 → PC = 0x11 (push-pull alt-func 1)  appx2 P4 */
+    P00_IOCR4.B.PC6 = 0x11U;
+    CddSys_ClearCpuWdtEndInit();
+    P00_PDR0.B.PD6  = 0x3U;
+    CddSys_SetCpuWdtEndInit();
 }
 
 void CddGpio_ConfigGtmPhaseWHs_P00_7(void)
 {
-    P00_IOCR4.B.PC7 = GPIO_PC_PP_ALT1;
-    CddSys_ClearWdtEndInit();
-    P00_PDR0.B.PD7  = GPIO_PD_SPEED3;
-    CddSys_SetWdtEndInit();
+    /* GTM_TOUT16 = O1 → PC = 0x11 (push-pull alt-func 1)  appx2 R6 */
+    P00_IOCR4.B.PC7 = 0x11U;
+    CddSys_ClearCpuWdtEndInit();
+    P00_PDR0.B.PD7  = 0x3U;
+    CddSys_SetCpuWdtEndInit();
 }
 
 /**********************************************************************************************************************
@@ -144,10 +149,10 @@ void CddGpio_ConfigGtmPhaseWHs_P00_7(void)
 
 void CddGpio_ConfigIsrTiming_P14_5(void)
 {
-    P14_IOCR4.B.PC5 = GPIO_PC_PP_GP;
-    CddSys_ClearWdtEndInit();
-    P14_PDR0.B.PD5  = GPIO_PD_SPEED1;
-    CddSys_SetWdtEndInit();
+    P14_IOCR4.B.PC5 = 0x10U;   /* push-pull GP output */
+    CddSys_ClearCpuWdtEndInit();
+    P14_PDR0.B.PD5  = 0x0U;    /* automotive CMOS speed-1 */
+    CddSys_SetCpuWdtEndInit();
     P14_OMR.B.PCL5  = 0x1U;   /* drive LOW on init */
 }
 
@@ -164,34 +169,44 @@ void CddGpio_ToggleIsrTiming_P14_5(void)
 }
 
 /**********************************************************************************************************************
- * TLE9180D Gate Driver Control Pins
+ * TLE9180D Gate Driver Pin Mux Helpers
  *********************************************************************************************************************/
 
-void CddGpio_ConfigGd9180Pins(void)
+void CddGpio_ConfigGd9180Inh_P20_0(void)
 {
-    /* P20.0 /INH — output, push-pull GP, speed-1, init LOW */
-    P20_IOCR0.B.PC0  = GPIO_PC_PP_GP;
-    CddSys_ClearWdtEndInit();
-    P20_PDR0.B.PD0   = GPIO_PD_SPEED1;
-    CddSys_SetWdtEndInit();
-    P20_OMR.B.PCL0   = 0x1U;
+    /* /INH — active-LOW inhibit, init LOW (gate driver sleep on boot)       */
+    P20_IOCR0.B.PC0 = 0x10U;   /* push-pull GP output */
+    CddSys_ClearCpuWdtEndInit();
+    P20_PDR0.B.PD0  = 0x0U;    /* automotive CMOS speed-1 */
+    CddSys_SetCpuWdtEndInit();
+    P20_OMR.B.PCL0  = 0x1U;               /* drive LOW on init             */
+}
 
-    /* P33.10 /SOFF — output, push-pull GP, speed-1, init HIGH (/SOFF=HIGH = normal) */
-    P33_IOCR8.B.PC10 = GPIO_PC_PP_GP;
-    CddSys_ClearWdtEndInit();
-    P33_PDR1.B.PD10  = GPIO_PD_SPEED1;
-    CddSys_SetWdtEndInit();
-    P33_OMR.B.PS10   = 0x1U;
+void CddGpio_ConfigGd9180Soff_P33_10(void)
+{
+    /* /SOFF — active-LOW safe-off, init HIGH (normal operation)             */
+    P33_IOCR8.B.PC10 = 0x10U;  /* push-pull GP output */
+    CddSys_ClearCpuWdtEndInit();
+    P33_PDR1.B.PD10  = 0x0U;   /* automotive CMOS speed-1 */
+    CddSys_SetCpuWdtEndInit();
+    P33_OMR.B.PS10   = 0x1U;              /* drive HIGH on init            */
+}
 
-    /* P33.11 ENA — output, push-pull GP, speed-1, init LOW */
-    P33_IOCR8.B.PC11 = GPIO_PC_PP_GP;
-    CddSys_ClearWdtEndInit();
-    P33_PDR1.B.PD11  = GPIO_PD_SPEED1;
-    CddSys_SetWdtEndInit();
-    P33_OMR.B.PCL11  = 0x1U;
+void CddGpio_ConfigGd9180Ena_P33_11(void)
+{
+    /* ENA — active-HIGH enable, init LOW (outputs disabled on boot)         */
+    P33_IOCR8.B.PC11 = 0x10U;  /* push-pull GP output */
+    CddSys_ClearCpuWdtEndInit();
+    P33_PDR1.B.PD11  = 0x0U;   /* automotive CMOS speed-1 */
+    CddSys_SetCpuWdtEndInit();
+    P33_OMR.B.PCL11  = 0x1U;             /* drive LOW on init             */
+}
 
-    /* P15.2 /ERR — input, pull-up (0x02 = input pull-up device) */
-    P15_IOCR0.B.PC2  = 0x02U;
+void CddGpio_ConfigGd9180Err_P15_2(void)
+{
+    /* /ERR — active-LOW error flag, input with pull-up                      */
+    P15_IOCR0.B.PC2  = 0x02U;            /* input pull-up device          */
+    /* Error pin is an input — PDR write not required                       */
 }
 
 /**********************************************************************************************************************
@@ -250,13 +265,13 @@ uint32_T CddGpio_GetErr_P15_2(void)
 void CddGpio_InitLed_P33(void)
 {
     /* IOCR: push-pull GP = 0x10  (IOCR4 covers pins 4–7) */
-    P33_IOCR4.B.PC4 = GPIO_PC_PP_GP;
-    P33_IOCR4.B.PC5 = GPIO_PC_PP_GP;
-    P33_IOCR4.B.PC6 = GPIO_PC_PP_GP;
-    P33_IOCR4.B.PC7 = GPIO_PC_PP_GP;
+    P33_IOCR4.B.PC4 = 0x10U;
+    P33_IOCR4.B.PC5 = 0x10U;
+    P33_IOCR4.B.PC6 = 0x10U;
+    P33_IOCR4.B.PC7 = 0x10U;
 
     /* PDR: medium automotive driver  (PDR0 covers pins 0–7, EndInit-protected) */
-    CddSys_ClearWdtEndInit();
+    CddSys_ClearCpuWdtEndInit();
     P33_PDR0.B.PD4  = 0x2U;
     P33_PDR0.B.PL4  = 0x0U;
     P33_PDR0.B.PD5  = 0x2U;
@@ -265,7 +280,7 @@ void CddGpio_InitLed_P33(void)
     P33_PDR0.B.PL6  = 0x0U;
     P33_PDR0.B.PD7  = 0x2U;
     P33_PDR0.B.PL7  = 0x0U;
-    CddSys_SetWdtEndInit();
+    CddSys_SetCpuWdtEndInit();
 
     /* Drive all LOW (LED off) */
     P33_OMR.B.PCL4  = 0x1U;
@@ -274,28 +289,71 @@ void CddGpio_InitLed_P33(void)
     P33_OMR.B.PCL7  = 0x1U;
 }
 
-void CddGpio_ToggleLed_P33_4(void) { P33_OMR.U = 0x00100010U; }
-void CddGpio_ToggleLed_P33_5(void) { P33_OMR.U = 0x00200020U; }
-void CddGpio_ToggleLed_P33_6(void) { P33_OMR.U = 0x00400040U; }
-void CddGpio_ToggleLed_P33_7(void) { P33_OMR.U = 0x00800080U; }
+void CddGpio_ToggleLed_P33_4(void)
+{
+    /* PS4=1 and PCL4=1 in same word — hardware XORs output latch (atomic toggle) */
+    P33_OMR.U = 0x00100010U;
+}
+
+void CddGpio_ToggleLed_P33_5(void)
+{
+    P33_OMR.U = 0x00200020U;
+}
+
+void CddGpio_ToggleLed_P33_6(void)
+{
+    P33_OMR.U = 0x00400040U;
+}
+
+void CddGpio_ToggleLed_P33_7(void)
+{
+    P33_OMR.U = 0x00800080U;
+}
 
 void CddGpio_SetLed_P33_4(CddGpio_Level_T Level)
 {
-    if (Level == CDDGPIO_LEVEL_HIGH) { P33_OMR.B.PS4  = 0x1U; }
-    else                             { P33_OMR.B.PCL4 = 0x1U; }
+    if (Level == CDDGPIO_LEVEL_HIGH)
+    {
+        P33_OMR.B.PS4  = 0x1U;
+    }
+    else
+    {
+        P33_OMR.B.PCL4 = 0x1U;
+    }
 }
+
 void CddGpio_SetLed_P33_5(CddGpio_Level_T Level)
 {
-    if (Level == CDDGPIO_LEVEL_HIGH) { P33_OMR.B.PS5  = 0x1U; }
-    else                             { P33_OMR.B.PCL5 = 0x1U; }
+    if (Level == CDDGPIO_LEVEL_HIGH)
+    {
+        P33_OMR.B.PS5  = 0x1U;
+    }
+    else
+    {
+        P33_OMR.B.PCL5 = 0x1U;
+    }
 }
+
 void CddGpio_SetLed_P33_6(CddGpio_Level_T Level)
 {
-    if (Level == CDDGPIO_LEVEL_HIGH) { P33_OMR.B.PS6  = 0x1U; }
-    else                             { P33_OMR.B.PCL6 = 0x1U; }
+    if (Level == CDDGPIO_LEVEL_HIGH)
+    {
+        P33_OMR.B.PS6  = 0x1U;
+    }
+    else
+    {
+        P33_OMR.B.PCL6 = 0x1U;
+    }
 }
+
 void CddGpio_SetLed_P33_7(CddGpio_Level_T Level)
 {
-    if (Level == CDDGPIO_LEVEL_HIGH) { P33_OMR.B.PS7  = 0x1U; }
-    else                             { P33_OMR.B.PCL7 = 0x1U; }
+    if (Level == CDDGPIO_LEVEL_HIGH)
+    {
+        P33_OMR.B.PS7  = 0x1U;
+    }
+    else
+    {
+        P33_OMR.B.PCL7 = 0x1U;
+    }
 }

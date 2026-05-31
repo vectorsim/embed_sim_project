@@ -118,7 +118,7 @@ void EVADC_G8_Isr(void) { /* DC-link result ready — handled in control loop */
 
 STATIC void CddEvadc_InitConvctrl(void)
 {
-    CddSys_ClearWdtEndInit();
+    CddSys_ClearCpuWdtEndInit();
     CONVCTRL_CLC.U = 0x00000000U;                  /* Enable CONVCTRL module        */
     while (CONVCTRL_CLC.B.DISS == 0x1U)
     {
@@ -127,14 +127,14 @@ STATIC void CddEvadc_InitConvctrl(void)
     CONVCTRL_CCCTRL.U = 0xB0000000U;               /* Unlock converter control regs */
     CONVCTRL_PHSCFG.U = 0x00008007U;               /* fADC=160MHz, fPHSYNC=20MHz    */
     CONVCTRL_CCCTRL.U = 0x00000000U;               /* Lock converter control regs   */
-    CddSys_SetWdtEndInit();
+    CddSys_SetCpuWdtEndInit();
 }
 
 STATIC void CddEvadc_EnableClock(void)
 {
-    CddSys_ClearWdtEndInit();
+    CddSys_ClearCpuWdtEndInit();
     EVADC_CLC.B.DISR = 0x0U;
-    CddSys_SetWdtEndInit();
+    CddSys_SetCpuWdtEndInit();
     while (EVADC_CLC.B.DISS != 0x0U)
     {
         CddSys_NopDelay(0x1U, 0x1U);

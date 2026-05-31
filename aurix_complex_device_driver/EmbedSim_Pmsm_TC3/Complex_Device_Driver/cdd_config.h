@@ -27,14 +27,14 @@
 /**********************************************************************************************************************
  * Clock Frequencies [Hz]
  *********************************************************************************************************************/
-#define MHZ_300             (300000000.0f)
-#define MHZ_200             (200000000.0f)
-#define MHZ_160             (160000000.0f)
-#define MHZ_100             (100000000.0f)
-#define MHZ_50               (50000000.0f)
-#define MHZ_20               (20000000.0f)
-#define MHZ_5                 (5000000.0f)
-#define MHZ_1                 (1000000.0f)
+#define MHZ_300             (300000000.0F)
+#define MHZ_200             (200000000.0F)
+#define MHZ_160             (160000000.0F)
+#define MHZ_100             (100000000.0F)
+#define MHZ_50               (50000000.0F)
+#define MHZ_20               (20000000.0F)
+#define MHZ_5                 (5000000.0F)
+#define MHZ_1                 (1000000.0F)
 
 #define EVR_OSC_FREQUENCY       MHZ_100
 #define XTAL_OSC_FREQUENCY      MHZ_20
@@ -52,10 +52,7 @@
 #define CORE_00_QSPI4_TX_SRPN                   (55U)
 #define CORE_00_QSPI4_RX_SRPN                   (56U)
 #define CORE_00_QSPI4_ERR_SRPN                  (57U)
-#define CORE_00_QSPI2_TX_SRPN                   (60U)
-#define CORE_00_QSPI2_RX_SRPN                   (61U)
-#define CORE_00_QSPI2_ERR_SRPN                  (62U)
-#define CORE_01_ATOM_00_CH_00_CL_SRPN           (80U)
+#define CORE_00_ATOM_00_CH_00_CL_SRPN           (80U)
 #define CORE_01_ADC_PHASE_U_SRPN                (90U)
 #define CORE_01_ADC_PHASE_V_SRPN                (91U)
 #define CORE_01_ADC_PHASE_W_SRPN                (92U)

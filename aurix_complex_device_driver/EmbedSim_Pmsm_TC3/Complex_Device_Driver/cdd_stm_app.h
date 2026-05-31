@@ -132,4 +132,22 @@ extern uint64_T CddStm_GetDeadline(uint64_T TimeOut);
  */
 extern uint32_T CddStm_IsDeadlineElapsed(uint64_T DeadLine);
 
+/**
+ * \brief   Busy-wait delay of the specified number of microseconds.
+ *
+ * \details Computes an absolute deadline as
+ *              now + (Microseconds × TimeConst_1us)
+ *          and spins until CddStm_IsDeadlineElapsed() returns 0x1U.
+ *
+ *          Minimum resolution is one STM tick (~3.3 ns at 300 MHz).
+ *          Passing 0 returns immediately without blocking.
+ *
+ * \pre     CddStm_Init() must have been called so that CddStm_TimeTable_G
+ *          is populated before this function is used.
+ *
+ * \param[in]  Microseconds  Delay duration [µs], must be >= 0.
+ * \return  void
+ */
+extern void CddStm_Delay_Us(uint32_T Microseconds);
+
 #endif /* CDD_STM_APP_H_ */

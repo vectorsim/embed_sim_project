@@ -193,6 +193,33 @@ uint32_T CddStm_IsDeadlineElapsed(uint64_T DeadLine)
     return is_elapsed;
 }
 
+/*--------------------------------------------------------------------------------------------------------------------
+ * CddStm_Delay_Us
+ *
+ * Blocking busy-wait for the requested number of microseconds.
+ *
+ * Implementation:
+ *   deadline = now + (Microseconds × TimeConst_1us)
+ *   spin until CddStm_IsDeadlineElapsed(deadline) == 0x1U
+ *
+ * Passing Microseconds == 0U returns immediately — the deadline equals now,
+ * and the while-condition evaluates to false on the first test.
+ *
+ * MISRA C:2012 notes:
+ *   Rule 14.4  : while-condition uses explicit == 0x0U comparison.
+ *   Rule 10.3  : (uint64_T)Microseconds widens uint32_T before multiplication;
+ *                no truncation.  PRQA S 4342 not required (widening only).
+ *------------------------------------------------------------------------------------------------------------------*/
+void CddStm_Delay_Us(uint32_T Microseconds)
+{
+    uint64_T deadLine = CddStm_GetDeadline((uint64_T)Microseconds * TimeConst_1us);
+
+    while (CddStm_IsDeadlineElapsed(deadLine) == 0x0U)
+    {
+        /* busy-wait */
+    }
+}
+
 /**********************************************************************************************************************
  * Private Function Implementations
  *********************************************************************************************************************/
