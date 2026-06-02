@@ -229,7 +229,6 @@ void CddApp_Init(void)
             CddGtm_Init();
             CddApp_G.CDDAppStatus = CDDAPP_INIT_DONE_GTM;
             CddApp_G.CDDAppStatus = CDDAPP_INIT_OK;
-            CddApp_Start();
 
         }
     }
@@ -245,9 +244,9 @@ void CddApp_Init(void)
  *------------------------------------------------------------------------------------------------------------------*/
 STATIC uint32_T CddApp_InitInverter(void)
 {
-    volatile uint32_T errorCode;
+    volatile uint32_T error_code;
 
-    return CddTle9180_Startup(&CddApp_G.Inverter, &errorCode);
+    return CddTle9180_Startup(&CddApp_G.Inverter, &error_code);
 }
 
 /*--------------------------------------------------------------------------------------------------------------------
@@ -264,17 +263,17 @@ STATIC uint32_T CddApp_InitInverter(void)
  *------------------------------------------------------------------------------------------------------------------*/
 uint32_T CddApp_Start(void)
 {
-    uint32_T started;
+    static uint32_T started = 0x0U;
 
-    started = 0x0U;
 
-    if (CddApp_G.CDDAppStatus == CDDAPP_INIT_OK)
+
+    if((CddApp_G.CDDAppStatus == CDDAPP_INIT_OK) && (started != 0x1U))
     {
-        CddGtm_OpenLoopSetRpm(800,0.3);
-
        CddTle9180_AssertEnable();             /* Step 7: gate drive outputs active       */
-       CddGtm_Start();                        /* Step 8: PWM carrier live               */
-        started = 0x1U;
+       CddGtm_Start();                        /* Step 8: PWM carrier live                */
+       CddApp_G.CDDAppStatus = CDDAPP_RUN_STATE;
+       started = 0x1U;
+
     }
 
     return started;

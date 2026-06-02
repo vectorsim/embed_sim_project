@@ -47,7 +47,7 @@
  * MISRA DEV-STM-001 (Rule 8.4): No extern declaration for this symbol in the header.
  * The ISR is installed exclusively through EMBED_SIM_INTERRUPT() into the .traptab section.
  *********************************************************************************************************************/
-EMBED_SIM_INTERRUPT(Stm_00_Cmp_00_Isr, 0, STM0_CMP0_IR_SRPN);
+EMBED_SIM_INTERRUPT(Stm_00_Cmp_00_Isr, 0x0U, STM0_CMP0_IR_SRPN);
 
 /**********************************************************************************************************************
  * Private Variables

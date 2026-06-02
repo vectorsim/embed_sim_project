@@ -1,275 +1,295 @@
 /**********************************************************************************************************************
- * \file      Coordinate_Transform.c
- * \brief     Clarke, Park, Inverse-Park and Inverse-Clarke transform implementations for FOC motor control.
+ * \file      embed_sim_coordinate_transform.c
+ * \brief     Matrix-based Clarke, Park, Inverse-Park and Inverse-Clarke transforms
+ *            for FOC motor control using EmbedSim matrix library.
  *
- * Working type: \c MatrixFloat (= \c real32_T from \c Matrix.h / \c Sys_Types.h).
- * Uses \c cosf and \c sinf from \c <math.h> — single-precision, no double promotion.
+ * \details   All transforms use matrix multiplication from embed_sim_matrix.h
+ *            for clarity and code reuse.
  *
- * \c Matrix.h is included for:
- *   - \c MatrixFloat type (= \c real32_T)
- *   - \c Matrix_FloatToQ31 / \c Matrix_Q31ToFloat at the application boundary
- *   - Consistent type infrastructure with all other \c fs_electrical_machines blocks
+ * \version   2.1.0
+ * \date      2025-05-24
+ * \author    EmbedSim / EV Light Vehicle Foundation
  *
- * MISRA C:2012 compliance notes:
- *   - No dynamic memory allocation
- *   - No recursion
- *   - Single exit per function (Rule 15.5)
- *   - All literals carry the \c f suffix — no implicit double promotion
- *   - NULL guards on all pointer arguments
- *
- * \version   1.1.0
- * \copyright Copyright (C) EmbedSim 2024
- *
+ * \copyright Copyright (C) 2025 EmbedSim — EV Light Vehicle Foundation, Jaffna, Sri Lanka.
+ *            Licensed under the MIT License.
  *********************************************************************************************************************/
 
-/*********************************************************************************************************************/
-/*-----------------------------------------------------Includes------------------------------------------------------*/
-/*********************************************************************************************************************/
+/**********************************************************************************************************************
+ * Includes
+ *********************************************************************************************************************/
 #include "embed_sim_coordinate_transform.h"
-#include <math.h>    /* cosf, sinf        */
-#include <string.h>  /* memset            */
+#include "embed_sim_compiler.h"
+#include <math.h>
+#include <stddef.h>
 
-
-/*********************************************************************************************************************/
-/*------------------------------------------------------Macros-------------------------------------------------------*/
-/*********************************************************************************************************************/
-
-/** \addtogroup ct_private_constants  Private numeric constants (MatrixFloat = real32_T)
- * \{
- */
-/** \brief Power-invariant Clarke scale factor: 2/3. */
-#define CT_TWO_THIRDS   ((MatrixFloat)0.66666667f)
-
-/** \brief Power-invariant Clarke scale factor: 1/3. */
-#define CT_ONE_THIRD    ((MatrixFloat)0.33333333f)
-
-/** \brief 1 / √3 = 0.57735027… */
-#define CT_INV_SQRT3    ((MatrixFloat)0.57735027f)
-
-/** \brief √3 / 2 = 0.86602540… */
-#define CT_HALF_SQRT3   ((MatrixFloat)0.86602540f)
-
-/** \brief 0.5 */
-#define CT_HALF         ((MatrixFloat)0.50000000f)
-/** \} */
-
-
-/*********************************************************************************************************************/
-/*-------------------------------------------------Global variables--------------------------------------------------*/
-/*********************************************************************************************************************/
-/* None */
-
-
-/*********************************************************************************************************************/
-/*--------------------------------------------Private Variables/Constants--------------------------------------------*/
-/*********************************************************************************************************************/
-/* None */
-
-
-/*********************************************************************************************************************/
-/*------------------------------------------------Function Prototypes------------------------------------------------*/
-/*********************************************************************************************************************/
-/* None — all functions are public; prototypes are in Coordinate_Transform.h */
-
-
-/*********************************************************************************************************************/
-/*---------------------------------------------Function Implementations----------------------------------------------*/
-/*********************************************************************************************************************/
-
-/*--------------------------------------------------------------------------------------------------------------------
- * Clarke_Init
- *------------------------------------------------------------------------------------------------------------------*/
-void Clarke_Init(Clarke_T * const s)
-{
-    if (s != NULL)
-    {
-        (void)memset(s, 0, sizeof(Clarke_T));
-    }
-    else
-    {
-        /* MISRA C:2012 Rule 15.7: else clause required. */
-    }
-}
-
-
-/*--------------------------------------------------------------------------------------------------------------------
- * Clarke_Step
+/**********************************************************************************************************************
+ * Module-Private Matrix Buffers (static allocation)
  *
- * Power-invariant Clarke transform:
- *   i_α = (2/3)·i_a − (1/3)·i_b − (1/3)·i_c
- *   i_β = (1/√3)·(i_b − i_c)
- *------------------------------------------------------------------------------------------------------------------*/
-void Clarke_Step(
-    Clarke_T       * const s,
-    MatrixFloat            ia,
-    MatrixFloat            ib,
-    MatrixFloat            ic,
-    MatrixFloat    * const alpha_out,
-    MatrixFloat    * const beta_out)
-{
-    (void)s;  /* Combinatorial block — state reserved for future pre-filter. */
+ * static gives these file scope only — not visible outside this TU.
+ * Naming: UPPER_SNAKE_CASE prefix + _G suffix per EmbedSim convention.
+ *********************************************************************************************************************/
+static MatrixElement Clarke_Matrix_Data_G[CLARKE_ROWS * CLARKE_COLS];
+static MatrixElement Inv_Clarke_Matrix_Data_G[INV_CLARKE_ROWS * INV_CLARKE_COLS];
+static MatrixElement Park_Cos_Matrix_Data_G[PARK_ROWS * PARK_COLS];
+static MatrixElement Park_Sin_Matrix_Data_G[PARK_ROWS * PARK_COLS];
+static MatrixElement Inv_Park_Cos_Matrix_Data_G[INV_PARK_ROWS * INV_PARK_COLS];
+static MatrixElement Inv_Park_Sin_Matrix_Data_G[INV_PARK_ROWS * INV_PARK_COLS];
 
-    if ((alpha_out != NULL) && (beta_out != NULL))
-    {
-        /* Amplitude-invariant Clarke -- matches iLLD Clarke() on AURIX.
-         * i_alpha = ia
-         * i_beta  = (ia + 2*ib) / sqrt(3)
-         * ic not used (balanced: ic = -ia - ib). */
-        (void)ic;
-        *alpha_out = ia;
-        *beta_out  = (ia + ((MatrixFloat)2.0f * ib)) * CT_INV_SQRT3;
-    }
-    else
-    {
-        /* MISRA C:2012 Rule 15.7: else clause required. */
-    }
-}
+/**********************************************************************************************************************
+ * Module-Private Matrix Handles
+ *********************************************************************************************************************/
+static Matrix_Type Clarke_Matrix_G;
+static Matrix_Type Inv_Clarke_Matrix_G;
+static Matrix_Type Park_Cos_Matrix_G;
+static Matrix_Type Park_Sin_Matrix_G;
+static Matrix_Type Inv_Park_Cos_Matrix_G;
+static Matrix_Type Inv_Park_Sin_Matrix_G;
 
+/**********************************************************************************************************************
+ * Private Helper Functions
+ *********************************************************************************************************************/
+/* All coordinate conversions are performed inline within each public function.
+ * No module-private helpers are currently required.                           */
 
-/*--------------------------------------------------------------------------------------------------------------------
- * Park_Init
- *------------------------------------------------------------------------------------------------------------------*/
-void Park_Init(Park_T * const s)
-{
-    if (s != NULL)
-    {
-        (void)memset(s, 0, sizeof(Park_T));
-    }
-    else
-    {
-        /* MISRA C:2012 Rule 15.7: else clause required. */
-    }
-}
-
+/**********************************************************************************************************************
+ * Public Functions
+ *********************************************************************************************************************/
 
 /*--------------------------------------------------------------------------------------------------------------------
- * Park_Step
- *
- * Park (forward) transform:
- *   i_d =  i_α·cos(θ) + i_β·sin(θ)
- *   i_q = −i_α·sin(θ) + i_β·cos(θ)
+ * Transform_Init
  *------------------------------------------------------------------------------------------------------------------*/
-void Park_Step(
-    Park_T         * const s,
-    MatrixFloat            alpha,
-    MatrixFloat            beta,
-    MatrixFloat            theta,
-    MatrixFloat    * const d_out,
-    MatrixFloat    * const q_out)
+void Transform_Init(void)
 {
-    MatrixFloat cos_t;
-    MatrixFloat sin_t;
+    /* Initialize Clarke transform matrix: [1, 0; 1/√3, 2/√3] */
+    Matrix_Init(&Clarke_Matrix_G, Clarke_Matrix_Data_G, CLARKE_ROWS, CLARKE_COLS);
+    Matrix_SetElementFloat(&Clarke_Matrix_G, 0U, 0U, ES_MATH_ONE_F);
+    Matrix_SetElementFloat(&Clarke_Matrix_G, 0U, 1U, 0.0f);
+    Matrix_SetElementFloat(&Clarke_Matrix_G, 1U, 0U, ES_MATH_INV_SQRT3_F);
+    Matrix_SetElementFloat(&Clarke_Matrix_G, 1U, 1U, ES_MATH_TWO_INV_SQRT3_F);
 
-    (void)s;  /* Combinatorial block — state unused. */
+    /* Initialize Inverse-Clarke transform matrix */
+    Matrix_Init(&Inv_Clarke_Matrix_G, Inv_Clarke_Matrix_Data_G, INV_CLARKE_ROWS, INV_CLARKE_COLS);
+    Matrix_SetElementFloat(&Inv_Clarke_Matrix_G, 0U, 0U,  ES_MATH_ONE_F);
+    Matrix_SetElementFloat(&Inv_Clarke_Matrix_G, 0U, 1U,  0.0f);
+    Matrix_SetElementFloat(&Inv_Clarke_Matrix_G, 1U, 0U, -ES_MATH_HALF_F);
+    Matrix_SetElementFloat(&Inv_Clarke_Matrix_G, 1U, 1U,  ES_MATH_HALF_SQRT3_F);
+    Matrix_SetElementFloat(&Inv_Clarke_Matrix_G, 2U, 0U, -ES_MATH_HALF_F);
+    Matrix_SetElementFloat(&Inv_Clarke_Matrix_G, 2U, 1U, -ES_MATH_HALF_SQRT3_F);
 
-    if ((d_out != NULL) && (q_out != NULL))
-    {
-        cos_t = cosf(theta);
-        sin_t = sinf(theta);
-
-        *d_out = ( alpha * cos_t) + (beta * sin_t);
-        *q_out = (-alpha * sin_t) + (beta * cos_t);
-    }
-    else
-    {
-        /* MISRA C:2012 Rule 15.7: else clause required. */
-    }
+    /* Initialize Park matrices (will be updated per transform call) */
+    Matrix_Init(&Park_Cos_Matrix_G, Park_Cos_Matrix_Data_G, PARK_ROWS, PARK_COLS);
+    Matrix_Init(&Park_Sin_Matrix_G, Park_Sin_Matrix_Data_G, PARK_ROWS, PARK_COLS);
+    Matrix_Init(&Inv_Park_Cos_Matrix_G, Inv_Park_Cos_Matrix_Data_G, INV_PARK_ROWS, INV_PARK_COLS);
+    Matrix_Init(&Inv_Park_Sin_Matrix_G, Inv_Park_Sin_Matrix_Data_G, INV_PARK_ROWS, INV_PARK_COLS);
 }
 
-
 /*--------------------------------------------------------------------------------------------------------------------
- * InvPark_Init
+ * Clarke_Transform_Matrix
  *------------------------------------------------------------------------------------------------------------------*/
-void InvPark_Init(InvPark_T * const s)
+MatrixStatus_Type Clarke_Transform_Matrix(
+    const FocUvw_T       * const In_P,
+    FocAlphaBeta_T       * const Out_P)
 {
-    if (s != NULL)
+    MatrixStatus_Type status;
+    MatrixElement     input_buffer[CLARKE_COLS];
+    MatrixElement     output_buffer[CLARKE_ROWS];
+    Matrix_Type       input_vec;
+    Matrix_Type       output_vec;
+
+    status = MATRIX_SUCCESS;
+
+    if ((In_P == NULL) || (Out_P == NULL))
     {
-        (void)memset(s, 0, sizeof(InvPark_T));
+        status = MATRIX_ERROR_NULL_PTR;
     }
     else
     {
-        /* MISRA C:2012 Rule 15.7: else clause required. */
+        /* Create input vector [U; V] (2×1) */
+        Matrix_Init(&input_vec, input_buffer, CLARKE_COLS, 1U);
+        Matrix_SetElementFloat(&input_vec, 0U, 0U, In_P->U);
+        Matrix_SetElementFloat(&input_vec, 1U, 0U, In_P->V);
+
+        /* Create output vector (2×1) */
+        Matrix_Init(&output_vec, output_buffer, CLARKE_ROWS, 1U);
+
+        /* Multiply: output = Clarke_matrix × input */
+        status = Matrix_Multiply(&Clarke_Matrix_G, &input_vec, &output_vec);
+
+        if (status == MATRIX_SUCCESS)
+        {
+            Matrix_GetElementFloat(&output_vec, 0U, 0U, &Out_P->Alpha);
+            Matrix_GetElementFloat(&output_vec, 1U, 0U, &Out_P->Beta);
+        }
+        else
+        {
+            /* Multiplication failed */
+        }
     }
+
+    return status;
 }
 
-
 /*--------------------------------------------------------------------------------------------------------------------
- * InvPark_Step
- *
- * Inverse-Park transform:
- *   v_α = v_d·cos(θ) − v_q·sin(θ)
- *   v_β = v_d·sin(θ) + v_q·cos(θ)
+ * Park_Transform_Matrix
  *------------------------------------------------------------------------------------------------------------------*/
-void InvPark_Step(
-    InvPark_T      * const s,
-    MatrixFloat            d,
-    MatrixFloat            q,
-    MatrixFloat            theta,
-    MatrixFloat    * const alpha_out,
-    MatrixFloat    * const beta_out)
+MatrixStatus_Type Park_Transform_Matrix(
+    const FocAlphaBeta_T * const In_P,
+    const FocAngle_T     * const Angle_P,
+    FocDq_T              * const Out_P)
 {
-    MatrixFloat cos_t;
-    MatrixFloat sin_t;
+    MatrixStatus_Type status;
+    MatrixElement     input_buffer[PARK_COLS];
+    MatrixElement     output_buffer[PARK_ROWS];
+    Matrix_Type       input_vec;
+    Matrix_Type       output_vec;
+    MatrixFloat       cos_theta;
+    MatrixFloat       sin_theta;
 
-    (void)s;  /* Combinatorial block — state unused. */
+    status = MATRIX_SUCCESS;
 
-    if ((alpha_out != NULL) && (beta_out != NULL))
+    if ((In_P == NULL) || (Angle_P == NULL) || (Out_P == NULL))
     {
-        cos_t = cosf(theta);
-        sin_t = sinf(theta);
-
-        *alpha_out = (d * cos_t) - (q * sin_t);
-        *beta_out  = (d * sin_t) + (q * cos_t);
+        status = MATRIX_ERROR_NULL_PTR;
     }
     else
     {
-        /* MISRA C:2012 Rule 15.7: else clause required. */
+        /* Compute sin and cos of electrical angle */
+        cos_theta = cosf(Angle_P->ThetaE);
+        sin_theta = sinf(Angle_P->ThetaE);
+
+        /* Build Park transform matrix: [cosθ, sinθ; -sinθ, cosθ] */
+        Matrix_SetElementFloat(&Park_Cos_Matrix_G, 0U, 0U,  cos_theta);
+        Matrix_SetElementFloat(&Park_Cos_Matrix_G, 0U, 1U,  sin_theta);
+        Matrix_SetElementFloat(&Park_Cos_Matrix_G, 1U, 0U, -sin_theta);
+        Matrix_SetElementFloat(&Park_Cos_Matrix_G, 1U, 1U,  cos_theta);
+
+        /* Create input vector [Alpha; Beta] (2×1) */
+        Matrix_Init(&input_vec, input_buffer, PARK_COLS, 1U);
+        Matrix_SetElementFloat(&input_vec, 0U, 0U, In_P->Alpha);
+        Matrix_SetElementFloat(&input_vec, 1U, 0U, In_P->Beta);
+
+        /* Create output vector (2×1) */
+        Matrix_Init(&output_vec, output_buffer, PARK_ROWS, 1U);
+
+        /* Multiply: output = Park_matrix × input */
+        status = Matrix_Multiply(&Park_Cos_Matrix_G, &input_vec, &output_vec);
+
+        if (status == MATRIX_SUCCESS)
+        {
+            Matrix_GetElementFloat(&output_vec, 0U, 0U, &Out_P->D);
+            Matrix_GetElementFloat(&output_vec, 1U, 0U, &Out_P->Q);
+        }
+        else
+        {
+            /* Multiplication failed */
+        }
     }
+
+    return status;
 }
 
-
 /*--------------------------------------------------------------------------------------------------------------------
- * InvClarke_Init
+ * InvPark_Transform_Matrix
  *------------------------------------------------------------------------------------------------------------------*/
-void InvClarke_Init(InvClarke_T * const s)
+MatrixStatus_Type InvPark_Transform_Matrix(
+    const FocDq_T        * const In_P,
+    const FocAngle_T     * const Angle_P,
+    FocAlphaBeta_T       * const Out_P)
 {
-    if (s != NULL)
+    MatrixStatus_Type status;
+    MatrixElement     input_buffer[INV_PARK_COLS];
+    MatrixElement     output_buffer[INV_PARK_ROWS];
+    Matrix_Type       input_vec;
+    Matrix_Type       output_vec;
+    MatrixFloat       cos_theta;
+    MatrixFloat       sin_theta;
+
+    status = MATRIX_SUCCESS;
+
+    if ((In_P == NULL) || (Angle_P == NULL) || (Out_P == NULL))
     {
-        (void)memset(s, 0, sizeof(InvClarke_T));
+        status = MATRIX_ERROR_NULL_PTR;
     }
     else
     {
-        /* MISRA C:2012 Rule 15.7: else clause required. */
+        /* Compute sin and cos of electrical angle */
+        cos_theta = cosf(Angle_P->ThetaE);
+        sin_theta = sinf(Angle_P->ThetaE);
+
+        /* Build Inverse-Park transform matrix: [cosθ, -sinθ; sinθ, cosθ] */
+        Matrix_SetElementFloat(&Inv_Park_Cos_Matrix_G, 0U, 0U,  cos_theta);
+        Matrix_SetElementFloat(&Inv_Park_Cos_Matrix_G, 0U, 1U, -sin_theta);
+        Matrix_SetElementFloat(&Inv_Park_Cos_Matrix_G, 1U, 0U,  sin_theta);
+        Matrix_SetElementFloat(&Inv_Park_Cos_Matrix_G, 1U, 1U,  cos_theta);
+
+        /* Create input vector [D; Q] (2×1) */
+        Matrix_Init(&input_vec, input_buffer, INV_PARK_COLS, 1U);
+        Matrix_SetElementFloat(&input_vec, 0U, 0U, In_P->D);
+        Matrix_SetElementFloat(&input_vec, 1U, 0U, In_P->Q);
+
+        /* Create output vector (2×1) */
+        Matrix_Init(&output_vec, output_buffer, INV_PARK_ROWS, 1U);
+
+        /* Multiply: output = InvPark_matrix × input */
+        status = Matrix_Multiply(&Inv_Park_Cos_Matrix_G, &input_vec, &output_vec);
+
+        if (status == MATRIX_SUCCESS)
+        {
+            Matrix_GetElementFloat(&output_vec, 0U, 0U, &Out_P->Alpha);
+            Matrix_GetElementFloat(&output_vec, 1U, 0U, &Out_P->Beta);
+        }
+        else
+        {
+            /* Multiplication failed */
+        }
     }
+
+    return status;
 }
 
-
 /*--------------------------------------------------------------------------------------------------------------------
- * InvClarke_Step
- *
- * Inverse-Clarke transform:
- *   v_a =  v_α
- *   v_b = −(1/2)·v_α + (√3/2)·v_β
- *   v_c = −(1/2)·v_α − (√3/2)·v_β
+ * InvClarke_Transform_Matrix
  *------------------------------------------------------------------------------------------------------------------*/
-void InvClarke_Step(
-    InvClarke_T    * const s,
-    MatrixFloat            alpha,
-    MatrixFloat            beta,
-    MatrixFloat    * const va_out,
-    MatrixFloat    * const vb_out,
-    MatrixFloat    * const vc_out)
+MatrixStatus_Type InvClarke_Transform_Matrix(
+    const FocAlphaBeta_T * const In_P,
+    FocUvw_T             * const Out_P)
 {
-    (void)s;  /* Combinatorial block — state unused. */
+    MatrixStatus_Type status;
+    MatrixElement     input_buffer[INV_CLARKE_COLS];
+    MatrixElement     output_buffer[INV_CLARKE_ROWS];
+    Matrix_Type       input_vec;
+    Matrix_Type       output_vec;
 
-    if ((va_out != NULL) && (vb_out != NULL) && (vc_out != NULL))
+    status = MATRIX_SUCCESS;
+
+    if ((In_P == NULL) || (Out_P == NULL))
     {
-        *va_out =  alpha;
-        *vb_out = (-CT_HALF * alpha) + (CT_HALF_SQRT3 * beta);
-        *vc_out = (-CT_HALF * alpha) - (CT_HALF_SQRT3 * beta);
+        status = MATRIX_ERROR_NULL_PTR;
     }
     else
     {
-        /* MISRA C:2012 Rule 15.7: else clause required. */
+        /* Create input vector [Alpha; Beta] (2×1) */
+        Matrix_Init(&input_vec, input_buffer, INV_CLARKE_COLS, 1U);
+        Matrix_SetElementFloat(&input_vec, 0U, 0U, In_P->Alpha);
+        Matrix_SetElementFloat(&input_vec, 1U, 0U, In_P->Beta);
+
+        /* Create output vector (3×1) */
+        Matrix_Init(&output_vec, output_buffer, INV_CLARKE_ROWS, 1U);
+
+        /* Multiply: output = InvClarke_matrix × input */
+        status = Matrix_Multiply(&Inv_Clarke_Matrix_G, &input_vec, &output_vec);
+
+        if (status == MATRIX_SUCCESS)
+        {
+            Matrix_GetElementFloat(&output_vec, 0U, 0U, &Out_P->U);
+            Matrix_GetElementFloat(&output_vec, 1U, 0U, &Out_P->V);
+            Matrix_GetElementFloat(&output_vec, 2U, 0U, &Out_P->W);
+        }
+        else
+        {
+            /* Multiplication failed */
+        }
     }
+
+    return status;
 }

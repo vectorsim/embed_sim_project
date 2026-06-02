@@ -77,29 +77,6 @@ extern void CddGtm_Init(void);
 extern void CddGtm_Start(void);
 
 /**********************************************************************************************************************
- * Function Prototypes — Open-Loop V/f Test
- *********************************************************************************************************************/
-
-/**
- * \brief   Arms the open-loop V/f test at the requested mechanical speed and
- *          modulation index.
- *
- * \details Sets omega_e, mi, resets theta to 0, sets active=1.
- *          For DB42S02 at 3000 RPM start: Rpm=3000, Mi=0.3F.
- *
- * \param[in]  Rpm   Target mechanical speed  [RPM]
- * \param[in]  Mi    Modulation index         [0.0 .. 1.0]
- * \return  void
- */
-extern void CddGtm_OpenLoopSetRpm(uint32_T Rpm, real32_T Mi);
-
-/**
- * \brief   Disarms the open-loop controller and returns all three phases to 50% duty.
- * \return  void
- */
-extern void CddGtm_OpenLoopStop(void);
-
-/**********************************************************************************************************************
  * Function Prototypes — Accessors
  *********************************************************************************************************************/
 

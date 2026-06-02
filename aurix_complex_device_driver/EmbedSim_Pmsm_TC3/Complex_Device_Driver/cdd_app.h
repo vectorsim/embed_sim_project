@@ -121,7 +121,9 @@ typedef enum
     CDDAPP_INIT_DONE_INV       =   10U,   /**< Inverter (TLE9180D) reached NORMAL mode   [dimensionless] */
     CDDAPP_INIT_ERR_GTM        =   12U,   /**< GTM frequency or CMU CLK0 check failed    [dimensionless] */
     CDDAPP_INIT_DONE_GTM       =   14U,   /**< GTM CMU + ATOM0 PWM initialised           [dimensionless] */
-    CDDAPP_INIT_OK             =  100U    /**< All sub-modules initialised successfully  [dimensionless] */
+    CDDAPP_INIT_OK             =  100U,    /**< All sub-modules initialised successfully  [dimensionless] */
+    CDDAPP_RUN_STATE           =  105U,    /**< All sub-modules initialised successfully  [dimensionless] */
+    CDDAPP_ERROR_STATE         =  110U
 } CddApp_Status_T;
 
 /**
@@ -180,8 +182,11 @@ typedef struct
     /** \brief  Control loop sample time = 1 / CDD_CONTROL_LOOP_FREQUENCY  [s]          */
     real32_T                SampleTime;
 
-    /** \brief  TLE9180D gate driver runtime handle                                      */
+    /** \brief  TLE9180D gate driver runtime handle                                     */
     CddTle9180_T            Inverter;
+
+    /** \brief  Control loop Counter                                                    */
+    uint64_T                ControlLoopCounter;
 
 } CddApp_T;
 

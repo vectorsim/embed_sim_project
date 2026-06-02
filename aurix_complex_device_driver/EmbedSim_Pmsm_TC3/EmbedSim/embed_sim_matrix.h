@@ -2,23 +2,40 @@
  * \file      embed_sim_matrix.h
  * \brief     32-bit fixed-point (Q31) linear algebra library for embedded systems.
  *
- * Provides static-allocation matrix operations targeting 32-bit MCUs
- * (Infineon AURIX TriCore, ARM Cortex-M4).  All algorithms are iterative —
- * no recursion — and the implementation is MISRA C:2012 / AUTOSAR C compliant.
+ * \details   Provides static-allocation matrix operations targeting 32-bit MCUs
+ *            (Infineon AURIX TriCore, ARM Cortex-M4).  All algorithms are iterative —
+ *            no recursion — and the implementation is MISRA C:2012 compliant.
  *
- * Key properties:
- *   - Q31 fixed-point arithmetic (1 sign bit + 31 fractional bits)
- *   - Maximum matrix size: 8 × 8
- *   - No dynamic memory allocation
- *   - Supports eigenvalue decomposition (iterative Jacobi method)
+ *            Key properties:
+ *              - Q31 fixed-point arithmetic (1 sign bit + 31 fractional bits)
+ *              - Maximum matrix size: 8 × 8
+ *              - No dynamic memory allocation
+ *              - Eigenvalue decomposition via iterative Jacobi method
  *
- * \version   5.0.0
- * \copyright Copyright (C) EmbedSim 2024
+ * \note      MISRA C:2012 compliance:
+ *              - Rule  8.5 : One declaration per identifier
+ *              - Rule  8.6 : No definitions in header files
+ *              - Rule 17.2 : No recursion
  *
+ * \note      EmbedSim naming convention:
+ *              - Functions      : Pascal_Snake_Case
+ *              - Parameters     : PascalCase  (single-letter → Uppercase)
+ *              - Output pointers: PascalCase_P
+ *              - Local variables: lower_snake_case
+ *              - Struct members : PascalCase
+ *              - Macros         : UPPER_SNAKE_CASE
+ *              - Typedefs       : Pascal_Snake_Case_T
+ *
+ * \version   5.1.0
+ * \date      2025-05-24
+ * \author    EmbedSim / EV Light Vehicle Foundation
+ *
+ * \copyright Copyright (C) 2025 EmbedSim — EV Light Vehicle Foundation, Jaffna, Sri Lanka.
+ *            Licensed under the MIT License.
  *********************************************************************************************************************/
 
-#ifndef MATRIX_H_
-#define MATRIX_H_
+#ifndef EMBED_SIM_MATRIX_H_
+#define EMBED_SIM_MATRIX_H_
 
 /*********************************************************************************************************************/
 /*-----------------------------------------------------Includes------------------------------------------------------*/
@@ -101,13 +118,13 @@ typedef enum
  */
 typedef struct
 {
-    MatrixElement  * data;      /**< Pointer to the Q31 data buffer (row-major).       */
-    uint32_T         rows;      /**< Active row count.                                 */
-    uint32_T         cols;      /**< Active column count.                              */
-    uint32_T         max_rows;  /**< Allocated row capacity.                           */
-    uint32_T         max_cols;  /**< Allocated column capacity.                        */
-    uint32_T         is_view;   /**< TRUE if this handle is a view of another matrix.  */
-    uint32_T         stride;    /**< Row stride in elements (equals max_cols normally).*/
+    MatrixElement  * Data;      /**< Pointer to the Q31 data buffer (row-major).       */
+    uint32_T         Rows;      /**< Active row count.                                 */
+    uint32_T         Cols;      /**< Active column count.                              */
+    uint32_T         MaxRows;  /**< Allocated row capacity.                           */
+    uint32_T         MaxCols;  /**< Allocated column capacity.                        */
+    uint32_T         IsView;   /**< TRUE if this handle is a view of another matrix.  */
+    uint32_T         Stride;    /**< Row stride in elements (equals max_cols normally).*/
 } Matrix_Type;
 
 /**
@@ -116,10 +133,10 @@ typedef struct
  */
 typedef struct
 {
-    MatrixFloat  eigenvalues[MATRIX_MAX_EIGEN];                   /**< Real eigenvalues (diagonal of diagonalised matrix). */
-    MatrixFloat  eigenvectors[MATRIX_MAX_ROWS * MATRIX_MAX_COLS]; /**< Eigenvectors stored column-wise.                    */
-    uint32_T     num_eigenvalues;                                  /**< Number of eigenvalues computed.                     */
-    uint32_T     iterations;                                       /**< Jacobi sweeps consumed.                             */
+    MatrixFloat  Eigenvalues[MATRIX_MAX_EIGEN];                   /**< Real eigenvalues (diagonal of diagonalised matrix). */
+    MatrixFloat  Eigenvectors[MATRIX_MAX_ROWS * MATRIX_MAX_COLS]; /**< Eigenvectors stored column-wise.                    */
+    uint32_T     NumEigenvalues;                                  /**< Number of eigenvalues computed.                     */
+    uint32_T     Iterations;                                       /**< Jacobi sweeps consumed.                             */
 } MatrixEigen_Type;
 
 /** \} */
@@ -146,39 +163,39 @@ typedef struct
 /**
  * \brief  Initialise a matrix handle with a caller-supplied static buffer.
  *
- * Sets \c rows and \c cols to \p max_rows and \p max_cols respectively and
+ * Sets \c Rows and \c Cols to \p MaxRows and \p MaxCols respectively and
  * zero-fills the entire buffer via \c memset.
  *
  * \param[out] matrix    Matrix handle to initialise (must not be NULL).
  * \param[in]  buffer    Caller-allocated buffer of size
- *                       \p max_rows × \p max_cols × sizeof(#MatrixElement).
- * \param[in]  max_rows  Row capacity (1 … #MATRIX_MAX_ROWS).
- * \param[in]  max_cols  Column capacity (1 … #MATRIX_MAX_COLS).
+ *                       \p MaxRows × \p MaxCols × sizeof(#MatrixElement).
+ * \param[in] MaxRows  Row capacity (1 … #MATRIX_MAX_ROWS).
+ * \param[in] MaxCols  Column capacity (1 … #MATRIX_MAX_COLS).
  */
 extern void Matrix_Init(
-    Matrix_Type    * const matrix,
-    MatrixElement  * const buffer,
-    const uint32_T         max_rows,
-    const uint32_T         max_cols);
+    Matrix_Type    * const Matrix_P,
+    MatrixElement  * const Buffer,
+    const uint32_T MaxRows,
+    const uint32_T MaxCols);
 
 /**
  * \brief  Set the active dimensions of a matrix without touching data.
  *
  * \param[in,out] matrix  Matrix handle (must not be NULL).
- * \param[in]     rows    Active rows    (1 … \c matrix->max_rows).
- * \param[in]     cols    Active columns (1 … \c matrix->max_cols).
+ * \param[in]     rows    Active rows    (1 … \c matrix->MaxRows).
+ * \param[in]     cols    Active columns (1 … \c matrix->MaxCols).
  */
 extern void Matrix_SetDimensions(
-    Matrix_Type  * const matrix,
-    const uint32_T       rows,
-    const uint32_T       cols);
+    Matrix_Type  * const Matrix_P,
+    const uint32_T Rows,
+    const uint32_T Cols);
 
 /**
  * \brief  Zero all elements within the active dimensions.
  *
  * \param[in,out] matrix  Matrix handle (must not be NULL).
  */
-extern void Matrix_Zero(Matrix_Type * const matrix);
+extern void Matrix_Zero(Matrix_Type * const Matrix_P);
 
 /**
  * \brief  Set a square matrix to the identity (I).
@@ -186,7 +203,7 @@ extern void Matrix_Zero(Matrix_Type * const matrix);
  * \param[in,out] matrix  Square matrix handle (must not be NULL).
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_NOT_SQUARE.
  */
-extern MatrixStatus_Type Matrix_Identity(Matrix_Type * const matrix);
+extern MatrixStatus_Type Matrix_Identity(Matrix_Type * const Matrix_P);
 
 /**
  * \brief  Copy \p src into \p dest.
@@ -198,8 +215,8 @@ extern MatrixStatus_Type Matrix_Identity(Matrix_Type * const matrix);
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_SIZE_EXCEEDED.
  */
 extern MatrixStatus_Type Matrix_Copy(
-    Matrix_Type        * const dest,
-    const Matrix_Type  * const src);
+    Matrix_Type        * const Dest_P,
+    const Matrix_Type  * const Src_P);
 
 /** \} */
 
@@ -215,16 +232,16 @@ extern MatrixStatus_Type Matrix_Copy(
  * \brief  Write a Q31 value to a single element.
  *
  * \param[in,out] matrix  Target matrix (must not be NULL).
- * \param[in]     row     0-based row index (< \c matrix->rows).
- * \param[in]     col     0-based column index (< \c matrix->cols).
+ * \param[in]     row     0-based row index (< \c Matrix_P->Rows).
+ * \param[in]     col     0-based column index (< \c Matrix_P->Cols).
  * \param[in]     value   Q31 value to write.
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_OUT_OF_BOUNDS.
  */
 extern MatrixStatus_Type Matrix_SetElement(
-    Matrix_Type    * const matrix,
-    const uint32_T         row,
-    const uint32_T         col,
-    const MatrixElement    value);
+    Matrix_Type    * const Matrix_P,
+    const uint32_T Row,
+    const uint32_T Col,
+    const MatrixElement    Value);
 
 /**
  * \brief  Write a float value (auto-converted to Q31) to a single element.
@@ -236,10 +253,10 @@ extern MatrixStatus_Type Matrix_SetElement(
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_OUT_OF_BOUNDS.
  */
 extern MatrixStatus_Type Matrix_SetElementFloat(
-    Matrix_Type    * const matrix,
-    const uint32_T         row,
-    const uint32_T         col,
-    const MatrixFloat      value);
+    Matrix_Type    * const Matrix_P,
+    const uint32_T Row,
+    const uint32_T Col,
+    const MatrixFloat      Value);
 
 /**
  * \brief  Read a Q31 value from a single element.
@@ -251,10 +268,10 @@ extern MatrixStatus_Type Matrix_SetElementFloat(
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_OUT_OF_BOUNDS.
  */
 extern MatrixStatus_Type Matrix_GetElement(
-    const Matrix_Type  * const matrix,
-    const uint32_T             row,
-    const uint32_T             col,
-    MatrixElement      * const value);
+    const Matrix_Type  * const Matrix_P,
+    const uint32_T Row,
+    const uint32_T Col,
+    MatrixElement      * const ValueOut_P);
 
 /**
  * \brief  Read a single element and return it as a float.
@@ -266,10 +283,10 @@ extern MatrixStatus_Type Matrix_GetElement(
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_OUT_OF_BOUNDS.
  */
 extern MatrixStatus_Type Matrix_GetElementFloat(
-    const Matrix_Type  * const matrix,
-    const uint32_T             row,
-    const uint32_T             col,
-    MatrixFloat        * const value);
+    const Matrix_Type  * const Matrix_P,
+    const uint32_T Row,
+    const uint32_T Col,
+    MatrixFloat        * const ValueOut_P);
 
 /** \} */
 
@@ -282,37 +299,37 @@ extern MatrixStatus_Type Matrix_GetElementFloat(
  */
 
 /**
- * \brief  Element-wise addition: \p result = \p a + \p b (saturating Q31).
+ * \brief  Element-wise addition: \p result = \p A + \p B (saturating Q31).
  *
  * \param[in]  a       Left operand.
- * \param[in]  b       Right operand (same dimensions as \p a).
- * \param[out] result  Output matrix (buffer must be ≥ \p a dimensions).
+ * \param[in]  b       Right operand (same dimensions as \p A).
+ * \param[out] result  Output matrix (buffer must be ≥ \p A dimensions).
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR;
  *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SIZE_EXCEEDED.
  */
 extern MatrixStatus_Type Matrix_Add(
-    const Matrix_Type  * const a,
-    const Matrix_Type  * const b,
-    Matrix_Type        * const result);
+    const Matrix_Type  * const A_P,
+    const Matrix_Type  * const B_P,
+    Matrix_Type        * const Result_P);
 
 /**
- * \brief  Element-wise subtraction: \p result = \p a − \p b (saturating Q31).
+ * \brief  Element-wise subtraction: \p result = \p A − \p B (saturating Q31).
  *
  * \param[in]  a       Minuend.
- * \param[in]  b       Subtrahend (same dimensions as \p a).
+ * \param[in]  b       Subtrahend (same dimensions as \p A).
  * \param[out] result  Output matrix.
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR;
  *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SIZE_EXCEEDED.
  */
 extern MatrixStatus_Type Matrix_Subtract(
-    const Matrix_Type  * const a,
-    const Matrix_Type  * const b,
-    Matrix_Type        * const result);
+    const Matrix_Type  * const A_P,
+    const Matrix_Type  * const B_P,
+    Matrix_Type        * const Result_P);
 
 /**
- * \brief  Matrix multiplication: \p result = \p a × \p b (Q31, saturating).
+ * \brief  Matrix multiplication: \p result = \p A × \p B (Q31, saturating).
  *
- * \p a is (m × n), \p b is (n × p), \p result is (m × p).
+ * \p A is (m × n), \p B is (n × p), \p result is (m × p).
  *
  * \param[in]  a       Left factor  (m × n).
  * \param[in]  b       Right factor (n × p).
@@ -321,9 +338,9 @@ extern MatrixStatus_Type Matrix_Subtract(
  *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SIZE_EXCEEDED.
  */
 extern MatrixStatus_Type Matrix_Multiply(
-    const Matrix_Type  * const a,
-    const Matrix_Type  * const b,
-    Matrix_Type        * const result);
+    const Matrix_Type  * const A_P,
+    const Matrix_Type  * const B_P,
+    Matrix_Type        * const Result_P);
 
 /**
  * \brief  Scalar multiplication: \p result = \p scalar × \p matrix (Q31).
@@ -334,9 +351,9 @@ extern MatrixStatus_Type Matrix_Multiply(
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_SIZE_EXCEEDED.
  */
 extern MatrixStatus_Type Matrix_ScalarMultiply(
-    const Matrix_Type  * const matrix,
-    const MatrixElement        scalar,
-    Matrix_Type        * const result);
+    const Matrix_Type  * const Matrix_P,
+    const MatrixElement        Scalar,
+    Matrix_Type        * const Result_P);
 
 /**
  * \brief  Scalar multiplication with float input (auto-converted to Q31).
@@ -347,9 +364,9 @@ extern MatrixStatus_Type Matrix_ScalarMultiply(
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_SIZE_EXCEEDED.
  */
 extern MatrixStatus_Type Matrix_ScalarMultiplyFloat(
-    const Matrix_Type  * const matrix,
-    const MatrixFloat          scalar,
-    Matrix_Type        * const result);
+    const Matrix_Type  * const Matrix_P,
+    const MatrixFloat          Scalar,
+    Matrix_Type        * const Result_P);
 
 /**
  * \brief  Transpose: \p result = \p matrix ᵀ.
@@ -359,8 +376,8 @@ extern MatrixStatus_Type Matrix_ScalarMultiplyFloat(
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_SIZE_EXCEEDED.
  */
 extern MatrixStatus_Type Matrix_Transpose(
-    const Matrix_Type  * const matrix,
-    Matrix_Type        * const result);
+    const Matrix_Type  * const Matrix_P,
+    Matrix_Type        * const Result_P);
 
 /** \} */
 
@@ -383,8 +400,8 @@ extern MatrixStatus_Type Matrix_Transpose(
  *          #MATRIX_ERROR_SIZE_EXCEEDED; #MATRIX_ERROR_SINGULAR.
  */
 extern MatrixStatus_Type Matrix_Determinant(
-    const Matrix_Type  * const matrix,
-    MatrixFloat        * const det);
+    const Matrix_Type  * const Matrix_P,
+    MatrixFloat        * const DetOut_P);
 
 /**
  * \brief  Determinant of a 2 × 2 matrix.
@@ -395,8 +412,8 @@ extern MatrixStatus_Type Matrix_Determinant(
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_DIMENSION_MISMATCH.
  */
 extern MatrixStatus_Type Matrix_Determinant2x2(
-    const Matrix_Type  * const matrix,
-    MatrixFloat        * const det);
+    const Matrix_Type  * const Matrix_P,
+    MatrixFloat        * const DetOut_P);
 
 /**
  * \brief  Determinant of a 3 × 3 matrix (Sarrus' rule, double precision).
@@ -406,8 +423,8 @@ extern MatrixStatus_Type Matrix_Determinant2x2(
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_DIMENSION_MISMATCH.
  */
 extern MatrixStatus_Type Matrix_Determinant3x3(
-    const Matrix_Type  * const matrix,
-    MatrixFloat        * const det);
+    const Matrix_Type  * const Matrix_P,
+    MatrixFloat        * const DetOut_P);
 
 /**
  * \brief  Determinant of a 4 × 4 matrix (direct formula, double precision).
@@ -417,8 +434,8 @@ extern MatrixStatus_Type Matrix_Determinant3x3(
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_DIMENSION_MISMATCH.
  */
 extern MatrixStatus_Type Matrix_Determinant4x4(
-    const Matrix_Type  * const matrix,
-    MatrixFloat        * const det);
+    const Matrix_Type  * const Matrix_P,
+    MatrixFloat        * const DetOut_P);
 
 /**
  * \brief  Determinant of a 5 × 5 matrix via LU decomposition.
@@ -429,8 +446,8 @@ extern MatrixStatus_Type Matrix_Determinant4x4(
  *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SINGULAR.
  */
 extern MatrixStatus_Type Matrix_Determinant5x5(
-    const Matrix_Type  * const matrix,
-    MatrixFloat        * const det);
+    const Matrix_Type  * const Matrix_P,
+    MatrixFloat        * const DetOut_P);
 
 /**
  * \brief  Determinant of a 6 × 6 matrix via LU decomposition.
@@ -441,8 +458,8 @@ extern MatrixStatus_Type Matrix_Determinant5x5(
  *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SINGULAR.
  */
 extern MatrixStatus_Type Matrix_Determinant6x6(
-    const Matrix_Type  * const matrix,
-    MatrixFloat        * const det);
+    const Matrix_Type  * const Matrix_P,
+    MatrixFloat        * const DetOut_P);
 
 /**
  * \brief  Determinant of a 7 × 7 matrix via LU decomposition.
@@ -453,8 +470,8 @@ extern MatrixStatus_Type Matrix_Determinant6x6(
  *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SINGULAR.
  */
 extern MatrixStatus_Type Matrix_Determinant7x7(
-    const Matrix_Type  * const matrix,
-    MatrixFloat        * const det);
+    const Matrix_Type  * const Matrix_P,
+    MatrixFloat        * const DetOut_P);
 
 /**
  * \brief  Determinant of an 8 × 8 matrix via LU decomposition.
@@ -465,8 +482,8 @@ extern MatrixStatus_Type Matrix_Determinant7x7(
  *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SINGULAR.
  */
 extern MatrixStatus_Type Matrix_Determinant8x8(
-    const Matrix_Type  * const matrix,
-    MatrixFloat        * const det);
+    const Matrix_Type  * const Matrix_P,
+    MatrixFloat        * const DetOut_P);
 
 /**
  * \brief  General matrix inverse dispatcher (2 × 2 … 8 × 8, Gauss-Jordan).
@@ -480,8 +497,8 @@ extern MatrixStatus_Type Matrix_Determinant8x8(
  *          #MATRIX_ERROR_SIZE_EXCEEDED; #MATRIX_ERROR_SINGULAR.
  */
 extern MatrixStatus_Type Matrix_Inverse(
-    const Matrix_Type  * const matrix,
-    Matrix_Type        * const result);
+    const Matrix_Type  * const Matrix_P,
+    Matrix_Type        * const Result_P);
 
 /**
  * \brief  Inverse of a 2 × 2 matrix.
@@ -493,8 +510,8 @@ extern MatrixStatus_Type Matrix_Inverse(
  *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SINGULAR.
  */
 extern MatrixStatus_Type Matrix_Inverse2x2(
-    const Matrix_Type  * const matrix,
-    Matrix_Type        * const result);
+    const Matrix_Type  * const Matrix_P,
+    Matrix_Type        * const Result_P);
 
 /**
  * \brief  Inverse of a 3 × 3 matrix (cofactor / adjugate method).
@@ -505,8 +522,8 @@ extern MatrixStatus_Type Matrix_Inverse2x2(
  *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SINGULAR.
  */
 extern MatrixStatus_Type Matrix_Inverse3x3(
-    const Matrix_Type  * const matrix,
-    Matrix_Type        * const result);
+    const Matrix_Type  * const Matrix_P,
+    Matrix_Type        * const Result_P);
 
 /**
  * \brief  Inverse of a 4 × 4 matrix (augmented Gauss-Jordan, partial pivot).
@@ -517,8 +534,8 @@ extern MatrixStatus_Type Matrix_Inverse3x3(
  *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SINGULAR.
  */
 extern MatrixStatus_Type Matrix_Inverse4x4(
-    const Matrix_Type  * const matrix,
-    Matrix_Type        * const result);
+    const Matrix_Type  * const Matrix_P,
+    Matrix_Type        * const Result_P);
 
 /**
  * \brief  Eigenvalue decomposition via iterative Jacobi method (symmetric matrices).
@@ -529,32 +546,32 @@ extern MatrixStatus_Type Matrix_Inverse4x4(
  *
  * \param[in,out] matrix          Symmetric input matrix (modified in-place).
  * \param[out]    eigen           Eigenvalue / eigenvector result structure.
- * \param[in]     max_iterations  Maximum Jacobi sweeps (0 uses #JACOBI_MAX_ITER).
+ * \param[in] MaxIterations  Maximum Jacobi sweeps (0 uses #JACOBI_MAX_ITER).
  * \param[in]     tolerance       Off-diagonal convergence threshold (0 uses default).
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_NOT_SQUARE;
  *          #MATRIX_ERROR_MAX_ITERATIONS.
  */
 extern MatrixStatus_Type Matrix_Eigenvalues(
-    Matrix_Type      * const matrix,
-    MatrixEigen_Type * const eigen,
-    const uint32_T           max_iterations,
-    const MatrixFloat        tolerance);
+    Matrix_Type      * const Matrix_P,
+    MatrixEigen_Type * const EigenOut_P,
+    const uint32_T MaxIterations,
+    const MatrixFloat        Tolerance);
 
 /**
  * \brief  Eigenvalues only (no eigenvectors; faster than #Matrix_Eigenvalues).
  *
  * \param[in,out] matrix          Symmetric input matrix (modified in-place).
- * \param[out]    eigenvalues     Array of at least \c matrix->rows floats.
- * \param[in]     max_iterations  Maximum Jacobi sweeps.
+ * \param[out]    eigenvalues     Array of at least \c Matrix_P->Rows floats.
+ * \param[in] MaxIterations  Maximum Jacobi sweeps.
  * \param[in]     tolerance       Off-diagonal convergence threshold.
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_NOT_SQUARE;
  *          #MATRIX_ERROR_MAX_ITERATIONS.
  */
 extern MatrixStatus_Type Matrix_EigenvaluesOnly(
-    Matrix_Type    * const matrix,
-    MatrixFloat    * const eigenvalues,
-    const uint32_T         max_iterations,
-    const MatrixFloat      tolerance);
+    Matrix_Type    * const Matrix_P,
+    MatrixFloat    * const EigenvaluesOut_P,
+    const uint32_T MaxIterations,
+    const MatrixFloat      Tolerance);
 
 /**
  * \brief  LU decomposition with partial pivoting (in-place, iterative).
@@ -564,12 +581,12 @@ extern MatrixStatus_Type Matrix_EigenvaluesOnly(
  * form, and \p pivot records the row permutation.
  *
  * \param[in,out] matrix  Square input matrix; overwritten with L+U.
- * \param[out]    pivot   Permutation array (at least \c matrix->rows entries).
+ * \param[out]    pivot   Permutation array (at least \c Matrix_P->Rows entries).
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_NOT_SQUARE;
  *          #MATRIX_ERROR_SINGULAR.
  */
 extern MatrixStatus_Type Matrix_LU(
-    Matrix_Type  * const matrix,
+    Matrix_Type  * const Matrix_P,
     uint32_T     * const pivot);
 
 /**
@@ -577,15 +594,15 @@ extern MatrixStatus_Type Matrix_LU(
  *
  * \param[in]  a  Square coefficient matrix.
  * \param[in]  b  Right-hand side matrix or vector.
- * \param[out] x  Solution (buffer must be ≥ a->rows × b->cols).
+ * \param[out] x  Solution (buffer must be ≥ a->Rows × b->Cols).
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_NOT_SQUARE;
  *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SIZE_EXCEEDED;
  *          #MATRIX_ERROR_SINGULAR.
  */
 extern MatrixStatus_Type Matrix_Solve(
-    const Matrix_Type  * const a,
-    const Matrix_Type  * const b,
-    Matrix_Type        * const x);
+    const Matrix_Type  * const A_P,
+    const Matrix_Type  * const B_P,
+    Matrix_Type        * const X_P);
 
 /**
  * \brief  Solve A·x = b via augmented Gauss-Jordan elimination (iterative).
@@ -600,9 +617,9 @@ extern MatrixStatus_Type Matrix_Solve(
  *          #MATRIX_ERROR_SINGULAR.
  */
 extern MatrixStatus_Type Matrix_SolveGaussJordan(
-    const Matrix_Type  * const a,
-    const Matrix_Type  * const b,
-    Matrix_Type        * const x);
+    const Matrix_Type  * const A_P,
+    const Matrix_Type  * const B_P,
+    Matrix_Type        * const X_P);
 
 /** \} */
 
@@ -618,9 +635,9 @@ extern MatrixStatus_Type Matrix_SolveGaussJordan(
  * \brief  Test whether a matrix is square.
  *
  * \param[in] matrix  Matrix to test (NULL → FALSE).
- * \return   TRUE if \c rows == \c cols, FALSE otherwise.
+ * \return   TRUE if \c Rows == \c Cols, FALSE otherwise.
  */
-extern boolean_T Matrix_IsSquare(const Matrix_Type * const matrix);
+extern boolean_T Matrix_IsSquare(const Matrix_Type * const Matrix_P);
 
 /**
  * \brief  Test whether a matrix is symmetric within a tolerance.
@@ -631,8 +648,8 @@ extern boolean_T Matrix_IsSquare(const Matrix_Type * const matrix);
  * \return   TRUE if |a[i][j] − a[j][i]| ≤ \p tolerance for all i, j.
  */
 extern boolean_T Matrix_IsSymmetric(
-    const Matrix_Type  * const matrix,
-    const MatrixFloat          tolerance);
+    const Matrix_Type  * const Matrix_P,
+    const MatrixFloat          Tolerance);
 
 /**
  * \brief  Compute the trace (sum of diagonal elements).
@@ -642,8 +659,8 @@ extern boolean_T Matrix_IsSymmetric(
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_NOT_SQUARE.
  */
 extern MatrixStatus_Type Matrix_Trace(
-    const Matrix_Type  * const matrix,
-    MatrixFloat        * const trace);
+    const Matrix_Type  * const Matrix_P,
+    MatrixFloat        * const TraceOut_P);
 
 /**
  * \brief  Compute the Frobenius norm: ‖A‖_F = √(Σᵢⱼ aᵢⱼ²).
@@ -653,8 +670,8 @@ extern MatrixStatus_Type Matrix_Trace(
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR.
  */
 extern MatrixStatus_Type Matrix_NormFrobenius(
-    const Matrix_Type  * const matrix,
-    MatrixFloat        * const norm);
+    const Matrix_Type  * const Matrix_P,
+    MatrixFloat        * const NormOut_P);
 
 /** \} */
 
@@ -669,15 +686,15 @@ extern MatrixStatus_Type Matrix_NormFrobenius(
 /**
  * \brief  Test element-wise equality within a tolerance.
  *
- * \param[in] a          First matrix.
- * \param[in] b          Second matrix (must have same dimensions as \p a).
+ * \param[in] A          First matrix.
+ * \param[in] B          Second matrix (must have same dimensions as \p A).
  * \param[in] tolerance  Maximum permitted element-wise difference (float).
  * \return   TRUE if all |a[i][j] − b[i][j]| ≤ \p tolerance.
  */
 extern boolean_T Matrix_IsEqual(
-    const Matrix_Type  * const a,
-    const Matrix_Type  * const b,
-    const MatrixFloat          tolerance);
+    const Matrix_Type  * const A_P,
+    const Matrix_Type  * const B_P,
+    const MatrixFloat          Tolerance);
 
 /**
  * \brief  Retrieve the active dimensions of a matrix.
@@ -689,9 +706,9 @@ extern boolean_T Matrix_IsEqual(
  * \param[out] cols    Receives active column count.
  */
 extern void Matrix_GetDimensions(
-    const Matrix_Type  * const matrix,
-    uint32_T           * const rows,
-    uint32_T           * const cols);
+    const Matrix_Type  * const Matrix_P,
+    uint32_T           * const RowsOut_P,
+    uint32_T           * const ColsOut_P);
 
 /**
  * \brief  Fill all active elements with a constant Q31 value.
@@ -700,8 +717,8 @@ extern void Matrix_GetDimensions(
  * \param[in]     value   Q31 fill value.
  */
 extern void Matrix_Fill(
-    Matrix_Type        * const matrix,
-    const MatrixElement        value);
+    Matrix_Type        * const Matrix_P,
+    const MatrixElement        Value);
 
 /**
  * \brief  Fill all active elements with a constant float value (auto-converted).
@@ -710,8 +727,8 @@ extern void Matrix_Fill(
  * \param[in]     value   Float fill value (clamped to [−1.0, 1.0]).
  */
 extern void Matrix_FillFloat(
-    Matrix_Type    * const matrix,
-    const MatrixFloat      value);
+    Matrix_Type    * const Matrix_P,
+    const MatrixFloat      Value);
 
 /** \} */
 
@@ -732,7 +749,7 @@ extern void Matrix_FillFloat(
  * \param[in] value  Float input.
  * \return           Q31 representation.
  */
-extern MatrixElement Matrix_FloatToQ31(const MatrixFloat value);
+extern MatrixElement Matrix_FloatToQ31(const MatrixFloat Value);
 
 /**
  * \brief  Convert a Q31 fixed-point value to float.
@@ -742,7 +759,7 @@ extern MatrixElement Matrix_FloatToQ31(const MatrixFloat value);
  * \param[in] value  Q31 input.
  * \return           Float in [−1.0, +1.0].
  */
-extern MatrixFloat Matrix_Q31ToFloat(const MatrixElement value);
+extern MatrixFloat Matrix_Q31ToFloat(const MatrixElement Value);
 
 /** \} */
 
@@ -763,8 +780,8 @@ extern MatrixFloat Matrix_Q31ToFloat(const MatrixElement value);
  *          MATRIX_ERROR_NON_POSITIVE_DEFINITE; MATRIX_ERROR_SIZE_EXCEEDED
  */
 extern MatrixStatus_Type Matrix_Cholesky(
-    const Matrix_Type  * const matrix,
-    Matrix_Type        * const L);
+    const Matrix_Type  * const Matrix_P,
+    Matrix_Type        * const L_P);
 
 /**
  * \brief  Forward substitution: L * x = b (L lower triangular)
@@ -775,9 +792,9 @@ extern MatrixStatus_Type Matrix_Cholesky(
  * \return  MATRIX_SUCCESS; MATRIX_ERROR_NULL_PTR; MATRIX_ERROR_DIMENSION_MISMATCH
  */
 extern MatrixStatus_Type Matrix_ForwardSubstitution(
-    const Matrix_Type  * const L,
-    const Matrix_Type  * const b,
-    Matrix_Type        * const x);
+    const Matrix_Type  * const L_P,
+    const Matrix_Type  * const B_P,
+    Matrix_Type        * const X_P);
 
 /**
  * \brief  Backward substitution: U * x = b (U upper triangular)
@@ -788,9 +805,9 @@ extern MatrixStatus_Type Matrix_ForwardSubstitution(
  * \return  MATRIX_SUCCESS; MATRIX_ERROR_NULL_PTR; MATRIX_ERROR_DIMENSION_MISMATCH
  */
 extern MatrixStatus_Type Matrix_BackwardSubstitution(
-    const Matrix_Type  * const U,
-    const Matrix_Type  * const b,
-    Matrix_Type        * const x);
+    const Matrix_Type  * const U_P,
+    const Matrix_Type  * const B_P,
+    Matrix_Type        * const X_P);
 
 /**
  * \brief  Symmetric rank-1 update: A = A + alpha * v * v^T
@@ -803,9 +820,9 @@ extern MatrixStatus_Type Matrix_BackwardSubstitution(
  * \return  MATRIX_SUCCESS; MATRIX_ERROR_NULL_PTR; MATRIX_ERROR_DIMENSION_MISMATCH
  */
 extern MatrixStatus_Type Matrix_SymmetricRank1Update(
-    Matrix_Type        * const A,
-    const Matrix_Type  * const v,
-    const MatrixElement        alpha);
+    Matrix_Type        * const A_P,
+    const Matrix_Type  * const V_P,
+    const MatrixElement        Alpha);
 
 /**
  * \brief  Symmetric rank-1 update with float alpha
@@ -816,9 +833,9 @@ extern MatrixStatus_Type Matrix_SymmetricRank1Update(
  * \return  MATRIX_SUCCESS; MATRIX_ERROR_NULL_PTR; MATRIX_ERROR_DIMENSION_MISMATCH
  */
 extern MatrixStatus_Type Matrix_SymmetricRank1UpdateFloat(
-    Matrix_Type        * const A,
-    const Matrix_Type  * const v,
-    const MatrixFloat          alpha);
+    Matrix_Type        * const A_P,
+    const Matrix_Type  * const V_P,
+    const MatrixFloat          Alpha);
 
 /**
  * \brief  Matrix square root for positive semidefinite matrices (Denman-Beavers)
@@ -832,9 +849,9 @@ extern MatrixStatus_Type Matrix_SymmetricRank1UpdateFloat(
  *          MATRIX_ERROR_MAX_ITERATIONS
  */
 extern MatrixStatus_Type Matrix_MatrixSquareRoot(
-    const Matrix_Type  * const matrix,
-    Matrix_Type        * const result,
-    const uint32_T             max_iter);
+    const Matrix_Type  * const Matrix_P,
+    Matrix_Type        * const Result_P,
+    const uint32_T MaxIter);
 
 /**
  * \brief  Condition number estimation (1-norm)
@@ -844,8 +861,8 @@ extern MatrixStatus_Type Matrix_MatrixSquareRoot(
  * \return  MATRIX_SUCCESS; MATRIX_ERROR_NULL_PTR; MATRIX_ERROR_NOT_SQUARE
  */
 extern MatrixStatus_Type Matrix_ConditionNumber(
-    const Matrix_Type  * const matrix,
-    MatrixFloat        * const cond);
+    const Matrix_Type  * const Matrix_P,
+    MatrixFloat        * const CondOut_P);
 
 /**
  * \brief  Check if matrix is positive definite via Cholesky attempt
@@ -853,9 +870,9 @@ extern MatrixStatus_Type Matrix_ConditionNumber(
  * \param[in]  matrix   Matrix to test
  * \return  TRUE if positive definite, FALSE otherwise
  */
-extern boolean_T Matrix_IsPositiveDefinite(const Matrix_Type * const matrix);
+extern boolean_T Matrix_IsPositiveDefinite(const Matrix_Type * const Matrix_P);
 
 /** \} */
 
 
-#endif /* MATRIX_H_ */
+#endif /* EMBED_SIM_MATRIX_H_ */
