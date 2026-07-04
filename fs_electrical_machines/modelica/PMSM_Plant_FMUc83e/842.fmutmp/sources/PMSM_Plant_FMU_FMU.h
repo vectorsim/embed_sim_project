@@ -5,7 +5,7 @@
 
 // define class name and unique id
 #define MODEL_IDENTIFIER PMSM_Plant_FMU
-#define MODEL_GUID "{858a65fe-2c64-4538-a904-0fe7a4bd2669}"
+#define MODEL_GUID "{0307ad53-9c7c-4ff7-b149-6daa230dd690}"
 
 // define model size
 #define NUMBER_OF_STATES 4

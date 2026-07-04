@@ -669,9 +669,9 @@ static const MMC_DEFSTRINGLIT(_OMC_LIT_RESOURCE_2_name,16,_OMC_LIT_RESOURCE_2_na
 static const MMC_DEFSTRINGLIT(_OMC_LIT_RESOURCE_2_dir,87,_OMC_LIT_RESOURCE_2_dir_data);
 
 #define _OMC_LIT_RESOURCE_3_name_data "PMSM_Plant_FMU"
-#define _OMC_LIT_RESOURCE_3_dir_data "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica"
+#define _OMC_LIT_RESOURCE_3_dir_data "C:/EmbedSimProject/embed_sim_project/pmsm/modelica"
 static const MMC_DEFSTRINGLIT(_OMC_LIT_RESOURCE_3_name,14,_OMC_LIT_RESOURCE_3_name_data);
-static const MMC_DEFSTRINGLIT(_OMC_LIT_RESOURCE_3_dir,68,_OMC_LIT_RESOURCE_3_dir_data);
+static const MMC_DEFSTRINGLIT(_OMC_LIT_RESOURCE_3_dir,50,_OMC_LIT_RESOURCE_3_dir_data);
 
 static const MMC_DEFSTRUCTLIT(_OMC_LIT_RESOURCES,8,MMC_ARRAY_TAG) {MMC_REFSTRINGLIT(_OMC_LIT_RESOURCE_0_name), MMC_REFSTRINGLIT(_OMC_LIT_RESOURCE_0_dir), MMC_REFSTRINGLIT(_OMC_LIT_RESOURCE_1_name), MMC_REFSTRINGLIT(_OMC_LIT_RESOURCE_1_dir), MMC_REFSTRINGLIT(_OMC_LIT_RESOURCE_2_name), MMC_REFSTRINGLIT(_OMC_LIT_RESOURCE_2_dir), MMC_REFSTRINGLIT(_OMC_LIT_RESOURCE_3_name), MMC_REFSTRINGLIT(_OMC_LIT_RESOURCE_3_dir)}};
 void PMSM_Plant_FMU_setupDataStruc(DATA *data, threadData_t *threadData)
@@ -684,8 +684,8 @@ void PMSM_Plant_FMU_setupDataStruc(DATA *data, threadData_t *threadData)
   data->modelData->modelFilePrefix = "PMSM_Plant_FMU";
   data->modelData->modelFileName = "PMSM_Motor.mo";
   data->modelData->resultFileName = NULL;
-  data->modelData->modelDir = "C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica";
-  data->modelData->modelGUID = "{858a65fe-2c64-4538-a904-0fe7a4bd2669}";
+  data->modelData->modelDir = "C:/EmbedSimProject/embed_sim_project/pmsm/modelica";
+  data->modelData->modelGUID = "{0307ad53-9c7c-4ff7-b149-6daa230dd690}";
   data->modelData->initXMLData = NULL;
   data->modelData->modelDataXml.infoXMLData = NULL;
   GC_asprintf(&data->modelData->modelDataXml.fileName, "%s/PMSM_Plant_FMU_info.json", data->modelData->resourcesDir);

@@ -62,7 +62,7 @@ PHONY: PMSM_Plant_FMU_FMU
 PMSM_Plant_FMU_FMU: nozip
 	cd .. && rm -f ../PMSM_Plant_FMU.fmu && zip -r ../PMSM_Plant_FMU.fmu *
 nozip: PMSM_Plant_FMU_functions.h PMSM_Plant_FMU_literals.h $(OFILES) $(RUNTIMEFILES) $(FMISUNDIALSFILES)
-	$(CXX) -shared -I. -o PMSM_Plant_FMU$(DLLEXT) $(RUNTIMEFILES) $(FMISUNDIALSFILES) $(OFILES) $(CPPFLAGS) -L"C:/EmbedSimProject/embed_sim_project/fs_electrical_machines/modelica"   $(CFLAGS) $(LDFLAGS) -llis -Wl,--kill-at
+	$(CXX) -shared -I. -o PMSM_Plant_FMU$(DLLEXT) $(RUNTIMEFILES) $(FMISUNDIALSFILES) $(OFILES) $(CPPFLAGS) -L"C:/EmbedSimProject/embed_sim_project/pmsm/modelica"   $(CFLAGS) $(LDFLAGS) -llis -Wl,--kill-at
 	mkdir.exe -p ../binaries/win64
 	dlltool -d PMSM_Plant_FMU.def --dllname PMSM_Plant_FMU$(DLLEXT) --output-lib PMSM_Plant_FMU.lib --kill-at
 	cp PMSM_Plant_FMU$(DLLEXT) PMSM_Plant_FMU.lib PMSM_Plant_FMU_FMU.libs ../binaries/win64/

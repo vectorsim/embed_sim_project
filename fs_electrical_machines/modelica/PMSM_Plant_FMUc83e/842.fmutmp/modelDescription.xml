@@ -2,11 +2,11 @@
 <fmiModelDescription
   fmiVersion="2.0"
   modelName="PMSM_Plant_FMU"
-  guid="{858a65fe-2c64-4538-a904-0fe7a4bd2669}"
+  guid="{0307ad53-9c7c-4ff7-b149-6daa230dd690}"
   description=""
   version=""
   generationTool="OpenModelica Compiler OpenModelica v1.26.3 (64-bit)"
-  generationDateAndTime="2026-05-07T16:52:46Z"
+  generationDateAndTime="2026-07-04T08:58:27Z"
   variableNamingConvention="structured"
   numberOfEventIndicators="0">
   <ModelExchange
