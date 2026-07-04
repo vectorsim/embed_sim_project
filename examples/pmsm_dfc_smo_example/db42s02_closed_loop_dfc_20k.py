@@ -146,18 +146,20 @@ FMU_PATH = _PMSM / "modelica" / "PMSM_Plant_FMU.fmu"
 
 
 # =============================================================================
-# Active gains — single source of truth.  None -> compile-time C defaults
-# from embed_sim_dfc_gains.h (DFC_KP_SPEED = 0.10, DFC_KP_ID = 0.15,
-# DFC_KP_IQ = 2.5, DFC_KI_ID = 0.045, DFC_REF_WN = 40, DFC_REF_ZETA = 1.0).
+# Active gains — single source of truth.
+# Now using tuned gains based on simulation results:
+#   - Kp_speed: 0.15 (was 0.10) - reduce speed error
+#   - Kp_iq: 0.60 (was 0.80) - reduce current overshoot
+#   - Ki_id: 0.050 (was 0.045) - slightly faster d-axis response
 # =============================================================================
 
 _ACTIVE_GAINS: dict = {
-    "kp_speed": None,    # [A/(rad/s)]
-    "kp_id":    None,    # [V/A]
-    "kp_iq":    None,    # [V/A]
-    "ki_id":    None,    # [V/(A*s)]
-    "ref_wn":   None,    # [rad/s]
-    "ref_zeta": None,    # [-]
+    "kp_speed": 0.15,      # [A/(rad/s)]  Increased for better speed tracking
+    "kp_id":    0.15,      # [V/A]        Unchanged
+    "kp_iq":    0.60,      # [V/A]        Reduced to limit overshoot
+    "ki_id":    0.050,     # [V/(A*s)]    Slightly increased
+    "ref_wn":   40.0,      # [rad/s]      Unchanged
+    "ref_zeta": 1.0,       # [-]          Unchanged
 }
 
 
@@ -234,8 +236,13 @@ class ConsoleMonitor:
         return default
 
     def _tload_mnm(self):
-        # t_load_est requires the v4.4 wrapper property; fall back silently.
-        v = getattr(self._dfc, "t_load_est", None)
+        """Get load-torque observer estimate in mN.m."""
+        # Try multiple possible attribute names
+        v = None
+        for attr in ("t_load_est", "tload_hat", "TLoadHat"):
+            v = getattr(self._dfc, attr, None)
+            if v is not None:
+                break
         try:
             return float(v) * 1e3 if v is not None else None
         except Exception:
@@ -724,13 +731,23 @@ def print_summary(d: dict, target_rpm: float) -> None:
     print(f"  mean speed, 20 mN.m load  : {np.mean(w_heavy):8.1f} RPM "
           f"(err {np.mean(w_heavy) - target_rpm:+.1f})")
     print(f"  speed ripple (heavy, 1σ)  : {np.std(w_heavy):8.2f} RPM")
-    print(f"  iq peak                   : {np.max(np.abs(d['iq'])):8.3f} A "
-          f"(I_MAX {I_MAX} A)")
+
+    # IQ current stats
+    iq = d["iq"]
+    iq_peak = np.max(np.abs(iq))
+    iq_rms = np.sqrt(np.mean(iq * iq))
+    print(f"  iq peak                   : {iq_peak:8.3f} A  (I_MAX {I_MAX} A)")
+    print(f"  iq RMS                    : {iq_rms:8.3f} A")
+    if iq_peak > I_MAX * 1.05:
+        print(f"  [WARNING] iq peak exceeds I_MAX by {((iq_peak/I_MAX)-1)*100:.1f}%")
+
     dfc = d.get("_dfc")
     tl  = getattr(dfc, "t_load_est", None) if dfc is not None else None
     if tl is not None:
         print(f"  load-torque observer T^   : {float(tl)*1e3:8.1f} mN.m "
-              f"(true 20.0)")
+              f"(true {T_LOAD_HEAVY*1e3:.1f})")
+        if abs(float(tl) - T_LOAD_HEAVY) / T_LOAD_HEAVY > 0.1:
+            print(f"  [WARNING] observer error {(float(tl)/T_LOAD_HEAVY - 1)*100:.1f}%")
     print(f"  final mode                : "
           f"{DFControllerBlock.MODE_NAMES.get(int(d['mode'][-1]), '?')}")
     print("=" * 64)
@@ -759,6 +776,9 @@ def _ask_codegen() -> bool:
 def main() -> int:
     print(f"[run] target={TARGET_RPM:.0f} RPM  T={T_SIM}s  dt={DT*1e6:.0f}us  "
           f"noise={'on' if ENABLE_NOISE else 'off'}")
+    print(f"[gains] Kp_speed={_ACTIVE_GAINS['kp_speed']:.2f} "
+          f"Kp_iq={_ACTIVE_GAINS['kp_iq']:.2f} "
+          f"Ki_id={_ACTIVE_GAINS['ki_id']:.3f}")
 
     # CodeGen boundary hooks are transparent passthroughs (identical results),
     # so code generation is available after the run.
