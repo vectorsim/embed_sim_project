@@ -74,7 +74,7 @@ boolean Ifx_Console_print(pchar format, ...)
         Ifx_SizeT count;
         va_list   args;
         va_start(args, format);
-        vsprintf((char *)message, format, args);
+        vsnprintf((char *)message, sizeof(message), format, args);
         va_end(args);
         count = (Ifx_SizeT)strlen(message);
         IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, count < STDIF_DPIPE_MAX_PRINT_SIZE);
@@ -104,7 +104,7 @@ boolean Ifx_Console_printAlign(pchar format, ...)
         char      spaces[17] = "                ";
         va_list   args;
         va_start(args, format);
-        vsprintf((char *)message, format, args);
+        vsnprintf((char *)message, sizeof(message), format, args);
         va_end(args);
         count = (Ifx_SizeT)strlen(message);
         IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, count < STDIF_DPIPE_MAX_PRINT_SIZE);
