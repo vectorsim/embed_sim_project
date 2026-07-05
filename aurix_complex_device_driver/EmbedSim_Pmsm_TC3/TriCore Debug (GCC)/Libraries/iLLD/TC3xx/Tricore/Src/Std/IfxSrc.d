@@ -1,0 +1,30 @@
+Libraries/iLLD/TC3xx/Tricore/Src/Std/IfxSrc.o: \
+ ../Libraries/iLLD/TC3xx/Tricore/Src/Std/IfxSrc.c \
+ ../Libraries/iLLD/TC3xx/Tricore/Src/Std/IfxSrc.h \
+ C:\EmbedSim_MotorControl\EmbedSim_Pmsm_TC3\Libraries\iLLD\TC3xx\Tricore/_Impl/IfxSrc_cfg.h \
+ C:\EmbedSim_MotorControl\EmbedSim_Pmsm_TC3\Configurations/Ifx_Cfg.h \
+ C:\EmbedSim_MotorControl\EmbedSim_Pmsm_TC3\Libraries\iLLD\TC3xx\Tricore/_Impl/IfxSrc_cfg_TC38x.h \
+ C:\EmbedSim_MotorControl\EmbedSim_Pmsm_TC3\Libraries\iLLD\TC3xx\Tricore/Cpu/Std/IfxCpu_Intrinsics.h \
+ C:\EmbedSim_MotorControl\EmbedSim_Pmsm_TC3\Libraries\iLLD\TC3xx\Tricore/Cpu/Std/Ifx_Types.h \
+ C:\EmbedSim_MotorControl\EmbedSim_Pmsm_TC3\Libraries\Infra\Platform/Tricore/Compilers/Compilers.h \
+ C:\EmbedSim_MotorControl\EmbedSim_Pmsm_TC3\Libraries\Infra\Platform/Tricore/Compilers/CompilerGcc.h \
+ C:\EmbedSim_MotorControl\EmbedSim_Pmsm_TC3\Libraries\iLLD\TC3xx\Tricore/Cpu/Std/Platform_Types.h \
+ C:\EmbedSim_MotorControl\EmbedSim_Pmsm_TC3\Libraries\iLLD\TC3xx\Tricore/Cpu/Std/Ifx_TypesGcc.h \
+ C:\EmbedSim_MotorControl\EmbedSim_Pmsm_TC3\Libraries\iLLD\TC3xx\Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h \
+ C:\EmbedSim_MotorControl\EmbedSim_Pmsm_TC3\Libraries\Infra\Sfr\TC38x/IfxSrc_reg.h \
+ C:\EmbedSim_MotorControl\EmbedSim_Pmsm_TC3\Libraries\Infra\Sfr\TC38x/IfxSrc_regdef.h \
+ C:\EmbedSim_MotorControl\EmbedSim_Pmsm_TC3\Libraries\Infra\Sfr\TC38x/Ifx_TypesReg.h
+../Libraries/iLLD/TC3xx/Tricore/Src/Std/IfxSrc.h:
+C:\EmbedSim_MotorControl\EmbedSim_Pmsm_TC3\Libraries\iLLD\TC3xx\Tricore/_Impl/IfxSrc_cfg.h:
+C:\EmbedSim_MotorControl\EmbedSim_Pmsm_TC3\Configurations/Ifx_Cfg.h:
+C:\EmbedSim_MotorControl\EmbedSim_Pmsm_TC3\Libraries\iLLD\TC3xx\Tricore/_Impl/IfxSrc_cfg_TC38x.h:
+C:\EmbedSim_MotorControl\EmbedSim_Pmsm_TC3\Libraries\iLLD\TC3xx\Tricore/Cpu/Std/IfxCpu_Intrinsics.h:
+C:\EmbedSim_MotorControl\EmbedSim_Pmsm_TC3\Libraries\iLLD\TC3xx\Tricore/Cpu/Std/Ifx_Types.h:
+C:\EmbedSim_MotorControl\EmbedSim_Pmsm_TC3\Libraries\Infra\Platform/Tricore/Compilers/Compilers.h:
+C:\EmbedSim_MotorControl\EmbedSim_Pmsm_TC3\Libraries\Infra\Platform/Tricore/Compilers/CompilerGcc.h:
+C:\EmbedSim_MotorControl\EmbedSim_Pmsm_TC3\Libraries\iLLD\TC3xx\Tricore/Cpu/Std/Platform_Types.h:
+C:\EmbedSim_MotorControl\EmbedSim_Pmsm_TC3\Libraries\iLLD\TC3xx\Tricore/Cpu/Std/Ifx_TypesGcc.h:
+C:\EmbedSim_MotorControl\EmbedSim_Pmsm_TC3\Libraries\iLLD\TC3xx\Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h:
+C:\EmbedSim_MotorControl\EmbedSim_Pmsm_TC3\Libraries\Infra\Sfr\TC38x/IfxSrc_reg.h:
+C:\EmbedSim_MotorControl\EmbedSim_Pmsm_TC3\Libraries\Infra\Sfr\TC38x/IfxSrc_regdef.h:
+C:\EmbedSim_MotorControl\EmbedSim_Pmsm_TC3\Libraries\Infra\Sfr\TC38x/Ifx_TypesReg.h:

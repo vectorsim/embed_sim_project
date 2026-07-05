@@ -89,6 +89,9 @@ extern void CddGpio_ConfigGtmPhaseWLs_P00_6(void);
 /** \brief  P00.7 — ATOM0_CH6 → CDTM0_DTM5_2 → TOUT16  /IH3 high-side Phase W   */
 extern void CddGpio_ConfigGtmPhaseWHs_P00_7(void);
 
+/** \brief  P00.8 — ATOM0_CH6 → CDTM0_DTM5_3 → TOUT17  ADC Trigger             */
+extern void CddGpio_ConfigGtmPhaseADCTrigger_P00_8(void);
+
 /**********************************************************************************************************************
  * Function Prototypes — Debug / ISR Timing
  *********************************************************************************************************************/

@@ -1,13 +1,13 @@
 /**********************************************************************************************************************
  * \file      embed_sim_matrix.h
- * \brief     32-bit fixed-point (Q31) linear algebra library for embedded systems.
+ * \brief     Single-precision floating-point linear algebra library for embedded systems.
  *
  * \details   Provides static-allocation matrix operations targeting 32-bit MCUs
  *            (Infineon AURIX TriCore, ARM Cortex-M4).  All algorithms are iterative —
  *            no recursion — and the implementation is MISRA C:2012 compliant.
  *
  *            Key properties:
- *              - Q31 fixed-point arithmetic (1 sign bit + 31 fractional bits)
+ *              - IEEE 754 single-precision (real32_T) arithmetic
  *              - Maximum matrix size: 8 × 8
  *              - No dynamic memory allocation
  *              - Eigenvalue decomposition via iterative Jacobi method
@@ -71,13 +71,13 @@
 
 /**
  * \typedef MatrixElement
- * \brief   32-bit Q31 fixed-point scalar type.
+ * \brief   Single-precision floating-point scalar type.
  *
- * Encoding: 1 sign bit + 31 fractional bits.
- * Range    : [−1.0, +0.9999999995]
- * Resolution: ~4.66 × 10⁻¹⁰
+ * Maps to \c real32_T (IEEE 754, 32-bit).
+ * Range    : approximately ±3.4 × 10³⁸
+ * Precision: ~7 significant decimal digits
  */
-typedef int32_T MatrixElement;
+typedef real32_T MatrixElement;
 
 /**
  * \typedef MatrixFloat
@@ -118,7 +118,7 @@ typedef enum
  */
 typedef struct
 {
-    MatrixElement  * Data;      /**< Pointer to the Q31 data buffer (row-major).       */
+    MatrixElement  * Data;      /**< Pointer to the real32_T data buffer (row-major).    */
     uint32_T         Rows;      /**< Active row count.                                 */
     uint32_T         Cols;      /**< Active column count.                              */
     uint32_T         MaxRows;  /**< Allocated row capacity.                           */
@@ -229,12 +229,12 @@ extern MatrixStatus_Type Matrix_Copy(
  */
 
 /**
- * \brief  Write a Q31 value to a single element.
+ * \brief  Write a real32_T value to a single element.
  *
  * \param[in,out] matrix  Target matrix (must not be NULL).
  * \param[in]     row     0-based row index (< \c Matrix_P->Rows).
  * \param[in]     col     0-based column index (< \c Matrix_P->Cols).
- * \param[in]     value   Q31 value to write.
+ * \param[in]     value   real32_T value to write.
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_OUT_OF_BOUNDS.
  */
 extern MatrixStatus_Type Matrix_SetElement(
@@ -244,7 +244,7 @@ extern MatrixStatus_Type Matrix_SetElement(
     const MatrixElement    Value);
 
 /**
- * \brief  Write a float value (auto-converted to Q31) to a single element.
+ * \brief  Write a float value to a single element.
  *
  * \param[in,out] matrix  Target matrix (must not be NULL).
  * \param[in]     row     0-based row index.
@@ -259,12 +259,12 @@ extern MatrixStatus_Type Matrix_SetElementFloat(
     const MatrixFloat      Value);
 
 /**
- * \brief  Read a Q31 value from a single element.
+ * \brief  Read a real32_T value from a single element.
  *
  * \param[in]  matrix  Source matrix (must not be NULL).
  * \param[in]  row     0-based row index.
  * \param[in]  col     0-based column index.
- * \param[out] value   Receives the Q31 value (must not be NULL).
+ * \param[out] value   Receives the real32_T value (must not be NULL).
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_OUT_OF_BOUNDS.
  */
 extern MatrixStatus_Type Matrix_GetElement(
@@ -299,7 +299,7 @@ extern MatrixStatus_Type Matrix_GetElementFloat(
  */
 
 /**
- * \brief  Element-wise addition: \p result = \p A + \p B (saturating Q31).
+ * \brief  Element-wise addition: \p result = \p A + \p B .
  *
  * \param[in]  a       Left operand.
  * \param[in]  b       Right operand (same dimensions as \p A).
@@ -313,7 +313,7 @@ extern MatrixStatus_Type Matrix_Add(
     Matrix_Type        * const Result_P);
 
 /**
- * \brief  Element-wise subtraction: \p result = \p A − \p B (saturating Q31).
+ * \brief  Element-wise subtraction: \p result = \p A − \p B .
  *
  * \param[in]  a       Minuend.
  * \param[in]  b       Subtrahend (same dimensions as \p A).
@@ -327,7 +327,7 @@ extern MatrixStatus_Type Matrix_Subtract(
     Matrix_Type        * const Result_P);
 
 /**
- * \brief  Matrix multiplication: \p result = \p A × \p B (Q31, saturating).
+ * \brief  Matrix multiplication: \p result = \p A × \p B .
  *
  * \p A is (m × n), \p B is (n × p), \p result is (m × p).
  *
@@ -343,10 +343,10 @@ extern MatrixStatus_Type Matrix_Multiply(
     Matrix_Type        * const Result_P);
 
 /**
- * \brief  Scalar multiplication: \p result = \p scalar × \p matrix (Q31).
+ * \brief  Scalar multiplication: \p result = \p scalar × \p matrix .
  *
  * \param[in]  matrix  Input matrix.
- * \param[in]  scalar  Q31 scalar.
+ * \param[in]  scalar  real32_T scalar.
  * \param[out] result  Output matrix.
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_SIZE_EXCEEDED.
  */
@@ -356,7 +356,7 @@ extern MatrixStatus_Type Matrix_ScalarMultiply(
     Matrix_Type        * const Result_P);
 
 /**
- * \brief  Scalar multiplication with float input (auto-converted to Q31).
+ * \brief  Scalar multiplication with float input.
  *
  * \param[in]  matrix  Input matrix.
  * \param[in]  scalar  Float scalar (clamped to [−1.0, 1.0]).
@@ -711,10 +711,10 @@ extern void Matrix_GetDimensions(
     uint32_T           * const ColsOut_P);
 
 /**
- * \brief  Fill all active elements with a constant Q31 value.
+ * \brief  Fill all active elements with a constant real32_T value.
  *
  * \param[in,out] matrix  Target matrix (must not be NULL).
- * \param[in]     value   Q31 fill value.
+ * \param[in]     value   real32_T fill value.
  */
 extern void Matrix_Fill(
     Matrix_Type        * const Matrix_P,
@@ -733,31 +733,31 @@ extern void Matrix_FillFloat(
 /** \} */
 
 /*--------------------------------------------------------------------------------------------------------------------
- * Q31 conversion helpers
+ * Conversion helpers  (formerly Q31; now float identity — retained for API compatibility)
  *------------------------------------------------------------------------------------------------------------------*/
 
-/** \addtogroup matrix_conversion  Q31 conversion helpers
+/** \addtogroup matrix_conversion  Conversion helpers
  * \{
  */
 
 /**
- * \brief  Convert a float to Q31 fixed-point.
+ * \brief  Convert a float to MatrixElement (identity — MatrixElement is now real32_T).
  *
- * \p value is clamped to [−1.0, +0.9999999995] before conversion.
- * Formula: result = value × 2³¹
+ * Retained for source compatibility with callers that used the Q31 API.
+ * Value is clamped to [−1.0, +1.0] to preserve prior semantics.
  *
- * \param[in] value  Float input.
- * \return           Q31 representation.
+ * \param[in] Value  Float input.
+ * \return           Same value clamped to [−1.0, +1.0].
  */
 extern MatrixElement Matrix_FloatToQ31(const MatrixFloat Value);
 
 /**
- * \brief  Convert a Q31 fixed-point value to float.
+ * \brief  Convert MatrixElement to float (identity — MatrixElement is now real32_T).
  *
- * Formula: result = value / 2³¹
+ * Retained for source compatibility with callers that used the Q31 API.
  *
- * \param[in] value  Q31 input.
- * \return           Float in [−1.0, +1.0].
+ * \param[in] Value  MatrixElement (real32_T) input.
+ * \return           Same value unchanged.
  */
 extern MatrixFloat Matrix_Q31ToFloat(const MatrixElement Value);
 
@@ -816,7 +816,7 @@ extern MatrixStatus_Type Matrix_BackwardSubstitution(
  *
  * \param[in,out] A     Symmetric matrix to update
  * \param[in]     v     Vector (n×1 matrix)
- * \param[in]     alpha Scalar (in Q31 format)
+ * \param[in]     alpha Scalar (real32_T)
  * \return  MATRIX_SUCCESS; MATRIX_ERROR_NULL_PTR; MATRIX_ERROR_DIMENSION_MISMATCH
  */
 extern MatrixStatus_Type Matrix_SymmetricRank1Update(

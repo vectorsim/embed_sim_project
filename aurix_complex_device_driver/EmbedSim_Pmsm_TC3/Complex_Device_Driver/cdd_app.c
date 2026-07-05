@@ -15,11 +15,13 @@
  *                  5. GTM CMU CLK0    — CddSys_SetGtmCmuClk00Freq(): CMU CLK0 = 200 MHz
  *                  6. GTM ATOM0       — CddGtm_Init(): ATOM0 CH0–CH5 complementary PWM;
  *                                       ISR service request armed but not yet firing (SRE=0)
+ *                  7. CTRL LAYER      — CddGtm_CtrlInit(): Transform_Init() + DFC_Init();
+ *                                       CtrlMode defaults to CDDAPP_CTRL_OPENLOOP
  *              --- CddApp_Start() completes the sequence ---
- *                  7. PWM LIVE        — CddGtm_Start(): HOST_TRIG; PWM carrier goes live
- *                  8. BRIDGE ENABLE   — CddTle9180_AssertEnable(): ENA = HIGH; gate
+ *                  8. PWM LIVE        — CddGtm_Start(): HOST_TRIG; PWM carrier goes live
+ *                  9. BRIDGE ENABLE   — CddTle9180_AssertEnable(): ENA = HIGH; gate
  *                                       drive outputs active on AP32541
- *                  9. ISR ARM         — SRC_GTM_ATOM0_0.B.SRE = 1U: 20 kHz FOC ISR fires
+ *                 10. ISR ARM         — SRC_GTM_ATOM0_0.B.SRE = 1U: 20 kHz FOC ISR fires
  *
  *              The split between CddApp_Init() and CddApp_Start() guarantees that
  *              bridge output transistors are never energised before the GTM PWM carrier
@@ -39,8 +41,8 @@
  *                           The volatile qualifier prevents the assignment from being
  *                           optimised away and renders Rule 2.2 inapplicable.
  *
- * \version     1.3.0
- * \date        2025-05-24
+ * \version     1.4.0
+ * \date        2026-07-04
  * \author      EmbedSim / EV Light Vehicle Foundation
  *
  * \copyright   Copyright (C) 2025 EmbedSim — EV Light Vehicle Foundation, Jaffna, Sri Lanka.
@@ -51,11 +53,16 @@
  * Includes
  *********************************************************************************************************************/
 #include "cdd_app.h"
+#include "cdd_evadc_app.h"
 #include "cdd_tle9180_app.h"
 #include "cdd_sys_utility.h"
 #include "IfxGtm_reg.h"
 #include "IfxSrc_reg.h"
 #include "IfxScuCcu.h"
+#include "cdd_stm_app.h"        /* CddStm_Init()                                               */
+#include "cdd_gpio_app.h"       /* CddGpio_InitLed_P33()                                       */
+#include "cdd_gtm_app.h"        /* CddGtm_Init(), CddGtm_Start()                               */
+#include "cdd_evadc_app.h"      /* CddEvadc_Meas_T, FocUvw_T (via embed_sim_foc_types.h)       */
 
 /**********************************************************************************************************************
  * Private Variables
@@ -117,11 +124,19 @@ void CddApp_Init(void)
 {
     volatile uint32_T ok;
 
-    /* Initialise duty cycles to 50% (zero-voltage vector) before anything else */
-    CddApp_G.DTC   = CDDAPP_DTC_NONE;
-    CddApp_G.DutyU = 0.5F;
-    CddApp_G.DutyV = 0.5F;
-    CddApp_G.DutyW = 0.5F;
+    /* Initialise duty cycles to 50% (zero-voltage vector) before anything else.
+     * Control command defaults: OPENLOOP, zero speed — the host must select
+     * mode and speed explicitly BEFORE CddApp_Start(); the ISR latches the
+     * mode once on the activation edge (no switching during operation).      */
+    CddApp_G.DTC         = CDDAPP_DTC_NONE;
+    CddApp_G.DutyU       = 0.5F;
+    CddApp_G.DutyV       = 0.5F;
+    CddApp_G.DutyW       = 0.5F;
+    CddApp_G.Vuo         = 0.0F;
+    CddApp_G.Vvo         = 0.0F;
+    CddApp_G.Vwo         = 0.0F;
+    CddApp_G.CtrlMode    = CDDAPP_CTRL_OPENLOOP;
+    CddApp_G.SpeedRefRpm = 600.0F;
 
     /* Re-entrant / repeated call guard: CDDAPP_INIT_PENDING = 0 (set by .bss at reset) */
     ok = ((CddApp_G.CDDAppStatus == CDDAPP_INIT_PENDING) ? 0x1U : 0x0U);
@@ -167,6 +182,7 @@ void CddApp_Init(void)
             {
                 /* CddTle9180_Startup(): Init → Configure → IsNormalMode */
                 ok = CddApp_InitInverter();
+
                 if (ok != 0x1U)
                 {
                     CddApp_G.CDDAppStatus = CDDAPP_INIT_ERR_INV;
@@ -226,10 +242,28 @@ void CddApp_Init(void)
             /* ATOM0 CH0–CH5: complementary PWM pairs (UH/UL, VH/VL, WH/WL).
              * ISR service request is configured here but SRE=0 — ISR does not fire
              * until CddApp_Start() sets SRE=1 after the PWM carrier is live.          */
+            CddEvadc_Init();
             CddGtm_Init();
             CddApp_G.CDDAppStatus = CDDAPP_INIT_DONE_GTM;
-            CddApp_G.CDDAppStatus = CDDAPP_INIT_OK;
+        }
 
+        /* ── Step 7: Control-loop layer (Transform_Init + DFC_Init) ───────────────────── */
+        if (ok == 0x1U)
+        {
+            /* Clarke/Park transform setup + DFC controller state zeroing with
+             * default gains.  Until this succeeds the ISR keeps to the open-loop
+             * V/f path regardless of the mode requested via CddApp_SetCtrlMode(). */
+            ok = CddGtm_CtrlInit();
+            if (ok != 0x1U)
+            {
+                CddApp_G.CDDAppStatus = CDDAPP_INIT_ERR_CTRL;
+                CddApp_G.DTC          = CDDAPP_DTC_CTRL_INIT;
+            }
+            else
+            {
+                CddApp_G.CDDAppStatus = CDDAPP_INIT_DONE_CTRL;
+                CddApp_G.CDDAppStatus = CDDAPP_INIT_OK;
+            }
         }
     }
 }
@@ -269,8 +303,30 @@ uint32_T CddApp_Start(void)
 
     if((CddApp_G.CDDAppStatus == CDDAPP_INIT_OK) && (started != 0x1U))
     {
-       CddTle9180_AssertEnable();             /* Step 7: gate drive outputs active       */
-       CddGtm_Start();                        /* Step 8: PWM carrier live                */
+       uint32_T clrErr = 0x0U;
+
+       /* Step 7 — CALIBRATION WINDOW: gates hard-off while everything else
+        * runs.  PowerOnSequence leaves /SOFF deasserted, so it must be
+        * re-asserted HERE, before ENA and the PWM carrier, to guarantee the
+        * bridge is never energised during offset calibration.                 */
+       CddTle9180_AssertSafeOff();            /* gates hard-off (latched)                */
+       CddTle9180_AssertEnable();             /* pre-drivers active, outputs held off    */
+       CddGtm_Start();                        /* PWM carrier live, 20 kHz ISR firing,
+                                               * EVADC conversions flowing (ISR reads
+                                               * sensors in every state)                 */
+
+       /* Step 8 — one-shot CSA offset calibration: true phase currents are
+        * zero (/SOFF asserted), the ISR refreshes Vu/Vv/Vw/Vr each tick.
+        * Blocking ~3.2 ms at 64 samples.  On timeout (ISR not ticking) the
+        * offsets stay 0.0f and conversion degrades gracefully — verify
+        * Vuo/Vvo/Vwo are non-zero in the watch window after startup.          */
+       CddEvadc_CalibratePhaseOffsets(&CddApp_G, 64U);
+
+       /* Step 9 — clear any faults logged while inputs toggled against
+        * /SOFF (Err_indiag class), then release the gates and go live.        */
+       //(void)CddTle9180_ClearFaults(&clrErr);
+       CddTle9180_DeassertSafeOff();          /* bridge live                             */
+
        CddApp_G.CDDAppStatus = CDDAPP_RUN_STATE;
        started = 0x1U;
 
@@ -285,4 +341,43 @@ uint32_T CddApp_Start(void)
 CddApp_Status_T CddApp_GetInitStatus(void)
 {
     return CddApp_G.CDDAppStatus;
+}
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * CddApp_SetCtrlMode
+ *
+ * Accepted only outside CDDAPP_RUN_STATE — the ISR latches the mode exactly
+ * once on the activation edge and it is fixed for the entire run.  The
+ * check-then-store sequence is race-benign: if the state flips to RUN between
+ * check and store, the ISR has already latched the previous mode on that
+ * activation edge, and the late-written value is not consumed before the next
+ * activation — exactly the stop → set → restart contract.
+ *------------------------------------------------------------------------------------------------------------------*/
+void CddApp_SetCtrlMode(const CddApp_CtrlMode_T Mode)
+{
+    if (((Mode == CDDAPP_CTRL_OPENLOOP) || (Mode == CDDAPP_CTRL_CLOSEDLOOP)) &&
+        (CddApp_G.CDDAppStatus != CDDAPP_RUN_STATE))
+    {
+        CddApp_G.CtrlMode = Mode;
+    }
+}
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * CddApp_GetCtrlMode
+ *------------------------------------------------------------------------------------------------------------------*/
+CddApp_CtrlMode_T CddApp_GetCtrlMode(void)
+{
+    return CddApp_G.CtrlMode;
+}
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * CddApp_SetSpeedRefRpm
+ *
+ * Single aligned 32-bit store — atomic on TriCore; live-settable from any
+ * thread context.  Both control paths bound the command internally (open
+ * loop: slew limiter; DFC: ±DFC_OMEGA_CMD_MAX clamp).
+ *------------------------------------------------------------------------------------------------------------------*/
+void CddApp_SetSpeedRefRpm(const real32_T SpeedRpm)
+{
+    CddApp_G.SpeedRefRpm = SpeedRpm;
 }

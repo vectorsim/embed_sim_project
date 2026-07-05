@@ -318,9 +318,9 @@ static void SVM_CalculateDutyFromTimes(
             break;
     }
 
-    DutyOut_P->Ta = Matrix_FloatToQ31(SVM_ClampFloat(ta));
-    DutyOut_P->Tb = Matrix_FloatToQ31(SVM_ClampFloat(tb));
-    DutyOut_P->Tc = Matrix_FloatToQ31(SVM_ClampFloat(tc));
+    DutyOut_P->Ta = SVM_ClampFloat(ta);
+    DutyOut_P->Tb = SVM_ClampFloat(tb);
+    DutyOut_P->Tc = SVM_ClampFloat(tc);
     DutyOut_P->Sector = Sector;
 }
 
@@ -515,8 +515,6 @@ MatrixStatus_Type SVM_GetSectorFromDQ(
     MatrixElement              Vq,
     SVM_Sector_T     * const   SectorOut_P)
 {
-    MatrixFloat       vd_f;
-    MatrixFloat       vq_f;
     MatrixFloat       sqrt3_vd;
     MatrixStatus_Type status;
 
@@ -528,17 +526,15 @@ MatrixStatus_Type SVM_GetSectorFromDQ(
     }
     else
     {
-        vd_f     = Matrix_Q31ToFloat(Vd);
-        vq_f     = Matrix_Q31ToFloat(Vq);
-        sqrt3_vd = SVM_SQRT3_F * vd_f;
+        sqrt3_vd = SVM_SQRT3_F * Vd;
 
-        if (vq_f >= SVM_ZERO_F)
+        if (Vq >= SVM_ZERO_F)
         {
-            if (vq_f > sqrt3_vd)
+            if (Vq > sqrt3_vd)
             {
                 *SectorOut_P = SVM_SECTOR_II;
             }
-            else if (vq_f > -sqrt3_vd)
+            else if (Vq > -sqrt3_vd)
             {
                 *SectorOut_P = SVM_SECTOR_I;
             }
@@ -549,11 +545,11 @@ MatrixStatus_Type SVM_GetSectorFromDQ(
         }
         else
         {
-            if (vq_f < -sqrt3_vd)
+            if (Vq < -sqrt3_vd)
             {
                 *SectorOut_P = SVM_SECTOR_V;
             }
-            else if (vq_f < sqrt3_vd)
+            else if (Vq < sqrt3_vd)
             {
                 *SectorOut_P = SVM_SECTOR_IV;
             }
@@ -597,15 +593,12 @@ MatrixStatus_Type SVM_GetCompareValues(
     }
     else
     {
-        /* Scale Q31 → ticks via 64-bit intermediate */
-        ta_ticks = (uint32_T)(((uint64_T)(uint32_T)DutyIn_P->Ta * (uint64_T)TimerPeriod)
-                              / (uint64_T)SVM_Q31_ONE);
-        tb_ticks = (uint32_T)(((uint64_T)(uint32_T)DutyIn_P->Tb * (uint64_T)TimerPeriod)
-                              / (uint64_T)SVM_Q31_ONE);
-        tc_ticks = (uint32_T)(((uint64_T)(uint32_T)DutyIn_P->Tc * (uint64_T)TimerPeriod)
-                              / (uint64_T)SVM_Q31_ONE);
+        /* Scale float duty [0.0, 1.0] → ticks */
+        ta_ticks = (uint32_T)(DutyIn_P->Ta * (MatrixFloat)TimerPeriod);
+        tb_ticks = (uint32_T)(DutyIn_P->Tb * (MatrixFloat)TimerPeriod);
+        tc_ticks = (uint32_T)(DutyIn_P->Tc * (MatrixFloat)TimerPeriod);
 
-        /* Centre-aligned compare = (Period − OnTime) / 2 */
+        /* Centre-aligned compare = (Period − OnTicks) / 2 */
         *CompAOut_P = (TimerPeriod - ta_ticks) / 2U;
         *CompBOut_P = (TimerPeriod - tb_ticks) / 2U;
         *CompCOut_P = (TimerPeriod - tc_ticks) / 2U;
@@ -628,9 +621,9 @@ void SVM_GetDutyCyclesFloat(
         (TbOut_P  != NULL) &&
         (TcOut_P  != NULL))
     {
-        *TaOut_P = Matrix_Q31ToFloat(DutyIn_P->Ta);
-        *TbOut_P = Matrix_Q31ToFloat(DutyIn_P->Tb);
-        *TcOut_P = Matrix_Q31ToFloat(DutyIn_P->Tc);
+        *TaOut_P = DutyIn_P->Ta;
+        *TbOut_P = DutyIn_P->Tb;
+        *TcOut_P = DutyIn_P->Tc;
     }
     else
     {

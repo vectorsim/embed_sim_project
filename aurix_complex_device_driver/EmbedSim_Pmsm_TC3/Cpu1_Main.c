@@ -28,23 +28,26 @@
 #include "IfxCpu.h"
 #include "IfxScuWdt.h"
 #include "Ifx_Cfg_Ssw.h"
+#include  "cdd_app.h"
+#include "cdd_sys_utility.h"
+
 
 extern IfxCpu_syncEvent cpuSyncEvent;
 
 void core1_main(void)
 {
-    IfxCpu_enableInterrupts();
-    
-    /* !!WATCHDOG1 IS DISABLED HERE!!
-     * Enable the watchdog and service it periodically if it is required
-     */
+    /* 1. Watchdog FIRST — ENDINIT sequence must run before IE=1 */
     IfxScuWdt_disableCpuWatchdog(IfxScuWdt_getCpuWatchdogPassword());
-    
-    /* Wait for CPU sync event */
-    IfxCpu_emitEvent(&cpuSyncEvent);
-    IfxCpu_waitEvent(&cpuSyncEvent, 1);
-    
-    while(1)
-    {
-    }
+    IfxScuWdt_disableSafetyWatchdog(IfxScuWdt_getSafetyWatchdogPassword());
+
+    /* 2. Enable CPU1 interrupts after watchdog is safe */
+    IfxCpu_enableInterrupts();
+
+    IfxCpu_waitEvent(&cpuSyncEvent, 100U);
+
+   while (1)
+   {
+
+
+   }
 }

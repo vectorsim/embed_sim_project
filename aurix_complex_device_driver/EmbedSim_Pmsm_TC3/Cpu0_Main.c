@@ -28,13 +28,10 @@
 #include "IfxCpu.h"
 #include "IfxScuWdt.h"
 #include "Ifx_Cfg_Ssw.h"
-#include "cdd_stm_app.h"
+#include  "cdd_app.h"
 
 
 IFX_ALIGN(4) IfxCpu_syncEvent cpuSyncEvent = 0;
-
-
-
 
 void core0_main(void)
 {
@@ -45,15 +42,14 @@ void core0_main(void)
      */
     IfxScuWdt_disableCpuWatchdog(IfxScuWdt_getCpuWatchdogPassword());
     IfxScuWdt_disableSafetyWatchdog(IfxScuWdt_getSafetyWatchdogPassword());
-    
-    /* Wait for CPU sync event */
-    IfxCpu_emitEvent(&cpuSyncEvent);
-    IfxCpu_waitEvent(&cpuSyncEvent, 1);
-    
-    Initialize_STM_Module();
 
-    
+    IfxCpu_emitEvent(&cpuSyncEvent);
+
+    CddApp_Init();
+    CddApp_Start();
+
     while(1)
     {
+        __nop();
     }
 }

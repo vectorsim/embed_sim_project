@@ -143,6 +143,15 @@ void CddGpio_ConfigGtmPhaseWHs_P00_7(void)
     CddSys_SetCpuWdtEndInit();
 }
 
+void CddGpio_ConfigGtmPhaseADCTrigger_P00_8(void)
+{
+    /* GTM_TOUT17 = O1 → PC = 0x11 (push-pull alt-func 1)  appx2 R6 */
+    P00_IOCR8.B.PC8 = 0x11U;
+    CddSys_ClearCpuWdtEndInit();
+    P00_PDR1.B.PD8  = 0x3U;
+    CddSys_SetCpuWdtEndInit();
+}
+
 /**********************************************************************************************************************
  * ISR Timing Probe — P14.5
  *********************************************************************************************************************/

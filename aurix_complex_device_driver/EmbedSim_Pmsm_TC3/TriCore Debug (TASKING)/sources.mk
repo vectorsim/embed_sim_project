@@ -41,6 +41,8 @@ Libraries/Service/CpuGeneric/SysSe/Bsp \
 Libraries/iLLD/TC3xx/Tricore/Cpu/Irq \
 Libraries/iLLD/TC3xx/Tricore/Cpu/Std \
 Libraries/iLLD/TC3xx/Tricore/Cpu/Trap \
+Libraries/iLLD/TC3xx/Tricore/Gpt12/IncrEnc \
+Libraries/iLLD/TC3xx/Tricore/Gpt12/Std \
 Libraries/iLLD/TC3xx/Tricore/Gtm/Std \
 Libraries/iLLD/TC3xx/Tricore/Mtu/Std \
 Libraries/iLLD/TC3xx/Tricore/Pms/Std \

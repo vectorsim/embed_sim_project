@@ -17,6 +17,8 @@ RM := rm -rf
 -include Libraries/iLLD/TC3xx/Tricore/Pms/Std/subdir.mk
 -include Libraries/iLLD/TC3xx/Tricore/Mtu/Std/subdir.mk
 -include Libraries/iLLD/TC3xx/Tricore/Gtm/Std/subdir.mk
+-include Libraries/iLLD/TC3xx/Tricore/Gpt12/Std/subdir.mk
+-include Libraries/iLLD/TC3xx/Tricore/Gpt12/IncrEnc/subdir.mk
 -include Libraries/iLLD/TC3xx/Tricore/Cpu/Trap/subdir.mk
 -include Libraries/iLLD/TC3xx/Tricore/Cpu/Std/subdir.mk
 -include Libraries/iLLD/TC3xx/Tricore/Cpu/Irq/subdir.mk

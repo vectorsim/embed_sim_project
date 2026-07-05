@@ -271,20 +271,20 @@ const CddTle9180_SpiTx_T CddTle9180_ReadCmds_G[CDD_TLE9180_READ_CMD_COUNT] =
  * Private Variables
  *********************************************************************************************************************/
 
-STATIC const CddTle9180_SpiTx_T Status_ReadSeq_S[2U] =
+static const CddTle9180_SpiTx_T Status_ReadSeq_S[2U] =
 {
     { .U = STATUS_READ_CMD },
     { .U = STATUS_NOP_CMD  },
 };
 
-STATIC CddTle9180_SpiRx_T Status_RxBuf_S[2U];
+static CddTle9180_SpiRx_T Status_RxBuf_S[2U];
 
 /**********************************************************************************************************************
  * Private Function Prototypes
  *********************************************************************************************************************/
-STATIC void CddTle9180_PowerOnSequence(void);
-STATIC uint32_T CddTle9180_PingSr0(P2VAR(uint32_T, AUTOMATIC, CDD_APPL_DATA) ErrorCode);
-STATIC uint32_T CddTle9180_ClearFaults(P2VAR(uint32_T, AUTOMATIC, CDD_APPL_DATA) ErrorCode);
+static void CddTle9180_PowerOnSequence(void);
+static uint32_T CddTle9180_PingSr0(P2VAR(uint32_T, AUTOMATIC, CDD_APPL_DATA) ErrorCode);
+static uint32_T CddTle9180_ClearFaults(P2VAR(uint32_T, AUTOMATIC, CDD_APPL_DATA) ErrorCode);
 
 /**********************************************************************************************************************
  * GPIO Wrapper Implementations
@@ -407,7 +407,7 @@ void CddTle9180_Wait(uint32_T TimeConst)
  *           wait 1 ms        LDO re-stabilise.
  *   Step 5  /SOFF = HIGH     Release gate shutdown.
  *------------------------------------------------------------------------------------------------------------------*/
-STATIC void CddTle9180_PowerOnSequence(void)
+static void CddTle9180_PowerOnSequence(void)
 {
     CddTle9180_AssertEnable();
 
@@ -454,8 +454,7 @@ STATIC void CddTle9180_PowerOnSequence(void)
  *   dbg_Sr0_SpiErr  == 1            → TLE9180 rejected frame CRC
  *   plausible non-zero, SpiErr==0   → SPI physical layer confirmed OK
  *------------------------------------------------------------------------------------------------------------------*/
-STATIC uint32_T CddTle9180_PingSr0(
-    P2VAR(uint32_T, AUTOMATIC, CDD_APPL_DATA) ErrorCode)
+static uint32_T CddTle9180_PingSr0(P2VAR(uint32_T, AUTOMATIC, CDD_APPL_DATA) ErrorCode)
 {
     /* TX: READ SR0 (addr=0x00, pre-verified constant) + NOP pipeline flush */
     static const CddTle9180_SpiTx_T Sr0_TxSeq_S[2U] =

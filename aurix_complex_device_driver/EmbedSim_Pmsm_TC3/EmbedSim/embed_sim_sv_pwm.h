@@ -80,17 +80,18 @@
 #define SVM_ONE_THIRD_F          ES_MATH_ONE_THIRD_F
 
 /**********************************************************************************************************************
- * Macros — Q31 Fixed-Point Scaling
+ * Macros — Q31 Fixed-Point Scaling  (DEPRECATED — retained as zero/one aliases only)
+ *
+ * MatrixElement is now real32_T.  These macros remain so that any existing
+ * call sites that reference SVM_Q31_ONE / SVM_Q31_ZERO still compile, but
+ * they now resolve to float 1.0f / 0.0f rather than integer bit patterns.
  *********************************************************************************************************************/
 
-/** \brief  Q31 scaling factor 2³¹                  [dimensionless] */
-#define SVM_Q31_SCALE_F          (2147483648.0f)
+/** \brief  Duty-cycle value representing 100 % (was Q31 0x7FFFFFFF, now 1.0f) */
+#define SVM_Q31_ONE              (ES_MATH_ONE_F)
 
-/** \brief  Q31 representation of 1.0               [Q31] */
-#define SVM_Q31_ONE              ((int32_T)0x7FFFFFFF)
-
-/** \brief  Q31 representation of 0.0               [Q31] */
-#define SVM_Q31_ZERO             ((int32_T)0x00000000)
+/** \brief  Duty-cycle value representing   0 % (was Q31 0x00000000, now 0.0f) */
+#define SVM_Q31_ZERO             (0.0f)
 
 /**********************************************************************************************************************
  * Data Structures
@@ -112,14 +113,14 @@ typedef enum
 
 /**
  * \struct SVM_DutyCycle_T
- * \brief  Per-phase Q31 duty cycles and the active sector.
+ * \brief  Per-phase duty cycles and the active sector.
  */
 typedef struct
 {
-    MatrixElement  Ta;      /**< Phase-A (U) duty cycle   [Q31, 0 … SVM_Q31_ONE] */
-    MatrixElement  Tb;      /**< Phase-B (V) duty cycle   [Q31, 0 … SVM_Q31_ONE] */
-    MatrixElement  Tc;      /**< Phase-C (W) duty cycle   [Q31, 0 … SVM_Q31_ONE] */
-    SVM_Sector_T   Sector;  /**< Active sector            [SVM_Sector_T]         */
+    MatrixFloat    Ta;      /**< Phase-A (U) duty cycle   [0.0 … 1.0] */
+    MatrixFloat    Tb;      /**< Phase-B (V) duty cycle   [0.0 … 1.0] */
+    MatrixFloat    Tc;      /**< Phase-C (W) duty cycle   [0.0 … 1.0] */
+    SVM_Sector_T   Sector;  /**< Active sector            [SVM_Sector_T]   */
 } SVM_DutyCycle_T;
 
 /**********************************************************************************************************************
@@ -202,8 +203,8 @@ extern MatrixStatus_Type SVM_GetSectorFromAlphaBeta(
 /**
  * \brief   Determine the SVPWM sector from dq-frame voltage components.
  *
- * \param[in]  Vd          d-axis voltage   [Q31]
- * \param[in]  Vq          q-axis voltage   [Q31]
+ * \param[in]  Vd          d-axis voltage   [real32_T]
+ * \param[in]  Vq          q-axis voltage   [real32_T]
  * \param[out] SectorOut_P Resolved sector  (must not be NULL)
  *
  * \return  MATRIX_SUCCESS on success.
@@ -215,7 +216,7 @@ extern MatrixStatus_Type SVM_GetSectorFromDQ(
     SVM_Sector_T     * const   SectorOut_P);
 
 /**
- * \brief   Convert Q31 duty cycles to centre-aligned PWM compare values.
+ * \brief   Convert floating-point duty cycles to centre-aligned PWM compare values.
  *
  * \param[in]  DutyIn_P    Source duty-cycle structure   (must not be NULL)
  * \param[in]  TimerPeriod Timer period in CLK ticks     (must be > 0)

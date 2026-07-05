@@ -33,8 +33,19 @@
  *              [D-14.4] #if directives use integer macros (CDD_CTRL_SELECT).
  *              [D-20.9] #if is necessary for multi-controller build selection.
  *
- * \version     1.3.0
- * \date        2025-05-24
+ * \version     1.4.0
+ * \date        2026-07-04
+ *
+ * \par v1.4.0
+ *   Redesign: CddApp_T is the single central object —
+ *     - CtrlMode (CDDAPP_CTRL_OPENLOOP / CDDAPP_CTRL_CLOSEDLOOP) and
+ *       SpeedRefRpm moved here; set via CddApp_SetCtrlMode() /
+ *       CddApp_SetSpeedRefRpm() before CddApp_Start(); the mode is latched
+ *       once by the ISR — no switching during operation.
+ *     - EVADC measurements (Meas: raw sense voltages + DC link [V]) and the
+ *       converted PhaseCurrents [A] moved here, updated every ISR tick.
+ *   The DFC loop-option layer (A/B) is removed from the public API:
+ *   CLOSEDLOOP always runs the full sensorless DFC sequence.
  * \author      EmbedSim / EV Light Vehicle Foundation
  *
  * \copyright   Copyright (C) 2025 EmbedSim — EV Light Vehicle Foundation, Jaffna, Sri Lanka.
@@ -48,9 +59,6 @@
  * Includes
  *********************************************************************************************************************/
 #include "cdd_config.h"         /* embed_sim_sys_types.h + embed_sim_compiler.h pulled in here */
-#include "cdd_stm_app.h"        /* CddStm_Init()                                               */
-#include "cdd_gpio_app.h"       /* CddGpio_InitLed_P33()                                       */
-#include "cdd_gtm_app.h"        /* CddGtm_Init(), CddGtm_Start()                               */
 #include "cdd_tle9180_app.h"    /* CddTle9180_T, CddTle9180_Startup(), CddTle9180_AssertEnable */
 
 /**********************************************************************************************************************
@@ -58,7 +66,7 @@
  *********************************************************************************************************************/
 
 /** \brief  Module version  [dimensionless] */
-#define CDDAPP_VERSION              (0x010300UL)
+#define CDDAPP_VERSION              (0x010400UL)
 
 /** \brief  Controller build-select token.
  *          Pass -DCDD_CTRL_SELECT=<n> on the compiler command line, or define here.
@@ -83,21 +91,22 @@
 
 /**
  * \brief  Total number of sub-module startup steps in CddApp_Init().
+ *         v1.4.0: +1 for the control-loop layer (Transform + DFC).
  *         Compile-time assertion below cross-checks this constant.
  */
-#define CDDAPP_NUM_SUBMODULES       (8U)
+#define CDDAPP_NUM_SUBMODULES       (9U)
 
 /**********************************************************************************************************************
  * Compile-time consistency check
  *********************************************************************************************************************/
 
 /*
- * Verify that CDDAPP_NUM_SUBMODULES matches the eight documented startup steps.
+ * Verify that CDDAPP_NUM_SUBMODULES matches the nine documented startup steps.
  * Implemented as a preprocessor #if/#error so that it is valid under --iso=99 (C99).
  * _Static_assert is C11 and is not available with the TASKING --iso=99 build flag.
  */
-#if (CDDAPP_NUM_SUBMODULES != 8U)
-    #error "CDD_APP_H: CDDAPP_NUM_SUBMODULES must equal 8 — update macro and CddApp_Init() together."
+#if (CDDAPP_NUM_SUBMODULES != 9U)
+    #error "CDD_APP_H: CDDAPP_NUM_SUBMODULES must equal 9 — update macro and CddApp_Init() together."
 #endif
 
 /**********************************************************************************************************************
@@ -121,6 +130,8 @@ typedef enum
     CDDAPP_INIT_DONE_INV       =   10U,   /**< Inverter (TLE9180D) reached NORMAL mode   [dimensionless] */
     CDDAPP_INIT_ERR_GTM        =   12U,   /**< GTM frequency or CMU CLK0 check failed    [dimensionless] */
     CDDAPP_INIT_DONE_GTM       =   14U,   /**< GTM CMU + ATOM0 PWM initialised           [dimensionless] */
+    CDDAPP_INIT_ERR_CTRL       =   16U,   /**< Control-loop init (DFC/transform) failed  [dimensionless] */
+    CDDAPP_INIT_DONE_CTRL      =   18U,   /**< Transform + DFC controller initialised    [dimensionless] */
     CDDAPP_INIT_OK             =  100U,    /**< All sub-modules initialised successfully  [dimensionless] */
     CDDAPP_RUN_STATE           =  105U,    /**< All sub-modules initialised successfully  [dimensionless] */
     CDDAPP_ERROR_STATE         =  110U
@@ -137,8 +148,30 @@ typedef enum
     CDDAPP_DTC_QSPI_FREQ       = 18U,   /**< fPeriph (QSPI source) not 200 MHz          [dimensionless] */
     CDDAPP_DTC_INV_STARTUP     = 22U,   /**< TLE9180D did not reach NORMAL mode         [dimensionless] */
     CDDAPP_DTC_GTM_FREQ        = 25U,   /**< GTM clock not 200 MHz                      [dimensionless] */
-    CDDAPP_DTC_GTM_CMU0_FREQ   = 28U    /**< GTM CMU CLK0 not 200 MHz after programming [dimensionless] */
+    CDDAPP_DTC_GTM_CMU0_FREQ   = 28U,   /**< GTM CMU CLK0 not 200 MHz after programming [dimensionless] */
+    CDDAPP_DTC_CTRL_INIT       = 32U    /**< DFC_Init() failed (control-loop layer)     [dimensionless] */
 } CddApp_DTC_T;
+
+/**
+ * \enum   CddApp_CtrlMode_T
+ * \brief  Control mode executed by the 20 kHz ISR — exactly two options.
+ *
+ * \details Selected BEFORE CddApp_Start() via CddApp_SetCtrlMode(); the ISR
+ *          latches the mode once on the activation edge and it is fixed for
+ *          the entire run — no switching during operation.  To change the
+ *          mode: stop, set, restart.  Both modes consume SpeedRefRpm.
+ *
+ *          CDDAPP_CTRL_OPENLOOP is the reset default (value 0, .bss safe):
+ *          V/f rotating vector at the ramped speed reference, no current
+ *          feedback — the commissioning / bring-up path.
+ *          CDDAPP_CTRL_CLOSEDLOOP runs the full sensorless DFC (its internal
+ *          ALIGN → I-f → CLOSEDLOOP startup sequence, then flatness FOC).
+ */
+typedef enum
+{
+    CDDAPP_CTRL_OPENLOOP   = 0U,   /**< V/f rotating vector at SpeedRefRpm, no feedback. */
+    CDDAPP_CTRL_CLOSEDLOOP = 1U    /**< Sensorless flatness FOC (DFC), full closed loop. */
+} CddApp_CtrlMode_T;
 
 /**
  * \brief  Central application state structure.
@@ -162,6 +195,28 @@ typedef struct
     /** \brief  Active Diagnostic Trouble Code                         [CddApp_DTC_T]    */
     CddApp_DTC_T            DTC;
 
+    /* ------------------------------------------------------------------
+     * Control command block  (host → ISR)
+     * ------------------------------------------------------------------ */
+
+    /** \brief  Selected control mode — OPENLOOP or CLOSEDLOOP.  Written by
+     *          CddApp_SetCtrlMode() before start; latched once by the ISR
+     *          on the activation edge (no switching during operation).
+     *          Atomic 32-bit store on TriCore.       [CddApp_CtrlMode_T]               */
+    CddApp_CtrlMode_T       CtrlMode;
+
+    /** \brief  Mechanical speed reference, consumed by BOTH control modes.
+     *          Live-settable via CddApp_SetSpeedRefRpm() (atomic store);
+     *          the open-loop path slew-limits it internally, the DFC clamps
+     *          it to ±DFC_OMEGA_CMD_MAX.                              [RPM]            */
+    real32_T                SpeedRefRpm;
+
+
+
+    /* ------------------------------------------------------------------
+     * PWM outputs and timing
+     * ------------------------------------------------------------------ */
+
     /** \brief  Phase U PWM duty cycle                                 [0.0 .. 1.0]      */
     real32_T                DutyU;
 
@@ -170,6 +225,47 @@ typedef struct
 
     /** \brief  Phase W PWM duty cycle                                 [0.0 .. 1.0]      */
     real32_T                DutyW;
+
+    /** \brief  Current Phase U                                        [A]               */
+    real32_T                Iu;
+
+    /** \brief  Current Phase V                                        [A]               */
+    real32_T                Iv;
+
+    /** \brief  Current Phase W                                        [A]               */
+    real32_T                Iw;
+
+    /** \brief  Sum of Current Phases                                   [A]               */
+    real32_T                Isum;
+
+    /** \brief  ADC Voltage Phase U                                    [V]               */
+    real32_T                Vu;
+
+    /** \brief  ADC Voltage Phase V                                    [V]               */
+    real32_T                Vv;
+
+    /** \brief  ADC Voltage Phase W                                    [V]               */
+    real32_T                Vw;
+
+    /** \brief  ADC dc link                                            [V]               */
+    real32_T                Vdc;
+
+    /** \brief                                                         [V]               */
+    real32_T                Vr;
+
+
+    /** \brief  ADC Voltage Phase U  Offset                                  [V]               */
+    real32_T                Vuo;
+
+    /** \brief  ADC Voltage Phase V  offset                                  [V]               */
+     real32_T                Vvo;
+
+    /** \brief  ADC Voltage Phase W                                          [V]               */
+    real32_T                Vwo;
+
+
+
+
 
     /** \brief  GTM ATOM0 carrier period in CMU CLK0 ticks
      *          = GTM_CMU_CLK0_FREQUENCY / CDD_CONTROL_LOOP_FREQUENCY [CLK0 ticks]      */
@@ -239,5 +335,41 @@ extern uint32_T CddApp_Start(void);
  * \return  CddApp_Status_T — current value of CddApp_G.CDDAppStatus.
  */
 extern CddApp_Status_T CddApp_GetInitStatus(void);
+
+/**
+ * \brief   Selects the control mode — OPENLOOP or CLOSEDLOOP (atomic store).
+ *
+ * \details Accepted only while the application is NOT in CDDAPP_RUN_STATE.
+ *          The 20 kHz ISR latches the mode exactly once on the activation
+ *          edge; it is fixed for the entire run — no switching during
+ *          operation.  To change the mode: stop, set, restart.
+ *          Requests during RUN, or invalid enum values, are silently ignored.
+ *
+ *          Host sequence:
+ *              CddApp_Init();
+ *              CddApp_SetCtrlMode(CDDAPP_CTRL_CLOSEDLOOP);  // or OPENLOOP — final
+ *              CddApp_SetSpeedRefRpm(1500.0F);
+ *              CddApp_Start();
+ *
+ * \param[in]  Mode  CDDAPP_CTRL_OPENLOOP or CDDAPP_CTRL_CLOSEDLOOP.
+ */
+extern void CddApp_SetCtrlMode(const CddApp_CtrlMode_T Mode);
+
+/**
+ * \brief   Returns the currently selected control mode.
+ * \return  CddApp_CtrlMode_T
+ */
+extern CddApp_CtrlMode_T CddApp_GetCtrlMode(void);
+
+/**
+ * \brief   Sets the mechanical speed reference (atomic 32-bit store).
+ *
+ * \details Consumed by both control modes and live-settable at any time:
+ *          the open-loop path slew-limits changes internally (no step in the
+ *          rotating vector frequency); the DFC clamps to ±DFC_OMEGA_CMD_MAX.
+ *
+ * \param[in]  SpeedRpm  Mechanical speed reference  [RPM]
+ */
+extern void CddApp_SetSpeedRefRpm(const real32_T SpeedRpm);
 
 #endif /* CDD_APP_H */
