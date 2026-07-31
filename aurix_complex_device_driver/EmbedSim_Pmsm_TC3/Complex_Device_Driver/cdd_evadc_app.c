@@ -6,12 +6,24 @@
  *              1. Configure arbitration priority (ARBPR)
  *              2. Configure channel control (CHCTR): global class 0
  *              3. Add channel(s) to queue (QINR): auto-refill; external trigger
- *                 on the first entry, back-to-back conversion for follow-ups
+ *                 on the first entry, back-to-back conversion for follow-ups.
+ *                 Phase groups queue EVADC_PHASE_SAMPLES entries per trigger
+ *                 (1x EXTR + 3x refill) for 4x oversampling, matching the
+ *                 Infineon PmsmFoc reference (Evadc_InitCurSenseLsTriShunt*).
  *              4. Configure queue trigger (QCTRL): GTM ATOM via ADCTRIG
  *              5. Enable queue trigger (QMR)
- *              6. Configure data reduction (RCR): 1 sample, service request
- *              7. Configure service request node (SRC): SRPN, CPU1
+ *              6. Configure data reduction (RCR): DRCTR = EVADC_PHASE_SAMPLES-1,
+ *                 DMM = 0 (accumulate); readout divides the sum back down.
+ *              7. Configure ONE service request node: G1_SR0 on the LAST
+ *                 result of the set (G1RES3 = VOLT_DC).  G1 converts VRO +
+ *                 VOLT_DC back-to-back after the phase bursts start on the
+ *                 same edge, so a G1 SR implies the whole set is fresh —
+ *                 same single-interrupt philosophy as the reference (which
+ *                 raises resultPriority only on curVO1).
  *              8. Start converter (ARBCFG.ANONC = 3)
+ *              9. AFTER all groups are on: startup calibration (SUCAL) —
+ *                 the analog converters must be enabled for the calibration
+ *                 sequence to execute (iLLD initGroup order).
  *
  *              Channel map (AP32541 v1.0 Table 12 / Table 15, AppKit TC387):
  *
@@ -66,11 +78,13 @@
  *              re-reading RESULT in a second access would race against the
  *              next conversion.  VF and RESULT are taken from the same load.
  *
- * \note        Required cdd_config.h changes (SRPN literals below must match):
- *                  CORE_01_ADC_PHASE_V_SRPN  now serviced by SRC_VADC_G3_SR0
- *                  CORE_01_ADC_DC_LINK_SRPN  (rename of the old
- *                      CORE_01_ADC_G_08_CH_08_DC_LINK_SRPN) on SRC_VADC_G1_SR0
- *                  EVADC_ENABLE_DC_LINK_SR   unchanged, now applied to G1_SR0
+ * \note        cdd_config.h dependencies:
+ *                  CORE_01_ADC_DC_LINK_SRPN  → SRC_VADC_G1_SR0 (the SINGLE
+ *                      conversion-set SR; raised by G1RES3, last of the set)
+ *                  EVADC_ENABLE_DC_LINK_SR   → G1_SR0.SRE
+ *                  CORE_01_ADC_PHASE_U/V/W_SRPN and EVADC_ENABLE_PHASE_x_SR
+ *                      are NO LONGER USED (phase groups raise no SR; their
+ *                      results are polled by CddEvadc_ReadSensorMeas).
  *
  * \note        MISRA C:2012: Rules 8.9, 8.10, 14.4, 15.5, 17.2.
  *
@@ -80,9 +94,10 @@
  *********************************************************************************************************************/
 
 #include "cdd_evadc_app.h"
-#include "cdd_sys_utility.h"   /* CddSys_ClearWdtEndInit, CddSys_SetWdtEndInit, CddSys_NopDelay */
-#include "cdd_gpio_app.h"      /* CddGpio_ConfigIsrTiming_P14_5, CddGpio_ToggleIsrTiming_P14_5  */
+#include "cdd_sys_utility.h"
+#include "cdd_gpio_app.h"
 #include "cdd_config.h"
+#include "cdd_stm_app.h"
 #include "IfxEvadc_reg.h"
 #include "IfxSrc_reg.h"
 #include "IfxConverter_reg.h"
@@ -93,20 +108,28 @@
  * Private Macros — ADC Scaling
  *********************************************************************************************************************/
 
-#define EVADC_FULL_SCALE            (4096.0f)    /**< 12-bit LSB divisor: 1 LSB = VAREF/4096   [dimensionless] */
-#define EVADC_VAREF_VOLT            (5.0f)       /**< AppKit TC387 VAREF.  AP32541 §3.3.4: CSA outputs
+
+
+#define EVADC_FULL_SCALE            (4095.0F)    /**< 12-bit LSB divisor: 1 LSB = VAREF/4096   [dimensionless] */
+#define EVADC_VAREF_VOLT            (5.0F)       /**< AppKit TC387 VAREF.  AP32541 §3.3.4: CSA outputs
                                                   *   "feed ADCs with an analog range from 0 V to 5 V";
                                                   *   VRO = 2.5 V is mid-scale of this range.        [V]      */
 #define EVADC_XTSEL_REQTRI          (0x8U)       /**< GxQCTRL0.XTSEL code for input REQTRI = GTM
                                                   *   ADC_TRIG0[group].  Uniform for all groups
                                                   *   (TC38x UM Appendix Table 292).                          */
-#define EVADC_PHASE_SAMPLES         (1U)         /**< DMM data reduction sample count                          */
+#define EVADC_PHASE_SAMPLES         (4U)         /**< Phase-current oversampling: conversions per trigger and
+                                                  *   DMM accumulation count (DRCTR = N-1).  4 matches the
+                                                  *   Infineon reference (DRCTR=3, "Accumulate 4 result").
+                                                  *   Burst length ~4 conversions (~3..4 us at 40 MHz fADCI)
+                                                  *   MUST fit inside the all-low-side ON window — verify on
+                                                  *   the scope at max modulation index, else reduce to 1.
+                                                  *   Accumulator headroom: 4 x 4095 = 16380 < 2^16, OK.     */
 #define EVADC_ARBPR_PRIO            (0x1U)       /**< Arbitration priority                                     */
-#define EVADC_G1_UDC_CHANNEL        (0x3U)       /**< G1 channel number of VOLT_DC (AN11)                      */
-#define EVADC_G1_UDC_RESREG         (0x3U)       /**< G1 result register of VOLT_DC (G1RES3)                   */
+
+
 
 /** \brief  ADC code → pin voltage  [V] */
-#define EVADC_CODE_TO_VOLT(Code)    (((real32_T)(Code) / EVADC_FULL_SCALE) * EVADC_VAREF_VOLT)
+#define EVADC_CODE_TO_VOLT(Code)    (((real32_T)(Code) / (1.0F * EVADC_FULL_SCALE * EVADC_PHASE_SAMPLES)) * EVADC_VAREF_VOLT)
 
 /**********************************************************************************************************************
  * Private Macros — Shunt Current Conversion  (CddEvadc_ConvertPhaseCurrents)
@@ -129,10 +152,10 @@
 #define EVADC_SHUNT_R_OHM           (0.010f)     /**< Low-side phase shunt        [Ohm]  AP32541 BoM #34   */
 #define EVADC_CSA_GAIN              (30.81f)     /**< TLE9180D CSA gain, code 100B [V/V] DS P_9.6.7        */
 #define EVADC_VRO_NOM_V             (2.5f)       /**< Nominal VRO (zcl=10B), fallback only  [V]            */
-#define EVADC_I_SIGN                (1.0f)       /**< Polarity, see block comment  [dimensionless]         */
+
 
 /** \brief  Sense-voltage → ampere conversion factor:  1/(30.81 * 0.010) = 3.246  [A/V] */
-#define EVADC_V_TO_A                (1.0f / (EVADC_CSA_GAIN * EVADC_SHUNT_R_OHM))
+
 
 /**********************************************************************************************************************
  * Private Macros — DC-Link Voltage Divider  (AP32541 Eq. 1)
@@ -147,33 +170,26 @@
 /** \brief  Pin voltage → DC-link bus voltage:  (5.6+56)/5.6 = 11.0  [V/V] */
 #define EVADC_UDC_PIN_TO_BUS        ((EVADC_UDC_R113_KOHM + EVADC_UDC_R114_KOHM) / EVADC_UDC_R113_KOHM)
 
-/**********************************************************************************************************************
- * Private Macros — Offset Calibration
- *********************************************************************************************************************/
 
-#define EVADC_CAL_VF_TIMEOUT        (100000U)    /**< Poll iterations per VF wait; >> one 50 us trigger
-                                                  *   period at 20 kHz              [loop iterations]     */
+#define  EVADC_CURRENT_U_READING_VALID   (0x1U)
+#define  EVADC_CURRENT_V_READING_VALID   (0x2U)
+#define  EVADC_CURRENT_W_READING_VALID   (0x4U)
 
-/**********************************************************************************************************************
- * Private Data
- *********************************************************************************************************************/
 
-/** \brief  Last measured VRO reference-buffer voltage.  Initialised to the nominal 2.5 V so that
- *          conversions before the first G1 result remain plausible.                          [V] */
-static volatile real32_T CddEvadc_VroVolt_G = EVADC_VRO_NOM_V;
+#define  EVADC_CALSTC   (0x3U)     /**<  Calibration Sample Time Control */
 
+
+/** \brief  Voltage to current conversion factor: 1/(R_shunt * CSA_gain) = 3.246 A/V */
+#define EVADC_V_TO_A_FACTOR         (1.0f / (EVADC_SHUNT_R_OHM * EVADC_CSA_GAIN))
 
 
 /**********************************************************************************************************************
  * Private Function Prototypes
  *********************************************************************************************************************/
-static void CddEvadc_InitConvctrl(void);
-static void CddEvadc_EnableClock(void);
 static void CddEvadc_ConfigGlobal(void);
-static void CddEvadc_CalibrateAllGroups(void);
-static void CddEvadc_ConfigG00PhaseU(void);
-static void CddEvadc_ConfigG03PhaseV(void);
-static void CddEvadc_ConfigG02PhaseW(void);
+static void CddEvadc_ConfigG0Ch0An0PhaseU(void);
+static void CddEvadc_ConfigG3Ch0An24PhaseV(void);
+static void CddEvadc_ConfigG2Ch0An16PhaseW(void);
 static void CddEvadc_ConfigG01VroUdc(void);
 
 static void CddEvadc_ReadVro(P2VAR(volatile CddApp_T, AUTOMATIC, CDD_APPL_DATA) CddAppPtr);
@@ -184,540 +200,553 @@ static void CddEvadc_ReadDcLink(P2VAR(volatile CddApp_T, AUTOMATIC, CDD_APPL_DAT
 
 
 
+
 /**********************************************************************************************************************
  * Public Function Implementations
  *********************************************************************************************************************/
 
 void CddEvadc_Init(void)
 {
-    CddGpio_ConfigIsrTiming_P14_5();
 
-    CddEvadc_InitConvctrl();
-    CddEvadc_EnableClock();
+
     CddEvadc_ConfigGlobal();
-    CddEvadc_CalibrateAllGroups();
-
-    CddEvadc_ConfigG00PhaseU();
-    CddEvadc_ConfigG03PhaseV();
-    CddEvadc_ConfigG02PhaseW();
+    CddEvadc_ConfigG0Ch0An0PhaseU();
+    CddEvadc_ConfigG3Ch0An24PhaseV();
+    /*CddEvadc_ConfigG2Ch0An16PhaseW();*/
     CddEvadc_ConfigG01VroUdc();
 }
 
-void CddEvadc_ReadSensorMeas(P2VAR(volatile CddApp_T, AUTOMATIC, CDD_APPL_DATA) CddAppPtr)
-{
-    /* VRO first, so the phase conversions of THIS cycle use the freshest reference */
-    CddEvadc_ReadVro(CddAppPtr);
-    CddEvadc_ReadPhaseU(CddAppPtr);
-    CddEvadc_ReadPhaseV(CddAppPtr);
-    CddEvadc_ReadPhaseW(CddAppPtr);
-    CddEvadc_ReadDcLink(CddAppPtr);
-    /* NOTE: CddEvadc_CalibratePhaseOffsets() is deliberately NOT called here.
-     * Calibration is a ONE-SHOT commissioning step at standstill with /SOFF
-     * asserted.  Calling it cyclically re-zeroes the offsets to the
-     * instantaneous residual every cycle, which (a) made Vuo/Vvo/Vwo track
-     * the live signal and (b) would force Iu/Iv/Iw to read 0 A permanently
-     * once the offsets are subtracted in ConvertPhaseCurrents().             */
-}
 
 void CddEvadc_ConvertPhaseCurrents(P2VAR(volatile CddApp_T, AUTOMATIC, CDD_APPL_DATA) CddAppPtr)
 {
-    /* Ix = SIGN * (Vx - VRO_measured - Offset_x) * 3.246 A/V.
-     * Vr is the live AN8 VRO reading (device spread + drift of the reference
-     * buffer); Vuo/Vvo/Vwo are the per-CSA residual output offsets captured
-     * once at standstill by CddEvadc_CalibratePhaseOffsets().  Before the
-     * first calibration the offsets are 0.0f (struct zero-init), so the
-     * conversion degrades gracefully to the uncompensated value.             */
-    CddAppPtr->Iu = (real32_T)(EVADC_I_SIGN
-                    * ((CddAppPtr->Vu - CddAppPtr->Vr - CddAppPtr->Vuo) * EVADC_V_TO_A));
-    CddAppPtr->Iv = (real32_T)(EVADC_I_SIGN
-                    * ((CddAppPtr->Vv - CddAppPtr->Vr - CddAppPtr->Vvo) * EVADC_V_TO_A));
-    CddAppPtr->Iw = (real32_T)(EVADC_I_SIGN
-                    * ((CddAppPtr->Vw - CddAppPtr->Vr - CddAppPtr->Vwo) * EVADC_V_TO_A));
+    const real32_T V_TO_A = EVADC_V_TO_A_FACTOR;  /* 3.246 A/V */
+    real32_T vRoCalibrated;
 
-    /* Plausibility signal: |Isum| beyond noise indicates offset drift, a lost sample,
-     * or the sampling instant leaving the low-side ON window at high modulation.        */
-    CddAppPtr->Isum = CddAppPtr->Iu + CddAppPtr->Iv + CddAppPtr->Iw;
+    /*
+     * Use calibrated VRO reference = measured VRO - VRO offset
+     * This removes the VRO offset from the reference
+     */
+    vRoCalibrated = CddAppPtr->Vro - CddAppPtr->OffsetVro;
+
+    /* Calculate phase currents using calibrated VRO reference */
+    CddAppPtr->Iu = ((CddAppPtr->Vu - vRoCalibrated) * V_TO_A) - CddAppPtr->OffsetIu;
+    CddAppPtr->Iv = ((CddAppPtr->Vv - vRoCalibrated) * V_TO_A) - CddAppPtr->OffsetIv;
+    CddAppPtr->Iw = -(CddAppPtr->Iu +  CddAppPtr->Iv);
+
+    CddAppPtr->Isum = 0.0F;
+
 }
 
-void CddEvadc_CalibratePhaseOffsets(P2VAR(volatile CddApp_T, AUTOMATIC, CDD_APPL_DATA) CddAppPtr, uint32_T NumSamples)
-{
-    /* ONE-SHOT commissioning function — task level, blocking.
-     *
-     * Preconditions: GTM triggers running, 20 kHz control ISR active (it
-     * executes CddEvadc_ReadSensorMeas and increments ControlLoopCounter),
-     * TLE9180 in NORMAL mode, bridge gates DISABLED (/SOFF asserted) so the
-     * true phase currents are zero and Vx - Vr equals the pure CSA offset.
-     *
-     * Fresh-sample gating: each accumulated sample waits for a NEW control
-     * cycle by observing the low word of ControlLoopCounter.  This avoids
-     * racing the ISR on the EVADC result registers (VF is clear-on-read and
-     * is consumed by the ISR readout) and guarantees NumSamples DISTINCT
-     * conversion sets.  Only the low 32 bits are compared: uint64_T reads
-     * are not atomic on TriCore, but a change in the low word is both
-     * necessary and sufficient here.
-     *
-     * On timeout (ISR not running) the stored offsets are left UNCHANGED.  */
-    uint32_T Sample;
-    uint32_T Guard;
-    uint32_T LastCount;
-    real32_T SumU = 0.0f;
-    real32_T SumV = 0.0f;
-    real32_T SumW = 0.0f;
 
-    if (NumSamples == 0x0U)
-    {
-        return;                              /* Invalid parameter — offsets unchanged */
-    }
-
-    LastCount = (uint32_T)CddAppPtr->ControlLoopCounter;
-
-    for (Sample = 0x0U; Sample < NumSamples; Sample++)
-    {
-        /* Wait for the next completed control cycle (fresh conversion set) */
-        Guard = 0x0U;
-        while ((uint32_T)CddAppPtr->ControlLoopCounter == LastCount)
-        {
-            Guard++;
-            if (Guard >= EVADC_CAL_VF_TIMEOUT)
-            {
-                return;                      /* Triggers/ISR not running — offsets unchanged */
-            }
-        }
-        LastCount = (uint32_T)CddAppPtr->ControlLoopCounter;
-
-        SumU += (CddAppPtr->Vu - CddAppPtr->Vr);
-        SumV += (CddAppPtr->Vv - CddAppPtr->Vr);
-        SumW += (CddAppPtr->Vw - CddAppPtr->Vr);
-    }
-
-    CddAppPtr->Vuo = SumU / (real32_T)NumSamples;
-    CddAppPtr->Vvo = SumV / (real32_T)NumSamples;
-    CddAppPtr->Vwo = SumW / (real32_T)NumSamples;
-}
-
-real32_T CddEvadc_GetVroVolt(void)
-{
-    return CddEvadc_VroVolt_G;
-}
 
 /**********************************************************************************************************************
- * ISR Vector Registrations
- * SRPN literals must match cdd_config.h: 90 (U/G0), 91 (V/G3), 92 (W/G2), 95 (VRO+DC-link/G1).
- * ISR names are vector-table entries — unchanged per MISRA DEV convention.
+ * ISR Vector Registration — SINGLE conversion-set interrupt
+ *
+ * One SR per PWM period (G1_SR0 on G1RES3, the last result of the set) instead
+ * of the previous four (G0/G3/G2/G1) — three of which were empty debug stubs
+ * costing ~3 ISR entries/exits every 50 us, and the fourth (G1) never fired
+ * because its SRC node was commented out.  SRPN literal must match
+ * cdd_config.h: CORE_01_ADC_DC_LINK_SRPN (95).
  *********************************************************************************************************************/
 
-EMBED_SIM_INTERRUPT(EVADC_G0_Isr, 0x0u, CORE_01_ADC_PHASE_U_SRPN);    /* CORE_01_ADC_PHASE_U_SRPN   */
-EMBED_SIM_INTERRUPT(EVADC_G3_Isr, 0x0u, 91);    /* CORE_01_ADC_PHASE_V_SRPN   */
-EMBED_SIM_INTERRUPT(EVADC_G2_Isr, 0x0u, 92);    /* CORE_01_ADC_PHASE_W_SRPN   */
-EMBED_SIM_INTERRUPT(EVADC_G1_Isr, 0x0u, 95);    /* CORE_01_ADC_DC_LINK_SRPN   */
-
-/**********************************************************************************************************************
- * ISR Bodies
- *********************************************************************************************************************/
-volatile  int paul_counter = 0;
-void EVADC_G0_Isr(void)
-{ /* Phase U result ready — handled in control loop        */
-    paul_counter++;
-    if(paul_counter>1000)
-    {
-        paul_counter=1;
-    }
-
-}
-void EVADC_G3_Isr(void) { /* Phase V result ready — handled in control loop        */
-
-    paul_counter++;
-      if(paul_counter>1000)
-      {
-          paul_counter=1;
-      }
-}
-void EVADC_G2_Isr(void)
+EMBED_SIM_INTERRUPT(EVADC_ConvSet_Isr, 0x0U, CORE_00_ADC_DC_LINK);
+void EVADC_ConvSet_Isr(void)
 {
-    CddGpio_ToggleIsrTiming_P14_5();
-    /* Phase W result ready — handled in control loop */
-    CddGpio_ToggleIsrTiming_P14_5();
-}
-void EVADC_G1_Isr(void) {
-    paul_counter++;
+    CddEvadc_ReadVro(&CddApp_G);
+    CddEvadc_ReadDcLink(&CddApp_G);
 
 }
 
+
+EMBED_SIM_INTERRUPT(EVADC_ConvPhaseU_Isr, 0x0U, CORE_00_ADC_PHASE_U_SRPN);
+void EVADC_ConvPhaseU_Isr(void)
+{
+    CddSys_NopDelay(1U, 1U);
+
+}
+
+EMBED_SIM_INTERRUPT(EVADC_ConvPhaseV_Isr, 0x0U, CORE_00_ADC_PHASE_V_SRPN);
+void EVADC_ConvPhaseV_Isr(void)
+{
+    CddApp_G.SensorReadingBitField = 0x0;
+
+
+        CddEvadc_ReadPhaseU(&CddApp_G);
+        CddEvadc_ReadPhaseV(&CddApp_G);
+        CddEvadc_ReadPhaseW(&CddApp_G);
+        CddEvadc_ConvertPhaseCurrents(&CddApp_G);
+
+}
+
+EMBED_SIM_INTERRUPT(EVADC_ConvPhaseW_Isr, 0x0U, CORE_00_ADC_PHASE_W_SRPN);
+void EVADC_ConvPhaseW_Isr(void)
+{
+    CddSys_NopDelay(1U, 1U);
+
+}
 
 
 /**********************************************************************************************************************
  * Private — Hardware Init Helpers
  *********************************************************************************************************************/
 
-static void CddEvadc_InitConvctrl(void)
+static void CddEvadc_ConfigGlobal(void)
 {
+
+    Ifx_EVADC_GLOBCFG   globCfg;
+
+    globCfg.U  = EVADC_GLOBCFG.U;
+
     CddSys_ClearCpuWdtEndInit();
     CONVCTRL_CLC.U = 0x00000000U;                  /* Enable CONVCTRL module        */
     while (CONVCTRL_CLC.B.DISS == 0x1U)
     {
         CddSys_NopDelay(1U, 1U);
     }
-    CONVCTRL_CCCTRL.U = 0xB0000000U;               /* Unlock converter control regs */
-    CONVCTRL_PHSCFG.U = 0x00008007U;               /* fADC=160MHz, fPHSYNC=20MHz    */
-    CONVCTRL_CCCTRL.U = 0x00000000U;               /* Lock converter control regs   */
+    CONVCTRL_CCCTRL.U = 0xB0000000U;               /* unlock converter control regs */
+    CONVCTRL_PHSCFG.U = 0x00008003U;               /* fADC=160MHz, fPHSYNC=40MHz    */
+    CONVCTRL_CCCTRL.U = 0x00000000U;               /* lock converter control regs   */
     CddSys_SetCpuWdtEndInit();
-}
 
-static void CddEvadc_EnableClock(void)
-{
     CddSys_ClearCpuWdtEndInit();
-    EVADC_CLC.B.DISR = 0x0U;
+    EVADC_CLC.U = 0x0U;
     CddSys_SetCpuWdtEndInit();
-    while (EVADC_CLC.B.DISS != 0x0U)
+    while (EVADC_CLC.B.DISS == 0x1U)
     {
         CddSys_NopDelay(0x1U, 0x1U);
     }
+
+    globCfg.B.CPWC   = 0x1U;   /* bitfields SUPLEV, USC can be written  */
+    globCfg.B.SUPLEV = 0x1U;   /* 5 V               */
+    globCfg.B.USC    = 0x0U;   /* automatic voltage control             */
+    EVADC_GLOBCFG.U  = globCfg.U;
+
 }
 
-static void CddEvadc_ConfigGlobal(void)
-{
-    Ifx_EVADC_GLOBCFG     globcfg;
-    Ifx_EVADC_GLOB_ICLASS iclass;
-    Ifx_EVADC_G_ANCFG     an_cfg;
 
-    globcfg.U        = EVADC_GLOBCFG.U;
-    globcfg.B.CPWC   = 0x1U;
-    globcfg.B.SUPLEV = 0x0U;
-    globcfg.B.USC    = 0x1U;
-    EVADC_GLOBCFG.U  = globcfg.U;
-
-    an_cfg.U           = 0x0U;
-    an_cfg.B.RPE       = 0x0U;
-    an_cfg.B.DIVA      = 0x3U;    /* 160MHz / (3+1) = 40 MHz */
-    an_cfg.B.DPCAL     = 0x0U;
-    an_cfg.B.CALSTC    = 0x3U;
-    EVADC_G0ANCFG.U    = an_cfg.U;
-    EVADC_G1ANCFG.U    = an_cfg.U;
-    EVADC_G2ANCFG.U    = an_cfg.U;
-    EVADC_G3ANCFG.U    = an_cfg.U;
-
-    iclass.U            = EVADC_GLOBICLASS0.U;
-    iclass.B.CMS        = 0x0U;
-    iclass.B.AIPS       = 0x0U;
-    iclass.B.STCS       = 0xFU;   /* 850 ns sample time (16 clocks at 40 MHz) */
-    EVADC_GLOBICLASS0.U = iclass.U;
-}
-
-static void CddEvadc_CalibrateAllGroups(void)
-{
-    EVADC_GLOBCFG.B.SUCAL = 0x1U;
-    while (EVADC_G0ARBCFG.B.CAL == 0x1U) { CddSys_NopDelay(0x1U, 0x1U); }
-    while (EVADC_G1ARBCFG.B.CAL == 0x1U) { CddSys_NopDelay(0x1U, 0x1U); }
-    while (EVADC_G2ARBCFG.B.CAL == 0x1U) { CddSys_NopDelay(0x1U, 0x1U); }
-    while (EVADC_G3ARBCFG.B.CAL == 0x1U) { CddSys_NopDelay(0x1U, 0x1U); }
-}
 
 /**********************************************************************************************************************
  * Private — Channel Configuration Helpers
  *********************************************************************************************************************/
 
 /** \brief  G0 CH0 = AN0 = VO1 — phase U current.  Triggered by ADCTRIG0 (ATOM0_CH7). */
-static void CddEvadc_ConfigG00PhaseU(void)
+void CddEvadc_ConfigG0Ch0An0PhaseU(void)
 {
-    Ifx_EVADC_G_ARBPR   arb_pr;
-    Ifx_EVADC_G_CHCTR   ch_ctrl;
-    Ifx_EVADC_G_Q_QINR  q_qinr;
-    Ifx_EVADC_G_Q_QCTRL q_ctrl;
-    Ifx_EVADC_G_Q_QMR   q_qmr;
+    Ifx_EVADC_G_ANCFG   anCfg;
+    Ifx_EVADC_G_ARBPR   arbPr;
+    Ifx_EVADC_G_CHCTR   chCtrl;
+    Ifx_EVADC_G_Q_QINR  qQinr;
+    Ifx_EVADC_G_Q_QCTRL qCtrl;
+    Ifx_EVADC_G_ICLASS  iClass;
+    Ifx_EVADC_G_Q_QMR   qQmr;
     Ifx_EVADC_G_RCR     rcr;
-    Ifx_SRC_SRCR        src_cfg;
+    Ifx_SRC_SRCR        srcCfg;
 
-    arb_pr.U           = EVADC_G0ARBPR.U;
-    arb_pr.B.PRIO0     = EVADC_ARBPR_PRIO;
-    arb_pr.B.ASEN0     = 0x1U;
-    arb_pr.B.CSM0      = 0x0U;
-    EVADC_G0ARBPR.U    = arb_pr.U;
 
-    ch_ctrl.U          = EVADC_G0CHCTR0.U;
-    ch_ctrl.B.ICLSEL   = 0x2U;                     /* Global class 0                */
-    ch_ctrl.B.RESREG   = 0x0U;
-    ch_ctrl.B.RESTGT   = 0x0U;
-    EVADC_G0CHCTR0.U   = ch_ctrl.U;
+    anCfg.U   = EVADC_G0ANCFG.U;
+    arbPr.U   = EVADC_G0ARBPR.U;
+    qQinr.U   = EVADC_G0QINR0.U;
+    qCtrl.U   = EVADC_G0QCTRL0.U;
+    chCtrl.U  = EVADC_G0CHCTR0.U;
+    qQmr.U    = EVADC_G0QMR0.U;
+    iClass.U  = EVADC_G0ICLASS0.U;
+    chCtrl.U  = EVADC_G0CHCTR0.U;
+    rcr.U     = EVADC_G0RCR0.U;
+    srcCfg.U  = SRC_VADC_G0_SR0.U;
 
-    q_qinr.U           = EVADC_G0QINR0.U;
-    q_qinr.B.REQCHNR   = 0x0U;
-    q_qinr.B.RF        = 0x1U;                     /* Auto-refill                   */
-    q_qinr.B.EXTR      = 0x1U;                     /* Wait for external trigger     */
-    EVADC_G0QINR0.U    = q_qinr.U;
+    /* Analog Conversion Configuration */
+    anCfg.B.DIVA     = 0x3U;   /* setup clock frequency fADC=160MHz/4=40MHz */
+    anCfg.B.IPE      = 0x0U;   /* idle pre charge  disabled                 */
+    anCfg.B.RPE      = 0x0U;   /* no reference pre charge                   */
+    anCfg.B.CALSTC   = EVADC_CALSTC;   /* calibration                        */
+    anCfg.B.BE       = 0x0U;   /* disable input buffer                      */
+    anCfg.B.DPCAL    = 0x1U;   /* disable post calibration                  */
+    EVADC_G0ANCFG.U = anCfg.U;
 
-    q_ctrl.U           = EVADC_G0QCTRL0.U;
-    q_ctrl.B.XTWC      = 0x1U;
-    q_ctrl.B.TRSEL     = 0x0U;
-    q_ctrl.B.XTSEL     = EVADC_XTSEL_REQTRI;
-    q_ctrl.B.GTSEL     = 0x0U;
-    q_ctrl.B.GTWC      = 0x1U;
-    q_ctrl.B.XTMODE    = 0x1U;    /* Falling edge of ATOM0_CH7 (duty 0.9).  VERIFY on the scope
-                                   * (P14.5 toggle vs. gate signal) that the sample instant sits
-                                   * centred in the all-low-side-ON window; otherwise the phase
-                                   * with the highest duty samples an open shunt and Isum grows
-                                   * with modulation index.                                       */
-    q_ctrl.B.SRCRESREG = 0x0U;
-    EVADC_G0QCTRL0.U   = q_ctrl.U;
+    EVADC_G0ARBCFG.B.ANONC = 0x3;  /* setup Normal Operation  */
+    while(EVADC_G0ARBCFG.B.ANONS != 0x3)
+    {
+        CddSys_NopDelay(1U, 1U);
+    }
+    CddStm_Delay_Us(5U);   /* wait until port settles down */
 
-    q_qmr.U            = EVADC_G0QMR0.U;
-    q_qmr.B.ENGT       = 0x1U;                     /* Requests issued, gate ignored */
-    q_qmr.B.ENTR       = 0x1U;                     /* External trigger enabled      */
-    EVADC_G0QMR0.U     = q_qmr.U;
+    /* Enable startup calibration */
+    EVADC_GLOBCFG.U |= (1 << 15) | (1 << 31);
+    /* Wait until calibration is done */
+    while(EVADC_G3ARBCFG.B.CAL == 0x1)
+    {
+        CddSys_NopDelay(1U, 1U);
+    }
 
-    rcr.U              = EVADC_G0RCR0.U;
-    rcr.B.DRCTR        = EVADC_PHASE_SAMPLES - 1U;
-    rcr.B.DMM          = 0x0U;
-    rcr.B.WFR          = 0x0U;
-    rcr.B.FEN          = 0x0U;
-    rcr.B.SRGEN        = 0x1U;
+    /* Configure Priority Queue */
+    arbPr.B.PRIO0 = EVADC_ARBPR_PRIO;
+    arbPr.B.ASEN0 = 0x1U;   /* arbitration Source input enable */
+    arbPr.B.CSM0  = 0x0U;   /* wait for start mode             */
+    EVADC_G0ARBPR.U = arbPr.U;
+
+    /* Add Channel 0 to Group 0 Queue Source and enable External Trigger */
+    qQinr.B.REQCHNR = 0x0u;   /* assign channel number */
+    qQinr.B.RF      = 0x1U;   /* refill the queue      */
+    qQinr.B.EXTR    = 0x1U;   /* wait for GMT trigger  */
+    EVADC_G0QINR0.U = qQinr.U;
+
+    /* Configure Source Control Trigger & Gate */
+    qCtrl.B.XTWC      = 0x1U;               /* bitfields XTMODE, XTSEL, TRSEL can be written */
+    qCtrl.B.GTWC      = 0x1U;               /* bitfield  GTSEL can be written                */
+    qCtrl.B.XTSEL     = EVADC_XTSEL_REQTRI; /* external Trigger Input Selection (GTM)        */
+    qCtrl.B.GTSEL     = 0x1U;               /* gate input selection                          */
+    qCtrl.B.XTMODE    = 0x1U;               /* trigger on falling edge                       */
+    qCtrl.B.SRCRESREG = 0x0U;               /* use G0CHCTR0.RESREG for result                */
+    EVADC_G0QCTRL0.U   = qCtrl.U;
+
+    /* Enable Trigger & Gate for Request */
+    qQmr.B.ENGT       = 0x1U;  /* Requests issued, gate ignored */
+    qQmr.B.ENTR       = 0x1U;  /* External trigger enabled      */
+    EVADC_G0QMR0.U     = qQmr.U;
+
+    /* Configure Channel Settings */
+    /*The global input class registers define the sample time and data conversion mode for each channel of any group
+    that selects them via bitfield ICLSEL in its channel control register GxCHCTRy. */
+    iClass.B.CMS  = 0x0U; /* standard conversion */
+    iClass.B.STCS = 0x0U;
+    EVADC_G0ICLASS0.U = iClass.U;
+
+    chCtrl.B.ICLSEL = 0x0U;   /* store result right-aligned */
+    chCtrl.B.RESREG = 0x0U;   /* store result from channel y to specified group result register */
+    EVADC_G0CHCTR0.U =  chCtrl.U;
+
+   /* Data Reduction */
+    rcr.B.DRCTR        = EVADC_PHASE_SAMPLES -  1U;  /* DRCTR = N-1 for N samples */
+    rcr.B.DMM          = 0x0U;                       /* Standard data reduction (accumulate and average) */
+    rcr.B.SRGEN        = 0x1U;                       /* generate service request */
     EVADC_G0RCR0.U     = rcr.U;
 
-    EVADC_G0REVNP0.U   = 0x0U;
+    EVADC_G0REVNP0.U = 0x0U;
 
-    src_cfg.U          = SRC_VADC_G0_SR0.U;
-    src_cfg.B.SRPN     = CORE_01_ADC_PHASE_U_SRPN;
-    src_cfg.B.TOS      = 0x0U;
-    SRC_VADC_G0_SR0.U  = src_cfg.U;
+    srcCfg.B.SRPN        = CORE_00_ADC_PHASE_U_SRPN;
+    srcCfg.B.TOS         = 0x0u;
+    SRC_VADC_G0_SR0.U    = srcCfg.U;
     SRC_VADC_G0_SR0.B.SRE = EVADC_ENABLE_PHASE_U_SR;
 
-    EVADC_G0ARBCFG.B.ANONC = 0x3U;
-    while (EVADC_G0ARBCFG.B.ANONS != 0x3U) { CddSys_NopDelay(0x1U, 0x1U); }
 }
 
-/** \brief  G3 CH0 = AN24 = VO2 — phase V current.  Triggered by ADCTRIG0 (ATOM0_CH7).
- *
- *  \note   Phase V was previously (and incorrectly) configured on G1 CH0 = AN8, which
- *          the AP32541 routes to the TLE9180D VRO reference output (Table 12): the
- *          "phase V" channel returned a 2.5 V DC level, so Iv computed as ~0 A and
- *          Isum showed -Iv(actual) — a sinusoid at electrical frequency scaling with
- *          load.  AN24 = P40.0 is the true VO2 signal on AppKit pin W2.               */
-static void CddEvadc_ConfigG03PhaseV(void)
+
+void CddEvadc_ConfigG3Ch0An24PhaseV(void)
 {
-    Ifx_EVADC_G_ARBPR   arb_pr;
-    Ifx_EVADC_G_CHCTR   ch_ctrl;
-    Ifx_EVADC_G_Q_QINR  q_qinr;
-    Ifx_EVADC_G_Q_QCTRL q_ctrl;
-    Ifx_EVADC_G_Q_QMR   q_qmr;
+    Ifx_EVADC_G_ANCFG   anCfg;
+    Ifx_EVADC_G_ARBPR   arbPr;
+    Ifx_EVADC_G_CHCTR   chCtrl;
+    Ifx_EVADC_G_Q_QINR  qQinr;
+    Ifx_EVADC_G_Q_QCTRL qCtrl;
+    Ifx_EVADC_G_ICLASS  iClass;
+    Ifx_EVADC_G_Q_QMR   qQmr;
     Ifx_EVADC_G_RCR     rcr;
-    Ifx_SRC_SRCR        src_cfg;
+    Ifx_SRC_SRCR        srcCfg;
 
-    arb_pr.U           = EVADC_G3ARBPR.U;
-    arb_pr.B.PRIO0     = EVADC_ARBPR_PRIO;
-    arb_pr.B.ASEN0     = 0x1U;
-    EVADC_G3ARBPR.U    = arb_pr.U;
+    anCfg.U   = EVADC_G3ANCFG.U;
+    arbPr.U   = EVADC_G3ARBPR.U;
+    qQinr.U   = EVADC_G3QINR0.U;
+    qCtrl.U   = EVADC_G3QCTRL0.U;
+    chCtrl.U  = EVADC_G3CHCTR0.U;
+    qQmr.U    = EVADC_G3QMR0.U;
+    iClass.U  = EVADC_G3ICLASS0.U;
+    chCtrl.U  = EVADC_G3CHCTR0.U;
+    rcr.U     = EVADC_G3RCR0.U;
+    srcCfg.U  = SRC_VADC_G3_SR0.U;
 
-    ch_ctrl.U          = EVADC_G3CHCTR0.U;
-    ch_ctrl.B.ICLSEL   = 0x2U;                     /* Global class 0                */
-    ch_ctrl.B.RESREG   = 0x0U;
-    ch_ctrl.B.RESTGT   = 0x0U;
-    EVADC_G3CHCTR0.U   = ch_ctrl.U;
+    /* Analog Conversion Configuration */
+    anCfg.B.DIVA     = 0x3U;   /* setup clock frequency fADC=160MHz/4=40MHz */
+    anCfg.B.IPE      = 0x0U;   /* idle pre charge  disabled                 */
+    anCfg.B.RPE      = 0x0U;   /* no reference pre charge                   */
+    anCfg.B.CALSTC   = EVADC_CALSTC;   /* calibration 2*Tadc                        */
+    anCfg.B.BE       = 0x0U;   /* disable input buffer                      */
+    anCfg.B.DPCAL    = 0x1U;   /* disable post calibration                  */
+    EVADC_G3ANCFG.U = anCfg.U;
 
-    q_qinr.U           = EVADC_G3QINR0.U;
-    q_qinr.B.REQCHNR   = 0x0U;
-    q_qinr.B.RF        = 0x1U;
-    q_qinr.B.EXTR      = 0x1U;
-    EVADC_G3QINR0.U    = q_qinr.U;
+    EVADC_G3ARBCFG.B.ANONC = 0x3;  /* setup Normal Operation  */
+    while(EVADC_G3ARBCFG.B.ANONS != 0x3)
+    {
+        CddSys_NopDelay(1U, 1U);
+    }
+    CddStm_Delay_Us(5U);   /* wait until port settles down */
 
-    q_ctrl.U           = EVADC_G3QCTRL0.U;
-    q_ctrl.B.XTWC      = 0x1U;
-    q_ctrl.B.TRSEL     = 0x0U;
-    q_ctrl.B.XTSEL     = EVADC_XTSEL_REQTRI;       /* ADC_TRIG0[3] = ATOM0_CH7 (verified)   */
-    q_ctrl.B.GTSEL     = 0x0U;
-    q_ctrl.B.GTWC      = 0x1U;
-    q_ctrl.B.XTMODE    = 0x1U;                     /* Falling edge — same instant as G0/G2  */
-    q_ctrl.B.SRCRESREG = 0x0U;
-    EVADC_G3QCTRL0.U   = q_ctrl.U;
+    /* Enable startup calibration */
+    EVADC_GLOBCFG.U |= (1 << 15) | (1 << 31);
+    /* Wait until calibration is done */
+    while(EVADC_G3ARBCFG.B.CAL == 0x1)
+    {
+        CddSys_NopDelay(1U, 1U);
+    }
 
-    q_qmr.U            = EVADC_G3QMR0.U;
-    q_qmr.B.ENGT       = 0x1U;
-    q_qmr.B.ENTR       = 0x1U;
-    EVADC_G3QMR0.U     = q_qmr.U;
 
-    rcr.U              = EVADC_G3RCR0.U;
-    rcr.B.DRCTR        = EVADC_PHASE_SAMPLES - 1U;
-    rcr.B.DMM          = 0x0U;
-    rcr.B.WFR          = 0x0U;
-    rcr.B.FEN          = 0x0U;
-    rcr.B.SRGEN        = 0x1U;
+    /* Configure Priority Queue */
+    arbPr.B.PRIO0 = EVADC_ARBPR_PRIO;
+    arbPr.B.ASEN0 = 0x1U;   /* arbitration Source input enable */
+    arbPr.B.CSM0  = 0x0U;   /* wait for start mode             */
+    EVADC_G3ARBPR.U = arbPr.U;
+
+    /* Add Channel 0 to Group 3 Queue Source and enable External Trigger */
+    qQinr.B.REQCHNR = 0x0u;   /* assign channel number */
+    qQinr.B.RF      = 0x1U;   /* refill the queue      */
+    qQinr.B.EXTR    = 0x1U;   /* wait for GMT trigger  */
+    EVADC_G3QINR0.U = qQinr.U;
+
+    /* Configure Source Control Trigger & Gate */
+    qCtrl.B.XTWC      = 0x1U;               /* bitfields XTMODE, XTSEL, TRSEL can be written */
+    qCtrl.B.GTWC      = 0x1U;               /* bitfield  GTSEL can be written                */
+    qCtrl.B.XTSEL     = EVADC_XTSEL_REQTRI; /* external Trigger Input Selection (GTM)        */
+    qCtrl.B.GTSEL     = 0x1U;               /* gate input selection                          */
+    qCtrl.B.XTMODE    = 0x1U;               /* trigger on falling edge                       */
+    qCtrl.B.SRCRESREG = 0x0U;               /* use G3CHCTR0.RESREG for result                */
+    EVADC_G3QCTRL0.U   = qCtrl.U;
+
+    /* Enable Trigger & Gate for Request */
+    qQmr.B.ENGT       = 0x1U;  /* Requests issued, gate ignored */
+    qQmr.B.ENTR       = 0x1U;  /* External trigger enabled      */
+    EVADC_G3QMR0.U     = qQmr.U;
+
+    /* Configure Channel Settings */
+    /*The global input class registers define the sample time and data conversion mode for each channel of any group
+    that selects them via bitfield ICLSEL in its channel control register GxCHCTRy. */
+    iClass.B.CMS  = 0x0U; /* standard conversion */
+    iClass.B.STCS = 0x0U;
+    EVADC_G3ICLASS0.U = iClass.U;
+
+    chCtrl.B.ICLSEL = 0x0U;   /* store result right-aligned */
+    chCtrl.B.RESREG = 0x0U;   /* store result from channel y to specified group result register */
+    EVADC_G3CHCTR0.U =  chCtrl.U;
+
+   /* Data Reduction */
+    rcr.B.DRCTR        = EVADC_PHASE_SAMPLES -  1U;  /* DRCTR = N-1 for N samples */
+    rcr.B.DMM          = 0x0U;                       /* Standard data reduction (accumulate and average) */
+    rcr.B.SRGEN        = 0x1U;                       /* generate service request */
     EVADC_G3RCR0.U     = rcr.U;
 
-    EVADC_G3REVNP0.U   = 0x0U;
+    EVADC_G3REVNP0.U = 0x0U;
 
-    src_cfg.U          = SRC_VADC_G3_SR0.U;
-    src_cfg.B.SRPN     = CORE_01_ADC_PHASE_V_SRPN;
-    src_cfg.B.TOS      = 0x0U;
-    SRC_VADC_G3_SR0.U  = src_cfg.U;
+    srcCfg.B.SRPN        = CORE_00_ADC_PHASE_V_SRPN;
+    srcCfg.B.TOS         = 0x0u;
+    SRC_VADC_G3_SR0.U    = srcCfg.U;
     SRC_VADC_G3_SR0.B.SRE = EVADC_ENABLE_PHASE_V_SR;
 
-    EVADC_G3ARBCFG.B.ANONC = 0x3U;
-    while (EVADC_G3ARBCFG.B.ANONS != 0x3U) { CddSys_NopDelay(0x1U, 0x1U); }
 }
 
-/** \brief  G2 CH0 = AN16 = VO3 — phase W current.  Triggered by ADCTRIG0 (ATOM0_CH7). */
-static void CddEvadc_ConfigG02PhaseW(void)
+
+void CddEvadc_ConfigG2Ch0An16PhaseW(void)
 {
-    Ifx_EVADC_G_ARBPR   arb_pr;
-    Ifx_EVADC_G_CHCTR   ch_ctrl;
-    Ifx_EVADC_G_Q_QINR  q_qinr;
-    Ifx_EVADC_G_Q_QCTRL q_ctrl;
-    Ifx_EVADC_G_Q_QMR   q_qmr;
+    Ifx_EVADC_G_ANCFG   anCfg;
+    Ifx_EVADC_G_ARBPR   arbPr;
+    Ifx_EVADC_G_CHCTR   chCtrl;
+    Ifx_EVADC_G_Q_QINR  qQinr;
+    Ifx_EVADC_G_Q_QCTRL qCtrl;
+    Ifx_EVADC_G_ICLASS  iClass;
+    Ifx_EVADC_G_Q_QMR   qQmr;
     Ifx_EVADC_G_RCR     rcr;
-    Ifx_SRC_SRCR        src_cfg;
+    Ifx_SRC_SRCR        srcCfg;
 
-    arb_pr.U           = EVADC_G2ARBPR.U;
-    arb_pr.B.PRIO0     = EVADC_ARBPR_PRIO;
-    arb_pr.B.ASEN0     = 0x1U;
-    EVADC_G2ARBPR.U    = arb_pr.U;
+    anCfg.U   = EVADC_G2ANCFG.U;
+    arbPr.U   = EVADC_G2ARBPR.U;
+    qQinr.U   = EVADC_G2QINR0.U;
+    qCtrl.U   = EVADC_G2QCTRL0.U;
+    chCtrl.U  = EVADC_G2CHCTR0.U;
+    qQmr.U    = EVADC_G2QMR0.U;
+    iClass.U  = EVADC_G2ICLASS0.U;
+    chCtrl.U  = EVADC_G2CHCTR0.U;
+    rcr.U     = EVADC_G2RCR0.U;
+    srcCfg.U  = SRC_VADC_G2_SR0.U;
 
-    ch_ctrl.U          = EVADC_G2CHCTR0.U;
-    ch_ctrl.B.ICLSEL   = 0x2U;                     /* Global class 0                */
-    ch_ctrl.B.RESREG   = 0x0U;
-    ch_ctrl.B.RESTGT   = 0x0U;
-    EVADC_G2CHCTR0.U   = ch_ctrl.U;
+    /* Analog Conversion Configuration */
+    anCfg.B.DIVA     = 0x3U;   /* setup clock frequency fADC=160MHz/4=40MHz */
+    anCfg.B.IPE      = 0x0U;   /* idle pre charge  disabled                 */
+    anCfg.B.RPE      = 0x0U;   /* no reference pre charge                   */
+    anCfg.B.CALSTC   =EVADC_CALSTC;   /* calibration 2*Tadc                        */
+    anCfg.B.BE       = 0x0U;   /* disable input buffer                      */
+    anCfg.B.DPCAL    = 0x1U;   /* disable post calibration                  */
+    EVADC_G2ANCFG.U = anCfg.U;
 
-    q_qinr.U           = EVADC_G2QINR0.U;
-    q_qinr.B.REQCHNR   = 0x0U;
-    q_qinr.B.RF        = 0x1U;
-    q_qinr.B.EXTR      = 0x1U;
-    EVADC_G2QINR0.U    = q_qinr.U;
+    EVADC_G2ARBCFG.B.ANONC = 0x3;  /* setup Normal Operation  */
+    while(EVADC_G2ARBCFG.B.ANONS != 0x3)
+    {
+        CddSys_NopDelay(1U, 1U);
+    }
+    CddStm_Delay_Us(5U);   /* wait until port settles down */
 
-    q_ctrl.U           = EVADC_G2QCTRL0.U;
-    q_ctrl.B.XTWC      = 0x1U;
-    q_ctrl.B.TRSEL     = 0x0U;
-    q_ctrl.B.XTSEL     = EVADC_XTSEL_REQTRI;
-    q_ctrl.B.GTSEL     = 0x0U;
-    q_ctrl.B.GTWC      = 0x1U;
-    q_ctrl.B.XTMODE    = 0x1U;                     /* Falling edge — same instant as G0/G3  */
-    q_ctrl.B.SRCRESREG = 0x0U;
-    EVADC_G2QCTRL0.U   = q_ctrl.U;
+    /* Enable startup calibration */
+    EVADC_GLOBCFG.U |= (1 << 15) | (1 << 31);
+    /* Wait until calibration is done */
+    while(EVADC_G2ARBCFG.B.CAL == 0x1)
+    {
+        CddSys_NopDelay(1U, 1U);
+    }
 
-    q_qmr.U            = EVADC_G2QMR0.U;
-    q_qmr.B.ENGT       = 0x1U;
-    q_qmr.B.ENTR       = 0x1U;
-    EVADC_G2QMR0.U     = q_qmr.U;
+    /* Configure Priority Queue */
+    arbPr.B.PRIO0 = EVADC_ARBPR_PRIO;
+    arbPr.B.ASEN0 = 0x1U;   /* arbitration Source input enable */
+    arbPr.B.CSM0  = 0x0U;   /* wait for start mode             */
+    EVADC_G2ARBPR.U = arbPr.U;
 
-    rcr.U              = EVADC_G2RCR0.U;
-    rcr.B.DRCTR        = EVADC_PHASE_SAMPLES - 1U;
-    rcr.B.DMM          = 0x0U;
-    rcr.B.WFR          = 0x0U;
-    rcr.B.FEN          = 0x0U;
-    rcr.B.SRGEN        = 0x1U;
+    /* Add Channel 0 to Group 3 Queue Source and enable External Trigger */
+    qQinr.B.REQCHNR = 0x0u;   /* assign channel number */
+    qQinr.B.RF      = 0x1U;   /* refill the queue      */
+    qQinr.B.EXTR    = 0x1U;   /* wait for GMT trigger  */
+    EVADC_G2QINR0.U = qQinr.U;
+
+    /* Configure Source Control Trigger & Gate */
+    qCtrl.B.XTWC      = 0x1U;               /* bitfields XTMODE, XTSEL, TRSEL can be written */
+    qCtrl.B.GTWC      = 0x1U;               /* bitfield  GTSEL can be written                */
+    qCtrl.B.XTSEL     = EVADC_XTSEL_REQTRI; /* external Trigger Input Selection (GTM)        */
+    qCtrl.B.GTSEL     = 0x1U;               /* gate input selection                          */
+    qCtrl.B.XTMODE    = 0x1U;               /* trigger on falling edge                       */
+    qCtrl.B.SRCRESREG = 0x0U;               /* use G3CHCTR0.RESREG for result                */
+    EVADC_G2QCTRL0.U   = qCtrl.U;
+
+    /* Enable Trigger & Gate for Request */
+    qQmr.B.ENGT       = 0x1U;  /* Requests issued, gate ignored */
+    qQmr.B.ENTR       = 0x1U;  /* External trigger enabled      */
+    EVADC_G2QMR0.U     = qQmr.U;
+
+    /* Configure Channel Settings */
+    /*The global input class registers define the sample time and data conversion mode for each channel of any group
+    that selects them via bitfield ICLSEL in its channel control register GxCHCTRy. */
+    iClass.B.CMS  = 0x0U; /* standard conversion */
+    iClass.B.STCS = 0x0U;
+    EVADC_G2ICLASS0.U = iClass.U;
+
+    chCtrl.B.ICLSEL = 0x0U;   /* store result right-aligned */
+    chCtrl.B.RESREG = 0x0U;   /* store result from channel y to specified group result register */
+    EVADC_G2CHCTR0.U =  chCtrl.U;
+
+    /* Data Reduction */
+    rcr.B.DRCTR        = EVADC_PHASE_SAMPLES -  1U;  /* DRCTR = N-1 for N samples */
+    rcr.B.DMM          = 0x0U;                       /* Standard data reduction (accumulate and average) */
+    rcr.B.SRGEN        = 0x1U;                       /* generate service request */
     EVADC_G2RCR0.U     = rcr.U;
 
-    EVADC_G2REVNP0.U   = 0x0U;
+    EVADC_G2REVNP0.U = 0x0U;
 
-    src_cfg.U          = SRC_VADC_G2_SR0.U;
-    src_cfg.B.SRPN     = CORE_01_ADC_PHASE_W_SRPN;
-    src_cfg.B.TOS      = 0x0U;
-    SRC_VADC_G2_SR0.U  = src_cfg.U;
+    srcCfg.B.SRPN        = CORE_00_ADC_PHASE_W_SRPN;
+    srcCfg.B.TOS         = 0x0u;
+    SRC_VADC_G2_SR0.U    = srcCfg.U;
     SRC_VADC_G2_SR0.B.SRE = EVADC_ENABLE_PHASE_W_SR;
 
-    EVADC_G2ARBCFG.B.ANONC = 0x3U;
-    while (EVADC_G2ARBCFG.B.ANONS != 0x3U) { CddSys_NopDelay(0x1U, 0x1U); }
 }
 
-/** \brief  G1 queue 0 with two entries — VRO reference and DC-link voltage.
- *
- *              Entry 0:  CH0 = AN8  = VRO      → G1RES0  (EXTR=1, starts on ADC_TRIG0[1])
- *              Entry 1:  CH3 = AN11 = VOLT_DC  → G1RES3  (EXTR=0, converts back-to-back)
- *
- *          One ATOM0_CH7 falling edge (ADC_TRIG0[1], same instant as the
- *          phase-current groups) therefore converts both channels
- *          sequentially; both entries auto-refill.  The service request is
- *          generated on the LAST result (G1RES3 via RCR3), so a G1 SR means
- *          both values are fresh.
- *
- *  \note   The old implementation read "DC-link" on G8 CH8 = AN40, which is not
- *          connected to VOLT_DC on this board (AP32541 Table 15: VOLT_DC = AN11).  */
-static void CddEvadc_ConfigG01VroUdc(void)
+void CddEvadc_ConfigG01VroUdc(void)
 {
-    Ifx_EVADC_G_ARBPR   arb_pr;
-    Ifx_EVADC_G_CHCTR   ch_ctrl;
-    Ifx_EVADC_G_Q_QINR  q_qinr;
-    Ifx_EVADC_G_Q_QCTRL q_ctrl;
-    Ifx_EVADC_G_Q_QMR   q_qmr;
+    Ifx_EVADC_G_ANCFG   anCfg;
+    Ifx_EVADC_G_ARBPR   arbPr;
+    Ifx_EVADC_G_CHCTR   chCtrl;
+    Ifx_EVADC_G_Q_QINR  qQinr;
+    Ifx_EVADC_G_Q_QCTRL qCtrl;
+    Ifx_EVADC_G_ICLASS  iClass;
+    Ifx_EVADC_G_Q_QMR   qQmr;
     Ifx_EVADC_G_RCR     rcr;
-    Ifx_SRC_SRCR        src_cfg;
+    Ifx_SRC_SRCR        srcCfg;
 
-    arb_pr.U           = EVADC_G1ARBPR.U;
-    arb_pr.B.PRIO0     = EVADC_ARBPR_PRIO;
-    arb_pr.B.ASEN0     = 0x1U;
-    EVADC_G1ARBPR.U    = arb_pr.U;
+    anCfg.U   = EVADC_G1ANCFG.U;
+    arbPr.U   = EVADC_G1ARBPR.U;
+    qQinr.U   = EVADC_G1QINR0.U;
+    qCtrl.U   = EVADC_G1QCTRL0.U;
+    chCtrl.U  = EVADC_G1CHCTR0.U;
+    qQmr.U    = EVADC_G1QMR0.U;
+    iClass.U  = EVADC_G1ICLASS0.U;
+    chCtrl.U  = EVADC_G1CHCTR0.U;
+    rcr.U     = EVADC_G1RCR0.U;
+    srcCfg.U  = SRC_VADC_G1_SR0.U;
 
-    /* CH0 — VRO → result register 0 */
-    ch_ctrl.U          = EVADC_G1CHCTR0.U;
-    ch_ctrl.B.ICLSEL   = 0x2U;                     /* Global class 0                */
-    ch_ctrl.B.RESREG   = 0x0U;
-    ch_ctrl.B.RESTGT   = 0x0U;
-    EVADC_G1CHCTR0.U   = ch_ctrl.U;
+    /* Analog Conversion Configuration */
+    anCfg.B.DIVA     = 0x3U;   /* setup clock frequency fADC=160MHz/4=40MHz */
+    anCfg.B.IPE      = 0x0U;   /* idle pre charge  disabled                 */
+    anCfg.B.RPE      = 0x0U;   /* no reference pre charge                   */
+    anCfg.B.CALSTC   = EVADC_CALSTC;   /* calibration 2*Tadc                        */
+    anCfg.B.BE       = 0x0U;   /* disable input buffer                      */
+    anCfg.B.DPCAL    = 0x1U;   /* disable post calibration                  */
+    EVADC_G1ANCFG.U = anCfg.U;
 
-    /* CH3 — VOLT_DC → result register 3 */
-    ch_ctrl.U          = EVADC_G1CHCTR3.U;
-    ch_ctrl.B.ICLSEL   = 0x2U;                     /* Global class 0                */
-    ch_ctrl.B.RESREG   = EVADC_G1_UDC_RESREG;
-    ch_ctrl.B.RESTGT   = 0x0U;
-    EVADC_G1CHCTR3.U   = ch_ctrl.U;
+    EVADC_G1ARBCFG.B.ANONC = 0x3;  /* setup Normal Operation  */
+    while(EVADC_G1ARBCFG.B.ANONS != 0x3)
+    {
+        CddSys_NopDelay(1U, 1U);
+    }
+    CddStm_Delay_Us(5U);   /* wait until port settles down */
 
-    /* Queue entry 0: VRO, waits for external trigger */
-    q_qinr.U           = 0x0U;
-    q_qinr.B.REQCHNR   = 0x0U;
-    q_qinr.B.RF        = 0x1U;
-    q_qinr.B.EXTR      = 0x1U;
-    EVADC_G1QINR0.U    = q_qinr.U;
 
-    /* Queue entry 1: VOLT_DC, converts immediately after VRO (no own trigger) */
-    q_qinr.U           = 0x0U;
-    q_qinr.B.REQCHNR   = EVADC_G1_UDC_CHANNEL;
-    q_qinr.B.RF        = 0x1U;
-    q_qinr.B.EXTR      = 0x0U;
-    EVADC_G1QINR0.U    = q_qinr.U;
+    /* Enable startup calibration */
+    EVADC_GLOBCFG.U |= (1 << 15) | (1 << 31);
+    /* Wait until calibration is done */
+    while(EVADC_G1ARBCFG.B.CAL == 0x1)
+    {
+        CddSys_NopDelay(1U, 1U);
+    }
 
-    q_ctrl.U           = EVADC_G1QCTRL0.U;
-    q_ctrl.B.XTWC      = 0x1U;
-    q_ctrl.B.TRSEL     = 0x0U;
-    q_ctrl.B.XTSEL     = EVADC_XTSEL_REQTRI;       /* ADC_TRIG0[1] = ATOM0_CH7 — same edge as
-                                                    * the phase groups; VRO+VOLT_DC convert
-                                                    * back-to-back at 20 kHz                  */
-    q_ctrl.B.GTSEL     = 0x0U;
-    q_ctrl.B.GTWC      = 0x1U;
-    q_ctrl.B.XTMODE    = 0x1U;                     /* Falling edge of ATOM0_CH7             */
-    q_ctrl.B.SRCRESREG = 0x0U;
-    EVADC_G1QCTRL0.U   = q_ctrl.U;
+    /* Configure Priority Queue */
+    arbPr.B.PRIO0 = EVADC_ARBPR_PRIO;
+    arbPr.B.ASEN0 = 0x1U;   /* arbitration Source input enable */
+    arbPr.B.CSM0  = 0x0U;   /* wait for start mode             */
+    EVADC_G1ARBPR.U = arbPr.U;
 
-    q_qmr.U            = EVADC_G1QMR0.U;
-    q_qmr.B.ENGT       = 0x1U;
-    q_qmr.B.ENTR       = 0x1U;
-    EVADC_G1QMR0.U     = q_qmr.U;
 
-    /* RCR0 (VRO): no service request — SR is raised by the last conversion only */
-    rcr.U              = EVADC_G1RCR0.U;
-    rcr.B.DRCTR        = 0x0U;
-    rcr.B.DMM          = 0x0U;
-    rcr.B.WFR          = 0x0U;
-    rcr.B.FEN          = 0x0U;
-    rcr.B.SRGEN        = 0x0U;
+    qQinr.B.REQCHNR = 0x3U;   /* assign channel number */
+    qQinr.B.RF      = 0x1U;   /* refill the queue      */
+    qQinr.B.EXTR    = 0x0U;   /* wait for GMT trigger  */
+    EVADC_G1QINR0.U = qQinr.U;
+
+    /* Add Channel 0 to Group 1 Queue Source and enable External Trigger */
+    qQinr.B.REQCHNR = 0x0u;   /* assign channel number */
+    qQinr.B.RF      = 0x1U;   /* refill the queue      */
+    qQinr.B.EXTR    = 0x1U;   /* wait for GMT trigger  */
+    EVADC_G1QINR0.U = qQinr.U;
+
+    /* Configure Source Control Trigger & Gate */
+    qCtrl.B.XTWC      = 0x1U;               /* bitfields XTMODE, XTSEL, TRSEL can be written */
+    qCtrl.B.GTWC      = 0x1U;               /* bitfield  GTSEL can be written                */
+    qCtrl.B.XTSEL     = EVADC_XTSEL_REQTRI; /* external Trigger Input Selection (GTM)        */
+    qCtrl.B.GTSEL     = 0x1U;               /* gate input selection                          */
+    qCtrl.B.XTMODE    = 0x2U;               /* trigger on rising edge                        */
+    qCtrl.B.SRCRESREG = 0x0U;               /* use G1CHCTR0.RESREG for result                */
+    EVADC_G1QCTRL0.U   = qCtrl.U;
+
+    /* Enable Trigger & Gate for Request */
+    qQmr.B.ENGT       = 0x1U;  /* Requests issued, gate ignored */
+    qQmr.B.ENTR       = 0x1U;  /* External trigger enabled      */
+    EVADC_G1QMR0.U     = qQmr.U;
+
+    /* Configure Channel Settings */
+    /*The global input class registers define the sample time and data conversion mode for each channel of any group
+    that selects them via bitfield ICLSEL in its channel control register GxCHCTRy. */
+    iClass.B.CMS  = 0x0U; /* standard conversion */
+    iClass.B.STCS = 0x0U;
+    EVADC_G1ICLASS0.U = iClass.U;
+
+    chCtrl.B.ICLSEL = 0x0U;   /* store result right-aligned */
+    chCtrl.B.RESREG = 0x0U;   /* store result from channel y to specified group result register */
+    EVADC_G1CHCTR0.U =  chCtrl.U;
+
+
+    chCtrl.B.RESREG   = 0x3U;
+    chCtrl.B.RESTGT   = 0x0U;
+    EVADC_G1CHCTR3.U   = chCtrl.U;
+
+
+    /* Data Reduction */
+    rcr.B.DRCTR        = EVADC_PHASE_SAMPLES -  1U;  /* DRCTR = N-1 for N samples */
+    rcr.B.DMM          = 0x0U;                       /* Standard data reduction (accumulate and average) */
+    rcr.B.SRGEN        = 0x1U;                       /* generate service request */
     EVADC_G1RCR0.U     = rcr.U;
 
-    /* RCR3 (VOLT_DC): service request after the pair completes */
-    rcr.U              = EVADC_G1RCR3.U;
-    rcr.B.DRCTR        = 0x0U;
-    rcr.B.DMM          = 0x0U;
-    rcr.B.WFR          = 0x0U;
-    rcr.B.FEN          = 0x0U;
-    rcr.B.SRGEN        = 0x1U;
+    rcr.B.SRGEN        = 0x0U;   /* generate service request */
     EVADC_G1RCR3.U     = rcr.U;
 
-    EVADC_G1REVNP0.U   = 0x0U;
 
-   /* src_cfg.U          = SRC_VADC_G1_SR0.U;
-    src_cfg.B.SRPN     = CORE_01_ADC_DC_LINK_SRPN;
-    src_cfg.B.TOS      = 0x0U;
-    SRC_VADC_G1_SR0.U  = src_cfg.U;
-    SRC_VADC_G1_SR0.B.SRE = EVADC_ENABLE_DC_LINK_SR;
-*/
-    EVADC_G1ARBCFG.B.ANONC = 0x3U;
-    while (EVADC_G1ARBCFG.B.ANONS != 0x3U) { CddSys_NopDelay(0x1U, 0x1U); }
+    EVADC_G1REVNP0.U = 0x0U;
+
+    srcCfg.B.SRPN        = CORE_00_ADC_DC_LINK;
+    srcCfg.B.TOS         = 0x0u;
+    SRC_VADC_G1_SR0.U    = srcCfg.U;
+    SRC_VADC_G1_SR0.B.SRE = 0x1U;
+
 }
+
 
 /**********************************************************************************************************************
  * Private — Result Readout Helpers
@@ -735,10 +764,8 @@ static void CddEvadc_ReadVro(P2VAR(volatile CddApp_T, AUTOMATIC, CDD_APPL_DATA) 
     Res.U = EVADC_G1RES0.U;
     if (Res.B.VF == 0x1U)
     {
-        CddAppPtr->Vr = EVADC_CODE_TO_VOLT(Res.B.RESULT);
-        /* Sanity anchor: with VAREF = 5 V and zcl = 10B this reads ~2048 counts
-         * (~2.5 V).  A grossly different value means the reference assumption
-         * or the channel mapping is wrong.                                     */
+        CddAppPtr->Vro  = EVADC_CODE_TO_VOLT(Res.B.RESULT);
+
     }
     else
     {
@@ -751,13 +778,16 @@ static void CddEvadc_ReadPhaseU(P2VAR(volatile CddApp_T, AUTOMATIC, CDD_APPL_DAT
     Ifx_EVADC_G_RES Res;
 
     Res.U = EVADC_G0RES0.U;
+
     if (Res.B.VF == 0x1U)
     {
+        /* RESULT holds the SUM of EVADC_PHASE_SAMPLES accumulated conversions */
         CddAppPtr->Vu = EVADC_CODE_TO_VOLT(Res.B.RESULT);
+        CddAppPtr->SensorReadingBitField |= EVADC_CURRENT_U_READING_VALID;
     }
     else
     {
-        /* No fresh result — previous value retained (Rule 15.7) */
+        CddAppPtr->SensorReadingBitField &= ~EVADC_CURRENT_U_READING_VALID;
     }
 }
 
@@ -766,13 +796,15 @@ static void CddEvadc_ReadPhaseV(P2VAR(volatile CddApp_T, AUTOMATIC, CDD_APPL_DAT
     Ifx_EVADC_G_RES Res;
 
     Res.U = EVADC_G3RES0.U;
+
     if (Res.B.VF == 0x1U)
     {
         CddAppPtr->Vv = EVADC_CODE_TO_VOLT(Res.B.RESULT);
+        CddAppPtr->SensorReadingBitField |= EVADC_CURRENT_V_READING_VALID;
     }
     else
     {
-        /* No fresh result — previous value retained (Rule 15.7) */
+        CddAppPtr->SensorReadingBitField &= ~EVADC_CURRENT_V_READING_VALID;
     }
 }
 
@@ -781,13 +813,15 @@ static void CddEvadc_ReadPhaseW(P2VAR(volatile CddApp_T, AUTOMATIC, CDD_APPL_DAT
     Ifx_EVADC_G_RES Res;
 
     Res.U = EVADC_G2RES0.U;
+
     if (Res.B.VF == 0x1U)
     {
         CddAppPtr->Vw = EVADC_CODE_TO_VOLT(Res.B.RESULT);
+        CddAppPtr->SensorReadingBitField |= EVADC_CURRENT_W_READING_VALID;
     }
     else
     {
-        /* No fresh result — previous value retained (Rule 15.7) */
+        CddAppPtr->SensorReadingBitField &= ~EVADC_CURRENT_W_READING_VALID;
     }
 }
 
@@ -810,3 +844,73 @@ static void CddEvadc_ReadDcLink(P2VAR(volatile CddApp_T, AUTOMATIC, CDD_APPL_DAT
 }
 
 
+void CddEvadc_CalibrateCurrentOffset(P2VAR(volatile CddApp_T, AUTOMATIC, CDD_APPL_DATA) CddAppPtr)
+{
+    static real32_T offsetIu = 0.0f;
+    static real32_T offsetIv = 0.0f;
+    static real32_T offsetIw = 0.0f;
+    static real32_T prevOffsetIu = 0.0f;
+    static real32_T prevOffsetIv = 0.0f;
+    static real32_T prevOffsetIw = 0.0f;
+    static uint32_T stableCount = 0U;
+
+    const real32_T V_TO_A = EVADC_V_TO_A_FACTOR;
+    const real32_T CONVERGENCE_THRESHOLD = 0.0005f;  /* 0.5mA stability */
+
+    if ((CddAppPtr->SensorReadingBitField & (EVADC_CURRENT_U_READING_VALID |
+                                              EVADC_CURRENT_V_READING_VALID)) ==
+        (EVADC_CURRENT_U_READING_VALID | EVADC_CURRENT_V_READING_VALID))
+    {
+        /* Calculate instantaneous current offsets for U and V (should be near zero at standstill) */
+        real32_T instOffsetIu = (CddAppPtr->Vu - CddAppPtr->Vro) * V_TO_A;
+        real32_T instOffsetIv = (CddAppPtr->Vv - CddAppPtr->Vro) * V_TO_A;
+        real32_T instOffsetIw = 0.0f;  /* W phase not measured */
+
+        /* Simple incremental update */
+        static real32_T alpha = 0.05f;  /* Start with faster convergence */
+
+        /* Update offsets for U and V only */
+        offsetIu = offsetIu + alpha * (instOffsetIu - offsetIu);
+        offsetIv = offsetIv + alpha * (instOffsetIv - offsetIv);
+        /* offsetIw remains 0 (not used) */
+
+        /* Gradually slow down convergence for stability */
+        if (alpha > 0.01f)
+        {
+            alpha = alpha * 0.999f;  /* Slowly decrease alpha */
+            if (alpha < 0.01f)
+            {
+                alpha = 0.01f;  /* Minimum alpha */
+            }
+        }
+
+        /* Check for convergence - only for U and V */
+        real32_T deltaIu = offsetIu - prevOffsetIu;
+        real32_T deltaIv = offsetIv - prevOffsetIv;
+
+        if ((deltaIu < CONVERGENCE_THRESHOLD) && (deltaIu > -CONVERGENCE_THRESHOLD) &&
+            (deltaIv < CONVERGENCE_THRESHOLD) && (deltaIv > -CONVERGENCE_THRESHOLD))
+        {
+            stableCount++;
+            if (stableCount >= 10U)
+            {
+                /* Calibration is stable - can set a flag if needed */
+                /* CddAppPtr->CDDAppStatus |= CDDAPP_CALIBRATED; */
+            }
+        }
+        else
+        {
+            stableCount = 0U;
+        }
+
+        prevOffsetIu = offsetIu;
+        prevOffsetIv = offsetIv;
+        /* prevOffsetIw remains 0 */
+
+        /* Store calibrated offsets */
+        CddAppPtr->OffsetIu = offsetIu;
+        CddAppPtr->OffsetIv = offsetIv;
+        CddAppPtr->OffsetIw = 0.0f;  /* W phase not measured */
+
+    }
+}

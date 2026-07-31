@@ -7,25 +7,29 @@ C_SRCS += \
 "../Cpu0_Main.c" \
 "../Cpu1_Main.c" \
 "../Cpu2_Main.c" \
-"../Cpu3_Main.c" 
+"../Cpu3_Main.c" \
+"../test.c" 
 
 COMPILED_SRCS += \
 "Cpu0_Main.src" \
 "Cpu1_Main.src" \
 "Cpu2_Main.src" \
-"Cpu3_Main.src" 
+"Cpu3_Main.src" \
+"test.src" 
 
 C_DEPS += \
 "./Cpu0_Main.d" \
 "./Cpu1_Main.d" \
 "./Cpu2_Main.d" \
-"./Cpu3_Main.d" 
+"./Cpu3_Main.d" \
+"./test.d" 
 
 OBJS += \
 "Cpu0_Main.o" \
 "Cpu1_Main.o" \
 "Cpu2_Main.o" \
-"Cpu3_Main.o" 
+"Cpu3_Main.o" \
+"test.o" 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -45,11 +49,15 @@ OBJS += \
 	cctc -cs --dep-file="$*.d" --misrac-version=2012 -D__CPU__=tc38x "-fC:/EmbedSim_MotorControl/EmbedSim_Pmsm_TC3/TriCore Debug (TASKING)/TASKING_C_C___Compiler-Include_paths__-I_.opt" --iso=99 --c++14 --language=+volatile --exceptions --anachronisms --fp-model=3 -O0 --tradeoff=4 --compact-max-size=200 -g -Wc-w544 -Wc-w557 -Wc-w508 -Ctc38x -Y0 -N0 -Z0 -o "$@" "$<"
 "Cpu3_Main.o":"Cpu3_Main.src" "subdir.mk"
 	astc -Og -Os --no-warnings= --error-limit=42 -o  "$@" "$<"
+"test.src":"../test.c" "subdir.mk"
+	cctc -cs --dep-file="$*.d" --misrac-version=2012 -D__CPU__=tc38x "-fC:/EmbedSim_MotorControl/EmbedSim_Pmsm_TC3/TriCore Debug (TASKING)/TASKING_C_C___Compiler-Include_paths__-I_.opt" --iso=99 --c++14 --language=+volatile --exceptions --anachronisms --fp-model=3 -O0 --tradeoff=4 --compact-max-size=200 -g -Wc-w544 -Wc-w557 -Wc-w508 -Ctc38x -Y0 -N0 -Z0 -o "$@" "$<"
+"test.o":"test.src" "subdir.mk"
+	astc -Og -Os --no-warnings= --error-limit=42 -o  "$@" "$<"
 
 clean: clean--2e-
 
 clean--2e-:
-	-$(RM) ./Cpu0_Main.d ./Cpu0_Main.o ./Cpu0_Main.src ./Cpu1_Main.d ./Cpu1_Main.o ./Cpu1_Main.src ./Cpu2_Main.d ./Cpu2_Main.o ./Cpu2_Main.src ./Cpu3_Main.d ./Cpu3_Main.o ./Cpu3_Main.src
+	-$(RM) ./Cpu0_Main.d ./Cpu0_Main.o ./Cpu0_Main.src ./Cpu1_Main.d ./Cpu1_Main.o ./Cpu1_Main.src ./Cpu2_Main.d ./Cpu2_Main.o ./Cpu2_Main.src ./Cpu3_Main.d ./Cpu3_Main.o ./Cpu3_Main.src ./test.d ./test.o ./test.src
 
 .PHONY: clean--2e-
 

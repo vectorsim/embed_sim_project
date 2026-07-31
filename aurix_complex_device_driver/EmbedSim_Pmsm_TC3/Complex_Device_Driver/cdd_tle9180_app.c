@@ -284,7 +284,7 @@ static CddTle9180_SpiRx_T Status_RxBuf_S[2U];
  *********************************************************************************************************************/
 static void CddTle9180_PowerOnSequence(void);
 static uint32_T CddTle9180_PingSr0(P2VAR(uint32_T, AUTOMATIC, CDD_APPL_DATA) ErrorCode);
-static uint32_T CddTle9180_ClearFaults(P2VAR(uint32_T, AUTOMATIC, CDD_APPL_DATA) ErrorCode);
+
 
 /**********************************************************************************************************************
  * GPIO Wrapper Implementations
@@ -387,7 +387,7 @@ void CddTle9180_Wait(uint32_T TimeConst)
 
     while (CddStm_IsDeadlineElapsed(deadline) == 0x0U)
     {
-        ;
+        CddSys_NopDelay(1U, 1U);
     }
 }
 

@@ -54,10 +54,10 @@
 #define CORE_00_QSPI4_ERR_SRPN                  (57U)
 #define CORE_00_ATOM_00_CH_00_CL_SRPN           (80U)
 #define CORE_01_ATOM_00_CH_00_CL_SRPN           (80U)
-#define CORE_01_ADC_PHASE_U_SRPN                (90U)
-#define CORE_01_ADC_PHASE_V_SRPN                (91U)
-#define CORE_01_ADC_PHASE_W_SRPN                (92U)
-#define CORE_01_ADC_G_08_CH_08_DC_LINK_SRPN     (95U)
+#define CORE_00_ADC_PHASE_U_SRPN                (90U)
+#define CORE_00_ADC_PHASE_V_SRPN                (91U)
+#define CORE_00_ADC_PHASE_W_SRPN                (92U)
+#define CORE_00_ADC_DC_LINK                     (95U)
 
 /**********************************************************************************************************************
  * GTM Software Dead-Time  [CLK0 ticks]
@@ -68,13 +68,6 @@
 #define CDD_GTM_SW_DEAD_TIME_TICKS      (28U)   /**< Software dead-time  [CLK0 ticks] */
 #endif
 
-/**
- * \brief  ADC valley trigger offset from CCU0 reset [CLK0 ticks].
- *         Must be > CDD_GTM_SW_DEAD_TIME_TICKS (140 ns).
- */
-#ifndef CDD_GTM_ADC_VALLEY_OFFSET_TICKS
-#define CDD_GTM_ADC_VALLEY_OFFSET_TICKS (40U)   /**< 200 ns  [CLK0 ticks] */
-#endif
 
 /**********************************************************************************************************************
  * GTM Gate-Driver HS Polarity Flag
@@ -93,9 +86,9 @@
 /**********************************************************************************************************************
  * EVADC SR Enable
  *********************************************************************************************************************/
-#define EVADC_ENABLE_PHASE_U_SR     (1U)
+#define EVADC_ENABLE_PHASE_U_SR     (0U)
 #define EVADC_ENABLE_PHASE_V_SR     (1U)
-#define EVADC_ENABLE_PHASE_W_SR     (1U)
-#define EVADC_ENABLE_DC_LINK_SR     (1U)
+#define EVADC_ENABLE_PHASE_W_SR     (0U)
+#define EVADC_ENABLE_DC_LINK_SR     (0U)
 
 #endif /* CDD_CONFIG_H_ */

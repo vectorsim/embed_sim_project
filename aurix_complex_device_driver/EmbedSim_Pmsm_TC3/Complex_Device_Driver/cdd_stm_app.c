@@ -216,7 +216,7 @@ void CddStm_Delay_Us(uint32_T Microseconds)
 
     while (CddStm_IsDeadlineElapsed(deadLine) == 0x0U)
     {
-        /* busy-wait */
+        CddSys_NopDelay(1U, 1U);
     }
 }
 

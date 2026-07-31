@@ -1,0 +1,4616 @@
+	; Module start
+	.compiler_version	"TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler v1.1r8 Build 22011964"
+	.compiler_invocation	"ctc -f cc9676a --dep-file=Complex_Device_Driver/cdd_pi_controller.d -c99 --fp-model=3cflnrSTz -D__CPU__=tc38x -D__CPU_TC38X__ --core=tc1.6.2 --fp-model=+float -D__CPU__=tc38x -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3 -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Complex_Device_Driver -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Configurations -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\EmbedSim -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\Infra -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\Infra\\\\Platform -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\Infra\\\\Platform\\\\Tricore -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\Infra\\\\Platform\\\\Tricore\\\\Compilers -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\Infra\\\\Sfr -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\Infra\\\\Sfr\\\\TC38x -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\Infra\\\\Ssw -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\Infra\\\\Ssw\\\\TC3xx -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\Infra\\\\Ssw\\\\TC3xx\\\\Tricore -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\Service -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\Service\\\\CpuGeneric -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\Service\\\\CpuGeneric\\\\SysSe -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\Service\\\\CpuGeneric\\\\SysSe\\\\Bsp -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\Service\\\\CpuGeneric\\\\_Utilities -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\iLLD -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\iLLD\\\\TC3xx -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\iLLD\\\\TC3xx\\\\Tricore -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\iLLD\\\\TC3xx\\\\Tricore\\\\Cpu -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\iLLD\\\\TC3xx\\\\Tricore\\\\Cpu\\\\Irq -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\iLLD\\\\TC3xx\\\\Tricore\\\\Cpu\\\\Std -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\iLLD\\\\TC3xx\\\\Tricore\\\\Cpu\\\\Trap -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\iLLD\\\\TC3xx\\\\Tricore\\\\Gpt12 -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\iLLD\\\\TC3xx\\\\Tricore\\\\Gpt12\\\\IncrEnc -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\iLLD\\\\TC3xx\\\\Tricore\\\\Gpt12\\\\Std -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\iLLD\\\\TC3xx\\\\Tricore\\\\Gtm -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\iLLD\\\\TC3xx\\\\Tricore\\\\Gtm\\\\Std -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\iLLD\\\\TC3xx\\\\Tricore\\\\Mtu -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\iLLD\\\\TC3xx\\\\Tricore\\\\Mtu\\\\Std -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\iLLD\\\\TC3xx\\\\Tricore\\\\Pms -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\iLLD\\\\TC3xx\\\\Tricore\\\\Pms\\\\Std -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\iLLD\\\\TC3xx\\\\Tricore\\\\Port -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\iLLD\\\\TC3xx\\\\Tricore\\\\Port\\\\Std -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\iLLD\\\\TC3xx\\\\Tricore\\\\Scu -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\iLLD\\\\TC3xx\\\\Tricore\\\\Scu\\\\Std -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\iLLD\\\\TC3xx\\\\Tricore\\\\Src -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\iLLD\\\\TC3xx\\\\Tricore\\\\Src\\\\Std -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\iLLD\\\\TC3xx\\\\Tricore\\\\Stm -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\iLLD\\\\TC3xx\\\\Tricore\\\\Stm\\\\Std -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\iLLD\\\\TC3xx\\\\Tricore\\\\_Impl -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\iLLD\\\\TC3xx\\\\Tricore\\\\_PinMap -IC:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\Libraries\\\\iLLD\\\\TC3xx\\\\Tricore\\\\_PinMap\\\\TC38x -g2 -w544 -w557 -w508 -t4 --language=+volatile -N0 -O0 -Y0 -Z0 --compact-max-size=200 --misrac-version=2012 -o Complex_Device_Driver/cdd_pi_controller.src ../Complex_Device_Driver/cdd_pi_controller.c"
+	.compiler_name		"ctc"
+	;source	'../Complex_Device_Driver/cdd_pi_controller.c'
+
+	
+$TC162
+	
+	.sdecl	'.text.cdd_pi_controller.PI_ClarkeTransform',code,cluster('PI_ClarkeTransform')
+	.sect	'.text.cdd_pi_controller.PI_ClarkeTransform'
+	.align	2
+	
+; Function PI_ClarkeTransform
+.L70:
+PI_ClarkeTransform:	.type	func
+	extr.u	d15,d6,#23,#8
+	eq	d15,d15,#0
+.L621:
+	jeq	d15,#0,.L2
+.L622:
+	add.f	d15,d4,d5
+.L623:
+	insn.t	d6,d15:31,d15:31
+.L2:
+	st.w	[a4],d4
+.L624:
+	sub.f	d15,d5,d6
+.L625:
+	mov.u	d0,#46039
+	addih	d0,d0,#16349
+.L626:
+	div.f	d15,d15,d0
+.L627:
+	st.w	[a5],d15
+.L628:
+	ret
+.L227:
+	
+__PI_ClarkeTransform_function_end:
+	.size	PI_ClarkeTransform,__PI_ClarkeTransform_function_end-PI_ClarkeTransform
+.L150:
+	; End of function
+	
+	.sdecl	'.text.cdd_pi_controller.PI_ParkTransform',code,cluster('PI_ParkTransform')
+	.sect	'.text.cdd_pi_controller.PI_ParkTransform'
+	.align	2
+	
+; Function PI_ParkTransform
+.L72:
+PI_ParkTransform:	.type	func
+	mov	d15,d4
+.L280:
+	mov	e8,d6,d5
+	mov.aa	a15,a4
+.L282:
+	mov.aa	a12,a5
+.L283:
+	mov	d4,d9
+.L278:
+	call	cosf
+.L279:
+	mov	d10,d2
+.L285:
+	mov	d4,d9
+.L286:
+	call	sinf
+.L284:
+	mul.f	d0,d8,d2
+.L287:
+	madd.f	d0,d0,d15,d10
+.L633:
+	st.w	[a15],d0
+.L634:
+	insn.t	d15,d15:31,d15:31
+.L281:
+	mul.f	d0,d8,d10
+.L288:
+	madd.f	d15,d0,d15,d2
+.L635:
+	st.w	[a12],d15
+.L636:
+	ret
+.L236:
+	
+__PI_ParkTransform_function_end:
+	.size	PI_ParkTransform,__PI_ParkTransform_function_end-PI_ParkTransform
+.L155:
+	; End of function
+	
+	.sdecl	'.text.cdd_pi_controller.PI_InvParkTransform',code,cluster('PI_InvParkTransform')
+	.sect	'.text.cdd_pi_controller.PI_InvParkTransform'
+	.align	2
+	
+; Function PI_InvParkTransform
+.L74:
+PI_InvParkTransform:	.type	func
+	mov	d15,d4
+.L291:
+	mov	e8,d6,d5
+	mov.aa	a15,a4
+.L293:
+	mov.aa	a12,a5
+.L294:
+	mov	d4,d9
+.L289:
+	call	cosf
+.L290:
+	mov	d10,d2
+.L296:
+	mov	d4,d9
+.L297:
+	call	sinf
+.L295:
+	mul.f	d0,d15,d10
+.L298:
+	msub.f	d0,d0,d8,d2
+.L299:
+	st.w	[a15],d0
+.L300:
+	mul.f	d0,d8,d10
+.L301:
+	madd.f	d15,d0,d15,d2
+.L292:
+	st.w	[a12],d15
+.L641:
+	ret
+.L246:
+	
+__PI_InvParkTransform_function_end:
+	.size	PI_InvParkTransform,__PI_InvParkTransform_function_end-PI_InvParkTransform
+.L160:
+	; End of function
+	
+	.sdecl	'.text.cdd_pi_controller.PI_SVPWM',code,cluster('PI_SVPWM')
+	.sect	'.text.cdd_pi_controller.PI_SVPWM'
+	.align	2
+	
+; Function PI_SVPWM
+.L76:
+PI_SVPWM:	.type	func
+	mov	e8,d5,d4
+	mov	d10,d6
+.L303:
+	mov.aa	a15,a4
+.L304:
+	mov.aa	a12,a5
+.L305:
+	mov.aa	a13,a6
+.L306:
+	mul.f	d15,d9,d9
+.L307:
+	madd.f	d4,d15,d8,d8
+.L302:
+	call	sqrtf
+.L271:
+	mov.u	d15,#46039
+	addih	d15,d15,#16349
+.L646:
+	div.f	d0,d10,d15
+.L309:
+	cmp.f	d15,d2,d0
+	extr.u	d15,d15,#2,#1
+.L647:
+	jeq	d15,#0,.L3
+.L648:
+	div.f	d15,d0,d2
+.L311:
+	mul.f	d8,d8,d15
+.L649:
+	div.f	d15,d0,d2
+.L312:
+	mul.f	d9,d9,d15
+.L3:
+	mov.u	d15,#46039
+	addih	d15,d15,#16349
+.L650:
+	div.f	d15,d15,d10
+.L313:
+	mul.f	d8,d8,d15
+.L314:
+	mov.u	d15,#46039
+	addih	d15,d15,#16349
+.L651:
+	div.f	d15,d15,d10
+.L315:
+	mul.f	d9,d9,d15
+.L316:
+	insert	d15,d8,#0,#31,#1
+.L652:
+	mov	d0,#14269
+.L310:
+	addih	d0,d0,#13702
+.L653:
+	cmp.f	d15,d15,d0
+	extr.u	d15,d15,#0,#1
+.L654:
+	jeq	d15,#0,.L4
+.L655:
+	insert	d15,d9,#0,#31,#1
+.L656:
+	mov	d0,#14269
+	addih	d0,d0,#13702
+.L657:
+	cmp.f	d15,d15,d0
+	extr.u	d15,d15,#0,#1
+	jeq	d15,#0,.L5
+.L658:
+	movh	d15,#16128
+.L659:
+	st.w	[a15],d15
+.L660:
+	movh	d15,#16128
+.L661:
+	st.w	[a12],d15
+.L662:
+	movh	d15,#16128
+.L663:
+	st.w	[a13],d15
+.L664:
+	j	.L6
+.L5:
+.L4:
+	mov	e4,d8,d9
+	call	atan2f
+.L308:
+	mov	d15,#0
+.L665:
+	cmp.f	d15,d2,d15
+	extr.u	d15,d15,#0,#1
+.L666:
+	jeq	d15,#0,.L7
+.L667:
+	mov	d15,#4059
+	addih	d15,d15,#16585
+.L668:
+	add.f	d2,d2,d15
+.L7:
+	mov	d15,#2706
+	addih	d15,d15,#16262
+.L669:
+	cmp.f	d15,d2,d15
+	extr.u	d15,d15,#0,#1
+.L670:
+	jeq	d15,#0,.L8
+.L671:
+	movh	d15,#16256
+.L317:
+	j	.L9
+.L8:
+	mov	d15,#2706
+	addih	d15,d15,#16390
+.L672:
+	cmp.f	d15,d2,d15
+	extr.u	d15,d15,#0,#1
+.L673:
+	jeq	d15,#0,.L10
+.L674:
+	movh	d15,#16384
+.L318:
+	j	.L11
+.L10:
+	mov	d15,#4059
+	addih	d15,d15,#16457
+.L675:
+	cmp.f	d15,d2,d15
+	extr.u	d15,d15,#0,#1
+.L676:
+	jeq	d15,#0,.L12
+.L677:
+	movh	d15,#16448
+.L319:
+	j	.L13
+.L12:
+	mov	d15,#2706
+	addih	d15,d15,#16518
+.L678:
+	cmp.f	d15,d2,d15
+	extr.u	d15,d15,#0,#1
+.L679:
+	jeq	d15,#0,.L14
+.L680:
+	movh	d15,#16512
+.L320:
+	j	.L15
+.L14:
+	mov.u	d15,#36151
+	addih	d15,d15,#16551
+.L681:
+	cmp.f	d15,d2,d15
+	jnz.t	d15:0,.L16
+.L682:
+	movh	d15,#16576
+.L321:
+	j	.L17
+.L16:
+	movh	d15,#16544
+.L17:
+.L15:
+.L13:
+.L11:
+.L9:
+	ftouz	d0,d15
+.L683:
+	mov	d15,#1
+.L322:
+	jeq	d15,d0,.L18
+.L684:
+	mov	d15,#2
+	jeq	d15,d0,.L19
+.L685:
+	mov	d15,#3
+	jeq	d15,d0,.L20
+.L686:
+	mov	d15,#4
+	jeq	d15,d0,.L21
+.L687:
+	mov	d15,#5
+	jeq	d15,d0,.L22
+.L688:
+	mov	d15,#6
+	jeq	d15,d0,.L23
+	j	.L24
+.L18:
+	mov.u	d15,#46039
+	addih	d15,d15,#16349
+.L689:
+	div.f	d15,d9,d15
+.L690:
+	sub.f	d15,d8,d15
+.L323:
+	movh	d0,#16384
+.L691:
+	mul.f	d0,d9,d0
+.L692:
+	mov.u	d1,#46039
+	addih	d1,d1,#16349
+.L693:
+	div.f	d0,d0,d1
+.L325:
+	add.f	d15,d15,d0
+.L324:
+	movh	d1,#16128
+.L694:
+	add.f	d15,d15,d1
+.L695:
+	st.w	[a15],d15
+.L696:
+	movh	d15,#16128
+.L697:
+	add.f	d15,d0,d15
+.L698:
+	st.w	[a12],d15
+.L699:
+	movh	d15,#16128
+.L700:
+	st.w	[a13],d15
+.L701:
+	j	.L25
+.L19:
+	mov.u	d15,#46039
+	addih	d15,d15,#16349
+.L702:
+	div.f	d15,d9,d15
+.L703:
+	add.f	d15,d8,d15
+.L326:
+	insn.t	d0,d8:31,d8:31
+.L704:
+	mov.u	d1,#46039
+	addih	d1,d1,#16349
+.L705:
+	div.f	d1,d9,d1
+.L706:
+	add.f	d0,d0,d1
+.L328:
+	movh	d1,#16128
+.L707:
+	add.f	d1,d0,d1
+.L708:
+	st.w	[a15],d1
+.L709:
+	add.f	d15,d15,d0
+.L327:
+	movh	d0,#16128
+.L329:
+	add.f	d15,d15,d0
+.L710:
+	st.w	[a12],d15
+.L711:
+	movh	d15,#16128
+.L712:
+	st.w	[a13],d15
+.L713:
+	j	.L26
+.L20:
+	movh	d15,#16384
+.L714:
+	mul.f	d15,d9,d15
+.L715:
+	mov.u	d0,#46039
+	addih	d0,d0,#16349
+.L716:
+	div.f	d15,d15,d0
+.L330:
+	insn.t	d0,d8:31,d8:31
+.L717:
+	mov.u	d1,#46039
+	addih	d1,d1,#16349
+.L718:
+	div.f	d1,d9,d1
+.L719:
+	sub.f	d0,d0,d1
+.L332:
+	movh	d1,#16128
+.L720:
+	st.w	[a15],d1
+.L721:
+	add.f	d15,d15,d0
+.L331:
+	movh	d1,#16128
+.L722:
+	add.f	d15,d15,d1
+.L723:
+	st.w	[a12],d15
+.L724:
+	movh	d15,#16128
+.L725:
+	add.f	d15,d0,d15
+.L726:
+	st.w	[a13],d15
+.L727:
+	j	.L27
+.L21:
+	insn.t	d15,d8:31,d8:31
+.L728:
+	mov.u	d0,#46039
+	addih	d0,d0,#16349
+.L729:
+	div.f	d0,d9,d0
+.L730:
+	add.f	d15,d15,d0
+.L333:
+	movh	d0,#49152
+.L731:
+	mul.f	d0,d9,d0
+.L732:
+	mov.u	d1,#46039
+	addih	d1,d1,#16349
+.L733:
+	div.f	d0,d0,d1
+.L335:
+	movh	d1,#16128
+.L734:
+	st.w	[a15],d1
+.L735:
+	movh	d1,#16128
+.L736:
+	add.f	d1,d0,d1
+.L737:
+	st.w	[a12],d1
+.L738:
+	add.f	d15,d15,d0
+.L334:
+	movh	d0,#16128
+.L336:
+	add.f	d15,d15,d0
+.L739:
+	st.w	[a13],d15
+.L740:
+	j	.L28
+.L22:
+	insn.t	d15,d8:31,d8:31
+.L741:
+	mov.u	d0,#46039
+	addih	d0,d0,#16349
+.L742:
+	div.f	d0,d9,d0
+.L743:
+	sub.f	d15,d15,d0
+.L337:
+	mov.u	d0,#46039
+	addih	d0,d0,#16349
+.L744:
+	div.f	d0,d9,d0
+.L745:
+	sub.f	d0,d8,d0
+.L339:
+	movh	d1,#16128
+.L746:
+	add.f	d1,d0,d1
+.L747:
+	st.w	[a15],d1
+.L748:
+	movh	d1,#16128
+.L749:
+	st.w	[a12],d1
+.L750:
+	add.f	d15,d15,d0
+.L338:
+	movh	d0,#16128
+.L340:
+	add.f	d15,d15,d0
+.L751:
+	st.w	[a13],d15
+.L752:
+	j	.L29
+.L23:
+	movh	d15,#49152
+.L753:
+	mul.f	d15,d9,d15
+.L754:
+	mov.u	d0,#46039
+	addih	d0,d0,#16349
+.L755:
+	div.f	d15,d15,d0
+.L341:
+	mov.u	d0,#46039
+	addih	d0,d0,#16349
+.L756:
+	div.f	d0,d9,d0
+.L757:
+	add.f	d0,d8,d0
+.L343:
+	add.f	d15,d15,d0
+.L342:
+	movh	d1,#16128
+.L758:
+	add.f	d15,d15,d1
+.L759:
+	st.w	[a15],d15
+.L760:
+	movh	d15,#16128
+.L761:
+	st.w	[a12],d15
+.L762:
+	movh	d15,#16128
+.L763:
+	add.f	d15,d0,d15
+.L764:
+	st.w	[a13],d15
+.L765:
+	j	.L30
+.L24:
+	movh	d15,#16128
+.L766:
+	st.w	[a15],d15
+.L767:
+	movh	d15,#16128
+.L768:
+	st.w	[a12],d15
+.L769:
+	movh	d15,#16128
+.L770:
+	st.w	[a13],d15
+.L771:
+	j	.L31
+.L31:
+.L30:
+.L29:
+.L28:
+.L27:
+.L26:
+.L25:
+	ld.w	d15,[a15]
+.L772:
+	mov	d0,#0
+.L773:
+	cmp.f	d15,d15,d0
+	extr.u	d15,d15,#0,#1
+.L774:
+	jeq	d15,#0,.L32
+.L775:
+	mov	d15,#0
+.L776:
+	st.w	[a15],d15
+.L32:
+	ld.w	d15,[a15]
+.L777:
+	movh	d0,#16256
+.L778:
+	cmp.f	d15,d15,d0
+	extr.u	d15,d15,#2,#1
+.L779:
+	jeq	d15,#0,.L33
+.L780:
+	movh	d15,#16256
+.L781:
+	st.w	[a15],d15
+.L33:
+	ld.w	d15,[a12]
+.L782:
+	mov	d0,#0
+.L783:
+	cmp.f	d15,d15,d0
+	extr.u	d15,d15,#0,#1
+.L784:
+	jeq	d15,#0,.L34
+.L785:
+	mov	d15,#0
+.L786:
+	st.w	[a12],d15
+.L34:
+	ld.w	d15,[a12]
+.L787:
+	movh	d0,#16256
+.L788:
+	cmp.f	d15,d15,d0
+	extr.u	d15,d15,#2,#1
+.L789:
+	jeq	d15,#0,.L35
+.L790:
+	movh	d15,#16256
+.L791:
+	st.w	[a12],d15
+.L35:
+	ld.w	d15,[a13]
+.L792:
+	mov	d0,#0
+.L793:
+	cmp.f	d15,d15,d0
+	extr.u	d15,d15,#0,#1
+.L794:
+	jeq	d15,#0,.L36
+.L795:
+	mov	d15,#0
+.L796:
+	st.w	[a13],d15
+.L36:
+	ld.w	d15,[a13]
+.L797:
+	movh	d0,#16256
+.L798:
+	cmp.f	d15,d15,d0
+	extr.u	d15,d15,#2,#1
+.L799:
+	jeq	d15,#0,.L37
+.L800:
+	movh	d15,#16256
+.L801:
+	st.w	[a13],d15
+.L37:
+.L6:
+	ret
+.L256:
+	
+__PI_SVPWM_function_end:
+	.size	PI_SVPWM,__PI_SVPWM_function_end-PI_SVPWM
+.L165:
+	; End of function
+	
+	.sdecl	'.text.cdd_pi_controller.PI_Clamp',code,cluster('PI_Clamp')
+	.sect	'.text.cdd_pi_controller.PI_Clamp'
+	.align	2
+	
+; Function PI_Clamp
+.L78:
+PI_Clamp:	.type	func
+	cmp.f	d15,d4,d5
+	extr.u	d15,d15,#2,#1
+.L806:
+	jeq	d15,#0,.L38
+.L807:
+	mov	d2,d5
+.L344:
+	j	.L39
+.L38:
+	insn.t	d15,d5:31,d5:31
+.L808:
+	cmp.f	d15,d4,d15
+	extr.u	d15,d15,#0,#1
+.L809:
+	jeq	d15,#0,.L40
+.L810:
+	insn.t	d2,d5:31,d5:31
+.L811:
+	j	.L41
+.L40:
+	mov	d2,d4
+.L345:
+	j	.L42
+.L42:
+.L41:
+.L39:
+	ret
+.L275:
+	
+__PI_Clamp_function_end:
+	.size	PI_Clamp,__PI_Clamp_function_end-PI_Clamp
+.L170:
+	; End of function
+	
+	.sdecl	'.text.cdd_pi_controller.PI_Init',code,cluster('PI_Init')
+	.sect	'.text.cdd_pi_controller.PI_Init'
+	.align	2
+	
+	.global	PI_Init
+; Function PI_Init
+.L80:
+PI_Init:	.type	func
+	jnz.a	a4,.L43
+.L385:
+	j	.L44
+.L43:
+	mov	d15,#0
+.L386:
+	st.w	[a4],d15
+.L387:
+	mov	d15,#0
+.L388:
+	st.w	[a4]4,d15
+.L389:
+	mov	d15,#0
+.L390:
+	st.w	[a4]8,d15
+.L391:
+	mov	d15,#0
+.L392:
+	st.w	[a4]12,d15
+.L393:
+	mov	d15,#0
+.L394:
+	st.w	[a4]16,d15
+.L395:
+	mov	d15,#0
+.L396:
+	st.w	[a4]20,d15
+.L397:
+	mov	d15,#0
+.L398:
+	st.w	[a4]24,d15
+.L399:
+	mov	d15,#0
+.L400:
+	st.w	[a4]28,d15
+.L401:
+	mov	d15,#0
+.L402:
+	st.w	[a4]32,d15
+.L403:
+	mov	d15,#0
+.L404:
+	st.w	[a4]36,d15
+.L405:
+	mov	d15,#0
+.L406:
+	st.w	[a4]40,d15
+.L407:
+	mov	d15,#0
+.L408:
+	st.w	[a4]44,d15
+.L409:
+	mov	d15,#0
+.L410:
+	st.w	[a4]48,d15
+.L411:
+	mov	d15,#0
+.L412:
+	st.w	[a4]52,d15
+.L413:
+	mov	d15,#0
+.L414:
+	st.w	[a4]56,d15
+.L415:
+	mov	d15,#0
+.L416:
+	st.w	[a4]60,d15
+.L417:
+	movh	d15,#16128
+.L418:
+	st.w	[a4]64,d15
+.L419:
+	movh	d15,#16128
+.L420:
+	st.w	[a4]68,d15
+.L421:
+	movh	d15,#16128
+.L422:
+	st.w	[a4]72,d15
+.L423:
+	mov	d15,#0
+.L424:
+	st.w	[a4]76,d15
+.L425:
+	mov	d15,#0
+.L426:
+	st.w	[a4]80,d15
+.L427:
+	mov	d15,#0
+.L428:
+	st.w	[a4]84,d15
+.L429:
+	mov	d15,#0
+.L430:
+	st.w	[a4]88,d15
+.L431:
+	mov	d15,#0
+.L432:
+	st.w	[a4]92,d15
+.L44:
+	ret
+.L171:
+	
+__PI_Init_function_end:
+	.size	PI_Init,__PI_Init_function_end-PI_Init
+.L105:
+	; End of function
+	
+	.sdecl	'.text.cdd_pi_controller.PI_Reset',code,cluster('PI_Reset')
+	.sect	'.text.cdd_pi_controller.PI_Reset'
+	.align	2
+	
+	.global	PI_Reset
+; Function PI_Reset
+.L82:
+PI_Reset:	.type	func
+	jnz.a	a4,.L45
+.L437:
+	j	.L46
+.L45:
+	mov	d15,#0
+.L438:
+	st.w	[a4]12,d15
+.L439:
+	mov	d15,#0
+.L440:
+	st.w	[a4]40,d15
+.L441:
+	mov	d15,#0
+.L442:
+	st.w	[a4]44,d15
+.L443:
+	mov	d15,#0
+.L444:
+	st.w	[a4]92,d15
+.L445:
+	movh	d15,#16128
+.L446:
+	st.w	[a4]64,d15
+.L447:
+	movh	d15,#16128
+.L448:
+	st.w	[a4]68,d15
+.L449:
+	movh	d15,#16128
+.L450:
+	st.w	[a4]72,d15
+.L46:
+	ret
+.L174:
+	
+__PI_Reset_function_end:
+	.size	PI_Reset,__PI_Reset_function_end-PI_Reset
+.L110:
+	; End of function
+	
+	.sdecl	'.text.cdd_pi_controller.PI_Enable',code,cluster('PI_Enable')
+	.sect	'.text.cdd_pi_controller.PI_Enable'
+	.align	2
+	
+	.global	PI_Enable
+; Function PI_Enable
+.L84:
+PI_Enable:	.type	func
+	jz.a	a4,.L47
+.L455:
+	mov	d15,#1
+.L456:
+	st.w	[a4]88,d15
+.L457:
+	call	PI_Reset
+.L47:
+	ret
+.L177:
+	
+__PI_Enable_function_end:
+	.size	PI_Enable,__PI_Enable_function_end-PI_Enable
+.L115:
+	; End of function
+	
+	.sdecl	'.text.cdd_pi_controller.PI_Disable',code,cluster('PI_Disable')
+	.sect	'.text.cdd_pi_controller.PI_Disable'
+	.align	2
+	
+	.global	PI_Disable
+; Function PI_Disable
+.L86:
+PI_Disable:	.type	func
+	jz.a	a4,.L48
+.L462:
+	mov	d15,#0
+.L463:
+	st.w	[a4]88,d15
+.L464:
+	movh	d15,#16128
+.L465:
+	st.w	[a4]64,d15
+.L466:
+	movh	d15,#16128
+.L467:
+	st.w	[a4]68,d15
+.L468:
+	movh	d15,#16128
+.L469:
+	st.w	[a4]72,d15
+.L48:
+	ret
+.L180:
+	
+__PI_Disable_function_end:
+	.size	PI_Disable,__PI_Disable_function_end-PI_Disable
+.L120:
+	; End of function
+	
+	.sdecl	'.text.cdd_pi_controller.PI_SetSpeed',code,cluster('PI_SetSpeed')
+	.sect	'.text.cdd_pi_controller.PI_SetSpeed'
+	.align	2
+	
+	.global	PI_SetSpeed
+; Function PI_SetSpeed
+.L88:
+PI_SetSpeed:	.type	func
+	jz.a	a4,.L49
+.L474:
+	st.w	[a4],d4
+.L49:
+	ret
+.L183:
+	
+__PI_SetSpeed_function_end:
+	.size	PI_SetSpeed,__PI_SetSpeed_function_end-PI_SetSpeed
+.L125:
+	; End of function
+	
+	.sdecl	'.text.cdd_pi_controller.PI_Step',code,cluster('PI_Step')
+	.sect	'.text.cdd_pi_controller.PI_Step'
+	.align	2
+	
+	.global	PI_Step
+; Function PI_Step
+.L90:
+PI_Step:	.type	func
+	sub.a	a10,#24
+.L346:
+	mov.aa	a15,a4
+.L350:
+	mov	d8,d6
+.L351:
+	movh	d9,#16776
+.L352:
+	jz.a	a15,.L50
+.L479:
+	mov	d15,#0
+.L480:
+	cmp.f	d15,d8,d15
+	and	d15,#3
+	ne	d15,d15,#0
+	jeq	d15,#0,.L51
+.L50:
+	mov	d2,#0
+.L481:
+	j	.L52
+.L51:
+	ld.w	d15,[a15]88
+.L482:
+	jne	d15,#0,.L53
+.L483:
+	mov	d2,#1
+.L484:
+	j	.L54
+.L53:
+	add.f	d15,d4,d5
+.L485:
+	insn.t	d6,d15:31,d15:31
+.L348:
+	lea	a4,[a10]0
+.L347:
+	lea	a5,[a10]4
+	call	PI_ClarkeTransform
+.L349:
+	ld.w	d15,[a15]84
+.L486:
+	ld.w	d0,[a15]76
+.L487:
+	madd.f	d15,d0,d15,d8
+	st.w	[a15]76,d15
+.L488:
+	ld.w	d15,[a15]76
+.L489:
+	mov	d0,#4059
+	addih	d0,d0,#16585
+.L490:
+	cmp.f	d15,d15,d0
+	and	d15,#6
+	ne	d15,d15,#0
+.L491:
+	jeq	d15,#0,.L55
+.L492:
+	ld.w	d15,[a15]76
+.L493:
+	mov	d0,#4059
+	addih	d0,d0,#16585
+.L494:
+	sub.f	d15,d15,d0
+	st.w	[a15]76,d15
+.L55:
+	ld.w	d4,[a10]
+.L495:
+	ld.w	d5,[a10]4
+.L496:
+	ld.w	d6,[a15]76
+.L497:
+	lea	a4,[a10]8
+.L498:
+	lea	a5,[a10]12
+	call	PI_ParkTransform
+.L499:
+	ld.w	d15,[a10]8
+.L500:
+	st.w	[a15]28,d15
+.L501:
+	ld.w	d15,[a10]12
+.L502:
+	st.w	[a15]24,d15
+.L503:
+	ld.w	d0,[a15]
+.L504:
+	ld.w	d15,[a15]4
+.L505:
+	sub.f	d15,d0,d15
+.L506:
+	mov	d0,#30544
+	addih	d0,d0,#15830
+.L507:
+	mul.f	d10,d15,d0
+.L353:
+	st.w	[a15]8,d10
+.L508:
+	mov.u	d0,#55050
+	addih	d0,d0,#15395
+.L509:
+	mul.f	d0,d10,d0
+.L510:
+	ld.w	d15,[a15]12
+.L511:
+	madd.f	d15,d15,d0,d8
+	st.w	[a15]12,d15
+.L512:
+	ld.w	d4,[a15]12
+.L513:
+	movh	d5,#16544
+	call	PI_Clamp
+.L514:
+	st.w	[a15]12,d2
+.L515:
+	mov.u	d0,#39322
+	addih	d0,d0,#15897
+.L516:
+	ld.w	d15,[a15]12
+.L517:
+	madd.f	d4,d15,d10,d0
+.L355:
+	movh	d5,#16448
+	call	PI_Clamp
+.L356:
+	st.w	[a15]16,d2
+.L518:
+	mov	d15,#0
+.L519:
+	st.w	[a15]20,d15
+.L520:
+	ld.w	d15,[a15]28
+.L521:
+	insn.t	d10,d15:31,d15:31
+.L354:
+	ld.w	d0,[a15]16
+.L522:
+	ld.w	d15,[a15]24
+.L523:
+	sub.f	d11,d0,d15
+.L359:
+	st.w	[a15]36,d10
+.L524:
+	st.w	[a15]32,d11
+.L525:
+	movh	d0,#16544
+.L526:
+	mul.f	d0,d10,d0
+.L527:
+	ld.w	d15,[a15]44
+.L528:
+	madd.f	d15,d15,d0,d8
+	st.w	[a15]44,d15
+.L529:
+	ld.w	d4,[a15]44
+.L530:
+	movh	d5,#16544
+	call	PI_Clamp
+.L357:
+	st.w	[a15]44,d2
+.L531:
+	movh	d15,#16544
+.L532:
+	mul.f	d0,d11,d15
+.L533:
+	ld.w	d15,[a15]40
+.L534:
+	madd.f	d15,d15,d0,d8
+	st.w	[a15]40,d15
+.L535:
+	ld.w	d4,[a15]40
+.L536:
+	movh	d5,#16544
+	call	PI_Clamp
+.L537:
+	st.w	[a15]40,d2
+.L538:
+	movh	d0,#16128
+.L539:
+	ld.w	d15,[a15]44
+.L540:
+	madd.f	d4,d15,d10,d0
+.L210:
+	ld.w	d15,[a15]4
+.L541:
+	mov	d0,#30544
+	addih	d0,d0,#16086
+.L542:
+	mul.f	d0,d15,d0
+.L361:
+	mov	d1,#4719
+.L362:
+	addih	d1,d1,#14595
+.L543:
+	mov.u	d2,#32820
+.L364:
+	addih	d2,d2,#15031
+.L544:
+	ld.w	d15,[a15]20
+.L545:
+	madd.f	d1,d2,d1,d15
+.L363:
+	movh	d2,#16128
+.L365:
+	ld.w	d15,[a15]40
+.L546:
+	madd.f	d15,d15,d11,d2
+.L547:
+	madd.f	d10,d15,d0,d1
+.L358:
+	movh	d5,#16648
+	call	PI_Clamp
+.L360:
+	mov	d15,d2
+.L367:
+	movh	d5,#16648
+	mov	d4,d10
+.L369:
+	call	PI_Clamp
+.L366:
+	st.w	[a15]48,d15
+.L548:
+	st.w	[a15]52,d2
+.L549:
+	ld.w	d6,[a15]76
+.L550:
+	lea	a4,[a10]16
+.L551:
+	lea	a5,[a10]20
+	mov	e4,d2,d15
+	call	PI_InvParkTransform
+.L370:
+	ld.w	d15,[a10]16
+.L368:
+	st.w	[a15]56,d15
+.L552:
+	ld.w	d15,[a10]20
+.L553:
+	st.w	[a15]60,d15
+.L554:
+	ld.w	d4,[a10]16
+.L555:
+	ld.w	d5,[a10]20
+.L556:
+	lea	a4,[a15]64
+.L557:
+	lea	a5,[a15]68
+.L558:
+	lea	a6,[a15]72
+	mov	d6,d9
+.L371:
+	call	PI_SVPWM
+.L215:
+	ld.w	d15,[a15]76
+.L559:
+	ld.w	d0,[a15]76
+.L560:
+	sub.f	d15,d15,d0
+.L561:
+	div.f	d15,d15,d8
+.L372:
+	st.w	[a15]84,d15
+.L562:
+	mov	d0,#4059
+	addih	d0,d0,#16841
+.L563:
+	div.f	d15,d15,d0
+.L373:
+	movh	d0,#17008
+.L564:
+	mul.f	d15,d15,d0
+.L565:
+	st.w	[a15]4,d15
+.L566:
+	ld.w	d15,[a15]4
+.L567:
+	mov	d0,#30544
+	addih	d0,d0,#15830
+.L568:
+	mul.f	d15,d15,d0
+.L569:
+	ld.w	d0,[a15]80
+.L570:
+	madd.f	d15,d0,d15,d8
+	st.w	[a15]80,d15
+.L571:
+	ld.w	d15,[a15]80
+.L572:
+	mov	d0,#4059
+	addih	d0,d0,#16585
+.L573:
+	cmp.f	d15,d15,d0
+	and	d15,#6
+	ne	d15,d15,#0
+.L574:
+	jeq	d15,#0,.L56
+.L575:
+	ld.w	d15,[a15]80
+.L576:
+	mov	d0,#4059
+	addih	d0,d0,#16585
+.L577:
+	sub.f	d15,d15,d0
+	st.w	[a15]80,d15
+.L56:
+	ld.w	d0,[a10]8
+.L578:
+	ld.w	d1,[a10]8
+.L579:
+	ld.w	d2,[a10]12
+.L580:
+	ld.w	d15,[a10]12
+.L581:
+	mul.f	d15,d2,d15
+.L582:
+	madd.f	d4,d15,d0,d1
+	call	sqrtf
+.L374:
+	mov	d15,#26215
+	addih	d15,d15,#16486
+.L583:
+	cmp.f	d15,d2,d15
+	extr.u	d15,d15,#2,#1
+.L584:
+	jeq	d15,#0,.L57
+.L585:
+	mov	d15,#1
+.L586:
+	st.w	[a15]92,d15
+.L587:
+	mov	d15,#0
+.L588:
+	st.w	[a15]88,d15
+.L589:
+	movh	d15,#16128
+.L590:
+	st.w	[a15]64,d15
+.L591:
+	movh	d15,#16128
+.L592:
+	st.w	[a15]68,d15
+.L593:
+	movh	d15,#16128
+.L594:
+	st.w	[a15]72,d15
+.L595:
+	mov	d2,#0
+.L375:
+	j	.L58
+.L57:
+	mov	d2,#1
+.L376:
+	j	.L59
+.L59:
+.L58:
+.L54:
+.L52:
+	ret
+.L189:
+	
+__PI_Step_function_end:
+	.size	PI_Step,__PI_Step_function_end-PI_Step
+.L130:
+	; End of function
+	
+	.sdecl	'.text.cdd_pi_controller.PI_GetSpeed',code,cluster('PI_GetSpeed')
+	.sect	'.text.cdd_pi_controller.PI_GetSpeed'
+	.align	2
+	
+	.global	PI_GetSpeed
+; Function PI_GetSpeed
+.L92:
+PI_GetSpeed:	.type	func
+	jnz.a	a4,.L60
+.L600:
+	mov	d2,#0
+.L601:
+	j	.L61
+.L60:
+	ld.w	d2,[a4]4
+.L602:
+	j	.L62
+.L62:
+.L61:
+	ret
+.L218:
+	
+__PI_GetSpeed_function_end:
+	.size	PI_GetSpeed,__PI_GetSpeed_function_end-PI_GetSpeed
+.L135:
+	; End of function
+	
+	.sdecl	'.text.cdd_pi_controller.PI_IsEnabled',code,cluster('PI_IsEnabled')
+	.sect	'.text.cdd_pi_controller.PI_IsEnabled'
+	.align	2
+	
+	.global	PI_IsEnabled
+; Function PI_IsEnabled
+.L94:
+PI_IsEnabled:	.type	func
+	jnz.a	a4,.L63
+.L607:
+	mov	d2,#0
+.L608:
+	j	.L64
+.L63:
+	ld.w	d2,[a4]88
+.L609:
+	j	.L65
+.L65:
+.L64:
+	ret
+.L221:
+	
+__PI_IsEnabled_function_end:
+	.size	PI_IsEnabled,__PI_IsEnabled_function_end-PI_IsEnabled
+.L140:
+	; End of function
+	
+	.sdecl	'.text.cdd_pi_controller.PI_HasFault',code,cluster('PI_HasFault')
+	.sect	'.text.cdd_pi_controller.PI_HasFault'
+	.align	2
+	
+	.global	PI_HasFault
+; Function PI_HasFault
+.L96:
+PI_HasFault:	.type	func
+	jnz.a	a4,.L66
+.L614:
+	mov	d2,#1
+.L615:
+	j	.L67
+.L66:
+	ld.w	d2,[a4]92
+.L616:
+	j	.L68
+.L68:
+.L67:
+	ret
+.L224:
+	
+__PI_HasFault_function_end:
+	.size	PI_HasFault,__PI_HasFault_function_end-PI_HasFault
+.L145:
+	; End of function
+	
+	.calls	'PI_ParkTransform','cosf'
+	.calls	'PI_ParkTransform','sinf'
+	.calls	'PI_InvParkTransform','cosf'
+	.calls	'PI_InvParkTransform','sinf'
+	.calls	'PI_SVPWM','sqrtf'
+	.calls	'PI_SVPWM','atan2f'
+	.calls	'PI_Enable','PI_Reset'
+	.calls	'PI_Step','PI_ClarkeTransform'
+	.calls	'PI_Step','PI_ParkTransform'
+	.calls	'PI_Step','PI_Clamp'
+	.calls	'PI_Step','PI_InvParkTransform'
+	.calls	'PI_Step','PI_SVPWM'
+	.calls	'PI_Step','sqrtf'
+	.calls	'PI_ClarkeTransform','',0
+	.calls	'PI_ParkTransform','',0
+	.calls	'PI_InvParkTransform','',0
+	.calls	'PI_SVPWM','',0
+	.calls	'PI_Clamp','',0
+	.calls	'PI_Init','',0
+	.calls	'PI_Reset','',0
+	.calls	'PI_Enable','',0
+	.calls	'PI_Disable','',0
+	.calls	'PI_SetSpeed','',0
+	.calls	'PI_Step','',24
+	.calls	'PI_GetSpeed','',0
+	.calls	'PI_IsEnabled','',0
+	.extern	sinf
+	.extern	cosf
+	.extern	atan2f
+	.extern	sqrtf
+	.calls	'PI_HasFault','',0
+	.sdecl	'.debug_info',debug
+	.sect	'.debug_info'
+.L98:
+	.word	4599
+	.half	3
+	.word	.L99
+	.byte	4
+.L97:
+	.byte	1
+	.byte	'../Complex_Device_Driver/cdd_pi_controller.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\EmbedSim_MotorControl\\EmbedSim_Pmsm_TC3\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L100
+.L186:
+	.byte	2
+	.byte	'float',0,4,4,3
+	.byte	'__fabsf',0
+	.word	208
+	.byte	1,1,1,1,4
+	.byte	'f',0
+	.word	208
+	.byte	0
+.L188:
+	.byte	2
+	.byte	'unsigned int',0,4,7,5,1,71,9,96,6
+	.byte	'SpeedRef',0
+	.word	208
+	.byte	4,2,35,0,6
+	.byte	'SpeedMeas',0
+	.word	208
+	.byte	4,2,35,4,6
+	.byte	'SpeedError',0
+	.word	208
+	.byte	4,2,35,8,6
+	.byte	'SpeedIntegral',0
+	.word	208
+	.byte	4,2,35,12,6
+	.byte	'IqRef',0
+	.word	208
+	.byte	4,2,35,16,6
+	.byte	'IdRef',0
+	.word	208
+	.byte	4,2,35,20,6
+	.byte	'IqMeas',0
+	.word	208
+	.byte	4,2,35,24,6
+	.byte	'IdMeas',0
+	.word	208
+	.byte	4,2,35,28,6
+	.byte	'IqError',0
+	.word	208
+	.byte	4,2,35,32,6
+	.byte	'IdError',0
+	.word	208
+	.byte	4,2,35,36,6
+	.byte	'IqIntegral',0
+	.word	208
+	.byte	4,2,35,40,6
+	.byte	'IdIntegral',0
+	.word	208
+	.byte	4,2,35,44,6
+	.byte	'Vd',0
+	.word	208
+	.byte	4,2,35,48,6
+	.byte	'Vq',0
+	.word	208
+	.byte	4,2,35,52,6
+	.byte	'VAlpha',0
+	.word	208
+	.byte	4,2,35,56,6
+	.byte	'VBeta',0
+	.word	208
+	.byte	4,2,35,60,6
+	.byte	'DutyU',0
+	.word	208
+	.byte	4,2,35,64,6
+	.byte	'DutyV',0
+	.word	208
+	.byte	4,2,35,68,6
+	.byte	'DutyW',0
+	.word	208
+	.byte	4,2,35,72,6
+	.byte	'ThetaE',0
+	.word	208
+	.byte	4,2,35,76,6
+	.byte	'ThetaMech',0
+	.word	208
+	.byte	4,2,35,80,6
+	.byte	'OmegaE',0
+	.word	208
+	.byte	4,2,35,84,6
+	.byte	'Enabled',0
+	.word	242
+	.byte	4,2,35,88,6
+	.byte	'Fault',0
+	.word	242
+	.byte	4,2,35,92,0,7
+	.word	258
+.L172:
+	.byte	8
+	.word	663
+.L175:
+	.byte	8
+	.word	663
+.L178:
+	.byte	8
+	.word	663
+.L181:
+	.byte	8
+	.word	663
+.L184:
+	.byte	8
+	.word	663
+.L190:
+	.byte	8
+	.word	663
+	.byte	8
+	.word	258
+	.byte	7
+	.word	698
+.L219:
+	.byte	8
+	.word	703
+.L222:
+	.byte	8
+	.word	703
+.L225:
+	.byte	8
+	.word	703
+	.byte	9
+	.byte	'sinf',0,2,89,25
+	.word	208
+	.byte	1,1,1,1,10,2,89,43
+	.word	208
+	.byte	0,9
+	.byte	'cosf',0,2,92,25
+	.word	208
+	.byte	1,1,1,1,10,2,92,43
+	.word	208
+	.byte	0,9
+	.byte	'atan2f',0,2,107,25
+	.word	208
+	.byte	1,1,1,1,10,2,107,43
+	.word	208
+	.byte	10,2,107,50
+	.word	208
+	.byte	0,9
+	.byte	'sqrtf',0,2,187,1,25
+	.word	208
+	.byte	1,1,1,1,10,2,187,1,43
+	.word	208
+	.byte	0,7
+	.word	208
+.L231:
+	.byte	8
+	.word	840
+.L233:
+	.byte	8
+	.word	840
+.L240:
+	.byte	8
+	.word	840
+.L242:
+	.byte	8
+	.word	840
+.L250:
+	.byte	8
+	.word	840
+.L252:
+	.byte	8
+	.word	840
+.L260:
+	.byte	8
+	.word	840
+.L262:
+	.byte	8
+	.word	840
+.L264:
+	.byte	8
+	.word	840
+	.byte	2
+	.byte	'short int',0,2,5,11
+	.byte	'__wchar_t',0,3,1,1
+	.word	890
+	.byte	11
+	.byte	'__size_t',0,3,1,1
+	.word	242
+	.byte	2
+	.byte	'int',0,4,5,11
+	.byte	'__ptrdiff_t',0,3,1,1
+	.word	938
+	.byte	12,1,7
+	.word	965
+	.byte	11
+	.byte	'__codeptr',0,3,1,1
+	.word	967
+	.byte	11
+	.byte	'uint32_T',0,4,45,28
+	.word	242
+	.byte	2
+	.byte	'unsigned long long int',0,8,7,11
+	.byte	'uint64_T',0,4,47,28
+	.word	1007
+	.byte	11
+	.byte	'real32_T',0,4,52,28
+	.word	208
+	.byte	2
+	.byte	'char',0,1,6,11
+	.byte	'char_T',0,4,65,28
+	.word	1067
+	.byte	2
+	.byte	'unsigned char',0,1,8,5,5,237,1,9,4,13
+	.byte	'CRC',0,1
+	.word	1090
+	.byte	3,5,2,35,0,13
+	.byte	'DUMMY5_3',0,1
+	.word	1090
+	.byte	5,0,2,35,0,13
+	.byte	'DATA',0,1
+	.word	1090
+	.byte	8,0,2,35,1,13
+	.byte	'ADDRESS',0,1
+	.word	1090
+	.byte	7,1,2,35,2,13
+	.byte	'C',0,1
+	.word	1090
+	.byte	1,0,2,35,2,13
+	.byte	'DUMMY8_24',0,1
+	.word	1090
+	.byte	8,0,2,35,3,0,11
+	.byte	'CddTle9180_SpiTxBits_T',0,5,245,1,3
+	.word	1107
+	.byte	2
+	.byte	'unsigned short int',0,2,7,5,5,134,2,9,4,13
+	.byte	'CRC',0,1
+	.word	1090
+	.byte	3,5,2,35,0,13
+	.byte	'DUMMY1_3',0,1
+	.word	1090
+	.byte	1,4,2,35,0,13
+	.byte	'DATA',0,2
+	.word	1250
+	.byte	8,4,2,35,0,13
+	.byte	'ADDRESS',0,4
+	.word	242
+	.byte	7,13,2,35,0,13
+	.byte	'SPLEVENT',0,1
+	.word	1090
+	.byte	1,4,2,35,2,13
+	.byte	'SPIERR',0,1
+	.word	1090
+	.byte	1,3,2,35,2,13
+	.byte	'CONFVALID',0,1
+	.word	1090
+	.byte	1,2,2,35,2,13
+	.byte	'WARNING',0,1
+	.word	1090
+	.byte	1,1,2,35,2,13
+	.byte	'ERROR',0,1
+	.word	1090
+	.byte	1,0,2,35,2,13
+	.byte	'DUMMY8_24',0,1
+	.word	1090
+	.byte	8,0,2,35,3,0,11
+	.byte	'CddTle9180_SpiRxBits_T',0,5,146,2,3
+	.word	1272
+	.byte	14,5,148,2,9,4,6
+	.byte	'U',0
+	.word	242
+	.byte	4,2,35,0,6
+	.byte	'B',0
+	.word	1272
+	.byte	4,2,35,0,0,11
+	.byte	'CddTle9180_SpiRx_T',0,5,152,2,3
+	.word	1497
+	.byte	5,5,163,2,9,4,13
+	.byte	'VCC_SELECT',0,1
+	.word	1090
+	.byte	1,7,2,35,0,13
+	.byte	'VCC_SUP_OFF',0,1
+	.word	1090
+	.byte	1,6,2,35,0,13
+	.byte	'LIMP_ACT',0,1
+	.word	1090
+	.byte	1,5,2,35,0,13
+	.byte	'SPI_WWD_ACT',0,1
+	.word	1090
+	.byte	1,4,2,35,0,13
+	.byte	'IN_DIAG_ACT',0,1
+	.word	1090
+	.byte	1,3,2,35,0,13
+	.byte	'TL_OT_W',0,1
+	.word	1090
+	.byte	3,0,2,35,0,13
+	.byte	'DUMMY24',0,4
+	.word	242
+	.byte	24,0,2,35,0,0,11
+	.byte	'CddTle9180_RegGenCfg1Bits_T',0,5,172,2,3
+	.word	1554
+	.byte	5,5,180,2,9,4,13
+	.byte	'EN_OP1',0,1
+	.word	1090
+	.byte	1,7,2,35,0,13
+	.byte	'EN_OP2',0,1
+	.word	1090
+	.byte	1,6,2,35,0,13
+	.byte	'EN_OP3',0,1
+	.word	1090
+	.byte	1,5,2,35,0,13
+	.byte	'EN_VDH3',0,1
+	.word	1090
+	.byte	1,4,2,35,0,13
+	.byte	'DIS_SD_VDH',0,1
+	.word	1090
+	.byte	1,3,2,35,0,13
+	.byte	'DIS_OV_LD_VDH',0,1
+	.word	1090
+	.byte	1,2,2,35,0,13
+	.byte	'DIS_OV_BH',0,1
+	.word	1090
+	.byte	1,1,2,35,0,13
+	.byte	'TL_OC_OP',0,1
+	.word	1090
+	.byte	1,0,2,35,0,13
+	.byte	'DUMMY24',0,4
+	.word	242
+	.byte	24,0,2,35,0,0,11
+	.byte	'CddTle9180_RegGenCfg2Bits_T',0,5,191,2,3
+	.word	1747
+	.byte	5,5,199,2,9,4,13
+	.byte	'TL_UV_VDH',0,1
+	.word	1090
+	.byte	4,4,2,35,0,13
+	.byte	'TL_OV_VDH',0,1
+	.word	1090
+	.byte	4,0,2,35,0,13
+	.byte	'DUMMY24',0,4
+	.word	242
+	.byte	24,0,2,35,0,0,11
+	.byte	'CddTle9180_RegTlVdhBits_T',0,5,204,2,3
+	.word	1971
+	.byte	5,5,212,2,9,4,13
+	.byte	'TL_UV_VCC',0,1
+	.word	1090
+	.byte	2,6,2,35,0,13
+	.byte	'TL_OV_VCC',0,1
+	.word	1090
+	.byte	2,4,2,35,0,13
+	.byte	'TL_UV_CB',0,1
+	.word	1090
+	.byte	4,0,2,35,0,13
+	.byte	'DUMMY24',0,4
+	.word	242
+	.byte	24,0,2,35,0,0,11
+	.byte	'CddTle9180_RegTlCbvccBits_T',0,5,218,2,3
+	.word	2074
+	.byte	5,5,226,2,9,4,13
+	.byte	'FM_UV_BS',0,1
+	.word	1090
+	.byte	2,6,2,35,0,13
+	.byte	'DUMMY2_3',0,1
+	.word	1090
+	.byte	2,4,2,35,0,13
+	.byte	'FM_CP2_OFF',0,1
+	.word	1090
+	.byte	1,3,2,35,0,13
+	.byte	'DUMMY1_5',0,1
+	.word	1090
+	.byte	1,2,2,35,0,13
+	.byte	'FM_UV_CB',0,1
+	.word	1090
+	.byte	2,0,2,35,0,13
+	.byte	'DUMMY24',0,4
+	.word	242
+	.byte	24,0,2,35,0,0,11
+	.byte	'CddTle9180_RegFm1Bits_T',0,5,234,2,3
+	.word	2199
+	.byte	5,5,242,2,9,4,13
+	.byte	'FM_UV_VCC',0,1
+	.word	1090
+	.byte	2,6,2,35,0,13
+	.byte	'FM_UV_VDH',0,1
+	.word	1090
+	.byte	2,4,2,35,0,13
+	.byte	'FM_UV_VS',0,1
+	.word	1090
+	.byte	2,2,2,35,0,13
+	.byte	'DUMMY2_7',0,1
+	.word	1090
+	.byte	2,0,2,35,0,13
+	.byte	'DUMMY24',0,4
+	.word	242
+	.byte	24,0,2,35,0,0,11
+	.byte	'CddTle9180_RegFm3Bits_T',0,5,249,2,3
+	.word	2360
+	.byte	5,5,129,3,9,4,13
+	.byte	'FM_OV_VCC',0,1
+	.word	1090
+	.byte	2,6,2,35,0,13
+	.byte	'FM_OV_VDH',0,1
+	.word	1090
+	.byte	3,3,2,35,0,13
+	.byte	'FM_OV_VS',0,1
+	.word	1090
+	.byte	2,1,2,35,0,13
+	.byte	'DUMMY1_7',0,1
+	.word	1090
+	.byte	1,0,2,35,0,13
+	.byte	'DUMMY24',0,4
+	.word	242
+	.byte	24,0,2,35,0,0,11
+	.byte	'CddTle9180_RegFm4Bits_T',0,5,136,3,3
+	.word	2501
+	.byte	5,5,144,3,9,4,13
+	.byte	'FM_OC_OP1',0,1
+	.word	1090
+	.byte	2,6,2,35,0,13
+	.byte	'FM_OC_OP2',0,1
+	.word	1090
+	.byte	2,4,2,35,0,13
+	.byte	'FM_OC_OP3',0,1
+	.word	1090
+	.byte	2,2,2,35,0,13
+	.byte	'DUMMY2_7',0,1
+	.word	1090
+	.byte	2,0,2,35,0,13
+	.byte	'DUMMY24',0,4
+	.word	242
+	.byte	24,0,2,35,0,0,11
+	.byte	'CddTle9180_RegFm6Bits_T',0,5,151,3,3
+	.word	2642
+	.byte	5,5,159,3,9,4,13
+	.byte	'DTHS',0,1
+	.word	1090
+	.byte	8,0,2,35,0,13
+	.byte	'DUMMY24',0,4
+	.word	242
+	.byte	24,0,2,35,0,0,11
+	.byte	'CddTle9180_RegDtHsBits_T',0,5,163,3,3
+	.word	2784
+	.byte	5,5,171,3,9,4,13
+	.byte	'DTLS',0,1
+	.word	1090
+	.byte	8,0,2,35,0,13
+	.byte	'DUMMY24',0,4
+	.word	242
+	.byte	24,0,2,35,0,0,11
+	.byte	'CddTle9180_RegDtLsBits_T',0,5,175,3,3
+	.word	2860
+	.byte	5,5,183,3,9,4,13
+	.byte	'OP2_GAIN1',0,1
+	.word	1090
+	.byte	3,5,2,35,0,13
+	.byte	'DUMMY1_3',0,1
+	.word	1090
+	.byte	1,4,2,35,0,13
+	.byte	'OP1_GAIN1',0,1
+	.word	1090
+	.byte	3,1,2,35,0,13
+	.byte	'DUMMY1_7',0,1
+	.word	1090
+	.byte	1,0,2,35,0,13
+	.byte	'DUMMY24',0,4
+	.word	242
+	.byte	24,0,2,35,0,0,11
+	.byte	'CddTle9180_RegOpGain1Bits_T',0,5,190,3,3
+	.word	2936
+	.byte	5,5,198,3,9,4,13
+	.byte	'OP2_GAIN2',0,1
+	.word	1090
+	.byte	3,5,2,35,0,13
+	.byte	'DUMMY1_3',0,1
+	.word	1090
+	.byte	1,4,2,35,0,13
+	.byte	'OP1_GAIN2',0,1
+	.word	1090
+	.byte	3,1,2,35,0,13
+	.byte	'DUMMY1_7',0,1
+	.word	1090
+	.byte	1,0,2,35,0,13
+	.byte	'DUMMY24',0,4
+	.word	242
+	.byte	24,0,2,35,0,0,11
+	.byte	'CddTle9180_RegOpGain2Bits_T',0,5,205,3,3
+	.word	3081
+	.byte	5,5,213,3,9,4,13
+	.byte	'OP3_GAIN1',0,1
+	.word	1090
+	.byte	3,5,2,35,0,13
+	.byte	'DUMMY1_3',0,1
+	.word	1090
+	.byte	1,4,2,35,0,13
+	.byte	'OP3_GAIN2',0,1
+	.word	1090
+	.byte	3,1,2,35,0,13
+	.byte	'DUMMY1_7',0,1
+	.word	1090
+	.byte	1,0,2,35,0,13
+	.byte	'DUMMY24',0,4
+	.word	242
+	.byte	24,0,2,35,0,0,11
+	.byte	'CddTle9180_RegOpGain3Bits_T',0,5,220,3,3
+	.word	3226
+	.byte	5,5,228,3,9,4,13
+	.byte	'OFS',0,1
+	.word	1090
+	.byte	6,2,2,35,0,13
+	.byte	'ZCL',0,1
+	.word	1090
+	.byte	2,0,2,35,0,13
+	.byte	'DUMMY24',0,4
+	.word	242
+	.byte	24,0,2,35,0,0,11
+	.byte	'CddTle9180_RegOpOclBits_T',0,5,233,3,3
+	.word	3371
+	.byte	5,5,241,3,9,4,13
+	.byte	'DIS_HB1',0,1
+	.word	1090
+	.byte	1,7,2,35,0,13
+	.byte	'DIS_HB2',0,1
+	.word	1090
+	.byte	1,6,2,35,0,13
+	.byte	'DIS_HB3',0,1
+	.word	1090
+	.byte	1,5,2,35,0,13
+	.byte	'EX_LIMP',0,1
+	.word	1090
+	.byte	1,4,2,35,0,13
+	.byte	'EN_LIMP',0,1
+	.word	1090
+	.byte	1,3,2,35,0,13
+	.byte	'EN_HB1',0,1
+	.word	1090
+	.byte	1,2,2,35,0,13
+	.byte	'EN_HB2',0,1
+	.word	1090
+	.byte	1,1,2,35,0,13
+	.byte	'EN_HB3',0,1
+	.word	1090
+	.byte	1,0,2,35,0,13
+	.byte	'DUMMY24',0,4
+	.word	242
+	.byte	24,0,2,35,0,0,11
+	.byte	'CddTle9180_RegLiCtrBits_T',0,5,252,3,3
+	.word	3462
+	.byte	15,6,100,9,1,16
+	.byte	'CDDTLE9180_STATE_POWERON',0,0,16
+	.byte	'CDDTLE9180_STATE_SLEEP',0,1,16
+	.byte	'CDDTLE9180_STATE_IDLE',0,2,16
+	.byte	'CDDTLE9180_STATE_CONFIGURING',0,3,16
+	.byte	'CDDTLE9180_STATE_NORMAL',0,4,16
+	.byte	'CDDTLE9180_STATE_FAULT',0,5,0,11
+	.byte	'CddTle9180_State_T',0,6,108,3
+	.word	3672
+	.byte	17,120
+	.word	1497
+	.byte	18,29,0,5,6,120,9,132,1,6
+	.byte	'RxBuf',0
+	.word	3863
+	.byte	120,2,35,0,6
+	.byte	'ReadIndex',0
+	.word	242
+	.byte	4,2,35,120,6
+	.byte	'State',0
+	.word	3672
+	.byte	1,2,35,124,6
+	.byte	'FaultCode',0
+	.word	242
+	.byte	4,2,35,126,0,11
+	.byte	'CddTle9180_T',0,6,126,3
+	.word	3872
+	.byte	15,7,123,9,1,16
+	.byte	'CDDAPP_INIT_PENDING',0,0,16
+	.byte	'CDDAPP_INIT_ERR_CLK',0,2,16
+	.byte	'CDDAPP_INIT_ERR_STM',0,4,16
+	.byte	'CDDAPP_INIT_DONE_STM',0,6,16
+	.byte	'CDDAPP_INIT_ERR_INV',0,8,16
+	.byte	'CDDAPP_INIT_DONE_INV',0,10,16
+	.byte	'CDDAPP_INIT_ERR_GTM',0,12,16
+	.byte	'CDDAPP_INIT_DONE_GTM',0,14,16
+	.byte	'CDDAPP_INIT_ERR_CTRL',0,16,16
+	.byte	'CDDAPP_INIT_DONE_CTRL',0,18,16
+	.byte	'CDDAPP_INIT_OK',0,228,0,16
+	.byte	'CDDAPP_RUN_STATE',0,233,0,16
+	.byte	'CDDAPP_ERROR_STATE',0,238,0,0,11
+	.byte	'CddApp_Status_T',0,7,138,1,3
+	.word	3968
+	.byte	15,7,143,1,9,1,16
+	.byte	'CDDAPP_DTC_NONE',0,0,16
+	.byte	'CDDAPP_DTC_CPU_FREQ',0,5,16
+	.byte	'CDDAPP_DTC_STM_FREQ',0,15,16
+	.byte	'CDDAPP_DTC_QSPI_FREQ',0,18,16
+	.byte	'CDDAPP_DTC_INV_STARTUP',0,22,16
+	.byte	'CDDAPP_DTC_GTM_FREQ',0,25,16
+	.byte	'CDDAPP_DTC_GTM_CMU0_FREQ',0,28,16
+	.byte	'CDDAPP_DTC_CTRL_INIT',0,32,0,11
+	.byte	'CddApp_DTC_T',0,7,153,1,3
+	.word	4285
+	.byte	15,7,170,1,9,1,16
+	.byte	'CDDAPP_CTRL_OPENLOOP',0,0,16
+	.byte	'CDDAPP_CTRL_CLOSEDLOOP',0,1,0,11
+	.byte	'CddApp_CtrlMode_T',0,7,174,1,3
+	.word	4496
+	.byte	11
+	.byte	'PI_Controller_T',0,1,108,3
+	.word	258
+	.byte	0
+	.sdecl	'.debug_abbrev',debug
+	.sect	'.debug_abbrev'
+.L99:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,16,6,0,0,2,36,0,3,8,11,15,62,15,0,0,3,46,1,3,8,73,19,54,15,39,12
+	.byte	63,12,60,12,0,0,4,5,0,3,8,73,19,0,0,5,19,1,58,15,59,15,57,15,11,15,0,0,6,13,0,3,8,73,19,11,15,56,9,0,0
+	.byte	7,15,0,73,19,0,0,8,38,0,73,19,0,0,9,46,1,3,8,58,15,59,15,57,15,73,19,54,15,39,12,63,12,60,12,0,0,10,5
+	.byte	0,58,15,59,15,57,15,73,19,0,0,11,22,0,3,8,58,15,59,15,57,15,73,19,0,0,12,21,0,54,15,0,0,13,13,0,3,8,11
+	.byte	15,73,19,13,15,12,15,56,9,0,0,14,23,1,58,15,59,15,57,15,11,15,0,0,15,4,1,58,15,59,15,57,15,11,15,0,0,16
+	.byte	40,0,3,8,28,13,0,0,17,1,1,11,15,73,19,0,0,18,33,0,47,15,0,0,0
+	.sdecl	'.debug_line',debug
+	.sect	'.debug_line'
+.L100:
+	.word	.L378-.L377
+.L377:
+	.half	3
+	.word	.L380-.L379
+.L379:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1
+	.byte	'C:\\Infineon\\AURIX-Studio-1.10.36\\tools\\Compilers\\Tasking_1.1r8\\ctc\\include\\',0
+	.byte	'C:\\\\EmbedSim_MotorControl\\\\EmbedSim_Pmsm_TC3\\\\EmbedSim',0,0
+	.byte	'..\\Complex_Device_Driver\\cdd_pi_controller.h',0,0,0,0
+	.byte	'math.h',0,1,0,0
+	.byte	'../Complex_Device_Driver/cdd_pi_controller.c',0,0,0,0
+	.byte	'embed_sim_sys_types.h',0,2,0,0
+	.byte	'..\\Complex_Device_Driver\\cdd_tle9180_reg.h',0,0,0,0
+	.byte	'..\\Complex_Device_Driver\\cdd_tle9180_app.h',0,0,0,0
+	.byte	'..\\Complex_Device_Driver\\cdd_app.h',0,0,0,0,0
+.L380:
+.L378:
+	.sdecl	'.debug_info',debug,cluster('PI_Init')
+	.sect	'.debug_info'
+.L101:
+	.word	269
+	.half	3
+	.word	.L102
+	.byte	4,1
+	.byte	'../Complex_Device_Driver/cdd_pi_controller.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\EmbedSim_MotorControl\\EmbedSim_Pmsm_TC3\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L104,.L103
+	.byte	2
+	.word	.L97
+	.byte	3
+	.byte	'PI_Init',0,1,203,1,6,1,1,1
+	.word	.L80,.L171,.L79
+	.byte	4
+	.byte	'Ctl',0,1,203,1,38
+	.word	.L172,.L173
+	.byte	5
+	.word	.L80,.L171
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('PI_Init')
+	.sect	'.debug_abbrev'
+.L102:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('PI_Init')
+	.sect	'.debug_line'
+.L103:
+	.word	.L382-.L381
+.L381:
+	.half	3
+	.word	.L384-.L383
+.L383:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../Complex_Device_Driver/cdd_pi_controller.c',0,0,0,0,0
+.L384:
+	.byte	5,5,7,0,5,2
+	.word	.L80
+	.byte	3,204,1,1,5,9,7,9
+	.half	.L385-.L80
+	.byte	3,2,1,5,21,9
+	.half	.L43-.L385
+	.byte	3,4,1,5,19,9
+	.half	.L386-.L43
+	.byte	1,5,22,9
+	.half	.L387-.L386
+	.byte	3,1,1,5,20,9
+	.half	.L388-.L387
+	.byte	1,5,23,9
+	.half	.L389-.L388
+	.byte	3,1,1,5,21,9
+	.half	.L390-.L389
+	.byte	1,5,26,9
+	.half	.L391-.L390
+	.byte	3,1,1,5,24,9
+	.half	.L392-.L391
+	.byte	1,5,18,9
+	.half	.L393-.L392
+	.byte	3,2,1,5,16,9
+	.half	.L394-.L393
+	.byte	1,5,18,9
+	.half	.L395-.L394
+	.byte	3,1,1,5,16,9
+	.half	.L396-.L395
+	.byte	1,5,19,9
+	.half	.L397-.L396
+	.byte	3,1,1,5,17,9
+	.half	.L398-.L397
+	.byte	1,5,19,9
+	.half	.L399-.L398
+	.byte	3,1,1,5,17,9
+	.half	.L400-.L399
+	.byte	1,5,20,9
+	.half	.L401-.L400
+	.byte	3,1,1,5,18,9
+	.half	.L402-.L401
+	.byte	1,5,20,9
+	.half	.L403-.L402
+	.byte	3,1,1,5,18,9
+	.half	.L404-.L403
+	.byte	1,5,23,9
+	.half	.L405-.L404
+	.byte	3,1,1,5,21,9
+	.half	.L406-.L405
+	.byte	1,5,23,9
+	.half	.L407-.L406
+	.byte	3,1,1,5,21,9
+	.half	.L408-.L407
+	.byte	1,5,15,9
+	.half	.L409-.L408
+	.byte	3,2,1,5,13,9
+	.half	.L410-.L409
+	.byte	1,5,15,9
+	.half	.L411-.L410
+	.byte	3,1,1,5,13,9
+	.half	.L412-.L411
+	.byte	1,5,19,9
+	.half	.L413-.L412
+	.byte	3,1,1,5,17,9
+	.half	.L414-.L413
+	.byte	1,5,18,9
+	.half	.L415-.L414
+	.byte	3,1,1,5,16,9
+	.half	.L416-.L415
+	.byte	1,5,18,9
+	.half	.L417-.L416
+	.byte	3,2,1,5,16,9
+	.half	.L418-.L417
+	.byte	1,5,18,9
+	.half	.L419-.L418
+	.byte	3,1,1,5,16,9
+	.half	.L420-.L419
+	.byte	1,5,18,9
+	.half	.L421-.L420
+	.byte	3,1,1,5,16,9
+	.half	.L422-.L421
+	.byte	1,5,19,9
+	.half	.L423-.L422
+	.byte	3,2,1,5,17,9
+	.half	.L424-.L423
+	.byte	1,5,22,9
+	.half	.L425-.L424
+	.byte	3,1,1,5,20,9
+	.half	.L426-.L425
+	.byte	1,5,19,9
+	.half	.L427-.L426
+	.byte	3,1,1,5,17,9
+	.half	.L428-.L427
+	.byte	1,5,20,9
+	.half	.L429-.L428
+	.byte	3,2,1,5,18,9
+	.half	.L430-.L429
+	.byte	1,9
+	.half	.L431-.L430
+	.byte	3,1,1,5,16,9
+	.half	.L432-.L431
+	.byte	1,5,1,9
+	.half	.L44-.L432
+	.byte	3,1,1,7,9
+	.half	.L105-.L44
+	.byte	0,1,1
+.L382:
+	.sdecl	'.debug_ranges',debug,cluster('PI_Init')
+	.sect	'.debug_ranges'
+.L104:
+	.word	-1,.L80,0,.L105-.L80,0,0
+	.sdecl	'.debug_info',debug,cluster('PI_Reset')
+	.sect	'.debug_info'
+.L106:
+	.word	270
+	.half	3
+	.word	.L107
+	.byte	4,1
+	.byte	'../Complex_Device_Driver/cdd_pi_controller.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\EmbedSim_MotorControl\\EmbedSim_Pmsm_TC3\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L109,.L108
+	.byte	2
+	.word	.L97
+	.byte	3
+	.byte	'PI_Reset',0,1,245,1,6,1,1,1
+	.word	.L82,.L174,.L81
+	.byte	4
+	.byte	'Ctl',0,1,245,1,39
+	.word	.L175,.L176
+	.byte	5
+	.word	.L82,.L174
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('PI_Reset')
+	.sect	'.debug_abbrev'
+.L107:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('PI_Reset')
+	.sect	'.debug_line'
+.L108:
+	.word	.L434-.L433
+.L433:
+	.half	3
+	.word	.L436-.L435
+.L435:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../Complex_Device_Driver/cdd_pi_controller.c',0,0,0,0,0
+.L436:
+	.byte	5,5,7,0,5,2
+	.word	.L82
+	.byte	3,246,1,1,5,9,7,9
+	.half	.L437-.L82
+	.byte	3,2,1,5,26,9
+	.half	.L45-.L437
+	.byte	3,4,1,5,24,9
+	.half	.L438-.L45
+	.byte	1,5,23,9
+	.half	.L439-.L438
+	.byte	3,1,1,5,21,9
+	.half	.L440-.L439
+	.byte	1,5,23,9
+	.half	.L441-.L440
+	.byte	3,1,1,5,21,9
+	.half	.L442-.L441
+	.byte	1,5,18,9
+	.half	.L443-.L442
+	.byte	3,1,1,5,16,9
+	.half	.L444-.L443
+	.byte	1,5,18,9
+	.half	.L445-.L444
+	.byte	3,2,1,5,16,9
+	.half	.L446-.L445
+	.byte	1,5,18,9
+	.half	.L447-.L446
+	.byte	3,1,1,5,16,9
+	.half	.L448-.L447
+	.byte	1,5,18,9
+	.half	.L449-.L448
+	.byte	3,1,1,5,16,9
+	.half	.L450-.L449
+	.byte	1,5,1,9
+	.half	.L46-.L450
+	.byte	3,1,1,7,9
+	.half	.L110-.L46
+	.byte	0,1,1
+.L434:
+	.sdecl	'.debug_ranges',debug,cluster('PI_Reset')
+	.sect	'.debug_ranges'
+.L109:
+	.word	-1,.L82,0,.L110-.L82,0,0
+	.sdecl	'.debug_info',debug,cluster('PI_Enable')
+	.sect	'.debug_info'
+.L111:
+	.word	271
+	.half	3
+	.word	.L112
+	.byte	4,1
+	.byte	'../Complex_Device_Driver/cdd_pi_controller.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\EmbedSim_MotorControl\\EmbedSim_Pmsm_TC3\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L114,.L113
+	.byte	2
+	.word	.L97
+	.byte	3
+	.byte	'PI_Enable',0,1,138,2,6,1,1,1
+	.word	.L84,.L177,.L83
+	.byte	4
+	.byte	'Ctl',0,1,138,2,40
+	.word	.L178,.L179
+	.byte	5
+	.word	.L84,.L177
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('PI_Enable')
+	.sect	'.debug_abbrev'
+.L112:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('PI_Enable')
+	.sect	'.debug_line'
+.L113:
+	.word	.L452-.L451
+.L451:
+	.half	3
+	.word	.L454-.L453
+.L453:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../Complex_Device_Driver/cdd_pi_controller.c',0,0,0,0,0
+.L454:
+	.byte	5,5,7,0,5,2
+	.word	.L84
+	.byte	3,139,2,1,5,24,7,9
+	.half	.L455-.L84
+	.byte	3,2,1,5,22,9
+	.half	.L456-.L455
+	.byte	1,5,18,9
+	.half	.L457-.L456
+	.byte	3,1,1,5,1,9
+	.half	.L47-.L457
+	.byte	3,2,1,7,9
+	.half	.L115-.L47
+	.byte	0,1,1
+.L452:
+	.sdecl	'.debug_ranges',debug,cluster('PI_Enable')
+	.sect	'.debug_ranges'
+.L114:
+	.word	-1,.L84,0,.L115-.L84,0,0
+	.sdecl	'.debug_info',debug,cluster('PI_Disable')
+	.sect	'.debug_info'
+.L116:
+	.word	272
+	.half	3
+	.word	.L117
+	.byte	4,1
+	.byte	'../Complex_Device_Driver/cdd_pi_controller.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\EmbedSim_MotorControl\\EmbedSim_Pmsm_TC3\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L119,.L118
+	.byte	2
+	.word	.L97
+	.byte	3
+	.byte	'PI_Disable',0,1,150,2,6,1,1,1
+	.word	.L86,.L180,.L85
+	.byte	4
+	.byte	'Ctl',0,1,150,2,41
+	.word	.L181,.L182
+	.byte	5
+	.word	.L86,.L180
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('PI_Disable')
+	.sect	'.debug_abbrev'
+.L117:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('PI_Disable')
+	.sect	'.debug_line'
+.L118:
+	.word	.L459-.L458
+.L458:
+	.half	3
+	.word	.L461-.L460
+.L460:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../Complex_Device_Driver/cdd_pi_controller.c',0,0,0,0,0
+.L461:
+	.byte	5,5,7,0,5,2
+	.word	.L86
+	.byte	3,151,2,1,5,24,7,9
+	.half	.L462-.L86
+	.byte	3,2,1,5,22,9
+	.half	.L463-.L462
+	.byte	1,9
+	.half	.L464-.L463
+	.byte	3,1,1,5,20,9
+	.half	.L465-.L464
+	.byte	1,5,22,9
+	.half	.L466-.L465
+	.byte	3,1,1,5,20,9
+	.half	.L467-.L466
+	.byte	1,5,22,9
+	.half	.L468-.L467
+	.byte	3,1,1,5,20,9
+	.half	.L469-.L468
+	.byte	1,5,1,9
+	.half	.L48-.L469
+	.byte	3,2,1,7,9
+	.half	.L120-.L48
+	.byte	0,1,1
+.L459:
+	.sdecl	'.debug_ranges',debug,cluster('PI_Disable')
+	.sect	'.debug_ranges'
+.L119:
+	.word	-1,.L86,0,.L120-.L86,0,0
+	.sdecl	'.debug_info',debug,cluster('PI_SetSpeed')
+	.sect	'.debug_info'
+.L121:
+	.word	292
+	.half	3
+	.word	.L122
+	.byte	4,1
+	.byte	'../Complex_Device_Driver/cdd_pi_controller.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\EmbedSim_MotorControl\\EmbedSim_Pmsm_TC3\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L124,.L123
+	.byte	2
+	.word	.L97
+	.byte	3
+	.byte	'PI_SetSpeed',0,1,164,2,6,1,1,1
+	.word	.L88,.L183,.L87
+	.byte	4
+	.byte	'Ctl',0,1,164,2,42
+	.word	.L184,.L185
+	.byte	4
+	.byte	'Speed',0,1,164,2,56
+	.word	.L186,.L187
+	.byte	5
+	.word	.L88,.L183
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('PI_SetSpeed')
+	.sect	'.debug_abbrev'
+.L122:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('PI_SetSpeed')
+	.sect	'.debug_line'
+.L123:
+	.word	.L471-.L470
+.L470:
+	.half	3
+	.word	.L473-.L472
+.L472:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../Complex_Device_Driver/cdd_pi_controller.c',0,0,0,0,0
+.L473:
+	.byte	5,5,7,0,5,2
+	.word	.L88
+	.byte	3,165,2,1,5,23,7,9
+	.half	.L474-.L88
+	.byte	3,2,1,5,1,9
+	.half	.L49-.L474
+	.byte	3,2,1,7,9
+	.half	.L125-.L49
+	.byte	0,1,1
+.L471:
+	.sdecl	'.debug_ranges',debug,cluster('PI_SetSpeed')
+	.sect	'.debug_ranges'
+.L124:
+	.word	-1,.L88,0,.L125-.L88,0,0
+	.sdecl	'.debug_info',debug,cluster('PI_Step')
+	.sect	'.debug_info'
+.L126:
+	.word	750
+	.half	3
+	.word	.L127
+	.byte	4,1
+	.byte	'../Complex_Device_Driver/cdd_pi_controller.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\EmbedSim_MotorControl\\EmbedSim_Pmsm_TC3\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L129,.L128
+	.byte	2
+	.word	.L97
+	.byte	3
+	.byte	'PI_Step',0,1,175,2,10
+	.word	.L188
+	.byte	1,1,1
+	.word	.L90,.L189,.L89
+	.byte	4
+	.byte	'Ctl',0,1,175,2,42
+	.word	.L190,.L191
+	.byte	4
+	.byte	'Iu',0,1,175,2,56
+	.word	.L186,.L192
+	.byte	4
+	.byte	'Iv',0,1,175,2,69
+	.word	.L186,.L193
+	.byte	4
+	.byte	'Dt',0,1,175,2,82
+	.word	.L186,.L194
+	.byte	5
+	.word	.L90,.L189
+	.byte	6
+	.byte	'Iw',0,1,177,2,14
+	.word	.L186,.L195
+	.byte	6
+	.byte	'IAlpha',0,1,178,2,14
+	.word	.L186,.L196
+	.byte	6
+	.byte	'IBeta',0,1,178,2,22
+	.word	.L186,.L197
+	.byte	6
+	.byte	'Id',0,1,179,2,14
+	.word	.L186,.L198
+	.byte	6
+	.byte	'Iq',0,1,179,2,18
+	.word	.L186,.L199
+	.byte	6
+	.byte	'Vd',0,1,180,2,14
+	.word	.L186,.L200
+	.byte	6
+	.byte	'Vq',0,1,180,2,18
+	.word	.L186,.L201
+	.byte	6
+	.byte	'VAlpha',0,1,181,2,14
+	.word	.L186,.L202
+	.byte	6
+	.byte	'VBeta',0,1,181,2,22
+	.word	.L186,.L203
+	.byte	6
+	.byte	'speedRadps',0,1,182,2,14
+	.word	.L186,.L204
+	.byte	6
+	.byte	'speedError',0,1,183,2,14
+	.word	.L186,.L205
+	.byte	6
+	.byte	'iqRef',0,1,184,2,14
+	.word	.L186,.L206
+	.byte	6
+	.byte	'idError',0,1,185,2,14
+	.word	.L186,.L207
+	.byte	6
+	.byte	'iqError',0,1,185,2,23
+	.word	.L186,.L208
+	.byte	6
+	.byte	'Vdc',0,1,186,2,14
+	.word	.L186,.L209
+	.byte	5
+	.word	.L210,.L189
+	.byte	6
+	.byte	'omegaE',0,1,128,3,14
+	.word	.L186,.L211
+	.byte	6
+	.byte	'Lq',0,1,129,3,14
+	.word	.L186,.L212
+	.byte	6
+	.byte	'Rs',0,1,130,3,14
+	.word	.L186,.L213
+	.byte	6
+	.byte	'lambdaPm',0,1,131,3,14
+	.word	.L186,.L214
+	.byte	5
+	.word	.L215,.L189
+	.byte	6
+	.byte	'omegaEst',0,1,153,3,14
+	.word	.L186,.L216
+	.byte	5
+	.word	.L56,.L189
+	.byte	6
+	.byte	'iMag',0,1,165,3,14
+	.word	.L186,.L217
+	.byte	0,0,0,0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('PI_Step')
+	.sect	'.debug_abbrev'
+.L127:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,73,16
+	.byte	54,15,39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0,0,6
+	.byte	52,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('PI_Step')
+	.sect	'.debug_line'
+.L128:
+	.word	.L476-.L475
+.L475:
+	.half	3
+	.word	.L478-.L477
+.L477:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../Complex_Device_Driver/cdd_pi_controller.c',0,0,0,0,0
+.L478:
+	.byte	5,10,7,0,5,2
+	.word	.L90
+	.byte	3,174,2,1,5,20,9
+	.half	.L351-.L90
+	.byte	3,11,1,5,9,9
+	.half	.L352-.L351
+	.byte	3,3,1,5,33,7,9
+	.half	.L479-.L352
+	.byte	1,5,30,9
+	.half	.L480-.L479
+	.byte	1,5,16,9
+	.half	.L50-.L480
+	.byte	3,2,1,5,9,9
+	.half	.L481-.L50
+	.byte	1,5,12,9
+	.half	.L51-.L481
+	.byte	3,4,1,5,5,9
+	.half	.L482-.L51
+	.byte	1,5,16,7,9
+	.half	.L483-.L482
+	.byte	3,2,1,5,9,9
+	.half	.L484-.L483
+	.byte	1,5,15,9
+	.half	.L53-.L484
+	.byte	3,4,1,5,10,9
+	.half	.L485-.L53
+	.byte	1,5,37,9
+	.half	.L348-.L485
+	.byte	3,3,1,5,46,9
+	.half	.L347-.L348
+	.byte	1,5,23,9
+	.half	.L349-.L347
+	.byte	3,5,1,5,8,9
+	.half	.L486-.L349
+	.byte	1,5,17,9
+	.half	.L487-.L486
+	.byte	1,5,12,9
+	.half	.L488-.L487
+	.byte	3,1,1,5,24,9
+	.half	.L489-.L488
+	.byte	1,5,21,9
+	.half	.L490-.L489
+	.byte	1,5,5,9
+	.half	.L491-.L490
+	.byte	1,5,12,7,9
+	.half	.L492-.L491
+	.byte	3,2,1,5,24,9
+	.half	.L493-.L492
+	.byte	1,5,21,9
+	.half	.L494-.L493
+	.byte	1,5,22,9
+	.half	.L55-.L494
+	.byte	3,4,1,5,30,9
+	.half	.L495-.L55
+	.byte	1,5,40,9
+	.half	.L496-.L495
+	.byte	1,5,51,9
+	.half	.L497-.L496
+	.byte	1,5,56,9
+	.half	.L498-.L497
+	.byte	1,5,19,9
+	.half	.L499-.L498
+	.byte	3,1,1,5,17,9
+	.half	.L500-.L499
+	.byte	1,5,19,9
+	.half	.L501-.L500
+	.byte	3,1,1,5,17,9
+	.half	.L502-.L501
+	.byte	1,5,22,9
+	.half	.L503-.L502
+	.byte	3,6,1,5,38,9
+	.half	.L504-.L503
+	.byte	1,5,33,9
+	.half	.L505-.L504
+	.byte	1,5,53,9
+	.half	.L506-.L505
+	.byte	1,5,51,9
+	.half	.L507-.L506
+	.byte	1,5,21,9
+	.half	.L353-.L507
+	.byte	3,1,1,5,27,9
+	.half	.L508-.L353
+	.byte	3,3,1,5,39,9
+	.half	.L509-.L508
+	.byte	1,5,8,9
+	.half	.L510-.L509
+	.byte	1,5,24,9
+	.half	.L511-.L510
+	.byte	1,5,38,9
+	.half	.L512-.L511
+	.byte	3,1,1,5,55,9
+	.half	.L513-.L512
+	.byte	1,5,24,9
+	.half	.L514-.L513
+	.byte	1,5,13,9
+	.half	.L515-.L514
+	.byte	3,2,1,5,43,9
+	.half	.L516-.L515
+	.byte	1,5,38,9
+	.half	.L517-.L516
+	.byte	1,5,29,9
+	.half	.L355-.L517
+	.byte	3,1,1,5,16,9
+	.half	.L356-.L355
+	.byte	3,1,1,5,18,9
+	.half	.L518-.L356
+	.byte	3,3,1,5,16,9
+	.half	.L519-.L518
+	.byte	1,5,31,9
+	.half	.L520-.L519
+	.byte	3,3,1,5,26,9
+	.half	.L521-.L520
+	.byte	1,5,18,9
+	.half	.L354-.L521
+	.byte	3,1,1,5,31,9
+	.half	.L522-.L354
+	.byte	1,5,26,9
+	.half	.L523-.L522
+	.byte	1,5,18,9
+	.half	.L359-.L523
+	.byte	3,1,1,9
+	.half	.L524-.L359
+	.byte	3,1,1,5,24,9
+	.half	.L525-.L524
+	.byte	3,3,1,5,38,9
+	.half	.L526-.L525
+	.byte	1,5,8,9
+	.half	.L527-.L526
+	.byte	1,5,21,9
+	.half	.L528-.L527
+	.byte	1,5,35,9
+	.half	.L529-.L528
+	.byte	3,1,1,5,49,9
+	.half	.L530-.L529
+	.byte	1,5,21,9
+	.half	.L357-.L530
+	.byte	1,5,24,9
+	.half	.L531-.L357
+	.byte	3,3,1,5,38,9
+	.half	.L532-.L531
+	.byte	1,5,8,9
+	.half	.L533-.L532
+	.byte	1,5,21,9
+	.half	.L534-.L533
+	.byte	1,5,35,9
+	.half	.L535-.L534
+	.byte	3,1,1,5,49,9
+	.half	.L536-.L535
+	.byte	1,5,21,9
+	.half	.L537-.L536
+	.byte	1,5,10,9
+	.half	.L538-.L537
+	.byte	3,3,1,5,39,9
+	.half	.L539-.L538
+	.byte	1,5,34,9
+	.half	.L540-.L539
+	.byte	1,5,26,9
+	.half	.L210-.L540
+	.byte	3,3,1,5,40,9
+	.half	.L541-.L210
+	.byte	1,5,38,9
+	.half	.L542-.L541
+	.byte	1,5,19,9
+	.half	.L361-.L542
+	.byte	3,1,1,5,25,9
+	.half	.L543-.L361
+	.byte	3,2,1,5,30,9
+	.half	.L544-.L543
+	.byte	3,3,1,5,38,9
+	.half	.L545-.L544
+	.byte	1,5,10,9
+	.half	.L363-.L545
+	.byte	3,127,1,5,39,9
+	.half	.L365-.L363
+	.byte	1,5,34,9
+	.half	.L546-.L365
+	.byte	1,5,10,9
+	.half	.L547-.L546
+	.byte	3,1,1,5,23,9
+	.half	.L358-.L547
+	.byte	3,3,1,5,8,9
+	.half	.L360-.L358
+	.byte	1,5,23,9
+	.half	.L367-.L360
+	.byte	3,1,1,5,13,9
+	.half	.L366-.L367
+	.byte	3,1,1,9
+	.half	.L548-.L366
+	.byte	3,1,1,5,36,9
+	.half	.L549-.L548
+	.byte	3,3,1,5,47,9
+	.half	.L550-.L549
+	.byte	1,5,56,9
+	.half	.L551-.L550
+	.byte	1,5,19,9
+	.half	.L370-.L551
+	.byte	3,1,1,5,17,9
+	.half	.L368-.L370
+	.byte	1,5,18,9
+	.half	.L552-.L368
+	.byte	3,1,1,5,16,9
+	.half	.L553-.L552
+	.byte	1,5,14,9
+	.half	.L554-.L553
+	.byte	3,3,1,5,22,9
+	.half	.L555-.L554
+	.byte	1,5,38,9
+	.half	.L556-.L555
+	.byte	1,5,51,9
+	.half	.L557-.L556
+	.byte	1,5,64,9
+	.half	.L558-.L557
+	.byte	1,5,29,9
+	.half	.L215-.L558
+	.byte	3,5,1,5,43,9
+	.half	.L559-.L215
+	.byte	1,5,38,9
+	.half	.L560-.L559
+	.byte	1,5,53,9
+	.half	.L561-.L560
+	.byte	1,5,17,9
+	.half	.L372-.L561
+	.byte	3,1,1,5,48,9
+	.half	.L562-.L372
+	.byte	3,1,1,5,31,9
+	.half	.L563-.L562
+	.byte	1,5,67,9
+	.half	.L373-.L563
+	.byte	1,5,65,9
+	.half	.L564-.L373
+	.byte	1,5,20,9
+	.half	.L565-.L564
+	.byte	1,5,27,9
+	.half	.L566-.L565
+	.byte	3,3,1,5,41,9
+	.half	.L567-.L566
+	.byte	1,5,39,9
+	.half	.L568-.L567
+	.byte	1,5,8,9
+	.half	.L569-.L568
+	.byte	1,5,20,9
+	.half	.L570-.L569
+	.byte	1,5,12,9
+	.half	.L571-.L570
+	.byte	3,1,1,5,27,9
+	.half	.L572-.L571
+	.byte	1,5,24,9
+	.half	.L573-.L572
+	.byte	1,5,5,9
+	.half	.L574-.L573
+	.byte	1,5,12,7,9
+	.half	.L575-.L574
+	.byte	3,2,1,5,27,9
+	.half	.L576-.L575
+	.byte	1,5,24,9
+	.half	.L577-.L576
+	.byte	1,5,27,9
+	.half	.L56-.L577
+	.byte	3,4,1,5,30,9
+	.half	.L578-.L56
+	.byte	1,5,35,9
+	.half	.L579-.L578
+	.byte	1,5,38,9
+	.half	.L580-.L579
+	.byte	1,5,37,9
+	.half	.L581-.L580
+	.byte	1,5,33,9
+	.half	.L582-.L581
+	.byte	1,5,25,9
+	.half	.L374-.L582
+	.byte	3,1,1,5,14,9
+	.half	.L583-.L374
+	.byte	1,5,5,9
+	.half	.L584-.L583
+	.byte	1,5,22,7,9
+	.half	.L585-.L584
+	.byte	3,2,1,5,20,9
+	.half	.L586-.L585
+	.byte	1,5,24,9
+	.half	.L587-.L586
+	.byte	3,1,1,5,22,9
+	.half	.L588-.L587
+	.byte	1,9
+	.half	.L589-.L588
+	.byte	3,1,1,5,20,9
+	.half	.L590-.L589
+	.byte	1,5,22,9
+	.half	.L591-.L590
+	.byte	3,1,1,5,20,9
+	.half	.L592-.L591
+	.byte	1,5,22,9
+	.half	.L593-.L592
+	.byte	3,1,1,5,20,9
+	.half	.L594-.L593
+	.byte	1,5,16,9
+	.half	.L595-.L594
+	.byte	3,1,1,5,9,9
+	.half	.L375-.L595
+	.byte	1,5,12,9
+	.half	.L57-.L375
+	.byte	3,3,1,5,5,9
+	.half	.L376-.L57
+	.byte	1,5,1,9
+	.half	.L52-.L376
+	.byte	3,1,1,7,9
+	.half	.L130-.L52
+	.byte	0,1,1
+.L476:
+	.sdecl	'.debug_ranges',debug,cluster('PI_Step')
+	.sect	'.debug_ranges'
+.L129:
+	.word	-1,.L90,0,.L130-.L90,0,0
+	.sdecl	'.debug_info',debug,cluster('PI_GetSpeed')
+	.sect	'.debug_info'
+.L131:
+	.word	277
+	.half	3
+	.word	.L132
+	.byte	4,1
+	.byte	'../Complex_Device_Driver/cdd_pi_controller.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\EmbedSim_MotorControl\\EmbedSim_Pmsm_TC3\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L134,.L133
+	.byte	2
+	.word	.L97
+	.byte	3
+	.byte	'PI_GetSpeed',0,1,182,3,10
+	.word	.L186
+	.byte	1,1,1
+	.word	.L92,.L218,.L91
+	.byte	4
+	.byte	'Ctl',0,1,182,3,52
+	.word	.L219,.L220
+	.byte	5
+	.word	.L92,.L218
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('PI_GetSpeed')
+	.sect	'.debug_abbrev'
+.L132:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,73,16
+	.byte	54,15,39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('PI_GetSpeed')
+	.sect	'.debug_line'
+.L133:
+	.word	.L597-.L596
+.L596:
+	.half	3
+	.word	.L599-.L598
+.L598:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../Complex_Device_Driver/cdd_pi_controller.c',0,0,0,0,0
+.L599:
+	.byte	5,5,7,0,5,2
+	.word	.L92
+	.byte	3,183,3,1,5,16,7,9
+	.half	.L600-.L92
+	.byte	3,2,1,5,9,9
+	.half	.L601-.L600
+	.byte	1,5,15,9
+	.half	.L60-.L601
+	.byte	3,2,1,5,5,9
+	.half	.L602-.L60
+	.byte	1,5,1,9
+	.half	.L61-.L602
+	.byte	3,1,1,7,9
+	.half	.L135-.L61
+	.byte	0,1,1
+.L597:
+	.sdecl	'.debug_ranges',debug,cluster('PI_GetSpeed')
+	.sect	'.debug_ranges'
+.L134:
+	.word	-1,.L92,0,.L135-.L92,0,0
+	.sdecl	'.debug_info',debug,cluster('PI_IsEnabled')
+	.sect	'.debug_info'
+.L136:
+	.word	278
+	.half	3
+	.word	.L137
+	.byte	4,1
+	.byte	'../Complex_Device_Driver/cdd_pi_controller.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\EmbedSim_MotorControl\\EmbedSim_Pmsm_TC3\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L139,.L138
+	.byte	2
+	.word	.L97
+	.byte	3
+	.byte	'PI_IsEnabled',0,1,194,3,10
+	.word	.L188
+	.byte	1,1,1
+	.word	.L94,.L221,.L93
+	.byte	4
+	.byte	'Ctl',0,1,194,3,53
+	.word	.L222,.L223
+	.byte	5
+	.word	.L94,.L221
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('PI_IsEnabled')
+	.sect	'.debug_abbrev'
+.L137:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,73,16
+	.byte	54,15,39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('PI_IsEnabled')
+	.sect	'.debug_line'
+.L138:
+	.word	.L604-.L603
+.L603:
+	.half	3
+	.word	.L606-.L605
+.L605:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../Complex_Device_Driver/cdd_pi_controller.c',0,0,0,0,0
+.L606:
+	.byte	5,5,7,0,5,2
+	.word	.L94
+	.byte	3,195,3,1,5,16,7,9
+	.half	.L607-.L94
+	.byte	3,2,1,5,9,9
+	.half	.L608-.L607
+	.byte	1,5,15,9
+	.half	.L63-.L608
+	.byte	3,2,1,5,5,9
+	.half	.L609-.L63
+	.byte	1,5,1,9
+	.half	.L64-.L609
+	.byte	3,1,1,7,9
+	.half	.L140-.L64
+	.byte	0,1,1
+.L604:
+	.sdecl	'.debug_ranges',debug,cluster('PI_IsEnabled')
+	.sect	'.debug_ranges'
+.L139:
+	.word	-1,.L94,0,.L140-.L94,0,0
+	.sdecl	'.debug_info',debug,cluster('PI_HasFault')
+	.sect	'.debug_info'
+.L141:
+	.word	277
+	.half	3
+	.word	.L142
+	.byte	4,1
+	.byte	'../Complex_Device_Driver/cdd_pi_controller.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\EmbedSim_MotorControl\\EmbedSim_Pmsm_TC3\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L144,.L143
+	.byte	2
+	.word	.L97
+	.byte	3
+	.byte	'PI_HasFault',0,1,206,3,10
+	.word	.L188
+	.byte	1,1,1
+	.word	.L96,.L224,.L95
+	.byte	4
+	.byte	'Ctl',0,1,206,3,52
+	.word	.L225,.L226
+	.byte	5
+	.word	.L96,.L224
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('PI_HasFault')
+	.sect	'.debug_abbrev'
+.L142:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,73,16
+	.byte	54,15,39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('PI_HasFault')
+	.sect	'.debug_line'
+.L143:
+	.word	.L611-.L610
+.L610:
+	.half	3
+	.word	.L613-.L612
+.L612:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../Complex_Device_Driver/cdd_pi_controller.c',0,0,0,0,0
+.L613:
+	.byte	5,5,7,0,5,2
+	.word	.L96
+	.byte	3,207,3,1,5,16,7,9
+	.half	.L614-.L96
+	.byte	3,2,1,5,9,9
+	.half	.L615-.L614
+	.byte	1,5,15,9
+	.half	.L66-.L615
+	.byte	3,2,1,5,5,9
+	.half	.L616-.L66
+	.byte	1,5,1,9
+	.half	.L67-.L616
+	.byte	3,1,1,7,9
+	.half	.L145-.L67
+	.byte	0,1,1
+.L611:
+	.sdecl	'.debug_ranges',debug,cluster('PI_HasFault')
+	.sect	'.debug_ranges'
+.L144:
+	.word	-1,.L96,0,.L145-.L96,0,0
+	.sdecl	'.debug_info',debug,cluster('PI_ClarkeTransform')
+	.sect	'.debug_info'
+.L146:
+	.word	359
+	.half	3
+	.word	.L147
+	.byte	4,1
+	.byte	'../Complex_Device_Driver/cdd_pi_controller.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\EmbedSim_MotorControl\\EmbedSim_Pmsm_TC3\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L149,.L148
+	.byte	2
+	.word	.L97
+	.byte	3
+	.byte	'PI_ClarkeTransform',0,1,21,13,1,1
+	.word	.L70,.L227,.L69
+	.byte	4
+	.byte	'Iu',0,1,21,41
+	.word	.L186,.L228
+	.byte	4
+	.byte	'Iv',0,1,21,54
+	.word	.L186,.L229
+	.byte	4
+	.byte	'Iw',0,1,21,67
+	.word	.L186,.L230
+	.byte	4
+	.byte	'IAlpha',0,1,22,50
+	.word	.L231,.L232
+	.byte	4
+	.byte	'IBeta',0,1,22,75
+	.word	.L233,.L234
+	.byte	5
+	.word	.L70,.L227
+	.byte	6
+	.byte	'iw',0,1,26,14
+	.word	.L186,.L235
+	.byte	0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('PI_ClarkeTransform')
+	.sect	'.debug_abbrev'
+.L147:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0,0,6,52,0,3,8,58
+	.byte	15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('PI_ClarkeTransform')
+	.sect	'.debug_line'
+.L148:
+	.word	.L618-.L617
+.L617:
+	.half	3
+	.word	.L620-.L619
+.L619:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../Complex_Device_Driver/cdd_pi_controller.c',0,0,0,0,0
+.L620:
+	.byte	5,12,7,0,5,2
+	.word	.L70
+	.byte	3,26,1,5,5,9
+	.half	.L621-.L70
+	.byte	1,5,19,7,9
+	.half	.L622-.L621
+	.byte	3,2,1,5,14,9
+	.half	.L623-.L622
+	.byte	1,5,13,9
+	.half	.L2-.L623
+	.byte	3,3,1,5,18,9
+	.half	.L624-.L2
+	.byte	3,1,1,5,26,9
+	.half	.L625-.L624
+	.byte	1,5,24,9
+	.half	.L626-.L625
+	.byte	1,5,12,9
+	.half	.L627-.L626
+	.byte	1,5,1,9
+	.half	.L628-.L627
+	.byte	3,1,1,7,9
+	.half	.L150-.L628
+	.byte	0,1,1
+.L618:
+	.sdecl	'.debug_ranges',debug,cluster('PI_ClarkeTransform')
+	.sect	'.debug_ranges'
+.L149:
+	.word	-1,.L70,0,.L150-.L70,0,0
+	.sdecl	'.debug_info',debug,cluster('PI_ParkTransform')
+	.sect	'.debug_info'
+.L151:
+	.word	387
+	.half	3
+	.word	.L152
+	.byte	4,1
+	.byte	'../Complex_Device_Driver/cdd_pi_controller.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\EmbedSim_MotorControl\\EmbedSim_Pmsm_TC3\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L154,.L153
+	.byte	2
+	.word	.L97
+	.byte	3
+	.byte	'PI_ParkTransform',0,1,39,13,1,1
+	.word	.L72,.L236,.L71
+	.byte	4
+	.byte	'IAlpha',0,1,39,39
+	.word	.L186,.L237
+	.byte	4
+	.byte	'IBeta',0,1,39,56
+	.word	.L186,.L238
+	.byte	4
+	.byte	'Theta',0,1,39,72
+	.word	.L186,.L239
+	.byte	4
+	.byte	'Id',0,1,40,48
+	.word	.L240,.L241
+	.byte	4
+	.byte	'Iq',0,1,40,69
+	.word	.L242,.L243
+	.byte	5
+	.word	.L72,.L236
+	.byte	6
+	.byte	'cosTheta',0,1,42,14
+	.word	.L186,.L244
+	.byte	6
+	.byte	'sinTheta',0,1,43,14
+	.word	.L186,.L245
+	.byte	0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('PI_ParkTransform')
+	.sect	'.debug_abbrev'
+.L152:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0,0,6,52,0,3,8,58
+	.byte	15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('PI_ParkTransform')
+	.sect	'.debug_line'
+.L153:
+	.word	.L630-.L629
+.L629:
+	.half	3
+	.word	.L632-.L631
+.L631:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../Complex_Device_Driver/cdd_pi_controller.c',0,0,0,0,0
+.L632:
+	.byte	5,13,7,0,5,2
+	.word	.L72
+	.byte	3,38,1,5,30,9
+	.half	.L283-.L72
+	.byte	3,3,1,5,23,9
+	.half	.L279-.L283
+	.byte	1,5,30,9
+	.half	.L285-.L279
+	.byte	3,1,1,5,37,9
+	.half	.L284-.L285
+	.byte	3,2,1,5,29,9
+	.half	.L287-.L284
+	.byte	1,5,9,9
+	.half	.L633-.L287
+	.byte	1,5,11,9
+	.half	.L634-.L633
+	.byte	3,1,1,5,38,9
+	.half	.L281-.L634
+	.byte	1,5,30,9
+	.half	.L288-.L281
+	.byte	1,5,9,9
+	.half	.L635-.L288
+	.byte	1,5,1,9
+	.half	.L636-.L635
+	.byte	3,1,1,7,9
+	.half	.L155-.L636
+	.byte	0,1,1
+.L630:
+	.sdecl	'.debug_ranges',debug,cluster('PI_ParkTransform')
+	.sect	'.debug_ranges'
+.L154:
+	.word	-1,.L72,0,.L155-.L72,0,0
+	.sdecl	'.debug_info',debug,cluster('PI_InvParkTransform')
+	.sect	'.debug_info'
+.L156:
+	.word	390
+	.half	3
+	.word	.L157
+	.byte	4,1
+	.byte	'../Complex_Device_Driver/cdd_pi_controller.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\EmbedSim_MotorControl\\EmbedSim_Pmsm_TC3\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L159,.L158
+	.byte	2
+	.word	.L97
+	.byte	3
+	.byte	'PI_InvParkTransform',0,1,52,13,1,1
+	.word	.L74,.L246,.L73
+	.byte	4
+	.byte	'Vd',0,1,52,42
+	.word	.L186,.L247
+	.byte	4
+	.byte	'Vq',0,1,52,55
+	.word	.L186,.L248
+	.byte	4
+	.byte	'Theta',0,1,52,68
+	.word	.L186,.L249
+	.byte	4
+	.byte	'VAlpha',0,1,53,51
+	.word	.L250,.L251
+	.byte	4
+	.byte	'VBeta',0,1,53,76
+	.word	.L252,.L253
+	.byte	5
+	.word	.L74,.L246
+	.byte	6
+	.byte	'cosTheta',0,1,55,14
+	.word	.L186,.L254
+	.byte	6
+	.byte	'sinTheta',0,1,56,14
+	.word	.L186,.L255
+	.byte	0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('PI_InvParkTransform')
+	.sect	'.debug_abbrev'
+.L157:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0,0,6,52,0,3,8,58
+	.byte	15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('PI_InvParkTransform')
+	.sect	'.debug_line'
+.L158:
+	.word	.L638-.L637
+.L637:
+	.half	3
+	.word	.L640-.L639
+.L639:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../Complex_Device_Driver/cdd_pi_controller.c',0,0,0,0,0
+.L640:
+	.byte	5,13,7,0,5,2
+	.word	.L74
+	.byte	3,51,1,5,30,9
+	.half	.L294-.L74
+	.byte	3,3,1,5,23,9
+	.half	.L290-.L294
+	.byte	1,5,30,9
+	.half	.L296-.L290
+	.byte	3,1,1,5,18,9
+	.half	.L295-.L296
+	.byte	3,2,1,5,29,9
+	.half	.L298-.L295
+	.byte	1,5,13,9
+	.half	.L299-.L298
+	.byte	1,5,33,9
+	.half	.L300-.L299
+	.byte	3,1,1,5,28,9
+	.half	.L301-.L300
+	.byte	1,5,12,9
+	.half	.L292-.L301
+	.byte	1,5,1,9
+	.half	.L641-.L292
+	.byte	3,1,1,7,9
+	.half	.L160-.L641
+	.byte	0,1,1
+.L638:
+	.sdecl	'.debug_ranges',debug,cluster('PI_InvParkTransform')
+	.sect	'.debug_ranges'
+.L159:
+	.word	-1,.L74,0,.L160-.L74,0,0
+	.sdecl	'.debug_info',debug,cluster('PI_SVPWM')
+	.sect	'.debug_info'
+.L161:
+	.word	521
+	.half	3
+	.word	.L162
+	.byte	4,1
+	.byte	'../Complex_Device_Driver/cdd_pi_controller.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\EmbedSim_MotorControl\\EmbedSim_Pmsm_TC3\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L164,.L163
+	.byte	2
+	.word	.L97
+	.byte	3
+	.byte	'PI_SVPWM',0,1,65,13,1,1
+	.word	.L76,.L256,.L75
+	.byte	4
+	.byte	'VAlpha',0,1,65,31
+	.word	.L186,.L257
+	.byte	4
+	.byte	'VBeta',0,1,65,48
+	.word	.L186,.L258
+	.byte	4
+	.byte	'Vdc',0,1,65,64
+	.word	.L186,.L259
+	.byte	4
+	.byte	'DutyU',0,1,66,40
+	.word	.L260,.L261
+	.byte	4
+	.byte	'DutyV',0,1,66,64
+	.word	.L262,.L263
+	.byte	4
+	.byte	'DutyW',0,1,66,88
+	.word	.L264,.L265
+	.byte	5
+	.word	.L76,.L256
+	.byte	6
+	.byte	'Ta',0,1,68,14
+	.word	.L186,.L266
+	.byte	6
+	.byte	'Tb',0,1,68,18
+	.word	.L186,.L267
+	.byte	6
+	.byte	'vMag',0,1,69,14
+	.word	.L186,.L268
+	.byte	6
+	.byte	'sector',0,1,70,14
+	.word	.L186,.L269
+	.byte	6
+	.byte	'angle',0,1,71,14
+	.word	.L186,.L270
+	.byte	5
+	.word	.L271,.L256
+	.byte	6
+	.byte	'vMax',0,1,77,14
+	.word	.L186,.L272
+	.byte	5
+	.word	.L3,.L256
+	.byte	6
+	.byte	'vPuAlpha',0,1,85,14
+	.word	.L186,.L273
+	.byte	6
+	.byte	'vPuBeta',0,1,86,14
+	.word	.L186,.L274
+	.byte	0,0,0,0,0
+	.sdecl	'.debug_abbrev',debug,cluster('PI_SVPWM')
+	.sect	'.debug_abbrev'
+.L162:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,54,15
+	.byte	39,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,1,17,1,18,1,0,0,6,52,0,3,8,58
+	.byte	15,59,15,57,15,73,16,2,6,0,0,0
+	.sdecl	'.debug_line',debug,cluster('PI_SVPWM')
+	.sect	'.debug_line'
+.L163:
+	.word	.L643-.L642
+.L642:
+	.half	3
+	.word	.L645-.L644
+.L644:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../Complex_Device_Driver/cdd_pi_controller.c',0,0,0,0,0
+.L645:
+	.byte	5,13,7,0,5,2
+	.word	.L76
+	.byte	3,192,0,1,5,42,9
+	.half	.L306-.L76
+	.byte	3,9,1,5,34,9
+	.half	.L307-.L306
+	.byte	1,5,27,9
+	.half	.L271-.L307
+	.byte	3,3,1,5,25,9
+	.half	.L646-.L271
+	.byte	1,5,14,9
+	.half	.L309-.L646
+	.byte	3,1,1,5,5,9
+	.half	.L647-.L309
+	.byte	1,5,33,7,9
+	.half	.L648-.L647
+	.byte	3,2,1,5,25,9
+	.half	.L311-.L648
+	.byte	1,5,31,9
+	.half	.L649-.L311
+	.byte	3,1,1,5,23,9
+	.half	.L312-.L649
+	.byte	1,5,35,9
+	.half	.L3-.L312
+	.byte	3,4,1,5,51,9
+	.half	.L650-.L3
+	.byte	1,5,32,9
+	.half	.L313-.L650
+	.byte	1,5,33,9
+	.half	.L314-.L313
+	.byte	3,1,1,5,49,9
+	.half	.L651-.L314
+	.byte	1,5,30,9
+	.half	.L315-.L651
+	.byte	1,5,10,9
+	.half	.L316-.L315
+	.byte	3,3,1,5,28,9
+	.half	.L652-.L316
+	.byte	1,5,26,9
+	.half	.L653-.L652
+	.byte	1,5,9,9
+	.half	.L654-.L653
+	.byte	1,5,39,7,9
+	.half	.L655-.L654
+	.byte	1,5,56,9
+	.half	.L656-.L655
+	.byte	1,5,54,9
+	.half	.L657-.L656
+	.byte	1,5,18,9
+	.half	.L658-.L657
+	.byte	3,3,1,5,16,9
+	.half	.L659-.L658
+	.byte	1,5,18,9
+	.half	.L660-.L659
+	.byte	3,1,1,5,16,9
+	.half	.L661-.L660
+	.byte	1,5,18,9
+	.half	.L662-.L661
+	.byte	3,1,1,5,16,9
+	.half	.L663-.L662
+	.byte	1,5,9,9
+	.half	.L664-.L663
+	.byte	3,1,1,5,29,9
+	.half	.L4-.L664
+	.byte	3,3,1,5,17,9
+	.half	.L308-.L4
+	.byte	3,1,1,5,15,9
+	.half	.L665-.L308
+	.byte	1,5,5,9
+	.half	.L666-.L665
+	.byte	1,5,32,7,9
+	.half	.L667-.L666
+	.byte	1,5,29,9
+	.half	.L668-.L667
+	.byte	1,5,30,9
+	.half	.L7-.L668
+	.byte	3,3,1,5,15,9
+	.half	.L669-.L7
+	.byte	1,5,5,9
+	.half	.L670-.L669
+	.byte	1,5,18,7,9
+	.half	.L671-.L670
+	.byte	3,1,1,5,22,9
+	.half	.L317-.L671
+	.byte	1,5,42,9
+	.half	.L8-.L317
+	.byte	3,1,1,5,20,9
+	.half	.L672-.L8
+	.byte	1,5,10,9
+	.half	.L673-.L672
+	.byte	1,5,18,7,9
+	.half	.L674-.L673
+	.byte	3,1,1,5,22,9
+	.half	.L318-.L674
+	.byte	1,9
+	.half	.L10-.L318
+	.byte	3,1,1,5,20,9
+	.half	.L675-.L10
+	.byte	1,5,10,9
+	.half	.L676-.L675
+	.byte	1,5,18,7,9
+	.half	.L677-.L676
+	.byte	3,1,1,5,22,9
+	.half	.L319-.L677
+	.byte	1,5,42,9
+	.half	.L12-.L319
+	.byte	3,1,1,5,20,9
+	.half	.L678-.L12
+	.byte	1,5,10,9
+	.half	.L679-.L678
+	.byte	1,5,18,7,9
+	.half	.L680-.L679
+	.byte	3,1,1,5,22,9
+	.half	.L320-.L680
+	.byte	1,5,42,9
+	.half	.L14-.L320
+	.byte	3,1,1,5,10,9
+	.half	.L681-.L14
+	.byte	1,5,18,9
+	.half	.L682-.L681
+	.byte	3,3,1,5,22,9
+	.half	.L321-.L682
+	.byte	3,126,1,5,18,9
+	.half	.L16-.L321
+	.byte	1,5,13,9
+	.half	.L9-.L16
+	.byte	3,5,1,5,14,9
+	.half	.L683-.L9
+	.byte	3,2,1,9
+	.half	.L684-.L683
+	.byte	3,7,1,9
+	.half	.L685-.L684
+	.byte	3,7,1,9
+	.half	.L686-.L685
+	.byte	3,7,1,9
+	.half	.L687-.L686
+	.byte	3,7,1,9
+	.half	.L688-.L687
+	.byte	3,7,1,5,39,9
+	.half	.L18-.L688
+	.byte	3,94,1,5,37,9
+	.half	.L689-.L18
+	.byte	1,5,27,9
+	.half	.L690-.L689
+	.byte	1,5,18,9
+	.half	.L323-.L690
+	.byte	3,1,1,5,23,9
+	.half	.L691-.L323
+	.byte	1,5,35,9
+	.half	.L692-.L691
+	.byte	1,5,33,9
+	.half	.L693-.L692
+	.byte	1,5,25,9
+	.half	.L325-.L693
+	.byte	3,1,1,5,32,9
+	.half	.L324-.L325
+	.byte	1,5,30,9
+	.half	.L694-.L324
+	.byte	1,5,20,9
+	.half	.L695-.L694
+	.byte	1,5,27,9
+	.half	.L696-.L695
+	.byte	3,1,1,5,25,9
+	.half	.L697-.L696
+	.byte	1,5,20,9
+	.half	.L698-.L697
+	.byte	1,5,22,9
+	.half	.L699-.L698
+	.byte	3,1,1,5,20,9
+	.half	.L700-.L699
+	.byte	1,5,13,9
+	.half	.L701-.L700
+	.byte	3,1,1,5,39,9
+	.half	.L19-.L701
+	.byte	3,2,1,5,37,9
+	.half	.L702-.L19
+	.byte	1,5,27,9
+	.half	.L703-.L702
+	.byte	1,5,18,9
+	.half	.L326-.L703
+	.byte	3,1,1,5,40,9
+	.half	.L704-.L326
+	.byte	1,5,38,9
+	.half	.L705-.L704
+	.byte	1,5,28,9
+	.half	.L706-.L705
+	.byte	1,5,27,9
+	.half	.L328-.L706
+	.byte	3,1,1,5,25,9
+	.half	.L707-.L328
+	.byte	1,5,20,9
+	.half	.L708-.L707
+	.byte	1,5,25,9
+	.half	.L709-.L708
+	.byte	3,1,1,5,32,9
+	.half	.L327-.L709
+	.byte	1,5,30,9
+	.half	.L329-.L327
+	.byte	1,5,20,9
+	.half	.L710-.L329
+	.byte	1,5,22,9
+	.half	.L711-.L710
+	.byte	3,1,1,5,20,9
+	.half	.L712-.L711
+	.byte	1,5,13,9
+	.half	.L713-.L712
+	.byte	3,1,1,5,18,9
+	.half	.L20-.L713
+	.byte	3,2,1,5,23,9
+	.half	.L714-.L20
+	.byte	1,5,35,9
+	.half	.L715-.L714
+	.byte	1,5,33,9
+	.half	.L716-.L715
+	.byte	1,5,18,9
+	.half	.L330-.L716
+	.byte	3,1,1,5,40,9
+	.half	.L717-.L330
+	.byte	1,5,38,9
+	.half	.L718-.L717
+	.byte	1,5,28,9
+	.half	.L719-.L718
+	.byte	1,5,22,9
+	.half	.L332-.L719
+	.byte	3,1,1,5,20,9
+	.half	.L720-.L332
+	.byte	1,5,25,9
+	.half	.L721-.L720
+	.byte	3,1,1,5,32,9
+	.half	.L331-.L721
+	.byte	1,5,30,9
+	.half	.L722-.L331
+	.byte	1,5,20,9
+	.half	.L723-.L722
+	.byte	1,5,27,9
+	.half	.L724-.L723
+	.byte	3,1,1,5,25,9
+	.half	.L725-.L724
+	.byte	1,5,20,9
+	.half	.L726-.L725
+	.byte	1,5,13,9
+	.half	.L727-.L726
+	.byte	3,1,1,5,18,9
+	.half	.L21-.L727
+	.byte	3,2,1,5,40,9
+	.half	.L728-.L21
+	.byte	1,5,38,9
+	.half	.L729-.L728
+	.byte	1,5,28,9
+	.half	.L730-.L729
+	.byte	1,5,18,9
+	.half	.L333-.L730
+	.byte	3,1,1,5,26,9
+	.half	.L731-.L333
+	.byte	1,5,36,9
+	.half	.L732-.L731
+	.byte	1,5,34,9
+	.half	.L733-.L732
+	.byte	1,5,22,9
+	.half	.L335-.L733
+	.byte	3,1,1,5,20,9
+	.half	.L734-.L335
+	.byte	1,5,27,9
+	.half	.L735-.L734
+	.byte	3,1,1,5,25,9
+	.half	.L736-.L735
+	.byte	1,5,20,9
+	.half	.L737-.L736
+	.byte	1,5,25,9
+	.half	.L738-.L737
+	.byte	3,1,1,5,32,9
+	.half	.L334-.L738
+	.byte	1,5,30,9
+	.half	.L336-.L334
+	.byte	1,5,20,9
+	.half	.L739-.L336
+	.byte	1,5,13,9
+	.half	.L740-.L739
+	.byte	3,1,1,5,18,9
+	.half	.L22-.L740
+	.byte	3,2,1,5,40,9
+	.half	.L741-.L22
+	.byte	1,5,38,9
+	.half	.L742-.L741
+	.byte	1,5,28,9
+	.half	.L743-.L742
+	.byte	1,5,39,9
+	.half	.L337-.L743
+	.byte	3,1,1,5,37,9
+	.half	.L744-.L337
+	.byte	1,5,27,9
+	.half	.L745-.L744
+	.byte	1,9
+	.half	.L339-.L745
+	.byte	3,1,1,5,25,9
+	.half	.L746-.L339
+	.byte	1,5,20,9
+	.half	.L747-.L746
+	.byte	1,5,22,9
+	.half	.L748-.L747
+	.byte	3,1,1,5,20,9
+	.half	.L749-.L748
+	.byte	1,5,25,9
+	.half	.L750-.L749
+	.byte	3,1,1,5,32,9
+	.half	.L338-.L750
+	.byte	1,5,30,9
+	.half	.L340-.L338
+	.byte	1,5,20,9
+	.half	.L751-.L340
+	.byte	1,5,13,9
+	.half	.L752-.L751
+	.byte	3,1,1,5,18,9
+	.half	.L23-.L752
+	.byte	3,2,1,5,26,9
+	.half	.L753-.L23
+	.byte	1,5,36,9
+	.half	.L754-.L753
+	.byte	1,5,34,9
+	.half	.L755-.L754
+	.byte	1,5,39,9
+	.half	.L341-.L755
+	.byte	3,1,1,5,37,9
+	.half	.L756-.L341
+	.byte	1,5,27,9
+	.half	.L757-.L756
+	.byte	1,5,25,9
+	.half	.L343-.L757
+	.byte	3,1,1,5,32,9
+	.half	.L342-.L343
+	.byte	1,5,30,9
+	.half	.L758-.L342
+	.byte	1,5,20,9
+	.half	.L759-.L758
+	.byte	1,5,22,9
+	.half	.L760-.L759
+	.byte	3,1,1,5,20,9
+	.half	.L761-.L760
+	.byte	1,5,27,9
+	.half	.L762-.L761
+	.byte	3,1,1,5,25,9
+	.half	.L763-.L762
+	.byte	1,5,20,9
+	.half	.L764-.L763
+	.byte	1,5,13,9
+	.half	.L765-.L764
+	.byte	3,1,1,5,22,9
+	.half	.L24-.L765
+	.byte	3,2,1,5,20,9
+	.half	.L766-.L24
+	.byte	1,5,22,9
+	.half	.L767-.L766
+	.byte	3,1,1,5,20,9
+	.half	.L768-.L767
+	.byte	1,5,22,9
+	.half	.L769-.L768
+	.byte	3,1,1,5,20,9
+	.half	.L770-.L769
+	.byte	1,5,13,9
+	.half	.L771-.L770
+	.byte	3,1,1,5,9,9
+	.half	.L25-.L771
+	.byte	3,4,1,5,18,9
+	.half	.L772-.L25
+	.byte	1,5,16,9
+	.half	.L773-.L772
+	.byte	1,5,5,9
+	.half	.L774-.L773
+	.byte	1,5,33,7,9
+	.half	.L775-.L774
+	.byte	1,5,31,9
+	.half	.L776-.L775
+	.byte	1,5,9,9
+	.half	.L32-.L776
+	.byte	3,1,1,5,18,9
+	.half	.L777-.L32
+	.byte	1,5,16,9
+	.half	.L778-.L777
+	.byte	1,5,5,9
+	.half	.L779-.L778
+	.byte	1,5,33,7,9
+	.half	.L780-.L779
+	.byte	1,5,31,9
+	.half	.L781-.L780
+	.byte	1,5,9,9
+	.half	.L33-.L781
+	.byte	3,1,1,5,18,9
+	.half	.L782-.L33
+	.byte	1,5,16,9
+	.half	.L783-.L782
+	.byte	1,5,5,9
+	.half	.L784-.L783
+	.byte	1,5,33,7,9
+	.half	.L785-.L784
+	.byte	1,5,31,9
+	.half	.L786-.L785
+	.byte	1,5,9,9
+	.half	.L34-.L786
+	.byte	3,1,1,5,18,9
+	.half	.L787-.L34
+	.byte	1,5,16,9
+	.half	.L788-.L787
+	.byte	1,5,5,9
+	.half	.L789-.L788
+	.byte	1,5,33,7,9
+	.half	.L790-.L789
+	.byte	1,5,31,9
+	.half	.L791-.L790
+	.byte	1,5,9,9
+	.half	.L35-.L791
+	.byte	3,1,1,5,18,9
+	.half	.L792-.L35
+	.byte	1,5,16,9
+	.half	.L793-.L792
+	.byte	1,5,5,9
+	.half	.L794-.L793
+	.byte	1,5,33,7,9
+	.half	.L795-.L794
+	.byte	1,5,31,9
+	.half	.L796-.L795
+	.byte	1,5,9,9
+	.half	.L36-.L796
+	.byte	3,1,1,5,18,9
+	.half	.L797-.L36
+	.byte	1,5,16,9
+	.half	.L798-.L797
+	.byte	1,5,5,9
+	.half	.L799-.L798
+	.byte	1,5,33,7,9
+	.half	.L800-.L799
+	.byte	1,5,31,9
+	.half	.L801-.L800
+	.byte	1,5,1,9
+	.half	.L6-.L801
+	.byte	3,1,1,7,9
+	.half	.L165-.L6
+	.byte	0,1,1
+.L643:
+	.sdecl	'.debug_ranges',debug,cluster('PI_SVPWM')
+	.sect	'.debug_ranges'
+.L164:
+	.word	-1,.L76,0,.L165-.L76,0,0
+	.sdecl	'.debug_info',debug,cluster('PI_Clamp')
+	.sect	'.debug_info'
+.L166:
+	.word	294
+	.half	3
+	.word	.L167
+	.byte	4,1
+	.byte	'../Complex_Device_Driver/cdd_pi_controller.c',0
+	.byte	'TASKING VX-toolset for AURIX Development Studio (non-commercial): C compiler',0
+	.byte	'C:\\EmbedSim_MotorControl\\EmbedSim_Pmsm_TC3\\TriCore Debug (TASKING)\\',0,12,1
+	.word	.L169,.L168
+	.byte	2
+	.word	.L97
+	.byte	3
+	.byte	'PI_Clamp',0,1,179,1,17
+	.word	.L186
+	.byte	1,1
+	.word	.L78,.L275,.L77
+	.byte	4
+	.byte	'Value',0,1,179,1,35
+	.word	.L186,.L276
+	.byte	4
+	.byte	'Limit',0,1,179,1,51
+	.word	.L186,.L277
+	.byte	5
+	.word	.L78,.L275
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('PI_Clamp')
+	.sect	'.debug_abbrev'
+.L167:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,73,16
+	.byte	54,15,39,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('PI_Clamp')
+	.sect	'.debug_line'
+.L168:
+	.word	.L803-.L802
+.L802:
+	.half	3
+	.word	.L805-.L804
+.L804:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'../Complex_Device_Driver/cdd_pi_controller.c',0,0,0,0,0
+.L805:
+	.byte	5,15,7,0,5,2
+	.word	.L78
+	.byte	3,180,1,1,5,5,9
+	.half	.L806-.L78
+	.byte	1,5,24,7,9
+	.half	.L807-.L806
+	.byte	1,5,17,9
+	.half	.L38-.L807
+	.byte	3,1,1,5,15,9
+	.half	.L808-.L38
+	.byte	1,5,5,9
+	.half	.L809-.L808
+	.byte	1,5,32,7,9
+	.half	.L810-.L809
+	.byte	1,5,25,9
+	.half	.L811-.L810
+	.byte	1,5,5,9
+	.half	.L40-.L811
+	.byte	3,1,1,5,1,9
+	.half	.L39-.L40
+	.byte	3,1,1,7,9
+	.half	.L170-.L39
+	.byte	0,1,1
+.L803:
+	.sdecl	'.debug_ranges',debug,cluster('PI_Clamp')
+	.sect	'.debug_ranges'
+.L169:
+	.word	-1,.L78,0,.L170-.L78,0,0
+	.sdecl	'.debug_loc',debug,cluster('PI_Clamp')
+	.sect	'.debug_loc'
+.L277:
+	.word	-1,.L78,0,.L275-.L78
+	.half	1
+	.byte	85
+	.word	.L344-.L78,.L38-.L78
+	.half	1
+	.byte	82
+	.word	0,0
+.L77:
+	.word	-1,.L78,0,.L275-.L78
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L276:
+	.word	-1,.L78,0,.L275-.L78
+	.half	1
+	.byte	84
+	.word	.L345-.L78,.L39-.L78
+	.half	1
+	.byte	82
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('PI_ClarkeTransform')
+	.sect	'.debug_loc'
+.L232:
+	.word	-1,.L70,0,.L227-.L70
+	.half	1
+	.byte	100
+	.word	0,0
+.L234:
+	.word	-1,.L70,0,.L227-.L70
+	.half	1
+	.byte	101
+	.word	0,0
+.L228:
+	.word	-1,.L70,0,.L227-.L70
+	.half	1
+	.byte	84
+	.word	0,0
+.L229:
+	.word	-1,.L70,0,.L227-.L70
+	.half	1
+	.byte	85
+	.word	0,0
+.L230:
+	.word	-1,.L70,0,.L227-.L70
+	.half	1
+	.byte	86
+	.word	0,0
+.L69:
+	.word	-1,.L70,0,.L227-.L70
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L235:
+	.word	-1,.L70,0,.L227-.L70
+	.half	1
+	.byte	86
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('PI_Disable')
+	.sect	'.debug_loc'
+.L182:
+	.word	-1,.L86,0,.L180-.L86
+	.half	1
+	.byte	100
+	.word	0,0
+.L85:
+	.word	-1,.L86,0,.L180-.L86
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('PI_Enable')
+	.sect	'.debug_loc'
+.L179:
+	.word	-1,.L84,0,.L47-.L84
+	.half	1
+	.byte	100
+	.word	0,0
+.L83:
+	.word	-1,.L84,0,.L177-.L84
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('PI_GetSpeed')
+	.sect	'.debug_loc'
+.L220:
+	.word	-1,.L92,0,.L218-.L92
+	.half	1
+	.byte	100
+	.word	0,0
+.L91:
+	.word	-1,.L92,0,.L218-.L92
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('PI_HasFault')
+	.sect	'.debug_loc'
+.L226:
+	.word	-1,.L96,0,.L224-.L96
+	.half	1
+	.byte	100
+	.word	0,0
+.L95:
+	.word	-1,.L96,0,.L224-.L96
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('PI_Init')
+	.sect	'.debug_loc'
+.L173:
+	.word	-1,.L80,0,.L171-.L80
+	.half	1
+	.byte	100
+	.word	0,0
+.L79:
+	.word	-1,.L80,0,.L171-.L80
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('PI_InvParkTransform')
+	.sect	'.debug_loc'
+.L73:
+	.word	-1,.L74,0,.L246-.L74
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L249:
+	.word	-1,.L74,0,.L289-.L74
+	.half	1
+	.byte	86
+	.word	.L294-.L74,.L289-.L74
+	.half	1
+	.byte	89
+	.word	.L289-.L74,.L290-.L74
+	.half	1
+	.byte	84
+	.word	.L296-.L74,.L297-.L74
+	.half	1
+	.byte	89
+	.word	.L297-.L74,.L295-.L74
+	.half	1
+	.byte	84
+	.word	0,0
+.L251:
+	.word	-1,.L74,0,.L290-.L74
+	.half	1
+	.byte	100
+	.word	.L293-.L74,.L246-.L74
+	.half	1
+	.byte	111
+	.word	0,0
+.L253:
+	.word	-1,.L74,0,.L290-.L74
+	.half	1
+	.byte	101
+	.word	.L294-.L74,.L246-.L74
+	.half	1
+	.byte	108
+	.word	0,0
+.L247:
+	.word	-1,.L74,0,.L289-.L74
+	.half	1
+	.byte	84
+	.word	.L291-.L74,.L292-.L74
+	.half	1
+	.byte	95
+	.word	0,0
+.L248:
+	.word	-1,.L74,0,.L290-.L74
+	.half	1
+	.byte	85
+	.word	.L298-.L74,.L299-.L74
+	.half	1
+	.byte	88
+	.word	.L300-.L74,.L301-.L74
+	.half	1
+	.byte	88
+	.word	0,0
+.L254:
+	.word	-1,.L74,.L290-.L74,.L295-.L74
+	.half	1
+	.byte	82
+	.word	.L296-.L74,.L246-.L74
+	.half	1
+	.byte	90
+	.word	0,0
+.L255:
+	.word	-1,.L74,.L295-.L74,.L246-.L74
+	.half	1
+	.byte	82
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('PI_IsEnabled')
+	.sect	'.debug_loc'
+.L223:
+	.word	-1,.L94,0,.L221-.L94
+	.half	1
+	.byte	100
+	.word	0,0
+.L93:
+	.word	-1,.L94,0,.L221-.L94
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('PI_ParkTransform')
+	.sect	'.debug_loc'
+.L237:
+	.word	-1,.L72,0,.L278-.L72
+	.half	1
+	.byte	84
+	.word	.L280-.L72,.L281-.L72
+	.half	1
+	.byte	95
+	.word	0,0
+.L238:
+	.word	-1,.L72,0,.L279-.L72
+	.half	1
+	.byte	85
+	.word	.L284-.L72,.L287-.L72
+	.half	1
+	.byte	88
+	.word	.L281-.L72,.L288-.L72
+	.half	1
+	.byte	88
+	.word	0,0
+.L241:
+	.word	-1,.L72,0,.L279-.L72
+	.half	1
+	.byte	100
+	.word	.L282-.L72,.L236-.L72
+	.half	1
+	.byte	111
+	.word	0,0
+.L243:
+	.word	-1,.L72,0,.L279-.L72
+	.half	1
+	.byte	101
+	.word	.L283-.L72,.L236-.L72
+	.half	1
+	.byte	108
+	.word	0,0
+.L71:
+	.word	-1,.L72,0,.L236-.L72
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L239:
+	.word	-1,.L72,0,.L278-.L72
+	.half	1
+	.byte	86
+	.word	.L283-.L72,.L278-.L72
+	.half	1
+	.byte	89
+	.word	.L278-.L72,.L279-.L72
+	.half	1
+	.byte	84
+	.word	.L285-.L72,.L286-.L72
+	.half	1
+	.byte	89
+	.word	.L286-.L72,.L284-.L72
+	.half	1
+	.byte	84
+	.word	0,0
+.L244:
+	.word	-1,.L72,.L279-.L72,.L284-.L72
+	.half	1
+	.byte	82
+	.word	.L285-.L72,.L236-.L72
+	.half	1
+	.byte	90
+	.word	0,0
+.L245:
+	.word	-1,.L72,.L284-.L72,.L236-.L72
+	.half	1
+	.byte	82
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('PI_Reset')
+	.sect	'.debug_loc'
+.L176:
+	.word	-1,.L82,0,.L174-.L82
+	.half	1
+	.byte	100
+	.word	0,0
+.L81:
+	.word	-1,.L82,0,.L174-.L82
+	.half	2
+	.byte	138,0
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('PI_SVPWM')
+	.sect	'.debug_loc'
+.L261:
+	.word	-1,.L76,0,.L271-.L76
+	.half	1
+	.byte	100
+	.word	.L304-.L76,.L256-.L76
+	.half	1
+	.byte	111
+	.word	0,0
+.L263:
+	.word	-1,.L76,0,.L271-.L76
+	.half	1
+	.byte	101
+	.word	.L305-.L76,.L256-.L76
+	.half	1
+	.byte	108
+	.word	0,0
+.L265:
+	.word	-1,.L76,0,.L271-.L76
+	.half	1
+	.byte	102
+	.word	.L306-.L76,.L256-.L76
+	.half	1
+	.byte	109
+	.word	0,0
+.L75:
+	.word	-1,.L76,0,.L256-.L76
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L266:
+	.word	-1,.L76,.L323-.L76,.L324-.L76
+	.half	1
+	.byte	95
+	.word	.L326-.L76,.L327-.L76
+	.half	1
+	.byte	95
+	.word	.L330-.L76,.L331-.L76
+	.half	1
+	.byte	95
+	.word	.L333-.L76,.L334-.L76
+	.half	1
+	.byte	95
+	.word	.L337-.L76,.L338-.L76
+	.half	1
+	.byte	95
+	.word	.L341-.L76,.L342-.L76
+	.half	1
+	.byte	95
+	.word	0,0
+.L267:
+	.word	-1,.L76,.L325-.L76,.L19-.L76
+	.half	5
+	.byte	144,32,157,32,0
+	.word	.L328-.L76,.L329-.L76
+	.half	5
+	.byte	144,32,157,32,0
+	.word	.L332-.L76,.L21-.L76
+	.half	5
+	.byte	144,32,157,32,0
+	.word	.L335-.L76,.L336-.L76
+	.half	5
+	.byte	144,32,157,32,0
+	.word	.L339-.L76,.L340-.L76
+	.half	5
+	.byte	144,32,157,32,0
+	.word	.L343-.L76,.L24-.L76
+	.half	5
+	.byte	144,32,157,32,0
+	.word	0,0
+.L257:
+	.word	-1,.L76,0,.L302-.L76
+	.half	1
+	.byte	84
+	.word	.L307-.L76,.L302-.L76
+	.half	1
+	.byte	88
+	.word	.L311-.L76,.L3-.L76
+	.half	1
+	.byte	88
+	.word	.L313-.L76,.L314-.L76
+	.half	1
+	.byte	88
+	.word	0,0
+.L258:
+	.word	-1,.L76,0,.L271-.L76
+	.half	1
+	.byte	85
+	.word	.L306-.L76,.L307-.L76
+	.half	1
+	.byte	89
+	.word	.L312-.L76,.L3-.L76
+	.half	1
+	.byte	89
+	.word	.L315-.L76,.L316-.L76
+	.half	1
+	.byte	89
+	.word	0,0
+.L259:
+	.word	-1,.L76,0,.L271-.L76
+	.half	1
+	.byte	86
+	.word	.L303-.L76,.L256-.L76
+	.half	1
+	.byte	90
+	.word	0,0
+.L270:
+	.word	-1,.L76,.L308-.L76,.L6-.L76
+	.half	1
+	.byte	82
+	.word	0,0
+.L269:
+	.word	-1,.L76,.L317-.L76,.L8-.L76
+	.half	1
+	.byte	95
+	.word	.L318-.L76,.L10-.L76
+	.half	1
+	.byte	95
+	.word	.L319-.L76,.L12-.L76
+	.half	1
+	.byte	95
+	.word	.L320-.L76,.L14-.L76
+	.half	1
+	.byte	95
+	.word	.L321-.L76,.L16-.L76
+	.half	1
+	.byte	95
+	.word	.L9-.L76,.L322-.L76
+	.half	1
+	.byte	95
+	.word	0,0
+.L268:
+	.word	-1,.L76,.L271-.L76,.L308-.L76
+	.half	1
+	.byte	82
+	.word	0,0
+.L272:
+	.word	-1,.L76,.L309-.L76,.L310-.L76
+	.half	5
+	.byte	144,32,157,32,0
+	.word	0,0
+.L273:
+	.word	-1,.L76,.L314-.L76,.L256-.L76
+	.half	1
+	.byte	88
+	.word	0,0
+.L274:
+	.word	-1,.L76,.L316-.L76,.L256-.L76
+	.half	1
+	.byte	89
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('PI_SetSpeed')
+	.sect	'.debug_loc'
+.L185:
+	.word	-1,.L88,0,.L183-.L88
+	.half	1
+	.byte	100
+	.word	0,0
+.L87:
+	.word	-1,.L88,0,.L183-.L88
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L187:
+	.word	-1,.L88,0,.L183-.L88
+	.half	1
+	.byte	84
+	.word	0,0
+	.sdecl	'.debug_loc',debug,cluster('PI_Step')
+	.sect	'.debug_loc'
+.L191:
+	.word	-1,.L90,0,.L347-.L90
+	.half	1
+	.byte	100
+	.word	.L350-.L90,.L189-.L90
+	.half	1
+	.byte	111
+	.word	0,0
+.L194:
+	.word	-1,.L90,0,.L348-.L90
+	.half	1
+	.byte	86
+	.word	.L351-.L90,.L189-.L90
+	.half	1
+	.byte	88
+	.word	0,0
+.L196:
+	.word	-1,.L90,0,.L189-.L90
+	.half	2
+	.byte	145,104
+	.word	0,0
+.L197:
+	.word	-1,.L90,0,.L189-.L90
+	.half	2
+	.byte	145,108
+	.word	0,0
+.L198:
+	.word	-1,.L90,0,.L189-.L90
+	.half	2
+	.byte	145,112
+	.word	0,0
+.L199:
+	.word	-1,.L90,0,.L189-.L90
+	.half	2
+	.byte	145,116
+	.word	0,0
+.L192:
+	.word	-1,.L90,0,.L349-.L90
+	.half	1
+	.byte	84
+	.word	0,0
+.L193:
+	.word	-1,.L90,0,.L349-.L90
+	.half	1
+	.byte	85
+	.word	0,0
+.L195:
+	.word	-1,.L90,.L348-.L90,.L349-.L90
+	.half	1
+	.byte	86
+	.word	0,0
+.L212:
+	.word	-1,.L90,.L362-.L90,.L363-.L90
+	.half	1
+	.byte	81
+	.word	0,0
+.L89:
+	.word	-1,.L90,0,.L346-.L90
+	.half	2
+	.byte	138,0
+	.word	.L346-.L90,.L189-.L90
+	.half	2
+	.byte	138,24
+	.word	.L189-.L90,.L189-.L90
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L213:
+	.word	0,0
+.L202:
+	.word	-1,.L90,0,.L189-.L90
+	.half	2
+	.byte	145,120
+	.word	0,0
+.L203:
+	.word	-1,.L90,0,.L189-.L90
+	.half	2
+	.byte	145,124
+	.word	0,0
+.L200:
+	.word	-1,.L90,.L210-.L90,.L360-.L90
+	.half	1
+	.byte	84
+	.word	.L360-.L90,.L366-.L90
+	.half	1
+	.byte	82
+	.word	.L367-.L90,.L368-.L90
+	.half	1
+	.byte	95
+	.word	0,0
+.L209:
+	.word	-1,.L90,.L352-.L90,.L189-.L90
+	.half	1
+	.byte	89
+	.word	.L371-.L90,.L215-.L90
+	.half	1
+	.byte	86
+	.word	0,0
+.L201:
+	.word	-1,.L90,.L358-.L90,.L366-.L90
+	.half	1
+	.byte	90
+	.word	.L369-.L90,.L366-.L90
+	.half	1
+	.byte	84
+	.word	.L366-.L90,.L370-.L90
+	.half	1
+	.byte	82
+	.word	0,0
+.L217:
+	.word	-1,.L90,.L374-.L90,.L375-.L90
+	.half	1
+	.byte	82
+	.word	.L57-.L90,.L376-.L90
+	.half	1
+	.byte	82
+	.word	0,0
+.L207:
+	.word	-1,.L90,.L354-.L90,.L358-.L90
+	.half	1
+	.byte	90
+	.word	0,0
+.L208:
+	.word	-1,.L90,.L359-.L90,.L52-.L90
+	.half	1
+	.byte	91
+	.word	0,0
+.L206:
+	.word	-1,.L90,.L355-.L90,.L356-.L90
+	.half	1
+	.byte	84
+	.word	.L356-.L90,.L357-.L90
+	.half	1
+	.byte	82
+	.word	0,0
+.L214:
+	.word	-1,.L90,.L364-.L90,.L365-.L90
+	.half	1
+	.byte	82
+	.word	0,0
+.L211:
+	.word	-1,.L90,.L361-.L90,.L360-.L90
+	.half	5
+	.byte	144,32,157,32,0
+	.word	0,0
+.L216:
+	.word	-1,.L90,.L372-.L90,.L373-.L90
+	.half	1
+	.byte	95
+	.word	0,0
+.L205:
+	.word	-1,.L90,.L353-.L90,.L354-.L90
+	.half	1
+	.byte	90
+	.word	0,0
+.L204:
+	.word	0,0
+	.sdecl	'.debug_frame',debug
+	.sect	'.debug_frame'
+.L812:
+	.word	48
+	.word	-1
+	.byte	3,0,2,1,27,12,26,0,8,26,8,27,8,30,8,29,8,28,8,16,8,17,8,24,8,25,8,31,8,32,8,33,8,34,8,35,8,36,8,37,8,38
+	.byte	8,39
+	.sdecl	'.debug_frame',debug,cluster('PI_ClarkeTransform')
+	.sect	'.debug_frame'
+	.word	20
+	.word	.L812,.L70,.L227-.L70
+	.byte	8,18,8,19,8,22,8,23
+	.sdecl	'.debug_frame',debug,cluster('PI_ParkTransform')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L812,.L72,.L236-.L72
+	.sdecl	'.debug_frame',debug,cluster('PI_InvParkTransform')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L812,.L74,.L246-.L74
+	.sdecl	'.debug_frame',debug,cluster('PI_SVPWM')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L812,.L76,.L256-.L76
+	.sdecl	'.debug_frame',debug,cluster('PI_Clamp')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L812,.L78,.L275-.L78
+	.byte	8,18,8,19,8,20,8,21,8,22,8,23
+	.sdecl	'.debug_frame',debug,cluster('PI_Init')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L812,.L80,.L171-.L80
+	.byte	8,18,8,19,8,21,8,22,8,23,0,0
+	.sdecl	'.debug_frame',debug,cluster('PI_Reset')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L812,.L82,.L174-.L82
+	.byte	8,18,8,19,8,21,8,22,8,23,0,0
+	.sdecl	'.debug_frame',debug,cluster('PI_Enable')
+	.sect	'.debug_frame'
+	.word	12
+	.word	.L812,.L84,.L177-.L84
+	.sdecl	'.debug_frame',debug,cluster('PI_Disable')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L812,.L86,.L180-.L86
+	.byte	8,18,8,19,8,21,8,22,8,23,0,0
+	.sdecl	'.debug_frame',debug,cluster('PI_SetSpeed')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L812,.L88,.L183-.L88
+	.byte	8,18,8,19,8,21,8,22,8,23,0,0
+	.sdecl	'.debug_frame',debug,cluster('PI_Step')
+	.sect	'.debug_frame'
+	.word	36
+	.word	.L812,.L90,.L189-.L90
+	.byte	4
+	.word	(.L346-.L90)/2
+	.byte	19,24,22,26,3,19,138,24,4
+	.word	(.L189-.L346)/2
+	.byte	19,0,8,26,0,0
+	.sdecl	'.debug_frame',debug,cluster('PI_GetSpeed')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L812,.L92,.L218-.L92
+	.byte	8,18,8,19,8,21,8,22,8,23,0,0
+	.sdecl	'.debug_frame',debug,cluster('PI_IsEnabled')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L812,.L94,.L221-.L94
+	.byte	8,18,8,19,8,21,8,22,8,23,0,0
+	.sdecl	'.debug_frame',debug,cluster('PI_HasFault')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L812,.L96,.L224-.L96
+	.byte	8,18,8,19,8,21,8,22,8,23,0,0
+	; Module end

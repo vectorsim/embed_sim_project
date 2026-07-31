@@ -122,16 +122,20 @@
  */
 typedef enum
 {
-    CDDAPP_INIT_PENDING        =    0U,   /**< Initialisation not yet called             [dimensionless] */
-    CDDAPP_INIT_ERR_CLK        =    2U,   /**< CPU clock frequency check failed          [dimensionless] */
-    CDDAPP_INIT_ERR_STM        =    4U,   /**< STM frequency check failed                [dimensionless] */
-    CDDAPP_INIT_DONE_STM       =    6U,   /**< GPIO + STM sub-modules initialised        [dimensionless] */
-    CDDAPP_INIT_ERR_INV        =    8U,   /**< TLE9180D startup failed                   [dimensionless] */
-    CDDAPP_INIT_DONE_INV       =   10U,   /**< Inverter (TLE9180D) reached NORMAL mode   [dimensionless] */
-    CDDAPP_INIT_ERR_GTM        =   12U,   /**< GTM frequency or CMU CLK0 check failed    [dimensionless] */
-    CDDAPP_INIT_DONE_GTM       =   14U,   /**< GTM CMU + ATOM0 PWM initialised           [dimensionless] */
-    CDDAPP_INIT_ERR_CTRL       =   16U,   /**< Control-loop init (DFC/transform) failed  [dimensionless] */
-    CDDAPP_INIT_DONE_CTRL      =   18U,   /**< Transform + DFC controller initialised    [dimensionless] */
+    CDDAPP_INIT_PENDING        =    0U,    /**< Initialisation not yet called             [dimensionless] */
+    CDDAPP_INIT_ERR_CLK        =    2U,    /**< CPU clock frequency check failed          [dimensionless] */
+    CDDAPP_INIT_ERR_STM        =    4U,    /**< STM frequency check failed                [dimensionless] */
+    CDDAPP_INIT_DONE_STM       =   10U,    /**< STM sub-modules initialised               [dimensionless] */
+    CDDAPP_INIT_ERR_ADC        =   12U,    /**< ADC frequency check failed                [dimensionless] */
+    CDDAPP_INIT_DONE_ADC       =   13U,    /**< ADC-modules initialised                   [dimensionless] */
+    CDDAPP_INIT_ERR_GPT12      =   19U,    /**< GPT12 initialisation error                [dimensionless] */
+    CDDAPP_INIT_DONE_GPT12     =   21U,    /**< GPT12 initialised                         [dimensionless] */
+    CDDAPP_INIT_ERR_INV        =   25U,    /**< TLE9180D startup failed                   [dimensionless] */
+    CDDAPP_INIT_DONE_INV       =   30U,    /**< Inverter (TLE9180D) reached NORMAL mode   [dimensionless] */
+    CDDAPP_INIT_ERR_GTM        =   45U,    /**< GTM frequency or CMU CLK0 check failed    [dimensionless] */
+    CDDAPP_INIT_DONE_GTM       =   55U,    /**< GTM CMU + ATOM0 PWM initialised           [dimensionless] */
+    CDDAPP_INIT_ERR_CTRL       =   65U,    /**< Control-loop init (DFC/transform) failed  [dimensionless] */
+    CDDAPP_INIT_DONE_CTRL      =   75U,    /**< Transform + DFC controller initialised    [dimensionless] */
     CDDAPP_INIT_OK             =  100U,    /**< All sub-modules initialised successfully  [dimensionless] */
     CDDAPP_RUN_STATE           =  105U,    /**< All sub-modules initialised successfully  [dimensionless] */
     CDDAPP_ERROR_STATE         =  110U
@@ -143,8 +147,10 @@ typedef enum
 typedef enum
 {
     CDDAPP_DTC_NONE            =  0U,   /**< No fault                                   [dimensionless] */
+    CDDAPP_DTC_ERR             =  1U,   /**< General Error                              [dimensionless] */
     CDDAPP_DTC_CPU_FREQ        =  5U,   /**< CPU frequency not 300 MHz                  [dimensionless] */
     CDDAPP_DTC_STM_FREQ        = 15U,   /**< STM frequency not 100 MHz                  [dimensionless] */
+    CDDAPP_DTC_ADC_FREQ        = 16U,   /**< ADC frequency not 160 MHz                  [dimensionless] */
     CDDAPP_DTC_QSPI_FREQ       = 18U,   /**< fPeriph (QSPI source) not 200 MHz          [dimensionless] */
     CDDAPP_DTC_INV_STARTUP     = 22U,   /**< TLE9180D did not reach NORMAL mode         [dimensionless] */
     CDDAPP_DTC_GTM_FREQ        = 25U,   /**< GTM clock not 200 MHz                      [dimensionless] */
@@ -211,8 +217,6 @@ typedef struct
      *          it to ±DFC_OMEGA_CMD_MAX.                              [RPM]            */
     real32_T                SpeedRefRpm;
 
-
-
     /* ------------------------------------------------------------------
      * PWM outputs and timing
      * ------------------------------------------------------------------ */
@@ -226,6 +230,9 @@ typedef struct
     /** \brief  Phase W PWM duty cycle                                 [0.0 .. 1.0]      */
     real32_T                DutyW;
 
+    /** \brief  ADC Trig PWM duty cycle                                 [0.0 .. 1.0]     */
+    real32_T                DutyAdcTrig;
+
     /** \brief  Current Phase U                                        [A]               */
     real32_T                Iu;
 
@@ -235,7 +242,19 @@ typedef struct
     /** \brief  Current Phase W                                        [A]               */
     real32_T                Iw;
 
-    /** \brief  Sum of Current Phases                                   [A]               */
+    /** \brief  Current Offset Phase U                                 [A]               */
+    real32_T                OffsetIu;
+
+    /** \brief  Current Offset Phase V                                 [A]               */
+    real32_T                OffsetIv;
+
+    /** \brief  Current Offset Phase V                                 [A]               */
+    real32_T                OffsetIw;
+
+    /** \brief  Voltage Offset Reference                               [V]              */
+    real32_T                OffsetVro;
+
+    /** \brief  Sum of Current Phases                                  [A]               */
     real32_T                Isum;
 
     /** \brief  ADC Voltage Phase U                                    [V]               */
@@ -247,32 +266,27 @@ typedef struct
     /** \brief  ADC Voltage Phase W                                    [V]               */
     real32_T                Vw;
 
-    /** \brief  ADC dc link                                            [V]               */
+    /** \brief  Sensor Validity Bitfields                              [V]               */
+    uint32_T                SensorReadingBitField;
+
+    /** \brief  Rotor Velocity in RPM                                  [RPM]             */
+    real32_T                RotorSpeedRpm;
+
+    /** \brief  Rotor Position                                                           */
+    real32_T                RotorPosition;
+
+    /** \brief  ADC DC  Voltage                                        [V]              */
     real32_T                Vdc;
 
-    /** \brief                                                         [V]               */
-    real32_T                Vr;
-
-
-    /** \brief  ADC Voltage Phase U  Offset                                  [V]               */
-    real32_T                Vuo;
-
-    /** \brief  ADC Voltage Phase V  offset                                  [V]               */
-     real32_T                Vvo;
-
-    /** \brief  ADC Voltage Phase W                                          [V]               */
-    real32_T                Vwo;
-
-
-
-
+    /** \brief  ADC Reference Voltage                                  [V]              */
+     real32_T               Vro;
 
     /** \brief  GTM ATOM0 carrier period in CMU CLK0 ticks
      *          = GTM_CMU_CLK0_FREQUENCY / CDD_CONTROL_LOOP_FREQUENCY [CLK0 ticks]      */
     uint32_T                PeriodTicks;
 
     /** \brief  Half of PeriodTicks — midpoint of the symmetrical carrier
-     *          used as the ATOM compare value for the zero-voltage vector [CLK0 ticks]  */
+     *         used as the ATOM compare value for the zero-voltage vector [CLK0 ticks]  */
     uint32_T                HalfPeriodTicks;
 
     /** \brief  Control loop sample time = 1 / CDD_CONTROL_LOOP_FREQUENCY  [s]          */
@@ -368,7 +382,7 @@ extern CddApp_CtrlMode_T CddApp_GetCtrlMode(void);
  *          the open-loop path slew-limits changes internally (no step in the
  *          rotating vector frequency); the DFC clamps to ±DFC_OMEGA_CMD_MAX.
  *
- * \param[in]  SpeedRpm  Mechanical speed reference  [RPM]
+ * \param[in]  RotorSpeedRpm  Mechanical speed reference  [RPM]
  */
 extern void CddApp_SetSpeedRefRpm(const real32_T SpeedRpm);
 

@@ -462,7 +462,7 @@ void CddSys_SetSafetyWdtEndInit(void)
     {
         #pragma nomisrac   /* Rule 10.7, 12.2, 2.2: single-access hardware password protocol; (0x0U) OR is harmless but kept for field-by-field documentation */
         SCU_WDTSCON0.U = (0x1U << 0x0U)                       |   /* ENDINIT = 1 (maintained)     */
-                         (0x0U)                       |   /* LCK     = 0 (unlock)         */
+                         (0x0U)                       |           /* LCK     = 0 (unlock)         */
                          (pwd  << 0x2U)                       |   /* PW      = corrected password */
                          (SCU_WDTSCON0.B.REL << 16U);             /* REL     = preserve           */
         #pragma nomisrac restore

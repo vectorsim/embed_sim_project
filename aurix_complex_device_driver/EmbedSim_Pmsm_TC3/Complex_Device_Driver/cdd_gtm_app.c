@@ -1,100 +1,100 @@
 /**********************************************************************************************************************
- * \file        cdd_gtm_app.c
- * \brief       GTM ATOM0 direct 6-channel driver for 3-phase FOC PWM generation
- *              on the AP32541 motor control board (TC38x).
+ * \file      cdd_gtm_app.c
+ * \brief     GTM ATOM0 direct 6-channel driver for 3-phase FOC PWM generation
+ *            on the AP32541 motor control board (TC38x).
  *
- * \details
- *  Channel assignment (TOUTSEL values from TC38x UM, Appendix 1):
+ * \details   Provides static-allocation GTM configuration targeting Infineon
+ *            AURIX TC38x.  All algorithms are iterative — no recursion — and
+ *            the implementation is MISRA C:2012 compliant.
  *
- *  | Channel    | Signal | Pin   | Polarity    | Mode        |
- *  |------------|--------|-------|-------------|-------------|
- *  | ATOM0_CH0  | Master | P00.0 | —           | SOMP master |
- *  | ATOM0_CH1  | IL1 LS | P00.2 | active HIGH | SOMP slave  |
- *  | ATOM0_CH2  | IH1 HS | P00.3 | active LOW  | SOMP slave  |
- *  | ATOM0_CH3  | IL2 LS | P00.4 | active HIGH | SOMP slave  |
- *  | ATOM0_CH4  | IH2 HS | P00.5 | active LOW  | SOMP slave  |
- *  | ATOM0_CH5  | IL3 LS | P00.6 | active HIGH | SOMP slave  |
- *  | ATOM0_CH6  | IH3 HS | P00.7 | active LOW  | SOMP slave  |
- *  | ATOM0_CH7  | ADCTRIG| P00.8 | edge@centre | SOMP slave  |
+ *            Channel assignment (TOUTSEL values from TC38x UM, Appendix 1):
  *
- *  Software dead-time — applied symmetrically on both edges in CddGtm_SetPwmDuty():
+ *            | Channel    | Signal | Pin   | Polarity    | Mode        |
+ *            |------------|--------|-------|-------------|-------------|
+ *            | ATOM0_CH0  | Master | P00.0 | —           | SOMP master |
+ *            | ATOM0_CH1  | IL1 LS | P00.2 | active HIGH | SOMP slave  |
+ *            | ATOM0_CH2  | IH1 HS | P00.3 | active LOW  | SOMP slave  |
+ *            | ATOM0_CH3  | IL2 LS | P00.4 | active HIGH | SOMP slave  |
+ *            | ATOM0_CH4  | IH2 HS | P00.5 | active LOW  | SOMP slave  |
+ *            | ATOM0_CH5  | IL3 LS | P00.6 | active HIGH | SOMP slave  |
+ *            | ATOM0_CH6  | IH3 HS | P00.7 | active LOW  | SOMP slave  |
+ *            | ATOM0_CH7  | ADCTRIG| P00.8 | edge@centre | SOMP slave  |
  *
- *      sr1_hs = (1 - dc) * Half          SR1 HS : rising  edge compare
- *      sr0_hs = (1 + dc) * Half          SR0 HS : falling edge compare
- *      sr1_ls = sr1_hs + DT              SR1 LS : delayed rising  edge
- *      sr0_ls = sr0_hs - DT              SR0 LS : advanced falling edge
+ *            Software dead-time — applied symmetrically on both edges:
  *
- *  CddGtm_SetPwmDuty() is file-scope static (Rule 8.7); it reads DutyU/V/W
- *  from CddApp_G and is called exclusively from the ISR and CddGtm_Init().
+ *                sr1_hs = (1 - dc) * Half          SR1 HS : rising  edge compare
+ *                sr0_hs = (1 + dc) * Half          SR0 HS : falling edge compare
+ *                sr1_ls = sr1_hs + DT              SR1 LS : delayed rising  edge
+ *                sr0_ls = sr0_hs - DT              SR0 LS : advanced falling edge
  *
- *  Control-path dispatch (GTM_Atom_00_Ch_00_Isr, 20 kHz) — two options,
- *  commanded through the central CddApp_T (CddApp_SetCtrlMode /
- *  CddApp_SetSpeedRefRpm, both atomic 32-bit stores):
- *      CDDAPP_CTRL_OPENLOOP   — CddGtm_RunOpenLoop(): V/f rotating vector at
- *                               the slew-limited SpeedRefRpm, no feedback.
- *      CDDAPP_CTRL_CLOSEDLOOP — CddGtm_RunDfc(): full sensorless Differential
- *                               Flatness Controller (ALIGN → I-f → CLOSEDLOOP
- *                               internally; embed_sim_dfc_controller v4.2.x).
- *  The mode is latched by the ISR once on the activation edge and is fixed
- *  for the entire run — no switching during operation (stop → set →
- *  restart).  EVADC measurements (raw sense voltages + DC link, converted
- *  phase currents) are read once per tick into CddApp_G.Meas /
- *  CddApp_G.PhaseCurrents for both modes.
+ *            Control-path dispatch (20 kHz) — two options commanded through
+ *            CddApp_T (CddApp_SetCtrlMode / CddApp_SetSpeedRefRpm):
+ *                - CDDAPP_CTRL_OPENLOOP   : V/f rotating vector at slew-limited
+ *                                            SpeedRefRpm, no feedback.
+ *                - CDDAPP_CTRL_CLOSEDLOOP : Full sensorless Differential
+ *                                            Flatness Controller.
+ *            The mode is latched by the ISR once on the activation edge and is
+ *            fixed for the entire run — no switching during operation.
  *
- * \note    MISRA C:2012 deviations recorded in this file:
- *          - Rule  8.7 : CddGtm_SetPwmDuty, CddGtm_RunOpenLoop, CddGtm_RunDfc —
- *                        internal linkage (intentional)
- *          - Rule  8.9 : CddGtm_Ctrl_G, angle, last_error_count — file/function
- *                        scope variables (minimised lifetime; CddGtm_Ctrl_G is
- *                        written by thread-context setters and read by the ISR)
- *          - Rule 14.4 : All controlling expressions use explicit comparison
- *          - Rule 15.5 : Single exit point per function
- *          - Rule 17.2 : No recursion
+ * \note      MISRA C:2012 compliance:
+ *              - Rule  8.1 : All functions have explicit return type
+ *              - Rule  8.5 : One declaration per identifier
+ *              - Rule  8.6 : No definitions in header files
+ *              - Rule  8.7 : Internal linkage for static functions
+ *              - Rule  8.9 : File scope variables minimised
+ *              - Rule 14.4 : All controlling expressions use explicit comparison
+ *              - Rule 15.5 : Single exit point per function
+ *              - Rule 17.2 : No recursion
+ *              - Rule 18.4 : No non-constant pointer arithmetic
  *
- * \version     1.6.0
- * \date        2026-07-04
- * \author      EmbedSim / EV Light Vehicle Foundation
+ * \note      EmbedSim naming convention:
+ *              - Functions      : Pascal_Snake_Case
+ *              - Parameters     : PascalCase  (single-letter → Uppercase)
+ *              - Output pointers: PascalCase_P
+ *              - Local variables: lower_snake_case
+ *              - Struct members : PascalCase
+ *              - Macros         : UPPER_SNAKE_CASE
+ *              - Typedefs       : Pascal_Snake_Case_T
  *
- * \copyright   Copyright (C) EmbedSim Project / Paul Abraham 2024
- *              https://github.com/vectorsim/embed_sim_project
- *              SPDX-License-Identifier: MIT
+ * \version   1.6.0
+ * \date      2026-07-04
+ * \author    EmbedSim / EV Light Vehicle Foundation
+ *
+ * \copyright Copyright (C) EmbedSim Project / Paul Abraham 2024
+ *            https://github.com/vectorsim/embed_sim_project
+ *            SPDX-License-Identifier: MIT
  *********************************************************************************************************************/
 
-/**********************************************************************************************************************
- * Includes
- *********************************************************************************************************************/
+/*********************************************************************************************************************/
+/*-----------------------------------------------------Includes------------------------------------------------------*/
+/*********************************************************************************************************************/
+
 #include "cdd_gtm_app.h"
-#include "cdd_app.h"           /* CddApp_T, CddApp_G — central state hub              */
+#include "cdd_app.h"
 #include "cdd_gpio_app.h"
+#include "cdd_gpt12_app.h"
 #include "cdd_sys_utility.h"
 #include "cdd_config.h"
 #include "IfxGtm_reg.h"
 #include "IfxGtm_Atom.h"
 #include "IfxSrc_reg.h"
-#include <math.h>              /* sinf()                                               */
+#include <math.h>
 #include "embed_sim_sv_pwm.h"
-#include "embed_sim_coordinate_transform.h"  /* Transform_Init()                       */
-#include "embed_sim_dfc_controller.h"        /* DFC_Init/Step/Reset, DFC_*_T           */
-#include "cdd_evadc_app.h"     /* CddEvadc_ReadSensorMeas(): single VF-gated read
-                                * of EVADC G0/G1/G2 + DC link per ISR tick;
-                                * CddEvadc_ConvertPhaseCurrents(): sense voltage →
-                                * ampere conversion (positive = into terminal).       */
+#include "embed_sim_coordinate_transform.h"
+#include "embed_sim_dfc_controller.h"
+#include "cdd_evadc_app.h"
 
-/**********************************************************************************************************************
- * ISR Vector Registration
- *********************************************************************************************************************/
+
+
+/*********************************************************************************************************************/
+/*------------------------------------------------------Macros-------------------------------------------------------*/
+/*********************************************************************************************************************/
 
 /** \brief  Target OS / CPU for GTM ATOM0 CH0 ISR — CPU0 (TOS = 0)                  */
 #define TOS_GTM_ISR     (0x0U)
 
 /** \brief  Service request priority number for ATOM0 CH0 on CPU0                   */
 #define SRPN_GTM_ISR    CORE_00_ATOM_00_CH_00_CL_SRPN
-
-EMBED_SIM_INTERRUPT(GTM_Atom_00_Ch_00_Isr, TOS_GTM_ISR, SRPN_GTM_ISR);
-
-/**********************************************************************************************************************
- * Private Macros
- *********************************************************************************************************************/
 
 /** \brief  ATOM SOMP mode — master only; CN0 resets at CM0 = carrier period         */
 #define ATOM_MODE_SOMP              (0x2U)
@@ -112,18 +112,15 @@ EMBED_SIM_INTERRUPT(GTM_Atom_00_Ch_00_Isr, TOS_GTM_ISR, SRPN_GTM_ISR);
  *          active-LOW gate driver).  When == 0: SL=1, output idles HIGH.
  */
 #if (CDD_GTM_HS_ACTIVE_LOW != 0U)
-    #define ATOM_HS_CH_SL   (0x0U)
-#else
     #define ATOM_HS_CH_SL   (0x1U)
+#else
+    #define ATOM_HS_CH_SL   (0x0U)
 #endif
 
 /**
- * \brief   SL polarity for LS channels — ILx active HIGH, SL=0.
- *
- * \details Reset → output = ~SL = 1 → ILx HIGH → freewheeling diode conducts.
- *          Safe-off state for a low-side active-HIGH gate driver.
+ * \brief   SL polarity for LS channels
  */
-#define ATOM_LS_CH_SL               (0x0U)
+#define ATOM_LS_CH_SL               (0x1U)
 
 /** \brief  TOUTSEL mux value routing ATOM0 outputs through CDTM0                   */
 #define TOUTSEL_GTM_ATOM            (0x02U)
@@ -186,58 +183,27 @@ EMBED_SIM_INTERRUPT(GTM_Atom_00_Ch_00_Isr, TOS_GTM_ISR, SRPN_GTM_ISR);
 /** \brief  Open-loop V/f law: modulation index ceiling.  [dimensionless]            */
 #define GTM_OL_MI_MAX               (0.95F)
 
-/**
- * \brief   ATOM0_CH7 ADC trigger placement (ticks).
- *
- * \details The EVADC groups trigger on the FALLING edge of ATOM0_CH7
- *          (GxQCTRL0.XTMODE = 1 in cdd_evadc_app.c) — the edge placement
- *          below is the single source of truth for the shunt sampling
- *          instant.
- *
- *          Geometry (SetPwmDuty, SL = 0, IL active HIGH, /IH active LOW):
- *          the low-side of each phase conducts in the CENTRE window
- *          [(1-dc)*Half, (1+dc)*Half]; the all-LS-ON overlap of the three
- *          phases is therefore always centred on CN0 = HalfPeriodTicks.
- *          At the period WRAP (CN0 = 0) all HIGH-sides conduct (V7) and the
- *          shunts carry zero current — the wrap must never be sampled.
- *
- *              SR0 (falling edge = EVADC trigger)
- *                  = HalfPeriodTicks - GTM_ADC_TRIG_LEAD_TICKS
- *              SR1 (rising edge, scope-visible pulse start on P00.8)
- *                  = SR0 - GTM_ADC_TRIG_PULSE_TICKS
- *
- *          The LEAD places the sample slightly before the CCU1 half-period
- *          ISR so that all conversions (~1 us) complete just in time for a
- *          SAME-CYCLE readout in CddEvadc_ReadSensorMeas().  At 5 ns/tick
- *          (CLK0 = 200 MHz), 300 ticks = 1.5 us.
- *
- *          Validity: the sample stays inside the all-LS window as long as
- *          min(dc)*HalfPeriodTicks > LEAD + dead-time — i.e. min duty
- *          > ~4% at 20 kHz.  Below that, low-side sensing is physically
- *          unavailable regardless of trigger placement.
- */
-#define GTM_ADC_TRIG_LEAD_TICKS     (300U)   /**< Falling edge lead before half-period  [CLK0 ticks] */
-#define GTM_ADC_TRIG_PULSE_TICKS    (1000U)  /**< Trigger pulse width (P00.8 scope)     [CLK0 ticks] */
-
-/**********************************************************************************************************************
- * Private Types
- *********************************************************************************************************************/
+   volatile real32_T estRpm;
+/*********************************************************************************************************************/
+/*-------------------------------------------------Data Structures---------------------------------------------------*/
+/*********************************************************************************************************************/
 
 /**
  * \struct CddGtm_Ctrl_T
- * \brief  Private control-loop runtime state.  The COMMAND interface
- *         (CtrlMode, SpeedRefRpm) and the MEASUREMENTS (Meas, PhaseCurrents)
- *         live in the central CddApp_T; this structure holds only what the
- *         ISR owns exclusively: the latched mode, controller state, and the
- *         open-loop integrators.
+ * \brief  Private control-loop runtime state.
  *
- * \details Single-writer: the 20 kHz ISR (plus one-time CddGtm_CtrlInit()
+ * \details The COMMAND interface (CtrlMode, SpeedRefRpm) and the MEASUREMENTS
+ *          (Meas, PhaseCurrents) live in the central CddApp_T; this structure
+ *          holds only what the ISR owns exclusively: the latched mode,
+ *          controller state, and the open-loop integrators.
+ *
+ *          Single-writer: the 20 kHz ISR (plus one-time CddGtm_CtrlInit()
  *          before the ISR is armed).  Telemetry accessors read snapshots.
  */
 typedef struct
 {
     CddApp_CtrlMode_T   ModeActive;     /**< Mode latched by the ISR ONCE on the
-                                         *   activation edge; immutable for the
+                                         *   activation edge — immutable for the
                                          *   entire run — no switching during
                                          *   operation.                             */
     DFC_State_T         Dfc;            /**< DFC controller state (SMO, shaper, …).   */
@@ -253,23 +219,27 @@ typedef struct
     uint32_T            CtrlInitDone;   /**< 0x1U after CddGtm_CtrlInit() succeeded.  */
 } CddGtm_Ctrl_T;
 
-/**********************************************************************************************************************
- * Private Variables
- *********************************************************************************************************************/
+/*********************************************************************************************************************/
+/*-------------------------------------------------Global variables--------------------------------------------------*/
+/*********************************************************************************************************************/
 
 /*
- * MISRA C:2012 Rule 8.9 deviation (mirrors [D-8.9] in cdd_app.c): file scope is
- * required because the structure is written by the ISR and read by the
- * telemetry accessors (CddGtm_GetSpeedRpm / GetDfcMode / GetDfcDiagnostics).
- * Zero-initialised by .bss: ModeActive = CDDAPP_CTRL_OPENLOOP (0),
- * CtrlInitDone = 0 — the ISR therefore stays on the open-loop path and the DFC
- * is never dispatched before CddGtm_CtrlInit() has completed.
+ * MISRA C:2012 Rule 8.9 deviation: file scope is required because the structure
+ * is written by the ISR and read by the telemetry accessors (CddGtm_GetSpeedRpm
+ * / GetDfcMode / GetDfcDiagnostics). Zero-initialised by .bss: ModeActive =
+ * CDDAPP_CTRL_OPENLOOP (0), CtrlInitDone = 0 — the ISR therefore stays on the
+ * open-loop path and the DFC is never dispatched before CddGtm_CtrlInit() has
+ * completed.
  */
 static CddGtm_Ctrl_T   CddGtm_Ctrl_G;
 
-/**********************************************************************************************************************
- * Private Function Prototypes
- *********************************************************************************************************************/
+/*********************************************************************************************************************/
+/*--------------------------------------------Private Variables/Constants--------------------------------------------*/
+/*********************************************************************************************************************/
+
+/*********************************************************************************************************************/
+/*------------------------------------------------Function Prototypes------------------------------------------------*/
+/*********************************************************************************************************************/
 
 /**
  * \brief   Writes ATOM0 CH1–CH6 shadow registers for all three phases with
@@ -335,9 +305,39 @@ static void CddGtm_RunOpenLoop(void);
  */
 static void CddGtm_RunDfc(void);
 
+/**
+ * \brief   Helper function to configure a single phase's PWM compare registers.
+ *
+ * \details Computes SR0 and SR1 compare values for both high-side and low-side
+ *          switches of a single phase using the centre-aligned dead-time formula.
+ *          This function is called once per phase from CddGtm_SetPwmDuty().
+ *
+ * \param[in]  Duty          Duty cycle for this phase [0.0 .. 1.0]
+ * \param[in]  HalfPeriod    Half of the PWM period in ticks
+ * \param[in]  DeadTime      Dead-time in ticks
+ * \param[out] HsSr0Ptr      Pointer to HS SR0 register (falling edge)
+ * \param[out] HsSr1Ptr      Pointer to HS SR1 register (rising edge)
+ * \param[out] LsSr0Ptr      Pointer to LS SR0 register (falling edge)
+ * \param[out] LsSr1Ptr      Pointer to LS SR1 register (rising edge)
+ *
+ * \note    STATIC — callable only from this translation unit (Rule 8.7).
+ */
+static void CddGtm_ConfigurePhase(real32_T Duty,
+                                  uint32_T HalfPeriod,
+                                  uint32_T DeadTime,
+                                  P2VAR(volatile Ifx_GTM_ATOM_CH_SR0, AUTOMATIC, CDD_APPL_DATA) HsSr0Ptr,
+                                  P2VAR(volatile Ifx_GTM_ATOM_CH_SR1, AUTOMATIC, CDD_APPL_DATA) HsSr1Ptr,
+                                  P2VAR(volatile Ifx_GTM_ATOM_CH_SR0, AUTOMATIC, CDD_APPL_DATA) LsSr0Ptr,
+                                  P2VAR(volatile Ifx_GTM_ATOM_CH_SR1, AUTOMATIC, CDD_APPL_DATA) LsSr1Ptr);
+
+/*********************************************************************************************************************/
+/*---------------------------------------------Function Implementations----------------------------------------------*/
+/*********************************************************************************************************************/
+
 /**********************************************************************************************************************
  * ISR — GTM ATOM0 CH0 CCU1 (20 kHz control loop)
  *********************************************************************************************************************/
+EMBED_SIM_INTERRUPT(GTM_Atom_00_Ch_00_Isr, TOS_GTM_ISR, SRPN_GTM_ISR);
 
 /**
  * \brief   20 kHz control-loop ISR, routed to CPU0 via SRC_GTM_ATOM0_0.
@@ -373,18 +373,11 @@ void GTM_Atom_00_Ch_00_Isr(void)
     /* Step 1 — diagnostics counter                                                  */
     CddApp_G.ControlLoopCounter++;
 
-    /* Step 1b — measurements in EVERY state: single VF-gated hardware read of
-     * this tick into the central structure (raw sense voltages + DC link),
-     * then the ampere conversion.  A channel with no fresh conversion retains
-     * its previous value — one stale tick is benign; a persistent fault
-     * surfaces through the DFC plausibility chain.
-     * Reading outside the RUN gate is REQUIRED: the one-shot offset
-     * calibration (CddEvadc_CalibratePhaseOffsets, called from CddApp_Start
-     * before RUN_STATE with /SOFF asserted) gates on ControlLoopCounter and
-     * consumes Vu/Vv/Vw/Vr refreshed by this read.  It also provides live
-     * Vdc monitoring while the drive is parked.                                */
-    CddEvadc_ReadSensorMeas(&CddApp_G);
-    CddEvadc_ConvertPhaseCurrents(&CddApp_G);
+    volatile real32_T estRpm;
+
+
+    CddGpt12_Update();
+
 
     /* Step 2 — control path dispatch, active only in RUN state                     */
     if (CddApp_G.CDDAppStatus == CDDAPP_RUN_STATE)
@@ -407,6 +400,7 @@ void GTM_Atom_00_Ch_00_Isr(void)
         else
         {
             /* Steady state — mode immutable while CtrlActive == 0x1U          */
+
         }
 
         /* Step 2c — dispatch on the LATCHED mode                               */
@@ -421,7 +415,22 @@ void GTM_Atom_00_Ch_00_Isr(void)
              * CLOSEDLOOP was requested before CddGtm_CtrlInit() succeeded).
              * Measurements were already taken in Step 1b — no second read:
              * VF is clear-on-read, a duplicate read only re-consumes flags.   */
-            CddGtm_RunOpenLoop();
+            if(CddApp_G.ControlLoopCounter < 1000)
+            {
+                CddApp_G.DutyU = 0.0F;
+                CddApp_G.DutyV = 0.0F;
+                CddApp_G.DutyW = 0.0F;
+                CddGtm_SetPwmDuty(&CddApp_G);
+                CddEvadc_CalibrateCurrentOffset(&CddApp_G);
+                //CddGtm_Ctrl_G.ModeActive =CDDAPP_CTRL_CLOSEDLOOP;
+            }
+            else
+            {
+
+               CddGtm_RunOpenLoop();
+               CddApp_G.RotorSpeedRpm = CddGpt12_GetSpeedRpm();
+               CddApp_G.RotorPosition = CddGpt12_GetMechanicalPosition();
+            }
         }
     }
     else
@@ -438,9 +447,8 @@ void GTM_Atom_00_Ch_00_Isr(void)
     GTM_ATOM0_CH0_IRQ_NOTIFY.B.CCU1TC = 0x1U;
 }
 
-/**********************************************************************************************************************
- * CddGtm_RunOpenLoop  [STATIC]
- *********************************************************************************************************************/
+
+
 static void CddGtm_RunOpenLoop(void)
 {
     FocAngle_T         angle;
@@ -536,35 +544,64 @@ static void CddGtm_RunOpenLoop(void)
     }
 }
 
+
+
 /**********************************************************************************************************************
- * CddGtm_RunDfc  [STATIC]
+ * CddGtm_RunDfc
  *********************************************************************************************************************/
+
+/**
+ * \brief   Implements one tick of the closed-loop sensorless DFC control path.
+ *
+ * \details The DFC (Differential Flatness Controller) provides full sensorless
+ *          control using the following sequence:
+ *              1. Consume phase currents from CddApp_G (valley-sampled by ATOM0_CH7)
+ *              2. Call DFC_Step() with DFC_LOOP_CLOSEDLOOP which executes:
+ *                 - SMO (Sliding Mode Observer) for position/speed estimation
+ *                 - ALIGN sequence for initial rotor alignment
+ *                 - I-f (current-frequency) startup
+ *                 - CLOSEDLOOP flatness controller
+ *                 - Voltage law and internal SVPWM
+ *              3. Copy the resulting duty cycles to CddApp_G
+ *              4. Write shadow registers via CddGtm_SetPwmDuty()
+ *
+ *          Failure handling:
+ *          - Transient failures (< GTM_DFC_FAIL_LIMIT): retain previous duties
+ *          - Sustained failures (>= GTM_DFC_FAIL_LIMIT): emergency shutdown
+ *
+ * \note    STATIC — called only from the ISR, not intended for external use.
+ *          The DFC state machine is maintained in CddGtm_Ctrl_G.Dfc and is
+ *          persistent across ISR calls.
+ */
 static void CddGtm_RunDfc(void)
 {
     DFC_Input_T        dfc_in;
     DFC_Output_T       dfc_out;
     MatrixStatus_Type  status;
 
+    /* Step 1 — prepare DFC input with latest phase currents                      */
     dfc_in.PhaseCurrents.U = CddApp_G.Iu;
     dfc_in.PhaseCurrents.V = CddApp_G.Iv;
     dfc_in.PhaseCurrents.W = CddApp_G.Iw;
 
+    /* Step 2 — set speed reference and loop option                               */
     dfc_in.SpeedRefRpm = (MatrixFloat)CddApp_G.SpeedRefRpm;
     dfc_in.LoopOption  = DFC_LOOP_CLOSEDLOOP;
 
+    /* Step 3 — execute one DFC step                                              */
     status = DFC_Step(&CddGtm_Ctrl_G.Dfc,
                       &dfc_in,
                       (MatrixFloat)CddApp_G.SampleTime,
                       &dfc_out);
 
+    /* Step 4 — handle the DFC result                                             */
     if (status == MATRIX_SUCCESS)
     {
-
+        /* Nominal path: copy duties and write shadow registers                      */
         CddApp_G.DutyU = (real32_T)dfc_out.Ta;
         CddApp_G.DutyV = (real32_T)dfc_out.Tb;
         CddApp_G.DutyW = (real32_T)dfc_out.Tc;
         CddGtm_SetPwmDuty(&CddApp_G);
-
 
         CddGtm_Ctrl_G.DfcOut       = dfc_out;
         CddGtm_Ctrl_G.DfcFailCount = 0U;
@@ -575,7 +612,7 @@ static void CddGtm_RunDfc(void)
 
         if (CddGtm_Ctrl_G.DfcFailCount >= GTM_DFC_FAIL_LIMIT)
         {
-
+            /* Sustained DFC failure: emergency shutdown                             */
             CddApp_G.DutyU = 0.0F;
             CddApp_G.DutyV = 0.0F;
             CddApp_G.DutyW = 0.0F;
@@ -586,185 +623,133 @@ static void CddGtm_RunDfc(void)
         }
         else
         {
-
+            /* Transient failure: retain previous duty cycle                         */
             CddGtm_SetPwmDuty(&CddApp_G);
         }
     }
 }
 
 /**********************************************************************************************************************
- * CddGtm_SetPwmDuty  [STATIC]
- *********************************************************************************************************************/
-void CddGtm_SetPwmDuty(P2CONST(CddApp_T, AUTOMATIC, CDD_APPL_DATA) AppPtr)
-{
-    uint32_T       sr1_hs;
-    uint32_T       sr0_hs;
-    uint32_T       sr1_ls;
-    uint32_T       sr0_ls;
-    real32_T       dc;
-    const uint32_T dt = CDD_GTM_SW_DEAD_TIME_TICKS;
-
-    /* ADC trigger (CH7): refresh SR0/SR1 on every duty update.
-     * FALLING edge (the EVADC trigger event, XTMODE=1) at
-     * HalfPeriodTicks - LEAD — centre of the all-LS-ON window, just early
-     * enough for the conversions to complete before the CCU1 ISR readout.  */
-    GTM_ATOM0_CH7_SR0.B.SR0 = CddApp_G.HalfPeriodTicks - GTM_ADC_TRIG_LEAD_TICKS;
-    GTM_ATOM0_CH7_SR1.B.SR1 = (CddApp_G.HalfPeriodTicks - GTM_ADC_TRIG_LEAD_TICKS)
-                              - GTM_ADC_TRIG_PULSE_TICKS;
-
-    /* ------------------------------------------------------------------
-     * Phase U  —  CH1 (LS IL1 P00.2) / CH2 (HS /IH1 P00.3)
-     * ------------------------------------------------------------------ */
-    dc = AppPtr->DutyU;
-
-    if (dc >= 1.0F)
-    {
-        /* Full ON: LS conducts entire period; HS at period (off)                   */
-        sr1_hs = 0U;
-        sr0_hs = CddApp_G.PeriodTicks;
-        sr1_ls = 0U;
-        sr0_ls = CddApp_G.PeriodTicks;
-    }
-    else if (dc <= 0.0F)
-    {
-        /* Full OFF: both switches parked at period ticks (zero pulse width)        */
-        sr1_hs = CddApp_G.PeriodTicks;
-        sr0_hs = CddApp_G.PeriodTicks;
-        sr1_ls = CddApp_G.PeriodTicks;
-        sr0_ls = CddApp_G.PeriodTicks;
-    }
-    else
-    {
-        /* Normal range: compute centre-aligned SR values, then add dead-time       */
-        sr1_hs = (uint32_T)((1.0F - dc) * (real32_T)CddApp_G.HalfPeriodTicks);
-        sr0_hs = (uint32_T)((1.0F + dc) * (real32_T)CddApp_G.HalfPeriodTicks);
-
-        if ((sr1_hs + dt) < (sr0_hs - dt))
-        {
-            sr1_ls = sr1_hs + dt;
-            sr0_ls = sr0_hs - dt;
-        }
-        else
-        {
-            /* Dead-time exceeds pulse width: collapse to 50% (safe neutral)        */
-            sr1_ls = CddApp_G.HalfPeriodTicks;
-            sr0_ls = CddApp_G.HalfPeriodTicks;
-        }
-    }
-
-    GTM_ATOM0_CH1_SR1.B.SR1 = sr1_ls;   /* Phase U LS rising  edge                */
-    GTM_ATOM0_CH1_SR0.B.SR0 = sr0_ls;   /* Phase U LS falling edge                */
-    GTM_ATOM0_CH2_SR1.B.SR1 = sr1_hs;   /* Phase U HS rising  edge                */
-    GTM_ATOM0_CH2_SR0.B.SR0 = sr0_hs;   /* Phase U HS falling edge                */
-
-    /* ------------------------------------------------------------------
-     * Phase V  —  CH3 (LS IL2 P00.4) / CH4 (HS /IH2 P00.5)
-     * ------------------------------------------------------------------ */
-    dc = AppPtr->DutyV;
-
-    if (dc >= 1.0F)
-    {
-        sr1_hs = 0U;
-        sr0_hs = CddApp_G.PeriodTicks;
-        sr1_ls = 0U;
-        sr0_ls = CddApp_G.PeriodTicks;
-    }
-    else if (dc <= 0.0F)
-    {
-        sr1_hs = CddApp_G.PeriodTicks;
-        sr0_hs = CddApp_G.PeriodTicks;
-        sr1_ls = CddApp_G.PeriodTicks;
-        sr0_ls = CddApp_G.PeriodTicks;
-    }
-    else
-    {
-        sr1_hs = (uint32_T)((1.0F - dc) * (real32_T)CddApp_G.HalfPeriodTicks);
-        sr0_hs = (uint32_T)((1.0F + dc) * (real32_T)CddApp_G.HalfPeriodTicks);
-
-        if ((sr1_hs + dt) < (sr0_hs - dt))
-        {
-            sr1_ls = sr1_hs + dt;
-            sr0_ls = sr0_hs - dt;
-        }
-        else
-        {
-            sr1_ls = CddApp_G.HalfPeriodTicks;
-            sr0_ls = CddApp_G.HalfPeriodTicks;
-        }
-    }
-
-    GTM_ATOM0_CH3_SR1.B.SR1 = sr1_ls;   /* Phase V LS rising  edge                */
-    GTM_ATOM0_CH3_SR0.B.SR0 = sr0_ls;   /* Phase V LS falling edge                */
-    GTM_ATOM0_CH4_SR1.B.SR1 = sr1_hs;   /* Phase V HS rising  edge                */
-    GTM_ATOM0_CH4_SR0.B.SR0 = sr0_hs;   /* Phase V HS falling edge                */
-
-    /* ------------------------------------------------------------------
-     * Phase W  —  CH5 (LS IL3 P00.6) / CH6 (HS /IH3 P00.7)
-     * ------------------------------------------------------------------ */
-    dc = AppPtr->DutyW;
-
-    if (dc >= 1.0F)
-    {
-        sr1_hs = 0U;
-        sr0_hs = CddApp_G.PeriodTicks;
-        sr1_ls = 0U;
-        sr0_ls = CddApp_G.PeriodTicks;
-    }
-    else if (dc <= 0.0F)
-    {
-        sr1_hs = CddApp_G.PeriodTicks;
-        sr0_hs = CddApp_G.PeriodTicks;
-        sr1_ls = CddApp_G.PeriodTicks;
-        sr0_ls = CddApp_G.PeriodTicks;
-    }
-    else
-    {
-        sr1_hs = (uint32_T)((1.0F - dc) * (real32_T)CddApp_G.HalfPeriodTicks);
-        sr0_hs = (uint32_T)((1.0F + dc) * (real32_T)CddApp_G.HalfPeriodTicks);
-
-        if ((sr1_hs + dt) < (sr0_hs - dt))
-        {
-            sr1_ls = sr1_hs + dt;
-            sr0_ls = sr0_hs - dt;
-        }
-        else
-        {
-            sr1_ls = CddApp_G.HalfPeriodTicks;
-            sr0_ls = CddApp_G.HalfPeriodTicks;
-        }
-    }
-
-    GTM_ATOM0_CH5_SR1.B.SR1 = sr1_ls;   /* Phase W LS rising  edge                */
-    GTM_ATOM0_CH5_SR0.B.SR0 = sr0_ls;   /* Phase W LS falling edge                */
-    GTM_ATOM0_CH6_SR1.B.SR1 = sr1_hs;   /* Phase W HS rising  edge                */
-    GTM_ATOM0_CH6_SR0.B.SR0 = sr0_hs;   /* Phase W HS falling edge                */
-}
-
-/**********************************************************************************************************************
- * CddGtm_Start
+ * CddGtm_ConfigurePhase
  *********************************************************************************************************************/
 
 /**
- * \brief   Finalises start-up: initialises SVM tables, sets RUN state, and issues
- *          HOST_TRIG to transfer all shadow registers to active compare registers.
+ * \brief   Configures a single phase's PWM compare registers with dead-time.
  *
- * \details Call sequence:
- *              CddGtm_Init()           — hardware init, shadow regs pre-loaded
- *              CddApp_InitInverter()   — gate driver enable
- *              CddGtm_Start()          — HOST_TRIG, PWM goes live
- *              SRC SRE = 1             — arm ISR after PWM is live
+ * \details Computes SR0 and SR1 compare values for both high-side and low-side
+ *          switches of a single phase using the centre-aligned dead-time formula.
+ *          This function is called once per phase from CddGtm_SetPwmDuty().
  *
- *          HOST_TRIG is a single-shot write; ATOM0 begins counting on the next
- *          CMU CLK0 edge.
+ *          The dead-time is applied symmetrically:
+ *          - High-side rising edge: delayed by DeadTime ticks
+ *          - Low-side falling edge: advanced by DeadTime ticks
  *
- * \return  void
+ * \param[in]  Duty          Duty cycle for this phase [0.0 .. 1.0]
+ * \param[in]  HalfPeriod    Half of the PWM period in ticks
+ * \param[in]  DeadTime      Dead-time in ticks
+ * \param[out] HsSr0Ptr      Pointer to HS SR0 register (falling edge)
+ * \param[out] HsSr1Ptr      Pointer to HS SR1 register (rising edge)
+ * \param[out] LsSr0Ptr      Pointer to LS SR0 register (falling edge)
+ * \param[out] LsSr1Ptr      Pointer to LS SR1 register (rising edge)
+ *
+ * \note    STATIC — callable only from this translation unit (Rule 8.7).
  */
-void CddGtm_Start(void)
+void CddGtm_ConfigurePhase(real32_T Duty,
+                                  uint32_T HalfPeriod,
+                                  uint32_T DeadTime,
+                                  P2VAR(volatile Ifx_GTM_ATOM_CH_SR0, AUTOMATIC, CDD_APPL_DATA) HsSr0Ptr,
+                                  P2VAR(volatile Ifx_GTM_ATOM_CH_SR1, AUTOMATIC, CDD_APPL_DATA) HsSr1Ptr,
+                                  P2VAR(volatile Ifx_GTM_ATOM_CH_SR0, AUTOMATIC, CDD_APPL_DATA) LsSr0Ptr,
+                                  P2VAR(volatile Ifx_GTM_ATOM_CH_SR1, AUTOMATIC, CDD_APPL_DATA) LsSr1Ptr)
 {
-    SVM_Init();
-    CddApp_G.CDDAppStatus          = CDDAPP_RUN_STATE;
-    GTM_ATOM0_AGC_GLB_CTRL.B.HOST_TRIG = 0x1U;
+    uint32_T sr1Hs = 0U;
+    uint32_T sr0Hs = 0U;
+    uint32_T sr1Ls = 0U;
+    uint32_T sr0Ls = 0U;
+
+    sr1Hs = (uint32_T)((1.0F - Duty) * (real32_T)HalfPeriod);
+    sr0Hs = (uint32_T)((1.0F + Duty) * (real32_T)HalfPeriod);
+
+    sr1Ls = sr1Hs - DeadTime;
+    sr0Ls = sr0Hs + DeadTime;
+
+    LsSr1Ptr->B.SR1 = sr1Ls;
+    LsSr0Ptr->B.SR0 = sr0Ls;
+    HsSr1Ptr->B.SR1 = sr1Hs;
+    HsSr0Ptr->B.SR0 = sr0Hs;
 }
+
+/**********************************************************************************************************************
+ * CddGtm_SetPwmDuty
+ *********************************************************************************************************************/
+
+/**
+ * \brief   Writes ATOM0 CH1–CH6 shadow registers for all three phases with
+ *          symmetric software dead-time insertion.
+ *
+ * \details Reads DutyU, DutyV, DutyW from \p AppPtr and calls CddGtm_ConfigurePhase()
+ *          for each phase to compute and write the compare values.
+ *          Also updates the ADC trigger channel (CH7) to maintain alignment
+ *          with the PWM carrier.
+ *
+ * \param[in]  AppPtr   Pointer to the central CddApp_G state structure (const).
+ *
+ * \note    STATIC — callable only from this translation unit (Rule 8.7).
+ *          Must not be called before CddGtm_Init() has populated PeriodTicks
+ *          and HalfPeriodTicks.
+ */
+static void CddGtm_SetPwmDuty(P2CONST(CddApp_T, AUTOMATIC, CDD_APPL_DATA) AppPtr)
+{
+    uint32_T halfPeriod;
+    uint32_T deadTimeTicks;
+
+    halfPeriod    = AppPtr->HalfPeriodTicks;
+    deadTimeTicks = CDD_GTM_SW_DEAD_TIME_TICKS;
+
+
+    /* Phases U,V,B */
+    CddGtm_ConfigurePhase(AppPtr->DutyU, halfPeriod, deadTimeTicks,
+                          &GTM_ATOM0_CH2_SR0, &GTM_ATOM0_CH2_SR1,
+                          &GTM_ATOM0_CH1_SR0, &GTM_ATOM0_CH1_SR1);
+
+    CddGtm_ConfigurePhase(AppPtr->DutyV, halfPeriod, deadTimeTicks,
+                          &GTM_ATOM0_CH4_SR0, &GTM_ATOM0_CH4_SR1,
+                          &GTM_ATOM0_CH3_SR0, &GTM_ATOM0_CH3_SR1);
+
+    CddGtm_ConfigurePhase(AppPtr->DutyW, halfPeriod, deadTimeTicks,
+                          &GTM_ATOM0_CH6_SR0, &GTM_ATOM0_CH6_SR1,
+                          &GTM_ATOM0_CH5_SR0, &GTM_ATOM0_CH5_SR1);
+
+    /* ADC Trigger */
+    GTM_ATOM0_CH7_SR0.B.SR0 = (uint32_T)((1.0F + AppPtr->DutyAdcTrig) * (real32_T)halfPeriod);
+    GTM_ATOM0_CH7_SR1.B.SR1 = (uint32_T)((1.0F - AppPtr->DutyAdcTrig) * (real32_T)halfPeriod);
+}
+
+void CddGtm_InitModule(void)
+{
+    CddSys_ClearCpuWdtEndInit();
+    GTM_CLC.B.DISR = 0x0U;       /* request clock enable                     */
+    CddSys_SetCpuWdtEndInit();
+    while (GTM_CLC.B.DISS != 0x0U)
+    {
+        CddSys_NopDelay(1U, 1U);  /* wait for clock to be running             */
+    }
+
+    /* Disable write protection on cluster configuration registers */
+    GTM_CTRL.B.RF_PROT       = 0x0U;
+    GTM_CCM0_PROT.B.CLS_PROT = 0x0U;
+
+    /* Enable cluster 0 with no additional divider (UM p.122) */
+    GTM_CLS_CLK_CFG.B.CLS0_CLK_DIV = 0x1U;
+
+    /* Disable all CMU clocks, program CLK0 = 200 MHz */
+    GTM_CMU_CLK_EN.U = 0x55555555U;                     /* disable all clocks */
+    CddSys_SetGtmCmuClk00Freq(GTM_CMU_CLK0_FREQUENCY);  /* set CLK0 = 200 MHz */
+
+}
+
+
+
 
 /**********************************************************************************************************************
  * CddGtm_Init
@@ -781,8 +766,7 @@ void CddGtm_Start(void)
  *          2. Pre-load DutyU/V/W = 0.5F (zero vector) and call CddGtm_SetPwmDuty()
  *             to populate all phase shadow registers before HOST_TRIG.
  *          3. Read AGC register images from hardware once (RMW pattern).
- *          4. Configure ATOM0_CH0: SOMP master, TRIGOUT=1, CCU1 ISR enabled
- *             (SRE=1 set here; ISR will fire after CddGtm_Start() HOST_TRIG).
+ *          4. Configure ATOM0_CH0: SOMP master, TRIGOUT=1, CCU1 ISR enabled.
  *          5. Configure ATOM0_CH1–CH6: SOMP slaves, RST_CCU0=1 (sync to master).
  *          6. Configure ATOM0_CH7: ADC valley trigger via ADCTRIG0OUT0.
  *          7. Configure CDTM0_DTM4 / DTM5: CMU CLK0, passthrough (no DTM dead-time).
@@ -793,7 +777,8 @@ void CddGtm_Start(void)
  *
  * \return  void
  */
-void CddGtm_Init(void)
+
+void CddGtm_InitInverter(void)
 {
     Ifx_GTM_ATOM_CH_CTRL        chCtrl;
     Ifx_GTM_ATOM_CH_IRQ_EN      chIrqEn;
@@ -803,6 +788,7 @@ void CddGtm_Init(void)
     Ifx_GTM_ATOM_AGC_ENDIS_CTRL endisCtrl;
     Ifx_GTM_ATOM_AGC_OUTEN_CTRL outenCtrl;
 
+
     /* Step 1 — timing constants from CMU CLK0 frequency and control loop rate      */
     CddApp_G.PeriodTicks        = (uint32_T)((real32_T)GTM_CMU_CLK0_FREQUENCY /
                                              (real32_T)CDD_CONTROL_LOOP_FREQUENCY);
@@ -811,9 +797,10 @@ void CddGtm_Init(void)
     CddApp_G.ControlLoopCounter = 0U;
 
     /* Step 2 — zero-vector pre-load: 50 % duty on all phases (no net voltage)      */
-    CddApp_G.DutyU = 0.5F;
-    CddApp_G.DutyV = 0.5F;
-    CddApp_G.DutyW = 0.5F;
+    CddApp_G.DutyU       = 0.5F;
+    CddApp_G.DutyV       = 0.5F;
+    CddApp_G.DutyW       = 0.5F;
+    CddApp_G.DutyAdcTrig = 0.9F;
     CddGtm_SetPwmDuty(&CddApp_G);
 
     /* Step 3 — snapshot current AGC registers for read-modify-write                */
@@ -867,26 +854,28 @@ void CddGtm_Init(void)
     outenCtrl.B.OUTEN_CTRL0 = 0x2U;
 
     /* ================================================================== */
-    /* Step 5a — PHASE U LS: ATOM0_CH1  IL1 P00.2  active HIGH  SL=0     */
+    /* Step 5a — PHASE U LS: ATOM0_CH1  IL1 P00.2                         */
     /* ================================================================== */
     chCtrl.U            = GTM_ATOM0_CH1_CTRL.U;
     chCtrl.B.MODE       = ATOM_MODE_SOMP;
     chCtrl.B.UDMODE     = ATOM_UD_COUNT_MODE;
-    chCtrl.B.RST_CCU0   = 0x1U;   /* Slave: reset CN0 on master TRIGOUT             */
+    chCtrl.B.RST_CCU0   = 0x1U;   /* Slave: reset CN0 on master TRIGOUT */
     chCtrl.B.TRIGOUT    = 0x0U;
     chCtrl.B.ARU_EN     = 0x0U;
     chCtrl.B.CLK_SRC_SR = ATOM_CMU_CLK;
     chCtrl.B.SL         = ATOM_LS_CH_SL;
     GTM_ATOM0_CH1_CTRL.U = chCtrl.U;
+
     GTM_TOUTSEL1.B.SEL3  = TOUTSEL_GTM_ATOM;
     CddGpio_ConfigGtmPhaseULs_P00_2();
+
     glbCtrl.B.UPEN_CTRL1    = 0x2U;
     fupdCtrl.B.FUPD_CTRL1   = 0x2U;
     endisCtrl.B.ENDIS_CTRL1 = 0x2U;
     outenCtrl.B.OUTEN_CTRL1 = 0x2U;
 
     /* ================================================================== */
-    /* Step 5b — PHASE U HS: ATOM0_CH2  /IH1 P00.3  active LOW   SL=0   */
+    /* Step 5b — PHASE U HS: ATOM0_CH2  /IH1 P00.3  active LOW   SL=0     */
     /* ================================================================== */
     chCtrl.U            = GTM_ATOM0_CH2_CTRL.U;
     chCtrl.B.MODE       = ATOM_MODE_SOMP;
@@ -905,7 +894,7 @@ void CddGtm_Init(void)
     outenCtrl.B.OUTEN_CTRL2 = 0x2U;
 
     /* ================================================================== */
-    /* Step 5c — PHASE V LS: ATOM0_CH3  IL2 P00.4  active HIGH  SL=0    */
+    /* Step 5c — PHASE V LS: ATOM0_CH3  IL2 P00.4  active HIGH  SL=0      */
     /* ================================================================== */
     chCtrl.U            = GTM_ATOM0_CH3_CTRL.U;
     chCtrl.B.MODE       = ATOM_MODE_SOMP;
@@ -924,7 +913,7 @@ void CddGtm_Init(void)
     outenCtrl.B.OUTEN_CTRL3 = 0x2U;
 
     /* ================================================================== */
-    /* Step 5d — PHASE V HS: ATOM0_CH4  /IH2 P00.5  active LOW   SL=0  */
+    /* Step 5d — PHASE V HS: ATOM0_CH4  /IH2 P00.5  active LOW   SL=0     */
     /* ================================================================== */
     chCtrl.U            = GTM_ATOM0_CH4_CTRL.U;
     chCtrl.B.MODE       = ATOM_MODE_SOMP;
@@ -943,7 +932,7 @@ void CddGtm_Init(void)
     outenCtrl.B.OUTEN_CTRL4 = 0x2U;
 
     /* ================================================================== */
-    /* Step 5e — PHASE W LS: ATOM0_CH5  IL3 P00.6  active HIGH  SL=0   */
+    /* Step 5e — PHASE W LS: ATOM0_CH5  IL3 P00.6  active HIGH  SL=0      */
     /* ================================================================== */
     chCtrl.U            = GTM_ATOM0_CH5_CTRL.U;
     chCtrl.B.MODE       = ATOM_MODE_SOMP;
@@ -962,7 +951,7 @@ void CddGtm_Init(void)
     outenCtrl.B.OUTEN_CTRL5 = 0x2U;
 
     /* ================================================================== */
-    /* Step 5f — PHASE W HS: ATOM0_CH6  /IH3 P00.7  active LOW   SL=0  */
+    /* Step 5f — PHASE W HS: ATOM0_CH6  /IH3 P00.7  active LOW   SL=0     */
     /* ================================================================== */
     chCtrl.U            = GTM_ATOM0_CH6_CTRL.U;
     chCtrl.B.MODE       = ATOM_MODE_SOMP;
@@ -981,7 +970,7 @@ void CddGtm_Init(void)
     outenCtrl.B.OUTEN_CTRL6 = 0x2U;
 
     /* ================================================================== */
-    /* Step 6 — ADC TRIGGER: ATOM0_CH7  P00.8 + EVADC G0/G1/G2/G3        */
+    /* Step 6 — ADC TRIGGER: ATOM0_CH7  P00.8 + EVADC G0/G1/G2/G3         */
     /* ================================================================== */
     /* FALLING edge (EVADC trigger event, XTMODE=1) at
      *     SR0 = HalfPeriodTicks - GTM_ADC_TRIG_LEAD_TICKS
@@ -1000,17 +989,16 @@ void CddGtm_Init(void)
     chCtrl.B.CLK_SRC_SR = ATOM_CMU_CLK;
     chCtrl.B.SL         = 0x0U;
     GTM_ATOM0_CH7_CTRL.U    = chCtrl.U;
-    GTM_ATOM0_CH7_SR0.B.SR0 = CddApp_G.HalfPeriodTicks - GTM_ADC_TRIG_LEAD_TICKS;
-    GTM_ATOM0_CH7_SR1.B.SR1 = (CddApp_G.HalfPeriodTicks - GTM_ADC_TRIG_LEAD_TICKS)
-                              - GTM_ADC_TRIG_PULSE_TICKS;
 
     /* Route CH7 (via CDTM0_DTM5_3 dead-time output, code 0x8 — identical
      * encoding for SEL0..SEL4, TC38x UM appx Table p.26-320/321) to the
      * ADC_TRIG0[x] lines; Table 292: ADC_TRIG0[x] → Gx REQTRI one-to-one. */
     GTM_ADCTRIG0OUT0.B.SEL0 = 0x8U;   /* ATOM0_CH7 → ADC_TRIG0[0] → G0 REQTRI  (U)        */
-    GTM_ADCTRIG0OUT0.B.SEL1 = 0x8U;   /* ATOM0_CH7 → ADC_TRIG0[1] → G1 REQTRI  (VRO+Vdc)  */
-    GTM_ADCTRIG0OUT0.B.SEL2 = 0x8U;   /* ATOM0_CH7 → ADC_TRIG0[2] → G2 REQTRI  (W)        */
     GTM_ADCTRIG0OUT0.B.SEL3 = 0x8U;   /* ATOM0_CH7 → ADC_TRIG0[3] → G3 REQTRI  (V)        */
+    GTM_ADCTRIG0OUT0.B.SEL2 = 0x8U;   /* ATOM0_CH7 → ADC_TRIG0[2] → G2 REQTRI  (W)        */
+    GTM_ADCTRIG0OUT0.B.SEL1 = 0x8U;   /* ATOM0_CH7 → ADC_TRIG0[1] → G1 REQTRI  (VRO+Vdc)  */
+
+
 
     /* Route CH7 additionally to P00.8 (TOUT17) — scope observation of the
      * shunt sampling instant relative to the phase PWM / LS conduction window.
@@ -1040,29 +1028,29 @@ void CddGtm_Init(void)
 }
 
 /**********************************************************************************************************************
- * CddGtm_GetPeriodTicks
+ * CddGtm_Start
  *********************************************************************************************************************/
 
 /**
- * \brief   Returns the carrier period in CMU CLK0 ticks.
- * \return  CddApp_G.PeriodTicks  [CLK0 ticks]
+ * \brief   Finalises start-up: initialises SVM tables, sets RUN state, and issues
+ *          HOST_TRIG to transfer all shadow registers to active compare registers.
+ *
+ * \details Call sequence:
+ *              CddGtm_Init()           — hardware init, shadow regs pre-loaded
+ *              CddApp_InitInverter()   — gate driver enable
+ *              CddGtm_Start()          — HOST_TRIG, PWM goes live
+ *              SRC SRE = 1             — arm ISR after PWM is live
+ *
+ *          HOST_TRIG is a single-shot write; ATOM0 begins counting on the next
+ *          CMU CLK0 edge.
+ *
+ * \return  void
  */
-uint32_T CddGtm_GetPeriodTicks(void)
+void CddGtm_Start(void)
 {
-    return CddApp_G.PeriodTicks;
-}
-
-/**********************************************************************************************************************
- * CddGtm_GetSampleTime
- *********************************************************************************************************************/
-
-/**
- * \brief   Returns the control-loop sample time in seconds.
- * \return  CddApp_G.SampleTime  [s]
- */
-real32_T CddGtm_GetSampleTime(void)
-{
-    return CddApp_G.SampleTime;
+    SVM_Init();
+    CddApp_G.CDDAppStatus          = CDDAPP_RUN_STATE;
+    GTM_ATOM0_AGC_GLB_CTRL.B.HOST_TRIG = 0x1U;
 }
 
 /**********************************************************************************************************************
@@ -1116,56 +1104,3 @@ uint32_T CddGtm_CtrlInit(void)
     return ok;
 }
 
-/**********************************************************************************************************************
- * CddGtm_GetSpeedRpm
- *********************************************************************************************************************/
-
-/**
- * \brief   Returns the latest SMO mechanical speed estimate.
- *
- * \details Converted from the DFC output AngularVelocity [rad/s mech] to RPM.
- *          Valid only while the DFC path is active; returns 0 after reset.
- *
- * \return  Estimated mechanical speed  [RPM]
- */
-real32_T CddGtm_GetSpeedRpm(void)
-{
-    return (real32_T)CddGtm_Ctrl_G.DfcOut.AngularVelocity * GTM_RADPS_TO_RPM;
-}
-
-/**********************************************************************************************************************
- * CddGtm_GetDfcMode
- *********************************************************************************************************************/
-
-/**
- * \brief   Returns the DFC internal startup/run mode from the latest output.
- * \return  DFC_Mode_T — DFC_MODE_ALIGN / DFC_MODE_OPENLOOP / DFC_MODE_CLOSEDLOOP.
- */
-DFC_Mode_T CddGtm_GetDfcMode(void)
-{
-    return CddGtm_Ctrl_G.DfcOut.Mode;
-}
-
-/**********************************************************************************************************************
- * CddGtm_GetDfcDiagnostics
- *********************************************************************************************************************/
-
-/**
- * \brief   Copies the latest DFC diagnostic snapshot (voltage refs, dq currents,
- *          electrical angle, SVPWM sector, TLoadHat) for CAN telemetry / debugger.
- *
- * \details Thin pass-through to DFC_GetDiagnostics(); NULL-checked there.
- *          Reads a struct updated by the ISR — treat as an eventually-consistent
- *          snapshot for telemetry, not as a synchronised control input.
- *
- * \param[out] Diag_P  Destination snapshot (must not be NULL)
- * \return  0x1U on success, 0x0U on NULL pointer.
- */
-uint32_T CddGtm_GetDfcDiagnostics(DFC_Diag_T * const Diag_P)
-{
-    MatrixStatus_Type status;
-
-    status = DFC_GetDiagnostics(&CddGtm_Ctrl_G.Dfc, Diag_P);
-
-    return ((status == MATRIX_SUCCESS) ? 0x1U : 0x0U);
-}

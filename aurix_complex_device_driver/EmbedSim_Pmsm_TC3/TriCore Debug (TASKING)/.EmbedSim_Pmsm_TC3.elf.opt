@@ -170,6 +170,7 @@
 "Libraries/Infra/Platform/Tricore/Compilers/CompilerGnuc.o"
 "Libraries/Infra/Platform/Tricore/Compilers/CompilerHighTec.o"
 "Libraries/Infra/Platform/Tricore/Compilers/CompilerTasking.o"
+"EmbedSim/embed_sim_control.o"
 "EmbedSim/embed_sim_coordinate_transform.o"
 "EmbedSim/embed_sim_dfc_controller.o"
 "EmbedSim/embed_sim_matrix.o"
@@ -193,3 +194,4 @@
 "Cpu1_Main.o"
 "Cpu2_Main.o"
 "Cpu3_Main.o"
+"test.o"

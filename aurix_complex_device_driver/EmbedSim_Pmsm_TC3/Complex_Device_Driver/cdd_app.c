@@ -59,10 +59,13 @@
 #include "IfxGtm_reg.h"
 #include "IfxSrc_reg.h"
 #include "IfxScuCcu.h"
-#include "cdd_stm_app.h"        /* CddStm_Init()                                               */
-#include "cdd_gpio_app.h"       /* CddGpio_InitLed_P33()                                       */
-#include "cdd_gtm_app.h"        /* CddGtm_Init(), CddGtm_Start()                               */
-#include "cdd_evadc_app.h"      /* CddEvadc_Meas_T, FocUvw_T (via embed_sim_foc_types.h)       */
+#include "IfxConverter_reg.h"
+#include "cdd_stm_app.h"
+#include "cdd_gpio_app.h"
+#include "cdd_gtm_app.h"
+#include "cdd_evadc_app.h"
+#include "cdd_gpt12_app.h"
+
 
 /**********************************************************************************************************************
  * Private Variables
@@ -129,21 +132,25 @@ void CddApp_Init(void)
      * mode and speed explicitly BEFORE CddApp_Start(); the ISR latches the
      * mode once on the activation edge (no switching during operation).      */
     CddApp_G.DTC         = CDDAPP_DTC_NONE;
-    CddApp_G.DutyU       = 0.5F;
-    CddApp_G.DutyV       = 0.5F;
-    CddApp_G.DutyW       = 0.5F;
-    CddApp_G.Vuo         = 0.0F;
-    CddApp_G.Vvo         = 0.0F;
-    CddApp_G.Vwo         = 0.0F;
+    CddApp_G.Iu          = 0.0F;
+    CddApp_G.Iv          = 0.0F;
+    CddApp_G.Iw          = 0.0F;
+    CddApp_G.Vro         = 2.5F;
+    CddApp_G.Vdc         = 12.0F;
+    CddApp_G.OffsetIu    = 0.0F;
+    CddApp_G.OffsetIv    = 0.0F;
+    CddApp_G.OffsetIw    = 0.0F;
+
     CddApp_G.CtrlMode    = CDDAPP_CTRL_OPENLOOP;
-    CddApp_G.SpeedRefRpm = 600.0F;
+    CddApp_G.SpeedRefRpm = 900.0F;
+    CddApp_G.SensorReadingBitField = 0x0U;
 
     /* Re-entrant / repeated call guard: CDDAPP_INIT_PENDING = 0 (set by .bss at reset) */
     ok = ((CddApp_G.CDDAppStatus == CDDAPP_INIT_PENDING) ? 0x1U : 0x0U);
 
     if (ok == 0x1U)
     {
-        /* ── Step 1: CPU frequency check ──────────────────────────────────────────────── */
+        /*  CPU Frequency Check */
         ok = (CddSys_AreEqual64(CddSys_GetCpuFreq(), MHZ_300, EPSILON_ZERO) ? 0x1U : 0x0U);
         if (ok != 0x1U)
         {
@@ -151,7 +158,7 @@ void CddApp_Init(void)
             CddApp_G.DTC          = CDDAPP_DTC_CPU_FREQ;
         }
 
-        /* ── Step 2: STM frequency check ──────────────────────────────────────────────── */
+        /*  Check STM Frequency and Init STM Module */
         if (ok == 0x1U)
         {
             ok = (CddSys_AreEqual64(CddSys_GetStmFreq(), MHZ_100, EPSILON_ZERO) ? 0x1U : 0x0U);
@@ -162,40 +169,47 @@ void CddApp_Init(void)
             }
             else
             {
-                /* ── Step 2 init: GPIO (LED diagnostics) + STM ────────────────────────── */
-                CddGpio_InitLed_P33();    /* Port 33 LED outputs for diagnostic indication */
                 CddStm_Init();            /* STM compare-match for 20 kHz FOC ISR deadline */
                 CddApp_G.CDDAppStatus = CDDAPP_INIT_DONE_STM;
+                CddApp_G.DTC          = CDDAPP_DTC_NONE;
             }
         }
 
-        /* ── Step 3: QSPI frequency check + inverter init ─────────────────────────────── */
-        if (ok == 0x1U)
+        /* Init ADC Module */
+        if(ok == 0x1U)
         {
-            ok = (CddSys_AreEqual64(CddSys_GetQspiFreq(), MHZ_200, EPSILON_ZERO) ? 0x1U : 0x0U);
+            ok = (CddSys_AreEqual64(CddSys_GetAdcFreq(), MHZ_160, EPSILON_ZERO) ? 0x1U : 0x0U);
             if (ok != 0x1U)
             {
-                CddApp_G.CDDAppStatus = CDDAPP_INIT_ERR_INV;
-                CddApp_G.DTC          = CDDAPP_DTC_QSPI_FREQ;
+                CddApp_G.CDDAppStatus = CDDAPP_INIT_ERR_ADC;
+                CddApp_G.DTC          = CDDAPP_DTC_ADC_FREQ;
             }
             else
             {
-                /* CddTle9180_Startup(): Init → Configure → IsNormalMode */
-                ok = CddApp_InitInverter();
-
-                if (ok != 0x1U)
-                {
-                    CddApp_G.CDDAppStatus = CDDAPP_INIT_ERR_INV;
-                    CddApp_G.DTC          = CDDAPP_DTC_INV_STARTUP;
-                }
-                else
-                {
-                    CddApp_G.CDDAppStatus = CDDAPP_INIT_DONE_INV;
-                }
+                CddEvadc_Init();
+                CddApp_G.CDDAppStatus = CDDAPP_INIT_DONE_ADC;
+                CddApp_G.DTC          = CDDAPP_DTC_NONE;
             }
         }
 
-        /* ── Step 4: GTM frequency check ──────────────────────────────────────────────── */
+        /* Init GPIT Module(Encoder) */
+        if(ok == 0x1U)
+        {
+            CddGpt12_Init();
+            ok  = CddGpt12_IsInitialized();
+            if (ok != 0x1U)
+            {
+                CddApp_G.CDDAppStatus = CDDAPP_INIT_ERR_GPT12;
+                CddApp_G.DTC          = CDDAPP_DTC_ERR;
+            }
+            else
+            {
+                CddApp_G.CDDAppStatus = CDDAPP_INIT_ERR_GPT12;
+                CddApp_G.DTC          = CDDAPP_DTC_NONE;
+            }
+        }
+
+        /* Init GTM Module  */
         if (ok == 0x1U)
         {
             ok = (CddSys_AreEqual64(CddSys_GetGtmFreq(), MHZ_200, EPSILON_ZERO) ? 0x1U : 0x0U);
@@ -206,50 +220,55 @@ void CddApp_Init(void)
             }
             else
             {
-                /* ── Step 4 init: Release GTM module clock gate ───────────────────────── */
-                CddSys_ClearCpuWdtEndInit();
-                GTM_CLC.B.DISR = 0x0U;       /* request clock enable                     */
-                CddSys_SetCpuWdtEndInit();
-                while (GTM_CLC.B.DISS != 0x0U)
-                {
-                    CddSys_NopDelay(1U, 1U);  /* wait for clock to be running             */
-                }
-
-                /* Disable write protection on cluster configuration registers */
-                GTM_CTRL.B.RF_PROT       = 0x0U;
-                GTM_CCM0_PROT.B.CLS_PROT = 0x0U;
-
-                /* Enable cluster 0 with no additional divider (UM p.122) */
-                GTM_CLS_CLK_CFG.B.CLS0_CLK_DIV = 0x1U;
-
-                /* ── Step 5: Disable all CMU clocks, program CLK0 = 200 MHz ─────────── */
-                GTM_CMU_CLK_EN.U = 0x55555555U;                     /* disable all clocks */
-                CddSys_SetGtmCmuClk00Freq(GTM_CMU_CLK0_FREQUENCY);  /* set CLK0 = 200 MHz */
-
-                /* Verify CMU CLK0 frequency after programming */
+                CddGtm_InitModule();
+                /* Verify CMU CLK0 frequency */
                 ok = (CddSys_AreEqual64(CddSys_GetGtmCmuClk00Freq(), MHZ_200, EPSILON_ZERO) ? 0x1U : 0x0U);
                 if (ok != 0x1U)
                 {
                     CddApp_G.CDDAppStatus = CDDAPP_INIT_ERR_GTM;
                     CddApp_G.DTC          = CDDAPP_DTC_GTM_CMU0_FREQ;
                 }
+                else
+                {
+                    /* ATOM0 CH0–CH5: complementary PWM pairs (UH/UL, VH/VL, WH/WL).
+                     * ISR service request is configured here but SRE=0 — ISR does not fire
+                     * until CddApp_Start() sets SRE=1 after the PWM carrier is live.          */
+                     CddGtm_InitInverter();
+                     CddApp_G.CDDAppStatus = CDDAPP_INIT_DONE_GTM;
+                     CddApp_G.DTC          = CDDAPP_DTC_NONE;
+                }
             }
         }
 
-        /* ── Step 6: GTM ATOM0 PWM init ───────────────────────────────────────────────── */
+        /* Initialise QSPI module and Tle9180 Inverter */
         if (ok == 0x1U)
         {
-            /* ATOM0 CH0–CH5: complementary PWM pairs (UH/UL, VH/VL, WH/WL).
-             * ISR service request is configured here but SRE=0 — ISR does not fire
-             * until CddApp_Start() sets SRE=1 after the PWM carrier is live.          */
-            CddEvadc_Init();
-            CddGtm_Init();
-            CddApp_G.CDDAppStatus = CDDAPP_INIT_DONE_GTM;
+            ok = (CddSys_AreEqual64(CddSys_GetQspiFreq(), MHZ_200, EPSILON_ZERO) ? 0x1U : 0x0U);
+            if (ok != 0x1U)
+            {
+                CddApp_G.CDDAppStatus = CDDAPP_INIT_ERR_INV;
+                CddApp_G.DTC          = CDDAPP_DTC_QSPI_FREQ;
+            }
+            else
+            {
+                ok = CddApp_InitInverter();
+                if (ok != 0x1U)
+                {
+                    CddApp_G.CDDAppStatus = CDDAPP_INIT_ERR_INV;
+                    CddApp_G.DTC          = CDDAPP_DTC_INV_STARTUP;
+                }
+                else
+                {
+                    CddApp_G.CDDAppStatus = CDDAPP_INIT_DONE_INV;
+                    CddApp_G.DTC          = CDDAPP_DTC_NONE;
+                }
+            }
         }
 
-        /* ── Step 7: Control-loop layer (Transform_Init + DFC_Init) ───────────────────── */
+        /* Initialise  Control */
         if (ok == 0x1U)
         {
+
             /* Clarke/Park transform setup + DFC controller state zeroing with
              * default gains.  Until this succeeds the ISR keeps to the open-loop
              * V/f path regardless of the mode requested via CddApp_SetCtrlMode(). */
@@ -265,6 +284,8 @@ void CddApp_Init(void)
                 CddApp_G.CDDAppStatus = CDDAPP_INIT_OK;
             }
         }
+
+
     }
 }
 
@@ -320,7 +341,7 @@ uint32_T CddApp_Start(void)
         * Blocking ~3.2 ms at 64 samples.  On timeout (ISR not ticking) the
         * offsets stay 0.0f and conversion degrades gracefully — verify
         * Vuo/Vvo/Vwo are non-zero in the watch window after startup.          */
-       CddEvadc_CalibratePhaseOffsets(&CddApp_G, 64U);
+
 
        /* Step 9 — clear any faults logged while inputs toggled against
         * /SOFF (Err_indiag class), then release the gates and go live.        */
