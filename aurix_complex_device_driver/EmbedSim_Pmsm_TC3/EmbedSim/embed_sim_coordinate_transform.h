@@ -60,7 +60,7 @@ extern void Transform_Init(void);
  * \param[out] Out_P  αβ output (must not be NULL)
  * \return  MATRIX_SUCCESS or error code
  */
-extern MatrixStatus_Type Clarke_Transform_Matrix(
+extern MatrixStatus_T Clarke_Transform_Matrix(
     const FocUvw_T       * const In_P,
     FocAlphaBeta_T       * const Out_P);
 
@@ -78,7 +78,7 @@ extern MatrixStatus_Type Clarke_Transform_Matrix(
  * \param[out] Out_P    dq output (must not be NULL)
  * \return  MATRIX_SUCCESS or error code
  */
-extern MatrixStatus_Type Park_Transform_Matrix(
+extern MatrixStatus_T Park_Transform_Matrix(
     const FocAlphaBeta_T * const In_P,
     const FocAngle_T     * const Angle_P,
     FocDq_T              * const Out_P);
@@ -97,7 +97,7 @@ extern MatrixStatus_Type Park_Transform_Matrix(
  * \param[out] Out_P    αβ output (must not be NULL)
  * \return  MATRIX_SUCCESS or error code
  */
-extern MatrixStatus_Type InvPark_Transform_Matrix(
+extern MatrixStatus_T InvPark_Transform_Matrix(
     const FocDq_T        * const In_P,
     const FocAngle_T     * const Angle_P,
     FocAlphaBeta_T       * const Out_P);
@@ -116,7 +116,7 @@ extern MatrixStatus_Type InvPark_Transform_Matrix(
  * \param[out] Out_P  UVW output (must not be NULL)
  * \return  MATRIX_SUCCESS or error code
  */
-extern MatrixStatus_Type InvClarke_Transform_Matrix(
+extern MatrixStatus_T InvClarke_Transform_Matrix(
     const FocAlphaBeta_T * const In_P,
     FocUvw_T             * const Out_P);
 

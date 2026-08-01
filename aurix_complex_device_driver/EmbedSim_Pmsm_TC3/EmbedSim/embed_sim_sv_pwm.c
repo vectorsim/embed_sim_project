@@ -378,7 +378,7 @@ void SVM_Init(void)
 /*--------------------------------------------------------------------------------------------------------------------
  * SVM_CalculateDutyCycleFromAlphaBeta
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type SVM_CalculateDutyCycleFromAlphaBeta(
+MatrixStatus_T SVM_CalculateDutyCycleFromAlphaBeta(
     const FocAlphaBeta_T * const V_AlphaBeta_P,
     const FocAngle_T     * const Angle_P,
     SVM_DutyCycle_T      * const DutyOut_P)
@@ -388,7 +388,7 @@ MatrixStatus_Type SVM_CalculateDutyCycleFromAlphaBeta(
     MatrixFloat       angle_rad;
     MatrixFloat       mod_index;
     SVM_Sector_T      sector;
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
 
     status = MATRIX_SUCCESS;
 
@@ -412,7 +412,7 @@ MatrixStatus_Type SVM_CalculateDutyCycleFromAlphaBeta(
 /*--------------------------------------------------------------------------------------------------------------------
  * SVM_CalculateDutyCycle
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type SVM_CalculateDutyCycle(
+MatrixStatus_T SVM_CalculateDutyCycle(
     MatrixFloat                    ModIndex,
     const FocAngle_T     * const   Angle_P,
     SVM_DutyCycle_T      * const   DutyOut_P)
@@ -421,7 +421,7 @@ MatrixStatus_Type SVM_CalculateDutyCycle(
     MatrixFloat       t2;
     MatrixFloat       angle_rad;
     SVM_Sector_T      sector;
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
 
     status = MATRIX_SUCCESS;
 
@@ -448,12 +448,12 @@ MatrixStatus_Type SVM_CalculateDutyCycle(
 /*--------------------------------------------------------------------------------------------------------------------
  * SVM_CalculateDutyCycleFromDq
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type SVM_CalculateDutyCycleFromDq(
+MatrixStatus_T SVM_CalculateDutyCycleFromDq(
     const FocDq_T        * const V_Dq_P,
     const FocAngle_T     * const Angle_P,
     SVM_DutyCycle_T      * const DutyOut_P)
 {
-    MatrixStatus_Type   status;
+    MatrixStatus_T   status;
     FocAlphaBeta_T      v_alpha_beta;
 
     status = MATRIX_SUCCESS;
@@ -484,12 +484,12 @@ MatrixStatus_Type SVM_CalculateDutyCycleFromDq(
 /*--------------------------------------------------------------------------------------------------------------------
  * SVM_GetSectorFromAlphaBeta
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type SVM_GetSectorFromAlphaBeta(
+MatrixStatus_T SVM_GetSectorFromAlphaBeta(
     const FocAlphaBeta_T * const V_AlphaBeta_P,
     SVM_Sector_T         * const SectorOut_P)
 {
     MatrixFloat       angle_rad;
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
 
     status = MATRIX_SUCCESS;
 
@@ -510,13 +510,13 @@ MatrixStatus_Type SVM_GetSectorFromAlphaBeta(
 /*--------------------------------------------------------------------------------------------------------------------
  * SVM_GetSectorFromDQ
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type SVM_GetSectorFromDQ(
+MatrixStatus_T SVM_GetSectorFromDQ(
     MatrixElement              Vd,
     MatrixElement              Vq,
     SVM_Sector_T     * const   SectorOut_P)
 {
     MatrixFloat       sqrt3_vd;
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
 
     status = MATRIX_SUCCESS;
 
@@ -566,7 +566,7 @@ MatrixStatus_Type SVM_GetSectorFromDQ(
 /*--------------------------------------------------------------------------------------------------------------------
  * SVM_GetCompareValues
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type SVM_GetCompareValues(
+MatrixStatus_T SVM_GetCompareValues(
     const SVM_DutyCycle_T  * const DutyIn_P,
     uint32_T                       TimerPeriod,
     uint32_T               * const CompAOut_P,
@@ -576,7 +576,7 @@ MatrixStatus_Type SVM_GetCompareValues(
     uint32_T          ta_ticks;
     uint32_T          tb_ticks;
     uint32_T          tc_ticks;
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
 
     status = MATRIX_SUCCESS;
 

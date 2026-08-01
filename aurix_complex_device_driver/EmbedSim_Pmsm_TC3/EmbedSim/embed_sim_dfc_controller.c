@@ -653,10 +653,10 @@ static void Dfc_VoltageLaw(
 /*--------------------------------------------------------------------------------------------------------------------
  * DFC_Init
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type DFC_Init(
+MatrixStatus_T DFC_Init(
     DFC_State_T          * const State_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
 
     status = MATRIX_SUCCESS;
 
@@ -735,13 +735,13 @@ MatrixStatus_Type DFC_Init(
 /*--------------------------------------------------------------------------------------------------------------------
  * DFC_Step
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type DFC_Step(
+MatrixStatus_T DFC_Step(
     DFC_State_T          * const State_P,
     const DFC_Input_T    * const In_P,
     const MatrixFloat            Dt,
     DFC_Output_T         * const Out_P)
 {
-    MatrixStatus_Type  status;
+    MatrixStatus_T  status;
     FocAlphaBeta_T     iAlphaBeta;
     FocDq_T            idqMeas;
     FocAngle_T         angle;
@@ -901,10 +901,10 @@ MatrixStatus_Type DFC_Step(
 /*--------------------------------------------------------------------------------------------------------------------
  * DFC_Reset
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type DFC_Reset(
+MatrixStatus_T DFC_Reset(
     DFC_State_T          * const State_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     DFC_GainSet_T     savedGains;
 
     status = MATRIX_SUCCESS;
@@ -926,11 +926,11 @@ MatrixStatus_Type DFC_Reset(
 /*--------------------------------------------------------------------------------------------------------------------
  * DFC_GainSet_Apply
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type DFC_GainSet_Apply(
+MatrixStatus_T DFC_GainSet_Apply(
     DFC_State_T          * const State_P,
     const DFC_GainSet_T  * const Gains_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
 
     status = MATRIX_SUCCESS;
 
@@ -949,11 +949,11 @@ MatrixStatus_Type DFC_GainSet_Apply(
 /*--------------------------------------------------------------------------------------------------------------------
  * DFC_GetDiagnostics
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type DFC_GetDiagnostics(
+MatrixStatus_T DFC_GetDiagnostics(
     const DFC_State_T    * const State_P,
     DFC_Diag_T           * const Diag_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
 
     status = MATRIX_SUCCESS;
 

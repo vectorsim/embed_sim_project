@@ -29,25 +29,410 @@
 /*********************************************************************************************************************/
 /*-----------------------------------------------------Includes------------------------------------------------------*/
 /*********************************************************************************************************************/
-#include "embed_sim_sys_types.h"
+#include "embed_sim_control.h"
+#include "embed_sim_motor_parameter.h"
 #include "embed_sim_matrix.h"
+#include "embed_sim_sv_pwm.h"
+#include "embed_sim_coordinate_transform.h"
+#include "stddef.h"
+#include "math.h"
+
 
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
 /*********************************************************************************************************************/
 
-/*********************************************************************************************************************/
-/*-------------------------------------------------Global variables--------------------------------------------------*/
-/*********************************************************************************************************************/
+/** \brief  Fixed open-loop voltage (modulation index) */
+#define OPEN_LOOP_VOLTAGE  (0.2F)
+
+/** \brief  Minimum current magnitude for valid speed estimation */
+#define MIN_CURRENT_MAG    (0.0001F)
+
+/** \brief  Speed filter coefficient */
+#define SPEED_FILTER_COEFF (0.1F)
+
+/** \brief  Maximum current for scaling */
+#define MAX_CURRENT_LIMIT  (100.0F)
+
+/** \brief  Target current after scaling */
+#define TARGET_CURRENT     (10.0F)
+
+/** \brief  Valid flag value */
+#define VALID_FLAG         (0x1U)
+
+/** \brief  Invalid flag value */
+#define INVALID_FLAG       (0x0U)
+
 
 /*********************************************************************************************************************/
-/*--------------------------------------------Private Variables/Constants--------------------------------------------*/
+/*-----------------------------------------Private Function Prototypes-----------------------------------------------*/
 /*********************************************************************************************************************/
 
-/*********************************************************************************************************************/
-/*------------------------------------------------Function Prototypes------------------------------------------------*/
-/*********************************************************************************************************************/
+static void EmbedSim_OpenLoopStep(EmbedSimCtrlInput_T* InputPtr, EmbedSimCtrlOutput_T* OutputPtr);
+static void EmbedSim_WrapAngle(real32_T* anglePtr);
+static real32_T EmbedSim_ClampValue(real32_T value, real32_T minVal, real32_T maxVal);
+static uint32_T EmbedSim_IsValidFloat(real32_T value);
+
 
 /*********************************************************************************************************************/
-/*---------------------------------------------Function Implementations----------------------------------------------*/
+/*--------------------------------------Private Function Implementations---------------------------------------------*/
 /*********************************************************************************************************************/
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * EmbedSim_IsValidFloat - Check if float is valid (not NaN or Inf)
+ *------------------------------------------------------------------------------------------------------------------*/
+static uint32_T EmbedSim_IsValidFloat(real32_T value)
+{
+    uint32_T valid;
+
+    valid = 0U;
+
+    if (!isnan(value) && !isinf(value))
+    {
+        valid = 1U;
+    }
+
+    return valid;
+}
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * EmbedSim_ClampValue - Clamp value between min and max
+ *------------------------------------------------------------------------------------------------------------------*/
+static real32_T EmbedSim_ClampValue(real32_T value, real32_T minVal, real32_T maxVal)
+{
+    real32_T result;
+
+    result = value;
+
+    if (result < minVal)
+    {
+        result = minVal;
+    }
+    else if (result > maxVal)
+    {
+        result = maxVal;
+    }
+    else
+    {
+        /* Value already within range - no action */
+    }
+
+    return result;
+}
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * EmbedSim_WrapAngle - Wrap angle to [0, 2π)
+ *------------------------------------------------------------------------------------------------------------------*/
+static void EmbedSim_WrapAngle(real32_T* anglePtr)
+{
+    if (anglePtr != NULL)
+    {
+        while (*anglePtr < 0.0F)
+        {
+            *anglePtr += ES_MATH_2PI_F;
+        }
+        while (*anglePtr >= ES_MATH_2PI_F)
+        {
+            *anglePtr -= ES_MATH_2PI_F;
+        }
+    }
+}
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * EmbedSim_OpenLoopStep - Open-loop control step (MISRA compliant)
+ *------------------------------------------------------------------------------------------------------------------*/
+static void EmbedSim_OpenLoopStep(EmbedSimCtrlInput_T* InputPtr , EmbedSimCtrlOutput_T* OutputPtr)
+{
+    real32_T angularVelocity;
+    FocAngle_T focAngle;
+    SVM_DutyCycle_T svmDC;
+    MatrixStatus_T status;
+    real32_T dutyU;
+    real32_T dutyV;
+    real32_T dutyW;
+    uint32_T svmSector;
+    real32_T rotorPosition;
+    uint32_T outputValid;
+    static real32_T rotorAngle = 0.0F;
+
+    dutyU = 0.0F;
+    dutyV = 0.0F;
+    dutyW = 0.0F;
+    svmSector = 0U;
+    rotorPosition = 0.0F;
+    outputValid = INVALID_FLAG;
+    focAngle.ThetaE = 0.0F;
+
+    /* Validate inputs */
+    if ((InputPtr != NULL) && (OutputPtr != NULL) && (InputPtr->Valid == VALID_FLAG))
+    {
+        /* Calculate angular velocity from speed reference */
+        angularVelocity = CON_RPM_TO_ELEC_RAD(InputPtr->SpeedRefRpm);
+
+        /* Update rotor angle */
+        rotorAngle += angularVelocity * InputPtr->SampleTime;
+
+        /* Wrap angle to [0, 2π) */
+        EmbedSim_WrapAngle(&rotorAngle);
+
+
+
+        /* Prepare FOC angle structure */
+        focAngle.ThetaE = rotorAngle;
+
+        /* Calculate SVPWM duty cycles with fixed voltage */
+        status = SVM_CalculateDutyCycle(OPEN_LOOP_VOLTAGE, &focAngle, &svmDC);
+
+        if (status == MATRIX_SUCCESS)
+        {
+            dutyU = svmDC.Ta;
+            dutyV = svmDC.Tb;
+            dutyW = svmDC.Tc;
+            svmSector = svmDC.Sector;
+            rotorPosition = rotorAngle;
+            outputValid = VALID_FLAG;
+        }
+        else
+        {
+            outputValid = INVALID_FLAG;
+        }
+    }
+    else
+    {
+        outputValid = INVALID_FLAG;
+    }
+
+    /* Single exit point - write all outputs at once */
+    if (OutputPtr != NULL)
+    {
+        OutputPtr->DutyU = dutyU;
+        OutputPtr->DutyV = dutyV;
+        OutputPtr->DutyW = dutyW;
+        OutputPtr->SvmSector = svmSector;
+        OutputPtr->RotorSpeed = InputPtr != NULL ? InputPtr->SpeedRefRpm : 0.0F;
+        OutputPtr->RotorPosition = rotorPosition;
+        OutputPtr->Valid = outputValid;
+    }
+}
+
+
+/*********************************************************************************************************************/
+/*--------------------------------------Public Function Implementations----------------------------------------------*/
+/*********************************************************************************************************************/
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * EmbedSim_ControlInit - Initialise open-loop control
+ *------------------------------------------------------------------------------------------------------------------*/
+void EmbedSim_ControlInit(void)
+{
+    /* Initialise Space Vector Modulation */
+    SVM_Init();
+
+    /* Initialise Coordinate Transforms */
+    Transform_Init();
+}
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * EmbedSim_ControlStep - Control step (MISRA C compliant)
+ *------------------------------------------------------------------------------------------------------------------*/
+void EmbedSim_ControlStep(EmbedSimCtrlInput_T* InputPtr, EmbedSimCtrlOutput_T* OutputPtr)
+{
+    uint32_T validOut;
+    real32_T speedEstimate;
+
+    /* Initialize */
+    validOut = INVALID_FLAG;
+    speedEstimate = 0.0F;
+
+    /* Validate inputs */
+    if ((InputPtr != NULL) && (OutputPtr != NULL) && (InputPtr->Valid == VALID_FLAG))
+    {
+        /* Estimate speed from currents */
+        speedEstimate = EmbedSim_EstimateRpm(InputPtr);
+        InputPtr->RotorSpeed = speedEstimate;
+
+        /* Execute open-loop step */
+        EmbedSim_OpenLoopStep(InputPtr, OutputPtr);
+
+        /* Check if output is valid */
+        if (OutputPtr->Valid == VALID_FLAG)
+        {
+            validOut = VALID_FLAG;
+        }
+        else
+        {
+            validOut = INVALID_FLAG;
+        }
+    }
+    else if (OutputPtr != NULL)
+    {
+        validOut = INVALID_FLAG;
+    }
+
+    /* Single exit point - ensure Valid flag is consistent */
+    if (OutputPtr != NULL)
+    {
+        OutputPtr->Valid = validOut;
+    }
+}
+
+/*--------------------------------------------------------------------------------------------------------------------
+ * EmbedSim_EstimateRpm - Estimate RPM from phase currents (MISRA compliant)
+ *------------------------------------------------------------------------------------------------------------------*/
+real32_T EmbedSim_EstimateRpm(EmbedSimCtrlInput_T* InputPtr)
+{
+    real32_T estimatedRpm;
+    FocUvw_T currents;
+    FocAlphaBeta_T alphaBeta;
+    FocAngle_T angle;
+    real32_T deltaAngle;
+    real32_T electricalFreq;
+    MatrixStatus_T status;
+    real32_T magnitude;
+    real32_T maxCurrent;
+    real32_T scaleFactor;
+    uint32_T validInput;
+    real32_T currentAngle;
+    real32_T prevAngle;
+    real32_T filteredRpm;
+    static real32_T prevAngle_G = 0.0F;       /* Static inside function */
+    static uint32_T firstCall_G = 1U;         /* Static inside function */
+    static real32_T filteredRpm_G = 0.0F;     /* Static inside function */
+
+    /* Initialize all variables */
+    estimatedRpm = 0.0F;
+    deltaAngle = 0.0F;
+    electricalFreq = 0.0F;
+    magnitude = 0.0F;
+    maxCurrent = 0.0F;
+    scaleFactor = 1.0F;
+    validInput = INVALID_FLAG;
+    currentAngle = 0.0F;
+    prevAngle = prevAngle_G;
+    filteredRpm = filteredRpm_G;
+    currents.U = 0.0F;
+    currents.V = 0.0F;
+    currents.W = 0.0F;
+    alphaBeta.Alpha = 0.0F;
+    alphaBeta.Beta = 0.0F;
+    angle.ThetaE = 0.0F;
+
+    /* Validate input pointer */
+    if (InputPtr != NULL)
+    {
+        /* Get phase currents from input */
+        currents.U = InputPtr->Iu;
+        currents.V = InputPtr->Iv;
+        currents.W = InputPtr->Iw;
+
+        /* Check for valid values (not NaN or Inf) */
+        if ((EmbedSim_IsValidFloat(currents.U) != 0U) &&
+            (EmbedSim_IsValidFloat(currents.V) != 0U) &&
+            (EmbedSim_IsValidFloat(currents.W) != 0U))
+        {
+            validInput = VALID_FLAG;
+        }
+    }
+    else
+    {
+        validInput = INVALID_FLAG;
+    }
+
+    if (validInput == VALID_FLAG)
+    {
+        /* Find maximum absolute current for scaling */
+        maxCurrent = fabsf(currents.U);
+        if (fabsf(currents.V) > maxCurrent)
+        {
+            maxCurrent = fabsf(currents.V);
+        }
+        if (fabsf(currents.W) > maxCurrent)
+        {
+            maxCurrent = fabsf(currents.W);
+        }
+
+        /* Scale currents if they are too large */
+        if (maxCurrent > MAX_CURRENT_LIMIT)
+        {
+            scaleFactor = TARGET_CURRENT / maxCurrent;
+            currents.U *= scaleFactor;
+            currents.V *= scaleFactor;
+            currents.W *= scaleFactor;
+        }
+
+        /* Clarke transform: ABC -> AlphaBeta */
+        status = Clarke_Transform_Matrix(&currents, &alphaBeta);
+
+        if (status == MATRIX_SUCCESS)
+        {
+            /* Calculate magnitude squared to check for valid signal */
+            magnitude = (alphaBeta.Alpha * alphaBeta.Alpha) +
+                        (alphaBeta.Beta * alphaBeta.Beta);
+
+            /* Only proceed if we have a valid signal */
+            if (magnitude > MIN_CURRENT_MAG)
+            {
+                /* Calculate electrical angle from alpha-beta components */
+                currentAngle = atan2f(alphaBeta.Beta, alphaBeta.Alpha);
+
+                /* Wrap angle to [0, 2π) */
+                currentAngle = fmodf(currentAngle, ES_MATH_2PI_F);
+                if (currentAngle < 0.0F)
+                {
+                    currentAngle += ES_MATH_2PI_F;
+                }
+
+                /* Use static prevAngle for state */
+                prevAngle = prevAngle_G;
+
+                /* Handle first call */
+                if (firstCall_G != 0U)
+                {
+                    prevAngle_G = currentAngle;
+                    firstCall_G = 0U;
+                }
+                else
+                {
+                    /* Calculate angle difference considering wrap-around */
+                    deltaAngle = currentAngle - prevAngle;
+
+                    /* Handle wrap-around for delta angle */
+                    if (deltaAngle > ES_MATH_PI_F)
+                    {
+                        deltaAngle -= ES_MATH_2PI_F;
+                    }
+                    else if (deltaAngle < -ES_MATH_PI_F)
+                    {
+                        deltaAngle += ES_MATH_2PI_F;
+                    }
+
+                    /* Calculate electrical frequency and RPM */
+                    if (InputPtr->SampleTime > 0.0F)
+                    {
+                        electricalFreq = deltaAngle / InputPtr->SampleTime;
+
+                        /* Convert to mechanical RPM */
+                        estimatedRpm = (electricalFreq / MP_POLES) * (60.0F / ES_MATH_2PI_F);
+
+                        /* Apply low-pass filter using static filtered value */
+                        filteredRpm = (SPEED_FILTER_COEFF * estimatedRpm) +
+                                      ((1.0F - SPEED_FILTER_COEFF) * filteredRpm_G);
+
+                        estimatedRpm = filteredRpm;
+                        filteredRpm_G = filteredRpm;
+                    }
+
+                    /* Store current angle for next iteration */
+                    prevAngle_G = currentAngle;
+                }
+            }
+        }
+    }
+    else
+    {
+        /* Invalid input - return 0 */
+    }
+
+    /* Single exit point */
+    return estimatedRpm;
+}

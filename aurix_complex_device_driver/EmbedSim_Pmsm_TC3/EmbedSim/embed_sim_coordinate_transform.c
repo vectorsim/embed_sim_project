@@ -86,11 +86,11 @@ void Transform_Init(void)
 /*--------------------------------------------------------------------------------------------------------------------
  * Clarke_Transform_Matrix
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Clarke_Transform_Matrix(
+MatrixStatus_T Clarke_Transform_Matrix(
     const FocUvw_T       * const In_P,
     FocAlphaBeta_T       * const Out_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     MatrixElement     input_buffer[CLARKE_COLS];
     MatrixElement     output_buffer[CLARKE_ROWS];
     Matrix_Type       input_vec;
@@ -132,12 +132,12 @@ MatrixStatus_Type Clarke_Transform_Matrix(
 /*--------------------------------------------------------------------------------------------------------------------
  * Park_Transform_Matrix
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Park_Transform_Matrix(
+MatrixStatus_T Park_Transform_Matrix(
     const FocAlphaBeta_T * const In_P,
     const FocAngle_T     * const Angle_P,
     FocDq_T              * const Out_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     MatrixElement     input_buffer[PARK_COLS];
     MatrixElement     output_buffer[PARK_ROWS];
     Matrix_Type       input_vec;
@@ -191,12 +191,12 @@ MatrixStatus_Type Park_Transform_Matrix(
 /*--------------------------------------------------------------------------------------------------------------------
  * InvPark_Transform_Matrix
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type InvPark_Transform_Matrix(
+MatrixStatus_T InvPark_Transform_Matrix(
     const FocDq_T        * const In_P,
     const FocAngle_T     * const Angle_P,
     FocAlphaBeta_T       * const Out_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     MatrixElement     input_buffer[INV_PARK_COLS];
     MatrixElement     output_buffer[INV_PARK_ROWS];
     Matrix_Type       input_vec;
@@ -250,11 +250,11 @@ MatrixStatus_Type InvPark_Transform_Matrix(
 /*--------------------------------------------------------------------------------------------------------------------
  * InvClarke_Transform_Matrix
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type InvClarke_Transform_Matrix(
+MatrixStatus_T InvClarke_Transform_Matrix(
     const FocAlphaBeta_T * const In_P,
     FocUvw_T             * const Out_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     MatrixElement     input_buffer[INV_CLARKE_COLS];
     MatrixElement     output_buffer[INV_CLARKE_ROWS];
     Matrix_Type       input_vec;

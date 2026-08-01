@@ -378,7 +378,7 @@ typedef struct
  * \param[out] State_P  Controller state (must not be NULL)
  * \return  MATRIX_SUCCESS or MATRIX_ERROR_NULL_PTR.
  */
-extern MatrixStatus_Type DFC_Init(
+extern MatrixStatus_T DFC_Init(
     DFC_State_T          * const State_P);
 
 /**
@@ -393,7 +393,7 @@ extern MatrixStatus_Type DFC_Init(
  *          MATRIX_ERROR_NULL_PTR if any pointer is NULL.
  *          MATRIX_ERROR_OUT_OF_BOUNDS if Dt <= 0.
  */
-extern MatrixStatus_Type DFC_Step(
+extern MatrixStatus_T DFC_Step(
     DFC_State_T          * const State_P,
     const DFC_Input_T    * const In_P,
     const MatrixFloat            Dt,
@@ -405,7 +405,7 @@ extern MatrixStatus_Type DFC_Step(
  * \param[in,out] State_P  Controller state (must not be NULL)
  * \return  MATRIX_SUCCESS or MATRIX_ERROR_NULL_PTR.
  */
-extern MatrixStatus_Type DFC_Reset(
+extern MatrixStatus_T DFC_Reset(
     DFC_State_T          * const State_P);
 
 /**
@@ -415,7 +415,7 @@ extern MatrixStatus_Type DFC_Reset(
  * \param[in]     Gains_P  New gain set (must not be NULL)
  * \return  MATRIX_SUCCESS or MATRIX_ERROR_NULL_PTR.
  */
-extern MatrixStatus_Type DFC_GainSet_Apply(
+extern MatrixStatus_T DFC_GainSet_Apply(
     DFC_State_T          * const State_P,
     const DFC_GainSet_T  * const Gains_P);
 
@@ -426,7 +426,7 @@ extern MatrixStatus_Type DFC_GainSet_Apply(
  * \param[out] Diag_P   Destination snapshot (must not be NULL)
  * \return  MATRIX_SUCCESS or MATRIX_ERROR_NULL_PTR.
  */
-extern MatrixStatus_Type DFC_GetDiagnostics(
+extern MatrixStatus_T DFC_GetDiagnostics(
     const DFC_State_T    * const State_P,
     DFC_Diag_T           * const Diag_P);
 

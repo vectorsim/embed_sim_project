@@ -147,7 +147,7 @@ extern void SVM_Init(void);
  * \return  MATRIX_SUCCESS on success.
  *          MATRIX_ERROR_NULL_PTR if any pointer is NULL.
  */
-extern MatrixStatus_Type SVM_CalculateDutyCycleFromAlphaBeta(
+extern MatrixStatus_T SVM_CalculateDutyCycleFromAlphaBeta(
     const FocAlphaBeta_T * const V_AlphaBeta_P,
     const FocAngle_T     * const Angle_P,
     SVM_DutyCycle_T      * const DutyOut_P);
@@ -165,7 +165,7 @@ extern MatrixStatus_Type SVM_CalculateDutyCycleFromAlphaBeta(
  *          MATRIX_ERROR_NULL_PTR if any pointer is NULL.
  *          MATRIX_ERROR_OUT_OF_BOUNDS if ModIndex is outside [0.0, 1.0].
  */
-extern MatrixStatus_Type SVM_CalculateDutyCycle(
+extern MatrixStatus_T SVM_CalculateDutyCycle(
     MatrixFloat                    ModIndex,
     const FocAngle_T     * const   Angle_P,
     SVM_DutyCycle_T      * const   DutyOut_P);
@@ -182,7 +182,7 @@ extern MatrixStatus_Type SVM_CalculateDutyCycle(
  * \return  MATRIX_SUCCESS on success.
  *          MATRIX_ERROR_NULL_PTR if any pointer is NULL.
  */
-extern MatrixStatus_Type SVM_CalculateDutyCycleFromDq(
+extern MatrixStatus_T SVM_CalculateDutyCycleFromDq(
     const FocDq_T        * const V_Dq_P,
     const FocAngle_T     * const Angle_P,
     SVM_DutyCycle_T      * const DutyOut_P);
@@ -196,7 +196,7 @@ extern MatrixStatus_Type SVM_CalculateDutyCycleFromDq(
  * \return  MATRIX_SUCCESS on success.
  *          MATRIX_ERROR_NULL_PTR if any pointer is NULL.
  */
-extern MatrixStatus_Type SVM_GetSectorFromAlphaBeta(
+extern MatrixStatus_T SVM_GetSectorFromAlphaBeta(
     const FocAlphaBeta_T * const V_AlphaBeta_P,
     SVM_Sector_T         * const SectorOut_P);
 
@@ -210,7 +210,7 @@ extern MatrixStatus_Type SVM_GetSectorFromAlphaBeta(
  * \return  MATRIX_SUCCESS on success.
  *          MATRIX_ERROR_NULL_PTR if SectorOut_P is NULL.
  */
-extern MatrixStatus_Type SVM_GetSectorFromDQ(
+extern MatrixStatus_T SVM_GetSectorFromDQ(
     MatrixElement              Vd,
     MatrixElement              Vq,
     SVM_Sector_T     * const   SectorOut_P);
@@ -228,7 +228,7 @@ extern MatrixStatus_Type SVM_GetSectorFromDQ(
  *          MATRIX_ERROR_NULL_PTR if any pointer is NULL.
  *          MATRIX_ERROR_DIV_BY_ZERO if TimerPeriod is zero.
  */
-extern MatrixStatus_Type SVM_GetCompareValues(
+extern MatrixStatus_T SVM_GetCompareValues(
     const SVM_DutyCycle_T  * const DutyIn_P,
     uint32_T                       TimerPeriod,
     uint32_T               * const CompAOut_P,
