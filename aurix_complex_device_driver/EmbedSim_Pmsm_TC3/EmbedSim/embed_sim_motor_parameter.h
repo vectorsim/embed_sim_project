@@ -36,56 +36,76 @@
 /*------------------------------------------------------Macros-------------------------------------------------------*/
 /*********************************************************************************************************************/
 
+/* ====================================================================
+ * MOTOR PHYSICAL PARAMETERS (Nanotec DB42S02)
+ * These are motor-specific and should NOT be changed
+ * ==================================================================== */
 
-/** \brief  DFC_P_POLES as MatrixFloat for mixed rad/s conversions.      [pole pairs]   */
-#define MP_POLES            ((MatrixFloat)4.0f)
+/** \brief  Motor pole pairs.                                      [pole pairs]   */
+#define MP_POLES                ((MatrixFloat)4.0f)
 
-/** \brief  Stator resistance, per phase.  Vq feedforward: R * IqRef.    [Ohm]          */
+/** \brief  Stator resistance, per phase.                         [Ohm]          */
 #define MP_R_S                  ((MatrixFloat)0.19f)
 
-/** \brief  d-axis inductance.  SPMSM: Ld = Lq (no reluctance saliency). [H]            */
+/** \brief  d-axis inductance.  SPMSM: Ld = Lq.                   [H]            */
 #define MP_L_D                  ((MatrixFloat)0.000125f)
 
-/** \brief  q-axis inductance.  Decoupling: -OmegaE*Lq*IqRef; Lq*dIq/dt. [H]            */
+/** \brief  q-axis inductance.                                    [H]            */
 #define MP_L_Q                  ((MatrixFloat)0.000125f)
 
-/** \brief  Permanent-magnet flux linkage.  Back-EMF: OmegaE * LambdaPm. [Wb]           */
+/** \brief  Permanent-magnet flux linkage.                        [Wb]           */
 #define MP_LAMBDA_PM            ((MatrixFloat)0.0014f)
 
-/** \brief  Rotor inertia.  Flatness feedforward: J * AlphaRefF.         [kg*m^2]       */
+/** \brief  Rotor inertia.                                        [kg*m^2]       */
 #define MP_J_ROTOR              ((MatrixFloat)2.4e-6f)
 
-/** \brief  Viscous friction coefficient.  Feedforward: B * OmegaRefF.   [N*m*s/rad]    */
+/** \brief  Viscous friction coefficient.                         [N*m*s/rad]    */
 #define MP_B_FRIC               ((MatrixFloat)1.0e-6f)
 
-
-
-/** \brief  DC bus voltage (17 V bench supply; 48 V final target).       [V]            */
+/** \brief  DC bus voltage.                                       [V]            */
 #define MP_V_DC                 ((MatrixFloat)12.0f)
 
+/* ====================================================================
+ * OPERATIONAL LIMITS
+ * These protect the motor and hardware
+ * ==================================================================== */
 
-#define CON_RPM_TO_RAD(RPM)   ((RPM * ES_MATH_2PI_F) / 60.0F)
-#define CON_RPM_TO_ELEC_RAD(RPM)  (CON_RPM_TO_RAD(RPM) * MP_POLES)
+/** \brief  Maximum allowable motor speed                         [RPM]          */
+#define MAX_SPEED_RPM                   (3000.0F)
 
+/** \brief  Minimum speed for closed-loop control                 [RPM]          */
+#define CLOSED_LOOP_MIN_SPEED           (250.0F)
 
+/** \brief  Position wrap value (2π)                              [rad]          */
+#define POSITION_WRAP                   (ES_MATH_2PI_F)
 
+/** \brief  Maximum allowed current                              [A]            */
+#define DFC_MAX_CURRENT                 (10.0F)
 
+/** \brief  Maximum allowed voltage                              [V]            */
+#define DFC_MAX_VOLTAGE                 (6.0F)
 
-/*********************************************************************************************************************/
-/*-------------------------------------------------Global variables--------------------------------------------------*/
-/*********************************************************************************************************************/
+/** \brief  Voltage saturation margin                            [V]            */
+#define DFC_VOLTAGE_MARGIN              (0.5F)
 
-/*********************************************************************************************************************/
-/*-------------------------------------------------Data Structures---------------------------------------------------*/
-/*********************************************************************************************************************/
- 
-/*********************************************************************************************************************/
-/*--------------------------------------------Private Variables/Constants--------------------------------------------*/
-/*********************************************************************************************************************/
+/* ====================================================================
+ * SMOOTH REFERENCE GENERATION PARAMETERS
+ * These control how the motor accelerates/decelerates
+ * ==================================================================== */
 
-/*********************************************************************************************************************/
-/*------------------------------------------------Function Prototypes------------------------------------------------*/
-/*********************************************************************************************************************/
+/** \brief  Maximum acceleration                                  [RPM/s]        */
+#define MAX_ACCEL_RPM                   (200.0F)
 
+/** \brief  Maximum jerk (rate of change of acceleration)         [RPM/s²]       */
+#define MAX_JERK_RPM                    (500.0F)
+
+/** \brief  Speed settle tolerance                                [RPM]          */
+#define SPEED_SETTLE_TOL                (2.0F)
+
+/** \brief  Jerk smoothing factor [0.0 .. 1.0]                                   */
+#define JERK_SMOOTHING_FACTOR           (0.6F)
+
+/** \brief  Acceleration ramp smoothing factor [0.0 .. 1.0]                     */
+#define ACCEL_SMOOTHING_FACTOR          (0.4F)
 
 #endif /* EMBEDSIM_EMBED_SIM_MOTOR_PARAMETER_H_ */
