@@ -1,15 +1,31 @@
 /**********************************************************************************************************************
- * \file        embed_sim_control.h
- * \brief       Top-level PMSM control module
+ * \file      embed_sim_dfc_controller.h
+ * \brief     DFC (Direct Field Control) controller for embedded motor control applications.
  *
- * \details
+ * \details   Implements PI-based speed and current control loops for permanent magnet
+ *            synchronous motors (PMSM). Includes anti-windup and output limiting.
+ *            Targets 32-bit MCUs (Infineon AURIX TriCore, ARM Cortex-M4).
  *
- * \version     1.1.0
- * \date        2026-08-07
- * \author      EmbedSim / EV Light Vehicle Foundation
+ * \note      MISRA C:2012 compliance:
+ *              - Rule  8.5 : One declaration per identifier
+ *              - Rule  8.6 : No definitions in header files
+ *              - Rule 17.2 : No recursion
  *
- * \copyright   Copyright (C) 2026 EmbedSim — EV Light Vehicle Foundation
- *              Licensed under the MIT License.
+ * \note      EmbedSim naming convention:
+ *              - Functions      : Pascal_Snake_Case
+ *              - Parameters     : PascalCase  (single-letter → Uppercase)
+ *              - Output pointers: PascalCase_P
+ *              - Local variables: Lower pascalCase
+ *              - Struct members : PascalCase
+ *              - Macros         : UPPER_SNAKE_CASE
+ *              - Typedefs       : Pascal_Snake_Case_T
+ *
+ * \version   1.0.0
+ * \date      2026-08-09
+ * \author    EmbedSim / EV Light Vehicle Foundation
+ *
+ * \copyright Copyright (C) 2026 EmbedSim — EV Light Vehicle Foundation, Jaffna, Sri Lanka.
+ *            Licensed under the MIT License.
  *********************************************************************************************************************/
 
 #ifndef EMBEDSIM_EMBED_SIM_CONTROL_H_
@@ -102,12 +118,6 @@ typedef struct
     real32_T    FluxPm;                 /**< Permanent magnet flux linkage                [Wb]     */
     real32_T    J;                      /**< Rotor inertia                                [kg·m²]  */
     real32_T    B;                      /**< Viscous damping coefficient                  [N·m·s]  */
-    real32_T    RatedCurrent;           /**< Rated current                                [A]      */
-    real32_T    RatedSpeed;             /**< Rated speed                                  [RPM]    */
-    real32_T    MaxSpeed;               /**< Maximum allowable speed                      [RPM]    */
-    real32_T    MaxCurrent;             /**< Maximum allowable current                    [A]      */
-    real32_T    TorqueConstant;         /**< Torque constant (Kt)                         [N·m/A]  */
-    real32_T    BackEmfConstant;        /**< Back EMF constant (Ke)                       [V·s]    */
     real32_T    Vdc;                    /**< DC bus voltage                               [V]      */
     real32_T    TorqueLoad;             /**< Torque Load                                  [N·m]    */
 } EmbedSimMachineParam_T;
@@ -126,21 +136,6 @@ extern void EmbedSim_ControlInit(void);
  */
 extern void EmbedSim_ControlStep(EmbedSimCtrlInput_T* InputPtr, EmbedSimCtrlOutput_T* OutputPtr);
 
-/**
- * \brief   Estimate RPM from phase currents (back-EMF observer).
- */
-extern void EmbedSim_EstimateRpm(EmbedSimMachineParam_T* MachineParamPtr, EmbedSimCtrlInput_T* InputPtr);
 
-/**
- * \brief   Generate smooth reference trajectory with jerk limiting.
- */
-extern void EmbedSim_CalculateRef(EmbedSimCtrlInput_T* InputPtr);
-
-/**
- * \brief   Wrap angle to [0, 2π) range.
- */
-extern void EmbedSim_WrapAngle(real32_T* anglePtr);
-
-extern real32_T  EmbedSim_Clamp(real32_T value, real32_T min, real32_T max);
 
 #endif /* EMBEDSIM_EMBED_SIM_CONTROL_H_ */

@@ -1,9 +1,6 @@
 /*
  * \file cdd_gpt12_app.c
  * \brief Implementation of GPT12 initialization for incremental encoder.
- * \details
- * This file contains the implementation of the GPT12 module initialization
- * for incremental encoder functionality.
  */
 
 /******************************************************************************/
@@ -17,6 +14,7 @@
 #include "IfxPort.h"
 #include "IfxGpt12_PinMap.h"
 #include "cdd_gpt12_app.h"
+#include <math.h>
 
 /******************************************************************************/
 /*-----------------------------Private Macros--------------------------------*/
@@ -58,6 +56,9 @@
 /** \brief Conversion constant: rad/s to RPM */
 #define RADPS_TO_RPM                        (60.0f / (2.0f * 3.141592653589793f))
 
+/** \brief 2π constant */
+#define TWO_PI                              (2.0f * 3.141592653589793f)
+
 /******************************************************************************/
 /*-----------------------------Private Variables-----------------------------*/
 /******************************************************************************/
@@ -70,7 +71,7 @@ static IfxGpt12_IncrEnc gpt12IncrEnc_G;
 /** \brief Initialization flag to prevent double initialization */
 static int g_encoderInitialized = 0;
 
-/** \brief Cached raw position for telemetry */
+/** \brief Cached raw position for telemetry (counts) */
 static int g_cachedRawPosition = 0;
 
 /** \brief Cached speed for telemetry (rad/s) */
@@ -82,19 +83,24 @@ static float g_filteredSpeed = 0.0f;
 /** \brief Cached RPM value (for fast access) */
 static float g_cachedRpm = 0.0f;
 
+/** \brief Cached mechanical position (radians) */
+static float g_cachedMechanicalPosition = 0.0f;
+
+/** \brief Cached electrical angle (radians) */
+static float g_cachedElectricalAngle = 0.0f;
+
+/** \brief Encoder resolution with 4x decoding */
+static int g_encoderResolutionCounts = 0;
+
 /******************************************************************************/
 /*-------------------------Interrupt Service Routines-------------------------*/
 /******************************************************************************/
 
 /**
  * \brief  Zero pulse interrupt handler for incremental encoder
- *
- * \note   This ISR is triggered when the encoder index (Z) pulse is detected.
- *         The priority must match the one configured in zeroIsrPriority.
  */
 IFX_INTERRUPT(GPT12_Zero_Int_Handler, 0, INTERRUPT_PRIORITY_ENCODER_GPT12)
 {
-    /* Call the iLLD zero interrupt handler - updates turn counter */
     IfxGpt12_IncrEnc_onZeroIrq(&gpt12IncrEnc_G);
 }
 
@@ -102,29 +108,12 @@ IFX_INTERRUPT(GPT12_Zero_Int_Handler, 0, INTERRUPT_PRIORITY_ENCODER_GPT12)
 /*-------------------------Public Function Implementations--------------------*/
 /******************************************************************************/
 
-/**
- * \brief Initialize the GPT12 module for incremental encoder functionality.
- *
- * \return 1 if initialization succeeded, 0 otherwise
- *
- * \details
- * This function configures the GPT12 module for use as an incremental encoder.
- * It sets up the clock prescalers, pins, interrupt priorities, and other
- * parameters required for position and speed acquisition.
- *
- * The function is idempotent - calling it multiple times has no effect after
- * the first successful initialization.
- *
- * \note IMPORTANT: Do NOT manually reconfigure T2, T3, or T4 after calling
- *       this function. The iLLD driver handles all timer configurations.
- */
 int CddGpt12_Init(void)
 {
     IfxGpt12_IncrEnc_Config gpt12Config;
     int initStatus = 1;
     unsigned int delay;
 
-    /* Return immediately if already initialized */
     if (g_encoderInitialized == 1)
     {
         return 1;
@@ -133,7 +122,6 @@ int CddGpt12_Init(void)
     /* 1. Enable GPT12 module */
     IfxGpt12_enableModule(&MODULE_GPT120);
 
-    /* Wait for module to stabilize */
     for (delay = 0U; delay < 1000U; delay++)
     {
         /* Simple delay loop */
@@ -152,6 +140,9 @@ int CddGpt12_Init(void)
     gpt12Config.resolution         = ENCODER_RESOLUTION;
     gpt12Config.resolutionFactor   = IfxGpt12_IncrEnc_ResolutionFactor_fourFold;
 
+    /* Store resolution with 4x decoding */
+    g_encoderResolutionCounts = ENCODER_RESOLUTION * 4;
+
     /* 5. Speed configuration */
     gpt12Config.speedModeThreshold = ENCODER_SPEED_MODE_THRESHOLD;
     gpt12Config.minSpeed           = ENCODER_BASE_MIN_SPEED;
@@ -162,53 +153,37 @@ int CddGpt12_Init(void)
     gpt12Config.zeroIsrPriority    = (Ifx_Priority)INTERRUPT_PRIORITY_ENCODER_GPT12;
     gpt12Config.zeroIsrProvider    = ENCODER_GPT12_HOST_CPU;
 
-    /* 7. Hardware resource configuration - AP32541 pins */
+    /* 7. Hardware resource configuration */
     gpt12Config.pinA               = ENCODER_GPT12_PIN_A;
     gpt12Config.pinB               = ENCODER_GPT12_PIN_B;
     gpt12Config.pinZ               = ENCODER_GPT12_PIN_Z;
     gpt12Config.pinDriver          = IfxPort_PadDriver_cmosAutomotiveSpeed1;
     gpt12Config.pinMode            = IfxPort_InputMode_noPullDevice;
-    gpt12Config.initPins           = 1;  /* Let the driver initialize pins */
+    gpt12Config.initPins           = 1;
 
     /* 8. Initialize the incremental encoder */
-    /* This function internally configures:
-     *   - T3 as incremental interface core (counts A/B pulses)
-     *   - T4 for zero pulse capture (if pinZ is provided)
-     *   - T5 for low speed calculation (time-diff mode)
-     *   - Interrupts for T4 (zero pulse detection)
-     */
     initStatus = IfxGpt12_IncrEnc_init(&gpt12IncrEnc_G, &gpt12Config);
 
     if (initStatus == 0)
     {
-        /* Initialization failed */
         g_encoderInitialized = 0;
         return 0;
     }
 
-    /* 9. NOTE: DO NOT manually configure T2/T3/T4 interrupts here!
-     * The IfxGpt12_IncrEnc_init() function already configured them.
-     * If you reconfigure them, you will break the encoder functionality.
-     */
-
-    /* 10. Initialize cached values */
+    /* 9. Initialize cached values */
     g_cachedRawPosition = 0;
     g_cachedSpeed = 0.0f;
     g_filteredSpeed = 0.0f;
     g_cachedRpm = 0.0f;
+    g_cachedMechanicalPosition = 0.0f;
+    g_cachedElectricalAngle = 0.0f;
 
-    /* 11. Mark as initialized */
+    /* 10. Mark as initialized */
     g_encoderInitialized = 1;
 
     return 1;
 }
 
-/**
- * \brief Update the encoder state - call periodically
- *
- * \details This function updates the encoder state and should be called
- *          at the control loop frequency (typically 20 kHz).
- */
 void CddGpt12_Update(void)
 {
     if (g_encoderInitialized == 1)
@@ -226,187 +201,15 @@ void CddGpt12_Update(void)
 
         /* Convert filtered speed to RPM and cache it */
         g_cachedRpm = g_filteredSpeed * RADPS_TO_RPM;
+
+        /* Cache mechanical position (0 to 2π) */
+        g_cachedMechanicalPosition = IfxGpt12_IncrEnc_getPosition(&gpt12IncrEnc_G);
     }
 }
 
-/**
- * \brief Get the raw encoder position (electrical angle in counts)
- *
- * \return Raw encoder position in counts, or 0 if not initialized
- */
-int CddGpt12_GetElecAngle(void)
-{
-    return g_cachedRawPosition;
-}
-
-/**
- * \brief Get the filtered encoder speed in rad/s
- *
- * \return Speed in rad/s, or 0 if not initialized
- */
-float CddGpt12_GetSpeedRadS(void)
-{
-    return g_filteredSpeed;
-}
-
-/**
- * \brief Get the filtered encoder speed in RPM
- *
- * \return Speed in RPM (Revolutions Per Minute), or 0 if not initialized
- *
- * \details Conversion: RPM = rad/s * 60 / (2 * PI)
- */
-float CddGpt12_GetSpeedRpm(void)
-{
-    return g_cachedRpm;
-}
-
-/**
- * \brief Get the raw (unfiltered) encoder speed in rad/s
- *
- * \return Raw speed in rad/s, or 0 if not initialized
- */
-float CddGpt12_GetRawSpeed(void)
-{
-    return g_cachedSpeed;
-}
-
-/**
- * \brief Get the encoder direction
- *
- * \return Direction value, or unknown if not initialized
- */
-IfxGpt12_IncrEnc_Direction CddGpt12_GetDirection(void)
-{
-    if (g_encoderInitialized == 1)
-    {
-        return IfxGpt12_IncrEnc_getDirection(&gpt12IncrEnc_G);
-    }
-    return IfxGpt12_IncrEnc_Direction_unknown;
-}
-
-/**
- * \brief Get the absolute position (including turns)
- *
- * \return Absolute position in radians, or 0 if not initialized
- */
-float CddGpt12_GetAbsolutePosition(void)
-{
-    if (g_encoderInitialized == 1)
-    {
-        return IfxGpt12_IncrEnc_getAbsolutePosition(&gpt12IncrEnc_G);
-    }
-    return 0.0f;
-}
-
-/**
- * \brief Get the number of turns
- *
- * \return Number of turns, or 0 if not initialized
- */
-int CddGpt12_GetTurns(void)
-{
-    if (g_encoderInitialized == 1)
-    {
-        return IfxGpt12_IncrEnc_getTurn(&gpt12IncrEnc_G);
-    }
-    return 0;
-}
-
-/**
- * \brief Reset the encoder state
- */
-void CddGpt12_Reset(void)
-{
-    if (g_encoderInitialized == 1)
-    {
-        IfxGpt12_IncrEnc_reset(&gpt12IncrEnc_G);
-        g_cachedRawPosition = 0;
-        g_cachedSpeed = 0.0f;
-        g_filteredSpeed = 0.0f;
-        g_cachedRpm = 0.0f;
-    }
-}
-
-/**
- * \brief Set the encoder offset
- *
- * \param offset Offset value in counts
- */
-void CddGpt12_SetOffset(int offset)
-{
-    if (g_encoderInitialized == 1)
-    {
-        IfxGpt12_IncrEnc_setOffset(&gpt12IncrEnc_G, offset);
-    }
-}
-
-/**
- * \brief Get the encoder resolution
- *
- * \return Resolution in counts per revolution, or 0 if not initialized
- */
-int CddGpt12_GetResolution(void)
-{
-    if (g_encoderInitialized == 1)
-    {
-        return IfxGpt12_IncrEnc_getResolution(&gpt12IncrEnc_G);
-    }
-    return 0;
-}
-
-/**
- * \brief Get the encoder handle (for direct iLLD access)
- *
- * \return Pointer to encoder handle, or NULL if not initialized
- */
-IfxGpt12_IncrEnc* CddGpt12_GetHandle(void)
-{
-    if (g_encoderInitialized == 1)
-    {
-        return &gpt12IncrEnc_G;
-    }
-    return NULL_PTR;
-}
-
-/**
- * \brief Check if encoder is initialized
- *
- * \return 1 if initialized, 0 otherwise
- */
-int CddGpt12_IsInitialized(void)
-{
-    return g_encoderInitialized;
-}
-
-/**
- * \brief Debug: Read raw T3 timer value
- *
- * \return Raw T3 timer value, or 0 if not initialized
- */
-unsigned short CddGpt12_GetRawTimerValue(void)
-{
-    if (g_encoderInitialized == 1)
-    {
-        return IfxGpt12_T3_getTimerValue(&MODULE_GPT120);
-    }
-    return 0U;
-}
-
-/**
- * \brief Debug: Read raw T4 timer value (for zero pulse)
- *
- * \return Raw T4 timer value, or 0 if not initialized
- */
-unsigned short CddGpt12_GetRawZeroTimerValue(void)
-{
-    if (g_encoderInitialized == 1)
-    {
-        return IfxGpt12_T4_getTimerValue(&MODULE_GPT120);
-    }
-    return 0U;
-}
-
+/* ====================================================================
+   POSITION FUNCTIONS - CLEAR AND CORRECT
+   ==================================================================== */
 
 /**
  * \brief Get mechanical position within one revolution (0 to 2π radians)
@@ -417,7 +220,151 @@ float CddGpt12_GetMechanicalPosition(void)
 {
     if (g_encoderInitialized == 1)
     {
-        return IfxGpt12_IncrEnc_getPosition(&gpt12IncrEnc_G);
+        return g_cachedMechanicalPosition;
     }
     return 0.0f;
+}
+
+/**
+ * \brief Get electrical angle in radians (0 to 2π)
+ *
+ * \param polePairs Number of pole pairs of the motor
+ * \return Electrical angle in radians (0 to 2π), or 0 if not initialized
+ *
+ * \note This is the CORRECT function to use for FOC/DTC control
+ */
+float CddGpt12_GetElectricalAngle(float polePairs)
+{
+    if (g_encoderInitialized == 1)
+    {
+        float electricalAngle = g_cachedMechanicalPosition * polePairs;
+        /* Wrap to 0-2π */
+        while (electricalAngle < 0.0f) electricalAngle += TWO_PI;
+        while (electricalAngle >= TWO_PI) electricalAngle -= TWO_PI;
+        return electricalAngle;
+    }
+    return 0.0f;
+}
+
+/**
+ * \brief Get raw encoder position in counts
+ *
+ * \return Raw position in counts (0 to resolution-1), or 0 if not initialized
+ */
+int CddGpt12_GetRawPositionCounts(void)
+{
+    return g_cachedRawPosition;
+}
+
+/* ====================================================================
+   SPEED FUNCTIONS - KEEP AS IS
+   ==================================================================== */
+
+float CddGpt12_GetSpeedRadS(void)
+{
+    return g_filteredSpeed;
+}
+
+float CddGpt12_GetSpeedRpm(void)
+{
+    return g_cachedRpm;
+}
+
+float CddGpt12_GetRawSpeed(void)
+{
+    return g_cachedSpeed;
+}
+
+/* ====================================================================
+   OTHER FUNCTIONS - KEEP AS IS
+   ==================================================================== */
+
+IfxGpt12_IncrEnc_Direction CddGpt12_GetDirection(void)
+{
+    if (g_encoderInitialized == 1)
+    {
+        return IfxGpt12_IncrEnc_getDirection(&gpt12IncrEnc_G);
+    }
+    return IfxGpt12_IncrEnc_Direction_unknown;
+}
+
+float CddGpt12_GetAbsolutePosition(void)
+{
+    if (g_encoderInitialized == 1)
+    {
+        return IfxGpt12_IncrEnc_getAbsolutePosition(&gpt12IncrEnc_G);
+    }
+    return 0.0f;
+}
+
+int CddGpt12_GetTurns(void)
+{
+    if (g_encoderInitialized == 1)
+    {
+        return IfxGpt12_IncrEnc_getTurn(&gpt12IncrEnc_G);
+    }
+    return 0;
+}
+
+void CddGpt12_Reset(void)
+{
+    if (g_encoderInitialized == 1)
+    {
+        IfxGpt12_IncrEnc_reset(&gpt12IncrEnc_G);
+        g_cachedRawPosition = 0;
+        g_cachedSpeed = 0.0f;
+        g_filteredSpeed = 0.0f;
+        g_cachedRpm = 0.0f;
+        g_cachedMechanicalPosition = 0.0f;
+        g_cachedElectricalAngle = 0.0f;
+    }
+}
+
+void CddGpt12_SetOffset(int offset)
+{
+    if (g_encoderInitialized == 1)
+    {
+        IfxGpt12_IncrEnc_setOffset(&gpt12IncrEnc_G, offset);
+    }
+}
+
+int CddGpt12_GetResolution(void)
+{
+    if (g_encoderInitialized == 1)
+    {
+        return IfxGpt12_IncrEnc_getResolution(&gpt12IncrEnc_G);
+    }
+    return 0;
+}
+
+IfxGpt12_IncrEnc* CddGpt12_GetHandle(void)
+{
+    if (g_encoderInitialized == 1)
+    {
+        return &gpt12IncrEnc_G;
+    }
+    return NULL_PTR;
+}
+
+int CddGpt12_IsInitialized(void)
+{
+    return g_encoderInitialized;
+}
+
+unsigned short CddGpt12_GetRawTimerValue(void)
+{
+    if (g_encoderInitialized == 1)
+    {
+        return IfxGpt12_T3_getTimerValue(&MODULE_GPT120);
+    }
+    return 0U;
+}
+
+unsigned short CddGpt12_GetRawZeroTimerValue(void)
+{
+    if (g_encoderInitialized == 1)
+    {
+        return IfxGpt12_T4_getTimerValue(&MODULE_GPT120);
+    }
+    return 0U;
 }

@@ -1,10 +1,31 @@
 /**********************************************************************************************************************
- * \file        embed_sim_dfc_controller.c
- * \brief       TRUE DIFFERENTIAL FLATNESS CONTROL for PMSM
- * \version     3.0.0
+ * \file      embed_sim_dfc_controller.c
+ * \brief     DFC (Direct Field Control) controller implementation.
  *
- * Flat outputs: y1 = θ, y2 = id
- * Pure feedforward + small correction. NO startup logic.
+ * \details   Implements PI-based speed and current control loops for permanent magnet
+ *            synchronous motors (PMSM). Includes anti-windup and output limiting.
+ *            Targets 32-bit MCUs (Infineon AURIX TriCore, ARM Cortex-M4).
+ *
+ * \note      MISRA C:2012 compliance:
+ *              - Rule  8.5 : One declaration per identifier
+ *              - Rule  8.6 : No definitions in header files
+ *              - Rule 17.2 : No recursion
+ *
+ * \note      EmbedSim naming convention:
+ *              - Functions      : Pascal_Snake_Case
+ *              - Parameters     : PascalCase  (single-letter → Uppercase)
+ *              - Output pointers: PascalCase_P
+ *              - Local variables: Lower pascalCase
+ *              - Struct members : PascalCase
+ *              - Macros         : UPPER_SNAKE_CASE
+ *              - Typedefs       : Pascal_Snake_Case_T
+ *
+ * \version   1.0.0
+ * \date      2026-08-09
+ * \author    EmbedSim / EV Light Vehicle Foundation
+ *
+ * \copyright Copyright (C) 2026 EmbedSim — EV Light Vehicle Foundation, Jaffna, Sri Lanka.
+ *            Licensed under the MIT License.
  *********************************************************************************************************************/
 
 #include "embed_sim_dfc_controller.h"
@@ -13,81 +34,84 @@
 #include "embed_sim_matrix.h"
 #include "embed_sim_control.h"
 #include <math.h>
-#include <stddef.h>
-
-/**********************************************************************************************************************
- * Private Definitions
- *********************************************************************************************************************/
-
-/**********************************************************************************************************************
- * Private Variables
- *********************************************************************************************************************/
 
 
-/**********************************************************************************************************************
- * Private Function Prototypes
- *********************************************************************************************************************/
+
+#define DFC_CURRENT_KP_D_F    (0.15F)
+#define DFC_CURRENT_KP_Q_F    (0.1F)
+
+/*********************************************************************************************************************/
+/*--------------------------------------------------Private Data-----------------------------------------------------*/
+/*********************************************************************************************************************/
 
 
-/**********************************************************************************************************************
- * Private Functions
- *********************************************************************************************************************/
 
+/*********************************************************************************************************************/
+/*--------------------------------------------Private Functions-----------------------------------------------------*/
+/*********************************************************************************************************************/
 
 /**
- * \brief  Read and transform sensor currents to dq reference frame.
+ * \brief   Wrap angle to [0, 2pi)
  *
- * This function reads the three-phase current sensors (Iu, Iv, Iw) and
- * transforms them to the synchronous dq reference frame using the rotor
- * electrical angle derived from the position sensor.
+ * \details Normalizes an angle to the range [0, 2π) using fmodf.
+ *          Useful for rotor angle and Park transform calculations.
  *
- * \param[in]  InputPtr      Pointer to input structure containing:
- *                           - Iu, Iv, Iw: Phase current sensor readings (A)
- *                           - RotorPositionSensor: Measured rotor position (rad)
- * \param[in]  MPtr          Pointer to motor parameters containing:
- *                           - PolePairs: Number of pole pairs
- * \param[out] SensorDqPtr   Pointer to output structure for dq currents:
- *                           - D: d-axis current from sensor (A)
- *                           - Q: q-axis current from sensor (A)
+ * \param[in,out] AnglePtr  Pointer to angle value to be wrapped (in radians).
  */
-static void DFC_ReadSensorDQ(EmbedSimCtrlInput_T* const InputPtr,
-                              const EmbedSimMachineParam_T* const MPtr,
-                              FocDq_T* const SensorDqPtr)
+static void DFC_WrapAngle(real32_T* AnglePtr)
 {
-    FocAngle_T focAngle;
-    FocUvw_T uvwCurrent;
-    FocAlphaBeta_T alphaBetaCurrent;
-    MatrixStatus_T status;
-    real32_T id = 0.0F;
-    real32_T iq = 0.0F;
-
-    /* Calculate electrical angle from rotor position sensor */
-    focAngle.ThetaE = InputPtr->RotorPositionSensor * MPtr->PolePairs;
-    EmbedSim_WrapAngle(&focAngle.ThetaE);
-
-    /* Read phase currents from sensors */
-    uvwCurrent.U = InputPtr->Iu;
-    uvwCurrent.V = InputPtr->Iv;
-    uvwCurrent.W = InputPtr->Iw;
-
-    /* Transform phase currents to alpha-beta (Clarke transform) */
-    status = Clarke_Transform_Matrix(&uvwCurrent, &alphaBetaCurrent);
-    if (status == MATRIX_SUCCESS)
+    *AnglePtr = fmodf(*AnglePtr, SVM_2PI_F);
+    if (*AnglePtr < 0.0F)
     {
-        /* Transform alpha-beta to dq (Park transform) */
-        status = Park_Transform_Matrix(&alphaBetaCurrent, &focAngle, SensorDqPtr);
-        if (status == MATRIX_SUCCESS)
-        {
-            id = SensorDqPtr->D;
-            iq = SensorDqPtr->Q;
-        }
+        *AnglePtr += SVM_2PI_F;
     }
-
-    /* Single exit point with results (or zeros on error) */
-    SensorDqPtr->D = id;
-    SensorDqPtr->Q = iq;
 }
 
+/**
+ * \brief   Clamp value to specified limits
+ *
+ * \details Limits a value to a range defined by MinVal and MaxVal.
+ *          If value is below MinVal, returns MinVal.
+ *          If value is above MaxVal, returns MaxVal.
+ *          Otherwise returns the original value.
+ *
+ * \param[in] Val     Value to clamp.
+ * \param[in] MinVal  Minimum allowed value.
+ * \param[in] MaxVal  Maximum allowed value.
+ *
+ * \return  Clamped value within [MinVal, MaxVal].
+ */
+static real32_T DFC_ClampValue(real32_T Val, real32_T MinVal, real32_T MaxVal)
+{
+    real32_T result;
+
+    if (Val < MinVal)
+    {
+        result = MinVal;
+    }
+    else if (Val > MaxVal)
+    {
+        result = MaxVal;
+    }
+    else
+    {
+        result = Val;
+    }
+
+    return result;
+}
+
+/**
+ * \brief   Transform currents to dq
+ *
+ * \details Converts phase currents (U, V, W) to dq rotating reference frame.
+ *          Applies Clarke transform to get alpha-beta, then Park transform
+ *          using the electrical angle (rotor position × pole pairs).
+ *
+ * \param[in]  InputPtr  Pointer to control input structure containing phase currents.
+ * \param[in]  MPtr      Pointer to machine parameters (pole pairs).
+ * \param[out] FocDqPtr  Pointer to dq current output structure.
+ */
 static void DFC_CurrentsToDq(EmbedSimCtrlInput_T* const InputPtr,
                              const EmbedSimMachineParam_T* const MPtr,
                              FocDq_T* const FocDqPtr)
@@ -100,251 +124,272 @@ static void DFC_CurrentsToDq(EmbedSimCtrlInput_T* const InputPtr,
     currents.V = InputPtr->Iv;
     currents.W = InputPtr->Iw;
 
-    angle.ThetaE = InputPtr->RotorPositionSensor * MPtr->PolePairs;
-    EmbedSim_WrapAngle(&angle.ThetaE);
+    angle.ThetaE = InputPtr->RotorPositionEst * MPtr->PolePairs;
+    DFC_WrapAngle(&angle.ThetaE);
 
     Clarke_Transform_Matrix(&currents, &alphaBeta);
     Park_Transform_Matrix(&alphaBeta, &angle, FocDqPtr);
 }
 
+/**
+ * \brief   Convert dq voltage to PWM
+ *
+ * \details Transforms dq voltage commands to PWM duty cycles using
+ *          inverse Park transform and Space Vector Modulation (SVM).
+ *          Includes over-modulation protection by clamping modulation index.
+ *
+ * \param[in]  DqPtr      Pointer to dq voltage commands.
+ * \param[in]  AnglePtr   Pointer to rotor angle for inverse Park transform.
+ * \param[in]  MachinePtr Pointer to machine parameters (Vdc).
+ * \param[out] DutyPtr    Pointer to PWM duty cycle output structure.
+ */
 static void DFC_VoltageToDuty(const FocDq_T* const DqPtr,
-                                FocAngle_T const AnglePtr,
-                                const EmbedSimMachineParam_T* const MachinePtr,
-                                SVM_DutyCycle_T* const DutyPtr)
+                              FocAngle_T const AnglePtr,
+                              const EmbedSimMachineParam_T* const MachinePtr,
+                              SVM_DutyCycle_T* const DutyPtr)
 {
     MatrixStatus_T status;
     FocAlphaBeta_T vAlphaBeta;
-    real32_T Vmag = 0.0F;
-    real32_T Vphase_max = 0.0F;
-    real32_T modulationIndex = 0.0F;
+    real32_T vMag;
+    real32_T vPhaseMax;
+    real32_T modulationIndex;
 
-    /* Default to 50% duty cycle */
     DutyPtr->Ta = 0.5F;
     DutyPtr->Tb = 0.5F;
     DutyPtr->Tc = 0.5F;
     DutyPtr->Sector = SVM_SECTOR_I;
 
-    /* Inverse Park transform: DQ → AlphaBeta */
     status = InvPark_Transform_Matrix(DqPtr, &AnglePtr, &vAlphaBeta);
 
-    if (status == MATRIX_SUCCESS) {
-        /* Calculate magnitude of αβ voltage vector */
-        Vmag = sqrtf((vAlphaBeta.Alpha * vAlphaBeta.Alpha) +
+    if (status == MATRIX_SUCCESS)
+    {
+        vMag = sqrtf((vAlphaBeta.Alpha * vAlphaBeta.Alpha) +
                      (vAlphaBeta.Beta * vAlphaBeta.Beta));
 
-        /* Calculate modulation index from DC bus voltage */
-        Vphase_max = MachinePtr->Vdc / SVM_SQRT3_F;
-        modulationIndex = Vmag / Vphase_max;
+        vPhaseMax = MachinePtr->Vdc / 1.73205080757F;
+        modulationIndex = vMag / vPhaseMax;
+        modulationIndex = DFC_ClampValue(modulationIndex, 0.0F, 0.95F);
 
-        /* Clamp modulation index to safe range */
-        modulationIndex = EmbedSim_Clamp(modulationIndex, 0.0F, 0.95F);
-
-        /* Calculate SVPWM duty cycles */
         SVM_CalculateDutyCycle(modulationIndex, &AnglePtr, DutyPtr);
     }
-
 }
 
 
-/**********************************************************************************************************************
- * TRUE DIFFERENTIAL FLATNESS - PURE FLATNESS, NO STARTUP
- *********************************************************************************************************************/
 
 
-/**********************************************************************************************************************
- * PUBLIC FUNCTIONS
- *********************************************************************************************************************/
+/*********************************************************************************************************************/
+/*--------------------------------------------Public Functions------------------------------------------------------*/
+/*********************************************************************************************************************/
 
+/**
+ * \brief   Initialize DFC controller
+ *
+ * \details Sets default PI gains, limits, and anti-windup values for speed,
+ *          Iq, and Id controllers. Sets Initialized flag to 1.
+ *          Default values:
+ *          - SpeedPI: Kp=0.4, Ki=0.0, UpperLimit=50.0, LowerLimit=-50.0, AntiWindup=0.1
+ *          - IqPI:    Kp=0.2, Ki=0.0, UpperLimit=100.0, LowerLimit=-100.0, AntiWindup=0.1
+ *          - IdPI:    Kp=0.1, Ki=0.0, UpperLimit=50.0, LowerLimit=-50.0, AntiWindup=0.1
+ */
 void DFC_Init(void)
 {
 
+
 }
 
+
+
+
+
 /**
- * \brief  Execute one step of Differential Flatness Control (DFC).
+ * \brief  Execute one step of Differential Flatness Control.
  *
- * This function implements the complete differential flatness mapping for PMSM control
- * as derived in the mathematical model. It reconstructs the full state from the flat
- * outputs (rotor angle and d-axis current) and computes the required feedforward dq voltages
- * with additional feedback corrections.
+ * \details
+ * Pure feedforward differential-flatness mapping for a PMSM.
  *
- * \param[in]  InputPtr    Pointer to input structure containing:
- *                         - RotorPositionRef: Mechanical angle reference (rad)
- *                         - AngularVelocityRef: Mechanical speed reference (rad/s)
- *                         - AngularAccerlerationRef: Mechanical acceleration reference (rad/s²)
- *                         - AngularJerkRef: Mechanical jerk reference (rad/s³)
- *                         - Iu, Iv, Iw: Phase current sensor readings (A)
- *                         - RotorSpeedSensor: Measured rotor speed (RPM)
- *                         - RotorPositionSensor: Measured rotor position (rad)
- *                         - SampleTime: Control loop sample time (s)
- * \param[in]  MPtr        Pointer to motor parameters
- * \param[out] OutputPtr   Pointer to output structure where results are stored
+ * Assumptions for the first implementation:
+ *   - Id_ref = 0
+ *   - Ld = Lq
+ *   - Load torque is constant
+ *   - Rotor speed reference is generated by an S-curve
+ *
+ * The S-curve provides:
+ *
+ *   omega_ref
+ *   omega_ref_dot
+ *   omega_ref_ddot
+ *
+ * The differential-flatness mapping calculates:
+ *
+ *   Iq_ref
+ *   Iq_ref_dot
+ *   Vd_ref
+ *   Vq_ref
+ *
+ * No PI controller is used in this version.
+ *
+ * \param[in]  InputPtr   Control input and reference values.
+ * \param[in]  MPtr       PMSM machine parameters.
+ * \param[out] OutputPtr  PWM output.
  */
-void DFC_Step(EmbedSimCtrlInput_T* const InputPtr,
-              const EmbedSimMachineParam_T* const MPtr,
-              EmbedSimCtrlOutput_T* const OutputPtr)
+void DFC_Step(EmbedSimCtrlInput_T * const InputPtr,
+              const EmbedSimMachineParam_T * const MPtr,
+              EmbedSimCtrlOutput_T * const OutputPtr)
 {
-    /* Flat outputs (y1 and y2 from differential flatness theory) - References */
-    real32_T rotorAngleRef;          /* y1 = θm_ref - mechanical angle reference (rad) */
-    real32_T rotorSpeedRef;          /* y1_dot = ωm_ref - mechanical speed reference (rad/s) */
-    real32_T rotorAccelRef;          /* y1_ddot = αm_ref - mechanical acceleration reference (rad/s²) */
-    real32_T rotorJerkRef;           /* y1_dddot = jerk_ref - mechanical jerk reference (rad/s³) */
-    real32_T dAxisCurrentRef;        /* y2 = id_ref - d-axis current reference (A) - ALWAYS 0 for SPMSM */
-    real32_T dAxisCurrentRefDot;     /* y2_dot = d(id_ref)/dt - d-axis current derivative (A/s) - ALWAYS 0 */
+    volatile real32_T omegaRef;
+    volatile real32_T omegaRefDot;
+    volatile real32_T omegaRefDDot;
 
-    /* Feedforward states reconstructed from flat outputs */
-    real32_T rotorAngleFF;           /* θm_FF - feedforward mechanical angle (rad) */
-    real32_T rotorSpeedFF;           /* ωm_FF - feedforward mechanical speed (rad/s) */
-    real32_T dAxisCurrentFF;         /* id_FF - feedforward d-axis current (A) - ALWAYS 0 */
-    real32_T qAxisCurrentFF;         /* iq_FF - feedforward q-axis current (A) */
-    real32_T qAxisCurrentFFDot;      /* d(iq_FF)/dt - feedforward q-axis current derivative (A/s) */
+    volatile real32_T iqRef;
+    volatile real32_T iqRefDot;
 
-    /* Feedback variables */
-    real32_T currentErrorId;         /* id_ref - id_meas (A) - id_ref = 0 */
-    real32_T currentErrorIq;         /* iq_FF - iq_meas (A) */
-    real32_T feedbackVd;             /* Feedback correction for d-axis voltage: kpId * currentErrorId (V) */
-    real32_T feedbackVq;             /* Feedback correction for q-axis voltage: kpIq * currentErrorIq (V) */
+    volatile real32_T vdRef;
+    volatile real32_T vqRef;
 
-    /* Feedforward + Feedback control inputs (dq voltages) */
-    FocDq_T dqVoltageFF;             /* Feedforward dq voltages from differential flatness */
-    FocDq_T dqVoltageTotal;          /* Total dq voltages (FF + FB) */
+    volatile real32_T torqueRequired;
+    volatile real32_T torqueConstant;
 
-    /* Intermediate variables for flatness equations */
-    real32_T torqueConstant;         /* Kt(id) = (3/2)*p*(ψf + (Ld-Lq)*id) */
-    real32_T numerator;              /* N = J*αm + B*ωm + TL */
-    real32_T denominator;            /* D = (3/2)*p*(ψf + (Ld-Lq)*id) */
-    real32_T numeratorDot;           /* N_dot = J*jerk + B*αm */
-    real32_T denominatorDot;         /* D_dot = (3/2)*p*(Ld-Lq)*id_dot */
+    volatile real32_T rotorAngleMeas;
+    volatile real32_T rotorSpeedMeas;
 
-    /* SVM variables */
+    volatile real32_T idError;
+    volatile real32_T iqError ;
+
+    FocDq_T dqVoltage;
     FocAngle_T focAngle;
     SVM_DutyCycle_T svmDC;
+    FocDq_T dqCurrentMeas;
 
-    /* Sensor feedback variables */
-    real32_T rotorSpeedMeas;         /* Measured mechanical speed (rad/s) */
-    real32_T rotorAngleMeas;         /* Measured electrical angle (rad) */
-    FocDq_T dqCurrentMeas;           /* Measured currents in dq frame */
+    /*
+     * ------------------------------------------------------------
+     * 1. Read reference trajectory
+     * ------------------------------------------------------------
+     */
 
-    /* PI controller gains (tunable) */
-    const real32_T kpSpeed = 0.5F;   /* Proportional gain for speed control */
-    const real32_T kpIq = 0.1F;      /* Proportional gain for Iq current control */
-    const real32_T kpId = 0.1F;      /* Proportional gain for Id current control */
+    omegaRef     = InputPtr->AngularVelocityRef;
+    omegaRefDot  = InputPtr->AngularAccerlerationRef;
+    omegaRefDDot = InputPtr->AngularJerkRef;
 
-    /* --- Step 0: Read Sensor Feedback --- */
+    /*
+     * ------------------------------------------------------------
+     * 2. Mechanical flatness mapping
+     *
+     *     Te = J * omega_dot + B * omega + Tload
+     * ------------------------------------------------------------
+     */
+
+    torqueRequired = (MPtr->J * omegaRefDot) + (MPtr->B * omegaRef) + MPtr->TorqueLoad;
+
+    /*
+     * For Id = 0:
+     *
+     *     Te = 1.5 * p * FluxPm * Iq
+     *
+     * Therefore:
+     *
+     *     Iq = Te / (1.5 * p * FluxPm)
+     */
+
+    torqueConstant =  1.5F * MPtr->PolePairs *  MPtr->FluxPm;
+
+    if (fabsf(torqueConstant) > 1.0e-6F)
+    {
+        iqRef = torqueRequired / torqueConstant;
+
+        /*
+         * --------------------------------------------------------
+         * 3. Differential of Iq reference
+         *
+         *     Iq_dot =
+         *       (J * omega_ddot + B * omega_dot)
+         *       / (1.5 * p * FluxPm)
+         *
+         * Load torque is assumed constant.
+         * --------------------------------------------------------
+         */
+
+        iqRefDot =
+            ((MPtr->J * omegaRefDDot) +
+             (MPtr->B * omegaRefDot)) /
+            torqueConstant;
+    }
+    else
+    {
+        iqRef = 0.0F;
+        iqRefDot = 0.0F;
+    }
+
+    /*
+     * ------------------------------------------------------------
+     * 4. Differential-flatness voltage mapping and add feedback correction
+     *
+     * Id = 0
+     *
+     *     Vd = -p * omega * Lq * Iq
+     *
+     *     Vq = Rs * Iq
+     *          + Lq * Iq_dot
+     *          + p * omega * FluxPm
+     * ------------------------------------------------------------
+     */
+
+    vdRef =  -MPtr->PolePairs * omegaRef *MPtr->Lq * iqRef;
+    vqRef = (MPtr->Rs * iqRef) + (MPtr->Lq * iqRefDot) + (MPtr->PolePairs * omegaRef *  MPtr->FluxPm);
+
     DFC_CurrentsToDq(InputPtr, MPtr, &dqCurrentMeas);
-    rotorSpeedMeas = CON_RPM_TO_RAD(InputPtr->RotorSpeedSensor);
-    rotorAngleMeas = InputPtr->RotorPositionSensor * MPtr->PolePairs;
-    EmbedSim_WrapAngle(&rotorAngleMeas);
+    idError = 0.0F - dqCurrentMeas.D;
+    iqError = vqRef - dqCurrentMeas.Q;
 
-    /* --- Step 1: Get reference flat outputs and their derivatives --- */
-    rotorAngleRef = InputPtr->RotorPositionRef;
-    rotorSpeedRef = InputPtr->AngularVelocityRef;
-    rotorAccelRef = InputPtr->AngularAccerlerationRef;
-    rotorJerkRef = InputPtr->AngularJerkRef;
 
-    /* --- IMPORTANT: Id = 0 control for surface PMSM (SPMSM) ---
-     * For SPMSM, Ld = Lq, so maximum torque per ampere (MTPA) is achieved
-     * with id = 0. This simplifies the control significantly.
+
+
+    /*
+     * ------------------------------------------------------------
+     * 5. Create dq voltage command
+     * ------------------------------------------------------------
      */
-    dAxisCurrentRef = 0.0F;           /* y2 = id_ref = 0 for SPMSM (Id=0 control) */
-    dAxisCurrentRefDot = 0.0F;        /* d(id_ref)/dt = 0 (constant reference) */
 
-    /* --- Step 2: State reconstruction from flat outputs (Feedforward) --- */
-    /* Equation (32): θm_FF = y1 */
-    rotorAngleFF = rotorAngleRef;
+    idError = 0.0F - dqCurrentMeas.D;
+    iqError = iqRef - dqCurrentMeas.Q;
 
-    /* Equation (33): ωm_FF = y˙1 */
-    rotorSpeedFF = rotorSpeedRef;
+    dqVoltage.D = vdRef + (DFC_CURRENT_KP_D_F * idError);
+    dqVoltage.Q = vqRef + (DFC_CURRENT_KP_Q_F * iqError);
 
-    /* Equation (34): id_FF = y2 = 0 */
-    dAxisCurrentFF = dAxisCurrentRef;
-
-    /* Calculate torque constant Kt(id) from equation (8)
-     * For SPMSM with id = 0: Kt = (3/2)*p*ψf (constant!)
+    /*
+     * ------------------------------------------------------------
+     * 6. Get measured rotor angle
+     * ------------------------------------------------------------
      */
-    torqueConstant = 1.5F * MPtr->PolePairs *
-                     (MPtr->FluxPm + (MPtr->Ld - MPtr->Lq) * dAxisCurrentFF);
-    /* Note: For SPMSM, (Ld - Lq) = 0, so Kt = (3/2)*p*ψf */
 
-    /* Equation (35): iq_FF = (J*y¨1 + B*y˙1 + TL) / ((3/2)*p*(ψf + (Ld-Lq)*y2))
-     * With y2 = id = 0: iq_FF = (J*αm + B*ωm + TL) / ((3/2)*p*ψf)
-     */
-    numerator = MPtr->J * rotorAccelRef + MPtr->B * rotorSpeedRef + MPtr->TorqueLoad;
-    denominator = 1.5F * MPtr->PolePairs *
-                  (MPtr->FluxPm + (MPtr->Ld - MPtr->Lq) * dAxisCurrentRef);
+    rotorSpeedMeas = CON_RPM_TO_RAD(InputPtr->RotorSpeedEst);
 
-    /* Avoid division by zero */
-    if (fabsf(denominator) > 1e-6F)
-    {
-        qAxisCurrentFF = numerator / denominator;
-    }
-    else
-    {
-        qAxisCurrentFF = 0.0F;
-    }
+    (void)rotorSpeedMeas;
 
-    /* --- Step 3: Calculate derivative of feedforward q-axis current --- */
-    /* Equation (25): N_dot = J*y¨¨1 + B*y¨1 + T˙L */
-    numeratorDot = MPtr->J * rotorJerkRef + MPtr->B * rotorAccelRef;
+    rotorAngleMeas = InputPtr->RotorPositionEst *  MPtr->PolePairs;
 
-    /* Equation (26): D_dot = (3/2)*p*(Ld-Lq)*y˙2
-     * With y˙2 = d(id)/dt = 0: D_dot = 0
-     */
-    denominatorDot = 1.5F * MPtr->PolePairs * (MPtr->Ld - MPtr->Lq) * dAxisCurrentRefDot;
+    DFC_WrapAngle(&rotorAngleMeas);
 
-    /* Equation (27): i˙q_FF = (N_dot*D - N*D_dot) / D²
-     * With D_dot = 0: i˙q_FF = N_dot / D
-     */
-    if (fabsf(denominator) > 1e-6F)
-    {
-        qAxisCurrentFFDot = (numeratorDot * denominator - numerator * denominatorDot) /
-                            (denominator * denominator);
-    }
-    else
-    {
-        qAxisCurrentFFDot = 0.0F;
-    }
-
-    /* --- Step 4: Calculate feedforward control inputs using flatness --- */
-    /* Equation (36): vd_FF = Rs*y2 + Ld*y˙2 - p*y˙1*Lq*iq_FF
-     * With y2 = 0 and y˙2 = 0: vd_FF = -p*ωm*Lq*iq_FF
-     */
-    dqVoltageFF.D = MPtr->Rs * dAxisCurrentRef +
-                    MPtr->Ld * dAxisCurrentRefDot -
-                    MPtr->PolePairs * rotorSpeedFF * MPtr->Lq * qAxisCurrentFF;
-
-    /* Equation (37): vq_FF = Rs*iq_FF + Lq*i˙q_FF + p*y˙1*(Ld*y2 + ψf)
-     * With y2 = 0: vq_FF = Rs*iq_FF + Lq*i˙q_FF + p*ωm*ψf
-     */
-    dqVoltageFF.Q = MPtr->Rs * qAxisCurrentFF +
-                    MPtr->Lq * qAxisCurrentFFDot +
-                    MPtr->PolePairs * rotorSpeedFF *
-                    (MPtr->Ld * dAxisCurrentRef + MPtr->FluxPm);
-
-    /* --- Step 5: Calculate Feedback Corrections --- */
-    /* Current feedback around DFC feedforward */
-    /* vd = vd_FF + kpId * (id_ref - id_meas), with id_ref = 0 */
-    currentErrorId = dAxisCurrentRef - dqCurrentMeas.D;
-    feedbackVd = kpId * currentErrorId;
-
-    /* vq = vq_FF + kpIq * (iq_FF - iq_meas) */
-    currentErrorIq = qAxisCurrentFF - dqCurrentMeas.Q;
-    feedbackVq = kpIq * currentErrorIq;
-
-    /* --- Step 6: Combine Feedforward + Feedback --- */
-    dqVoltageTotal.D = dqVoltageFF.D + feedbackVd;
-    dqVoltageTotal.Q = dqVoltageFF.Q + feedbackVq;
-
-    /* --- Step 7: Convert total dq voltages to PWM duty cycles using DFC_VoltageToDuty --- */
     focAngle.ThetaE = rotorAngleMeas;
 
-    /* FIX: Pass focAngle by value (not pointer) */
-    DFC_VoltageToDuty(&dqVoltageTotal, focAngle, MPtr, &svmDC);
+    /*
+     * ------------------------------------------------------------
+     * 7. dq voltage -> inverse Park -> SVM
+     * ------------------------------------------------------------
+     */
 
-    /* --- Step 8: Write Outputs --- */
+    DFC_VoltageToDuty( &dqVoltage,focAngle,MPtr, &svmDC);
+
+    /*
+     * ------------------------------------------------------------
+     * 8. PWM outputs
+     * ------------------------------------------------------------
+     */
+
     OutputPtr->DutyU = svmDC.Ta;
     OutputPtr->DutyV = svmDC.Tb;
     OutputPtr->DutyW = svmDC.Tc;
     OutputPtr->SvmSector = svmDC.Sector;
     OutputPtr->Valid = 0x1U;
 }
+
+

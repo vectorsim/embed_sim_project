@@ -118,18 +118,7 @@ extern void CddGtm_InitInverter(void);
 extern void CddGtm_Start(void);
 
 
-/**
- * \brief   Initialises the control-loop layer: Transform_Init() + DFC_Init(),
- *          then resets the private controller state.  Command defaults
- *          (CtrlMode = CDDAPP_CTRL_OPENLOOP, SpeedRefRpm = 0) are set by
- *          CddApp_Init() in the central CddApp_T.
- *
- * \details Called by CddApp_Init() after CddGtm_Init().  The ISR never
- *          dispatches the DFC path before this has returned 0x1U.
- *
- * \return  0x1U on success; 0x0U if DFC_Init() failed.
- */
-extern uint32_T CddGtm_CtrlInit(void);
+
 
 
 #endif /* CDD_GTM_APP_H_ */

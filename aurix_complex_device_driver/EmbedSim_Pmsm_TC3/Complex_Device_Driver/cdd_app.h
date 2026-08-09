@@ -137,6 +137,7 @@ typedef enum
     CDDAPP_INIT_ERR_CTRL       =   65U,    /**< Control-loop init (DFC/transform) failed  [dimensionless] */
     CDDAPP_INIT_DONE_CTRL      =   75U,    /**< Transform + DFC controller initialised    [dimensionless] */
     CDDAPP_INIT_OK             =  100U,    /**< All sub-modules initialised successfully  [dimensionless] */
+    CDDAPP_CALIBRATE_OK        =  101U,    /**< All sub-modules initialised successfully  [dimensionless] */
     CDDAPP_RUN_STATE           =  105U,    /**< All sub-modules initialised successfully  [dimensionless] */
     CDDAPP_ERROR_STATE         =  110U
 } CddApp_Status_T;

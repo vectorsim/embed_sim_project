@@ -75,14 +75,13 @@
 #include "cdd_gpt12_app.h"
 #include "cdd_sys_utility.h"
 #include "cdd_config.h"
+#include "cdd_evadc_app.h"
+#include "embed_sim_control.h"
 #include "IfxGtm_reg.h"
 #include "IfxGtm_Atom.h"
 #include "IfxSrc_reg.h"
 #include <math.h>
-#include "embed_sim_sv_pwm.h"
-#include "embed_sim_coordinate_transform.h"
-#include "embed_sim_dfc_controller.h"
-#include "cdd_evadc_app.h"
+
 
 
 
@@ -183,55 +182,20 @@
 /** \brief  Open-loop V/f law: modulation index ceiling.  [dimensionless]            */
 #define GTM_OL_MI_MAX               (0.95F)
 
-   volatile real32_T estRpm;
 /*********************************************************************************************************************/
 /*-------------------------------------------------Data Structures---------------------------------------------------*/
 /*********************************************************************************************************************/
 
-/**
- * \struct CddGtm_Ctrl_T
- * \brief  Private control-loop runtime state.
- *
- * \details The COMMAND interface (CtrlMode, SpeedRefRpm) and the MEASUREMENTS
- *          (Meas, PhaseCurrents) live in the central CddApp_T; this structure
- *          holds only what the ISR owns exclusively: the latched mode,
- *          controller state, and the open-loop integrators.
- *
- *          Single-writer: the 20 kHz ISR (plus one-time CddGtm_CtrlInit()
- *          before the ISR is armed).  Telemetry accessors read snapshots.
- */
-typedef struct
-{
-    CddApp_CtrlMode_T   ModeActive;     /**< Mode latched by the ISR ONCE on the
-                                         *   activation edge — immutable for the
-                                         *   entire run — no switching during
-                                         *   operation.                             */
-    DFC_State_T         Dfc;            /**< DFC controller state (SMO, shaper, …).   */
-    DFC_Output_T        DfcOut;         /**< Latest DFC output snapshot (telemetry).  */
-    uint32_T            DfcFailCount;   /**< Consecutive DFC_Step() failures.         */
-    real32_T            OlThetaE;       /**< Open-loop electrical angle    [rad]      */
-    real32_T            OlRpmAct;       /**< Open-loop slew-limited speed  [RPM]      */
-    uint32_T            OlFailCount;    /**< Consecutive open-loop SVM failures.      */
-    uint32_T            CtrlActive;     /**< 0x1U while a run is active; cleared on
-                                         *   RUN exit or fault so the next activation
-                                         *   re-latches the mode and restarts from a
-                                         *   defined state (DFC: ALIGN, standstill).  */
-    uint32_T            CtrlInitDone;   /**< 0x1U after CddGtm_CtrlInit() succeeded.  */
-} CddGtm_Ctrl_T;
+
 
 /*********************************************************************************************************************/
 /*-------------------------------------------------Global variables--------------------------------------------------*/
 /*********************************************************************************************************************/
 
-/*
- * MISRA C:2012 Rule 8.9 deviation: file scope is required because the structure
- * is written by the ISR and read by the telemetry accessors (CddGtm_GetSpeedRpm
- * / GetDfcMode / GetDfcDiagnostics). Zero-initialised by .bss: ModeActive =
- * CDDAPP_CTRL_OPENLOOP (0), CtrlInitDone = 0 — the ISR therefore stays on the
- * open-loop path and the DFC is never dispatched before CddGtm_CtrlInit() has
- * completed.
- */
-static CddGtm_Ctrl_T   CddGtm_Ctrl_G;
+
+
+EmbedSimCtrlInput_T  EmbedSimCtrlInput_G;
+EmbedSimCtrlOutput_T EmbedSimCtrlOutput_G;
 
 /*********************************************************************************************************************/
 /*--------------------------------------------Private Variables/Constants--------------------------------------------*/
@@ -271,39 +235,6 @@ static CddGtm_Ctrl_T   CddGtm_Ctrl_G;
  */
 static void CddGtm_SetPwmDuty(P2CONST(CddApp_T, AUTOMATIC, CDD_APPL_DATA) AppPtr);
 
-/**
- * \brief   Open-loop V/f path — one ISR tick.
- *
- * \details Rotating voltage vector at the mechanical speed reference
- *          CddApp_G.SpeedRefRpm: the reference is slew-limited
- *          (GTM_OL_RPM_SLEW per tick — never a frequency step), the
- *          modulation index follows the V/f law mi = BOOST + GAIN * |rpm|
- *          (ceiling GTM_OL_MI_MAX), and the electrical angle integrates
- *          rpm * 2*pi*p/60 * Ts.  Negative references reverse rotation.
- *          No current feedback consumed.  Sustained SVM failure
- *          (>= GTM_SVM_FAIL_LIMIT ticks) zeroes the duties and latches
- *          CDDAPP_ERROR_STATE.
- *
- * \note    STATIC — called only from GTM_Atom_00_Ch_00_Isr() (Rule 8.7).
- */
-static void CddGtm_RunOpenLoop(void);
-
-/**
- * \brief   Closed-loop sensorless DFC path — one ISR tick.
- *
- * \details Sequence:
- *              1. Consume CddApp_G.PhaseCurrents [A] (read and converted once
- *                 per tick by the ISR; valley-sampled by ATOM0_CH7).
- *              2. DFC_Step() with DFC_LOOP_CLOSEDLOOP (always the full
- *                 sequence): SMO → ALIGN → I-f → CLOSEDLOOP flatness →
- *                 voltage law → internal SVPWM → Ta/Tb/Tc.
- *              3. Copy duties to CddApp_G and write ATOM shadow registers.
- *          On failure: hold previous duties for < GTM_DFC_FAIL_LIMIT consecutive
- *          ticks; beyond that, zero duties, DFC_Reset(), CDDAPP_ERROR_STATE.
- *
- * \note    STATIC — called only from GTM_Atom_00_Ch_00_Isr() (Rule 8.7).
- */
-static void CddGtm_RunDfc(void);
 
 /**
  * \brief   Helper function to configure a single phase's PWM compare registers.
@@ -370,264 +301,60 @@ EMBED_SIM_INTERRUPT(GTM_Atom_00_Ch_00_Isr, TOS_GTM_ISR, SRPN_GTM_ISR);
  */
 void GTM_Atom_00_Ch_00_Isr(void)
 {
-    /* Step 1 — diagnostics counter                                                  */
+
     CddApp_G.ControlLoopCounter++;
-
-    volatile real32_T estRpm;
-
-
+    CddApp_G.DutyAdcTrig = 0.8F;
+    CddEvadc_ConvertPhaseCurrents(&CddApp_G);
     CddGpt12_Update();
+    CddApp_G.RotorSpeedRpm = CddGpt12_GetSpeedRpm();
+    CddApp_G.RotorPosition = CddGpt12_GetMechanicalPosition();
 
-
-    /* Step 2 — control path dispatch, active only in RUN state                     */
-    if (CddApp_G.CDDAppStatus == CDDAPP_RUN_STATE)
+    if((CddApp_G.CDDAppStatus == CDDAPP_INIT_OK) || (CddApp_G.CDDAppStatus == CDDAPP_RUN_STATE))
     {
-        /* Step 2b — activation edge: latch the commanded mode ONCE — it is
-         * fixed for the entire run (no switching during operation; to change:
-         * stop, set, restart).  Both controller states restart defined:
-         * DFC from ALIGN (assumes standstill), open loop from zero angle and
-         * zero speed (the slew limiter then ramps to SpeedRefRpm).             */
-        if (CddGtm_Ctrl_G.CtrlActive != 0x1U)
+
+        if(CddApp_G.CDDAppStatus == CDDAPP_INIT_OK)
         {
-            CddGtm_Ctrl_G.ModeActive   = CddApp_G.CtrlMode;
-            (void)DFC_Reset(&CddGtm_Ctrl_G.Dfc);
-            CddGtm_Ctrl_G.DfcFailCount = 0U;
-            CddGtm_Ctrl_G.OlThetaE     = 0.0F;
-            CddGtm_Ctrl_G.OlRpmAct     = 0.0F;
-            CddGtm_Ctrl_G.OlFailCount  = 0U;
-            CddGtm_Ctrl_G.CtrlActive   = 0x1U;
+            CddApp_G.DutyU       = 0.5F;
+            CddApp_G.DutyV       = 0.5F;
+            CddApp_G.DutyW       = 0.5F;
+            CddEvadc_CalibrateCurrentOffset(&CddApp_G);
         }
         else
         {
-            /* Steady state — mode immutable while CtrlActive == 0x1U          */
+            EmbedSimCtrlInput_G.AngularVelocityRefRpm   = CddApp_G.SpeedRefRpm;
+            EmbedSimCtrlInput_G.Iu                      = CddApp_G.Iu;
+            EmbedSimCtrlInput_G.Iv                      = CddApp_G.Iv;
+            EmbedSimCtrlInput_G.Iw                      = CddApp_G.Iw;
+            EmbedSimCtrlInput_G.DutyU                   = CddApp_G.DutyU;
+            EmbedSimCtrlInput_G.DutyV                   = CddApp_G.DutyV;
+            EmbedSimCtrlInput_G.DutyW                   = CddApp_G.DutyW;
+            EmbedSimCtrlInput_G.RotorPositionSensor     = CddApp_G.RotorPosition;
+            EmbedSimCtrlInput_G.RotorSpeedSensor        = CddApp_G.RotorSpeedRpm;
+            EmbedSimCtrlInput_G.SampleTime              = CddApp_G.SampleTime;
+            EmbedSimCtrlInput_G.Vdc                     = CddApp_G.Vdc;
+            EmbedSimCtrlInput_G.Valid = 0x1U;
+            EmbedSim_ControlStep(&EmbedSimCtrlInput_G, &EmbedSimCtrlOutput_G);
 
-        }
-
-        /* Step 2c — dispatch on the LATCHED mode                               */
-        if ((CddGtm_Ctrl_G.ModeActive == CDDAPP_CTRL_CLOSEDLOOP) &&
-            (CddGtm_Ctrl_G.CtrlInitDone == 0x1U))
-        {
-            CddGtm_RunDfc();
-        }
-        else
-        {
-            /* Open-loop V/f path (default from reset; also the fallback if
-             * CLOSEDLOOP was requested before CddGtm_CtrlInit() succeeded).
-             * Measurements were already taken in Step 1b — no second read:
-             * VF is clear-on-read, a duplicate read only re-consumes flags.   */
-            if(CddApp_G.ControlLoopCounter < 1000)
+            if(EmbedSimCtrlOutput_G.Valid == 0x1U)
             {
-                CddApp_G.DutyU = 0.0F;
-                CddApp_G.DutyV = 0.0F;
-                CddApp_G.DutyW = 0.0F;
-                CddGtm_SetPwmDuty(&CddApp_G);
-                CddEvadc_CalibrateCurrentOffset(&CddApp_G);
-                //CddGtm_Ctrl_G.ModeActive =CDDAPP_CTRL_CLOSEDLOOP;
+                CddApp_G.DutyU = EmbedSimCtrlOutput_G.DutyU;
+                CddApp_G.DutyV = EmbedSimCtrlOutput_G.DutyV;
+                CddApp_G.DutyW = EmbedSimCtrlOutput_G.DutyW;
             }
             else
             {
-
-               CddGtm_RunOpenLoop();
-               CddApp_G.RotorSpeedRpm = CddGpt12_GetSpeedRpm();
-               CddApp_G.RotorPosition = CddGpt12_GetMechanicalPosition();
+                CddApp_G.DutyU       = 0.5F;
+                CddApp_G.DutyV       = 0.5F;
+                CddApp_G.DutyW       = 0.5F;
             }
         }
     }
-    else
-    {
-        /* Step 3 — safe-off in all non-RUN states                                  */
-        CddGtm_Ctrl_G.CtrlActive = 0x0U;
-        CddApp_G.DutyU = 0.0F;
-        CddApp_G.DutyV = 0.0F;
-        CddApp_G.DutyW = 0.0F;
-        CddGtm_SetPwmDuty(&CddApp_G);
-    }
 
-    /* Step 4 — clear CCU1 interrupt flag (write-1-to-clear, TC38x UM §24)          */
+    CddGtm_SetPwmDuty(&CddApp_G);
     GTM_ATOM0_CH0_IRQ_NOTIFY.B.CCU1TC = 0x1U;
 }
 
 
-
-static void CddGtm_RunOpenLoop(void)
-{
-    FocAngle_T         angle;
-    SVM_DutyCycle_T    svm_dc;
-    MatrixStatus_Type  status;
-    real32_T           rpm_err;
-    real32_T           rpm_abs;
-    real32_T           mi;
-
-    /* Step 1 — speed ramp: an open-loop rotating vector must never step in
-     * frequency (loss of synchronism).  OlRpmAct tracks CddApp_G.SpeedRefRpm
-     * with at most GTM_OL_RPM_SLEW per tick; negative references reverse
-     * the rotation direction.                                                    */
-    rpm_err = CddApp_G.SpeedRefRpm - CddGtm_Ctrl_G.OlRpmAct;
-
-    if (rpm_err > GTM_OL_RPM_SLEW)
-    {
-        rpm_err = GTM_OL_RPM_SLEW;
-    }
-    else if (rpm_err < -GTM_OL_RPM_SLEW)
-    {
-        rpm_err = -GTM_OL_RPM_SLEW;
-    }
-    else
-    {
-        /* Within one slew step — take the remainder (Rule 14.4: mandatory else) */
-    }
-
-    CddGtm_Ctrl_G.OlRpmAct += rpm_err;
-
-    /* Step 2 — V/f law: mi = BOOST + GAIN * |rpm|, ceiling-clamped               */
-    rpm_abs = ((CddGtm_Ctrl_G.OlRpmAct < 0.0F) ? -CddGtm_Ctrl_G.OlRpmAct
-                                               :  CddGtm_Ctrl_G.OlRpmAct);
-    mi      = GTM_OL_VF_BOOST + (GTM_OL_VF_GAIN * rpm_abs);
-
-    if (mi > GTM_OL_MI_MAX)
-    {
-        mi = GTM_OL_MI_MAX;
-    }
-
-
-    /* Step 3 — electrical angle integration with conditional wrap (no fmodf):
-     * theta_e += omega_e * Ts = rpm * (2*pi*p/60) * Ts                           */
-    CddGtm_Ctrl_G.OlThetaE += (CddGtm_Ctrl_G.OlRpmAct * GTM_RPM_TO_RADPS_E *
-                               CddApp_G.SampleTime);
-
-    if (CddGtm_Ctrl_G.OlThetaE >= RAD_360)
-    {
-        CddGtm_Ctrl_G.OlThetaE -= RAD_360;
-    }
-    else if (CddGtm_Ctrl_G.OlThetaE < 0.0F)
-    {
-        CddGtm_Ctrl_G.OlThetaE += RAD_360;
-    }
-    else
-    {
-        /* Angle within [0, 2π) — no wrap required (Rule 14.4: mandatory else)      */
-    }
-
-    angle.ThetaE = CddGtm_Ctrl_G.OlThetaE;
-
-    status = SVM_CalculateDutyCycle(mi, &angle, &svm_dc);
-
-    if (status == MATRIX_SUCCESS)
-    {
-        /* Nominal path: copy duties and write shadow registers                      */
-        SVM_GetDutyCyclesFloat(&svm_dc,
-                               &CddApp_G.DutyU,
-                               &CddApp_G.DutyV,
-                               &CddApp_G.DutyW);
-        CddGtm_SetPwmDuty(&CddApp_G);
-        CddGtm_Ctrl_G.OlFailCount = 0U;
-    }
-    else
-    {
-        CddGtm_Ctrl_G.OlFailCount++;
-
-        if (CddGtm_Ctrl_G.OlFailCount >= GTM_SVM_FAIL_LIMIT)
-        {
-            /* Sustained SVM failure: emergency shutdown                             */
-            CddApp_G.DutyU     = 0.0F;
-            CddApp_G.DutyV     = 0.0F;
-            CddApp_G.DutyW     = 0.0F;
-            CddGtm_SetPwmDuty(&CddApp_G);
-            CddGtm_Ctrl_G.CtrlActive = 0x0U;
-            CddApp_G.CDDAppStatus    = CDDAPP_ERROR_STATE;
-        }
-        else
-        {
-            /* Transient failure: retain previous duty cycle                         */
-            CddGtm_SetPwmDuty(&CddApp_G);
-        }
-    }
-}
-
-
-
-/**********************************************************************************************************************
- * CddGtm_RunDfc
- *********************************************************************************************************************/
-
-/**
- * \brief   Implements one tick of the closed-loop sensorless DFC control path.
- *
- * \details The DFC (Differential Flatness Controller) provides full sensorless
- *          control using the following sequence:
- *              1. Consume phase currents from CddApp_G (valley-sampled by ATOM0_CH7)
- *              2. Call DFC_Step() with DFC_LOOP_CLOSEDLOOP which executes:
- *                 - SMO (Sliding Mode Observer) for position/speed estimation
- *                 - ALIGN sequence for initial rotor alignment
- *                 - I-f (current-frequency) startup
- *                 - CLOSEDLOOP flatness controller
- *                 - Voltage law and internal SVPWM
- *              3. Copy the resulting duty cycles to CddApp_G
- *              4. Write shadow registers via CddGtm_SetPwmDuty()
- *
- *          Failure handling:
- *          - Transient failures (< GTM_DFC_FAIL_LIMIT): retain previous duties
- *          - Sustained failures (>= GTM_DFC_FAIL_LIMIT): emergency shutdown
- *
- * \note    STATIC — called only from the ISR, not intended for external use.
- *          The DFC state machine is maintained in CddGtm_Ctrl_G.Dfc and is
- *          persistent across ISR calls.
- */
-static void CddGtm_RunDfc(void)
-{
-    DFC_Input_T        dfc_in;
-    DFC_Output_T       dfc_out;
-    MatrixStatus_Type  status;
-
-    /* Step 1 — prepare DFC input with latest phase currents                      */
-    dfc_in.PhaseCurrents.U = CddApp_G.Iu;
-    dfc_in.PhaseCurrents.V = CddApp_G.Iv;
-    dfc_in.PhaseCurrents.W = CddApp_G.Iw;
-
-    /* Step 2 — set speed reference and loop option                               */
-    dfc_in.SpeedRefRpm = (MatrixFloat)CddApp_G.SpeedRefRpm;
-    dfc_in.LoopOption  = DFC_LOOP_CLOSEDLOOP;
-
-    /* Step 3 — execute one DFC step                                              */
-    status = DFC_Step(&CddGtm_Ctrl_G.Dfc,
-                      &dfc_in,
-                      (MatrixFloat)CddApp_G.SampleTime,
-                      &dfc_out);
-
-    /* Step 4 — handle the DFC result                                             */
-    if (status == MATRIX_SUCCESS)
-    {
-        /* Nominal path: copy duties and write shadow registers                      */
-        CddApp_G.DutyU = (real32_T)dfc_out.Ta;
-        CddApp_G.DutyV = (real32_T)dfc_out.Tb;
-        CddApp_G.DutyW = (real32_T)dfc_out.Tc;
-        CddGtm_SetPwmDuty(&CddApp_G);
-
-        CddGtm_Ctrl_G.DfcOut       = dfc_out;
-        CddGtm_Ctrl_G.DfcFailCount = 0U;
-    }
-    else
-    {
-        CddGtm_Ctrl_G.DfcFailCount++;
-
-        if (CddGtm_Ctrl_G.DfcFailCount >= GTM_DFC_FAIL_LIMIT)
-        {
-            /* Sustained DFC failure: emergency shutdown                             */
-            CddApp_G.DutyU = 0.0F;
-            CddApp_G.DutyV = 0.0F;
-            CddApp_G.DutyW = 0.0F;
-            CddGtm_SetPwmDuty(&CddApp_G);
-            (void)DFC_Reset(&CddGtm_Ctrl_G.Dfc);
-            CddGtm_Ctrl_G.CtrlActive = 0x0U;
-            CddApp_G.CDDAppStatus    = CDDAPP_ERROR_STATE;
-        }
-        else
-        {
-            /* Transient failure: retain previous duty cycle                         */
-            CddGtm_SetPwmDuty(&CddApp_G);
-        }
-    }
-}
 
 /**********************************************************************************************************************
  * CddGtm_ConfigurePhase
@@ -796,11 +523,17 @@ void CddGtm_InitInverter(void)
     CddApp_G.SampleTime         = 1.0F / (real32_T)CDD_CONTROL_LOOP_FREQUENCY;
     CddApp_G.ControlLoopCounter = 0U;
 
+
+    EmbedSimCtrlInput_G.CtrlAlg = SIM_CTRL_DFC;  //SIM_CTRL_OPEN_LOOP; SIM_CTRL_DFC;
+    EmbedSimCtrlInput_G.SwitchToClosedLoop = 0x0U;
+    EmbedSim_ControlInit();
+
+
     /* Step 2 — zero-vector pre-load: 50 % duty on all phases (no net voltage)      */
     CddApp_G.DutyU       = 0.5F;
     CddApp_G.DutyV       = 0.5F;
     CddApp_G.DutyW       = 0.5F;
-    CddApp_G.DutyAdcTrig = 0.9F;
+    CddApp_G.DutyAdcTrig = 0.8F;
     CddGtm_SetPwmDuty(&CddApp_G);
 
     /* Step 3 — snapshot current AGC registers for read-modify-write                */
@@ -1048,59 +781,11 @@ void CddGtm_InitInverter(void)
  */
 void CddGtm_Start(void)
 {
-    SVM_Init();
-    CddApp_G.CDDAppStatus          = CDDAPP_RUN_STATE;
+
+    //CddApp_G.CDDAppStatus = CDDAPP_RUN_STATE;
     GTM_ATOM0_AGC_GLB_CTRL.B.HOST_TRIG = 0x1U;
 }
 
-/**********************************************************************************************************************
- * CddGtm_CtrlInit
- *********************************************************************************************************************/
 
-/**
- * \brief   Initialises the control-loop layer: coordinate transforms + DFC state.
- *
- * \details Sequence:
- *              1. Transform_Init()  — Clarke/Park matrix setup; required once
- *                                     before the first DFC_Step() (see
- *                                     embed_sim_dfc_controller.h, DFC_Init contract).
- *              2. DFC_Init()        — explicit field-by-field zeroing + default gains.
- *              3. Private-state defaults (ModeActive, open-loop integrators,
- *                 fail counters).  Command defaults live in CddApp_Init().
- *
- *          Called by CddApp_Init() after CddGtm_Init() (the DFC needs no GTM
- *          hardware, but keeping it last preserves the failure-localising status
- *          ladder).  Until CtrlInitDone == 0x1U the ISR never dispatches the DFC
- *          path, regardless of the requested mode.
- *
- * \return  0x1U on success; 0x0U if DFC_Init() failed.
- */
-uint32_T CddGtm_CtrlInit(void)
-{
-    uint32_T           ok;
-    MatrixStatus_Type  status;
 
-    /* Step 1 — Clarke/Park transform tables (idempotent; also used by SVM path)    */
-    Transform_Init();
-
-    /* Step 2 — DFC controller state: explicit zeroing + compile-time default gains */
-    status = DFC_Init(&CddGtm_Ctrl_G.Dfc);
-    ok     = ((status == MATRIX_SUCCESS) ? 0x1U : 0x0U);
-
-    /* Step 3 — private-state defaults.  The COMMAND defaults (CtrlMode =
-     * OPENLOOP, SpeedRefRpm = 0) are set by CddApp_Init() in the central
-     * structure; the host selects mode and speed explicitly BEFORE
-     * CddApp_Start() via CddApp_SetCtrlMode() / CddApp_SetSpeedRefRpm() —
-     * the mode is latched once on the activation edge and cannot change
-     * during the run.                                                          */
-    CddGtm_Ctrl_G.ModeActive   = CDDAPP_CTRL_OPENLOOP;
-    CddGtm_Ctrl_G.DfcFailCount = 0U;
-    CddGtm_Ctrl_G.OlThetaE     = 0.0F;
-    CddGtm_Ctrl_G.OlRpmAct     = 0.0F;
-    CddGtm_Ctrl_G.OlFailCount  = 0U;
-    CddGtm_Ctrl_G.CtrlActive   = 0x0U;
-    CddGtm_Ctrl_G.CtrlInitDone = ok;
-
-    return ok;
-}
 

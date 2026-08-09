@@ -86,9 +86,9 @@
 /**********************************************************************************************************************
  * EVADC SR Enable
  *********************************************************************************************************************/
-#define EVADC_ENABLE_PHASE_U_SR     (0U)
+#define EVADC_ENABLE_PHASE_U_SR     (1U)
 #define EVADC_ENABLE_PHASE_V_SR     (1U)
-#define EVADC_ENABLE_PHASE_W_SR     (0U)
+#define EVADC_ENABLE_PHASE_W_SR     (1U)
 #define EVADC_ENABLE_DC_LINK_SR     (0U)
 
 #endif /* CDD_CONFIG_H_ */

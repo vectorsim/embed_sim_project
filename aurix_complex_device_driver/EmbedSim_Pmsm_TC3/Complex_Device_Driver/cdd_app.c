@@ -137,12 +137,15 @@ void CddApp_Init(void)
     CddApp_G.Iw          = 0.0F;
     CddApp_G.Vro         = 2.5F;
     CddApp_G.Vdc         = 12.0F;
+    CddApp_G.DutyU       = 0.5F;
+    CddApp_G.DutyV       = 0.5F;
+    CddApp_G.DutyW       = 0.5F;
     CddApp_G.OffsetIu    = 0.0F;
     CddApp_G.OffsetIv    = 0.0F;
     CddApp_G.OffsetIw    = 0.0F;
 
     CddApp_G.CtrlMode    = CDDAPP_CTRL_OPENLOOP;
-    CddApp_G.SpeedRefRpm = 900.0F;
+    CddApp_G.SpeedRefRpm = 1200.0F;
     CddApp_G.SensorReadingBitField = 0x0U;
 
     /* Re-entrant / repeated call guard: CDDAPP_INIT_PENDING = 0 (set by .bss at reset) */
@@ -265,25 +268,7 @@ void CddApp_Init(void)
             }
         }
 
-        /* Initialise  Control */
-        if (ok == 0x1U)
-        {
 
-            /* Clarke/Park transform setup + DFC controller state zeroing with
-             * default gains.  Until this succeeds the ISR keeps to the open-loop
-             * V/f path regardless of the mode requested via CddApp_SetCtrlMode(). */
-            ok = CddGtm_CtrlInit();
-            if (ok != 0x1U)
-            {
-                CddApp_G.CDDAppStatus = CDDAPP_INIT_ERR_CTRL;
-                CddApp_G.DTC          = CDDAPP_DTC_CTRL_INIT;
-            }
-            else
-            {
-                CddApp_G.CDDAppStatus = CDDAPP_INIT_DONE_CTRL;
-                CddApp_G.CDDAppStatus = CDDAPP_INIT_OK;
-            }
-        }
 
 
     }
@@ -322,9 +307,9 @@ uint32_T CddApp_Start(void)
 
 
 
-    if((CddApp_G.CDDAppStatus == CDDAPP_INIT_OK) && (started != 0x1U))
+    if((CddApp_G.CDDAppStatus == CDDAPP_INIT_DONE_INV) && (started != 0x1U))
     {
-       uint32_T clrErr = 0x0U;
+
 
        /* Step 7 — CALIBRATION WINDOW: gates hard-off while everything else
         * runs.  PowerOnSequence leaves /SOFF deasserted, so it must be
@@ -332,23 +317,18 @@ uint32_T CddApp_Start(void)
         * bridge is never energised during offset calibration.                 */
        CddTle9180_AssertSafeOff();            /* gates hard-off (latched)                */
        CddTle9180_AssertEnable();             /* pre-drivers active, outputs held off    */
-       CddGtm_Start();                        /* PWM carrier live, 20 kHz ISR firing,
+                              /* PWM carrier live, 20 kHz ISR firing,
                                                * EVADC conversions flowing (ISR reads
                                                * sensors in every state)                 */
-
-       /* Step 8 — one-shot CSA offset calibration: true phase currents are
-        * zero (/SOFF asserted), the ISR refreshes Vu/Vv/Vw/Vr each tick.
-        * Blocking ~3.2 ms at 64 samples.  On timeout (ISR not ticking) the
-        * offsets stay 0.0f and conversion degrades gracefully — verify
-        * Vuo/Vvo/Vwo are non-zero in the watch window after startup.          */
 
 
        /* Step 9 — clear any faults logged while inputs toggled against
         * /SOFF (Err_indiag class), then release the gates and go live.        */
        //(void)CddTle9180_ClearFaults(&clrErr);
        CddTle9180_DeassertSafeOff();          /* bridge live                             */
+       CddGtm_Start();
+       CddApp_G.CDDAppStatus = CDDAPP_INIT_OK;
 
-       CddApp_G.CDDAppStatus = CDDAPP_RUN_STATE;
        started = 0x1U;
 
     }

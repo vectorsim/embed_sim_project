@@ -212,7 +212,7 @@ void CddEvadc_Init(void)
     CddEvadc_ConfigGlobal();
     CddEvadc_ConfigG0Ch0An0PhaseU();
     CddEvadc_ConfigG3Ch0An24PhaseV();
-    /*CddEvadc_ConfigG2Ch0An16PhaseW();*/
+    CddEvadc_ConfigG2Ch0An16PhaseW();
     CddEvadc_ConfigG01VroUdc();
 }
 
@@ -221,6 +221,7 @@ void CddEvadc_ConvertPhaseCurrents(P2VAR(volatile CddApp_T, AUTOMATIC, CDD_APPL_
 {
     const real32_T V_TO_A = EVADC_V_TO_A_FACTOR;  /* 3.246 A/V */
     real32_T vRoCalibrated;
+    real32_T iBalanced;
 
     /*
      * Use calibrated VRO reference = measured VRO - VRO offset
@@ -231,10 +232,14 @@ void CddEvadc_ConvertPhaseCurrents(P2VAR(volatile CddApp_T, AUTOMATIC, CDD_APPL_
     /* Calculate phase currents using calibrated VRO reference */
     CddAppPtr->Iu = ((CddAppPtr->Vu - vRoCalibrated) * V_TO_A) - CddAppPtr->OffsetIu;
     CddAppPtr->Iv = ((CddAppPtr->Vv - vRoCalibrated) * V_TO_A) - CddAppPtr->OffsetIv;
-    CddAppPtr->Iw = -(CddAppPtr->Iu +  CddAppPtr->Iv);
+    CddAppPtr->Iw = ((CddAppPtr->Vw - vRoCalibrated) * V_TO_A) - CddAppPtr->OffsetIw;
 
-    CddAppPtr->Isum = 0.0F;
+    CddAppPtr->Isum =  CddAppPtr->Iu + CddAppPtr->Iv + CddAppPtr->Iw;
+    iBalanced = iBalanced/3.0F;
 
+    CddAppPtr->Iu += iBalanced;
+    CddAppPtr->Iv += iBalanced;
+    CddAppPtr->Iw += iBalanced;
 }
 
 
@@ -261,6 +266,7 @@ void EVADC_ConvSet_Isr(void)
 EMBED_SIM_INTERRUPT(EVADC_ConvPhaseU_Isr, 0x0U, CORE_00_ADC_PHASE_U_SRPN);
 void EVADC_ConvPhaseU_Isr(void)
 {
+    CddEvadc_ReadPhaseU(&CddApp_G);
     CddSys_NopDelay(1U, 1U);
 
 }
@@ -268,20 +274,17 @@ void EVADC_ConvPhaseU_Isr(void)
 EMBED_SIM_INTERRUPT(EVADC_ConvPhaseV_Isr, 0x0U, CORE_00_ADC_PHASE_V_SRPN);
 void EVADC_ConvPhaseV_Isr(void)
 {
-    CddApp_G.SensorReadingBitField = 0x0;
 
+     CddEvadc_ReadPhaseV(&CddApp_G);
 
-        CddEvadc_ReadPhaseU(&CddApp_G);
-        CddEvadc_ReadPhaseV(&CddApp_G);
-        CddEvadc_ReadPhaseW(&CddApp_G);
-        CddEvadc_ConvertPhaseCurrents(&CddApp_G);
 
 }
 
 EMBED_SIM_INTERRUPT(EVADC_ConvPhaseW_Isr, 0x0U, CORE_00_ADC_PHASE_W_SRPN);
 void EVADC_ConvPhaseW_Isr(void)
 {
-    CddSys_NopDelay(1U, 1U);
+
+    CddEvadc_ReadPhaseW(&CddApp_G);
 
 }
 
@@ -818,6 +821,8 @@ static void CddEvadc_ReadPhaseW(P2VAR(volatile CddApp_T, AUTOMATIC, CDD_APPL_DAT
     {
         CddAppPtr->Vw = EVADC_CODE_TO_VOLT(Res.B.RESULT);
         CddAppPtr->SensorReadingBitField |= EVADC_CURRENT_W_READING_VALID;
+
+
     }
     else
     {
@@ -857,14 +862,12 @@ void CddEvadc_CalibrateCurrentOffset(P2VAR(volatile CddApp_T, AUTOMATIC, CDD_APP
     const real32_T V_TO_A = EVADC_V_TO_A_FACTOR;
     const real32_T CONVERGENCE_THRESHOLD = 0.0005f;  /* 0.5mA stability */
 
-    if ((CddAppPtr->SensorReadingBitField & (EVADC_CURRENT_U_READING_VALID |
-                                              EVADC_CURRENT_V_READING_VALID)) ==
-        (EVADC_CURRENT_U_READING_VALID | EVADC_CURRENT_V_READING_VALID))
+    if ((CddAppPtr->SensorReadingBitField & (EVADC_CURRENT_U_READING_VALID | EVADC_CURRENT_V_READING_VALID | EVADC_CURRENT_W_READING_VALID )) ==  (EVADC_CURRENT_U_READING_VALID | EVADC_CURRENT_V_READING_VALID |  EVADC_CURRENT_W_READING_VALID))
     {
         /* Calculate instantaneous current offsets for U and V (should be near zero at standstill) */
         real32_T instOffsetIu = (CddAppPtr->Vu - CddAppPtr->Vro) * V_TO_A;
         real32_T instOffsetIv = (CddAppPtr->Vv - CddAppPtr->Vro) * V_TO_A;
-        real32_T instOffsetIw = 0.0f;  /* W phase not measured */
+        real32_T instOffsetIw = (CddAppPtr->Vw - CddAppPtr->Vro) * V_TO_A;
 
         /* Simple incremental update */
         static real32_T alpha = 0.05f;  /* Start with faster convergence */
@@ -872,7 +875,7 @@ void CddEvadc_CalibrateCurrentOffset(P2VAR(volatile CddApp_T, AUTOMATIC, CDD_APP
         /* Update offsets for U and V only */
         offsetIu = offsetIu + alpha * (instOffsetIu - offsetIu);
         offsetIv = offsetIv + alpha * (instOffsetIv - offsetIv);
-        /* offsetIw remains 0 (not used) */
+        offsetIw = offsetIw + alpha * (instOffsetIw - offsetIw);
 
         /* Gradually slow down convergence for stability */
         if (alpha > 0.01f)
@@ -887,15 +890,18 @@ void CddEvadc_CalibrateCurrentOffset(P2VAR(volatile CddApp_T, AUTOMATIC, CDD_APP
         /* Check for convergence - only for U and V */
         real32_T deltaIu = offsetIu - prevOffsetIu;
         real32_T deltaIv = offsetIv - prevOffsetIv;
+        real32_T deltaIw = offsetIw - prevOffsetIw;
 
         if ((deltaIu < CONVERGENCE_THRESHOLD) && (deltaIu > -CONVERGENCE_THRESHOLD) &&
-            (deltaIv < CONVERGENCE_THRESHOLD) && (deltaIv > -CONVERGENCE_THRESHOLD))
+            (deltaIv < CONVERGENCE_THRESHOLD) && (deltaIv > -CONVERGENCE_THRESHOLD) &&
+            (deltaIw < CONVERGENCE_THRESHOLD) && (deltaIw > -CONVERGENCE_THRESHOLD)
+        )
         {
             stableCount++;
-            if (stableCount >= 10U)
+            if (stableCount >= 10000U)
             {
                 /* Calibration is stable - can set a flag if needed */
-                /* CddAppPtr->CDDAppStatus |= CDDAPP_CALIBRATED; */
+                CddAppPtr->CDDAppStatus =  CDDAPP_RUN_STATE;
             }
         }
         else
@@ -905,12 +911,12 @@ void CddEvadc_CalibrateCurrentOffset(P2VAR(volatile CddApp_T, AUTOMATIC, CDD_APP
 
         prevOffsetIu = offsetIu;
         prevOffsetIv = offsetIv;
-        /* prevOffsetIw remains 0 */
+        prevOffsetIw = offsetIw;
 
         /* Store calibrated offsets */
         CddAppPtr->OffsetIu = offsetIu;
         CddAppPtr->OffsetIv = offsetIv;
-        CddAppPtr->OffsetIw = 0.0f;  /* W phase not measured */
+        CddAppPtr->OffsetIw =  offsetIw;  /* W phase not measured */
 
     }
 }
