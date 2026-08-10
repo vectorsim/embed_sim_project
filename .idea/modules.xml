@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/embed_sim_project.iml" filepath="$PROJECT_DIR$/.idea/embed_sim_project.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/embedsim.iml" filepath="$PROJECT_DIR$/.idea/embedsim.iml" />
     </modules>
   </component>
 </project>

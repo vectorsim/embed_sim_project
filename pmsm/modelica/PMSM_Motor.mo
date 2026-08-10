@@ -6,7 +6,7 @@ model PMSM_Plant_FMU
   parameter Real J = 2.4e-6;
   parameter Real B_fric = 1e-6;
   parameter Integer p = 4;
-  parameter Real v_dc_nom = 17.0;
+  parameter Real v_dc_nom = 12.0;
 
   input Real duty_a(start=0.5);
   input Real duty_b(start=0.5);

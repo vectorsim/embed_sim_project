@@ -58,7 +58,7 @@
  * \return   TRUE if indices are in range, FALSE otherwise.
  */
 static boolean_T Matrix_IsValidIndex(
-    const Matrix_Type  * const Matrix_P,
+    const Matrix_T  * const Matrix_P,
     const uint32_T Row,
     const uint32_T Col);
 
@@ -70,10 +70,10 @@ static boolean_T Matrix_IsValidIndex(
  * \param[in] result  Output Matrix_P.
  * \return   #MATRIX_SUCCESS or appropriate error code.
  */
-static MatrixStatus_Type Matrix_CheckAddSub(
-    const Matrix_Type * const A_P,
-    const Matrix_Type * const B_P,
-    const Matrix_Type * const Result_P);
+static MatrixStatus_T Matrix_CheckAddSub(
+    const Matrix_T * const A_P,
+    const Matrix_T * const B_P,
+    const Matrix_T * const Result_P);
 
 /**
  * \brief  Pre-condition check for Matrix_P multiply.
@@ -83,10 +83,10 @@ static MatrixStatus_Type Matrix_CheckAddSub(
  * \param[in] result  Output Matrix_P.
  * \return   #MATRIX_SUCCESS or appropriate error code.
  */
-static MatrixStatus_Type Matrix_CheckMultiply(
-    const Matrix_Type * const A_P,
-    const Matrix_Type * const B_P,
-    const Matrix_Type * const Result_P);
+static MatrixStatus_T Matrix_CheckMultiply(
+    const Matrix_T * const A_P,
+    const Matrix_T * const B_P,
+    const Matrix_T * const Result_P);
 
 /**
  * \brief  Compute the determinant of an already-copied work Matrix_P via LU.
@@ -97,8 +97,8 @@ static MatrixStatus_Type Matrix_CheckMultiply(
  * \param[out]    DetOut_P  Computed determinant.
  * \return   #MATRIX_SUCCESS or #MATRIX_ERROR_SINGULAR.
  */
-static MatrixStatus_Type Matrix_DeterminantLU(
-    Matrix_Type  * const Matrix_P,
+static MatrixStatus_T Matrix_DeterminantLU(
+    Matrix_T  * const Matrix_P,
     MatrixFloat  * const DetOut_P);
 
 
@@ -110,7 +110,7 @@ static MatrixStatus_Type Matrix_DeterminantLU(
  * Matrix_IsValidIndex
  *------------------------------------------------------------------------------------------------------------------*/
 static boolean_T Matrix_IsValidIndex(
-    const Matrix_Type  * const Matrix_P,
+    const Matrix_T  * const Matrix_P,
     const uint32_T Row,
     const uint32_T Col)
 {
@@ -142,12 +142,12 @@ static boolean_T Matrix_IsValidIndex(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_CheckAddSub
  *------------------------------------------------------------------------------------------------------------------*/
-static MatrixStatus_Type Matrix_CheckAddSub(
-    const Matrix_Type * const A_P,
-    const Matrix_Type * const B_P,
-    const Matrix_Type * const Result_P)
+static MatrixStatus_T Matrix_CheckAddSub(
+    const Matrix_T * const A_P,
+    const Matrix_T * const B_P,
+    const Matrix_T * const Result_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
 
     status = MATRIX_SUCCESS;
 
@@ -175,12 +175,12 @@ static MatrixStatus_Type Matrix_CheckAddSub(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_CheckMultiply
  *------------------------------------------------------------------------------------------------------------------*/
-static MatrixStatus_Type Matrix_CheckMultiply(
-    const Matrix_Type * const A_P,
-    const Matrix_Type * const B_P,
-    const Matrix_Type * const Result_P)
+static MatrixStatus_T Matrix_CheckMultiply(
+    const Matrix_T * const A_P,
+    const Matrix_T * const B_P,
+    const Matrix_T * const Result_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
 
     status = MATRIX_SUCCESS;
 
@@ -208,11 +208,11 @@ static MatrixStatus_Type Matrix_CheckMultiply(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_DeterminantLU  (private helper)
  *------------------------------------------------------------------------------------------------------------------*/
-static MatrixStatus_Type Matrix_DeterminantLU(
-    Matrix_Type  * const Matrix_P,
+static MatrixStatus_T Matrix_DeterminantLU(
+    Matrix_T  * const Matrix_P,
     MatrixFloat  * const DetOut_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     uint32_T          i;
     uint32_T          n;
     uint32_T          pivot_local[MATRIX_MAX_ROWS];
@@ -259,7 +259,7 @@ static MatrixStatus_Type Matrix_DeterminantLU(
  * Matrix_Init
  *------------------------------------------------------------------------------------------------------------------*/
 void Matrix_Init(
-    Matrix_Type    * const Matrix_P,
+    Matrix_T    * const Matrix_P,
     MatrixElement  * const buffer,
     const uint32_T MaxRows,
     const uint32_T MaxCols)
@@ -288,7 +288,7 @@ void Matrix_Init(
  * Matrix_SetDimensions
  *------------------------------------------------------------------------------------------------------------------*/
 void Matrix_SetDimensions(
-    Matrix_Type  * const Matrix_P,
+    Matrix_T  * const Matrix_P,
     const uint32_T Rows,
     const uint32_T Cols)
 {
@@ -315,7 +315,7 @@ void Matrix_SetDimensions(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_Zero
  *------------------------------------------------------------------------------------------------------------------*/
-void Matrix_Zero(Matrix_Type * const Matrix_P)
+void Matrix_Zero(Matrix_T * const Matrix_P)
 {
     uint32_T row;
     uint32_T col;
@@ -340,9 +340,9 @@ void Matrix_Zero(Matrix_Type * const Matrix_P)
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_Identity
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Matrix_Identity(Matrix_Type * const Matrix_P)
+MatrixStatus_T Matrix_Identity(Matrix_T * const Matrix_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     uint32_T          row;
     uint32_T          col;
 
@@ -375,11 +375,11 @@ MatrixStatus_Type Matrix_Identity(Matrix_Type * const Matrix_P)
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_Copy
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Matrix_Copy(
-    Matrix_Type        * const Dest_P,
-    const Matrix_Type  * const Src_P)
+MatrixStatus_T Matrix_Copy(
+    Matrix_T        * const Dest_P,
+    const Matrix_T  * const Src_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     uint32_T          row;
     uint32_T          col;
 
@@ -415,13 +415,13 @@ MatrixStatus_Type Matrix_Copy(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_SetElement
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Matrix_SetElement(
-    Matrix_Type    * const Matrix_P,
+MatrixStatus_T Matrix_SetElement(
+    Matrix_T    * const Matrix_P,
     const uint32_T Row,
     const uint32_T Col,
     const MatrixElement    value)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
 
     status = MATRIX_SUCCESS;
 
@@ -445,8 +445,8 @@ MatrixStatus_Type Matrix_SetElement(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_SetElementFloat
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Matrix_SetElementFloat(
-    Matrix_Type    * const Matrix_P,
+MatrixStatus_T Matrix_SetElementFloat(
+    Matrix_T    * const Matrix_P,
     const uint32_T Row,
     const uint32_T Col,
     const MatrixFloat      value)
@@ -458,13 +458,13 @@ MatrixStatus_Type Matrix_SetElementFloat(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_GetElement
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Matrix_GetElement(
-    const Matrix_Type  * const Matrix_P,
+MatrixStatus_T Matrix_GetElement(
+    const Matrix_T  * const Matrix_P,
     const uint32_T Row,
     const uint32_T Col,
     MatrixElement      * const value)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
 
     status = MATRIX_SUCCESS;
 
@@ -488,8 +488,8 @@ MatrixStatus_Type Matrix_GetElement(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_GetElementFloat
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Matrix_GetElementFloat(
-    const Matrix_Type  * const Matrix_P,
+MatrixStatus_T Matrix_GetElementFloat(
+    const Matrix_T  * const Matrix_P,
     const uint32_T Row,
     const uint32_T Col,
     MatrixFloat        * const value)
@@ -501,12 +501,12 @@ MatrixStatus_Type Matrix_GetElementFloat(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_Add
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Matrix_Add(
-    const Matrix_Type  * const A_P,
-    const Matrix_Type  * const B_P,
-    Matrix_Type        * const Result_P)
+MatrixStatus_T Matrix_Add(
+    const Matrix_T  * const A_P,
+    const Matrix_T  * const B_P,
+    Matrix_T        * const Result_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     uint32_T          row;
     uint32_T          col;
 
@@ -539,12 +539,12 @@ MatrixStatus_Type Matrix_Add(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_Subtract
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Matrix_Subtract(
-    const Matrix_Type  * const A_P,
-    const Matrix_Type  * const B_P,
-    Matrix_Type        * const Result_P)
+MatrixStatus_T Matrix_Subtract(
+    const Matrix_T  * const A_P,
+    const Matrix_T  * const B_P,
+    Matrix_T        * const Result_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     uint32_T          row;
     uint32_T          col;
 
@@ -577,12 +577,12 @@ MatrixStatus_Type Matrix_Subtract(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_Multiply
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Matrix_Multiply(
-    const Matrix_Type  * const A_P,
-    const Matrix_Type  * const B_P,
-    Matrix_Type        * const Result_P)
+MatrixStatus_T Matrix_Multiply(
+    const Matrix_T  * const A_P,
+    const Matrix_T  * const B_P,
+    Matrix_T        * const Result_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     uint32_T          i;
     uint32_T          j;
     uint32_T          k;
@@ -623,12 +623,12 @@ MatrixStatus_Type Matrix_Multiply(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_ScalarMultiply
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Matrix_ScalarMultiply(
-    const Matrix_Type  * const Matrix_P,
+MatrixStatus_T Matrix_ScalarMultiply(
+    const Matrix_T  * const Matrix_P,
     const MatrixElement        Scalar,
-    Matrix_Type * const Result_P)
+    Matrix_T * const Result_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     uint32_T          row;
     uint32_T          col;
 
@@ -664,10 +664,10 @@ MatrixStatus_Type Matrix_ScalarMultiply(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_ScalarMultiplyFloat
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Matrix_ScalarMultiplyFloat(
-    const Matrix_Type  * const Matrix_P,
+MatrixStatus_T Matrix_ScalarMultiplyFloat(
+    const Matrix_T  * const Matrix_P,
     const MatrixFloat          Scalar,
-    Matrix_Type * const Result_P)
+    Matrix_T * const Result_P)
 {
     return Matrix_ScalarMultiply(Matrix_P, Scalar, Result_P);
 }
@@ -676,11 +676,11 @@ MatrixStatus_Type Matrix_ScalarMultiplyFloat(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_Transpose
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Matrix_Transpose(
-    const Matrix_Type  * const Matrix_P,
-    Matrix_Type * const Result_P)
+MatrixStatus_T Matrix_Transpose(
+    const Matrix_T  * const Matrix_P,
+    Matrix_T * const Result_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     uint32_T          row;
     uint32_T          col;
 
@@ -716,11 +716,11 @@ MatrixStatus_Type Matrix_Transpose(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_Determinant2x2
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Matrix_Determinant2x2(
-    const Matrix_Type  * const Matrix_P,
+MatrixStatus_T Matrix_Determinant2x2(
+    const Matrix_T  * const Matrix_P,
     MatrixFloat        * const DetOut_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     MatrixFloat       a11;
     MatrixFloat       a12;
     MatrixFloat       a21;
@@ -753,11 +753,11 @@ MatrixStatus_Type Matrix_Determinant2x2(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_Determinant3x3
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Matrix_Determinant3x3(
-    const Matrix_Type  * const Matrix_P,
+MatrixStatus_T Matrix_Determinant3x3(
+    const Matrix_T  * const Matrix_P,
     MatrixFloat        * const DetOut_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     MatrixFloat       m00, m01, m02;
     MatrixFloat       m10, m11, m12;
     MatrixFloat       m20, m21, m22;
@@ -797,11 +797,11 @@ MatrixStatus_Type Matrix_Determinant3x3(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_Determinant4x4
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Matrix_Determinant4x4(
-    const Matrix_Type  * const Matrix_P,
+MatrixStatus_T Matrix_Determinant4x4(
+    const Matrix_T  * const Matrix_P,
     MatrixFloat        * const DetOut_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     MatrixFloat       m[4U][4U];
     MatrixFloat       term1;
     MatrixFloat       term2;
@@ -857,13 +857,13 @@ MatrixStatus_Type Matrix_Determinant4x4(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_Determinant5x5 … Matrix_Determinant8x8  (LU-based)
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Matrix_Determinant5x5(
-    const Matrix_Type  * const Matrix_P,
+MatrixStatus_T Matrix_Determinant5x5(
+    const Matrix_T  * const Matrix_P,
     MatrixFloat        * const DetOut_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     MatrixElement     work_buffer[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
-    Matrix_Type       work;
+    Matrix_T       work;
 
     status = MATRIX_SUCCESS;
 
@@ -885,13 +885,13 @@ MatrixStatus_Type Matrix_Determinant5x5(
     return status;
 }
 
-MatrixStatus_Type Matrix_Determinant6x6(
-    const Matrix_Type  * const Matrix_P,
+MatrixStatus_T Matrix_Determinant6x6(
+    const Matrix_T  * const Matrix_P,
     MatrixFloat        * const DetOut_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     MatrixElement     work_buffer[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
-    Matrix_Type       work;
+    Matrix_T       work;
 
     status = MATRIX_SUCCESS;
 
@@ -913,13 +913,13 @@ MatrixStatus_Type Matrix_Determinant6x6(
     return status;
 }
 
-MatrixStatus_Type Matrix_Determinant7x7(
-    const Matrix_Type  * const Matrix_P,
+MatrixStatus_T Matrix_Determinant7x7(
+    const Matrix_T  * const Matrix_P,
     MatrixFloat        * const DetOut_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     MatrixElement     work_buffer[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
-    Matrix_Type       work;
+    Matrix_T       work;
 
     status = MATRIX_SUCCESS;
 
@@ -941,13 +941,13 @@ MatrixStatus_Type Matrix_Determinant7x7(
     return status;
 }
 
-MatrixStatus_Type Matrix_Determinant8x8(
-    const Matrix_Type  * const Matrix_P,
+MatrixStatus_T Matrix_Determinant8x8(
+    const Matrix_T  * const Matrix_P,
     MatrixFloat        * const DetOut_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     MatrixElement     work_buffer[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
-    Matrix_Type       work;
+    Matrix_T       work;
 
     status = MATRIX_SUCCESS;
 
@@ -973,11 +973,11 @@ MatrixStatus_Type Matrix_Determinant8x8(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_Determinant  (dispatcher)
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Matrix_Determinant(
-    const Matrix_Type  * const Matrix_P,
+MatrixStatus_T Matrix_Determinant(
+    const Matrix_T  * const Matrix_P,
     MatrixFloat        * const DetOut_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     uint32_T          n;
 
     status = MATRIX_SUCCESS;
@@ -1018,11 +1018,11 @@ MatrixStatus_Type Matrix_Determinant(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_Inverse2x2
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Matrix_Inverse2x2(
-    const Matrix_Type  * const Matrix_P,
-    Matrix_Type * const Result_P)
+MatrixStatus_T Matrix_Inverse2x2(
+    const Matrix_T  * const Matrix_P,
+    Matrix_T * const Result_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     MatrixFloat       det;
     MatrixFloat       a11, a12, a21, a22;
     MatrixFloat       inv_det;
@@ -1066,11 +1066,11 @@ MatrixStatus_Type Matrix_Inverse2x2(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_Inverse3x3
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Matrix_Inverse3x3(
-    const Matrix_Type  * const Matrix_P,
-    Matrix_Type * const Result_P)
+MatrixStatus_T Matrix_Inverse3x3(
+    const Matrix_T  * const Matrix_P,
+    Matrix_T * const Result_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     MatrixFloat       det;
     MatrixFloat       m00, m01, m02;
     MatrixFloat       m10, m11, m12;
@@ -1142,13 +1142,13 @@ MatrixStatus_Type Matrix_Inverse3x3(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_Inverse4x4  (augmented Gauss-Jordan, partial pivot)
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Matrix_Inverse4x4(
-    const Matrix_Type  * const Matrix_P,
-    Matrix_Type * const Result_P)
+MatrixStatus_T Matrix_Inverse4x4(
+    const Matrix_T  * const Matrix_P,
+    Matrix_T * const Result_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     MatrixElement     aug_buffer[4U * 8U];
-    Matrix_Type       aug;
+    Matrix_T       aug;
     uint32_T          i;
     uint32_T          j;
     uint32_T          k;
@@ -1291,11 +1291,11 @@ MatrixStatus_Type Matrix_Inverse4x4(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_Inverse  (dispatcher)
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Matrix_Inverse(
-    const Matrix_Type  * const Matrix_P,
-    Matrix_Type * const Result_P)
+MatrixStatus_T Matrix_Inverse(
+    const Matrix_T  * const Matrix_P,
+    Matrix_T * const Result_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     uint32_T          n;
 
     status = MATRIX_SUCCESS;
@@ -1323,7 +1323,7 @@ MatrixStatus_Type Matrix_Inverse(
         {
             /* Generic augmented Gauss-Jordan for 5 × 5 … 8 × 8. */
             MatrixElement aug_buffer[MATRIX_MAX_ROWS * (2U * MATRIX_MAX_COLS)];
-            Matrix_Type   aug;
+            Matrix_T   aug;
             uint32_T      i;
             uint32_T      j;
             uint32_T      k;
@@ -1447,13 +1447,13 @@ MatrixStatus_Type Matrix_Inverse(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_Eigenvalues  (iterative Jacobi)
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Matrix_Eigenvalues(
-    Matrix_Type      * const Matrix_P,
-    MatrixEigen_Type * const EigenOut_P,
+MatrixStatus_T Matrix_Eigenvalues(
+    Matrix_T      * const Matrix_P,
+    MatrixEigen_T * const EigenOut_P,
     const uint32_T MaxIterations,
     const MatrixFloat        Tolerance)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     uint32_T          n;
     uint32_T          iter;
     uint32_T          p;
@@ -1467,7 +1467,7 @@ MatrixStatus_Type Matrix_Eigenvalues(
     MatrixFloat       c;
     MatrixFloat       s;
     MatrixFloat       temp;
-    Matrix_Type       v_matrix;
+    Matrix_T       v_matrix;
     MatrixElement     v_buffer[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
     boolean_T         use_tolerance;
     uint32_T          MaxIter;
@@ -1646,14 +1646,14 @@ MatrixStatus_Type Matrix_Eigenvalues(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_EigenvaluesOnly
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Matrix_EigenvaluesOnly(
-    Matrix_Type    * const Matrix_P,
+MatrixStatus_T Matrix_EigenvaluesOnly(
+    Matrix_T    * const Matrix_P,
     MatrixFloat    * const EigenvaluesOut_P,
     const uint32_T MaxIterations,
     const MatrixFloat      Tolerance)
 {
-    MatrixStatus_Type status;
-    MatrixEigen_Type  EigenOut_P;
+    MatrixStatus_T status;
+    MatrixEigen_T  EigenOut_P;
     uint32_T          i;
 
     status = Matrix_Eigenvalues(Matrix_P, &EigenOut_P, MaxIterations, Tolerance);
@@ -1677,11 +1677,11 @@ MatrixStatus_Type Matrix_EigenvaluesOnly(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_LU
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Matrix_LU(
-    Matrix_Type  * const Matrix_P,
+MatrixStatus_T Matrix_LU(
+    Matrix_T  * const Matrix_P,
     uint32_T     * const pivot)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     uint32_T          i;
     uint32_T          j;
     uint32_T          k;
@@ -1797,14 +1797,14 @@ MatrixStatus_Type Matrix_LU(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_SolveGaussJordan
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Matrix_SolveGaussJordan(
-    const Matrix_Type  * const A_P,
-    const Matrix_Type  * const B_P,
-    Matrix_Type        * const X_P)
+MatrixStatus_T Matrix_SolveGaussJordan(
+    const Matrix_T  * const A_P,
+    const Matrix_T  * const B_P,
+    Matrix_T        * const X_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     MatrixElement     aug_buffer[MATRIX_MAX_ROWS * (MATRIX_MAX_COLS + MATRIX_MAX_COLS)];
-    Matrix_Type       aug;
+    Matrix_T       aug;
     uint32_T          i;
     uint32_T          j;
     uint32_T          k;
@@ -1920,10 +1920,10 @@ MatrixStatus_Type Matrix_SolveGaussJordan(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_Solve  (delegates to Gauss-Jordan)
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Matrix_Solve(
-    const Matrix_Type  * const A_P,
-    const Matrix_Type  * const B_P,
-    Matrix_Type        * const X_P)
+MatrixStatus_T Matrix_Solve(
+    const Matrix_T  * const A_P,
+    const Matrix_T  * const B_P,
+    Matrix_T        * const X_P)
 {
     return Matrix_SolveGaussJordan(A_P, B_P, X_P);
 }
@@ -1932,7 +1932,7 @@ MatrixStatus_Type Matrix_Solve(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_IsSquare
  *------------------------------------------------------------------------------------------------------------------*/
-boolean_T Matrix_IsSquare(const Matrix_Type * const Matrix_P)
+boolean_T Matrix_IsSquare(const Matrix_T * const Matrix_P)
 {
     boolean_T result;
 
@@ -1955,7 +1955,7 @@ boolean_T Matrix_IsSquare(const Matrix_Type * const Matrix_P)
  * Matrix_IsSymmetric
  *------------------------------------------------------------------------------------------------------------------*/
 boolean_T Matrix_IsSymmetric(
-    const Matrix_Type  * const Matrix_P,
+    const Matrix_T  * const Matrix_P,
     const MatrixFloat          Tolerance)
 {
     boolean_T   result;
@@ -2006,11 +2006,11 @@ boolean_T Matrix_IsSymmetric(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_Trace
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Matrix_Trace(
-    const Matrix_Type  * const Matrix_P,
+MatrixStatus_T Matrix_Trace(
+    const Matrix_T  * const Matrix_P,
     MatrixFloat        * const TraceOut_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     uint32_T          i;
     MatrixFloat       sum;
 
@@ -2042,11 +2042,11 @@ MatrixStatus_Type Matrix_Trace(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_NormFrobenius
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Matrix_NormFrobenius(
-    const Matrix_Type  * const Matrix_P,
+MatrixStatus_T Matrix_NormFrobenius(
+    const Matrix_T  * const Matrix_P,
     MatrixFloat        * const NormOut_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     uint32_T          i;
     uint32_T          j;
     real64_T          sum;
@@ -2081,8 +2081,8 @@ MatrixStatus_Type Matrix_NormFrobenius(
  * Matrix_IsEqual
  *------------------------------------------------------------------------------------------------------------------*/
 boolean_T Matrix_IsEqual(
-    const Matrix_Type  * const A_P,
-    const Matrix_Type  * const B_P,
+    const Matrix_T  * const A_P,
+    const Matrix_T  * const B_P,
     const MatrixFloat          Tolerance)
 {
     boolean_T result;
@@ -2134,7 +2134,7 @@ boolean_T Matrix_IsEqual(
  * Matrix_GetDimensions
  *------------------------------------------------------------------------------------------------------------------*/
 void Matrix_GetDimensions(
-    const Matrix_Type  * const Matrix_P,
+    const Matrix_T  * const Matrix_P,
     uint32_T           * const RowsOut_P,
     uint32_T           * const ColsOut_P)
 {
@@ -2154,7 +2154,7 @@ void Matrix_GetDimensions(
  * Matrix_Fill
  *------------------------------------------------------------------------------------------------------------------*/
 void Matrix_Fill(
-    Matrix_Type        * const Matrix_P,
+    Matrix_T        * const Matrix_P,
     const MatrixElement        value)
 {
     uint32_T i;
@@ -2181,7 +2181,7 @@ void Matrix_Fill(
  * Matrix_FillFloat
  *------------------------------------------------------------------------------------------------------------------*/
 void Matrix_FillFloat(
-    Matrix_Type    * const Matrix_P,
+    Matrix_T    * const Matrix_P,
     const MatrixFloat      value)
 {
     Matrix_Fill(Matrix_P, value);
@@ -2221,11 +2221,11 @@ MatrixFloat Matrix_Q31ToFloat(const MatrixElement value)
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_Cholesky
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Matrix_Cholesky(
-    const Matrix_Type  * const Matrix_P,
-    Matrix_Type        * const L_P)
+MatrixStatus_T Matrix_Cholesky(
+    const Matrix_T  * const Matrix_P,
+    Matrix_T        * const L_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     uint32_T          i;
     uint32_T          j;
     uint32_T          k;
@@ -2315,12 +2315,12 @@ MatrixStatus_Type Matrix_Cholesky(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_ForwardSubstitution
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Matrix_ForwardSubstitution(
-    const Matrix_Type  * const L_P,
-    const Matrix_Type  * const B_P,
-    Matrix_Type        * const X_P)
+MatrixStatus_T Matrix_ForwardSubstitution(
+    const Matrix_T  * const L_P,
+    const Matrix_T  * const B_P,
+    Matrix_T        * const X_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     uint32_T          i;
     uint32_T          j;
     uint32_T          n;
@@ -2394,12 +2394,12 @@ MatrixStatus_Type Matrix_ForwardSubstitution(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_BackwardSubstitution
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Matrix_BackwardSubstitution(
-    const Matrix_Type  * const U_P,
-    const Matrix_Type  * const B_P,
-    Matrix_Type        * const X_P)
+MatrixStatus_T Matrix_BackwardSubstitution(
+    const Matrix_T  * const U_P,
+    const Matrix_T  * const B_P,
+    Matrix_T        * const X_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     uint32_T          i;
     uint32_T          j;
     uint32_T          k;
@@ -2477,12 +2477,12 @@ MatrixStatus_Type Matrix_BackwardSubstitution(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_SymmetricRank1Update
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Matrix_SymmetricRank1Update(
-    Matrix_Type        * const A_P,
-    const Matrix_Type  * const V_P,
+MatrixStatus_T Matrix_SymmetricRank1Update(
+    Matrix_T        * const A_P,
+    const Matrix_T  * const V_P,
     const MatrixElement        alpha)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     uint32_T          i;
     uint32_T          j;
     uint32_T          n;
@@ -2526,9 +2526,9 @@ MatrixStatus_Type Matrix_SymmetricRank1Update(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_SymmetricRank1UpdateFloat
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Matrix_SymmetricRank1UpdateFloat(
-    Matrix_Type        * const A_P,
-    const Matrix_Type  * const V_P,
+MatrixStatus_T Matrix_SymmetricRank1UpdateFloat(
+    Matrix_T        * const A_P,
+    const Matrix_T  * const V_P,
     const MatrixFloat          alpha)
 {
     return Matrix_SymmetricRank1Update(A_P, V_P, alpha);
@@ -2538,22 +2538,22 @@ MatrixStatus_Type Matrix_SymmetricRank1UpdateFloat(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_MatrixSquareRoot (Denman-Beavers iteration)
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Matrix_MatrixSquareRoot(
-    const Matrix_Type  * const Matrix_P,
-    Matrix_Type * const Result_P,
+MatrixStatus_T Matrix_MatrixSquareRoot(
+    const Matrix_T  * const Matrix_P,
+    Matrix_T * const Result_P,
     const uint32_T MaxIter)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     MatrixElement     Y_buf[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
     MatrixElement     Z_buf[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
     MatrixElement     Y_inv_buf[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
     MatrixElement     Y_new_buf[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
     MatrixElement     Z_new_buf[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
-    Matrix_Type       Y;
-    Matrix_Type       Z;
-    Matrix_Type       Y_inv;
-    Matrix_Type       Y_new;
-    Matrix_Type       Z_new;
+    Matrix_T       Y;
+    Matrix_T       Z;
+    Matrix_T       Y_inv;
+    Matrix_T       Y_new;
+    Matrix_T       Z_new;
     uint32_T          iter;
     uint32_T          max_iters;
     MatrixFloat       norm_diff;
@@ -2635,13 +2635,13 @@ MatrixStatus_Type Matrix_MatrixSquareRoot(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_ConditionNumber
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Matrix_ConditionNumber(
-    const Matrix_Type  * const Matrix_P,
+MatrixStatus_T Matrix_ConditionNumber(
+    const Matrix_T  * const Matrix_P,
     MatrixFloat        * const CondOut_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     MatrixElement     inv_buf[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
-    Matrix_Type       inv_matrix;
+    Matrix_T       inv_matrix;
     MatrixFloat       norm_A;
     MatrixFloat       norm_Ainv;
 
@@ -2680,11 +2680,11 @@ MatrixStatus_Type Matrix_ConditionNumber(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_IsPositiveDefinite
  *------------------------------------------------------------------------------------------------------------------*/
-boolean_T Matrix_IsPositiveDefinite(const Matrix_Type * const Matrix_P)
+boolean_T Matrix_IsPositiveDefinite(const Matrix_T * const Matrix_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     MatrixElement     L_buf[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
-    Matrix_Type       L;
+    Matrix_T       L;
     boolean_T         result;
 
     result = FALSE;

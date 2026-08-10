@@ -38,12 +38,12 @@ static MatrixElement Inv_Park_Sin_Matrix_Data_G[INV_PARK_ROWS * INV_PARK_COLS];
 /**********************************************************************************************************************
  * Module-Private Matrix Handles
  *********************************************************************************************************************/
-static Matrix_Type Clarke_Matrix_G;
-static Matrix_Type Inv_Clarke_Matrix_G;
-static Matrix_Type Park_Cos_Matrix_G;
-static Matrix_Type Park_Sin_Matrix_G;
-static Matrix_Type Inv_Park_Cos_Matrix_G;
-static Matrix_Type Inv_Park_Sin_Matrix_G;
+static Matrix_T Clarke_Matrix_G;
+static Matrix_T Inv_Clarke_Matrix_G;
+static Matrix_T Park_Cos_Matrix_G;
+static Matrix_T Park_Sin_Matrix_G;
+static Matrix_T Inv_Park_Cos_Matrix_G;
+static Matrix_T Inv_Park_Sin_Matrix_G;
 
 /**********************************************************************************************************************
  * Private Helper Functions
@@ -86,15 +86,15 @@ void Transform_Init(void)
 /*--------------------------------------------------------------------------------------------------------------------
  * Clarke_Transform_Matrix
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Clarke_Transform_Matrix(
+MatrixStatus_T Clarke_Transform_Matrix(
     const FocUvw_T       * const In_P,
     FocAlphaBeta_T       * const Out_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     MatrixElement     input_buffer[CLARKE_COLS];
     MatrixElement     output_buffer[CLARKE_ROWS];
-    Matrix_Type       input_vec;
-    Matrix_Type       output_vec;
+    Matrix_T       input_vec;
+    Matrix_T       output_vec;
 
     status = MATRIX_SUCCESS;
 
@@ -132,16 +132,16 @@ MatrixStatus_Type Clarke_Transform_Matrix(
 /*--------------------------------------------------------------------------------------------------------------------
  * Park_Transform_Matrix
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type Park_Transform_Matrix(
+MatrixStatus_T Park_Transform_Matrix(
     const FocAlphaBeta_T * const In_P,
     const FocAngle_T     * const Angle_P,
     FocDq_T              * const Out_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     MatrixElement     input_buffer[PARK_COLS];
     MatrixElement     output_buffer[PARK_ROWS];
-    Matrix_Type       input_vec;
-    Matrix_Type       output_vec;
+    Matrix_T       input_vec;
+    Matrix_T       output_vec;
     MatrixFloat       cos_theta;
     MatrixFloat       sin_theta;
 
@@ -191,16 +191,16 @@ MatrixStatus_Type Park_Transform_Matrix(
 /*--------------------------------------------------------------------------------------------------------------------
  * InvPark_Transform_Matrix
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type InvPark_Transform_Matrix(
+MatrixStatus_T InvPark_Transform_Matrix(
     const FocDq_T        * const In_P,
     const FocAngle_T     * const Angle_P,
     FocAlphaBeta_T       * const Out_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     MatrixElement     input_buffer[INV_PARK_COLS];
     MatrixElement     output_buffer[INV_PARK_ROWS];
-    Matrix_Type       input_vec;
-    Matrix_Type       output_vec;
+    Matrix_T       input_vec;
+    Matrix_T       output_vec;
     MatrixFloat       cos_theta;
     MatrixFloat       sin_theta;
 
@@ -250,15 +250,15 @@ MatrixStatus_Type InvPark_Transform_Matrix(
 /*--------------------------------------------------------------------------------------------------------------------
  * InvClarke_Transform_Matrix
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_Type InvClarke_Transform_Matrix(
+MatrixStatus_T InvClarke_Transform_Matrix(
     const FocAlphaBeta_T * const In_P,
     FocUvw_T             * const Out_P)
 {
-    MatrixStatus_Type status;
+    MatrixStatus_T status;
     MatrixElement     input_buffer[INV_CLARKE_COLS];
     MatrixElement     output_buffer[INV_CLARKE_ROWS];
-    Matrix_Type       input_vec;
-    Matrix_Type       output_vec;
+    Matrix_T       input_vec;
+    Matrix_T       output_vec;
 
     status = MATRIX_SUCCESS;
 

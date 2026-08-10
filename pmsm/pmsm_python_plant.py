@@ -10,8 +10,8 @@ using RK4 internally — 4th-order accuracy at the 50 us step rate.
 
 All Clarke / Park / InvPark / InvClarke calculations are delegated to the
 canonical C functions in embed_sim_coordinate_transform.c, surfaced by the
-compiled dfc_controller_wrapper (clarke / park / inv_park / inv_clarke).
-This is the SAME transform code that runs on the AURIX target — there is no
+compiled embedsim_control_wrapper (clarke / park / inv_park / inv_clarke).
+This is the SAME code that runs on the AURIX target — there is no
 parallel Python implementation and no inline transform math in this file.
 
 dq voltage equations (Krishnan, "PMSM and BLDC Motor Drives", Ch. 4):
@@ -40,12 +40,27 @@ import numpy as np
 from embedsim.core_blocks import VectorBlock, VectorSignal, DEFAULT_DTYPE
 
 # Frame transforms come from the canonical C implementation
-# (embed_sim_coordinate_transform.c), surfaced by the compiled DFC wrapper.
+# (embed_sim_coordinate_transform.c), surfaced by the compiled wrapper.
 # This is the SAME code that runs on the AURIX — no parallel Python mirror.
 _C_SRC = Path(__file__).resolve().parent / "c_src"
 if str(_C_SRC) not in sys.path:
     sys.path.insert(0, str(_C_SRC))
-from dfc_controller_wrapper import clarke, park, inv_park, inv_clarke
+
+# Import transforms from the sensor-based control wrapper
+# This wrapper exposes clarke, park, inv_park, inv_clarke from
+# embed_sim_coordinate_transform.c
+try:
+    from embedsim_control_wrapper import clarke, park, inv_park, inv_clarke
+except ImportError:
+    # Fallback: try the dfc wrapper if available
+    try:
+        from dfc_controller_wrapper import clarke, park, inv_park, inv_clarke
+    except ImportError:
+        raise ImportError(
+            "No wrapper found with transform functions. "
+            "Build the wrapper first:\n"
+            "  cd pmsm/c_src && ./build.sh"
+        )
 
 
 class PMSM_Python_Plant(VectorBlock):
@@ -75,7 +90,7 @@ class PMSM_Python_Plant(VectorBlock):
                  J: float         = 2.4e-6,
                  B_fric: float    = 1e-6,
                  p: float         = 4.0,
-                 v_dc: float      = 17.0,
+                 v_dc: float      = 12.0,
                  **kwargs):
         super().__init__(name, **kwargs)
 
@@ -101,21 +116,13 @@ class PMSM_Python_Plant(VectorBlock):
 
         # Diagnostics
         self._t_last_print = -1.0
-        self._nprint       = 0
-
-        # ── Frame transforms — canonical C via the DFC wrapper ───────────────
-        # duties -> Clarke -> Park -> (vd,vq)     [in _vdq_from_duties]
-        # (id,iq) -> InvPark -> InvClarke -> abc  [in _abc_from_idiq]
-        # No sub-blocks and no inline math: the module-level clarke/park/
-        # inv_park/inv_clarke functions call embed_sim_coordinate_transform.c
-        # directly (Transform_Init() runs once when the wrapper is imported).
 
         print(f"[PMSM_Python_Plant] '{name}'  "
               f"R={R} Ld={L_d} Lq={L_q} lpm={lambda_pm} "
               f"J={J} B={B_fric} p={p} Vdc={v_dc}  "
               f"[transforms -> embed_sim_coordinate_transform.c]")
 
-    # ------------------------------------------------------------------ reset
+    # ------------------------------------------------------------------
     def reset(self):
         super().reset()
         self._x[:]  = 0.0
@@ -125,12 +132,8 @@ class PMSM_Python_Plant(VectorBlock):
         self._v_dc  = self._v_dc_nom
         self._tload = 0.0
         self._t_last_print = -1.0
-        self._nprint = 0
 
     # ------------------------------------------------------------ transforms
-    # Delegate to the canonical C transforms (embed_sim_coordinate_transform.c)
-    # exposed by the DFC wrapper — no inline math, no Python mirror.
-
     def _vdq_from_duties(self, ta, tb, tc, v_dc, theta_e):
         """
         Duties -> (v_d, v_q).
@@ -224,15 +227,14 @@ class PMSM_Python_Plant(VectorBlock):
         theta_m    = theta_e / self.p      # mechanical angle (unwrapped)
         speed_rpm  = omega_m * 60.0 / (2.0 * math.pi)
 
-        # Periodic console print
-        if t - self._t_last_print >= 0.2 and self._nprint < 20:
+        # Periodic console print (UNLIMITED - prints every 0.2s)
+        if t - self._t_last_print >= 0.2:
             print(f"[PMSM t={t:.2f}s]  rpm={speed_rpm:+8.1f}  "
                   f"theta_e={theta_e:.4f}rad  "
                   f"id={i_d:+.4f}A  iq={i_q:+.4f}A  "
                   f"T_em={T_em*1e3:+.3f}mN.m  "
                   f"T_load={self._tload*1e3:.1f}mN.m")
             self._t_last_print = t
-            self._nprint += 1
 
         self.output = VectorSignal(np.array([
             speed_rpm,    # [0] RPM

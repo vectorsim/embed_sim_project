@@ -88,7 +88,7 @@ typedef real32_T MatrixElement;
 typedef real32_T MatrixFloat;
 
 /**
- * \enum  MatrixStatus_Type
+ * \enum  MatrixStatus_T
  * \brief Status codes returned by all matrix operations.
  */
 typedef enum
@@ -106,7 +106,7 @@ typedef enum
     MATRIX_ERROR_NOT_INVERTIBLE      = 10,  /**< Matrix cannot be inverted.                   */
     MATRIX_ERROR_NOT_CONVERGENT      = 11,  /**< Iterative algorithm did not converge.        */
     MATRIX_ERROR_MAX_ITERATIONS      = 12   /**< Maximum iteration count reached.             */
-} MatrixStatus_Type;
+} MatrixStatus_T;
 
 /**
  * \struct Matrix_Type
@@ -125,7 +125,7 @@ typedef struct
     uint32_T         MaxCols;  /**< Allocated column capacity.                        */
     uint32_T         IsView;   /**< TRUE if this handle is a view of another matrix.  */
     uint32_T         Stride;    /**< Row stride in elements (equals max_cols normally).*/
-} Matrix_Type;
+} Matrix_T;
 
 /**
  * \struct MatrixEigen_Type
@@ -137,7 +137,7 @@ typedef struct
     MatrixFloat  Eigenvectors[MATRIX_MAX_ROWS * MATRIX_MAX_COLS]; /**< Eigenvectors stored column-wise.                    */
     uint32_T     NumEigenvalues;                                  /**< Number of eigenvalues computed.                     */
     uint32_T     Iterations;                                       /**< Jacobi sweeps consumed.                             */
-} MatrixEigen_Type;
+} MatrixEigen_T;
 
 /** \} */
 
@@ -173,7 +173,7 @@ typedef struct
  * \param[in] MaxCols  Column capacity (1 … #MATRIX_MAX_COLS).
  */
 extern void Matrix_Init(
-    Matrix_Type    * const Matrix_P,
+    Matrix_T    * const Matrix_P,
     MatrixElement  * const Buffer,
     const uint32_T MaxRows,
     const uint32_T MaxCols);
@@ -186,7 +186,7 @@ extern void Matrix_Init(
  * \param[in]     cols    Active columns (1 … \c matrix->MaxCols).
  */
 extern void Matrix_SetDimensions(
-    Matrix_Type  * const Matrix_P,
+    Matrix_T  * const Matrix_P,
     const uint32_T Rows,
     const uint32_T Cols);
 
@@ -195,7 +195,7 @@ extern void Matrix_SetDimensions(
  *
  * \param[in,out] matrix  Matrix handle (must not be NULL).
  */
-extern void Matrix_Zero(Matrix_Type * const Matrix_P);
+extern void Matrix_Zero(Matrix_T * const Matrix_P);
 
 /**
  * \brief  Set a square matrix to the identity (I).
@@ -203,7 +203,7 @@ extern void Matrix_Zero(Matrix_Type * const Matrix_P);
  * \param[in,out] matrix  Square matrix handle (must not be NULL).
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_NOT_SQUARE.
  */
-extern MatrixStatus_Type Matrix_Identity(Matrix_Type * const Matrix_P);
+extern MatrixStatus_T Matrix_Identity(Matrix_T * const Matrix_P);
 
 /**
  * \brief  Copy \p src into \p dest.
@@ -214,9 +214,9 @@ extern MatrixStatus_Type Matrix_Identity(Matrix_Type * const Matrix_P);
  * \param[in]  src   Source matrix (must not be NULL).
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_SIZE_EXCEEDED.
  */
-extern MatrixStatus_Type Matrix_Copy(
-    Matrix_Type        * const Dest_P,
-    const Matrix_Type  * const Src_P);
+extern MatrixStatus_T Matrix_Copy(
+    Matrix_T        * const Dest_P,
+    const Matrix_T  * const Src_P);
 
 /** \} */
 
@@ -237,8 +237,8 @@ extern MatrixStatus_Type Matrix_Copy(
  * \param[in]     value   real32_T value to write.
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_OUT_OF_BOUNDS.
  */
-extern MatrixStatus_Type Matrix_SetElement(
-    Matrix_Type    * const Matrix_P,
+extern MatrixStatus_T Matrix_SetElement(
+    Matrix_T    * const Matrix_P,
     const uint32_T Row,
     const uint32_T Col,
     const MatrixElement    Value);
@@ -252,8 +252,8 @@ extern MatrixStatus_Type Matrix_SetElement(
  * \param[in]     value   Float in [−1.0, 1.0] (clamped).
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_OUT_OF_BOUNDS.
  */
-extern MatrixStatus_Type Matrix_SetElementFloat(
-    Matrix_Type    * const Matrix_P,
+extern MatrixStatus_T Matrix_SetElementFloat(
+    Matrix_T    * const Matrix_P,
     const uint32_T Row,
     const uint32_T Col,
     const MatrixFloat      Value);
@@ -267,8 +267,8 @@ extern MatrixStatus_Type Matrix_SetElementFloat(
  * \param[out] value   Receives the real32_T value (must not be NULL).
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_OUT_OF_BOUNDS.
  */
-extern MatrixStatus_Type Matrix_GetElement(
-    const Matrix_Type  * const Matrix_P,
+extern MatrixStatus_T Matrix_GetElement(
+    const Matrix_T  * const Matrix_P,
     const uint32_T Row,
     const uint32_T Col,
     MatrixElement      * const ValueOut_P);
@@ -282,8 +282,8 @@ extern MatrixStatus_Type Matrix_GetElement(
  * \param[out] value   Receives the float value (must not be NULL).
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_OUT_OF_BOUNDS.
  */
-extern MatrixStatus_Type Matrix_GetElementFloat(
-    const Matrix_Type  * const Matrix_P,
+extern MatrixStatus_T Matrix_GetElementFloat(
+    const Matrix_T  * const Matrix_P,
     const uint32_T Row,
     const uint32_T Col,
     MatrixFloat        * const ValueOut_P);
@@ -307,10 +307,10 @@ extern MatrixStatus_Type Matrix_GetElementFloat(
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR;
  *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SIZE_EXCEEDED.
  */
-extern MatrixStatus_Type Matrix_Add(
-    const Matrix_Type  * const A_P,
-    const Matrix_Type  * const B_P,
-    Matrix_Type        * const Result_P);
+extern MatrixStatus_T Matrix_Add(
+    const Matrix_T  * const A_P,
+    const Matrix_T  * const B_P,
+    Matrix_T        * const Result_P);
 
 /**
  * \brief  Element-wise subtraction: \p result = \p A − \p B .
@@ -321,10 +321,10 @@ extern MatrixStatus_Type Matrix_Add(
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR;
  *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SIZE_EXCEEDED.
  */
-extern MatrixStatus_Type Matrix_Subtract(
-    const Matrix_Type  * const A_P,
-    const Matrix_Type  * const B_P,
-    Matrix_Type        * const Result_P);
+extern MatrixStatus_T Matrix_Subtract(
+    const Matrix_T  * const A_P,
+    const Matrix_T  * const B_P,
+    Matrix_T        * const Result_P);
 
 /**
  * \brief  Matrix multiplication: \p result = \p A × \p B .
@@ -337,10 +337,10 @@ extern MatrixStatus_Type Matrix_Subtract(
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR;
  *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SIZE_EXCEEDED.
  */
-extern MatrixStatus_Type Matrix_Multiply(
-    const Matrix_Type  * const A_P,
-    const Matrix_Type  * const B_P,
-    Matrix_Type        * const Result_P);
+extern MatrixStatus_T Matrix_Multiply(
+    const Matrix_T  * const A_P,
+    const Matrix_T  * const B_P,
+    Matrix_T        * const Result_P);
 
 /**
  * \brief  Scalar multiplication: \p result = \p scalar × \p matrix .
@@ -350,10 +350,10 @@ extern MatrixStatus_Type Matrix_Multiply(
  * \param[out] result  Output matrix.
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_SIZE_EXCEEDED.
  */
-extern MatrixStatus_Type Matrix_ScalarMultiply(
-    const Matrix_Type  * const Matrix_P,
+extern MatrixStatus_T Matrix_ScalarMultiply(
+    const Matrix_T  * const Matrix_P,
     const MatrixElement        Scalar,
-    Matrix_Type        * const Result_P);
+    Matrix_T        * const Result_P);
 
 /**
  * \brief  Scalar multiplication with float input.
@@ -363,10 +363,10 @@ extern MatrixStatus_Type Matrix_ScalarMultiply(
  * \param[out] result  Output matrix.
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_SIZE_EXCEEDED.
  */
-extern MatrixStatus_Type Matrix_ScalarMultiplyFloat(
-    const Matrix_Type  * const Matrix_P,
+extern MatrixStatus_T Matrix_ScalarMultiplyFloat(
+    const Matrix_T  * const Matrix_P,
     const MatrixFloat          Scalar,
-    Matrix_Type        * const Result_P);
+    Matrix_T        * const Result_P);
 
 /**
  * \brief  Transpose: \p result = \p matrix ᵀ.
@@ -375,9 +375,9 @@ extern MatrixStatus_Type Matrix_ScalarMultiplyFloat(
  * \param[out] result  Output matrix (buffer must be ≥ n × m).
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_SIZE_EXCEEDED.
  */
-extern MatrixStatus_Type Matrix_Transpose(
-    const Matrix_Type  * const Matrix_P,
-    Matrix_Type        * const Result_P);
+extern MatrixStatus_T Matrix_Transpose(
+    const Matrix_T  * const Matrix_P,
+    Matrix_T        * const Result_P);
 
 /** \} */
 
@@ -399,8 +399,8 @@ extern MatrixStatus_Type Matrix_Transpose(
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_NOT_SQUARE;
  *          #MATRIX_ERROR_SIZE_EXCEEDED; #MATRIX_ERROR_SINGULAR.
  */
-extern MatrixStatus_Type Matrix_Determinant(
-    const Matrix_Type  * const Matrix_P,
+extern MatrixStatus_T Matrix_Determinant(
+    const Matrix_T  * const Matrix_P,
     MatrixFloat        * const DetOut_P);
 
 /**
@@ -411,8 +411,8 @@ extern MatrixStatus_Type Matrix_Determinant(
  * \param[out] det     Computed determinant.
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_DIMENSION_MISMATCH.
  */
-extern MatrixStatus_Type Matrix_Determinant2x2(
-    const Matrix_Type  * const Matrix_P,
+extern MatrixStatus_T Matrix_Determinant2x2(
+    const Matrix_T  * const Matrix_P,
     MatrixFloat        * const DetOut_P);
 
 /**
@@ -422,8 +422,8 @@ extern MatrixStatus_Type Matrix_Determinant2x2(
  * \param[out] det     Computed determinant.
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_DIMENSION_MISMATCH.
  */
-extern MatrixStatus_Type Matrix_Determinant3x3(
-    const Matrix_Type  * const Matrix_P,
+extern MatrixStatus_T Matrix_Determinant3x3(
+    const Matrix_T  * const Matrix_P,
     MatrixFloat        * const DetOut_P);
 
 /**
@@ -433,8 +433,8 @@ extern MatrixStatus_Type Matrix_Determinant3x3(
  * \param[out] det     Computed determinant.
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_DIMENSION_MISMATCH.
  */
-extern MatrixStatus_Type Matrix_Determinant4x4(
-    const Matrix_Type  * const Matrix_P,
+extern MatrixStatus_T Matrix_Determinant4x4(
+    const Matrix_T  * const Matrix_P,
     MatrixFloat        * const DetOut_P);
 
 /**
@@ -445,8 +445,8 @@ extern MatrixStatus_Type Matrix_Determinant4x4(
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR;
  *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SINGULAR.
  */
-extern MatrixStatus_Type Matrix_Determinant5x5(
-    const Matrix_Type  * const Matrix_P,
+extern MatrixStatus_T Matrix_Determinant5x5(
+    const Matrix_T  * const Matrix_P,
     MatrixFloat        * const DetOut_P);
 
 /**
@@ -457,8 +457,8 @@ extern MatrixStatus_Type Matrix_Determinant5x5(
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR;
  *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SINGULAR.
  */
-extern MatrixStatus_Type Matrix_Determinant6x6(
-    const Matrix_Type  * const Matrix_P,
+extern MatrixStatus_T Matrix_Determinant6x6(
+    const Matrix_T  * const Matrix_P,
     MatrixFloat        * const DetOut_P);
 
 /**
@@ -469,8 +469,8 @@ extern MatrixStatus_Type Matrix_Determinant6x6(
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR;
  *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SINGULAR.
  */
-extern MatrixStatus_Type Matrix_Determinant7x7(
-    const Matrix_Type  * const Matrix_P,
+extern MatrixStatus_T Matrix_Determinant7x7(
+    const Matrix_T  * const Matrix_P,
     MatrixFloat        * const DetOut_P);
 
 /**
@@ -481,8 +481,8 @@ extern MatrixStatus_Type Matrix_Determinant7x7(
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR;
  *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SINGULAR.
  */
-extern MatrixStatus_Type Matrix_Determinant8x8(
-    const Matrix_Type  * const Matrix_P,
+extern MatrixStatus_T Matrix_Determinant8x8(
+    const Matrix_T  * const Matrix_P,
     MatrixFloat        * const DetOut_P);
 
 /**
@@ -496,9 +496,9 @@ extern MatrixStatus_Type Matrix_Determinant8x8(
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_NOT_SQUARE;
  *          #MATRIX_ERROR_SIZE_EXCEEDED; #MATRIX_ERROR_SINGULAR.
  */
-extern MatrixStatus_Type Matrix_Inverse(
-    const Matrix_Type  * const Matrix_P,
-    Matrix_Type        * const Result_P);
+extern MatrixStatus_T Matrix_Inverse(
+    const Matrix_T  * const Matrix_P,
+    Matrix_T        * const Result_P);
 
 /**
  * \brief  Inverse of a 2 × 2 matrix.
@@ -509,9 +509,9 @@ extern MatrixStatus_Type Matrix_Inverse(
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR;
  *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SINGULAR.
  */
-extern MatrixStatus_Type Matrix_Inverse2x2(
-    const Matrix_Type  * const Matrix_P,
-    Matrix_Type        * const Result_P);
+extern MatrixStatus_T Matrix_Inverse2x2(
+    const Matrix_T  * const Matrix_P,
+    Matrix_T        * const Result_P);
 
 /**
  * \brief  Inverse of a 3 × 3 matrix (cofactor / adjugate method).
@@ -521,9 +521,9 @@ extern MatrixStatus_Type Matrix_Inverse2x2(
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR;
  *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SINGULAR.
  */
-extern MatrixStatus_Type Matrix_Inverse3x3(
-    const Matrix_Type  * const Matrix_P,
-    Matrix_Type        * const Result_P);
+extern MatrixStatus_T Matrix_Inverse3x3(
+    const Matrix_T  * const Matrix_P,
+    Matrix_T        * const Result_P);
 
 /**
  * \brief  Inverse of a 4 × 4 matrix (augmented Gauss-Jordan, partial pivot).
@@ -533,9 +533,9 @@ extern MatrixStatus_Type Matrix_Inverse3x3(
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR;
  *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SINGULAR.
  */
-extern MatrixStatus_Type Matrix_Inverse4x4(
-    const Matrix_Type  * const Matrix_P,
-    Matrix_Type        * const Result_P);
+extern MatrixStatus_T Matrix_Inverse4x4(
+    const Matrix_T  * const Matrix_P,
+    Matrix_T        * const Result_P);
 
 /**
  * \brief  Eigenvalue decomposition via iterative Jacobi method (symmetric matrices).
@@ -551,9 +551,9 @@ extern MatrixStatus_Type Matrix_Inverse4x4(
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_NOT_SQUARE;
  *          #MATRIX_ERROR_MAX_ITERATIONS.
  */
-extern MatrixStatus_Type Matrix_Eigenvalues(
-    Matrix_Type      * const Matrix_P,
-    MatrixEigen_Type * const EigenOut_P,
+extern MatrixStatus_T Matrix_Eigenvalues(
+    Matrix_T      * const Matrix_P,
+    MatrixEigen_T * const EigenOut_P,
     const uint32_T MaxIterations,
     const MatrixFloat        Tolerance);
 
@@ -567,8 +567,8 @@ extern MatrixStatus_Type Matrix_Eigenvalues(
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_NOT_SQUARE;
  *          #MATRIX_ERROR_MAX_ITERATIONS.
  */
-extern MatrixStatus_Type Matrix_EigenvaluesOnly(
-    Matrix_Type    * const Matrix_P,
+extern MatrixStatus_T Matrix_EigenvaluesOnly(
+    Matrix_T    * const Matrix_P,
     MatrixFloat    * const EigenvaluesOut_P,
     const uint32_T MaxIterations,
     const MatrixFloat      Tolerance);
@@ -585,8 +585,8 @@ extern MatrixStatus_Type Matrix_EigenvaluesOnly(
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_NOT_SQUARE;
  *          #MATRIX_ERROR_SINGULAR.
  */
-extern MatrixStatus_Type Matrix_LU(
-    Matrix_Type  * const Matrix_P,
+extern MatrixStatus_T Matrix_LU(
+    Matrix_T  * const Matrix_P,
     uint32_T     * const pivot);
 
 /**
@@ -599,10 +599,10 @@ extern MatrixStatus_Type Matrix_LU(
  *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SIZE_EXCEEDED;
  *          #MATRIX_ERROR_SINGULAR.
  */
-extern MatrixStatus_Type Matrix_Solve(
-    const Matrix_Type  * const A_P,
-    const Matrix_Type  * const B_P,
-    Matrix_Type        * const X_P);
+extern MatrixStatus_T Matrix_Solve(
+    const Matrix_T  * const A_P,
+    const Matrix_T  * const B_P,
+    Matrix_T        * const X_P);
 
 /**
  * \brief  Solve A·x = b via augmented Gauss-Jordan elimination (iterative).
@@ -616,10 +616,10 @@ extern MatrixStatus_Type Matrix_Solve(
  *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SIZE_EXCEEDED;
  *          #MATRIX_ERROR_SINGULAR.
  */
-extern MatrixStatus_Type Matrix_SolveGaussJordan(
-    const Matrix_Type  * const A_P,
-    const Matrix_Type  * const B_P,
-    Matrix_Type        * const X_P);
+extern MatrixStatus_T Matrix_SolveGaussJordan(
+    const Matrix_T  * const A_P,
+    const Matrix_T  * const B_P,
+    Matrix_T        * const X_P);
 
 /** \} */
 
@@ -637,7 +637,7 @@ extern MatrixStatus_Type Matrix_SolveGaussJordan(
  * \param[in] matrix  Matrix to test (NULL → FALSE).
  * \return   TRUE if \c Rows == \c Cols, FALSE otherwise.
  */
-extern boolean_T Matrix_IsSquare(const Matrix_Type * const Matrix_P);
+extern boolean_T Matrix_IsSquare(const Matrix_T * const Matrix_P);
 
 /**
  * \brief  Test whether a matrix is symmetric within a tolerance.
@@ -648,7 +648,7 @@ extern boolean_T Matrix_IsSquare(const Matrix_Type * const Matrix_P);
  * \return   TRUE if |a[i][j] − a[j][i]| ≤ \p tolerance for all i, j.
  */
 extern boolean_T Matrix_IsSymmetric(
-    const Matrix_Type  * const Matrix_P,
+    const Matrix_T  * const Matrix_P,
     const MatrixFloat          Tolerance);
 
 /**
@@ -658,8 +658,8 @@ extern boolean_T Matrix_IsSymmetric(
  * \param[out] trace   Receives the trace value.
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_NOT_SQUARE.
  */
-extern MatrixStatus_Type Matrix_Trace(
-    const Matrix_Type  * const Matrix_P,
+extern MatrixStatus_T Matrix_Trace(
+    const Matrix_T  * const Matrix_P,
     MatrixFloat        * const TraceOut_P);
 
 /**
@@ -669,8 +669,8 @@ extern MatrixStatus_Type Matrix_Trace(
  * \param[out] norm    Receives the Frobenius norm.
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR.
  */
-extern MatrixStatus_Type Matrix_NormFrobenius(
-    const Matrix_Type  * const Matrix_P,
+extern MatrixStatus_T Matrix_NormFrobenius(
+    const Matrix_T  * const Matrix_P,
     MatrixFloat        * const NormOut_P);
 
 /** \} */
@@ -692,8 +692,8 @@ extern MatrixStatus_Type Matrix_NormFrobenius(
  * \return   TRUE if all |a[i][j] − b[i][j]| ≤ \p tolerance.
  */
 extern boolean_T Matrix_IsEqual(
-    const Matrix_Type  * const A_P,
-    const Matrix_Type  * const B_P,
+    const Matrix_T  * const A_P,
+    const Matrix_T  * const B_P,
     const MatrixFloat          Tolerance);
 
 /**
@@ -706,7 +706,7 @@ extern boolean_T Matrix_IsEqual(
  * \param[out] cols    Receives active column count.
  */
 extern void Matrix_GetDimensions(
-    const Matrix_Type  * const Matrix_P,
+    const Matrix_T  * const Matrix_P,
     uint32_T           * const RowsOut_P,
     uint32_T           * const ColsOut_P);
 
@@ -717,7 +717,7 @@ extern void Matrix_GetDimensions(
  * \param[in]     value   real32_T fill value.
  */
 extern void Matrix_Fill(
-    Matrix_Type        * const Matrix_P,
+    Matrix_T        * const Matrix_P,
     const MatrixElement        Value);
 
 /**
@@ -727,7 +727,7 @@ extern void Matrix_Fill(
  * \param[in]     value   Float fill value (clamped to [−1.0, 1.0]).
  */
 extern void Matrix_FillFloat(
-    Matrix_Type    * const Matrix_P,
+    Matrix_T    * const Matrix_P,
     const MatrixFloat      Value);
 
 /** \} */
@@ -779,9 +779,9 @@ extern MatrixFloat Matrix_Q31ToFloat(const MatrixElement Value);
  * \return  MATRIX_SUCCESS; MATRIX_ERROR_NOT_SQUARE;
  *          MATRIX_ERROR_NON_POSITIVE_DEFINITE; MATRIX_ERROR_SIZE_EXCEEDED
  */
-extern MatrixStatus_Type Matrix_Cholesky(
-    const Matrix_Type  * const Matrix_P,
-    Matrix_Type        * const L_P);
+extern MatrixStatus_T Matrix_Cholesky(
+    const Matrix_T  * const Matrix_P,
+    Matrix_T        * const L_P);
 
 /**
  * \brief  Forward substitution: L * x = b (L lower triangular)
@@ -791,10 +791,10 @@ extern MatrixStatus_Type Matrix_Cholesky(
  * \param[out] x   Solution vector
  * \return  MATRIX_SUCCESS; MATRIX_ERROR_NULL_PTR; MATRIX_ERROR_DIMENSION_MISMATCH
  */
-extern MatrixStatus_Type Matrix_ForwardSubstitution(
-    const Matrix_Type  * const L_P,
-    const Matrix_Type  * const B_P,
-    Matrix_Type        * const X_P);
+extern MatrixStatus_T Matrix_ForwardSubstitution(
+    const Matrix_T  * const L_P,
+    const Matrix_T  * const B_P,
+    Matrix_T        * const X_P);
 
 /**
  * \brief  Backward substitution: U * x = b (U upper triangular)
@@ -804,10 +804,10 @@ extern MatrixStatus_Type Matrix_ForwardSubstitution(
  * \param[out] x   Solution vector
  * \return  MATRIX_SUCCESS; MATRIX_ERROR_NULL_PTR; MATRIX_ERROR_DIMENSION_MISMATCH
  */
-extern MatrixStatus_Type Matrix_BackwardSubstitution(
-    const Matrix_Type  * const U_P,
-    const Matrix_Type  * const B_P,
-    Matrix_Type        * const X_P);
+extern MatrixStatus_T Matrix_BackwardSubstitution(
+    const Matrix_T  * const U_P,
+    const Matrix_T  * const B_P,
+    Matrix_T        * const X_P);
 
 /**
  * \brief  Symmetric rank-1 update: A = A + alpha * v * v^T
@@ -819,9 +819,9 @@ extern MatrixStatus_Type Matrix_BackwardSubstitution(
  * \param[in]     alpha Scalar (real32_T)
  * \return  MATRIX_SUCCESS; MATRIX_ERROR_NULL_PTR; MATRIX_ERROR_DIMENSION_MISMATCH
  */
-extern MatrixStatus_Type Matrix_SymmetricRank1Update(
-    Matrix_Type        * const A_P,
-    const Matrix_Type  * const V_P,
+extern MatrixStatus_T Matrix_SymmetricRank1Update(
+    Matrix_T        * const A_P,
+    const Matrix_T  * const V_P,
     const MatrixElement        Alpha);
 
 /**
@@ -832,9 +832,9 @@ extern MatrixStatus_Type Matrix_SymmetricRank1Update(
  * \param[in]     alpha Float scalar
  * \return  MATRIX_SUCCESS; MATRIX_ERROR_NULL_PTR; MATRIX_ERROR_DIMENSION_MISMATCH
  */
-extern MatrixStatus_Type Matrix_SymmetricRank1UpdateFloat(
-    Matrix_Type        * const A_P,
-    const Matrix_Type  * const V_P,
+extern MatrixStatus_T Matrix_SymmetricRank1UpdateFloat(
+    Matrix_T        * const A_P,
+    const Matrix_T  * const V_P,
     const MatrixFloat          Alpha);
 
 /**
@@ -848,9 +848,9 @@ extern MatrixStatus_Type Matrix_SymmetricRank1UpdateFloat(
  * \return  MATRIX_SUCCESS; MATRIX_ERROR_NON_POSITIVE_DEFINITE;
  *          MATRIX_ERROR_MAX_ITERATIONS
  */
-extern MatrixStatus_Type Matrix_MatrixSquareRoot(
-    const Matrix_Type  * const Matrix_P,
-    Matrix_Type        * const Result_P,
+extern MatrixStatus_T Matrix_MatrixSquareRoot(
+    const Matrix_T  * const Matrix_P,
+    Matrix_T        * const Result_P,
     const uint32_T MaxIter);
 
 /**
@@ -860,8 +860,8 @@ extern MatrixStatus_Type Matrix_MatrixSquareRoot(
  * \param[out] cond     Condition number estimate
  * \return  MATRIX_SUCCESS; MATRIX_ERROR_NULL_PTR; MATRIX_ERROR_NOT_SQUARE
  */
-extern MatrixStatus_Type Matrix_ConditionNumber(
-    const Matrix_Type  * const Matrix_P,
+extern MatrixStatus_T Matrix_ConditionNumber(
+    const Matrix_T  * const Matrix_P,
     MatrixFloat        * const CondOut_P);
 
 /**
@@ -870,7 +870,7 @@ extern MatrixStatus_Type Matrix_ConditionNumber(
  * \param[in]  matrix   Matrix to test
  * \return  TRUE if positive definite, FALSE otherwise
  */
-extern boolean_T Matrix_IsPositiveDefinite(const Matrix_Type * const Matrix_P);
+extern boolean_T Matrix_IsPositiveDefinite(const Matrix_T * const Matrix_P);
 
 /** \} */
 
