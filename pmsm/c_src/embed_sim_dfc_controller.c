@@ -181,16 +181,7 @@ static void DFC_VoltageToDuty(const FocDq_T* const DqPtr,
 /*--------------------------------------------Public Functions------------------------------------------------------*/
 /*********************************************************************************************************************/
 
-/**
- * \brief   Initialize DFC controller
- *
- * \details Sets default PI gains, limits, and anti-windup values for speed,
- *          Iq, and Id controllers. Sets Initialized flag to 1.
- *          Default values:
- *          - SpeedPI: Kp=0.4, Ki=0.0, UpperLimit=50.0, LowerLimit=-50.0, AntiWindup=0.1
- *          - IqPI:    Kp=0.2, Ki=0.0, UpperLimit=100.0, LowerLimit=-100.0, AntiWindup=0.1
- *          - IdPI:    Kp=0.1, Ki=0.0, UpperLimit=50.0, LowerLimit=-50.0, AntiWindup=0.1
- */
+
 void DFC_Init(void)
 {
 
@@ -232,10 +223,13 @@ void DFC_Init(void)
  * \param[in]  MPtr       PMSM machine parameters.
  * \param[out] OutputPtr  PWM output.
  */
-void DFC_Step(EmbedSimCtrlInput_T * const InputPtr,
-              const EmbedSimMachineParam_T * const MPtr,
-              EmbedSimCtrlOutput_T * const OutputPtr)
+void DFC_Step(EmbedSimMachine_T* const MotorPtr)
 {
+
+    EmbedSimCtrlInput_T * inputPtr;
+    const EmbedSimMachineParam_T *  mPtr;
+    EmbedSimCtrlOutput_T *  outputPtr;
+
     volatile real32_T omegaRef;
     volatile real32_T omegaRefDot;
     volatile real32_T omegaRefDDot;
@@ -260,15 +254,19 @@ void DFC_Step(EmbedSimCtrlInput_T * const InputPtr,
     SVM_DutyCycle_T svmDC;
     FocDq_T dqCurrentMeas;
 
+    inputPtr  = MotorPtr->InputPtr;
+    mPtr      = MotorPtr->MaschinePtr;
+    outputPtr = MotorPtr->OutputPtr;
+
     /*
      * ------------------------------------------------------------
      * 1. Read reference trajectory
      * ------------------------------------------------------------
      */
 
-    omegaRef     = InputPtr->AngularVelocityRef;
-    omegaRefDot  = InputPtr->AngularAccerlerationRef;
-    omegaRefDDot = InputPtr->AngularJerkRef;
+    omegaRef     = inputPtr->AngularVelocityRef;
+    omegaRefDot  = inputPtr->AngularAccerlerationRef;
+    omegaRefDDot = inputPtr->AngularJerkRef;
 
     /*
      * ------------------------------------------------------------
@@ -278,7 +276,7 @@ void DFC_Step(EmbedSimCtrlInput_T * const InputPtr,
      * ------------------------------------------------------------
      */
 
-    torqueRequired = (MPtr->J * omegaRefDot) + (MPtr->B * omegaRef) + MPtr->TorqueLoad;
+    torqueRequired = (mPtr->J * omegaRefDot) + (mPtr->B * omegaRef) + mPtr->TorqueLoad;
 
     /*
      * For Id = 0:
@@ -290,7 +288,7 @@ void DFC_Step(EmbedSimCtrlInput_T * const InputPtr,
      *     Iq = Te / (1.5 * p * FluxPm)
      */
 
-    torqueConstant =  1.5F * MPtr->PolePairs *  MPtr->FluxPm;
+    torqueConstant =  1.5F * mPtr->PolePairs *  mPtr->FluxPm;
 
     if (fabsf(torqueConstant) > 1.0e-6F)
     {
@@ -308,10 +306,7 @@ void DFC_Step(EmbedSimCtrlInput_T * const InputPtr,
          * --------------------------------------------------------
          */
 
-        iqRefDot =
-            ((MPtr->J * omegaRefDDot) +
-             (MPtr->B * omegaRefDot)) /
-            torqueConstant;
+        iqRefDot = ((mPtr->J * omegaRefDDot) +(mPtr->B * omegaRefDot)) /  torqueConstant;
     }
     else
     {
@@ -333,10 +328,10 @@ void DFC_Step(EmbedSimCtrlInput_T * const InputPtr,
      * ------------------------------------------------------------
      */
 
-    vdRef =  -MPtr->PolePairs * omegaRef *MPtr->Lq * iqRef;
-    vqRef = (MPtr->Rs * iqRef) + (MPtr->Lq * iqRefDot) + (MPtr->PolePairs * omegaRef *  MPtr->FluxPm);
+    vdRef =  -mPtr->PolePairs * omegaRef * mPtr->Lq * iqRef;
+    vqRef = (mPtr->Rs * iqRef) + (mPtr->Lq * iqRefDot) + (mPtr->PolePairs * omegaRef *  mPtr->FluxPm);
 
-    DFC_CurrentsToDq(InputPtr, MPtr, &dqCurrentMeas);
+    DFC_CurrentsToDq(inputPtr, mPtr, &dqCurrentMeas);
     idError = 0.0F - dqCurrentMeas.D;
     iqError = vqRef - dqCurrentMeas.Q;
 
@@ -361,11 +356,11 @@ void DFC_Step(EmbedSimCtrlInput_T * const InputPtr,
      * ------------------------------------------------------------
      */
 
-    rotorSpeedMeas = CON_RPM_TO_RAD(InputPtr->RotorSpeedEst);
+    rotorSpeedMeas = CON_RPM_TO_RAD(inputPtr->RotorSpeedEst);
 
     (void)rotorSpeedMeas;
 
-    rotorAngleMeas = InputPtr->RotorPositionEst *  MPtr->PolePairs;
+    rotorAngleMeas = inputPtr->RotorPositionEst *  mPtr->PolePairs;
 
     DFC_WrapAngle(&rotorAngleMeas);
 
@@ -377,7 +372,7 @@ void DFC_Step(EmbedSimCtrlInput_T * const InputPtr,
      * ------------------------------------------------------------
      */
 
-    DFC_VoltageToDuty( &dqVoltage,focAngle,MPtr, &svmDC);
+    DFC_VoltageToDuty( &dqVoltage,focAngle,mPtr, &svmDC);
 
     /*
      * ------------------------------------------------------------
@@ -385,11 +380,11 @@ void DFC_Step(EmbedSimCtrlInput_T * const InputPtr,
      * ------------------------------------------------------------
      */
 
-    OutputPtr->DutyU = svmDC.Ta;
-    OutputPtr->DutyV = svmDC.Tb;
-    OutputPtr->DutyW = svmDC.Tc;
-    OutputPtr->SvmSector = svmDC.Sector;
-    OutputPtr->Valid = 0x1U;
+    outputPtr->DutyU     = svmDC.Ta;
+    outputPtr->DutyV     = svmDC.Tb;
+    outputPtr->DutyW     = svmDC.Tc;
+    outputPtr->SvmSector = svmDC.Sector;
+    outputPtr->Valid     = 0x1U;
 }
 
 

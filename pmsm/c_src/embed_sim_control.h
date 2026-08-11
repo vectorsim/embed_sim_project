@@ -69,27 +69,23 @@ typedef enum
  */
 typedef struct
 {
-    real32_T    AngularVelocityRefRpm;       /**< Mechanical speed reference [RPM]      */
-    real32_T    RotorPositionRef;            /**< Rotor position reference [rad]        */
-    real32_T    AngularVelocityRef;          /**< Angular velocity [rad/s]              */
-    real32_T    AngularAccerlerationRef;     /**< Angular acceleration [rad/s²]         */
-    real32_T    AngularJerkRef;              /**< Angular jerk [rad/s³]                 */
-
-    real32_T    DutyU;                      /**< Phase U PWM duty cycle [0.0 .. 1.0]    */
-    real32_T    DutyV;                      /**< Phase V PWM duty cycle [0.0 .. 1.0]    */
-    real32_T    DutyW;                      /**< Phase W PWM duty cycle [0.0 .. 1.0]    */
+    real32_T    AngularVelocityRefRpm;      /**< Mechanical speed reference [RPM]       */
+    real32_T    RotorPositionRef;           /**< Rotor position reference [rad]         */
+    real32_T    AngularVelocityRef;         /**< Angular velocity [rad/s]               */
+    real32_T    AngularAccerlerationRef;    /**< Angular acceleration [rad/s²]          */
+    real32_T    AngularJerkRef;             /**< Angular jerk [rad/s³]                  */
     real32_T    Iu;                         /**< Current Phase U [A]                    */
     real32_T    Iv;                         /**< Current Phase V [A]                    */
     real32_T    Iw;                         /**< Current Phase W [A]                    */
     real32_T    RotorSpeedSensor;           /**< Rotor Velocity in RPM [RPM] (Sensor)   */
-    real32_T    RotorSpeedEst;              /**< Rotor Velocity in RPM [RPM] (Estimated)*/
-    real32_T    SampleTime;                 /**< Control loop sample time [s]           */
-    real32_T    RotorPositionSensor;        /**< Rotor Position [RAD] (Sensor)          */
-    real32_T    RotorPositionEst;           /**< Rotor Position [RAD] (Estimated)       */
-    uint32_T    SwitchToClosedLoop;                     /**< Flag to indicate RampUp    */
-    uint32_T    Valid;                      /**< Flag of Validation                     */
-    uint32_T    CtrlAlg;                    /**< Control algorithm selector             */
-    real32_T    Vdc;                        /**< DC Voltage                             */
+    real32_T    RotorSpeedEst;              /**< Rotor Velocity in RPM [RPM] (Estimated) */
+    real32_T    SampleTime;                 /**< Control loop sample time [s]            */
+    real32_T    RotorPositionSensor;        /**< Rotor Position [RAD] (Sensor)           */
+    real32_T    RotorPositionEst;           /**< Rotor Position [RAD] (Estimated)        */
+    uint32_T    SwitchToClosedLoop;         /**< Flag to indicate RampUp                 */
+    real32_T    Vdc;                        /**< DC Voltage                              */
+    uint32_T    CtrlAlg;                    /**< Control Algorithm                       */
+    uint32_T    Valid;                      /**< Flag of Validation                      */
 } EmbedSimCtrlInput_T;
 
 /**
@@ -122,6 +118,18 @@ typedef struct
     real32_T    TorqueLoad;             /**< Torque Load                                  [N·m]    */
 } EmbedSimMachineParam_T;
 
+
+
+typedef struct
+{
+   EmbedSimCtrlInput_T*     InputPtr;
+   EmbedSimCtrlOutput_T*    OutputPtr;
+   EmbedSimMachineParam_T*  MaschinePtr;
+} EmbedSimMachine_T;
+
+
+extern  EmbedSimMachine_T TractionMotor_G;
+
 /*********************************************************************************************************************/
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
 /*********************************************************************************************************************/
@@ -132,9 +140,9 @@ typedef struct
 extern void EmbedSim_ControlInit(void);
 
 /**
- * \brief   Top-level PMSM control step.
+ * \brief   Top-level PMSM control step used CDD.
  */
-extern void EmbedSim_ControlStep(EmbedSimCtrlInput_T* InputPtr, EmbedSimCtrlOutput_T* OutputPtr);
+extern void EmbedSim_ControlStep(EmbedSimMachine_T*  const MotorPtr);
 
 
 

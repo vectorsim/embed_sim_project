@@ -63,25 +63,8 @@ void DFC_Init(void);
  * \param[in]  MPtr       Pointer to machine parameters (resistance, inductance, flux).
  * \param[out] OutputPtr  Pointer to control output structure (voltage commands).
  */
-void DFC_Step(EmbedSimCtrlInput_T* const InputPtr,
-              const EmbedSimMachineParam_T* const MPtr,
-              EmbedSimCtrlOutput_T* const OutputPtr);
+void DFC_Step(EmbedSimMachine_T*  const MotorPtr);
 
-/**
- * \brief   Configure PI gains
- *
- * \details Sets proportional (Kp) and integral (Ki) gains for all three
- *          PI controllers in the cascade structure.
- *
- * \param[in] KpSpeed  Speed controller proportional gain.
- * \param[in] KiSpeed  Speed controller integral gain.
- * \param[in] KpIq     Iq current controller proportional gain.
- * \param[in] KiIq     Iq current controller integral gain.
- * \param[in] KpId     Id current controller proportional gain.
- * \param[in] KiId     Id current controller integral gain.
- */
-void DFC_ConfigurePI(real32_T KpSpeed, real32_T KiSpeed,
-                     real32_T KpIq, real32_T KiIq,
-                     real32_T KpId, real32_T KiId);
+
 
 #endif /* EMBED_SIM_DFC_CONTROLLER_H_ */

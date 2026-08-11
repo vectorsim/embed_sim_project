@@ -35,6 +35,7 @@
 #include "embed_sim_sv_pwm.h"
 #include "embed_sim_coordinate_transform.h"
 #include "embed_sim_dfc_controller.h"
+#include "embed_sim_cython_interface.h"
 #include <stddef.h>
 #include <math.h>
 
@@ -47,7 +48,7 @@
 /*--------------------------------------------------Private Data-----------------------------------------------------*/
 /*********************************************************************************************************************/
 
-static EmbedSimMachineParam_T MotorParams_G =
+static EmbedSimMachineParam_T TractionMotorParams_G =
 {
     .PolePairs        = MP_POLES,
     .Rs               = MP_R_S,
@@ -59,17 +60,15 @@ static EmbedSimMachineParam_T MotorParams_G =
     .Vdc              = MP_V_DC
 };
 
+EmbedSimCtrlInput_T    TractionMotorInput_G;
+EmbedSimCtrlOutput_T   TractionMotorOutput_G;
+EmbedSimMachine_T      TractionMotor_G;
+
 /*********************************************************************************************************************/
 /*-----------------------------------------Private Function Prototypes-----------------------------------------------*/
 /*********************************************************************************************************************/
 
-/**
- * \brief   Execute one step of open-loop motor control
- *
- * \param[in]     InputPtr  Pointer to control input structure.
- * \param[in,out] OutputPtr Pointer to control output structure.
- */
-static void EmbedSim_OpenLoopStep(EmbedSimCtrlInput_T* InputPtr, EmbedSimCtrlOutput_T* OutputPtr);
+static void EmbedSim_OpenLoopStep(EmbedSimCtrlInput_T* const InputPtr, EmbedSimMachineParam_T*  const ParaPtr,EmbedSimCtrlOutput_T* const OutputPtr);
 
 /**
  * \brief   Wrap angle to [0, 2pi)
@@ -228,7 +227,7 @@ static real32_T EmbedSim_SmoothJerk(real32_T RawJerk, real32_T PreviousJerk, rea
  * \note The rotor angle is wrapped to the range [0, 2π) after each step.
  * \note This function uses the global MotorParams_G structure for motor parameters.
  */
-static void EmbedSim_OpenLoopStep(EmbedSimCtrlInput_T* InputPtr, EmbedSimCtrlOutput_T* OutputPtr)
+void EmbedSim_OpenLoopStep(EmbedSimCtrlInput_T* const InputPtr, EmbedSimMachineParam_T*  const ParaPtr, EmbedSimCtrlOutput_T* const OutputPtr)
 {
     static real32_T rotorAngleE = 0.0F;
     FocAngle_T      focAngle;
@@ -246,7 +245,7 @@ static void EmbedSim_OpenLoopStep(EmbedSimCtrlInput_T* InputPtr, EmbedSimCtrlOut
 
     if (InputPtr->Valid == 0x1U)
     {
-        angularVelocityE = InputPtr->AngularVelocityRef * MotorParams_G.PolePairs;
+        angularVelocityE = InputPtr->AngularVelocityRef * ParaPtr->PolePairs;
         rotorAngleE += (angularVelocityE * InputPtr->SampleTime);
         EmbedSim_WrapAngle(&rotorAngleE);
 
@@ -255,10 +254,10 @@ static void EmbedSim_OpenLoopStep(EmbedSimCtrlInput_T* InputPtr, EmbedSimCtrlOut
         /* Id = 0 control for surface PMSM */
         dqVoltage.D = 0.0F;
         /* Vq magnitude = modulation * (Vdc/√3) */
-        dqVoltage.Q = (MotorParams_G.Vdc / SVM_SQRT3_F) * modulation;
+        dqVoltage.Q = (ParaPtr->Vdc / SVM_SQRT3_F) * modulation;
 
         /* Use fixed SVPWM with Vdc parameter */
-        if (SVM_CalculateDutyCycleFromDq(&dqVoltage, &focAngle, MotorParams_G.Vdc, &svmDC) == MATRIX_SUCCESS)
+        if (SVM_CalculateDutyCycleFromDq(&dqVoltage, &focAngle, ParaPtr->Vdc, &svmDC) == MATRIX_SUCCESS)
         {
             OutputPtr->DutyU = svmDC.Ta;
             OutputPtr->DutyV = svmDC.Tb;
@@ -414,6 +413,12 @@ void EmbedSim_ControlInit(void)
 {
     SVM_Init();
     DFC_Init();
+
+    TractionMotorInput_G.CtrlAlg = 0;
+   /* Initialise Traction Motor */
+    TractionMotor_G.InputPtr   = &TractionMotorInput_G;
+    TractionMotor_G.OutputPtr  = &TractionMotorOutput_G;
+    TractionMotor_G.MaschinePtr = &TractionMotorParams_G;
 }
 
 /**
@@ -426,35 +431,86 @@ void EmbedSim_ControlInit(void)
  * \param[in]     InputPtr  Pointer to control input structure.
  * \param[in,out] OutputPtr Pointer to control output structure.
  */
-void EmbedSim_ControlStep(EmbedSimCtrlInput_T* InputPtr, EmbedSimCtrlOutput_T* OutputPtr)
+void EmbedSim_ControlStep(EmbedSimMachine_T*  const MotorPtr)
 {
-
-    if (InputPtr->Valid == 0x1U)
+    EmbedSimCtrlInput_T*    inputPtr  = MotorPtr->InputPtr;
+    EmbedSimCtrlOutput_T*   outputPtr = MotorPtr->OutputPtr;
+    EmbedSimMachineParam_T* pPtr      = MotorPtr->MaschinePtr;
+    if (inputPtr->Valid == 0x1U)
     {
-        MotorParams_G.Vdc = InputPtr->Vdc;
-        EmbedSim_CalculateRef(InputPtr);
+        pPtr->Vdc = inputPtr->Vdc;
+        EmbedSim_CalculateRef(inputPtr);
 
-        if (InputPtr->SwitchToClosedLoop != 0x1U)
+        if (inputPtr->SwitchToClosedLoop != 0x1U)
         {
-            EmbedSim_OpenLoopStep(InputPtr, OutputPtr);
+            EmbedSim_OpenLoopStep(inputPtr, pPtr, outputPtr);
         }
         else
         {
             /* Substitute by Observer */
-            InputPtr->RotorPositionEst = InputPtr->RotorPositionSensor;
-            InputPtr->RotorSpeedEst    = InputPtr->RotorSpeedSensor;
+            inputPtr->RotorPositionEst = inputPtr->RotorPositionSensor;
+            inputPtr->RotorSpeedEst    = inputPtr->RotorSpeedSensor;
 
             /* Select the Control */
-            switch (InputPtr->CtrlAlg)
+            switch (inputPtr->CtrlAlg)
             {
                 case SIM_CTRL_DFC:
-                    DFC_Step(InputPtr, &MotorParams_G, OutputPtr);
+                    DFC_Step(MotorPtr);
                     break;
 
                 default:
-                    EmbedSim_OpenLoopStep(InputPtr, OutputPtr);
+                    EmbedSim_OpenLoopStep(inputPtr, pPtr, outputPtr);
                     break;
             }
         }
     }
+}
+
+
+void EmbedSim_CythonControlInit(void)
+{
+    EmbedSim_ControlInit();
+}
+
+
+
+extern void EmbedSim_CythonControlStep(
+                                     /* input */
+                                      real32_T  Iu,                  /*  [A] */
+                                      real32_T  Iv,                    /*  [A] */
+                                      real32_T  Iw,                      /*  [A] */
+                                      real32_T  RotorPositionSensor,     /* RAD */
+                                      real32_T RotorVelocitySensor,      /* RPM Mechanichal */
+                                      real32_T  AngularVelocityRefRpm,   /* RPM Mechanichal */
+                                      real32_T  Vdc,                     /*  [V]*/
+                                      real32_T  SampleTime,
+                                      uint32_T  CtrlAlg,
+                                      uint32_T   ValidIn,
+                                      /* output*/
+                                      real32_T* PwmU,
+                                      real32_T* PwmV,
+                                      real32_T* PwmW,
+                                      uint32_T*   ValidOut)
+ {
+    TractionMotorInput_G.Iu = Iu;
+    TractionMotorInput_G.Iv = Iv;
+    TractionMotorInput_G.Iw = Iw;
+
+
+    TractionMotorInput_G.RotorPositionSensor = RotorPositionSensor;
+    TractionMotorInput_G.RotorSpeedSensor    = RotorVelocitySensor;
+    TractionMotorInput_G.AngularVelocityRefRpm =  AngularVelocityRefRpm;
+
+     TractionMotorInput_G.SampleTime = SampleTime;  // 50us = 20 kHz
+     TractionMotorInput_G.Vdc = Vdc;
+
+    TractionMotorInput_G.Valid = ValidIn;
+
+    EmbedSim_ControlStep(&TractionMotor_G);
+
+   *PwmU  = TractionMotorOutput_G.DutyU;
+   *PwmV  = TractionMotorOutput_G.DutyV;
+   *PwmW  = TractionMotorOutput_G.DutyW;
+   *ValidOut = TractionMotorOutput_G.Valid;
+
 }
