@@ -1,5 +1,5 @@
 """
-db42s02__pmsm_20k.py  -  PMSM Control Simulation - C BACKEND / Python switchable
+db42s02__pmsm_20k.py  -  PMSM Control Simulation - C BACKEND
 """
 
 from __future__ import annotations
@@ -34,7 +34,7 @@ import matplotlib.pyplot as plt
 from embedsim import EmbedSim, ODESolver, VectorEnd
 from embedsim.core_blocks import VectorBlock, VectorSignal, DEFAULT_DTYPE
 from embedsim.source_blocks import VectorStep
-from embedsim.simulation_engine import VectorDelay
+from embedsim.simulation_engine import VectorDelay          # <--- built-in loop breaker
 from embedsim.plot_helper import create_plotter
 
 from pmsm_python_plant import PMSM_Python_Plant
@@ -53,7 +53,10 @@ class VectorDelayVector(VectorDelay):
     def __init__(self, name="delay", initial=None):
         if initial is None:
             initial = [0.0]
+        # Call parent __init__ – it sets is_loop_breaker = True
+        # Pass only the first element as the scalar initial value
         super().__init__(name, initial=initial[0])
+        # Override the state to store the whole vector
         self._state = np.array(initial, dtype=float)
         self.vector_size = len(self._state)
         self.output = VectorSignal(self._state.copy(), self.name)
@@ -63,87 +66,13 @@ class VectorDelayVector(VectorDelay):
             new_val = input_values[0].value
             if len(new_val) == self.vector_size:
                 self._state = new_val.copy()
+            # else keep old state (should not happen)
         self.output = VectorSignal(self._state.copy(), self.name)
         return self.output
 
     def reset(self):
         self._state = np.zeros(self.vector_size, dtype=float)
         self.output = VectorSignal(self._state.copy(), self.name)
-
-
-# =============================================================================
-# FlexibleControlBlock - inherits from C block, uses compute_py for Python
-# =============================================================================
-
-class FlexibleControlBlock(EmbedSimControlBlock):
-    """
-    Control block that can run either the original C backend
-    or a user-defined Python function via compute_py().
-    """
-    def __init__(self, use_python=True, **kwargs):
-        super().__init__(**kwargs)
-        self.use_python = use_python
-
-        # ---- Python controller states (example: PI) ----
-        self.integral = 0.0
-        self.Kp = 0.5
-        self.Ki = 2.0
-        self.valid_out = 1
-        self._last_py_print = -1.0
-
-    def compute(self, t, dt, input_values=None):
-        # ---- Mode 1: C backend ----
-        if not self.use_python:
-            return super().compute(t, dt, input_values)
-
-        # ---- Mode 2: Python implementation ----
-        return self.compute_py(t, dt, input_values)
-
-    def compute_py(self, t, dt, input_values=None):
-        """
-        Your Python control algorithm goes here.
-        This is the method you'll edit and experiment with.
-        """
-        u = input_values[0].value
-        speed_ref_rpm = float(u[0])
-        ia = float(u[1])
-        ib = float(u[2])
-        ic = float(u[3])
-        speed_sensor_rpm = float(u[4])
-        sample_time = float(u[5])
-        position_sensor_rad = float(u[6])
-        valid_in = int(u[7])
-        vdc = float(u[9])
-
-        # Debug prints (rate-limited to 0.2 s)
-        if (t - self._last_py_print) >= 0.2:
-            self._last_py_print = t
-            print(f"\n[FlexPy t={t:.2f}s]")
-            print(f"  speed_ref={speed_ref_rpm:.1f}  speed_sensor={speed_sensor_rpm:.1f}")
-            print(f"  ia={ia:.3f}  ib={ib:.3f}  ic={ic:.3f}  vdc={vdc:.2f}")
-
-        # ================================================================
-        #  YOUR CONTROL ALGORITHM STARTS HERE – EDIT FREELY
-        # ================================================================
-        # Example: PI speed controller
-        error_rpm = speed_ref_rpm - speed_sensor_rpm
-        self.integral += self.Ki * error_rpm * dt
-        duty = self.Kp * error_rpm + self.integral
-        duty = np.clip(duty, 0.0, 1.0)
-        duty_u = duty_v = duty_w = duty
-        # ================================================================
-
-        if (t - self._last_py_print) <= 0.001:
-            print(f"  duties -> u={duty_u:.4f} v={duty_v:.4f} w={duty_w:.4f}  valid={self.valid_out}")
-
-        out = np.array([duty_u, duty_v, duty_w, float(self.valid_out)], dtype=DEFAULT_DTYPE)
-        self.output = VectorSignal(out, self.name)
-        return self.output
-
-    def reset(self):
-        super().reset()
-        self.integral = 0.0
-        self._last_py_print = -1.0
 
 
 # =============================================================================
@@ -169,12 +98,8 @@ VALID_FLAG = 1
 # =============================================================================
 # Debug flag – set to True to see controller inputs and duties
 # =============================================================================
-DEBUG_CTRL = False
+DEBUG_CTRL = True
 
-# =============================================================================
-# Control selection
-# =============================================================================
-USE_PYTHON_CONTROL = True   # True = Python controller, False = C backend
 
 # =============================================================================
 # Wire labels
@@ -204,7 +129,7 @@ class CtrlPacker(VectorBlock):
     """
     TOPO_CATEGORY = "utility"
     C_CODEGEN_EXCLUDE = True
-    NUM_INPUTS = 2
+    NUM_INPUTS = 2                     # two explicit ports
     output_label = "ctrl_inputs[10]"
 
     def __init__(self, name="ctrl_packer", dt=DT, monitor=None):
@@ -215,9 +140,11 @@ class CtrlPacker(VectorBlock):
         self._last_debug_t = -1.0
 
     def compute_py(self, t, dt, input_values=None):
+        # port 0: speed reference
         speed_ref_sig = input_values[0]
         speed_ref_rpm = float(speed_ref_sig.value[0])
 
+        # port 1: motor feedback (8 elements)
         motor_vals = input_values[1].value
         speed_sensor_rpm = float(motor_vals[0])
         ia = float(motor_vals[1])
@@ -225,6 +152,7 @@ class CtrlPacker(VectorBlock):
         ic = float(motor_vals[3])
         position_sensor_rad = float(motor_vals[4]) % (2.0 * math.pi)
 
+        # Debug print every 0.2 s
         if DEBUG_CTRL and (t - self._last_debug_t >= 0.2):
             self._last_debug_t = t
             print(f"\n[CtrlPacker t={t:.2f}s]")
@@ -233,21 +161,23 @@ class CtrlPacker(VectorBlock):
             print(f"  theta_m (mech)  = {position_sensor_rad:.4f} rad")
             print(f"  ia={ia:.3f}  ib={ib:.3f}  ic={ic:.3f}")
 
+        # Build the 10‑element output for the control block
         output_array = np.array([
             speed_ref_rpm,
             ia,
             ib,
             ic,
             speed_sensor_rpm,
-            dt,
-            position_sensor_rad,
+            dt,                     # sample time
+            position_sensor_rad,    # mechanical angle
             VALID_FLAG,
-            0.0,
+            0.0,                    # unused placeholder
             V_DC,
         ], dtype=DEFAULT_DTYPE)
 
         self.output = VectorSignal(output_array, self.name)
 
+        # Optional monitor
         if self._monitor:
             self._monitor.tick(t, speed_ref_rpm, speed_sensor_rpm,
                                ia, ib, ic, motor_vals[6], motor_vals[7],
@@ -260,7 +190,7 @@ class CtrlPacker(VectorBlock):
 
 
 # =============================================================================
-# Load Adapter
+# Load Adapter - Converts duties to motor inputs
 # =============================================================================
 
 class LoadAdapter(VectorBlock):
@@ -321,28 +251,24 @@ class ConsoleMonitor:
 # =============================================================================
 
 def main():
-    # Control mode – only used by C block; for Python block it's informational
-    CONTROL_MODE = SIM_CTRL_OPEN_LOOP   # or SIM_CTRL_DFC
+    # Select control mode here
+    CONTROL_MODE = SIM_CTRL_OPEN_LOOP  # Change to SIM_CTRL_DFC for closed loop
+
     mode_name = "DFC" if CONTROL_MODE == SIM_CTRL_DFC else "OPEN_LOOP"
 
     print(f"\n[config] target={TARGET_RPM:.0f} RPM  T={T_SIM:.1f}s  dt={DT*1e6:.0f}us")
     print(f"[config] Vdc={V_DC:.1f}V")
-    if USE_PYTHON_CONTROL:
-        print(f"[config] Mode: Python controller (PI)")
-    else:
-        print(f"[config] Mode: {mode_name} (C Backend)")
+    print(f"[config] Mode: {mode_name} (C Backend)")
     print(f"[config] Controller expects MECHANICAL angle (from sensor)")
 
     monitor = ConsoleMonitor(period_s=0.2)
 
-    # ── Instantiate the flexible controller ──────────────────────────────────
-    ctrl = FlexibleControlBlock(
+    ctrl = EmbedSimControlBlock(
         name="ctrl",
-        use_python=USE_PYTHON_CONTROL,
         dt_s=DT,
-        ctrl_alg=CONTROL_MODE,          # only used when use_python=False
+        ctrl_alg=CONTROL_MODE,
         vdc_nom=V_DC,
-        use_c_backend=False,             # only used when use_python=False
+        use_c_backend=True,
     )
 
     motor = PMSM_Python_Plant(
@@ -365,6 +291,7 @@ def main():
         dim=1
     )
 
+    # Use the custom vector delay (inherits loop-breaker from VectorDelay)
     motor_delay = VectorDelayVector(
         name="motor_delay",
         initial=[0.0] * _MOTOR_OUT_SIZE
@@ -375,7 +302,7 @@ def main():
     ctrl_packer = CtrlPacker("ctrl_packer", dt=DT, monitor=monitor)
     load_adapter = LoadAdapter("load_adapter", tload=0.0)
 
-    # ── Connections ──────────────────────────────────────────────────────────
+    # Connections – port 0: speed_ref, port 1: motor_delay
     speed_ref >> ctrl_packer
     motor_delay >> ctrl_packer
     ctrl_packer >> ctrl
@@ -407,28 +334,33 @@ def main():
 
     sim.run(progress_bar=True)
 
-    # ── Plotting ─────────────────────────────────────────────────────────────
+    # ------------------------------------------------------------------------
+    # Use plot_helper for clean, organised plotting
+    # ------------------------------------------------------------------------
     ph = create_plotter(sim)
 
+    # Plot 1: Speed reference vs motor speed
     ph.easyplot(["SpeedRef[0]", "Motor[0]"],
                 title="Speed Reference & Motor Speed",
                 time_range=(0, T_SIM),
                 figsize=(10, 4),
                 save_path=str(_HERE / f"speed_{mode_name.lower()}.png"))
 
+    # Plot 2: Phase currents
     ph.easyplot(["Motor[1]", "Motor[2]", "Motor[3]"],
                 title="Phase Currents (ia, ib, ic)",
                 time_range=(0, T_SIM),
                 figsize=(10, 4),
                 save_path=str(_HERE / f"currents_{mode_name.lower()}.png"))
 
+    # Plot 3: dq currents
     ph.easyplot(["Motor[6]", "Motor[7]"],
                 title="DQ Currents (id, iq)",
                 time_range=(0, T_SIM),
                 figsize=(10, 4),
                 save_path=str(_HERE / f"dq_{mode_name.lower()}.png"))
 
-    # ── Summary ──────────────────────────────────────────────────────────────
+    # Summary
     sc = sim.scope
     speed_data = sc.get_signal("Motor", 0)
     final_speed = speed_data[-1] if speed_data is not None and len(speed_data) > 0 else 0.0
@@ -436,7 +368,7 @@ def main():
     print(f"\n{'='*60}")
     print(f" SUMMARY")
     print(f"{'='*60}")
-    print(f"  Controller   : {'Python (PI)' if USE_PYTHON_CONTROL else 'C backend'}")
+    print(f"  Control Mode : {mode_name}")
     print(f"  Vdc          : {V_DC:.1f} V")
     print(f"  Target speed : {TARGET_RPM:.0f} RPM")
     print(f"  Final speed  : {final_speed:.1f} RPM")

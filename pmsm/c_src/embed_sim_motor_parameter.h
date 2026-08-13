@@ -2,11 +2,9 @@
  * \file      embed_sim_motor_parameter.h
  * \brief     Motor parameters and operational limits for PMSM control.
  *
- * \details   Defines all motor-specific physical parameters, operational limits,
- *            and reference generation parameters for the Nanotec DB42S02 motor.
+ * \details   Defines all motor-specific physical parameters for the Nanotec DB42S02 motor.
  *            Includes pole pairs, resistance, inductance, flux linkage, inertia,
- *            and friction coefficients. Also defines speed/acceleration/jerk
- *            limits for smooth trajectory generation.
+ *            and friction coefficients.
  *            Targets 32-bit MCUs (Infineon AURIX TriCore, ARM Cortex-M4).
  *
  * \note      MISRA C:2012 compliance:
@@ -18,13 +16,13 @@
  *              - Functions      : Pascal_Snake_Case
  *              - Parameters     : PascalCase  (single-letter → Uppercase)
  *              - Output pointers: PascalCase_P
- *              - Local variables: Lower pascalCase
+ *              - Local variables: Lower camelCase
  *              - Struct members : PascalCase
  *              - Macros         : UPPER_SNAKE_CASE
  *              - Typedefs       : Pascal_Snake_Case_T
  *
- * \version   1.0.0
- * \date      2026-08-09
+ * \version   2.0.0
+ * \date      2026-08-12
  * \author    EmbedSim / EV Light Vehicle Foundation
  *
  * \copyright Copyright (C) 2026 EmbedSim — EV Light Vehicle Foundation, Jaffna, Sri Lanka.
@@ -139,135 +137,20 @@
  */
 #define MP_V_DC                 ((MatrixFloat)12.0f)
 
-/* ====================================================================
- * OPERATIONAL LIMITS
- * These protect the motor and hardware
- * ==================================================================== */
-
-/**
- * \brief   Maximum allowable motor speed
- *
- * \details Maximum speed limit to prevent mechanical damage.
- *          Used to clamp speed references.
- *
- * \note    Value: 3000 RPM
- * \unit    Revolutions per minute [RPM]
+/*
+ * ====================================================================
+ * NOTE: Operational limit macros are defined in embed_sim_control.h
+ * ====================================================================
+ * The following macros are defined in embed_sim_control.h:
+ *   - MAX_SPEED_RPM
+ *   - CLOSED_LOOP_MIN_SPEED
+ *   - MAX_JERK_RPM
+ *   - SPEED_SETTLE_TOL
+ *   - JERK_SMOOTHING_FACTOR
+ *   - DFC_MAX_CURRENT
+ *   - DFC_MAX_VOLTAGE
+ *   - DFC_VOLTAGE_MARGIN
+ * ====================================================================
  */
-#define MAX_SPEED_RPM                   (3000.0F)
-
-/**
- * \brief   Minimum speed for closed-loop control
- *
- * \details Speed threshold below which the motor cannot reliably
- *          operate in closed-loop control mode.
- *
- * \note    Value: 250 RPM
- * \unit    Revolutions per minute [RPM]
- */
-#define CLOSED_LOOP_MIN_SPEED           (250.0F)
-
-/**
- * \brief   Position wrap value
- *
- * \details Value used for wrapping rotor position to the range [0, 2π).
- *          Equal to 2π radians.
- *
- * \note    Value: 2π rad
- * \unit    Radians [rad]
- */
-#define POSITION_WRAP                   (ES_MATH_2PI_F)
-
-/**
- * \brief   Maximum allowed current
- *
- * \details Maximum current limit to protect the motor windings
- *          from overheating or demagnetization.
- *
- * \note    Value: 10.0 A
- * \unit    Amperes [A]
- */
-#define DFC_MAX_CURRENT                 (10.0F)
-
-/**
- * \brief   Maximum allowed voltage
- *
- * \details Maximum voltage limit for the motor phases.
- *          Prevents overvoltage damage to the inverter.
- *
- * \note    Value: 6.0 V
- * \unit    Volts [V]
- */
-#define DFC_MAX_VOLTAGE                 (6.0F)
-
-/**
- * \brief   Voltage saturation margin
- *
- * \details Voltage margin to prevent saturation of the PI controllers.
- *          Provides headroom for transient voltage demands.
- *
- * \note    Value: 0.5 V
- * \unit    Volts [V]
- */
-#define DFC_VOLTAGE_MARGIN              (0.5F)
-
-/* ====================================================================
- * SMOOTH REFERENCE GENERATION PARAMETERS
- * These control how the motor accelerates/decelerates
- * ==================================================================== */
-
-/**
- * \brief   Maximum acceleration
- *
- * \details Maximum rate of change of speed.
- *          Limits acceleration to prevent mechanical stress.
- *
- * \note    Value: 200 RPM/s
- * \unit    Revolutions per minute per second [RPM/s]
- */
-#define MAX_ACCEL_RPM                   (200.0F)
-
-/**
- * \brief   Maximum jerk
- *
- * \details Maximum rate of change of acceleration.
- *          Limits jerk to ensure smooth speed transitions.
- *
- * \note    Value: 500 RPM/s²
- * \unit    Revolutions per minute per second squared [RPM/s²]
- */
-#define MAX_JERK_RPM                    (500.0F)
-
-/**
- * \brief   Speed settle tolerance
- *
- * \details Speed error threshold below which the controller considers
- *          the speed to have settled to its target value.
- *
- * \note    Value: 2.0 RPM
- * \unit    Revolutions per minute [RPM]
- */
-#define SPEED_SETTLE_TOL                (2.0F)
-
-/**
- * \brief   Jerk smoothing factor
- *
- * \details Filter coefficient for exponential smoothing of jerk.
- *          Value range: 0.0 (maximum smoothing) to 1.0 (no smoothing).
- *
- * \note    Value: 0.6
- * \unit    dimensionless [-]
- */
-#define JERK_SMOOTHING_FACTOR           (0.6F)
-
-/**
- * \brief   Acceleration ramp smoothing factor
- *
- * \details Filter coefficient for smoothing the acceleration ramp.
- *          Value range: 0.0 (maximum smoothing) to 1.0 (no smoothing).
- *
- * \note    Value: 0.4
- * \unit    dimensionless [-]
- */
-#define ACCEL_SMOOTHING_FACTOR          (0.4F)
 
 #endif /* EMBEDSIM_EMBED_SIM_MOTOR_PARAMETER_H_ */

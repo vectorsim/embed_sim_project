@@ -28,7 +28,7 @@ Mechanical:
 Block interface
 ---------------
 Input bus [0] : [ta, tb, tc, v_dc, T_load]   (from SVPWM / cg_end)
-Output bus    : [rpm, ia, ib, ic, theta_m, T_em, id, iq]
+Output bus    : [rpm, ia, ib, ic, theta_e, T_em, id, iq]
                   [0]  [1][2][3]    [4]     [5]  [6][7]
 """
 
@@ -80,7 +80,7 @@ class PMSM_Python_Plant(VectorBlock):
 
     TOPO_CATEGORY     = "plant"
     C_CODEGEN_EXCLUDE = True
-    output_label      = "[rpm,ia,ib,ic,theta_m,Tem,id,iq]"
+    output_label      = "[rpm,ia,ib,ic,theta_e,Tem,id,iq]"   # <-- changed
 
     def __init__(self, name: str = "pmsm",
                  R: float         = 0.19,
@@ -224,7 +224,6 @@ class PMSM_Python_Plant(VectorBlock):
         T_em       = 1.5 * self.p * (self.lambda_pm*i_q
                                       + (self.L_d - self.L_q)*i_d*i_q)
         ia, ib, ic = self._abc_from_idiq(i_d, i_q, theta_e)
-        theta_m    = theta_e / self.p      # mechanical angle (unwrapped)
         speed_rpm  = omega_m * 60.0 / (2.0 * math.pi)
 
         # Periodic console print (UNLIMITED - prints every 0.2s)
@@ -236,10 +235,11 @@ class PMSM_Python_Plant(VectorBlock):
                   f"T_load={self._tload*1e3:.1f}mN.m")
             self._t_last_print = t
 
+        # Output bus: now index [4] is theta_e (electrical)
         self.output = VectorSignal(np.array([
             speed_rpm,    # [0] RPM
             ia, ib, ic,   # [1-3] phase currents [A]
-            theta_m,      # [4] mechanical angle [rad]  <- CtrlPacker index [4]
+            theta_e,      # [4] electrical angle [rad]   <-- changed
             T_em,         # [5] electromagnetic torque [N.m]
             i_d,          # [6] d-axis current [A]
             i_q,          # [7] q-axis current [A]

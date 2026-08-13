@@ -27,14 +27,9 @@
  *                sr1_ls = sr1_hs + DT              SR1 LS : delayed rising  edge
  *                sr0_ls = sr0_hs - DT              SR0 LS : advanced falling edge
  *
- *            Control-path dispatch (20 kHz) — two options commanded through
- *            CddApp_T (CddApp_SetCtrlMode / CddApp_SetSpeedRefRpm):
- *                - CDDAPP_CTRL_OPENLOOP   : V/f rotating vector at slew-limited
- *                                            SpeedRefRpm, no feedback.
- *                - CDDAPP_CTRL_CLOSEDLOOP : Full sensorless Differential
- *                                            Flatness Controller.
- *            The mode is latched by the ISR once on the activation edge and is
- *            fixed for the entire run — no switching during operation.
+ *            Control-path dispatch (20 kHz):
+ *                - Open-loop  : Handled by EmbedSim_ControlStep() with SIM_CTRL_OPEN_LOOP
+ *                - Closed-loop: Handled by EmbedSim_ControlStep() with SIM_CTRL_DFC
  *
  * \note      MISRA C:2012 compliance:
  *              - Rule  8.1 : All functions have explicit return type
@@ -83,8 +78,6 @@
 #include <math.h>
 
 
-
-
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
 /*********************************************************************************************************************/
@@ -116,71 +109,20 @@
     #define ATOM_HS_CH_SL   (0x0U)
 #endif
 
-/**
- * \brief   SL polarity for LS channels
+/** \brief  SL polarity for LS channels
  */
 #define ATOM_LS_CH_SL               (0x1U)
 
 /** \brief  TOUTSEL mux value routing ATOM0 outputs through CDTM0                   */
 #define TOUTSEL_GTM_ATOM            (0x02U)
 
-/**
- * \brief   Maximum consecutive SVM failures before emergency duty zeroing.
- *
- * \details At 20 kHz, 100 failures = 5 ms of consecutive SVM errors.  Beyond this
- *          threshold the ISR forces DutyU/V/W to 0.0F and transitions to
- *          CDDAPP_ERROR_STATE.
- */
-#define GTM_SVM_FAIL_LIMIT          (100U)
-
-/**
- * \brief   Maximum consecutive DFC_Step() failures before emergency duty zeroing.
- *
- * \details Same rationale as GTM_SVM_FAIL_LIMIT: at 20 kHz, 100 failures = 5 ms.
- *          A DFC_Step() mid-step error already forces safe 0.5 duties internally;
- *          the counter guards against a persistent fault (ADC chain down, transform
- *          error) and escalates to CDDAPP_ERROR_STATE + DFC_Reset().
- */
-#define GTM_DFC_FAIL_LIMIT          (100U)
-
-/** \brief  rad/s (mechanical) → RPM for the telemetry accessor.  [RPM*s/rad]        */
-#define GTM_RADPS_TO_RPM            (60.0F / ES_MATH_2PI_F)
-
-/**
- * \brief   Motor pole pairs — NANOTEC DB42S02 (8 poles).  [dimensionless] — VERIFY
+/** \brief  Motor pole pairs — NANOTEC DB42S02 (8 poles).  [dimensionless]
  *
  * \details Used by the open-loop V/f path to convert the mechanical speed
  *          reference into the electrical angle increment.  Must match the
  *          value used by the DFC motor parameter set.
  */
 #define GTM_MOTOR_POLE_PAIRS        (4.0F)
-
-/**
- * \brief   Mechanical RPM → electrical rad/s conversion.  [rad*min/(s*rev)]
- */
-#define GTM_RPM_TO_RADPS_E          (ES_MATH_2PI_F * GTM_MOTOR_POLE_PAIRS / 60.0F)
-
-/**
- * \brief   Open-loop speed slew limit per ISR tick.  [RPM/tick]
- *
- * \details 0.025 RPM/tick at 20 kHz = 500 RPM/s.  An open-loop rotating
- *          vector must never step in frequency (loss of synchronism); the
- *          reference is therefore ramped inside CddGtm_RunOpenLoop()
- *          regardless of how CddApp_G.SpeedRefRpm changes.
- */
-#define GTM_OL_RPM_SLEW             (0.025F)
-
-/** \brief  Open-loop V/f law: modulation index at zero speed (boost).
- *          [dimensionless] — tune on hardware                                       */
-#define GTM_OL_VF_BOOST             (0.05F)
-
-/** \brief  Open-loop V/f law: modulation index gain per RPM.
- *          mi = BOOST + GAIN * |rpm|.  1.0E-4 → mi = 0.20 at 1500 RPM.
- *          [1/RPM] — tune on hardware                                               */
-#define GTM_OL_VF_GAIN              (1.0E-4F)
-
-/** \brief  Open-loop V/f law: modulation index ceiling.  [dimensionless]            */
-#define GTM_OL_MI_MAX               (0.95F)
 
 /*********************************************************************************************************************/
 /*-------------------------------------------------Data Structures---------------------------------------------------*/
@@ -194,8 +136,6 @@
 
 
 
-EmbedSimCtrlInput_T  EmbedSimCtrlInput_G;
-EmbedSimCtrlOutput_T EmbedSimCtrlOutput_G;
 
 /*********************************************************************************************************************/
 /*--------------------------------------------Private Variables/Constants--------------------------------------------*/
@@ -302,7 +242,15 @@ EMBED_SIM_INTERRUPT(GTM_Atom_00_Ch_00_Isr, TOS_GTM_ISR, SRPN_GTM_ISR);
 void GTM_Atom_00_Ch_00_Isr(void)
 {
 
+    EmbedSimCtrlInput_T*   inputPtr;
+    EmbedSimCtrlOutput_T*  outputPtr;
+
+
+    inputPtr   = TractionMotor_G.InputPtr;
+    outputPtr = TractionMotor_G.OutputPtr;
+
     CddApp_G.ControlLoopCounter++;
+
     CddApp_G.DutyAdcTrig = 0.8F;
     CddEvadc_ConvertPhaseCurrents(&CddApp_G);
     CddGpt12_Update();
@@ -321,25 +269,23 @@ void GTM_Atom_00_Ch_00_Isr(void)
         }
         else
         {
-            EmbedSimCtrlInput_G.AngularVelocityRefRpm   = CddApp_G.SpeedRefRpm;
-            EmbedSimCtrlInput_G.Iu                      = CddApp_G.Iu;
-            EmbedSimCtrlInput_G.Iv                      = CddApp_G.Iv;
-            EmbedSimCtrlInput_G.Iw                      = CddApp_G.Iw;
-            EmbedSimCtrlInput_G.DutyU                   = CddApp_G.DutyU;
-            EmbedSimCtrlInput_G.DutyV                   = CddApp_G.DutyV;
-            EmbedSimCtrlInput_G.DutyW                   = CddApp_G.DutyW;
-            EmbedSimCtrlInput_G.RotorPositionSensor     = CddApp_G.RotorPosition;
-            EmbedSimCtrlInput_G.RotorSpeedSensor        = CddApp_G.RotorSpeedRpm;
-            EmbedSimCtrlInput_G.SampleTime              = CddApp_G.SampleTime;
-            EmbedSimCtrlInput_G.Vdc                     = CddApp_G.Vdc;
-            EmbedSimCtrlInput_G.Valid = 0x1U;
-            EmbedSim_ControlStep(&EmbedSimCtrlInput_G, &EmbedSimCtrlOutput_G);
+            inputPtr->AngularVelocityRefRpm   = CddApp_G.SpeedRefRpm;
+            inputPtr->Iu                      = CddApp_G.Iu;
+            inputPtr->Iv                      = CddApp_G.Iv;
+            inputPtr->Iw                      = CddApp_G.Iw;
 
-            if(EmbedSimCtrlOutput_G.Valid == 0x1U)
+            inputPtr->RotorPositionSensor     = CddApp_G.RotorPosition;
+            inputPtr->RotorSpeedSensor        = CddApp_G.RotorSpeedRpm;
+            inputPtr->SampleTime              = CddApp_G.SampleTime;
+            inputPtr->Vdc                     = CddApp_G.Vdc;
+            inputPtr->Valid                   = 0x1U;
+            EmbedSim_ControlStep(&TractionMotor_G);
+
+            if(outputPtr->Valid == 0x1U)
             {
-                CddApp_G.DutyU = EmbedSimCtrlOutput_G.DutyU;
-                CddApp_G.DutyV = EmbedSimCtrlOutput_G.DutyV;
-                CddApp_G.DutyW = EmbedSimCtrlOutput_G.DutyW;
+                CddApp_G.DutyU = outputPtr->DutyU;
+                CddApp_G.DutyV = outputPtr->DutyV;
+                CddApp_G.DutyW = outputPtr->DutyW;
             }
             else
             {
@@ -476,8 +422,6 @@ void CddGtm_InitModule(void)
 }
 
 
-
-
 /**********************************************************************************************************************
  * CddGtm_Init
  *********************************************************************************************************************/
@@ -523,9 +467,6 @@ void CddGtm_InitInverter(void)
     CddApp_G.SampleTime         = 1.0F / (real32_T)CDD_CONTROL_LOOP_FREQUENCY;
     CddApp_G.ControlLoopCounter = 0U;
 
-
-    EmbedSimCtrlInput_G.CtrlAlg = SIM_CTRL_DFC;  //SIM_CTRL_OPEN_LOOP; SIM_CTRL_DFC;
-    EmbedSimCtrlInput_G.SwitchToClosedLoop = 0x0U;
     EmbedSim_ControlInit();
 
 
@@ -731,8 +672,6 @@ void CddGtm_InitInverter(void)
     GTM_ADCTRIG0OUT0.B.SEL2 = 0x8U;   /* ATOM0_CH7 → ADC_TRIG0[2] → G2 REQTRI  (W)        */
     GTM_ADCTRIG0OUT0.B.SEL1 = 0x8U;   /* ATOM0_CH7 → ADC_TRIG0[1] → G1 REQTRI  (VRO+Vdc)  */
 
-
-
     /* Route CH7 additionally to P00.8 (TOUT17) — scope observation of the
      * shunt sampling instant relative to the phase PWM / LS conduction window.
      * Shunt current sensing: the EVADC must sample while the low-side
@@ -781,11 +720,6 @@ void CddGtm_InitInverter(void)
  */
 void CddGtm_Start(void)
 {
-
-    //CddApp_G.CDDAppStatus = CDDAPP_RUN_STATE;
     GTM_ATOM0_AGC_GLB_CTRL.B.HOST_TRIG = 0x1U;
 }
-
-
-
 
