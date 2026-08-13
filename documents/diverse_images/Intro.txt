@@ -1,7 +1,0 @@
-EmbedSim is not a free Simulink Embedded Coder  clone.
-Simulink documents control designs. EmbedSim builds them — from first principles to qualified C, in Python, for free.
-Three disciplines. One framework.
-Physics modelling — topology-first, Modelica-grounded. The >> operator is not convenience. It is a declaration that your block diagram is the physics.
-Pythonic experimentation — NumPy, SciPy, FMPy, and Cython in the same namespace as your motor model. Physics-aware AI is not a roadmap item. It is the PYXInspector pipeline, today.
-ISO 26262 C generation — StepGenerator emits EmbedSim_step.h/.c for AURIX TriCore and ARM Cortex-M, structured for ASIL-D review. A disciplined pipeline. Not a transpiler.
-The Fachschalen — Traction and BMS — are not demos. They are production-grade starting points any engineer on earth can fork, extend, and ship. No six-figure license. No institutional gatekeeping.
