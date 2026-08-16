@@ -303,6 +303,7 @@ class PythonController(GenericControlBlock):
         omega_ddot = ref['omega_ddot']
         switch_to_closed_loop = ref['switch_to_closed_loop']
 
+
         if not switch_to_closed_loop:
             modulation = 0.1
             self.theta_open_loop += 2 * np.pi * self.startup_speed / 60 * self.pole_pairs * dt

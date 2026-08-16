@@ -39,26 +39,6 @@
 /*------------------------------------------------------Macros-------------------------------------------------------*/
 /*********************************************************************************************************************/
 
-/**
- * \brief   Current PI controller gains (correction on top of flatness)
- *
- * \details These gains provide proportional correction to the flatness feedforward
- *          voltages based on current errors. Higher gains give faster response
- *          but may cause instability.
- *
- * \note    Sensor noise mitigation strategy:
- *          - Very low proportional gains (especially on d-axis)
- *          - Low integral gains to prevent noise amplification
- *          - The feedforward handles most of the control effort (80-90%)
- *          - PI only corrects for model errors and low-frequency disturbances
- *
- * \warning Increasing gains above these values will amplify sensor noise
- *          and may cause audible noise or instability.
- */
-#define DFC_CURRENT_KP_D_F              (0.003F)        /**< d-axis proportional gain (very low for noise immunity) */
-#define DFC_CURRENT_KP_Q_F              (0.135F)        /**< q-axis proportional gain (moderate for torque response) */
-#define DFC_CURRENT_KI_D_F              (0.0001F)       /**< d-axis integral gain (extremely low to prevent windup) */
-#define DFC_CURRENT_KI_Q_F              (0.0009F)       /**< q-axis integral gain (low for smooth steady-state) */
 
 /**
  * \brief   Maximum current limit (A)
@@ -93,20 +73,11 @@
  */
 #define DFC_SQRT3_F                     (1.7320508075688772F)
 
-/**
- * \brief   Maximum integrator anti-windup limit
- *
- * \details Prevents the integral term from accumulating excessive values
- *          during large errors or when the motor is saturated.
- *          This is critical for noise robustness.
- */
-#define DFC_INTEGRAL_LIMIT_F            (10.0F)         /**< Integral term limit (A) */
 
 /*********************************************************************************************************************/
 /*--------------------------------------------------Private Data-----------------------------------------------------*/
 /*********************************************************************************************************************/
 
-/*
 
 
 /*********************************************************************************************************************/
@@ -194,7 +165,7 @@ static void DFC_CurrentsToDq(EmbedSimCtrlInput_T* const inputPtr,
     currents.W = inputPtr->Iw;
 
     /* Calculate electrical angle from rotor position */
-    angle.ThetaE = inputPtr->RotorPositionEst * machinePtr->PolePairs;
+    angle.ThetaE = inputPtr->RotorPositionObsEstM * machinePtr->PolePairs;
     DFC_WrapAngle(&angle.ThetaE);
 
     /* Transform to dq frame - note: sensor noise is now in dq frame */
@@ -367,9 +338,9 @@ void DFC_Step(EmbedSimMachine_T* const motorPtr)
      * These values come from the S-curve generator and are noise-free.
      * The S-curve ensures smooth acceleration and jerk limits.
      */
-    omegaRef         = inputPtr->AngularVelocityRef;
-    omegaRefDot      = inputPtr->AngularAccerlerationRef;
-    omegaRefDDot     = inputPtr->AngularJerkRef;
+    omegaRef         = inputPtr->RotorVelocityRefM;
+    omegaRefDot      = inputPtr->RotorAccerlerationRefM;
+    omegaRefDDot     = inputPtr->RotorJerkRefM;
 
     /*
      * ------------------------------------------------------------
@@ -384,9 +355,7 @@ void DFC_Step(EmbedSimMachine_T* const motorPtr)
      * Noise note: J and B are constants, so this step doesn't
      * amplify sensor noise. The load torque is assumed constant.
      */
-    torqueRequired = (machinePtr->J * omegaRefDot) +
-                     (machinePtr->B * omegaRef) +
-                     machinePtr->TorqueLoad;
+    torqueRequired = (machinePtr->J * omegaRefDot) + (machinePtr->B * omegaRef) + machinePtr->TorqueLoad;
 
     /*
      * ------------------------------------------------------------
@@ -429,9 +398,7 @@ void DFC_Step(EmbedSimMachine_T* const motorPtr)
          * Noise note: Omega_ddot comes from S-curve (noise-free).
          * The division by torqueConstant is still safe.
          */
-        iqRefDot = ((machinePtr->J * omegaRefDDot) +
-                    (machinePtr->B * omegaRefDot)) /
-                   torqueConstant;
+        iqRefDot = ((machinePtr->J * omegaRefDDot) +  (machinePtr->B * omegaRefDot)) / torqueConstant;
 
         /*
          * Limit the current derivative to prevent voltage overshoot.
@@ -533,12 +500,8 @@ void DFC_Step(EmbedSimMachine_T* const motorPtr)
      * If the noise causes large errors, the integrator
      * won't accumulate excessive values.
      */
-    idIntegralError = DFC_ClampValue(idIntegralError,
-                                     -DFC_INTEGRAL_LIMIT_F,
-                                     DFC_INTEGRAL_LIMIT_F);
-    iqIntegralError = DFC_ClampValue(iqIntegralError,
-                                     -DFC_INTEGRAL_LIMIT_F,
-                                     DFC_INTEGRAL_LIMIT_F);
+    idIntegralError = DFC_ClampValue(idIntegralError, -machinePtr->ParamPidIntegralLimit, machinePtr->ParamPidIntegralLimit);
+    iqIntegralError = DFC_ClampValue(iqIntegralError, -machinePtr->ParamPidIntegralLimit, machinePtr->ParamPidIntegralLimit);
 
     /*
      * Clamp current errors to prevent excessive voltage commands.
@@ -568,8 +531,8 @@ void DFC_Step(EmbedSimMachine_T* const motorPtr)
      * This makes the system robust to noise because the feedback
      * gain is low.
      */
-    dqVoltage.D = vdRef + (DFC_CURRENT_KP_D_F * idError) + (DFC_CURRENT_KI_D_F * idIntegralError);
-    dqVoltage.Q = vqRef + (DFC_CURRENT_KP_Q_F * iqError) + (DFC_CURRENT_KI_Q_F * iqIntegralError);
+    dqVoltage.D = vdRef + (machinePtr->ParamPidCurrentDProp * idError) + (machinePtr->ParamPidCurrentQInteg * idIntegralError);
+    dqVoltage.Q = vqRef + (machinePtr->ParamPidCurrentQProp * iqError) + (machinePtr->ParamPidCurrentQInteg * iqIntegralError);
 
     /*
      * ------------------------------------------------------------
@@ -586,8 +549,8 @@ void DFC_Step(EmbedSimMachine_T* const motorPtr)
      * Noise note: Speed noise would cause angle jitter.
      * We rely on the position sensor's filtering (usually hardware).
      */
-    rotorSpeedMeas = 0.0F; /* TODO: Get speed from position derivative or observer */
-    rotorAngleMeas = (inputPtr->RotorPositionEst + (rotorSpeedMeas * inputPtr->SampleTime)) * machinePtr->PolePairs;
+    rotorSpeedMeas = 0.0F;
+    rotorAngleMeas =  (inputPtr->RotorPositionObsEstM + (rotorSpeedMeas * inputPtr->SampleTime)) * machinePtr->PolePairs;
     DFC_WrapAngle(&rotorAngleMeas);
     focAngle.ThetaE = rotorAngleMeas;
 

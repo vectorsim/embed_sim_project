@@ -80,7 +80,7 @@ class PMSM_Python_Plant(VectorBlock):
 
     TOPO_CATEGORY     = "plant"
     C_CODEGEN_EXCLUDE = True
-    output_label      = "[rpm,ia,ib,ic,theta_e,Tem,id,iq]"   # <-- changed
+    output_label      = "[rpm,ia,ib,ic,theta_m,Tem,id,iq]"
 
     def __init__(self, name: str = "pmsm",
                  R: float         = 0.19,
@@ -226,10 +226,12 @@ class PMSM_Python_Plant(VectorBlock):
         ia, ib, ic = self._abc_from_idiq(i_d, i_q, theta_e)
         speed_rpm  = omega_m * 60.0 / (2.0 * math.pi)
 
+        theta_m = (theta_e / self.p) % (2*math.pi)
+
         # Periodic console print (UNLIMITED - prints every 0.2s)
         if t - self._t_last_print >= 0.2:
             print(f"[PMSM t={t:.2f}s]  rpm={speed_rpm:+8.1f}  "
-                  f"theta_e={theta_e:.4f}rad  "
+                  f"theta_m={theta_m:.4f}rad  "
                   f"id={i_d:+.4f}A  iq={i_q:+.4f}A  "
                   f"T_em={T_em*1e3:+.3f}mN.m  "
                   f"T_load={self._tload*1e3:.1f}mN.m")
@@ -239,7 +241,7 @@ class PMSM_Python_Plant(VectorBlock):
         self.output = VectorSignal(np.array([
             speed_rpm,    # [0] RPM
             ia, ib, ic,   # [1-3] phase currents [A]
-            theta_e,      # [4] electrical angle [rad]   <-- changed
+            theta_m,      # [4] mechanical angle [rad]   <-
             T_em,         # [5] electromagnetic torque [N.m]
             i_d,          # [6] d-axis current [A]
             i_q,          # [7] q-axis current [A]

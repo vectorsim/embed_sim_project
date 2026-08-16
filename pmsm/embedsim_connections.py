@@ -50,7 +50,7 @@ class CtrlPacker(VectorBlock):
         ia = float(motor_vals[1])
         ib = float(motor_vals[2])
         ic = float(motor_vals[3])
-        position_sensor_rad = float(motor_vals[4]) % (2.0 * math.pi)
+        theta_m = float(motor_vals[4]) % (2.0 * math.pi)
 
         output_array = np.array([
             speed_ref_rpm,
@@ -59,7 +59,7 @@ class CtrlPacker(VectorBlock):
             ic,
             speed_sensor_rpm,
             dt,
-            position_sensor_rad,
+            theta_m,
             self._valid_flag,
             0.0,
             self._vdc,

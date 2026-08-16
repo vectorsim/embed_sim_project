@@ -39,7 +39,7 @@ from embedsim.plot_helper import create_plotter
 from pmsm_python_plant import PMSM_Python_Plant
 from embedsim_generic_control import GenericControlBlock
 from embedsim_connections import CtrlPacker, LoadAdapter, MotorVectorDelay
-from pmsm_dfc import PythonController
+from pmsm_dfc1 import PythonController
 
 # Import C backend control
 from embedsim_control_block import EmbedSimControlBlock, SIM_CTRL_OPEN_LOOP, SIM_CTRL_DFC
@@ -55,7 +55,7 @@ from embedsim_control_block import EmbedSimControlBlock, SIM_CTRL_OPEN_LOOP, SIM
 #   "C_OPEN_LOOP"        - C backend open-loop
 #   "C_DFC"              - C backend DFC
 
-MODE = "C_OPEN_LOOP"  # Change this to switch modes
+MODE = "PYTHON_DFC"  # Change this to switch modes
 
 
 # =============================================================================
