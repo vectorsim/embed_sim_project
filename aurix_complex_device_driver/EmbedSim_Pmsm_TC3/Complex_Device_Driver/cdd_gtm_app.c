@@ -269,16 +269,16 @@ void GTM_Atom_00_Ch_00_Isr(void)
         }
         else
         {
-            inputPtr->AngularVelocityRefRpm   = CddApp_G.SpeedRefRpm;
-            inputPtr->Iu                      = CddApp_G.Iu;
-            inputPtr->Iv                      = CddApp_G.Iv;
-            inputPtr->Iw                      = CddApp_G.Iw;
-
-            inputPtr->RotorPositionSensor     = CddApp_G.RotorPosition;
-            inputPtr->RotorSpeedSensor        = CddApp_G.RotorSpeedRpm;
-            inputPtr->SampleTime              = CddApp_G.SampleTime;
-            inputPtr->Vdc                     = CddApp_G.Vdc;
-            inputPtr->Valid                   = 0x1U;
+            inputPtr->AngularVelocityRefRpmM   = CddApp_G.SpeedRefRpm;
+            inputPtr->Iu                       = CddApp_G.Iu;
+            inputPtr->Iv                       = CddApp_G.Iv;
+            inputPtr->Iw                       = CddApp_G.Iw;
+            inputPtr->CtrlAlg                  = CddApp_G.CtrlMode;
+            inputPtr->RotorPositionSensorM      = CddApp_G.RotorPosition;
+            inputPtr->RotorSpeedSensorM         = CddApp_G.RotorSpeedRpm;
+            inputPtr->SampleTime               = CddApp_G.SampleTime;
+            inputPtr->Vdc                      = CddApp_G.Vdc;
+            inputPtr->Valid                    = 0x1U;
             EmbedSim_ControlStep(&TractionMotor_G);
 
             if(outputPtr->Valid == 0x1U)

@@ -1,0 +1,3 @@
+C:/EmbedSimProject/embed_sim_project/pmsm/modelica/PMSM_Plant_FMUc83e/842.fmutmp/sources/../binaries/win64/libPMSM_Plant_FMU.dll.a
+C:/EmbedSimProject/embed_sim_project/pmsm/modelica/PMSM_Plant_FMUc83e/842.fmutmp/sources/../binaries/win64/PMSM_Plant_FMU.dll
+C:/EmbedSimProject/embed_sim_project/pmsm/modelica/PMSM_Plant_FMUc83e/842.fmutmp/sources/../binaries/win64/libwinpthread-1.dll

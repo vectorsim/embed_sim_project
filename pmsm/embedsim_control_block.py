@@ -39,7 +39,7 @@ SIM_CTRL_DFC = 1
 # ===========================================================================
 # Debug flag – set to True to enable console prints
 # ===========================================================================
-DEBUG_CONTROL = False # <--- Toggle this: True = print, False = silent
+DEBUG_CONTROL = True # <--- Toggle this: True = print, False = silent
 
 
 # ===========================================================================
@@ -86,7 +86,7 @@ class EmbedSimControlBlock(VectorBlock):
         vdc = float(u[9])
 
         # ---- Debug print every 0.2 seconds (if enabled) ----
-        if DEBUG_CONTROL and (t - self._last_print_t >= 0.2):
+        if DEBUG_CONTROL:
             self._last_print_t = t
             print(f"\n[Ctrl t={t:.2f}s]")
             print(f"  pos_rad (mech) = {position_sensor_rad:.4f}")

@@ -237,9 +237,9 @@ void CddEvadc_ConvertPhaseCurrents(P2VAR(volatile CddApp_T, AUTOMATIC, CDD_APPL_
     CddAppPtr->Isum =  CddAppPtr->Iu + CddAppPtr->Iv + CddAppPtr->Iw;
     iBalanced = iBalanced/3.0F;
 
-    CddAppPtr->Iu += iBalanced;
-    CddAppPtr->Iv += iBalanced;
-    CddAppPtr->Iw += iBalanced;
+    CddAppPtr->Iu -= iBalanced;
+    CddAppPtr->Iv -= iBalanced;
+    CddAppPtr->Iw -= iBalanced;
 }
 
 

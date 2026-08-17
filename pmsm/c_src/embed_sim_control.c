@@ -69,7 +69,9 @@ static EmbedSimMachineParam_T TractionMotorParams_G =
     .ParamPidCurrentQInteg  = DFC_CURRENT_KI_Q_F,
     .ParamPidCurrentDProp   = DFC_CURRENT_KP_D_F,
     .ParamPidCurrentDInteg  = DFC_CURRENT_KI_D_F,
-    .ParamPidIntegralLimit  =  DFC_INTEGRAL_LIMIT_F
+    .ParamPidSpeedQProp     = DFC_SPEED_KP_Q_F ,
+    .ParamPidSpeedQInteg    = DFC_SPEED_KI_Q_F,
+    .ParamPidIntegralLimit  = DFC_INTEGRAL_LIMIT_F
 };
 
 /**
@@ -290,47 +292,90 @@ void EmbedSim_ControlInit(void)
  *
  * \return  void
  */
-void EmbedSim_ControlStep(EmbedSimMachine_T* const motorPtr)
+void EmbedSim_ControlStep(EmbedSimMachine_T* const MotorPtr)
 {
-    EmbedSimCtrlInput_T*    inputPtr  = motorPtr->InputPtr;
-    EmbedSimCtrlOutput_T*   outputPtr = motorPtr->OutputPtr;
-    EmbedSimMachineParam_T* paraPtr   = motorPtr->MachinePtr;
+    EmbedSimCtrlInput_T*    inputPtr  = MotorPtr->InputPtr;
+    EmbedSimCtrlOutput_T*   outputPtr = MotorPtr->OutputPtr;
+    EmbedSimMachineParam_T* paraPtr   = MotorPtr->MachinePtr;
+
+    EmbedSim_ExceuteObserver(inputPtr);
+    /* Update DC bus voltage from input */
+    paraPtr->Vdc = inputPtr->Vdc;
 
     /* Only execute if input data is valid */
     if (inputPtr->Valid == 0x1U)
     {
-
-        EmbedSim_ExceuteObserver(inputPtr);
-        /* Update DC bus voltage from input */
-        paraPtr->Vdc = inputPtr->Vdc;
-
-
-        /* Select control mode based on closed-loop flag */
-        if((inputPtr->CtrlAlg == 0U) || (inputPtr->SwitchToClosedLoop == 0x0U))
+        switch(inputPtr->CtrlAlg)
         {
-            /* Open-loop control (startup / low speed) - use smooth ref */
-            EmbedSim_OpenLoopStep(inputPtr, paraPtr, outputPtr);
-        }
-        else
-        {
-            /* Closed-loop control */
-            /* Execute selected control algorithm */
-            switch (inputPtr->CtrlAlg)
-            {
-                case SIM_CTRL_DFC:
-                    /* Generate smooth reference trajectory using Time-Optimal S-Curve */
-                    EmbedSim_CalculateTimeOptimalSCurve(inputPtr, paraPtr);
-                    DFC_Step(motorPtr);
-                    break;
+            case SIM_CTRL_OPEN_LOOP:
+                EmbedSim_OpenLoopStep(inputPtr, paraPtr, outputPtr);
+                break;
+            case  SIM_CTRL_DFC:
+                EmbedSim_CalculateTimeOptimalSCurve(inputPtr, paraPtr);
+                DFC_Step(MotorPtr);
+                break;
+            default:
+                break;
 
-                default:
-                    /* Fallback to open-loop if unknown algorithm */
-                    EmbedSim_OpenLoopStep(inputPtr, paraPtr, outputPtr);
-                    break;
-            }
         }
+
     }
 }
+
+uint32_T EmbedSim_IsMotorSpinning( const EmbedSimCtrlInput_T* const InputPtr, uint32_T PastIndex)
+{
+    static uint32_T successCounter = 0U;
+    uint32_T result = 0U;
+
+    if (fabs(InputPtr->RotorSpeedObsEstM) >  ((0.8)*InputPtr->AngularVelocityRefRpmM))
+    {
+        if (successCounter < MAX_int32_T)
+        {
+            successCounter++;
+        }
+    }
+    else
+    {
+        successCounter = 0U;
+    }
+
+    if (successCounter > PastIndex)
+    {
+        result = 1U;
+        successCounter = 0U;
+    }
+
+    return result;
+}
+
+
+
+uint32_T EmbedSim_IsNotSpinning(const EmbedSimCtrlInput_T* const InputPtr,  uint32_T PastIndex)
+{
+    static uint32_T successCounter = 0U;
+    uint32_T result = 0U;
+
+    if (fabs(InputPtr->RotorSpeedObsEstM) < CLOSED_LOOP_MIN_SPEED)
+    {
+        if (successCounter < MAX_int32_T)
+        {
+            successCounter++;
+        }
+    }
+    else
+    {
+        successCounter = 0U;
+    }
+
+    if (successCounter > PastIndex)
+    {
+        result = 1U;
+        successCounter = 0U;
+    }
+
+    return result;
+}
+
 /**
  * \brief   Cython interface initialization
  *
@@ -568,25 +613,17 @@ void EmbedSim_CalculateTimeOptimalSCurve( EmbedSimCtrlInput_T* const InputPtr,
     InputPtr->RotorAccerlerationRefM = sCurveAccelRef;
     InputPtr->RotorJerkRefM          = jerk;   /* dω/dt */
 }
+
 void EmbedSim_ExceuteObserver(EmbedSimCtrlInput_T* const InputPtr)
 {
-
-
     InputPtr->LoopCounter++;
-
-    /* Limit target speed to safe range */
-    InputPtr->AngularVelocityRefRpmM = EmbedSim_ClampValue(InputPtr->AngularVelocityRefRpmM,-MAX_SPEED_RPM, MAX_SPEED_RPM);
+    InputPtr->AngularVelocityRefRpmM = EmbedSim_ClampValue(InputPtr->AngularVelocityRefRpmM, -MAX_SPEED_RPM, MAX_SPEED_RPM);
     InputPtr->RotorVelocityRefM    = CON_RPM_TO_RAD(InputPtr->AngularVelocityRefRpmM);
-    InputPtr->RotorPositionObsEstM = InputPtr->RotorPositionSensorM;  /* later from Observer */
+    InputPtr->RotorPositionObsEstM = InputPtr->RotorPositionSensorM;
     InputPtr->RotorSpeedObsEstM    = InputPtr->RotorSpeedSensorM;
 
-     if(( InputPtr->LoopCounter >19500) && (fabs(InputPtr->RotorSpeedObsEstM)> CLOSED_LOOP_MIN_SPEED) && (InputPtr->SwitchToClosedLoop==0))
-     {
-         InputPtr->SwitchToClosedLoop = 0x1U;
-         InputPtr->ControlReInit      = 0x1U;
-     }
+    /* Switch to closed-loop is now handled by DFC_Step */
 }
-
 
 /**
  * \brief   Cython interface control step

@@ -4,30 +4,37 @@ Pure-Python PMSM Plant Block for EmbedSim
 ==========================================
 Textbook dq-frame PMSM.  No FMU, no DASSL, no surprises.
 
-EmbedSim calls compute(t, dt, inputs) every step.  This block owns its
-four state variables [i_d, i_q, omega_m, theta_e] and advances them
-using RK4 internally — 4th-order accuracy at the 50 us step rate.
+SVPWM Interface Convention (AURIX embed_sim_sv_pwm.c):
+----------------------------------------------------
+The SVPWM outputs duty cycles in [0, 1] range where:
+- 0.5 = zero voltage (all phase voltages equal)
+- 0.0 = minimum voltage (all low-side switches on)
+- 1.0 = maximum voltage (all high-side switches on)
 
-All Clarke / Park / InvPark / InvClarke calculations are delegated to the
-canonical C functions in embed_sim_coordinate_transform.c, surfaced by the
-compiled embedsim_control_wrapper (clarke / park / inv_park / inv_clarke).
-This is the SAME code that runs on the AURIX target — there is no
-parallel Python implementation and no inline transform math in this file.
+This is verified in SVM_CalculateDutyFromTimes():
+  For ModIndex = 0: T1 = T2 = 0, t0 = 0.5
+  ta = tb = tc = 0.5 → zero phase-to-neutral voltage
 
-dq voltage equations (Krishnan, "PMSM and BLDC Motor Drives", Ch. 4):
-    L_d * di_d/dt = v_d - R*i_d + omega_e*L_q*i_q
-    L_q * di_q/dt = v_q - R*i_q - omega_e*(L_d*i_d + lambda_pm)
+The PMSM plant uses the standard inverter model:
+  v_phase_leg = duty * Vdc
+  v_neutral = (va_leg + vb_leg + vc_leg) / 3
+  v_phase_to_neutral = v_phase_leg - v_neutral
 
-Torque:
-    T_em = 1.5 * p * (lambda_pm*i_q + (L_d - L_q)*i_d*i_q)
-
-Mechanical:
-    J * domega_m/dt = T_em - B*omega_m - T_load
-    dtheta_e/dt     = omega_e = p * omega_m
+All Clarke / Park transforms use the canonical C implementation
+from embed_sim_coordinate_transform.c.
 
 Block interface
 ---------------
-Input bus [0] : [ta, tb, tc, v_dc, T_load]   (from SVPWM / cg_end)
+Input bus [0] : [ta, tb, tc, v_dc, T_load]   (from SVPWM)
+                  |   |   |    |      |
+                  |   |   |    |      +-- Load torque [N.m]
+                  |   |   |    +--------- DC bus voltage [V]
+                  |   |   +-------------- Duty cycle phase C [0.0, 1.0]
+                  |   +------------------ Duty cycle phase B [0.0, 1.0]
+                  +---------------------- Duty cycle phase A [0.0, 1.0]
+
+Note: ta=tb=tc=0.5 → zero voltage (verified from SVPWM implementation)
+
 Output bus    : [rpm, ia, ib, ic, theta_e, T_em, id, iq]
                   [0]  [1][2][3]    [4]     [5]  [6][7]
 """
@@ -39,20 +46,14 @@ from pathlib import Path
 import numpy as np
 from embedsim.core_blocks import VectorBlock, VectorSignal, DEFAULT_DTYPE
 
-# Frame transforms come from the canonical C implementation
-# (embed_sim_coordinate_transform.c), surfaced by the compiled wrapper.
-# This is the SAME code that runs on the AURIX — no parallel Python mirror.
+# Frame transforms from canonical C implementation
 _C_SRC = Path(__file__).resolve().parent / "c_src"
 if str(_C_SRC) not in sys.path:
     sys.path.insert(0, str(_C_SRC))
 
-# Import transforms from the sensor-based control wrapper
-# This wrapper exposes clarke, park, inv_park, inv_clarke from
-# embed_sim_coordinate_transform.c
 try:
     from embedsim_control_wrapper import clarke, park, inv_park, inv_clarke
 except ImportError:
-    # Fallback: try the dfc wrapper if available
     try:
         from dfc_controller_wrapper import clarke, park, inv_park, inv_clarke
     except ImportError:
@@ -66,6 +67,9 @@ except ImportError:
 class PMSM_Python_Plant(VectorBlock):
     """
     Pure-Python PMSM plant with RK4 internal integration.
+
+    SVPWM Duty Convention: [0, 1] where 0.5 = zero voltage
+    (Matches AURIX embed_sim_sv_pwm.c implementation)
 
     Parameters
     ----------
@@ -104,10 +108,10 @@ class PMSM_Python_Plant(VectorBlock):
         self._v_dc_nom = float(v_dc)
 
         # State vector: [i_d, i_q, omega_m, theta_e]
-        # Using float64 for RK4 precision
         self._x = np.zeros(4, dtype=np.float64)
 
         # Latched inputs (zero-order hold between compute calls)
+        # Initialized to 0.5 = zero voltage (matches SVPWM)
         self._ta    = 0.5
         self._tb    = 0.5
         self._tc    = 0.5
@@ -120,13 +124,13 @@ class PMSM_Python_Plant(VectorBlock):
         print(f"[PMSM_Python_Plant] '{name}'  "
               f"R={R} Ld={L_d} Lq={L_q} lpm={lambda_pm} "
               f"J={J} B={B_fric} p={p} Vdc={v_dc}  "
-              f"[transforms -> embed_sim_coordinate_transform.c]")
+              f"[SVPWM convention: 0.5 = zero voltage]")
 
     # ------------------------------------------------------------------
     def reset(self):
         super().reset()
         self._x[:]  = 0.0
-        self._ta    = 0.5
+        self._ta    = 0.5  # Zero voltage (SVPWM convention)
         self._tb    = 0.5
         self._tc    = 0.5
         self._v_dc  = self._v_dc_nom
@@ -136,23 +140,42 @@ class PMSM_Python_Plant(VectorBlock):
     # ------------------------------------------------------------ transforms
     def _vdq_from_duties(self, ta, tb, tc, v_dc, theta_e):
         """
-        Duties -> (v_d, v_q).
+        SVPWM duties [0,1] -> (v_d, v_q).
 
-        Star voltages -> Clarke_Transform_Matrix -> Park_Transform_Matrix (C).
+        SVPWM convention (from embed_sim_sv_pwm.c):
+        - Duty = 0.5 → zero voltage (all phase voltages equal)
+        - Duty = 0.0 → minimum voltage
+        - Duty = 1.0 → maximum voltage
+
+        Phase voltages:
+        - Leg voltage: v_leg = duty * Vdc
+        - Neutral: vn = (va_leg + vb_leg + vc_leg) / 3
+        - Phase-to-neutral: v_phase = v_leg - vn
+
+        For ta=tb=tc=0.5: va=vb=vc=0.5*Vdc, vn=0.5*Vdc, va-vn=0 ✓
         """
-        # Star phase voltages (neutral = average of legs)
+        # Clamp duties to [0, 1] for safety
+        ta = float(max(0.0, min(1.0, ta)))
+        tb = float(max(0.0, min(1.0, tb)))
+        tc = float(max(0.0, min(1.0, tc)))
+
+        # Phase leg voltages (relative to DC-)
         va_leg = ta * v_dc
         vb_leg = tb * v_dc
         vc_leg = tc * v_dc
+
+        # Neutral point voltage (floating motor neutral)
         vn = (va_leg + vb_leg + vc_leg) / 3.0
+
+        # Phase-to-neutral voltages
         va = va_leg - vn
         vb = vb_leg - vn
         vc = vc_leg - vn
 
-        # Clarke: va,vb,vc -> v_alpha, v_beta   (C: Clarke_Transform_Matrix)
+        # Clarke transform: va,vb,vc -> v_alpha, v_beta
         v_alpha, v_beta = clarke(va, vb, vc)
 
-        # Park: v_alpha,v_beta,theta_e -> v_d, v_q   (C: Park_Transform_Matrix)
+        # Park transform: v_alpha,v_beta,theta_e -> v_d, v_q
         v_d, v_q = park(v_alpha, v_beta, theta_e)
         return float(v_d), float(v_q)
 
@@ -179,11 +202,15 @@ class PMSM_Python_Plant(VectorBlock):
         omega_e = self.p * omega_m
         vd, vq  = self._vdq_from_duties(ta, tb, tc, v_dc, theta_e)
 
+        # dq voltage equations (Krishnan, Ch. 4)
         did_dt     = (vd - self.R*i_d + omega_e*self.L_q*i_q) / self.L_d
         diq_dt     = (vq - self.R*i_q - omega_e*(self.L_d*i_d + self.lambda_pm)) / self.L_q
 
+        # Electromagnetic torque
         T_em       = 1.5 * self.p * (self.lambda_pm*i_q
                                       + (self.L_d - self.L_q)*i_d*i_q)
+
+        # Mechanical dynamics
         domega_dt  = (T_em - self.B_fric*omega_m - T_load) / self.J
         dtheta_dt  = omega_e
 
@@ -205,6 +232,7 @@ class PMSM_Python_Plant(VectorBlock):
         if input_values and input_values[0] is not None:
             v = input_values[0].value
             if len(v) >= 3:
+                # SVPWM duties in [0,1] from AURIX (0.5 = zero voltage)
                 self._ta = float(max(0.0, min(1.0, v[0])))
                 self._tb = float(max(0.0, min(1.0, v[1])))
                 self._tc = float(max(0.0, min(1.0, v[2])))
@@ -228,20 +256,26 @@ class PMSM_Python_Plant(VectorBlock):
 
         theta_m = (theta_e / self.p) % (2*math.pi)
 
-        # Periodic console print (UNLIMITED - prints every 0.2s)
+        # Periodic console print (every 0.2s)
         if t - self._t_last_print >= 0.2:
+            # Show duty offset from zero (0.5)
+            da_offset = (self._ta - 0.5) * 100.0
+            db_offset = (self._tb - 0.5) * 100.0
+            dc_offset = (self._tc - 0.5) * 100.0
             print(f"[PMSM t={t:.2f}s]  rpm={speed_rpm:+8.1f}  "
                   f"theta_m={theta_m:.4f}rad  "
                   f"id={i_d:+.4f}A  iq={i_q:+.4f}A  "
                   f"T_em={T_em*1e3:+.3f}mN.m  "
-                  f"T_load={self._tload*1e3:.1f}mN.m")
+                  f"duty=[{self._ta:.3f}({da_offset:+5.1f}%) "
+                  f"{self._tb:.3f}({db_offset:+5.1f}%) "
+                  f"{self._tc:.3f}({dc_offset:+5.1f}%)]")
             self._t_last_print = t
 
-        # Output bus: now index [4] is theta_e (electrical)
+        # Output bus
         self.output = VectorSignal(np.array([
             speed_rpm,    # [0] RPM
             ia, ib, ic,   # [1-3] phase currents [A]
-            theta_m,      # [4] mechanical angle [rad]   <-
+            theta_m,      # [4] mechanical angle [rad]
             T_em,         # [5] electromagnetic torque [N.m]
             i_d,          # [6] d-axis current [A]
             i_q,          # [7] q-axis current [A]

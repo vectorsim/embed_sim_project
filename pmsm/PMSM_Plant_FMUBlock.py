@@ -22,7 +22,7 @@ class PMSM_Plant_FMUBlock(FMUBlock):
     OUTPUT_VARS: List[str] = ['rpm', 'ia', 'ib', 'ic', 'theta_m', 'T_em', 'id_out', 'iq_out']
 
     # Default parameter values extracted from Modelica
-    DEFAULT_PARAMS: Dict[str, float] = {'R': 0.19, 'L_d': 0.000125, 'L_q': 0.000125, 'lambda_pm': 0.0014, 'J': 2.4e-06, 'B_fric': 1e-06, 'p': 4, 'v_dc_nom': 17.0}
+    DEFAULT_PARAMS: Dict[str, float] = {}
 
     def __init__(self, name: str, fmu_path: str):
         """

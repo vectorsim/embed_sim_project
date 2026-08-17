@@ -2,18 +2,27 @@
  * \file      embed_sim_dfc_controller.c
  * \brief     DFC (Direct Field Control) controller implementation.
  *
- * \details   Implements differential-flatness-based feedforward control for permanent magnet
- *            synchronous motors (PMSM). Uses pure flatness mapping with PI current correction.
- *            Targets 32-bit MCUs (Infineon AURIX TriCore, ARM Cortex-M4).
+ * \details   Implements differential‑flatness feedforward with speed and current PI loops.
+ *            Startup is a 0.3 s open‑loop voltage ramp (modulation 0.05 → 0.20, fixed 300 RPM),
+ *            exactly matching the Python version. After startup, the controller runs
+ *            closed‑loop DFC indefinitely.
+ *
+ *            The state is controlled solely by `SwitchToClosedLoop`:
+ *            - 0 : startup phase (open‑loop ramp)
+ *            - 1 : closed‑loop DFC
+ *
+ *            Resetting is done via `ControlReInit = 1` (or calling `DFC_Reset()`),
+ *            which sets `SwitchToClosedLoop = 0` and clears all integrators.
  *
  * \note      MISRA C:2012 compliance:
- *              - Rule  8.5 : One declaration per identifier
- *              - Rule  8.6 : No definitions in header files
- *              - Rule 17.2 : No recursion
+ *              - Rule  8.5 : One declaration per identifier.
+ *              - Rule  8.6 : No definitions in header files.
+ *              - Rule 17.2 : No recursion.
+ *              - Rule 14.7 : Single return point.
  *
  * \note      EmbedSim naming convention:
  *              - Functions      : Pascal_Snake_Case
- *              - Parameters     : PascalCase  (single-letter → Uppercase)
+ *              - Parameters     : PascalCase
  *              - Output pointers: PascalCase_P
  *              - Local variables: Lower camelCase
  *              - Struct members : PascalCase
@@ -21,7 +30,7 @@
  *              - Typedefs       : Pascal_Snake_Case_T
  *
  * \version   2.0.0
- * \date      2026-08-12
+ * \date      2026-08-17
  * \author    EmbedSim / EV Light Vehicle Foundation
  *
  * \copyright Copyright (C) 2026 EmbedSim — EV Light Vehicle Foundation, Jaffna, Sri Lanka.
@@ -40,87 +49,65 @@
 /*********************************************************************************************************************/
 
 /**
- * \brief   Current PI controller gains (correction on top of flatness)
- *
- * \details These gains provide proportional correction to the flatness feedforward
- *          voltages based on current errors. Higher gains give faster response
- *          but may cause instability.
- *
- * \note    Sensor noise mitigation strategy:
- *          - Very low proportional gains (especially on d-axis)
- *          - Low integral gains to prevent noise amplification
- *          - The feedforward handles most of the control effort (80-90%)
- *          - PI only corrects for model errors and low-frequency disturbances
- *
- * \warning Increasing gains above these values will amplify sensor noise
- *          and may cause audible noise or instability.
- */
-#define DFC_CURRENT_KP_D_F              (0.003F)        /**< d-axis proportional gain (very low for noise immunity) */
-#define DFC_CURRENT_KP_Q_F              (0.135F)        /**< q-axis proportional gain (moderate for torque response) */
-#define DFC_CURRENT_KI_D_F              (0.0001F)       /**< d-axis integral gain (extremely low to prevent windup) */
-#define DFC_CURRENT_KI_Q_F              (0.0009F)       /**< q-axis integral gain (low for smooth steady-state) */
-
-/**
- * \brief   Maximum current limit (A)
- *
- * \details Limits the current references and errors to prevent:
- *          - Overcurrent faults
- *          - Integrator windup
- *          - Excessive voltage commands from noise spikes
+ * \def DFC_MAX_CURRENT
+ * \brief   Maximum current limit (A).
  */
 #define DFC_MAX_CURRENT                 (100.0F)
 
 /**
- * \brief   Maximum current derivative limit (A/s)
- *
- * \details Limits the rate of change of current reference to prevent:
- *          - Voltage overshoot
- *          - Inductive voltage spikes
- *          - Unstable behavior during transients
+ * \def DFC_MAX_IQ_DOT_F
+ * \brief   Maximum current derivative limit (A/s).
  */
 #define DFC_MAX_IQ_DOT_F                (1000.0F)
 
 /**
- * \brief   Numerical protection epsilon
- *
- * \details Used to prevent division by zero and other numerical issues.
- *          Small enough to not affect calculations but large enough for FPU.
+ * \def DFC_EPSILON_F
+ * \brief   Numerical protection epsilon.
  */
 #define DFC_EPSILON_F                   (1.0e-6F)
 
 /**
- * \brief   Square root of 3 (for SVM voltage limit)
+ * \def DFC_SQRT3_F
+ * \brief   Square root of 3 (for SVM voltage limit).
  */
 #define DFC_SQRT3_F                     (1.7320508075688772F)
-
-/**
- * \brief   Maximum integrator anti-windup limit
- *
- * \details Prevents the integral term from accumulating excessive values
- *          during large errors or when the motor is saturated.
- *          This is critical for noise robustness.
- */
-#define DFC_INTEGRAL_LIMIT_F            (10.0F)         /**< Integral term limit (A) */
 
 /*********************************************************************************************************************/
 /*--------------------------------------------------Private Data-----------------------------------------------------*/
 /*********************************************************************************************************************/
 
-/*
+/**
+ * \var speedIntegralError
+ * \brief   Accumulated speed error for the outer speed PI controller.
+ */
+static real32_T speedIntegralError = 0.0F;
 
+/**
+ * \var idIntegralError
+ * \brief   Accumulated d‑axis current error for the inner current PI.
+ */
+static real32_T idIntegralError    = 0.0F;
+
+/**
+ * \var iqIntegralError
+ * \brief   Accumulated q‑axis current error for the inner current PI.
+ */
+static real32_T iqIntegralError    = 0.0F;
+
+/**
+ * \var startupThetaE
+ * \brief   Electrical angle used during the open‑loop startup phase (rad).
+ */
+static real32_T startupThetaE = 0.0F;
 
 /*********************************************************************************************************************/
 /*--------------------------------------------Private Functions-----------------------------------------------------*/
 /*********************************************************************************************************************/
 
 /**
- * \brief   Wrap angle to [0, 2pi)
+ * \brief   Wrap an angle to the range [0, 2π).
  *
- * \details Normalizes an angle to the range [0, 2π) using fmodf.
- *          Useful for rotor angle and Park transform calculations.
- *          Prevents angle accumulation errors over long operation.
- *
- * \param[in,out] anglePtr  Pointer to angle value to be wrapped (in radians).
+ * \param[in,out] anglePtr  Pointer to the angle value to be wrapped (in radians).
  */
 static void DFC_WrapAngle(real32_T* const anglePtr)
 {
@@ -132,16 +119,11 @@ static void DFC_WrapAngle(real32_T* const anglePtr)
 }
 
 /**
- * \brief   Clamp value to specified limits
- *
- * \details Limits a value to a range defined by minVal and maxVal.
- *          Critical for preventing noise spikes from affecting the controller.
- *          Acts as a noise gate - large noise spikes are clipped.
+ * \brief   Clamp a value to specified limits.
  *
  * \param[in] val     Value to clamp.
  * \param[in] minVal  Minimum allowed value.
  * \param[in] maxVal  Maximum allowed value.
- *
  * \return  Clamped value within [minVal, maxVal].
  */
 static real32_T DFC_ClampValue(real32_T val, real32_T minVal, real32_T maxVal)
@@ -165,18 +147,9 @@ static real32_T DFC_ClampValue(real32_T val, real32_T minVal, real32_T maxVal)
 }
 
 /**
- * \brief   Transform currents to dq
+ * \brief   Transform phase currents to the dq rotating reference frame.
  *
- * \details Converts phase currents (U, V, W) to dq rotating reference frame.
- *          Applies Clarke transform to get alpha-beta, then Park transform
- *          using the electrical angle (rotor position × pole pairs).
- *
- * \note    Current sensor noise effect:
- *          - The Clarke transform averages out some noise
- *          - The Park transform converts high-frequency noise to DC offsets
- *          - Proper filtering should be applied before this function
- *
- * \param[in]  inputPtr   Pointer to control input structure containing phase currents.
+ * \param[in]  inputPtr   Pointer to control input structure (phase currents).
  * \param[in]  machinePtr Pointer to machine parameters (pole pairs).
  * \param[out] focDqPtr   Pointer to dq current output structure.
  */
@@ -188,69 +161,15 @@ static void DFC_CurrentsToDq(EmbedSimCtrlInput_T* const inputPtr,
     FocAlphaBeta_T alphaBeta;
     FocAngle_T angle;
 
-    /* Read measured phase currents (may contain sensor noise) */
     currents.U = inputPtr->Iu;
     currents.V = inputPtr->Iv;
     currents.W = inputPtr->Iw;
 
-    /* Calculate electrical angle from rotor position */
-    angle.ThetaE = inputPtr->RotorPositionEst * machinePtr->PolePairs;
+    angle.ThetaE = inputPtr->RotorPositionObsEstM * machinePtr->PolePairs;
     DFC_WrapAngle(&angle.ThetaE);
 
-    /* Transform to dq frame - note: sensor noise is now in dq frame */
     Clarke_Transform_Matrix(&currents, &alphaBeta);
     Park_Transform_Matrix(&alphaBeta, &angle, focDqPtr);
-}
-
-/**
- * \brief   Convert dq voltage to PWM
- *
- * \details Transforms dq voltage commands to PWM duty cycles using
- *          inverse Park transform and Space Vector Modulation (SVM).
- *          Includes over-modulation protection by clamping modulation index.
- *
- * \param[in]  dqPtr      Pointer to dq voltage commands.
- * \param[in]  anglePtr   Pointer to rotor angle for inverse Park transform.
- * \param[in]  machinePtr Pointer to machine parameters (Vdc).
- * \param[out] dutyPtr    Pointer to PWM duty cycle output structure.
- */
-static void DFC_VoltageToDuty(const FocDq_T* const dqPtr,
-                              const FocAngle_T* const anglePtr,
-                              const EmbedSimMachineParam_T* const machinePtr,
-                              SVM_DutyCycle_T* const dutyPtr)
-{
-    MatrixStatus_T status;
-    FocAlphaBeta_T vAlphaBeta;
-    real32_T vMag;
-    real32_T vPhaseMax;
-    real32_T modulationIndex;
-
-    /* Initialize with safe 50% duty cycle (no output) */
-    dutyPtr->Ta = 0.5F;
-    dutyPtr->Tb = 0.5F;
-    dutyPtr->Tc = 0.5F;
-    dutyPtr->Sector = SVM_SECTOR_I;
-
-    /* Inverse Park transform: dq -> alpha-beta */
-    status = InvPark_Transform_Matrix(dqPtr, anglePtr, &vAlphaBeta);
-
-    if (status == MATRIX_SUCCESS)
-    {
-        /* Calculate voltage magnitude and limit to prevent overmodulation */
-        vMag = sqrtf((vAlphaBeta.Alpha * vAlphaBeta.Alpha) +
-                     (vAlphaBeta.Beta * vAlphaBeta.Beta));
-
-        /*
-         * Limit modulation index to 0.95 (leaves 5% margin for inverter dead-time)
-         * This also prevents excessive voltage spikes from noise
-         */
-        vPhaseMax = machinePtr->Vdc / DFC_SQRT3_F;
-        modulationIndex = vMag / vPhaseMax;
-        modulationIndex = DFC_ClampValue(modulationIndex, 0.0F, 0.95F);
-
-        /* Generate PWM duty cycles */
-        SVM_CalculateDutyCycle(modulationIndex, anglePtr, dutyPtr);
-    }
 }
 
 /*********************************************************************************************************************/
@@ -258,399 +177,278 @@ static void DFC_VoltageToDuty(const FocDq_T* const dqPtr,
 /*********************************************************************************************************************/
 
 /**
- * \brief   Initialize DFC controller
+ * \brief   Initialize the DFC controller.
  *
- * \details Resets all PI controllers to zero. Must be called before DFC_Step().
- *          For pure flatness feedforward, no state initialization is required.
- *          However, the PI integral terms must be reset to prevent startup transients.
+ * \details Resets all integrators and the startup angle.
+ *          The controller will start in open‑loop (SwitchToClosedLoop = 0)
+ *          and run the startup ramp on the next step.
+ *
+ * \return  void
  */
 void DFC_Init(void)
 {
+    speedIntegralError = 0.0F;
+    idIntegralError    = 0.0F;
+    iqIntegralError    = 0.0F;
+    startupThetaE      = 0.0F;
+}
 
+/**
+ * \brief   Reset the DFC controller state.
+ *
+ * \details Clears all integrators and resets the startup angle.
+ *          The caller must also set `ControlReInit = 1` (or the reset
+ *          will take effect on the next step when `ControlReInit` is
+ *          handled in DFC_Step). This function is typically called
+ *          from `EmbedSim_ResetController()`.
+ *
+ * \return  void
+ */
+void DFC_Reset(void)
+{
+    speedIntegralError = 0.0F;
+    idIntegralError    = 0.0F;
+    iqIntegralError    = 0.0F;
+    startupThetaE      = 0.0F;
 }
 
 /**
  * \brief   Execute one step of Differential Flatness Control.
  *
- * \details Pure feedforward differential-flatness mapping with PI current correction.
- *          The PI correction is specifically tuned to handle sensor noise.
+ * \details The controller state is determined by `SwitchToClosedLoop`:
+ *          - **0** : Startup phase – runs open‑loop voltage ramp for
+ *                    `DFC_STARTUP_TIME_S` seconds (0.3 s by default).
+ *          - **1** : Normal closed‑loop DFC.
  *
- *          Sensor Noise Handling Strategy:
- *          ===============================
- *          1. Low PI Gains: The PI gains are deliberately low so that high-frequency
- *             noise is not amplified. The feedforward handles most of the control.
+ *          Resetting is done by setting `ControlReInit = 1`, which
+ *          clears integrators and forces `SwitchToClosedLoop = 0`
+ *          to re‑enter the startup ramp.
  *
- *          2. Error Clamping: Current errors are clamped to ±MAX_CURRENT to prevent
- *             noise spikes from causing large voltage commands.
+ *          This function has a single return point for MISRA compliance.
  *
- *          3. Integral Clamping: Integral terms are clamped to prevent windup
- *             during periods of high noise or saturation.
+ * \param[in]  motorPtr  Pointer to the motor structure.
  *
- *          4. Modulated Output: The SVM modulation index is limited to 0.95,
- *             providing a buffer against noise-induced overmodulation.
- *
- *          Control Flow:
- *          =============
- *          1. Read reference trajectory (omega, omega_dot, omega_ddot)
- *          2. Mechanical flatness: Calculate required torque
- *          3. Electrical flatness: Calculate current and voltage references
- *          4. Measure actual currents and transform to dq
- *          5. Calculate PI correction from current errors
- *          6. Combine feedforward + feedback for final voltage
- *          7. Apply SVM and generate PWM duties
- *
- * \param[in]  motorPtr  Pointer to motor structure containing input, output, and parameters.
+ * \return  void
  */
 void DFC_Step(EmbedSimMachine_T* const motorPtr)
 {
-    /* Local pointers to input/output/parameter structures */
     EmbedSimCtrlInput_T* const inputPtr   = motorPtr->InputPtr;
     EmbedSimCtrlOutput_T* const outputPtr = motorPtr->OutputPtr;
     const EmbedSimMachineParam_T* const machinePtr = motorPtr->MachinePtr;
 
     /*
-     * ---------- Reference Trajectory (from S-curve generator) ----------
-     * These values come from a higher-level motion planner.
-     * They are already smooth, so they don't contain high-frequency noise.
+     * ---------- Local variables (one per line, MISRA Rule 8.5) ----------
      */
-    volatile real32_T omegaRef;        /**< Desired angular velocity [rad/s] */
-    volatile real32_T omegaRefDot;     /**< Desired angular acceleration [rad/s²] */
-    volatile real32_T omegaRefDDot;    /**< Desired angular jerk [rad/s³] */
+    real32_T omegaRef;
+    real32_T omegaRefDot;
+    real32_T omegaRefDDot;
+    real32_T omegaMeas;
 
-    /*
-     * ---------- Flatness Mapped Values ----------
-     * These are calculated from the flatness equations.
-     * They form the "base" control effort (80-90% of total).
-     */
-    volatile real32_T iqRef;           /**< q-axis current reference [A] (from torque requirement) */
-    volatile real32_T iqRefDot;        /**< Derivative of iqRef [A/s] (for inductive voltage drop) */
+    real32_T speedError;
+    real32_T torqueCorrection;
+    real32_T torqueFeedforward;
+    real32_T torqueRequired;
 
-    volatile real32_T vdRef;           /**< d-axis voltage reference [V] (from flatness) */
-    volatile real32_T vqRef;           /**< q-axis voltage reference [V] (from flatness) */
+    real32_T torqueConstant;
+    real32_T iqRef;
+    real32_T iqRefDot;
+    real32_T vdRef;
+    real32_T vqRef;
 
-    /*
-     * ---------- Intermediate Calculations ----------
-     */
-    volatile real32_T torqueRequired;  /**< Required electromagnetic torque [Nm] */
-    volatile real32_T torqueConstant;  /**< Torque constant Kt = 1.5*p*λ_PM [Nm/A] */
+    volatile real32_T idError;
+    volatile real32_T iqError;
+    volatile real32_T vdCorr;
+    volatile real32_T vqCorr;
 
-    volatile real32_T rotorAngleMeas;  /**< Measured rotor electrical angle [rad] */
-    volatile real32_T rotorSpeedMeas;  /**< Measured rotor speed [rad/s] (from position derivative) */
+    FocDq_T dqCurrentMeas;
+    FocDq_T dqVoltage;
+    FocAngle_T focAngle;
+    FocAlphaBeta_T abVoltage;
+    SVM_DutyCycle_T svmDC;
 
-    /*
-     * ---------- PI Correction Variables ----------
-     * These handle sensor noise and model uncertainties.
-     * The values are clamped to prevent noise amplification.
-     */
-    volatile real32_T idError;         /**< d-axis current error [A] (reference - measured) */
-    volatile real32_T iqError;         /**< q-axis current error [A] (reference - measured) */
-
-    static volatile real32_T idIntegralError = 0.0F;    /**< Accumulated d-axis current error */
-    static volatile real32_T iqIntegralError = 0.0F;    /**< Accumulated q-axis current error */
-
-    /*
-     * ---------- Output Variables ----------
-     */
-    FocDq_T dqVoltage;                 /**< dq voltage commands (feedforward + correction) */
-    FocAlphaBeta_T abVoltage;          /**< Alpha-beta voltage (after inverse Park) */
-    FocAngle_T focAngle;               /**< Field oriented control angle */
-    SVM_DutyCycle_T svmDC;             /**< SVM duty cycle outputs */
-    FocDq_T dqCurrentMeas;             /**< Measured dq currents (from sensors) */
     real32_T vMag;
     real32_T vPhaseMax;
     real32_T modulationIndex;
 
-    /*
-     * ------------------------------------------------------------
-     * STEP 1: Read Reference Trajectory
-     * ------------------------------------------------------------
-     * These values come from the S-curve generator and are noise-free.
-     * The S-curve ensures smooth acceleration and jerk limits.
-     */
-    omegaRef         = inputPtr->AngularVelocityRef;
-    omegaRefDot      = inputPtr->AngularAccerlerationRef;
-    omegaRefDDot     = inputPtr->AngularJerkRef;
+    static real32_T elapsed;
+    real32_T ramp;
+    static real32_T modulation = 0.0F;
+    real32_T omegaStartupE;
+    FocDq_T startupDqVoltage;
+    FocAngle_T startupAngle;
+    FocAlphaBeta_T startupAbVoltage;
+    SVM_DutyCycle_T startupSvmDC;
+    real32_T startupVMag;
+    real32_T startupVPhaseMax;
+    real32_T startupModIdx;
 
-    /*
-     * ------------------------------------------------------------
-     * STEP 2: Mechanical Flatness Mapping (Torque Calculation)
-     * ------------------------------------------------------------
-     * Uses the rigid body dynamics equation:
-     *   Te = J * omega_dot + B * omega + Tload
-     *
-     * This is the "inverse dynamics" - it calculates what torque
-     * is needed to achieve the desired motion.
-     *
-     * Noise note: J and B are constants, so this step doesn't
-     * amplify sensor noise. The load torque is assumed constant.
-     */
-    torqueRequired = (machinePtr->J * omegaRefDot) +
-                     (machinePtr->B * omegaRef) +
-                     machinePtr->TorqueLoad;
-
-    /*
-     * ------------------------------------------------------------
-     * STEP 3: Electrical Flatness Mapping - Current Reference
-     * ------------------------------------------------------------
-     * For surface PMSM with Id = 0 (MTPA operation):
-     *   Te = 1.5 * p * FluxPm * Iq
-     * Therefore:
-     *   Iq = Te / (1.5 * p * FluxPm)
-     *
-     * Noise note: This is a division by a constant. Any noise in
-     * torqueRequired would be amplified, but torqueRequired comes
-     * from the clean reference trajectory, not from sensors.
-     */
-    torqueConstant = 1.5F * machinePtr->PolePairs * machinePtr->FluxPm;
-
-    if (fabsf(torqueConstant) > DFC_EPSILON_F)
+    /* ================================================================
+     * 1. Reset on request (ControlReInit)
+     * ================================================================ */
+    if((EmbedSim_IsMotorSpinning(inputPtr, 80000U)==0x1U)  &&  (inputPtr->SwitchToClosedLoop != 0x1U) )
     {
-        /* Calculate q-axis current reference from torque */
-        iqRef = torqueRequired / torqueConstant;
-
-        /*
-         * Clamp current to prevent overcurrent faults.
-         * This also prevents noise from causing excessive currents.
-         */
-        iqRef = DFC_ClampValue(iqRef, -DFC_MAX_CURRENT, DFC_MAX_CURRENT);
-
-        /*
-         * ------------------------------------------------------------
-         * STEP 4: Differential of Iq Reference (Current Derivative)
-         * ------------------------------------------------------------
-         * Needed for the inductive voltage drop Lq * diq/dt.
-         *
-         * Derivation:
-         *   iq_dot = (J * omega_ddot + B * omega_dot) / (1.5 * p * FluxPm)
-         *
-         * Load torque is assumed constant (derivative = 0).
-         * This term is critical for high-speed operation.
-         *
-         * Noise note: Omega_ddot comes from S-curve (noise-free).
-         * The division by torqueConstant is still safe.
-         */
-        iqRefDot = ((machinePtr->J * omegaRefDDot) +
-                    (machinePtr->B * omegaRefDot)) /
-                   torqueConstant;
-
-        /*
-         * Limit the current derivative to prevent voltage overshoot.
-         * This also prevents noise from causing rapid voltage changes.
-         */
-        iqRefDot = DFC_ClampValue(iqRefDot, -DFC_MAX_IQ_DOT_F, DFC_MAX_IQ_DOT_F);
+        /* Startup time expired: switch to closed‑loop */
+         inputPtr->SwitchToClosedLoop = 0x1U;
+         DFC_Reset();
     }
-    else
+    if (inputPtr->ControlReInit == 1U)
     {
-        /* Safety: If torque constant is zero, set everything to zero */
-        iqRef = 0.0F;
-        iqRefDot = 0.0F;
+        DFC_Reset();
+        modulation = 0;
+        inputPtr->SwitchToClosedLoop = 0x0U;
+        inputPtr->ControlReInit = 0;
+
     }
 
-    /*
-     * ------------------------------------------------------------
-     * STEP 5: Differential-Flatness Voltage Mapping
-     * ------------------------------------------------------------
-     * This is the "inverse electrical model" of the PMSM.
-     * It calculates the voltages needed to produce the desired currents.
-     *
-     * For Id = 0 (surface PMSM):
-     *   Vd = -p * omega * Lq * Iq        (cross-coupling term)
-     *   Vq = Rs * Iq + Lq * Iq_dot + p * omega * FluxPm
-     *
-     * Physical interpretation:
-     *   - Vd: Voltage needed to counteract speed-dependent coupling
-     *   - Vq: Voltage for resistive drop, inductive drop, and back-EMF
-     *
-     * Noise note: All inputs are from the clean trajectory or constants.
-     * No sensor data is used here, so no noise amplification.
-     */
-    vdRef = -machinePtr->PolePairs * omegaRef * machinePtr->Lq * iqRef;
-    vqRef = (machinePtr->Rs * iqRef) +
-            (machinePtr->Lq * iqRefDot) +
-            (machinePtr->PolePairs * omegaRef * machinePtr->FluxPm);
+    /* ================================================================
+     * 2. Startup phase (open‑loop voltage ramp)
+     *    Runs only when SwitchToClosedLoop == 0
+     * ================================================================ */
+    if (inputPtr->SwitchToClosedLoop == 0x0U)
+    {
 
-    /*
-     * ------------------------------------------------------------
-     * STEP 6: Measure and Transform Phase Currents to dq Frame
-     * ------------------------------------------------------------
-     * This is where sensor noise enters the control loop.
-     * The phase current measurements contain:
-     *   - PWM switching noise (high frequency)
-     *   - ADC quantization noise
-     *   - Thermal drift (DC offset)
-     *
-     * The Clarke and Park transforms convert this to dq frame.
-     * In dq frame:
-     *   - High-frequency noise appears as AC ripple
-     *   - DC offsets appear as steady-state errors
-     *
-     * Our PI correction will handle both.
-     */
-    DFC_CurrentsToDq(inputPtr, machinePtr, &dqCurrentMeas);
 
-    /*
-     * ------------------------------------------------------------
-     * STEP 7: Calculate Current Errors for PI Correction
-     * ------------------------------------------------------------
-     *
-     *   idError = idRef - idMeas    (idRef = 0 for surface PMSM)
-     *   iqError = iqRef - iqMeas
-     *
-     * These errors contain:
-     *   1. Actual tracking errors (desired vs actual)
-     *   2. Sensor noise (from the measurements)
-     *   3. Model errors (parameter mismatches)
-     *   4. Disturbances (load changes, temperature effects)
-     *
-     * Our PI controller must correct #1, #3, #4 while not amplifying #2.
-     * This is why the gains are deliberately low.
-     */
-    idError = 0.0F - dqCurrentMeas.D;    /* Id reference is 0 for surface PMSM */
-    iqError = iqRef - dqCurrentMeas.Q;
+            modulation += DFC_STARTUP_MOD_MIN;
+            modulation = DFC_ClampValue(modulation,
+                                        DFC_STARTUP_MOD_MIN,
+                                        DFC_STARTUP_MOD_MAX);
 
-    /*
-     * ------------------------------------------------------------
-     * STEP 8: Integrate Errors (with Anti-Windup)
-     * ------------------------------------------------------------
-     * The integral term accumulates error over time.
-     * This is what eliminates steady-state error.
-     *
-     * However, integrators can be problematic with noise:
-     *   - Noise spikes can cause integral windup
-     *   - Continuous noise can cause steady-state oscillation
-     *
-     * To handle this, we:
-     *   1. Clamp the error before integration
-     *   2. Clamp the integral term itself
-     *   3. Use very low integral gains
-     */
-    idIntegralError += idError;
-    iqIntegralError += iqError;
+            omegaStartupE = machinePtr->PolePairs * CON_RPM_TO_RAD(inputPtr->AngularVelocityRefRpmM);
+            startupThetaE += omegaStartupE * inputPtr->SampleTime;
+            DFC_WrapAngle(&startupThetaE);
 
-    /*
-     * Limit integral terms to prevent windup.
-     * This is critical for noise robustness.
-     * If the noise causes large errors, the integrator
-     * won't accumulate excessive values.
-     */
-    idIntegralError = DFC_ClampValue(idIntegralError,
-                                     -DFC_INTEGRAL_LIMIT_F,
-                                     DFC_INTEGRAL_LIMIT_F);
-    iqIntegralError = DFC_ClampValue(iqIntegralError,
-                                     -DFC_INTEGRAL_LIMIT_F,
-                                     DFC_INTEGRAL_LIMIT_F);
+            startupDqVoltage.D = 0.0F;
+            startupDqVoltage.Q = (machinePtr->Vdc / DFC_SQRT3_F) * modulation;
 
-    /*
-     * Clamp current errors to prevent excessive voltage commands.
-     * This is the first line of defense against noise spikes.
-     * If a noise spike causes an error of 100A, we clamp it to 100A.
-     * This prevents the PI controller from commanding huge voltages.
-     */
-    idError = DFC_ClampValue(idError, -DFC_MAX_CURRENT, DFC_MAX_CURRENT);
-    iqError = DFC_ClampValue(iqError, -DFC_MAX_CURRENT, DFC_MAX_CURRENT);
+            startupAngle.ThetaE = startupThetaE;
+            InvPark_Transform_Matrix(&startupDqVoltage,
+                                     &startupAngle,
+                                     &startupAbVoltage);
 
-    /*
-     * ------------------------------------------------------------
-     * STEP 9: Final Voltage Commands = Flatness FF + PI Correction
-     * ------------------------------------------------------------
-     *
-     *   Vd_cmd = Vd_FF + Kp_d * idError + Ki_d * ∫idError dt
-     *   Vq_cmd = Vq_FF + Kp_q * iqError + Ki_q * ∫iqError dt
-     *
-     * The PI gains are carefully tuned to:
-     *   1. Provide sufficient correction for model errors
-     *   2. Not amplify sensor noise
-     *   3. Provide stable operation at all speeds
-     *   4. Maintain good transient response
-     *
-     * Key principle: The feedforward (flatness) should do 80-90% of
-     * the control effort. The PI only does 10-20% correction.
-     * This makes the system robust to noise because the feedback
-     * gain is low.
-     */
-    dqVoltage.D = vdRef + (DFC_CURRENT_KP_D_F * idError) + (DFC_CURRENT_KI_D_F * idIntegralError);
-    dqVoltage.Q = vqRef + (DFC_CURRENT_KP_Q_F * iqError) + (DFC_CURRENT_KI_Q_F * iqIntegralError);
+            startupVMag = sqrtf(startupAbVoltage.Alpha * startupAbVoltage.Alpha +
+                                startupAbVoltage.Beta  * startupAbVoltage.Beta);
+            startupVPhaseMax = machinePtr->Vdc / DFC_SQRT3_F;
+            startupModIdx = startupVMag / startupVPhaseMax;
+            startupModIdx = DFC_ClampValue(startupModIdx, 0.0F, 0.90F);
+            SVM_CalculateDutyCycle(startupModIdx, &startupAngle, &startupSvmDC);
 
-    /*
-     * ------------------------------------------------------------
-     * STEP 10: Get Measured Rotor Electrical Angle
-     * ------------------------------------------------------------
-     * The electrical angle is needed for the inverse Park transform.
-     * We use:
-     *   theta_e = (theta_m + omega * Ts) * PolePairs
-     *
-     * This includes speed estimation to compensate for position
-     * measurement delay. The speed measurement may have noise,
-     * but the position is from the encoder/resolver.
-     *
-     * Noise note: Speed noise would cause angle jitter.
-     * We rely on the position sensor's filtering (usually hardware).
-     */
-    rotorSpeedMeas = 0.0F; /* TODO: Get speed from position derivative or observer */
-    rotorAngleMeas = (inputPtr->RotorPositionEst + (rotorSpeedMeas * inputPtr->SampleTime)) * machinePtr->PolePairs;
-    DFC_WrapAngle(&rotorAngleMeas);
-    focAngle.ThetaE = rotorAngleMeas;
+            /* Write startup output */
+            outputPtr->DutyU = startupSvmDC.Ta;
+            outputPtr->DutyV = startupSvmDC.Tb;
+            outputPtr->DutyW = startupSvmDC.Tc;
+            outputPtr->SvmSector = startupSvmDC.Sector;
+            outputPtr->Valid = 0x1U;
 
-    /*
-     * ------------------------------------------------------------
-     * STEP 11: Transform dq Voltage to Stationary Frame (Alpha-Beta)
-     * ------------------------------------------------------------
-     * Inverse Park transform converts the rotating frame voltages
-     * to the stationary frame used by the SVM modulator.
-     */
-    InvPark_Transform_Matrix(&dqVoltage, &focAngle, &abVoltage);
 
-    /*
-     * ------------------------------------------------------------
-     * STEP 12: Space Vector Modulation
-     * ------------------------------------------------------------
-     * The SVM generates the PWM duty cycles from the alpha-beta voltages.
-     *
-     * Important for noise handling:
-     *   1. The modulation index is clamped to 0.95
-     *      - Prevents overmodulation from noise spikes
-     *      - Leaves margin for inverter non-linearity
-     *   2. The SVM algorithm itself has some filtering effect
-     *      - PWM frequency is fixed (typically 10-20 kHz)
-     *      - This acts as a zero-order hold
-     *
-     * The low modulation index limit (0.95) ensures that even with
-     * noise-induced voltage spikes, the PWM stays in the linear region.
-     * This prevents:
-     *   - Nonlinear distortion
-     *   - Audible noise
-     *   - Current spikes
-     */
-    vMag = sqrtf((abVoltage.Alpha * abVoltage.Alpha) + (abVoltage.Beta * abVoltage.Beta));
+    }
 
-    vPhaseMax = machinePtr->Vdc / DFC_SQRT3_F;
-    modulationIndex = vMag / vPhaseMax;
+    /* ================================================================
+     * 3. Normal DFC (closed‑loop) – only if SwitchToClosedLoop == 1
+     * ================================================================ */
+    if(inputPtr->SwitchToClosedLoop == 1U)
+    {
+        omegaRef     = inputPtr->RotorVelocityRefM;
+        omegaRefDot  = inputPtr->RotorAccerlerationRefM;
+        omegaRefDDot = inputPtr->RotorJerkRefM;
+        omegaMeas    = CON_RPM_TO_RAD(inputPtr->RotorSpeedObsEstM);
 
-    /*
-     * Clamp modulation index to 0.25 for testing (safety factor).
-     * In production, this would be 0.95 for full voltage utilization.
-     * The lower limit provides additional safety during development.
-     */
-    modulationIndex = DFC_ClampValue(modulationIndex, 0.0F, 0.25F);
-    SVM_CalculateDutyCycle(modulationIndex, &focAngle, &svmDC);
+        /* Speed PI (torque correction) */
+        speedError = omegaRef - omegaMeas;
+        speedIntegralError += speedError;
+        speedIntegralError = DFC_ClampValue(speedIntegralError,
+                                            -machinePtr->ParamPidIntegralLimit,
+                                             machinePtr->ParamPidIntegralLimit);
+        torqueCorrection = (machinePtr->ParamPidSpeedQProp * speedError) +
+                           (machinePtr->ParamPidSpeedQInteg * speedIntegralError);
 
-    /*
-     * ------------------------------------------------------------
-     * STEP 13: Write PWM Duty Cycles to Output Structure
-     * ------------------------------------------------------------
-     * These duty cycles are used to generate the gate signals
-     * for the inverter switches.
-     *
-     * The outputs are:
-     *   - DutyU: Phase U duty cycle (0.0 to 1.0)
-     *   - DutyV: Phase V duty cycle (0.0 to 1.0)
-     *   - DutyW: Phase W duty cycle (0.0 to 1.0)
-     *   - Sector: SVM sector (for debugging)
-     *   - Valid: Output validity flag
-     */
-    outputPtr->DutyU = svmDC.Ta;
-    outputPtr->DutyV = svmDC.Tb;
-    outputPtr->DutyW = svmDC.Tc;
-    outputPtr->SvmSector = svmDC.Sector;
-    outputPtr->Valid = 0x1U;
+        /* Mechanical flatness */
+        torqueFeedforward = (machinePtr->J * omegaRefDot) +
+                            (machinePtr->B * omegaRef) +
+                            machinePtr->TorqueLoad;
+        torqueRequired = torqueFeedforward + torqueCorrection;
+
+        /* Electrical flatness */
+        torqueConstant = 1.5F * machinePtr->PolePairs * machinePtr->FluxPm;
+        if (fabsf(torqueConstant) > DFC_EPSILON_F)
+        {
+            iqRef = torqueRequired / torqueConstant;
+            iqRef = DFC_ClampValue(iqRef, -DFC_MAX_CURRENT, DFC_MAX_CURRENT);
+            iqRefDot = ((machinePtr->J * omegaRefDDot) +
+                        (machinePtr->B * omegaRefDot)) / torqueConstant;
+            iqRefDot = DFC_ClampValue(iqRefDot,
+                                      -DFC_MAX_IQ_DOT_F,
+                                      DFC_MAX_IQ_DOT_F);
+        }
+        else
+        {
+            iqRef    = 0.0F;
+            iqRefDot = 0.0F;
+        }
+
+        /* Voltage feedforward */
+        vdRef = -machinePtr->PolePairs * omegaRef * machinePtr->Lq * iqRef;
+        vqRef = (machinePtr->Rs * iqRef) +
+                (machinePtr->Lq * iqRefDot) +
+                (machinePtr->PolePairs * omegaRef * machinePtr->FluxPm);
+
+        /* Measure currents */
+        DFC_CurrentsToDq(inputPtr, machinePtr, &dqCurrentMeas);
+
+        /* Current PI */
+        idError = 0.0F - dqCurrentMeas.D;
+        iqError = iqRef - dqCurrentMeas.Q;
+
+        idIntegralError += idError;
+        iqIntegralError += iqError;
+        idIntegralError = DFC_ClampValue(idIntegralError,
+                                         -machinePtr->ParamPidIntegralLimit,
+                                          machinePtr->ParamPidIntegralLimit);
+        iqIntegralError = DFC_ClampValue(iqIntegralError,
+                                         -machinePtr->ParamPidIntegralLimit,
+                                          machinePtr->ParamPidIntegralLimit);
+
+        idError = DFC_ClampValue(idError, -DFC_MAX_CURRENT, DFC_MAX_CURRENT);
+        iqError = DFC_ClampValue(iqError, -DFC_MAX_CURRENT, DFC_MAX_CURRENT);
+
+        vdCorr = (machinePtr->ParamPidCurrentDProp * idError) +
+                 (machinePtr->ParamPidCurrentDInteg * idIntegralError);
+        vqCorr = (machinePtr->ParamPidCurrentQProp * iqError) +
+                 (machinePtr->ParamPidCurrentQInteg * iqIntegralError);
+
+        /* Final voltage */
+        dqVoltage.D = vdRef + vdCorr;
+        dqVoltage.Q = vqRef + vqCorr;
+
+        /* Inverse Park */
+        focAngle.ThetaE = inputPtr->RotorPositionObsEstM * machinePtr->PolePairs;
+        DFC_WrapAngle(&focAngle.ThetaE);
+        InvPark_Transform_Matrix(&dqVoltage, &focAngle, &abVoltage);
+
+        /* SVM */
+        vMag = sqrtf(abVoltage.Alpha * abVoltage.Alpha +
+                     abVoltage.Beta  * abVoltage.Beta);
+        vPhaseMax = machinePtr->Vdc / DFC_SQRT3_F;
+        modulationIndex = vMag / vPhaseMax;
+        modulationIndex = DFC_ClampValue(modulationIndex, 0.0F, 0.90F);
+        SVM_CalculateDutyCycle(modulationIndex, &focAngle, &svmDC);
+
+        /* Write normal DFC output */
+        outputPtr->DutyU = svmDC.Ta;
+        outputPtr->DutyV = svmDC.Tb;
+        outputPtr->DutyW = svmDC.Tc;
+        outputPtr->SvmSector = svmDC.Sector;
+        outputPtr->Valid = 0x1U;
+
+        startupThetaE = focAngle.ThetaE;
+        if(EmbedSim_IsNotSpinning(inputPtr,100U)==0x1U)
+        {
+            inputPtr->ControlReInit = 0x1U;
+        }
+    }
+
+
+    /* ================================================================
+     * Single return point – MISRA Rule 14.7
+     * ================================================================ */
+    return;
 }

@@ -177,7 +177,7 @@ typedef enum
 typedef enum
 {
     CDDAPP_CTRL_OPENLOOP   = 0U,   /**< V/f rotating vector at SpeedRefRpm, no feedback. */
-    CDDAPP_CTRL_CLOSEDLOOP = 1U    /**< Sensorless flatness FOC (DFC), full closed loop. */
+    CDDAPP_CTRL_CLOSEDLOOP = 1U    /**< flatness FOC (DFC), full closed loop. */
 } CddApp_CtrlMode_T;
 
 /**
