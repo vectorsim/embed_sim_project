@@ -62,7 +62,7 @@ from embedsim_control_block import EmbedSimControlBlock, SIM_CTRL_OPEN_LOOP, SIM
 #   "C_OPEN_LOOP"        - C backend open-loop
 #   "C_DFC"              - C backend DFC
 
-MODE = "PYTHON_OPEN_LOOP"  # Change this to switch modes
+MODE = "C_DFC"  # Change this to switch modes
 
 
 # =============================================================================
@@ -72,7 +72,7 @@ MODE = "PYTHON_OPEN_LOOP"  # Change this to switch modes
 def main():
     # Simulation parameters
     TARGET_RPM = 850.0
-    T_SIM = 1.0
+    T_SIM = 2.0
     DT = 50e-6
     V_DC = 12.0
     P_POLES = 4

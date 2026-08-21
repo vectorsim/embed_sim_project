@@ -52,7 +52,7 @@
  *
  * \return  void
  */
-void DFC_Init(void);
+void DFC_Init(EmbedSimMachine_T* const MotorPtr);
 
 /**
  * \brief   Execute Differential Flatness Control step
@@ -81,6 +81,6 @@ void DFC_Init(void);
  *
  * \return  void
  */
-void DFC_Step(EmbedSimMachine_T* const motorPtr);
+void DFC_Step(EmbedSimMachine_T* const MotorPtr);
 
 #endif /* EMBED_SIM_DFC_CONTROLLER_H_ */

@@ -86,11 +86,6 @@
 #define JERK_SMOOTHING_FACTOR           (0.2F)
 
 /**
- * \brief  Minimum speed to switch to closed-loop control (RPM)
- */
-#define CLOSED_LOOP_MIN_SPEED           (60.0F)
-
-/**
  * \brief   Current PI controller gains (correction on top of flatness)
  *
  * \details These gains provide proportional correction to the flatness feedforward
@@ -114,9 +109,7 @@
 /**
  * \brief  DFC startup parameters (match Python's 0.3s ramp)
  */
-#define DFC_STARTUP_TIME_S       (0.8F)      /**< Startup duration [s]        */
-#define DFC_STARTUP_SPEED_RPM    (300.0F)    /**< Fixed speed during startup [RPM] */
-#define DFC_STARTUP_MOD_MIN      (0.001F)     /**< Initial modulation index     */
+#define DFC_STARTUP_MOD_MIN      (0.05F)     /**< Initial modulation index     */
 #define DFC_STARTUP_MOD_MAX      (0.25F)     /**< Final modulation index       */
 
 
@@ -130,8 +123,8 @@
  * \note    The speed loop gains are also kept low to avoid noise amplification.
  *          The integral term eliminates steady-state speed error.
  */
-#define DFC_SPEED_KP_Q_F                (0.0021F)    /**< Speed proportional gain (for torque correction) */
-#define DFC_SPEED_KI_Q_F                (0.0001F)    /**< Speed integral gain */
+#define DFC_SPEED_KP_Q_F                (0.0039F)    /**< Speed proportional gain (for torque correction) */
+#define DFC_SPEED_KI_Q_F                (0.0002F)    /**< Speed integral gain */
 
 /**
  * \brief   Maximum integrator anti-windup limit (common for speed and current)
@@ -141,7 +134,7 @@
  *          The value is chosen to allow enough correction without causing
  *          excessive voltage commands.
  */
-#define DFC_INTEGRAL_LIMIT_F            (5.0F)
+#define DFC_INTEGRAL_LIMIT_F            (25.0F)
 
 /*********************************************************************************************************************/
 /*-------------------------------------------------Data Structures---------------------------------------------------*/
@@ -208,25 +201,30 @@ typedef struct
  */
 typedef struct
 {
-    real32_T    PolePairs;                 /**< Number of pole pairs                         [-]      */
-    real32_T    Rs;                        /**< Stator resistance                            [Ohm]    */
-    real32_T    Ld;                        /**< Direct-axis inductance                       [H]      */
-    real32_T    Lq;                        /**< Quadrature-axis inductance                   [H]      */
-    real32_T    FluxPm;                    /**< Permanent magnet flux linkage                [Wb]     */
-    real32_T    J;                         /**< Rotor inertia                                [kg·m²]  */
-    real32_T    B;                         /**< Viscous damping coefficient                  [N·m·s]  */
-    real32_T    Vdc;                       /**< DC bus voltage                               [V]      */
-    real32_T    TorqueLoad;                /**< Load torque (external)                       [N·m]    */
+    real32_T    PolePairs;                 /**< Number of pole pairs                         [-]           */
+    real32_T    Rs;                        /**< Stator resistance                            [Ohm]         */
+    real32_T    Ld;                        /**< Direct-axis inductance                       [H]           */
+    real32_T    Lq;                        /**< Quadrature-axis inductance                   [H]           */
+    real32_T    FluxPm;                    /**< Permanent magnet flux linkage                [Wb]          */
+    real32_T    J;                         /**< Rotor inertia                                [kg·m²]       */
+    real32_T    B;                         /**< Viscous damping coefficient                  [N·m·s]       */
+    real32_T    Vdc;                       /**< DC bus voltage                               [V]           */
+    real32_T    TorqueLoad;                /**< Load torque (external)                       [N·m]         */
 
     /* Current PI gains */
-    real32_T    ParamPidCurrentQProp;      /**< PID Proportional Parameter for Q Current              */
-    real32_T    ParamPidCurrentQInteg;     /**< PID Integral Parameter for Q Current                  */
-    real32_T    ParamPidCurrentDProp;      /**< PID Proportional Parameter for D Current              */
-    real32_T    ParamPidCurrentDInteg;     /**< PID Integral Parameter for D Current                  */
+    real32_T    ParamPidCurrentQProp;      /**< PID Proportional Parameter for Q Current                    */
+    real32_T    ParamPidCurrentQInteg;     /**< PID Integral Parameter for Q Current                        */
+    real32_T    ParamPidCurrentDProp;      /**< PID Proportional Parameter for D Current                    */
+    real32_T    ParamPidCurrentDInteg;     /**< PID Integral Parameter for D Current                        */
 
     /* Speed PI gains */
-    real32_T    ParamPidSpeedQProp;        /**< PID Proportional Parameter for Speed (torque correction) */
-    real32_T    ParamPidSpeedQInteg;       /**< PID Integral Parameter for Speed                         */
+    real32_T    ParamPidSpeedQProp;        /**< PID Proportional Parameter for Speed (torque correction)    */
+    real32_T    ParamPidSpeedQInteg;       /**< PID Integral Parameter for Speed                            */
+
+    /* Integral Error */
+    real32_T    SpeedIntegralError;        /**< Accumulated speed error for the outer speed PI controller   */
+    real32_T    IdIntegralError;           /**< Accumulated d-axis current error for the inner current PI   */
+    real32_T    IqIntegralError;           /**< Accumulated q-axis current error for the inner current PI   */
 
     /**
      * \brief  Integral anti‑windup limit (common for speed and current integrators)
@@ -236,6 +234,8 @@ typedef struct
      *          The same limit is applied to speed, Id, and Iq integrators.
      */
     real32_T    ParamPidIntegralLimit;
+
+    real32_T    StartupThetaE;               /**< Fixed Angle for Start Up                                    */
 
 } EmbedSimMachineParam_T;
 
@@ -292,51 +292,7 @@ extern void EmbedSim_ControlStep(EmbedSimMachine_T* const motorPtr);
 
 
 
-/**
- * \brief Calculates an online time-optimal jerk-limited speed trajectory.
- *
- * \details
- * Generates the reference motor speed and its derivatives online using
- * a jerk-limited S-curve trajectory. The trajectory adapts at every
- * control sample according to the instantaneous speed error and the
- * remaining distance to the target speed.
- *
- * The trajectory is generated using the following states and control:
- *
- *   - State:
- *       omega_ref_dot = acceleration
- *   - Control:
- *       jerk
- *
- * At each control sample, the algorithm:
- *
- *   1. Calculates the speed error.
- *   2. Determines the direction toward the target speed.
- *   3. Calculates the required braking distance.
- *   4. Selects the appropriate jerk:
- *        +Jmax : increase acceleration toward the target.
- *         0    : maintain the current acceleration.
- *        -Jmax : reduce acceleration to prepare for the target.
- *   5. Integrates jerk to obtain acceleration.
- *   6. Integrates acceleration to obtain the reference speed.
- *
- * The resulting trajectory consists of jerk-limited acceleration and
- * deceleration phases followed by a constant-speed phase when the
- * target speed is reached.
- *
- * The algorithm is time-optimal subject to the specified jerk and
- * acceleration constraints. No predefined T1 or total trajectory time
- * is required; the trajectory timing is determined online.
- *
- * \param[in,out] InputPtr Pointer to the control input structure
- *                         containing speed references and feedback signals.
- * \param[in]     ParaPtr  Pointer to the motor parameter structure
- *                         containing trajectory constraints such as
- *                         maximum jerk and acceleration.
- *
- * \note The trajectory is intended to be executed at the controller's
- *       fixed sampling frequency.
- */
+
 extern uint32_T EmbedSim_IsMotorSpinning(const EmbedSimCtrlInput_T* const  InputPtr, uint32_T PastIndex);
 
 

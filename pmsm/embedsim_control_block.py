@@ -39,7 +39,7 @@ SIM_CTRL_DFC = 1
 # ===========================================================================
 # Debug flag – set to True to enable console prints
 # ===========================================================================
-DEBUG_CONTROL = True # <--- Toggle this: True = print, False = silent
+DEBUG_CONTROL = False # <--- Toggle this: True = print, False = silent
 
 
 # ===========================================================================

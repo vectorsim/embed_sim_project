@@ -65,7 +65,7 @@ MODE = "C_DFC"  # Change this to switch modes
 def main():
     # Simulation parameters
     TARGET_RPM = 850.0
-    T_SIM = 3.0
+    T_SIM = 2.5
     DT = 50e-6
     V_DC = 12.0
     P_POLES = 4

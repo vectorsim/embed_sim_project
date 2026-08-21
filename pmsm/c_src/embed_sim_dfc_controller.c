@@ -76,29 +76,6 @@
 /*--------------------------------------------------Private Data-----------------------------------------------------*/
 /*********************************************************************************************************************/
 
-/**
- * \var speedIntegralError
- * \brief   Accumulated speed error for the outer speed PI controller.
- */
-static real32_T speedIntegralError = 0.0F;
-
-/**
- * \var idIntegralError
- * \brief   Accumulated d‑axis current error for the inner current PI.
- */
-static real32_T idIntegralError    = 0.0F;
-
-/**
- * \var iqIntegralError
- * \brief   Accumulated q‑axis current error for the inner current PI.
- */
-static real32_T iqIntegralError    = 0.0F;
-
-/**
- * \var startupThetaE
- * \brief   Electrical angle used during the open‑loop startup phase (rad).
- */
-static real32_T startupThetaE = 0.0F;
 
 /*********************************************************************************************************************/
 /*--------------------------------------------Private Functions-----------------------------------------------------*/
@@ -185,12 +162,12 @@ static void DFC_CurrentsToDq(EmbedSimCtrlInput_T* const inputPtr,
  *
  * \return  void
  */
-void DFC_Init(void)
+void DFC_Init(EmbedSimMachine_T* const MotorPtr)
 {
-    speedIntegralError = 0.0F;
-    idIntegralError    = 0.0F;
-    iqIntegralError    = 0.0F;
-    startupThetaE      = 0.0F;
+    MotorPtr->MachinePtr->SpeedIntegralError = 0.0F;
+    MotorPtr->MachinePtr->IdIntegralError    = 0.0F;
+    MotorPtr->MachinePtr->IqIntegralError    = 0.0F;
+    MotorPtr->MachinePtr->StartupThetaE      = 0.0F;
 }
 
 /**
@@ -204,12 +181,12 @@ void DFC_Init(void)
  *
  * \return  void
  */
-void DFC_Reset(void)
+void DFC_Reset(EmbedSimMachine_T* const MotorPtr)
 {
-    speedIntegralError = 0.0F;
-    idIntegralError    = 0.0F;
-    iqIntegralError    = 0.0F;
-    startupThetaE      = 0.0F;
+    MotorPtr->MachinePtr->SpeedIntegralError = 0.0F;
+    MotorPtr->MachinePtr->IdIntegralError    = 0.0F;
+    MotorPtr->MachinePtr->IqIntegralError    = 0.0F;
+    MotorPtr->MachinePtr->StartupThetaE      = 0.0F;
 }
 
 /**
@@ -230,11 +207,11 @@ void DFC_Reset(void)
  *
  * \return  void
  */
-void DFC_Step(EmbedSimMachine_T* const motorPtr)
+void DFC_Step(EmbedSimMachine_T* const MotorPtr)
 {
-    EmbedSimCtrlInput_T* const inputPtr   = motorPtr->InputPtr;
-    EmbedSimCtrlOutput_T* const outputPtr = motorPtr->OutputPtr;
-    const EmbedSimMachineParam_T* const machinePtr = motorPtr->MachinePtr;
+    EmbedSimCtrlInput_T*    const inputPtr   = MotorPtr->InputPtr;
+    EmbedSimCtrlOutput_T*   const outputPtr  = MotorPtr->OutputPtr;
+    EmbedSimMachineParam_T* const machinePtr = MotorPtr->MachinePtr;
 
     /*
      * ---------- Local variables (one per line, MISRA Rule 8.5) ----------
@@ -255,10 +232,10 @@ void DFC_Step(EmbedSimMachine_T* const motorPtr)
     real32_T vdRef;
     real32_T vqRef;
 
-    volatile real32_T idError;
-    volatile real32_T iqError;
-    volatile real32_T vdCorr;
-    volatile real32_T vqCorr;
+    real32_T idError;
+    real32_T iqError;
+    real32_T vdCorr;
+    real32_T vqCorr;
 
     FocDq_T dqCurrentMeas;
     FocDq_T dqVoltage;
@@ -270,10 +247,7 @@ void DFC_Step(EmbedSimMachine_T* const motorPtr)
     real32_T vPhaseMax;
     real32_T modulationIndex;
 
-    static real32_T elapsed;
-    real32_T ramp;
     static real32_T modulation = 0.0F;
-    real32_T omegaStartupE;
     FocDq_T startupDqVoltage;
     FocAngle_T startupAngle;
     FocAlphaBeta_T startupAbVoltage;
@@ -285,19 +259,14 @@ void DFC_Step(EmbedSimMachine_T* const motorPtr)
     /* ================================================================
      * 1. Reset on request (ControlReInit)
      * ================================================================ */
-    if((EmbedSim_IsMotorSpinning(inputPtr, 80U)==0x1U)  &&  (inputPtr->SwitchToClosedLoop != 0x1U) )
+
+    if((EmbedSim_IsMotorSpinning(inputPtr, 89500U)==0x1U) &&  (inputPtr->SwitchToClosedLoop != 0x1U) )
     {
         /* Startup time expired: switch to closed‑loop */
          inputPtr->SwitchToClosedLoop = 0x1U;
-         DFC_Reset();
-    }
-    if (inputPtr->ControlReInit == 1U)
-    {
-        DFC_Reset();
-        modulation = 0;
-        inputPtr->SwitchToClosedLoop = 0x0U;
-        inputPtr->ControlReInit = 0;
-
+         DFC_Reset(MotorPtr);
+         modulation = 0.0F;
+         inputPtr->ControlReInit = 0x1U;
     }
 
     /* ================================================================
@@ -306,40 +275,35 @@ void DFC_Step(EmbedSimMachine_T* const motorPtr)
      * ================================================================ */
     if (inputPtr->SwitchToClosedLoop == 0x0U)
     {
-
-
-            modulation += DFC_STARTUP_MOD_MIN;
-            modulation = DFC_ClampValue(modulation,
+        modulation += DFC_STARTUP_MOD_MIN;
+        modulation = DFC_ClampValue(modulation,
                                         DFC_STARTUP_MOD_MIN,
                                         DFC_STARTUP_MOD_MAX);
 
-            omegaStartupE = machinePtr->PolePairs * CON_RPM_TO_RAD(inputPtr->AngularVelocityRefRpmM);
-            startupThetaE += omegaStartupE * inputPtr->SampleTime;
-            DFC_WrapAngle(&startupThetaE);
+        machinePtr->StartupThetaE += (machinePtr->PolePairs * CON_RPM_TO_RAD(inputPtr->AngularVelocityRefRpmM)) * inputPtr->SampleTime;
+        DFC_WrapAngle(&machinePtr->StartupThetaE);
 
-            startupDqVoltage.D = 0.0F;
-            startupDqVoltage.Q = (machinePtr->Vdc / DFC_SQRT3_F) * modulation;
+        startupDqVoltage.D = 0.0F;
+        startupDqVoltage.Q = (machinePtr->Vdc / DFC_SQRT3_F) * modulation;
 
-            startupAngle.ThetaE = startupThetaE;
-            InvPark_Transform_Matrix(&startupDqVoltage,
-                                     &startupAngle,
-                                     &startupAbVoltage);
+        startupAngle.ThetaE =  machinePtr->StartupThetaE;
+        InvPark_Transform_Matrix(&startupDqVoltage,
+                                 &startupAngle,
+                                 &startupAbVoltage);
 
-            startupVMag = sqrtf(startupAbVoltage.Alpha * startupAbVoltage.Alpha +
-                                startupAbVoltage.Beta  * startupAbVoltage.Beta);
-            startupVPhaseMax = machinePtr->Vdc / DFC_SQRT3_F;
-            startupModIdx = startupVMag / startupVPhaseMax;
-            startupModIdx = DFC_ClampValue(startupModIdx, 0.0F, 0.90F);
-            SVM_CalculateDutyCycle(startupModIdx, &startupAngle, &startupSvmDC);
+        startupVMag = sqrtf(startupAbVoltage.Alpha * startupAbVoltage.Alpha +
+                            startupAbVoltage.Beta  * startupAbVoltage.Beta);
+        startupVPhaseMax = machinePtr->Vdc / DFC_SQRT3_F;
+        startupModIdx = startupVMag / startupVPhaseMax;
+        startupModIdx = DFC_ClampValue(startupModIdx, 0.0F, 0.90F);
+        SVM_CalculateDutyCycle(startupModIdx, &startupAngle, &startupSvmDC);
 
-            /* Write startup output */
-            outputPtr->DutyU = startupSvmDC.Ta;
-            outputPtr->DutyV = startupSvmDC.Tb;
-            outputPtr->DutyW = startupSvmDC.Tc;
-            outputPtr->SvmSector = startupSvmDC.Sector;
-            outputPtr->Valid = 0x1U;
-
-
+        /* Write startup output */
+        outputPtr->DutyU = startupSvmDC.Ta;
+        outputPtr->DutyV = startupSvmDC.Tb;
+        outputPtr->DutyW = startupSvmDC.Tc;
+        outputPtr->SvmSector = startupSvmDC.Sector;
+        outputPtr->Valid = 0x1U;
     }
 
     /* ================================================================
@@ -354,12 +318,12 @@ void DFC_Step(EmbedSimMachine_T* const motorPtr)
 
         /* Speed PI (torque correction) */
         speedError = omegaRef - omegaMeas;
-        speedIntegralError += speedError;
-        speedIntegralError = DFC_ClampValue(speedIntegralError,
+        machinePtr->SpeedIntegralError += speedError;
+        machinePtr->SpeedIntegralError = DFC_ClampValue( machinePtr->SpeedIntegralError,
                                             -machinePtr->ParamPidIntegralLimit,
                                              machinePtr->ParamPidIntegralLimit);
         torqueCorrection = (machinePtr->ParamPidSpeedQProp * speedError) +
-                           (machinePtr->ParamPidSpeedQInteg * speedIntegralError);
+                           (machinePtr->ParamPidSpeedQInteg *  machinePtr->SpeedIntegralError);
 
         /* Mechanical flatness */
         torqueFeedforward = (machinePtr->J * omegaRefDot) +
@@ -398,22 +362,20 @@ void DFC_Step(EmbedSimMachine_T* const motorPtr)
         idError = 0.0F - dqCurrentMeas.D;
         iqError = iqRef - dqCurrentMeas.Q;
 
-        idIntegralError += idError;
-        iqIntegralError += iqError;
-        idIntegralError = DFC_ClampValue(idIntegralError,
-                                         -machinePtr->ParamPidIntegralLimit,
-                                          machinePtr->ParamPidIntegralLimit);
-        iqIntegralError = DFC_ClampValue(iqIntegralError,
-                                         -machinePtr->ParamPidIntegralLimit,
-                                          machinePtr->ParamPidIntegralLimit);
+        machinePtr->IdIntegralError += idError;
+        machinePtr->IqIntegralError += iqError;
+        machinePtr->IdIntegralError = DFC_ClampValue(machinePtr->IdIntegralError,
+                                                     -machinePtr->ParamPidIntegralLimit,
+                                                     machinePtr->ParamPidIntegralLimit);
+        machinePtr->IqIntegralError = DFC_ClampValue(machinePtr->IqIntegralError,
+                                                     -machinePtr->ParamPidIntegralLimit,
+                                                     machinePtr->ParamPidIntegralLimit);
 
         idError = DFC_ClampValue(idError, -DFC_MAX_CURRENT, DFC_MAX_CURRENT);
         iqError = DFC_ClampValue(iqError, -DFC_MAX_CURRENT, DFC_MAX_CURRENT);
 
-        vdCorr = (machinePtr->ParamPidCurrentDProp * idError) +
-                 (machinePtr->ParamPidCurrentDInteg * idIntegralError);
-        vqCorr = (machinePtr->ParamPidCurrentQProp * iqError) +
-                 (machinePtr->ParamPidCurrentQInteg * iqIntegralError);
+        vdCorr = (machinePtr->ParamPidCurrentDProp * idError) + (machinePtr->ParamPidCurrentDInteg * machinePtr->IdIntegralError);
+        vqCorr = (machinePtr->ParamPidCurrentQProp * iqError) + (machinePtr->ParamPidCurrentQInteg * machinePtr->IqIntegralError);
 
         /* Final voltage */
         dqVoltage.D = vdRef + vdCorr;
@@ -439,16 +401,16 @@ void DFC_Step(EmbedSimMachine_T* const motorPtr)
         outputPtr->SvmSector = svmDC.Sector;
         outputPtr->Valid = 0x1U;
 
-        startupThetaE = focAngle.ThetaE;
-        if(EmbedSim_IsNotSpinning(inputPtr,10U)==0x1U)
+        machinePtr->StartupThetaE  = focAngle.ThetaE;
+
+        if(EmbedSim_IsNotSpinning(inputPtr,2000U)==0x1U)
         {
-            inputPtr->ControlReInit = 0x1U;
+            inputPtr->SwitchToClosedLoop = 0x0U;
+            DFC_Reset(MotorPtr);
+            modulation = 0.0F;
+           inputPtr->ControlReInit = 0x1U;
         }
+
+
     }
-
-
-    /* ================================================================
-     * Single return point – MISRA Rule 14.7
-     * ================================================================ */
-    return;
 }
