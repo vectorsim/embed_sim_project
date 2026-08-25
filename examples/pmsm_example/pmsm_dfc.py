@@ -46,6 +46,7 @@ from __future__ import annotations
 import sys
 import math
 from pathlib import Path
+from typing import Dict, Any
 
 import numpy as np
 
@@ -86,18 +87,6 @@ from embedsim.core_blocks import (
 from embedsim_generic_control import GenericControlBlock
 
 
-# ================================================================
-# Canonical coordinate transforms
-# ================================================================
-
-from embedsim_control_wrapper import (
-    clarke,
-    park,
-    inv_park,
-    inv_clarke,
-)
-
-
 # =============================================================================
 # Jerk-Limited Speed Trajectory (matches C implementation)
 # =============================================================================
@@ -126,6 +115,7 @@ class SpeedTrajectory:
             max_accel_rpm_s=500.0,
             max_jerk_rpm_s3=3000.0,  # C uses RPM/s^3
             settle_tolerance=0.1,     # SPEED_SETTLE_TOL
+            debug=False,
     ):
 
         self.max_speed_rpm = float(max_speed_rpm)
@@ -137,6 +127,10 @@ class SpeedTrajectory:
         self.speed = 0.0
         self.accel = 0.0
         self.jerk = 0.0  # RPM/s^3
+
+        # Debug
+        self.debug = debug
+        self._last_debug_print = -1.0
 
     # ------------------------------------------------------------------
     @staticmethod
@@ -226,6 +220,7 @@ class SpeedTrajectory:
 
         # ------------------------------------------------------------
         # Compute jerk needed to reach desired acceleration in one step
+        # This is ALWAYS computed, not just when changing
         # ------------------------------------------------------------
 
         jerk_request = (desired_accel - self.accel) / dt
@@ -295,6 +290,11 @@ class SpeedTrajectory:
         self.speed = new_speed
         self.accel = new_accel
 
+        # Debug: Print trajectory states when jerk is non-zero
+        if self.debug:
+            if abs(self.jerk) > 0.1:  # Only print when jerk is significant
+                print(f"[Trajectory] speed={self.speed:.1f} RPM, accel={self.accel:.1f} RPM/s, jerk={self.jerk:.1f} RPM/s³")
+
         return self._output()
 
     # ------------------------------------------------------------------
@@ -358,94 +358,136 @@ class PythonController(GenericControlBlock):
             dt_s=50e-6,
             vdc_nom=12.0,
             controller_mode="DFC",
+            # Current PI gains (matches C: DFC_CURRENT_KP_D_F, etc.)
+            kp_d=0.0001,
+            kp_q=0.0195,
+            ki_d=0.0005,
+            ki_q=0.0002,
+            # Speed PI gains (matches C: DFC_SPEED_KP_Q_F, DFC_SPEED_KI_Q_F)
+            kp_speed=0.0039,
+            ki_speed=0.0002,
+            # Limits (matches C: DFC_INTEGRAL_LIMIT_F)
+            integral_limit=25.0,
+            max_current=100.0,
+            max_iq_dot=1000.0,
+            modulation_limit=0.90,
+            # Startup parameters (matches C)
+            startup_mod_min=0.05,
+            startup_mod_max=0.25,
+            startup_increment=0.001,
+            # Spinning detection (matches C)
+            spinning_past_index=89500,
+            stopped_past_index=2000,
+            # PMSM parameters
+            pole_pairs=4.0,
+            rs=0.19,
+            ld=0.125e-3,
+            lq=0.125e-3,
+            lambda_pm=0.0014,
+            j=2.4e-6,
+            b=1.0e-6,
+            tload=0.0,
+            # Open-loop parameters
+            open_loop_amp=0.3,
+            open_loop_ramp_rate=200.0,
+            # FIX: Force use_python=True to always use Python implementation
+            use_python=True,
+            # Debug
+            debug=False,
             **kwargs,
     ):
 
+        # Initialize GenericControlBlock
+        # FIX: Override use_c_backend to False to always use Python
         super().__init__(
             name=name,
             dt_s=dt_s,
             vdc_nom=vdc_nom,
-            use_c_backend=False,
+            use_c_backend=False,  # Always use Python implementation
             **kwargs,
         )
 
         self.controller_mode = controller_mode
+        self.use_python = use_python
+        self.debug = debug
 
         # ============================================================
         # PMSM parameters (match C)
         # ============================================================
 
-        self.pole_pairs = 4.0
-        self.Rs = 0.19
-        self.Ld = 0.125e-3
-        self.Lq = 0.125e-3
-        self.lambda_pm = 0.0014
-        self.J = 2.4e-6
-        self.B = 1.0e-6
-        self.Tload = 0.0
+        self.pole_pairs = pole_pairs
+        self.Rs = rs
+        self.Ld = ld
+        self.Lq = lq
+        self.lambda_pm = lambda_pm
+        self.J = j
+        self.B = b
+        self.Tload = tload
 
         # ============================================================
         # Open-loop parameters
         # ============================================================
 
         self.theta = 0.0
-        self.amp = 0.3
-        self.ramp_rate = 200.0
+        self.amp = open_loop_amp
+        self.ramp_rate = open_loop_ramp_rate
         self._current_freq = 0.0
 
         # ============================================================
-        # Speed PI (torque correction) – gains from C
+        # Speed PI (torque correction) - gains from C
         # ============================================================
 
-        self.Kp_speed = 0.0021   # DFC_SPEED_KP_Q_F
-        self.Ki_speed = 0.0001   # DFC_SPEED_KI_Q_F
+        self.Kp_speed = kp_speed
+        self.Ki_speed = ki_speed
 
         # Integral accumulator (no dt multiplication)
         self.speed_integral = 0.0
 
         # ============================================================
-        # Current PI – gains from C
+        # Current PI - gains from C
         # ============================================================
 
-        self.Kp_d = 0.0001   # DFC_CURRENT_KP_D_F
-        self.Kp_q = 0.0195   # DFC_CURRENT_KP_Q_F
-        self.Ki_d = 0.0005   # DFC_CURRENT_KI_D_F
-        self.Ki_q = 0.0002   # DFC_CURRENT_KI_Q_F
+        self.Kp_d = kp_d
+        self.Kp_q = kp_q
+        self.Ki_d = ki_d
+        self.Ki_q = ki_q
 
         # Integral accumulators (no dt multiplication)
         self.id_integral = 0.0
         self.iq_integral = 0.0
 
         # ============================================================
-        # Limits – match C
+        # Limits - match C
         # ============================================================
 
-        self.max_current = 100.0          # DFC_MAX_CURRENT
-        self.max_iq_dot = 1000.0          # DFC_MAX_IQ_DOT_F
-        self.integral_limit = 5.0         # DFC_INTEGRAL_LIMIT_F
-        self.modulation_limit = 0.90      # as in C (clamped to 0.90)
+        self.max_current = max_current
+        self.max_iq_dot = max_iq_dot
+        self.integral_limit = integral_limit
+        self.modulation_limit = modulation_limit
 
         # ============================================================
         # Startup parameters - MATCH C
         # ============================================================
 
-        self.startup_time = 0.8           # DFC_STARTUP_TIME_S (C uses 0.8s)
-        self.startup_speed_rpm = 300.0    # DFC_STARTUP_SPEED_RPM
-        self.startup_mod_min = 0.001      # DFC_STARTUP_MOD_MIN (increment)
-        self.startup_mod_max = 0.25       # DFC_STARTUP_MOD_MAX
-        self.startup_modulation = 0.0     # Current modulation (ramps from min to max)
+        self.startup_mod_min = startup_mod_min
+        self.startup_mod_max = startup_mod_max
+        self.startup_increment = startup_increment
+        self.startup_modulation = 0.0
         self.theta_open_loop = 0.0
         self._startup_elapsed = 0.0
 
         # ============================================================
-        # Switch to closed-loop flag (matches C)
+        # Switch to closed-loop flags (matches C)
         # ============================================================
 
         self.switch_to_closed_loop = False
         self.control_reinit = False
 
-        # Motor spinning detection counter (matches C's successCounter)
+        # Motor spinning detection (matches C's successCounter)
         self.spinning_counter = 0
+        self.spinning_past_index = spinning_past_index
+        self.stopped_counter = 0
+        self.stopped_past_index = stopped_past_index
 
         # ============================================================
         # Jerk-limited trajectory (matches C)
@@ -454,8 +496,9 @@ class PythonController(GenericControlBlock):
         self.trajectory = SpeedTrajectory(
             max_speed_rpm=3000.0,
             max_accel_rpm_s=500.0,
-            max_jerk_rpm_s3=3000.0,  # C: MAX_JERK_RPM (RPM/s^3)
-            settle_tolerance=0.1,     # C: SPEED_SETTLE_TOL
+            max_jerk_rpm_s3=3000.0,
+            settle_tolerance=0.1,
+            debug=debug,
         )
 
         # ============================================================
@@ -463,9 +506,13 @@ class PythonController(GenericControlBlock):
         # ============================================================
 
         self._last_print = -1.0
+        self._print_counter = 0
 
         print(f"\n{'=' * 70}")
         print(f" PYTHON CONTROLLER - Mode: {controller_mode} (ALIGNED WITH C)")
+        print(f"  Using Python implementation (use_python={use_python})")
+        if debug:
+            print(f"  Debug mode: ENABLED")
         print(f"{'=' * 70}")
 
         if controller_mode == "OPEN_LOOP":
@@ -480,15 +527,82 @@ class PythonController(GenericControlBlock):
             print(f"  Max current: {self.max_current} A")
             print(f"  S-curve: Jmax={self.trajectory.max_jerk_rpm_s3:.1f} RPM/s³")
             print(f"  S-curve: Amax={self.trajectory.max_accel_rpm_s:.1f} RPM/s")
-            print(f"  Startup: {self.startup_time * 1000:.0f}ms at {self.startup_speed_rpm:.0f} RPM")
             print(f"  Startup: modulation {self.startup_mod_min} → {self.startup_mod_max}")
+            print(f"  Startup increment: {self.startup_increment}")
+            print(f"  Spinning PastIndex: {self.spinning_past_index}")
+            print(f"  Stopped PastIndex: {self.stopped_past_index}")
         print(f"{'=' * 70}\n")
+
+    # ==================================================================
+    # Additional Diagnostic Methods
+    # ==================================================================
+
+    def get_diagnostics(self) -> Dict[str, Any]:
+        """
+        Get diagnostic information about the controller state.
+
+        Returns
+        -------
+        dict
+            Dictionary containing controller diagnostics
+        """
+        return {
+            "switch_to_closed_loop": self.switch_to_closed_loop,
+            "control_reinit": self.control_reinit,
+            "speed_integral": self.speed_integral,
+            "id_integral": self.id_integral,
+            "iq_integral": self.iq_integral,
+            "startup_modulation": self.startup_modulation,
+            "spinning_counter": self.spinning_counter,
+            "stopped_counter": self.stopped_counter,
+            "trajectory_speed": self.trajectory.speed,
+            "trajectory_accel": self.trajectory.accel,
+            "trajectory_jerk": self.trajectory.jerk,
+        }
+
+    def set_parameters(self, **kwargs) -> None:
+        """
+        Dynamically set controller parameters.
+
+        Parameters
+        ----------
+        **kwargs
+            Parameter name-value pairs to update
+        """
+        for key, value in kwargs.items():
+            if hasattr(self, key):
+                setattr(self, key, value)
+                print(f"[Controller] Updated {key} = {value}")
+            else:
+                print(f"[Controller] Warning: {key} not found")
+
+    def log_state(self, t: float) -> None:
+        """
+        Log current controller state for debugging.
+
+        Parameters
+        ----------
+        t : float
+            Current simulation time
+        """
+        if self.controller_mode == "DFC":
+            print(
+                f"[Controller t={t:.3f}s] "
+                f"closed={self.switch_to_closed_loop} "
+                f"traj={self.trajectory.speed:.1f}RPM "
+                f"spin_cnt={self.spinning_counter} "
+                f"mod={self.startup_modulation:.3f}"
+            )
 
     # ==================================================================
     # Utility
     # ==================================================================
 
     def compute(self, t, dt, input_values=None):
+        """
+        Override compute to ALWAYS use Python implementation.
+        This ensures our fixes are always applied.
+        """
         return self.compute_py(t, dt, input_values)
 
     # ------------------------------------------------------------------
@@ -521,7 +635,8 @@ class PythonController(GenericControlBlock):
             valpha = (valpha / v_mag) * mod_idx * v_max
             vbeta = (vbeta / v_mag) * mod_idx * v_max
 
-        vu, vv, vw = inv_clarke(valpha, vbeta)
+        # Use wrapper's inv_clarke (matches C)
+        vu, vv, vw = self.inv_clarke(valpha, vbeta)
 
         vmax = vdc / 2.0
         if vmax > 0.0:
@@ -535,64 +650,31 @@ class PythonController(GenericControlBlock):
     # ==================================================================
     # Motor Spinning Detection - MATCHES C EXACTLY
     # ==================================================================
-    #
-    # C code (from embed_sim_control.c):
-    #   uint32_T EmbedSim_IsMotorSpinning(const EmbedSimCtrlInput_T* const InputPtr, uint32_T PastIndex)
-    #   {
-    #       static uint32_T successCounter = 0U;
-    #       uint32_T result = 0U;
-    #
-    #       if (fabs(CON_RPM_TO_RAD(InputPtr->RotorSpeedObsEstM)) > (InputPtr->RotorVelocityRefM))
-    #       {
-    #           if (successCounter < MAX_int32_T) successCounter++;
-    #       }
-    #       else
-    #       {
-    #           successCounter = 0U;
-    #       }
-    #
-    #       if (successCounter > PastIndex)
-    #       {
-    #           result = 1U;
-    #           successCounter = 0U;
-    #       }
-    #       return result;
-    #   }
-    #
-    # KEY INSIGHT: In DFC mode, RotorVelocityRefM is overwritten by the
-    # TRAJECTORY speed (from EmbedSim_CalculateTimeOptimalSCurve) before
-    # DFC_Step is called. So during DFC mode, the comparison is:
-    #   measured_speed > trajectory_speed
-    #
-    # During startup (before trajectory starts), RotorVelocityRefM is set
-    # to the target speed by ExecuteObserver. So the comparison is:
-    #   measured_speed > target_speed
-    # ==================================================================
 
-    def _is_motor_spinning(self, speed_meas_rpm, speed_ref_rad_s, past_index=80000):
+    def _is_motor_spinning(self, speed_meas_rpm, speed_ref_rpm, past_index=None):
         """
         Matches C's EmbedSim_IsMotorSpinning exactly.
 
-        Returns True if measured speed (in rad/s) exceeds reference speed (in rad/s)
+        Returns True if measured speed exceeds 95% of reference speed
         for past_index consecutive samples.
-
-        The condition is: |speed_meas_rad_s| > speed_ref_rad_s
 
         Parameters:
         -----------
         speed_meas_rpm : float
             Measured speed in RPM
-        speed_ref_rad_s : float
-            Reference speed in rad/s (this could be target OR trajectory speed)
+        speed_ref_rpm : float
+            Reference speed in RPM
         past_index : int
-            Number of consecutive samples required (C uses 80000)
+            Number of consecutive samples required (default: self.spinning_past_index)
         """
-        # Convert measured speed to rad/s
-        speed_meas_rad_s = speed_meas_rpm * (2.0 * math.pi / 60.0)
+        if past_index is None:
+            past_index = self.spinning_past_index
 
-        # Check if measured speed exceeds reference speed (in rad/s)
-        # Matches C: fabs(CON_RPM_TO_RAD(measured)) > reference_in_rad_s
-        if abs(speed_meas_rad_s) > speed_ref_rad_s:
+        # Use RPM directly - matches C exactly
+        threshold = 0.15 * speed_ref_rpm
+
+        # Check if measured speed exceeds threshold (in RPM)
+        if abs(speed_meas_rpm) > threshold:
             if self.spinning_counter < 0x7FFFFFFF:  # MAX_int32_T
                 self.spinning_counter += 1
         else:
@@ -601,6 +683,40 @@ class PythonController(GenericControlBlock):
         # If counter exceeds past_index, motor is spinning
         if self.spinning_counter > past_index:
             self.spinning_counter = 0  # Reset counter (matches C)
+            return True
+
+        return False
+
+    # ==================================================================
+    # Motor Stopped Detection - MATCHES C EXACTLY
+    # ==================================================================
+
+    def _is_motor_stopped(self, speed_meas_rpm, past_index=None):
+        """
+        Matches C's EmbedSim_IsNotSpinning exactly.
+
+        Returns True if measured speed is below 0.2 RPM for past_index
+        consecutive samples.
+
+        Parameters:
+        -----------
+        speed_meas_rpm : float
+            Measured speed in RPM
+        past_index : int
+            Number of consecutive samples required (default: self.stopped_past_index)
+        """
+        if past_index is None:
+            past_index = self.stopped_past_index
+
+        # Check if speed is below 0.2 RPM (matches C)
+        if abs(speed_meas_rpm) < 0.2:
+            if self.stopped_counter < 0x7FFFFFFF:
+                self.stopped_counter += 1
+        else:
+            self.stopped_counter = 0
+
+        if self.stopped_counter > past_index:
+            self.stopped_counter = 0
             return True
 
         return False
@@ -643,11 +759,15 @@ class PythonController(GenericControlBlock):
         _ = valid_in
 
         # ============================================================
-        # Diagnostics
+        # Diagnostics - PRINT SPEED OUTPUT
         # ============================================================
 
-        if t - self._last_print >= 0.2:
+        # Print more frequently when debug is enabled
+        print_interval = 0.02 if self.debug else 0.2
+
+        if t - self._last_print >= print_interval:
             self._last_print = t
+            self._print_counter += 1
 
             if self.controller_mode == "OPEN_LOOP":
                 target_freq = speed_ref_rpm * self.pole_pairs / 60.0
@@ -658,15 +778,21 @@ class PythonController(GenericControlBlock):
                     f"speed={speed_sensor_rpm:.1f} RPM"
                 )
             else:
+                # Show jerk even when 0 - but with more context
+                jerk_str = f"{self.trajectory.jerk:.1f}"
+                if abs(self.trajectory.jerk) > 1.0:
+                    jerk_str = f"*{self.trajectory.jerk:.1f}*"  # Highlight non-zero jerk
+
                 print(
                     f"[DFC t={t:.2f}s] "
                     f"speed_ref={speed_ref_rpm:.1f} RPM  "
                     f"speed={speed_sensor_rpm:.1f} RPM  "
                     f"traj={self.trajectory.speed:.1f} RPM  "
                     f"acc={self.trajectory.accel:.1f} RPM/s  "
-                    f"jerk={self.trajectory.jerk:.1f} RPM/s³  "
+                    f"jerk={jerk_str} RPM/s³  "
                     f"closed_loop={self.switch_to_closed_loop}  "
-                    f"spin_cnt={self.spinning_counter}"
+                    f"spin_cnt={self.spinning_counter}  "
+                    f"mod={self.startup_modulation:.3f}"
                 )
 
         # ============================================================
@@ -678,16 +804,16 @@ class PythonController(GenericControlBlock):
         theta_elec = self._wrap_angle(theta_elec)
 
         # ============================================================
-        # Clarke transform
+        # Clarke transform - USE WRAPPER (matches C)
         # ============================================================
 
-        ialpha, ibeta = clarke(ia, ib, ic)
+        ialpha, ibeta = self.clarke(ia, ib, ic)
 
         # ============================================================
-        # Park transform
+        # Park transform - USE WRAPPER (matches C)
         # ============================================================
 
-        id_meas, iq_meas = park(ialpha, ibeta, theta_elec)
+        id_meas, iq_meas = self.park(ialpha, ibeta, theta_elec)
 
         # ============================================================
         # OPEN LOOP MODE
@@ -721,73 +847,44 @@ class PythonController(GenericControlBlock):
         # ============================================================
         # DFC STARTUP - MATCHES C EXACTLY
         # ============================================================
-        #
-        # C execution order for DFC mode:
-        #   1. ExecuteObserver: sets RotorVelocityRefM = target speed (rad/s)
-        #   2. CalculateTimeOptimalSCurve: overwrites RotorVelocityRefM with trajectory speed (rad/s)
-        #   3. DFC_Step: uses RotorVelocityRefM (trajectory speed) for spinning detection
-        #
-        # KEY INSIGHT: During startup, the trajectory speed is 0 until the
-        # trajectory starts generating. So the spinning detection compares:
-        #   measured_speed > trajectory_speed (which is 0 during early startup)
-        #
-        # This means the motor will appear to be "spinning" as soon as it starts moving!
-        #
-        # In C, the spinning detection in DFC_Step happens AFTER CalculateTimeOptimalSCurve,
-        # so it uses the trajectory speed (not the target speed).
-        # ============================================================
 
         # Update trajectory (matches C's EmbedSim_CalculateTimeOptimalSCurve)
-        # This is called BEFORE spinning detection, just like in C
         ref = self.trajectory.update(speed_ref_rpm, dt)
-
-        # The trajectory speed in rad/s (this is what C uses for spinning detection)
-        trajectory_speed_rad_s = ref["omega_ref"]
 
         # ============================================================
         # Check if we should switch to closed-loop
-        # Matches C: if (EmbedSim_IsMotorSpinning(...) && SwitchToClosedLoop != 1)
-        #
-        # CRITICAL: In C, the spinning detection uses RotorVelocityRefM
-        # which is the TRAJECTORY speed (after CalculateTimeOptimalSCurve),
-        # NOT the target speed!
-        #
-        # During early startup, trajectory_speed_rad_s = 0, so any positive
-        # measured speed will trigger the spinning detection.
         # ============================================================
 
-        # Use trajectory speed (in rad/s) for spinning detection - matches C exactly
-        if self._is_motor_spinning(speed_sensor_rpm, trajectory_speed_rad_s, 80000):
+        # Use target speed (in RPM) for spinning detection - matches C exactly
+        if self._is_motor_spinning(speed_sensor_rpm, speed_ref_rpm, self.spinning_past_index):
             if not self.switch_to_closed_loop:
                 print(f"[DFC t={t:.2f}s] SWITCHING TO CLOSED-LOOP")
-                print(f"  measured={speed_sensor_rpm:.1f} RPM > trajectory={self.trajectory.speed:.1f} RPM")
+                print(f"  measured={speed_sensor_rpm:.1f} RPM > 0.95 * target={0.95 * speed_ref_rpm:.1f} RPM")
                 self.switch_to_closed_loop = True
-                # Reset integrators on switch (matches C's DFC_Reset in the spinning check)
+                # Reset integrators on switch (matches C's DFC_Reset)
                 self.speed_integral = 0.0
                 self.id_integral = 0.0
                 self.iq_integral = 0.0
-                # Re-initialize trajectory from measured speed (matches C's ControlReInit logic)
+                self.control_reinit = True
                 self.trajectory.speed = speed_sensor_rpm
                 self.trajectory.accel = 0.0
                 self.trajectory.jerk = 0.0
+                self.startup_modulation = 0.0
 
         # If we're in startup mode (not closed-loop)
         if not self.switch_to_closed_loop:
-            # Matches C: modulation += DFC_STARTUP_MOD_MIN
-            # C uses modulation += DFC_STARTUP_MOD_MIN (0.001) each step
-            self.startup_modulation += 0.001  # DFC_STARTUP_MOD_MIN as increment
-
-            # Clamp to [DFC_STARTUP_MOD_MIN, DFC_STARTUP_MOD_MAX]
+            # Ramp modulation
+            self.startup_modulation += self.startup_increment
             self.startup_modulation = self._clamp(
                 self.startup_modulation,
-                0.001,   # DFC_STARTUP_MOD_MIN
-                0.25     # DFC_STARTUP_MOD_MAX
+                self.startup_mod_min,
+                self.startup_mod_max
             )
 
             # Electrical speed during startup (matches C)
             omega_startup_e = self.pole_pairs * (speed_ref_rpm * (2.0 * math.pi / 60.0))
 
-            # Integrate angle
+            # Integrate angle (matches C)
             self.theta_open_loop += omega_startup_e * dt
             self.theta_open_loop = self._wrap_angle(self.theta_open_loop)
 
@@ -795,8 +892,8 @@ class PythonController(GenericControlBlock):
             startup_vd = 0.0
             startup_vq = (vdc / math.sqrt(3.0)) * self.startup_modulation
 
-            # Inverse Park to alpha-beta
-            valpha, vbeta = inv_park(startup_vd, startup_vq, self.theta_open_loop)
+            # Inverse Park to alpha-beta - USE WRAPPER (matches C)
+            valpha, vbeta = self.inv_park(startup_vd, startup_vq, self.theta_open_loop)
 
             # SVM (matches C)
             duty_u, duty_v, duty_w = self._svm(valpha, vbeta, vdc)
@@ -809,156 +906,90 @@ class PythonController(GenericControlBlock):
         # CLOSED-LOOP DFC - MATCHES C EXACTLY
         # ============================================================
 
-        # We already have the trajectory reference from above
         omega_ref = ref["omega_ref"]
         omega_dot = ref["omega_dot"]
-        omega_ddot = ref["omega_ddot"]  # This is jerk in rad/s^3
+        omega_ddot = ref["omega_ddot"]
 
-        # Convert measured speed to rad/s
         omega_meas = speed_sensor_rpm * (2.0 * math.pi / 60.0)
 
-        # ============================================================
-        # Speed PI (torque correction) - matches C exactly
-        # ============================================================
-        #
-        # C code:
-        #   speedError = omegaRef - omegaMeas;
-        #   speedIntegralError += speedError;
-        #   speedIntegralError = DFC_ClampValue(speedIntegralError, -limit, limit);
-        #   torqueCorrection = (Kp_speed * speedError) + (Ki_speed * speedIntegralError);
-        #
-
+        # Speed PI (torque correction)
         speed_error = omega_ref - omega_meas
-
-        # Accumulate integral (no dt multiplication - matches C)
         self.speed_integral += speed_error
-
-        # Clamp integral to prevent windup
         self.speed_integral = self._clamp(
             self.speed_integral,
             -self.integral_limit,
             self.integral_limit,
         )
-
-        # Compute torque correction
         torque_correction = (
             self.Kp_speed * speed_error
             + self.Ki_speed * self.speed_integral
         )
 
-        # ============================================================
-        # Mechanical Flatness - matches C exactly
-        # ============================================================
-        #
-        # C code:
-        #   torqueFeedforward = (J * omegaRefDot) + (B * omegaRef) + TorqueLoad;
-        #   torqueRequired = torqueFeedforward + torqueCorrection;
-        #
-
+        # Mechanical Flatness
         torque_ff = self.J * omega_dot + self.B * omega_ref + self.Tload
         torque_required = torque_ff + torque_correction
 
-        # ============================================================
-        # Electrical Flatness - matches C exactly
-        # ============================================================
-        #
-        # C code:
-        #   torqueConstant = 1.5 * polePairs * FluxPm;
-        #   iqRef = torqueRequired / torqueConstant;
-        #   iqRef = clamp(iqRef, -DFC_MAX_CURRENT, DFC_MAX_CURRENT);
-        #   iqRefDot = (J * omegaRefDDot + B * omegaRefDot) / torqueConstant;
-        #   iqRefDot = clamp(iqRefDot, -DFC_MAX_IQ_DOT_F, DFC_MAX_IQ_DOT_F);
-        #
-
+        # Electrical Flatness
         torque_constant = 1.5 * self.pole_pairs * self.lambda_pm
-
         if abs(torque_constant) > 1.0e-6:
-            iq_ref = torque_required / torque_constant
-            iq_ref = self._clamp(iq_ref, -self.max_current, self.max_current)
-
-            # Derivative of iq reference
-            iq_ref_dot = (self.J * omega_ddot + self.B * omega_dot) / torque_constant
-            iq_ref_dot = self._clamp(iq_ref_dot, -self.max_iq_dot, self.max_iq_dot)
+            iq_ref = self._clamp(torque_required / torque_constant, -self.max_current, self.max_current)
+            iq_ref_dot = self._clamp(
+                (self.J * omega_ddot + self.B * omega_dot) / torque_constant,
+                -self.max_iq_dot,
+                self.max_iq_dot
+            )
         else:
             iq_ref = 0.0
             iq_ref_dot = 0.0
 
-        # ============================================================
-        # Voltage Feedforward - matches C exactly
-        # ============================================================
-        #
-        # C code:
-        #   vdRef = -polePairs * omegaRef * Lq * iqRef;
-        #   vqRef = (Rs * iqRef) + (Lq * iqRefDot) + (polePairs * omegaRef * FluxPm);
-        #
-
+        # Voltage Feedforward
         omega_e_ref = self.pole_pairs * omega_ref
-
         vd_ff = -omega_e_ref * self.Lq * iq_ref
         vq_ff = self.Rs * iq_ref + self.Lq * iq_ref_dot + omega_e_ref * self.lambda_pm
 
-        # ============================================================
-        # Current PI - matches C exactly
-        # ============================================================
-        #
-        # C code:
-        #   idError = 0.0 - dqCurrentMeas.D;
-        #   iqError = iqRef - dqCurrentMeas.Q;
-        #   idIntegralError += idError;
-        #   iqIntegralError += iqError;
-        #   idIntegralError = clamp(idIntegralError, -limit, limit);
-        #   iqIntegralError = clamp(iqIntegralError, -limit, limit);
-        #   vdCorr = (Kp_d * idError) + (Ki_d * idIntegralError);
-        #   vqCorr = (Kp_q * iqError) + (Ki_q * iqIntegralError);
-        #
-
-        id_ref = 0.0  # Id_ref = 0 for surface PMSM
-
+        # Current PI
+        id_ref = 0.0
         id_error = id_ref - id_meas
         iq_error = iq_ref - iq_meas
 
-        # Integrate (no dt multiplication - matches C)
         self.id_integral += id_error
         self.iq_integral += iq_error
-
-        # Clamp integrals
         self.id_integral = self._clamp(self.id_integral, -self.integral_limit, self.integral_limit)
         self.iq_integral = self._clamp(self.iq_integral, -self.integral_limit, self.integral_limit)
 
-        # Clamp errors to max current (matches C)
         id_error = self._clamp(id_error, -self.max_current, self.max_current)
         iq_error = self._clamp(iq_error, -self.max_current, self.max_current)
 
-        # Compute voltage corrections
         vd_corr = self.Kp_d * id_error + self.Ki_d * self.id_integral
         vq_corr = self.Kp_q * iq_error + self.Ki_q * self.iq_integral
 
-        # ============================================================
-        # Final voltage references - matches C
-        # ============================================================
-
+        # Final voltage references
         vd_ref = vd_ff + vd_corr
         vq_ref = vq_ff + vq_corr
 
-        # ============================================================
-        # Inverse Park - matches C
-        # ============================================================
+        # Inverse Park - USE WRAPPER (matches C)
+        valpha, vbeta = self.inv_park(vd_ref, vq_ref, theta_elec)
 
-        valpha, vbeta = inv_park(vd_ref, vq_ref, theta_elec)
-
-        # ============================================================
         # SVM - matches C
-        # ============================================================
-
         duty_u, duty_v, duty_w = self._svm(valpha, vbeta, vdc)
 
-        # ============================================================
-        # Output
-        # ============================================================
+        # Check if motor has stopped (matches C)
+        if self._is_motor_stopped(speed_sensor_rpm, self.stopped_past_index):
+            print(f"[DFC t={t:.2f}s] MOTOR STOPPED - REVERTING TO OPEN-LOOP")
+            self.switch_to_closed_loop = False
+            self.speed_integral = 0.0
+            self.id_integral = 0.0
+            self.iq_integral = 0.0
+            self.control_reinit = True
+            self.startup_modulation = 0.0
+            self.trajectory.speed = 0.0
+            self.trajectory.accel = 0.0
+            self.trajectory.jerk = 0.0
+            return self.compute_py(t, dt, input_values)
 
+        # Output
         out = np.array([duty_u, duty_v, duty_w, 1.0], dtype=DEFAULT_DTYPE)
         self.output = VectorSignal(out, self.name)
-
         return self.output
 
     # ==================================================================
@@ -984,13 +1015,15 @@ class PythonController(GenericControlBlock):
         self.startup_modulation = 0.0
         self._startup_elapsed = 0.0
 
-        # Switch flag and spinning counter
+        # Switch flag and counters
         self.switch_to_closed_loop = False
         self.control_reinit = True
         self.spinning_counter = 0
+        self.stopped_counter = 0
 
         # Trajectory
         self.trajectory.reset()
 
         # Diagnostics
         self._last_print = -1.0
+        self._print_counter = 0

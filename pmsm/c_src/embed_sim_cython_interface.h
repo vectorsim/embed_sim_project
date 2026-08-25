@@ -1,10 +1,11 @@
 /**********************************************************************************************************************
  * \file      embed_sim_cython_interface.h
- * \brief     Cython interface for EmbedSim motor control library.
+ * \brief     Top-level PMSM control module with DFC controller.
  *
- * \details   Provides C-callable wrapper functions for Python/Cython integration.
- *            This allows the motor control library to be called from Python
- *            applications for simulation, testing, and rapid prototyping.
+ * \details   Defines the main control structures and functions for permanent magnet
+ *            synchronous motors (PMSM). Supports open-loop and DFC control modes
+ *            with smooth reference trajectory generation.
+ *            Targets 32-bit MCUs (Infineon AURIX TriCore, ARM Cortex-M4).
  *
  * \note      MISRA C:2012 compliance:
  *              - Rule  8.5 : One declaration per identifier
@@ -28,87 +29,64 @@
  *            Licensed under the MIT License.
  *********************************************************************************************************************/
 
-#ifndef EMBEDSIM_EMBED_SIM_CYTHON_INTERFACE_H_
-#define EMBEDSIM_EMBED_SIM_CYTHON_INTERFACE_H_
+#ifndef EMBED_SIM_CYTHON_INTERFACE_H
+#define EMBED_SIM_CYTHON_INTERFACE_H
 
-/*********************************************************************************************************************/
-/*-----------------------------------------------------Includes------------------------------------------------------*/
-/*********************************************************************************************************************/
-#include "embed_sim_sys_types.h"
+#include "embed_sim_control.h"
 
-/*********************************************************************************************************************/
-/*------------------------------------------------------Macros-------------------------------------------------------*/
-/*********************************************************************************************************************/
-
-/* No public macros required for this interface */
-
-/*********************************************************************************************************************/
-/*-------------------------------------------------Data Structures---------------------------------------------------*/
-/*********************************************************************************************************************/
-
-/* No public data structures required for this interface */
-
-/*********************************************************************************************************************/
-/*------------------------------------------------Function Prototypes------------------------------------------------*/
-/*********************************************************************************************************************/
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /**
- * \brief   Initialize Cython interface
- *
- * \details Initializes the motor control module for use with Python/Cython.
- *          This must be called once before any control step is executed.
- *          Wraps the EmbedSim_ControlInit() function for external use.
- *
- * \return  void
+ * @brief Initialize the EmbedSim controller for Cython/Python.
  */
 extern void EmbedSim_CythonControlInit(void);
 
 /**
- * \brief   Execute one control step via Cython interface
+ * @brief Execute one control cycle from Cython/Python.
  *
- * \details Performs one step of motor control with parameters passed
- *          directly as arguments. This function is designed to be called
- *          from Python/Cython with minimal overhead.
- *
- *          Control flow:
- *            1. Copy input parameters to global control structure
- *            2. Execute one control step
- *            3. Copy output parameters back to caller
- *
- * \param[in]  Iu                      Phase U current [A]
- * \param[in]  Iv                      Phase V current [A]
- * \param[in]  Iw                      Phase W current [A]
- * \param[in]  RotorPositionSensor     Rotor electrical position from sensor [rad]
- * \param[in]  RotorVelocitySensor     Rotor mechanical speed from sensor [RPM]
- * \param[in]  AngularVelocityRefRpm   Desired mechanical speed reference [RPM]
- * \param[in]  Vdc                     DC bus voltage [V]
- * \param[in]  SampleTime              Control loop sample time [s]
- * \param[in]  CtrlAlg                 Control algorithm selection (0=Open-loop, 1=DFC)
- * \param[in]  ValidIn                 Input validity flag (0x1 = valid)
- * \param[out] PwmU                    Phase U PWM duty cycle [0.0 .. 1.0]
- * \param[out] PwmV                    Phase V PWM duty cycle [0.0 .. 1.0]
- * \param[out] PwmW                    Phase W PWM duty cycle [0.0 .. 1.0]
- * \param[out] ValidOut                Output validity flag (0x1 = valid)
- *
- * \return  void
+ * @param[in]  Iu_P                  Phase-U current.
+ * @param[in]  Iv_P                  Phase-V current.
+ * @param[in]  Iw_P                  Phase-W current.
+ * @param[in]  RotorPositionSensor   Rotor mechanical position [rad].
+ * @param[in]  RotorVelocitySensor   Rotor speed [RPM].
+ * @param[in]  AngularVelocityRefRpm  Speed reference [RPM].
+ * @param[in]  Vdc                   DC bus voltage [V].
+ * @param[in]  SampleTime            Control sample time [s].
+ * @param[in]  CtrlAlg               Controller algorithm selector.
+ * @param[in]  ValidIn               Input validity flag.
+ * @param[out] PwmU_P                PWM duty U.
+ * @param[out] PwmV_P                PWM duty V.
+ * @param[out] PwmW_P                PWM duty W.
+ * @param[out] ValidOut_P             Output validity flag.
  */
 extern void EmbedSim_CythonControlStep(
-    /* Input parameters */
-    real32_T  Iu,                      /**< Phase U current [A] */
-    real32_T  Iv,                      /**< Phase V current [A] */
-    real32_T  Iw,                      /**< Phase W current [A] */
-    real32_T  RotorPositionSensor,     /**< Rotor position [rad] */
-    real32_T  RotorVelocitySensor,     /**< Rotor speed [RPM] */
-    real32_T  AngularVelocityRefRpm,   /**< Speed reference [RPM] */
-    real32_T  Vdc,                     /**< DC bus voltage [V] */
-    real32_T  SampleTime,              /**< Sample time [s] */
-    uint32_T  CtrlAlg,                 /**< Control algorithm selection */
-    uint32_T  ValidIn,                 /**< Input validity flag */
-    /* Output parameters */
-    real32_T* PwmU,                    /**< Phase U PWM duty cycle [0-1] */
-    real32_T* PwmV,                    /**< Phase V PWM duty cycle [0-1] */
-    real32_T* PwmW,                    /**< Phase W PWM duty cycle [0-1] */
-    uint32_T* ValidOut                 /**< Output validity flag */
+    float Iu_P,
+    float Iv_P,
+    float Iw_P,
+    float RotorPositionSensor,
+    float RotorVelocitySensor,
+    float AngularVelocityRefRpm,
+    float Vdc,
+    float SampleTime,
+    unsigned int CtrlAlg,
+    unsigned int ValidIn,
+    float * const PwmU_P,
+    float * const PwmV_P,
+    float * const PwmW_P,
+    unsigned int * const ValidOut_P
 );
 
-#endif /* EMBEDSIM_EMBED_SIM_CYTHON_INTERFACE_H_ */
+/**
+ * @brief Obtain the complete motor state.
+ *
+ * @param[out] StatePtr Pointer to motor state structure.
+ */
+extern void EmbedSim_CythonGetMotorState(EmbedSimMotorState_T * const StatePtr);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* EMBED_SIM_CYTHON_INTERFACE_H */

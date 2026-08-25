@@ -37,6 +37,7 @@
 /*********************************************************************************************************************/
 #include "embed_sim_sys_types.h"
 #include "embed_sim_matrix.h"
+#include "embed_sim_motor_parameter.h"
 
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
@@ -60,6 +61,30 @@
  */
 #define CON_RAD_TO_RPM(RAD)             ((RAD * 60.0F) / ES_MATH_2PI_F)
 
+
+/**
+ * @def ES_SVM_START_MOD_FUNC(TAU)
+ * @brief Calculates a smooth start modulation factor.
+ *
+ * Uses a cubic smoothstep function:
+ * @code
+ * f(TAU) = 3 * TAU^2 - 2 * TAU^3
+ * @endcode
+ *
+ * When @p TAU is in the range [0, 1], the function smoothly transitions
+ * from 0 to 1 with zero slope at both endpoints.
+ *
+ * @param[in] TAU Normalized modulation time, typically in the range [0, 1].
+ * @return Smooth modulation factor in the range [0, 1] for TAU in [0, 1].
+ */
+
+#define ES_SVM_START_MOD_FUNC(TAU)   ((3.0 * (TAU) * (TAU)) - (2.0 * (TAU) * (TAU) * (TAU)))
+
+
+
+#include <math.h>
+
+
 /**
  * \brief  Maximum speed in RPM
  */
@@ -73,22 +98,17 @@
 /**
  * \brief  Maximum jerk limit (RPM/s^3)
  */
-#define MAX_JERK_RPM                    (3000.0F)
+#define MAX_JERK_RPM                    (3500.0F)
 
 /**
  * \brief  Maximum jerk limit (RPM/s^2)
  */
-#define MAX_ACCEL_RPM                   (500.0F)
+#define MAX_ACCEL_RPM                   (800.0F) // 500
 
 /**
  * \brief  Jerk smoothing factor (0.0 to 1.0)
  */
 #define JERK_SMOOTHING_FACTOR           (0.2F)
-
-/**
- * \brief  Minimum speed to switch to closed-loop control (RPM)
- */
-#define CLOSED_LOOP_MIN_SPEED           (60.0F)
 
 /**
  * \brief   Current PI controller gains (correction on top of flatness)
@@ -106,19 +126,17 @@
  * \warning Increasing gains above these values will amplify sensor noise
  *          and may cause audible noise or instability.
  */
-#define DFC_CURRENT_KP_D_F              (0.0001F)    /**< d-axis proportional gain */
-#define DFC_CURRENT_KP_Q_F              (0.0195F)    /**< q-axis proportional gain */
-#define DFC_CURRENT_KI_D_F              (0.0005F)    /**< d-axis integral gain */
-#define DFC_CURRENT_KI_Q_F              (0.0002F)    /**< q-axis integral gain  */
+#define DFC_CURRENT_KP_D_F              (0.00999F)    /**< d-axis proportional gain */
+#define DFC_CURRENT_KI_D_F              (0.00000025F)    /**< d-axis integral gain     */
+#define DFC_CURRENT_KP_Q_F              (0.019995F)    /**< q-axis proportional gain */
+#define DFC_CURRENT_KI_Q_F              (0.00000025F)    /**< q-axis integral gain     */
+
 
 /**
- * \brief  DFC startup parameters (match Python's 0.3s ramp)
+ * \brief  Spinning detection parameters
  */
-#define DFC_STARTUP_TIME_S       (0.8F)      /**< Startup duration [s]        */
-#define DFC_STARTUP_SPEED_RPM    (300.0F)    /**< Fixed speed during startup [RPM] */
-#define DFC_STARTUP_MOD_MIN      (0.001F)     /**< Initial modulation index     */
-#define DFC_STARTUP_MOD_MAX      (0.25F)     /**< Final modulation index       */
-
+#define DFC_SPINNING_PAST_INDEX  (8950U)     /**< 0.45s debounce time */
+#define DFC_STOPPED_PAST_INDEX    (200U)      /**< 0.01s debounce time */
 
 /**
  * \brief   Speed PI controller gains (outer loop)
@@ -130,8 +148,8 @@
  * \note    The speed loop gains are also kept low to avoid noise amplification.
  *          The integral term eliminates steady-state speed error.
  */
-#define DFC_SPEED_KP_Q_F                (0.0021F)    /**< Speed proportional gain (for torque correction) */
-#define DFC_SPEED_KI_Q_F                (0.0001F)    /**< Speed integral gain */
+#define DFC_SPEED_KP_Q_F                (0.00092F)       /**< Speed proportional gain (for torque correction) */
+#define DFC_SPEED_KI_Q_F                (0.00091F)    /**< Speed integral gain */
 
 /**
  * \brief   Maximum integrator anti-windup limit (common for speed and current)
@@ -141,7 +159,10 @@
  *          The value is chosen to allow enough correction without causing
  *          excessive voltage commands.
  */
-#define DFC_INTEGRAL_LIMIT_F            (5.0F)
+#define DFC_INTEGRAL_LIMIT_F            (25.0F)
+
+
+#define DFC_MIN_VELOCITY               (500.0F)
 
 /*********************************************************************************************************************/
 /*-------------------------------------------------Data Structures---------------------------------------------------*/
@@ -178,7 +199,7 @@ typedef struct
     uint32_T    ControlReInit;                /**< Flag to clear the Control State, (Intern)                                   */
     real32_T    RotorPositionRefM;            /**< Rotor position reference [rad], Mechanic (Intern,Path Calculation)          */
     real32_T    RotorVelocityRefM;            /**< Angular velocity [rad/s], Mechanical (Intern,Path Calculation)              */
-    real32_T    RotorAccerlerationRefM;       /**< Angular acceleration [rad/s²], Mechanical  (Intern,Path Calculation)        */
+    real32_T    RotorAccelerationRefM;        /**< Angular acceleration [rad/s²], Mechanical  (Intern,Path Calculation)        */
     real32_T    RotorJerkRefM;                /**< Angular jerk [rad/s³], Mechanical    (Intern,Path Calculation)              */
     real32_T    RotorPositionObsEstM;         /**< Rotor Position [RAD], Mechanical (Observer Estimated)                       */
     real32_T    RotorSpeedObsEstM;            /**< Rotor Velocity in RPM [RPM], Mechanical (Observer Estimated) Intern         */
@@ -208,25 +229,30 @@ typedef struct
  */
 typedef struct
 {
-    real32_T    PolePairs;                 /**< Number of pole pairs                         [-]      */
-    real32_T    Rs;                        /**< Stator resistance                            [Ohm]    */
-    real32_T    Ld;                        /**< Direct-axis inductance                       [H]      */
-    real32_T    Lq;                        /**< Quadrature-axis inductance                   [H]      */
-    real32_T    FluxPm;                    /**< Permanent magnet flux linkage                [Wb]     */
-    real32_T    J;                         /**< Rotor inertia                                [kg·m²]  */
-    real32_T    B;                         /**< Viscous damping coefficient                  [N·m·s]  */
-    real32_T    Vdc;                       /**< DC bus voltage                               [V]      */
-    real32_T    TorqueLoad;                /**< Load torque (external)                       [N·m]    */
+    real32_T    PolePairs;                 /**< Number of pole pairs                         [-]           */
+    real32_T    Rs;                        /**< Stator resistance                            [Ohm]         */
+    real32_T    Ld;                        /**< Direct-axis inductance                       [H]           */
+    real32_T    Lq;                        /**< Quadrature-axis inductance                   [H]           */
+    real32_T    FluxPm;                    /**< Permanent magnet flux linkage                [Wb]          */
+    real32_T    J;                         /**< Rotor inertia                                [kg·m²]       */
+    real32_T    B;                         /**< Viscous damping coefficient                  [N·m·s]       */
+    real32_T    Vdc;                       /**< DC bus voltage                               [V]           */
+    real32_T    TorqueLoad;                /**< Load torque (external)                       [N·m]         */
 
     /* Current PI gains */
-    real32_T    ParamPidCurrentQProp;      /**< PID Proportional Parameter for Q Current              */
-    real32_T    ParamPidCurrentQInteg;     /**< PID Integral Parameter for Q Current                  */
-    real32_T    ParamPidCurrentDProp;      /**< PID Proportional Parameter for D Current              */
-    real32_T    ParamPidCurrentDInteg;     /**< PID Integral Parameter for D Current                  */
+    real32_T    ParamPidCurrentQProp;      /**< PID Proportional Parameter for Q Current                    */
+    real32_T    ParamPidCurrentQInteg;     /**< PID Integral Parameter for Q Current                        */
+    real32_T    ParamPidCurrentDProp;      /**< PID Proportional Parameter for D Current                    */
+    real32_T    ParamPidCurrentDInteg;     /**< PID Integral Parameter for D Current                        */
 
     /* Speed PI gains */
-    real32_T    ParamPidSpeedQProp;        /**< PID Proportional Parameter for Speed (torque correction) */
-    real32_T    ParamPidSpeedQInteg;       /**< PID Integral Parameter for Speed                         */
+    real32_T    ParamPidSpeedQProp;        /**< PID Proportional Parameter for Speed (torque correction)    */
+    real32_T    ParamPidSpeedQInteg;       /**< PID Integral Parameter for Speed                            */
+
+    /* Integral Error */
+    real32_T    SpeedIntegralError;        /**< Accumulated speed error for the outer speed PI controller   */
+    real32_T    IdIntegralError;           /**< Accumulated d-axis current error for the inner current PI   */
+    real32_T    IqIntegralError;           /**< Accumulated q-axis current error for the inner current PI   */
 
     /**
      * \brief  Integral anti‑windup limit (common for speed and current integrators)
@@ -236,6 +262,12 @@ typedef struct
      *          The same limit is applied to speed, Id, and Iq integrators.
      */
     real32_T    ParamPidIntegralLimit;
+
+    real32_T    SvmRotorThetaE;               /**< Electrical Angle of Rotor (Model Representation)          */
+
+    /* Startup modulation (added for state reporting) */
+    real32_T    SvmModulationIndex;         /**< SVM ModulationIndex                                          */
+    real32_T    SvmStartUpTimer;            /**< Start  Up Timer for Modulation                               */
 
 } EmbedSimMachineParam_T;
 
@@ -251,6 +283,104 @@ typedef struct
     EmbedSimCtrlOutput_T*    OutputPtr;   /**< Pointer to output structure */
     EmbedSimMachineParam_T*  MachinePtr;  /**< Pointer to motor parameters */
 } EmbedSimMachine_T;
+
+/**
+ * \brief  Motor state structure for unified reporting
+ *
+ * \details Contains all motor state information for display and logging.
+ *          This structure is used to provide a unified view of motor
+ *          operation across C and Python implementations.
+ */
+typedef struct
+{
+    /* Mechanical */
+    real32_T    SpeedRpm;                    /**< Measured speed [RPM] */
+    real32_T    SpeedRadS;                   /**< Measured speed [rad/s] */
+    real32_T    PositionRad;                 /**< Rotor position [rad] */
+    real32_T    AccelerationRpmS;            /**< Acceleration [RPM/s] */
+    real32_T    JerkRpmS3;                   /**< Jerk [RPM/s³] */
+
+    /* Electrical */
+    real32_T    Ia;                          /**< Phase A current [A] */
+    real32_T    Ib;                          /**< Phase B current [A] */
+    real32_T    Ic;                          /**< Phase C current [A] */
+    real32_T    Id;                          /**< D-axis current [A] */
+    real32_T    Iq;                          /**< Q-axis current [A] */
+    real32_T    Ialpha;                      /**< Alpha current [A] */
+    real32_T    Ibeta;                       /**< Beta current [A] */
+    real32_T    Vd;                          /**< D-axis voltage [V] */
+    real32_T    Vq;                          /**< Q-axis voltage [V] */
+    real32_T    Valpha;                      /**< Alpha voltage [V] */
+    real32_T    Vbeta;                       /**< Beta voltage [V] */
+
+    /* PWM */
+    real32_T    DutyU;                       /**< Phase U duty [0-1] */
+    real32_T    DutyV;                       /**< Phase V duty [0-1] */
+    real32_T    DutyW;                       /**< Phase W duty [0-1] */
+    uint32_T    SvmSector;                   /**< SVM sector [0-6] */
+    real32_T    ModulationIndex;             /**< Modulation index */
+
+    /* References */
+    real32_T    SpeedRefRpm;                 /**< Speed reference [RPM] */
+    real32_T    SpeedRefRadS;                /**< Speed reference [rad/s] */
+    real32_T    IqRef;                       /**< Q-current reference [A] */
+    real32_T    IqRefDot;                    /**< Q-current derivative [A/s] */
+    real32_T    IdRef;                       /**< D-current reference [A] */
+
+    /* Control Mode */
+    uint32_T    SwitchToClosedLoop;          /**< Closed-loop flag */
+    uint32_T    ControlReInit;               /**< Reinit flag */
+    uint32_T    ControllerMode;              /**< 0=OPEN_LOOP, 1=DFC */
+
+    /* Startup */
+    real32_T    StartupModulation;           /**< Startup modulation index */
+    real32_T    StartupTheta;                /**< Startup angle [rad] */
+    real32_T    StartupTime;                 /**< Startup elapsed time [s] */
+
+    /* PI States */
+    real32_T    SpeedIntegral;               /**< Speed PI integral */
+    real32_T    IdIntegral;                  /**< D-current PI integral */
+    real32_T    IqIntegral;                  /**< Q-current PI integral */
+
+    /* Spinning Detection */
+    uint32_T    SpinningCounter;             /**< Spinning counter */
+    uint32_T    StoppedCounter;              /**< Stopped counter */
+    uint32_T    SpinningPastIndex;           /**< Spinning past index */
+    uint32_T    StoppedPastIndex;            /**< Stopped past index */
+    uint32_T    IsSpinning;                  /**< 1=spinning, 0=not */
+    uint32_T    IsStopped;                   /**< 1=stopped, 0=not */
+
+    /* Torque */
+    real32_T    TorqueFF;                    /**< Feedforward torque [Nm] */
+    real32_T    TorqueCorrection;            /**< Torque correction [Nm] */
+    real32_T    TorqueTotal;                 /**< Total torque [Nm] */
+    real32_T    TorqueConstant;              /**< Torque constant [Nm/A] */
+
+    /* Voltage */
+    real32_T    VdFF;                        /**< D feedforward voltage [V] */
+    real32_T    VqFF;                        /**< Q feedforward voltage [V] */
+    real32_T    VdCorr;                      /**< D correction voltage [V] */
+    real32_T    VqCorr;                      /**< Q correction voltage [V] */
+
+    /* Speed Error */
+    real32_T    SpeedErrorRpm;               /**< Speed error [RPM] */
+    real32_T    SpeedErrorRadS;              /**< Speed error [rad/s] */
+    real32_T    SpeedErrorPercent;           /**< Speed error [%] */
+
+    /* Trajectory */
+    real32_T    TrajSpeedRpm;                /**< Trajectory speed [RPM] */
+    real32_T    TrajAccelRpmS;               /**< Trajectory accel [RPM/s] */
+    real32_T    TrajJerkRpmS3;               /**< Trajectory jerk [RPM/s³] */
+
+    /* Timestamp */
+    real32_T    Time;                        /**< Current time [s] */
+    real32_T    Dt;                          /**< Sample time [s] */
+
+    /* Status */
+    uint32_T    Valid;                       /**< 1=valid, 0=invalid */
+    uint64_T    LoopCounter;                 /**< Loop counter */
+
+} EmbedSimMotorState_T;
 
 /**
  * \brief  Global motor instance
@@ -288,59 +418,158 @@ extern void EmbedSim_ControlInit(void);
  *
  * \return  void
  */
-extern void EmbedSim_ControlStep(EmbedSimMachine_T* const motorPtr);
+extern void EmbedSim_ControlStep(EmbedSimMachine_T* const MotorPtr);
 
+/**
+ * \brief   Check if the motor is spinning
+ *
+ * \param[in] InputPtr    Pointer to control input structure.
+ * \param[in] Duration    Time in S (Motor is spining since then.
+ *
+ * \return  1 if motor is spinning fast enough, 0 otherwise.
+ */
+extern uint32_T EmbedSim_IsMotorSpinning(const EmbedSimCtrlInput_T* const InputPtr, real32_T SpeedRefRPM, real32_T  Duration);
 
 
 /**
- * \brief Calculates an online time-optimal jerk-limited speed trajectory.
+ * \brief   Check if the motor has stopped
  *
- * \details
- * Generates the reference motor speed and its derivatives online using
- * a jerk-limited S-curve trajectory. The trajectory adapts at every
- * control sample according to the instantaneous speed error and the
- * remaining distance to the target speed.
+ * \param[in] InputPtr    Pointer to control input structure.
+ * \param[in] PastIndex   Number of consecutive valid samples required.
  *
- * The trajectory is generated using the following states and control:
- *
- *   - State:
- *       omega_ref_dot = acceleration
- *   - Control:
- *       jerk
- *
- * At each control sample, the algorithm:
- *
- *   1. Calculates the speed error.
- *   2. Determines the direction toward the target speed.
- *   3. Calculates the required braking distance.
- *   4. Selects the appropriate jerk:
- *        +Jmax : increase acceleration toward the target.
- *         0    : maintain the current acceleration.
- *        -Jmax : reduce acceleration to prepare for the target.
- *   5. Integrates jerk to obtain acceleration.
- *   6. Integrates acceleration to obtain the reference speed.
- *
- * The resulting trajectory consists of jerk-limited acceleration and
- * deceleration phases followed by a constant-speed phase when the
- * target speed is reached.
- *
- * The algorithm is time-optimal subject to the specified jerk and
- * acceleration constraints. No predefined T1 or total trajectory time
- * is required; the trajectory timing is determined online.
- *
- * \param[in,out] InputPtr Pointer to the control input structure
- *                         containing speed references and feedback signals.
- * \param[in]     ParaPtr  Pointer to the motor parameter structure
- *                         containing trajectory constraints such as
- *                         maximum jerk and acceleration.
- *
- * \note The trajectory is intended to be executed at the controller's
- *       fixed sampling frequency.
+ * \return  1 if motor is stopped, 0 otherwise.
  */
-extern uint32_T EmbedSim_IsMotorSpinning(const EmbedSimCtrlInput_T* const  InputPtr, uint32_T PastIndex);
+extern uint32_T EmbedSim_IsNotSpinning(const EmbedSimCtrlInput_T* const InputPtr, uint32_T PastIndex);
+
+/**
+ * \brief   Get current motor state for unified reporting
+ *
+ * \details Fills the motor state structure with current values from
+ *          the control system. This provides a unified view of motor
+ *          operation for display and logging.
+ *
+ * \param[in]  motorPtr   Pointer to motor structure
+ * \param[out] statePtr   Pointer to state structure to fill
+ *
+ * \return  void
+ */
+extern void EmbedSim_GetMotorState(EmbedSimMachine_T* const motorPtr,  EmbedSimMotorState_T* const statePtr);
+
+/**
+ * \brief   Wrap angle to [0, 2pi)
+ *
+ * \details Normalizes an angle to the range [0, 2π) using fmodf.
+ *          Useful for rotor angle and Park transform calculations.
+ *
+ * \param[in,out] anglePtr  Pointer to angle value to be wrapped (in radians).
+ */
+ extern void EmbedSim_WrapAngleTwoPi(real32_T* AnglePtr);
 
 
+ /**
+  * @brief Calculates the shortest signed angular distance between two angles.
+  *
+  * Both input angles are expected to be in the range [0, 2*PI).
+  * The returned angular distance is in the range [-PI, PI).
+  *
+  * A positive result means Angle1 is ahead of Angle2.
+  * A negative result means Angle1 is behind Angle2.
+  *
+  * @param[in] Angle1 First angle in radians.
+  * @param[in] Angle2 Second angle in radians.
+  *
+  * @return Shortest signed angular distance Angle1 - Angle2 in radians.
+  */
+ extern real32_T EmbedSim_AngleDistance(real32_T Angle1, real32_T Angle2);
 
-extern uint32_T EmbedSim_IsNotSpinning(const EmbedSimCtrlInput_T* const InputPtr,  uint32_T PastIndex);
+
+ /**
+  * \brief   Clamp value to specified limits
+  *
+  * \details Limits a value to a range defined by minVal and maxVal.
+  *          If value is below minVal, returns minVal.
+  *          If value is above maxVal, returns maxVal.
+  *          Otherwise returns the original value.
+  *
+  * \param[in] val     Value to clamp.
+  * \param[in] minVal  Minimum allowed value.
+  * \param[in] maxVal  Maximum allowed value.
+  *
+  * \return  Clamped value within [minVal, maxVal].
+  */
+extern  real32_T EmbedSim_ClampValue(real32_T Val, real32_T MinVal, real32_T MaxVal);
+
+
+ /**
+  * @brief Calculates the online jerk-limited velocity trajectory.
+  *
+  * @details
+  * Generates the reference angular velocity, acceleration, jerk, and position
+  * online while moving the velocity reference toward the requested target.
+  *
+  * The trajectory generator uses the velocity error to determine the required
+  * direction of motion. A stopping acceleration is calculated from the remaining
+  * velocity error and the configured maximum jerk:
+  *
+  * @code
+  * a_stop = sqrt(2 * Jmax * |velocity_error|)
+  * @endcode
+  *
+  * The calculated stopping acceleration represents the acceleration required
+  * to remove the remaining velocity error using the available maximum jerk.
+  * The requested acceleration is limited to the configured maximum acceleration.
+  *
+  * The jerk required to move the current acceleration toward the desired
+  * acceleration within one sample period is then calculated and limited to
+  * +/-Jmax.
+  *
+  * Assuming constant jerk during one sample period, the trajectory states are
+  * integrated using:
+  *
+  * @code
+  * a(k+1) = a(k) + j(k) * Ts
+  *
+  * w(k+1) = w(k) + a(k) * Ts + 0.5 * j(k) * Ts^2
+  *
+  * theta(k+1) = theta(k)
+  *            + w(k) * Ts
+  *            + 0.5 * a(k) * Ts^2
+  *            + (1/6) * j(k) * Ts^3
+  * @endcode
+  *
+  * The previous velocity and acceleration are stored before updating the
+  * trajectory states. These previous values are used for consistent numerical
+  * integration during the current sample.
+  *
+  * The generated velocity and acceleration references are constrained by
+  * their configured limits. If the calculated velocity crosses the target
+  * velocity, the trajectory is clamped to the target and the acceleration
+  * and jerk are reset to zero.
+  *
+  * When the velocity error is within the configured settling tolerance and
+  * the acceleration is sufficiently small, the trajectory is considered
+  * settled. The velocity is then set directly to the target and the dynamic
+  * states are reset.
+  *
+  * If control re-initialization is requested, the acceleration and jerk states
+  * are reset before continuing trajectory generation. The current velocity
+  * is retained as the starting point of the new trajectory.
+  *
+  * @note The target velocity is limited to +/-Vmax.
+  * @note The acceleration is limited to +/-Amax.
+  * @note The jerk is limited to +/-Jmax.
+  * @note The trajectory states use SI units:
+  *       velocity in rad/s, acceleration in rad/s^2,
+  *       jerk in rad/s^3, and position in rad.
+  * @note InputPtr->SampleTime must be greater than zero.
+  *
+  * @param[in,out] InputPtr
+  *        Pointer to the control input and trajectory state structure.
+  *
+  * @param[in] ParaPtr
+  *        Pointer to the motor parameter structure.
+  *        Currently unused by this function.
+  */
+ extern void EmbedSim_CalculateJerkLimitedTrajectory(EmbedSimCtrlInput_T* const InputPtr, const EmbedSimMachineParam_T* const ParaPtr);
 
 #endif /* EMBEDSIM_EMBED_SIM_CONTROL_H_ */

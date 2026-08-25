@@ -21,7 +21,7 @@
  *              - Typedefs       : Pascal_Snake_Case_T
  *
  * \version   2.0.0
- * \date      2026-08-12
+ * \date      2026-08-22
  * \author    EmbedSim / EV Light Vehicle Foundation
  *
  * \copyright Copyright (C) 2026 EmbedSim — EV Light Vehicle Foundation, Jaffna, Sri Lanka.
@@ -35,6 +35,7 @@
 /*-----------------------------------------------------Includes------------------------------------------------------*/
 /*********************************************************************************************************************/
 #include "embed_sim_sys_types.h"
+#include "embed_sim_control.h"
 
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
@@ -110,5 +111,18 @@ extern void EmbedSim_CythonControlStep(
     real32_T* PwmW,                    /**< Phase W PWM duty cycle [0-1] */
     uint32_T* ValidOut                 /**< Output validity flag */
 );
+
+/**
+ * \brief   Get motor state for unified reporting via Cython
+ *
+ * \details Returns the current motor state structure filled with values
+ *          from the control system. This provides a unified view of motor
+ *          operation for display and logging in Python.
+ *
+ * \param[out] statePtr  Pointer to state structure to fill
+ *
+ * \return  void
+ */
+extern void EmbedSim_CythonGetMotorState(EmbedSimMotorState_T* const statePtr);
 
 #endif /* EMBEDSIM_EMBED_SIM_CYTHON_INTERFACE_H_ */

@@ -27,6 +27,7 @@ for _p in (str(_HERE), str(_C_SRC)):
 from embedsim_control_wrapper import (
     control_init,
     control_step as c_control_step,
+    get_motor_state,
 )
 
 # ===========================================================================
@@ -37,9 +38,17 @@ SIM_CTRL_OPEN_LOOP = 0
 SIM_CTRL_DFC = 1
 
 # ===========================================================================
-# Debug flag – set to True to enable console prints
+# Debug flags – Toggle these independently
 # ===========================================================================
-DEBUG_CONTROL = False # <--- Toggle this: True = print, False = silent
+
+# Debug input/output: prints control inputs and outputs (duties)
+DEBUG_IO = False  # <--- Toggle: True = print I/O, False = silent
+
+# Debug state: prints full motor state from C
+DEBUG_STATE = False   # <--- Toggle: True = print state, False = silent
+
+# Debug print interval (seconds)
+DEBUG_INTERVAL = 0.3 # Print every 0.1 seconds
 
 
 # ===========================================================================
@@ -69,8 +78,8 @@ class EmbedSimControlBlock(VectorBlock):
         print(f"[Control]   DT: {dt_s*1e6:.0f} us")
         print(f"[Control]   Mode: {mode_name}")
         print(f"[Control]   Vdc: {vdc_nom:.1f} V")
-        if DEBUG_CONTROL:
-            print("[Control] Debug prints ENABLED (every 0.2 s)")
+        print(f"[Control]   Debug I/O: {'ENABLED' if DEBUG_IO else 'DISABLED'}")
+        print(f"[Control]   Debug State: {'ENABLED' if DEBUG_STATE else 'DISABLED'}")
 
     def compute(self, t, dt, input_values=None):
         u = input_values[0].value
@@ -85,14 +94,21 @@ class EmbedSimControlBlock(VectorBlock):
         valid_in = int(u[7])
         vdc = float(u[9])
 
-        # ---- Debug print every 0.2 seconds (if enabled) ----
-        if DEBUG_CONTROL:
-            self._last_print_t = t
-            print(f"\n[Ctrl t={t:.2f}s]")
-            print(f"  pos_rad (mech) = {position_sensor_rad:.4f}")
-            print(f"  speed_ref = {speed_ref_rpm:.1f}  speed_sensor = {speed_sensor_rpm:.1f}")
-            print(f"  ia={ia:.3f}  ib={ib:.3f}  ic={ic:.3f}  vdc={vdc:.2f}  valid_in={valid_in}")
+        # ---- Debug: Print Inputs (if enabled) ----
+        if DEBUG_IO and (t - self._last_print_t >= DEBUG_INTERVAL):
+            print(f"\n{'='*70}")
+            print(f"[Ctrl I/O t={t:.3f}s]")
+            print(f"  INPUTS:")
+            print(f"    speed_ref     = {speed_ref_rpm:8.1f} RPM")
+            print(f"    speed_sensor  = {speed_sensor_rpm:8.1f} RPM")
+            print(f"    position      = {position_sensor_rad:8.4f} rad")
+            print(f"    ia            = {ia:8.3f} A")
+            print(f"    ib            = {ib:8.3f} A")
+            print(f"    ic            = {ic:8.3f} A")
+            print(f"    vdc           = {vdc:8.2f} V")
+            print(f"    valid_in      = {valid_in:8d}")
 
+        # ---- Execute control step ----
         result = c_control_step(
             ia=ia,
             ib=ib,
@@ -106,10 +122,47 @@ class EmbedSimControlBlock(VectorBlock):
             valid_in=valid_in,
         )
 
-        # ---- Debug print duties (if enabled) ----
-        if DEBUG_CONTROL and (t - self._last_print_t <= 0.001):  # same tick
-            print(f"  duties -> u={result['pwm_u']:.4f} v={result['pwm_v']:.4f} w={result['pwm_w']:.4f}  valid_out={result['valid_out']}")
+        # ---- Debug: Print Outputs (if enabled) ----
+        if DEBUG_IO and (t - self._last_print_t >= DEBUG_INTERVAL):
+            print(f"  OUTPUTS:")
+            print(f"    duty_u        = {result['pwm_u']:8.4f}")
+            print(f"    duty_v        = {result['pwm_v']:8.4f}")
+            print(f"    duty_w        = {result['pwm_w']:8.4f}")
+            print(f"    valid_out     = {result['valid_out']:8d}")
 
+        # ---- Debug: Print Motor State (if enabled) ----
+        if DEBUG_STATE and (t - self._last_print_t >= DEBUG_INTERVAL):
+            try:
+                state = get_motor_state()
+                if state and state.get('valid', 0):
+                    mode = "CLOSED" if state.get('closed_loop', 0) else "OPEN"
+                    print(f"  MOTOR STATE:")
+                    print(f"    mode          = {mode}")
+                    print(f"    speed_rpm     = {state.get('speed_rpm', 0):8.1f} RPM")
+                    print(f"    speed_ref_rpm = {state.get('speed_ref_rpm', 0):8.1f} RPM")
+                    print(f"    id            = {state.get('id', 0):8.3f} A")
+                    print(f"    iq            = {state.get('iq', 0):8.3f} A")
+                    print(f"    torque_total  = {state.get('torque_total', 0):8.4f} Nm")
+                    print(f"    closed_loop   = {state.get('closed_loop', 0):8d}")
+                    print(f"    control_reinit= {state.get('control_reinit', 0):8d}")
+                    print(f"    spinning_cnt  = {state.get('spinning_counter', 0):8d}")
+                    print(f"    is_spinning   = {state.get('is_spinning', 0):8d}")
+                    print(f"    is_stopped    = {state.get('is_stopped', 0):8d}")
+                    print(f"    speed_error   = {state.get('speed_error_rpm', 0):8.1f} RPM")
+                    print(f"    modulation_idx= {state.get('modulation_index', 0):8.4f}")
+                    print(f"    duty_u        = {state.get('duty_u', 0):8.4f}")
+                    print(f"    duty_v        = {state.get('duty_v', 0):8.4f}")
+                    print(f"    duty_w        = {state.get('duty_w', 0):8.4f}")
+            except Exception as e:
+                print(f"  ⚠️ Error getting motor state: {e}")
+
+        # ---- Print separator ----
+        if DEBUG_IO or DEBUG_STATE:
+            if t - self._last_print_t >= DEBUG_INTERVAL:
+                print(f"{'='*70}")
+                self._last_print_t = t
+
+        # ---- Build output array ----
         output_array = np.array([
             float(result['pwm_u']),
             float(result['pwm_v']),

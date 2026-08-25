@@ -36,8 +36,10 @@
 #include "embed_sim_coordinate_transform.h"
 #include "embed_sim_dfc_controller.h"
 #include "embed_sim_cython_interface.h"
+#include <stdio.h>
 #include <stddef.h>
 #include <math.h>
+#include <string.h>
 
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
@@ -96,23 +98,6 @@ static void EmbedSim_OpenLoopStep(EmbedSimCtrlInput_T* const inputPtr,
                                   EmbedSimMachineParam_T* const paraPtr,
                                   EmbedSimCtrlOutput_T* const outputPtr);
 
-/**
- * \brief   Wrap angle to [0, 2pi)
- *
- * \param[in,out] anglePtr  Pointer to angle value to be wrapped (in radians).
- */
-static void EmbedSim_WrapAngle(real32_T* anglePtr);
-
-/**
- * \brief   Clamp value to specified limits
- *
- * \param[in] val     Value to clamp.
- * \param[in] minVal  Minimum allowed value.
- * \param[in] maxVal  Maximum allowed value.
- *
- * \return  Clamped value within [minVal, maxVal].
- */
-static real32_T EmbedSim_ClampValue(real32_T val, real32_T minVal, real32_T maxVal);
 
 /**
  * \brief   Update observer estimates and prepare inputs for the controller.
@@ -124,75 +109,22 @@ static real32_T EmbedSim_ClampValue(real32_T val, real32_T minVal, real32_T maxV
  * \param[in,out] inputPtr  Pointer to control input structure containing
  *                          sensor data and references.
  */
-static void EmbedSim_ExecuteObserver(EmbedSimCtrlInput_T* const inputPtr);
+static void EmbedSim_ExecuteObserver(EmbedSimMachine_T* const MotorPtr);
+
 
 /**
- * \brief   Calculate time‑optimal S‑curve trajectory online.
+ * \brief   Prints Debug Information
  *
- * \details Generates smooth position, velocity, acceleration, and jerk
- *          references using a jerk‑limited profile that minimizes settling time.
+ * \details Used in Python Simulation
  *
- * \param[in,out] InputPtr  Pointer to control input structure.
- * \param[in]     ParaPtr   Pointer to motor parameters (not used currently).
+ * \param[in,out] inputPtr  Pointer to State Structue(Cythen)
+ *
  */
-static void EmbedSim_CalculateTimeOptimalSCurve(EmbedSimCtrlInput_T*   const InputPtr,
-                                                EmbedSimMachineParam_T* const ParaPtr);
+static void EmbedSim_ControlStatePrint(const EmbedSimMotorState_T* const StatePtr);
 
 /*********************************************************************************************************************/
 /*--------------------------------------Private Function Implementations---------------------------------------------*/
 /*********************************************************************************************************************/
-
-/**
- * \brief   Wrap angle to [0, 2pi)
- *
- * \details Normalizes an angle to the range [0, 2π) using fmodf.
- *          Useful for rotor angle and Park transform calculations.
- *
- * \param[in,out] anglePtr  Pointer to angle value to be wrapped (in radians).
- */
-static void EmbedSim_WrapAngle(real32_T* anglePtr)
-{
-    *anglePtr = fmodf(*anglePtr, SVM_2PI_F);
-    if (*anglePtr < 0.0F)
-    {
-        *anglePtr += SVM_2PI_F;
-    }
-}
-
-/**
- * \brief   Clamp value to specified limits
- *
- * \details Limits a value to a range defined by minVal and maxVal.
- *          If value is below minVal, returns minVal.
- *          If value is above maxVal, returns maxVal.
- *          Otherwise returns the original value.
- *
- * \param[in] val     Value to clamp.
- * \param[in] minVal  Minimum allowed value.
- * \param[in] maxVal  Maximum allowed value.
- *
- * \return  Clamped value within [minVal, maxVal].
- */
-static real32_T EmbedSim_ClampValue(real32_T val, real32_T minVal, real32_T maxVal)
-{
-    real32_T result;
-
-    if (val < minVal)
-    {
-        result = minVal;
-    }
-    else if (val > maxVal)
-    {
-        result = maxVal;
-    }
-    else
-    {
-        result = val;
-    }
-
-    return result;
-}
-
 
 /**
  * \brief   Execute one step of open-loop motor control
@@ -242,7 +174,7 @@ static void EmbedSim_OpenLoopStep(EmbedSimCtrlInput_T*    const inputPtr,
 
         /* Update rotor angle by integration */
         rotorAngleE += (angularVelocityE * inputPtr->SampleTime);
-        EmbedSim_WrapAngle(&rotorAngleE);
+        EmbedSim_WrapAngleTwoPi(&rotorAngleE);
 
         focAngle.ThetaE = rotorAngleE;
 
@@ -265,6 +197,53 @@ static void EmbedSim_OpenLoopStep(EmbedSimCtrlInput_T*    const inputPtr,
 }
 
 
+/**
+ * \brief   Update observer estimates from sensor readings.
+ *
+ * \details This function copies the raw sensor values (position and speed)
+ *          to the estimated fields used by the controller. It also increments
+ *          the loop counter and clamps the speed reference to the allowed range.
+ *
+ * \param[in,out] InputPtr  Pointer to control input structure.
+ */
+void EmbedSim_ExecuteObserver(EmbedSimMachine_T* const MotorPtr)
+{
+    EmbedSimCtrlInput_T*    iPtr;
+    EmbedSimMachineParam_T* mPtr;
+    real32_T angleDiff;
+    real32_T rotorSensorPosE;
+
+    iPtr = MotorPtr->InputPtr;
+    mPtr = MotorPtr->MachinePtr;
+
+    rotorSensorPosE = 0.0F;
+    angleDiff       = 0.0F;
+
+    /* Increment loop counter for diagnostic purposes */
+    iPtr->LoopCounter++;
+
+    /* Clamp RPM reference to maximum speed */
+    iPtr->AngularVelocityRefRpmM = EmbedSim_ClampValue(iPtr->AngularVelocityRefRpmM, -MAX_SPEED_RPM,MAX_SPEED_RPM);
+    /* Convert RPM reference to rad/s for use in control */
+    iPtr->RotorVelocityRefM = CON_RPM_TO_RAD(iPtr->AngularVelocityRefRpmM);
+
+    /* Use sensor readings directly as estimates (no filtering) */
+    iPtr->RotorPositionObsEstM = iPtr->RotorPositionSensorM;
+    iPtr->RotorSpeedObsEstM    = iPtr->RotorSpeedSensorM;
+
+    if(iPtr->SwitchToClosedLoop == 0x1U)
+    {
+        rotorSensorPosE  =  iPtr->RotorPositionObsEstM * mPtr->PolePairs;
+        EmbedSim_WrapAngleTwoPi(&rotorSensorPosE);
+
+        angleDiff = EmbedSim_AngleDistance(rotorSensorPosE,  mPtr->SvmRotorThetaE);
+        mPtr->SvmRotorThetaE += (0.3 *angleDiff);
+
+    }
+
+}
+
+
 /*********************************************************************************************************************/
 /*--------------------------------------Public Function Implementations----------------------------------------------*/
 /*********************************************************************************************************************/
@@ -283,12 +262,6 @@ void EmbedSim_ControlInit(void)
     TractionMotor_G.InputPtr   = &TractionMotorInput_G;
     TractionMotor_G.OutputPtr  = &TractionMotorOutput_G;
     TractionMotor_G.MachinePtr = &TractionMotorParams_G;
-    TractionMotor_G.InputPtr->SwitchToClosedLoop     = 0x0U;
-    TractionMotor_G.InputPtr->LoopCounter            = 0x0U;
-    TractionMotor_G.MachinePtr->SpeedIntegralError   = 0.0F;
-    TractionMotor_G.MachinePtr->IdIntegralError      = 0.0F;
-    TractionMotor_G.MachinePtr->IqIntegralError      = 0.0F;
-    TractionMotor_G.MachinePtr->StartupThetaE        = 0.0F;
     /* Initialize SVM module */
     SVM_Init();
     /* Initialize DFC controller */
@@ -316,7 +289,7 @@ void EmbedSim_ControlStep(EmbedSimMachine_T* const MotorPtr)
     EmbedSimMachineParam_T* paraPtr   = MotorPtr->MachinePtr;
 
     /* Update observer estimates from sensors */
-    EmbedSim_ExecuteObserver(inputPtr);
+    EmbedSim_ExecuteObserver(MotorPtr);
 
     /* Update DC bus voltage from input (allows run‑time variation) */
     paraPtr->Vdc = inputPtr->Vdc;
@@ -331,7 +304,6 @@ void EmbedSim_ControlStep(EmbedSimMachine_T* const MotorPtr)
                 break;
             case SIM_CTRL_DFC:
                 /* Generate smooth trajectory and then run DFC */
-                EmbedSim_CalculateTimeOptimalSCurve(inputPtr, paraPtr);
                 DFC_Step(MotorPtr);
                 break;
             default:
@@ -341,39 +313,55 @@ void EmbedSim_ControlStep(EmbedSimMachine_T* const MotorPtr)
     }
 }
 
+
 /**
- * \brief   Check if the motor is spinning and has reached a significant fraction
- *          of the reference speed.
+ * \brief   Check if the motor is spinning and has reached ≥95% of the reference speed.
  *
- * \details Uses a debounce counter to avoid noise. Returns 1 only after the
- *          measured speed has stayed above 95% of the reference for a given
- *          number of consecutive samples.
+ * \details Uses a debounce timer (in seconds) to avoid noise. Returns 1 only after
+ *          the measured speed has stayed above 95% of the given reference for the
+ *          specified duration.
  *
- * \param[in] InputPtr    Pointer to control input structure.
- * \param[in] PastIndex   Number of consecutive valid samples required.
+ * \param[in] InputPtr     Pointer to control input structure.
+ * \param[in] SpeedRefRPM  Reference speed in RPM.
+ * \param[in] Duration     Required debounce time in seconds.
  *
  * \return  1 if motor is spinning fast enough, 0 otherwise.
  */
-uint32_T EmbedSim_IsMotorSpinning(const EmbedSimCtrlInput_T* const InputPtr,
-                                  uint32_T PastIndex)
+uint32_T EmbedSim_IsMotorSpinning(const EmbedSimCtrlInput_T* const InputPtr, real32_T SpeedRefRPM, real32_T Duration)
 {
     static uint32_T successCounter = 0U;
-    uint32_T result = 0U;
+    uint32_T result;
     real32_T speed;
     real32_T threshold;
+    uint32_T requiredSamples;
+    real32_T samplesFloat;
+
+
+    samplesFloat = Duration / InputPtr->SampleTime;       /* always > 0 if Duration > 0 */
+    result = 0x0U;
+
+    /* Round up to next whole sample count */
+    samplesFloat = ceilf(samplesFloat);
+    requiredSamples = (uint32_T)samplesFloat;   /* safe cast, no overflow expected */
+
+    /* Ensure at least one sample – in case Duration is 0 */
+    if (requiredSamples == 0U)
+    {
+        requiredSamples = 1U;
+    }
 
     speed = InputPtr->RotorSpeedSensorM;
-    threshold = 0.95F * InputPtr->AngularVelocityRefRpmM;
 
-    /* Validate sensor reading */
-    if ((isnan(speed) == 0U) && (isinf(speed) == 0U))
+    /* Validate reference speed and sensor reading */
+    if((isnan(speed) == 0) && (isinf(speed) == 0))
     {
-        /* Valid reading - check if spinning fast enough */
+        threshold =  SpeedRefRPM;
+
         if (fabsf(speed) > threshold)
         {
-            if (successCounter < MAX_int32_T)
+            if (successCounter < MAX_uint32_T)
             {
-                successCounter = successCounter + 1U;
+                successCounter++;
             }
         }
         else
@@ -381,17 +369,15 @@ uint32_T EmbedSim_IsMotorSpinning(const EmbedSimCtrlInput_T* const InputPtr,
             successCounter = 0U;
         }
 
-        if (successCounter > PastIndex)
+        if (successCounter >= requiredSamples)
         {
             result = 1U;
-            successCounter = 0U;   /* Reset after triggering */
+            successCounter = 0U;
         }
     }
     else
     {
-        /* Invalid reading - reset */
         successCounter = 0U;
-        /* result remains 0U */
     }
 
     return result;
@@ -409,8 +395,7 @@ uint32_T EmbedSim_IsMotorSpinning(const EmbedSimCtrlInput_T* const InputPtr,
  *
  * \return  1 if motor is stopped, 0 otherwise.
  */
-uint32_T EmbedSim_IsNotSpinning(const EmbedSimCtrlInput_T* const InputPtr,
-                                uint32_T PastIndex)
+uint32_T EmbedSim_IsNotSpinning(const EmbedSimCtrlInput_T* const InputPtr, uint32_T PastIndex)
 {
     static uint32_T successCounter = 0U;
     real32_T  speed;
@@ -425,13 +410,13 @@ uint32_T EmbedSim_IsNotSpinning(const EmbedSimCtrlInput_T* const InputPtr,
     if ((isnan(speed) != 0x0U) || (isinf(speed) != 0x0U))
     {
         successCounter++;
-        validSpeed = false;
+        validSpeed = 0U;
     }
 
     if (validSpeed == 0x1U)
     {
         /* If speed magnitude is below 0.2 RPM, consider stopped */
-        if (fabsf(speed) < 0.2F)
+        if(fabsf(speed) < 0.2F)
         {
             if (successCounter < MAX_int32_T)
             {
@@ -454,308 +439,401 @@ uint32_T EmbedSim_IsNotSpinning(const EmbedSimCtrlInput_T* const InputPtr,
 }
 
 /**
- * \brief   Cython interface initialization
+ * \brief   Get current motor state for unified reporting
  *
- * \details Wrapper function for Python/Cython interface to initialize
- *          the control module.
+ * \details Fills the motor state structure with current values from
+ *          the control system. This provides a unified view of motor
+ *          operation for display and logging.
+ *
+ * \param[in]  motorPtr   Pointer to motor structure
+ * \param[out] statePtr   Pointer to state structure to fill
  *
  * \return  void
  */
-void EmbedSim_CythonControlInit(void)
+/**
+ * \brief   Get current motor state for unified reporting
+ *
+ * \details Fills the motor state structure with current values from
+ *          the control system. This provides a unified view of motor
+ *          operation for display and logging.
+ *
+ * \param[in]  motorPtr   Pointer to motor structure
+ * \param[out] statePtr   Pointer to state structure to fill
+ *
+ * \return  void
+ */
+/**
+ * \brief   Get current motor state for unified reporting
+ *
+ * \details Fills the motor state structure with current values from
+ *          the control system. This provides a unified view of motor
+ *          operation for display and logging.
+ *
+ * \param[in]  motorPtr   Pointer to motor structure
+ * \param[out] statePtr   Pointer to state structure to fill
+ *
+ * \return  void
+ */
+void EmbedSim_GetMotorState(EmbedSimMachine_T* const motorPtr, EmbedSimMotorState_T* const statePtr)
 {
-    EmbedSim_ControlInit();
+    EmbedSimCtrlInput_T*    inputPtr  = motorPtr->InputPtr;
+    EmbedSimCtrlOutput_T*   outputPtr = motorPtr->OutputPtr;
+    EmbedSimMachineParam_T* paraPtr   = motorPtr->MachinePtr;
+    FocUvw_T uvw;
+    FocAlphaBeta_T ab;
+    FocAngle_T angle;
+    FocDq_T dq;
+
+    /* ===== Mechanical ===== */
+    statePtr->SpeedRpm = inputPtr->RotorSpeedSensorM;
+    statePtr->SpeedRadS = CON_RPM_TO_RAD(inputPtr->RotorSpeedSensorM);
+    statePtr->PositionRad = inputPtr->RotorPositionSensorM;
+    statePtr->AccelerationRpmS = CON_RAD_TO_RPM(inputPtr->RotorAccelerationRefM);
+    statePtr->JerkRpmS3 = CON_RAD_TO_RPM(inputPtr->RotorJerkRefM);
+
+    /* ===== Currents ===== */
+    statePtr->Ia = inputPtr->Iu;
+    statePtr->Ib = inputPtr->Iv;
+    statePtr->Ic = inputPtr->Iw;
+
+    /* DQ currents - use coordinate transforms */
+    uvw.U = inputPtr->Iu;
+    uvw.V = inputPtr->Iv;
+    uvw.W = inputPtr->Iw;
+
+    Clarke_Transform_Matrix(&uvw, &ab);
+    statePtr->Ialpha = ab.Alpha;
+    statePtr->Ibeta = ab.Beta;
+
+    angle.ThetaE = inputPtr->RotorPositionSensorM * paraPtr->PolePairs;
+    EmbedSim_WrapAngleTwoPi(&angle.ThetaE);
+    Park_Transform_Matrix(&ab, &angle, &dq);
+    statePtr->Id = dq.D;
+    statePtr->Iq = dq.Q;
+
+    /* ===== PWM ===== */
+    statePtr->DutyU = outputPtr->DutyU;
+    statePtr->DutyV = outputPtr->DutyV;
+    statePtr->DutyW = outputPtr->DutyW;
+    statePtr->SvmSector = outputPtr->SvmSector;
+
+    /* ===== References ===== */
+    statePtr->SpeedRefRpm = inputPtr->AngularVelocityRefRpmM;
+    statePtr->SpeedRefRadS = CON_RPM_TO_RAD(inputPtr->AngularVelocityRefRpmM);
+
+    /* ===== Control Mode ===== */
+    statePtr->SwitchToClosedLoop = inputPtr->SwitchToClosedLoop;
+    statePtr->ControlReInit = inputPtr->ControlReInit;
+    statePtr->ControllerMode = inputPtr->CtrlAlg;
+
+    /* ===== PI States ===== */
+    statePtr->SpeedIntegral = paraPtr->SpeedIntegralError;
+    statePtr->IdIntegral = paraPtr->IdIntegralError;
+    statePtr->IqIntegral = paraPtr->IqIntegralError;
+
+
 }
 
 
-/**
- * \brief   Calculates online time-optimal jerk-limited trajectory
- *
- * \details Generates omega_ref and its derivatives online using a time-optimal
- *          control strategy with jerk limitation. The algorithm computes a
- *          desired acceleration that brings the speed to the target with
- *          maximum jerk, then integrates to produce a smooth S‑curve.
- *
- *          State: omega_ref (speed), acceleration_ref.
- *          Control: jerk (limited to ±Jmax).
- *
- *          At each sample:
- *              1. Compute speed error to target.
- *              2. Determine direction (sign of error).
- *              3. Compute stopping acceleration: a_stop = sqrt(2*Jmax*|error|)
- *              4. Desired acceleration = direction * min(accelMax, a_stop)
- *              5. Compute jerk required to reach desired acceleration in one step.
- *              6. Clamp jerk to ±Jmax.
- *              7. Integrate acceleration and speed with second‑order accuracy.
- *              8. Clamp speed and prevent overshoot.
- *
- * \param[in,out] InputPtr  Pointer to control input structure containing
- *                          references and feedback signals.
- * \param[in]     ParaPtr   Pointer to motor parameters (not used currently).
- */
-void EmbedSim_CalculateTimeOptimalSCurve(EmbedSimCtrlInput_T* const InputPtr,
-                                         EmbedSimMachineParam_T* const ParaPtr)
+
+void EmbedSim_CalculateJerkLimitedTrajectory(EmbedSimCtrlInput_T* const InputPtr, const EmbedSimMachineParam_T* const ParaPtr)
 {
-    /* Persistent trajectory states (in rad/s, rad/s²) */
-    static real32_T sCurveOmegaRef = 0.0F;
-    static real32_T sCurveAccelRef = 0.0F;
-    static real32_T sCurvePositionRef = 0.0F;
-    static real32_T sCurveLastTargetRpm = 0.0F;
-
-    real32_T targetRpm;
     real32_T targetOmega;
-    real32_T sampleTime;
-
     real32_T errorOmega;
-    real32_T distanceToTarget;
-    real32_T direction;
+    real32_T stoppingAccel;
+    real32_T desiredAccel;
+    real32_T jerkRequest;
+    real32_T previousVelocity;
+    real32_T previousAcceleration;
 
-    real32_T jerkMax;          /* rad/s³ */
-    real32_T accelMax;         /* rad/s² */
-    real32_T speedMax;         /* rad/s   */
-
-    real32_T stoppingAccel;    /* rad/s² */
-    real32_T desiredAccel;     /* rad/s² */
-    real32_T jerkRequest;      /* rad/s³ */
-    real32_T jerk;             /* rad/s³ */
-    real32_T newAccel;
-    real32_T newOmega;
-    real32_T newPosition;
+    real32_T sampleTime;
+    real32_T jerkMax;
+    real32_T accelMax;
+    real32_T speedMax;
 
     (void)ParaPtr;
 
     sampleTime = InputPtr->SampleTime;
 
-    /* ------------------------------------------------------------
-     * 1. Read target and limits (convert from RPM to rad/s)
-     * ------------------------------------------------------------ */
-    targetRpm   = InputPtr->AngularVelocityRefRpmM;
-    targetOmega = InputPtr->RotorVelocityRefM;   /* already in rad/s */
+    /*
+     * Convert the requested target speed from RPM to rad/s and
+     * limit it to the configured maximum speed.
+     */
+    targetOmega = CON_RPM_TO_RAD(InputPtr->AngularVelocityRefRpmM);
     speedMax    = CON_RPM_TO_RAD(MAX_SPEED_RPM);
     accelMax    = CON_RPM_TO_RAD(MAX_ACCEL_RPM);
     jerkMax     = CON_RPM_TO_RAD(MAX_JERK_RPM);
 
-    /* ------------------------------------------------------------
-     * 2. Clamp target to max speed
-     * ------------------------------------------------------------ */
-    if (targetOmega > speedMax)  targetOmega = speedMax;
-    if (targetOmega < -speedMax) targetOmega = -speedMax;
-
-    /* ------------------------------------------------------------
-     * 3. Initialise trajectory from measured speed on re‑init
-     * ------------------------------------------------------------ */
+    /*
+     * Reset the dynamic trajectory states when control
+     * re-initialization is requested. The current velocity is
+     * retained as the starting point of the new trajectory.
+     */
     if (InputPtr->ControlReInit == 1U)
     {
-        real32_T omegaSensor = CON_RPM_TO_RAD(InputPtr->RotorSpeedObsEstM);
-        sCurveOmegaRef      = omegaSensor;
-        sCurveAccelRef      = 0.0F;
-        sCurvePositionRef   = InputPtr->RotorPositionObsEstM;
-        sCurveLastTargetRpm = targetRpm;
-        InputPtr->ControlReInit = 0x0U;
+        InputPtr->RotorAccelerationRefM = 0.0F;
+        InputPtr->RotorJerkRefM = 0.0F;
+        InputPtr->ControlReInit = 0U;
     }
 
-    /* ------------------------------------------------------------
-     * 4. If target changes significantly, just update last target
-     *    (no replanning needed, algorithm is adaptive)
-     * ------------------------------------------------------------ */
-    if (fabsf(targetRpm - sCurveLastTargetRpm) > 10.0F)
-    {
-        sCurveLastTargetRpm = targetRpm;
-    }
+    /*
+     * Calculate the remaining velocity error between the current
+     * trajectory velocity and the requested target velocity.
+     */
+    errorOmega = targetOmega - InputPtr->RotorVelocityRefM;
 
-    /* ------------------------------------------------------------
-     * 5. Speed error (use trajectory state, not measured)
-     * ------------------------------------------------------------ */
-    errorOmega = targetOmega - sCurveOmegaRef;
-    distanceToTarget = fabsf(errorOmega);
-
-    /* ------------------------------------------------------------
-     * 6. Deadband: if very close to target and accel small, settle
-     * ------------------------------------------------------------ */
-    if (distanceToTarget < SPEED_SETTLE_TOL && fabsf(sCurveAccelRef) < 0.01F)
+    /*
+     * If the velocity error and acceleration are sufficiently small,
+     * consider the trajectory settled and remove residual dynamic states.
+     */
+    if((fabsf(errorOmega) < SPEED_SETTLE_TOL) && (fabsf(InputPtr->RotorAccelerationRefM) < 0.01F))
     {
-        sCurveOmegaRef = targetOmega;
-        sCurveAccelRef = 0.0F;
-        jerk = 0.0F;
+        InputPtr->RotorVelocityRefM = targetOmega;
+        InputPtr->RotorAccelerationRefM = 0.0F;
+        InputPtr->RotorJerkRefM = 0.0F;
     }
     else
     {
-        /* --------------------------------------------------------
-         * 7. Direction toward target
-         * -------------------------------------------------------- */
-        direction = (errorOmega >= 0.0F) ? 1.0F : -1.0F;
+        /*
+         * Calculate the acceleration required to remove the remaining
+         * velocity error using the configured maximum jerk.
+         *
+         * a_stop = sqrt(2 * Jmax * |velocity_error|)
+         */
+        stoppingAccel = sqrtf(2.0F * jerkMax * fabsf(errorOmega));
 
-        /* --------------------------------------------------------
-         * 8. Calculate stopping acceleration:
-         *    a_stop = sqrt( 2 * Jmax * |error| )
-         *    This is the maximum acceleration that can be reduced
-         *    to zero exactly at the target using max jerk.
-         * -------------------------------------------------------- */
-        stoppingAccel = sqrtf(2.0F * jerkMax * distanceToTarget);
+        /*
+         * Determine the acceleration direction from the velocity error
+         * and limit the acceleration magnitude to the configured maximum.
+         */
+        desiredAccel =  ((errorOmega >= 0.0F) ? 1.0F : -1.0F) *  ((accelMax < stoppingAccel) ? accelMax : stoppingAccel);
 
-        /* --------------------------------------------------------
-         * 9. Desired acceleration = direction * min(accelMax, a_stop)
-         * -------------------------------------------------------- */
-        desiredAccel = direction * ((accelMax < stoppingAccel) ? accelMax : stoppingAccel);
+        /*
+         * Store the trajectory states from the previous sample.
+         * These values are used for consistent integration.
+         */
+        previousVelocity = InputPtr->RotorVelocityRefM;
+        previousAcceleration = InputPtr->RotorAccelerationRefM;
 
-        /* --------------------------------------------------------
-         * 10. Compute jerk needed to reach desired acceleration in one step
-         * -------------------------------------------------------- */
-        jerkRequest = (desiredAccel - sCurveAccelRef) / sampleTime;
+        /*
+         * Calculate the jerk required to move the previous acceleration
+         * toward the desired acceleration within one sample period.
+         */
+        jerkRequest =  (desiredAccel - previousAcceleration) / sampleTime;
 
-        /* --------------------------------------------------------
-         * 11. Clamp jerk to ±jerkMax
-         * -------------------------------------------------------- */
-        if (jerkRequest > jerkMax)      jerk = jerkMax;
-        else if (jerkRequest < -jerkMax) jerk = -jerkMax;
-        else                             jerk = jerkRequest;
+        /*
+         * Limit the requested jerk to the configured positive and
+         * negative jerk limits.
+         */
+        InputPtr->RotorJerkRefM = EmbedSim_ClampValue(jerkRequest, -jerkMax, jerkMax);
 
-        /* --------------------------------------------------------
-         * 12. Integrate acceleration: a += j * dt
-         * -------------------------------------------------------- */
-        newAccel = sCurveAccelRef + jerk * sampleTime;
+        /*
+         * Integrate velocity assuming constant jerk during
+         * the current sample period.
+         */
+        InputPtr->RotorVelocityRefM =  previousVelocity +
+                                       (previousAcceleration * sampleTime) +
+                                       (0.5F * InputPtr->RotorJerkRefM * sampleTime * sampleTime);
 
-        /* --------------------------------------------------------
-         * 13. Clamp acceleration to ±accelMax
-         * -------------------------------------------------------- */
-        if (newAccel > accelMax)      newAccel = accelMax;
-        else if (newAccel < -accelMax) newAccel = -accelMax;
+        /*
+         * Integrate acceleration using the applied jerk.
+         */
+        InputPtr->RotorAccelerationRefM = previousAcceleration + InputPtr->RotorJerkRefM * sampleTime;
 
-        /* --------------------------------------------------------
-         * 14. Integrate speed using second-order formula
-         *     (matches Python's Euler but more accurate)
-         * -------------------------------------------------------- */
-        newOmega = sCurveOmegaRef + sCurveAccelRef * sampleTime + 0.5F * jerk * sampleTime * sampleTime;
+        /*
+         * Enforce the configured acceleration and velocity limits.
+         */
+        InputPtr->RotorAccelerationRefM = EmbedSim_ClampValue(InputPtr->RotorAccelerationRefM, -accelMax,  accelMax);
 
-        /* --------------------------------------------------------
-         * 15. Clamp speed to ±speedMax
-         * -------------------------------------------------------- */
-        if (newOmega > speedMax)      newOmega = speedMax;
-        else if (newOmega < -speedMax) newOmega = -speedMax;
+        InputPtr->RotorVelocityRefM = EmbedSim_ClampValue( InputPtr->RotorVelocityRefM, -speedMax,  speedMax);
 
-        /* --------------------------------------------------------
-         * 16. Prevent overshoot
-         * -------------------------------------------------------- */
-        if ((direction > 0.0F && newOmega > targetOmega) ||
-            (direction < 0.0F && newOmega < targetOmega))
+        /*
+         * Prevent the trajectory from crossing the target velocity.
+         * If an overshoot is detected, settle directly at the target
+         * and remove the remaining acceleration and jerk.
+         */
+        if(((errorOmega > 0.0F) && (InputPtr->RotorVelocityRefM > targetOmega))  ||
+            ((errorOmega < 0.0F) && (InputPtr->RotorVelocityRefM < targetOmega)))
         {
-            newOmega = targetOmega;
-            newAccel = 0.0F;
-            jerk = 0.0F;
+            InputPtr->RotorVelocityRefM = targetOmega;
+            InputPtr->RotorAccelerationRefM = 0.0F;
+            InputPtr->RotorJerkRefM = 0.0F;
         }
 
-        /* --------------------------------------------------------
-         * 17. Integrate position (second-order with jerk)
-         *     (used by observer/controller; keep for consistency)
-         * -------------------------------------------------------- */
-        newPosition = sCurvePositionRef
-                    + sCurveOmegaRef * sampleTime
-                    + 0.5F * sCurveAccelRef * sampleTime * sampleTime
-                    + (1.0F / 6.0F) * jerk * sampleTime * sampleTime * sampleTime;
-
-        /* --------------------------------------------------------
-         * 18. Update states
-         * -------------------------------------------------------- */
-        sCurveOmegaRef   = newOmega;
-        sCurveAccelRef   = newAccel;
-        sCurvePositionRef = newPosition;
+        /*
+         * Integrate position using the previous velocity and acceleration
+         * and the constant jerk applied during the current sample.
+         */
+        InputPtr->RotorPositionRefM =  InputPtr->RotorPositionRefM +
+                                       previousVelocity * sampleTime +
+                                       0.5F * previousAcceleration *
+                                       sampleTime * sampleTime +
+                                      (1.0F / 6.0F) *  InputPtr->RotorJerkRefM *  sampleTime * sampleTime * sampleTime;
     }
-
-    /* ------------------------------------------------------------
-     * 19. Write outputs
-     * ------------------------------------------------------------ */
-    InputPtr->RotorPositionRefM      = sCurvePositionRef;
-    InputPtr->RotorVelocityRefM      = sCurveOmegaRef;
-    InputPtr->RotorAccerlerationRefM = sCurveAccelRef;
-    InputPtr->RotorJerkRefM          = jerk;   /* dω/dt */
 }
 
-/**
- * \brief   Update observer estimates from sensor readings.
- *
- * \details This function copies the raw sensor values (position and speed)
- *          to the estimated fields used by the controller. It also increments
- *          the loop counter and clamps the speed reference to the allowed range.
- *
- * \param[in,out] InputPtr  Pointer to control input structure.
- */
-void EmbedSim_ExecuteObserver(EmbedSimCtrlInput_T* const InputPtr)
+
+void EmbedSim_WrapAngleTwoPi(real32_T* AnglePtr)
 {
-    /* Increment loop counter for diagnostic purposes */
-    InputPtr->LoopCounter++;
-
-    /* Clamp RPM reference to maximum speed */
-    InputPtr->AngularVelocityRefRpmM = EmbedSim_ClampValue(InputPtr->AngularVelocityRefRpmM,
-                                                           -MAX_SPEED_RPM,
-                                                           MAX_SPEED_RPM);
-    /* Convert RPM reference to rad/s for use in control */
-    InputPtr->RotorVelocityRefM = CON_RPM_TO_RAD(InputPtr->AngularVelocityRefRpmM);
-
-    /* Use sensor readings directly as estimates (no filtering) */
-    InputPtr->RotorPositionObsEstM = InputPtr->RotorPositionSensorM;
-    InputPtr->RotorSpeedObsEstM    = InputPtr->RotorSpeedSensorM;
-
-    /* Switch to closed-loop decision is handled in DFC_Step */
+    *AnglePtr = fmodf(*AnglePtr, ES_MATH_2PI_F);
+    if(*AnglePtr < 0.0F)
+    {
+        *AnglePtr += ES_MATH_2PI_F;
+    }
 }
 
-/**
- * \brief   Cython interface control step
- *
- * \details Wrapper function for Python/Cython interface to execute one
- *          control step with direct parameter passing.
- *
- * \param[in]  Iu                      Phase U current [A]
- * \param[in]  Iv                      Phase V current [A]
- * \param[in]  Iw                      Phase W current [A]
- * \param[in]  RotorPositionSensor     Rotor position from sensor [rad]
- * \param[in]  RotorVelocitySensor     Rotor speed from sensor [RPM]
- * \param[in]  AngularVelocityRefRpm   Speed reference [RPM]
- * \param[in]  Vdc                     DC bus voltage [V]
- * \param[in]  SampleTime              Sample time [s]
- * \param[in]  CtrlAlg                 Control algorithm selection
- * \param[in]  ValidIn                 Input validity flag
- * \param[out] PwmU                    Phase U PWM duty cycle [0-1]
- * \param[out] PwmV                    Phase V PWM duty cycle [0-1]
- * \param[out] PwmW                    Phase W PWM duty cycle [0-1]
- * \param[out] ValidOut                Output validity flag
- *
- * \return  void
- */
-void EmbedSim_CythonControlStep(
-    /* Inputs */
-    real32_T  Iu,                      /* [A] */
-    real32_T  Iv,                      /* [A] */
-    real32_T  Iw,                      /* [A] */
-    real32_T  RotorPositionSensor,     /* [rad] */
-    real32_T  RotorVelocitySensor,     /* [RPM] */
-    real32_T  AngularVelocityRefRpm,   /* [RPM] */
-    real32_T  Vdc,                     /* [V] */
-    real32_T  SampleTime,              /* [s] */
-    uint32_T  CtrlAlg,
-    uint32_T  ValidIn,
-    /* Outputs */
-    real32_T* PwmU,
-    real32_T* PwmV,
-    real32_T* PwmW,
-    uint32_T* ValidOut)
+
+
+
+
+ real32_T EmbedSim_ClampValue(real32_T Val, real32_T MinVal, real32_T MaxVal)
+ {
+     real32_T result;
+
+     if(Val < MinVal)
+     {
+         result = MinVal;
+     }
+     else if (Val > MaxVal)
+     {
+         result = MaxVal;
+     }
+     else
+     {
+         result = Val;
+     }
+
+     return result;
+ }
+
+real32_T EmbedSim_AngleDistance(real32_T Angle1, real32_T Angle2)
+ {
+     real32_T AngleDistance;
+
+     AngleDistance = Angle1 - Angle2;
+
+     if(AngleDistance >= ES_MATH_PI_F)
+     {
+         AngleDistance -= ES_MATH_2PI_F;
+     }
+     else if (AngleDistance < -ES_MATH_PI_F)
+     {
+         AngleDistance += ES_MATH_2PI_F;
+     }
+
+     return AngleDistance;
+ }
+
+
+
+void EmbedSim_ControlDebug(const EmbedSimMachine_T * const MotorPtr)
 {
-    /* Copy input data to global structure */
-    TractionMotorInput_G.Iu = Iu;
-    TractionMotorInput_G.Iv = Iv;
-    TractionMotorInput_G.Iw = Iw;
-    TractionMotorInput_G.RotorPositionSensorM = RotorPositionSensor;
-    TractionMotorInput_G.RotorSpeedSensorM = RotorVelocitySensor;
-    TractionMotorInput_G.AngularVelocityRefRpmM = AngularVelocityRefRpm;
-    TractionMotorInput_G.SampleTime = SampleTime;
-    TractionMotorInput_G.Vdc = Vdc;
-    TractionMotorInput_G.CtrlAlg = CtrlAlg;
-    TractionMotorInput_G.Valid = ValidIn;
+   const EmbedSimCtrlInput_T * const inputPtr = MotorPtr->InputPtr;
+   const EmbedSimCtrlOutput_T * const outputPtr = MotorPtr->OutputPtr;
+   const EmbedSimMachineParam_T * const paraPtr = MotorPtr->MachinePtr;
 
-    /* Execute one control step */
-    EmbedSim_ControlStep(&TractionMotor_G);
+   printf("\n");
+   printf("============================================================\n");
+   printf("              EmbedSim_ControlStep DEBUG\n");
+   printf("============================================================\n");
 
-    /* Copy output data */
-    *PwmU  = TractionMotorOutput_G.DutyU;
-    *PwmV  = TractionMotorOutput_G.DutyV;
-    *PwmW  = TractionMotorOutput_G.DutyW;
-    *ValidOut = TractionMotorOutput_G.Valid;
+   /* ------------------------------------------------------------
+    * Controller inputs
+    * ------------------------------------------------------------ */
+   printf("INPUTS\n");
+   printf("------------------------------------------------------------\n");
+
+   printf("  Iu                  = %10.5f A\n", inputPtr->Iu);
+   printf("  Iv                  = %10.5f A\n", inputPtr->Iv);
+   printf("  Iw                  = %10.5f A\n", inputPtr->Iw);
+
+   printf("  RotorPosition       = %10.6f rad\n",
+          inputPtr->RotorPositionSensorM);
+
+   printf("  RotorSpeed          = %10.3f RPM\n",
+          inputPtr->RotorSpeedSensorM);
+
+   printf("  SpeedReference      = %10.3f RPM\n",
+          inputPtr->AngularVelocityRefRpmM);
+
+   printf("  Vdc                 = %10.4f V\n",
+          inputPtr->Vdc);
+
+   printf("  SampleTime          = %10.8f s\n",
+          inputPtr->SampleTime);
+
+   printf("  CtrlAlg             = %u\n",
+          inputPtr->CtrlAlg);
+
+   printf("  Valid               = %u\n",
+          inputPtr->Valid);
+
+
+   /* ------------------------------------------------------------
+    * Machine parameters
+    * ------------------------------------------------------------ */
+   printf("\n");
+   printf("MACHINE PARAMETERS\n");
+   printf("------------------------------------------------------------\n");
+
+   printf("  Vdc                 = %10.4f V\n",
+          paraPtr->Vdc);
+
+
+   /* ------------------------------------------------------------
+    * Controller outputs
+    * ------------------------------------------------------------ */
+   printf("\n");
+   printf("OUTPUTS\n");
+   printf("------------------------------------------------------------\n");
+
+   printf("  DutyU               = %10.6f\n",
+          outputPtr->DutyU);
+
+   printf("  DutyV               = %10.6f\n",
+          outputPtr->DutyV);
+
+   printf("  DutyW               = %10.6f\n",
+          outputPtr->DutyW);
+
+   printf("  Valid               = %u\n",
+          outputPtr->Valid);
+
+   printf("============================================================\n");
+
+   fflush(stdout);
 }
+
+
+
+void EmbedSim_ControlStatePrint(const EmbedSimMotorState_T* const StatePtr)
+{
+
+   printf("\n");
+   printf("============================================================\n");
+   printf("              EmbedSim MOTOR STATE DEBUG\n");
+   printf("============================================================\n");
+
+   /* ===== Mechanical ===== */
+   printf("MECHANICAL\n");
+   printf("------------------------------------------------------------\n");
+   printf("  Speed              = %10.3f RPM\n", StatePtr->SpeedRpm);
+   printf("  SpeedRef           = %10.3f RPM\n", StatePtr->SpeedRefRpm);
+   printf("  SpeedError         = %10.3f RPM\n", StatePtr->SpeedErrorRpm);
+
+
+   printf("============================================================\n");
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

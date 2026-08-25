@@ -1,6 +1,20 @@
+# =============================================================================
 # embedsim_control_wrapper.pyx
 # =============================================================================
-# EmbedSim Control Wrapper -- Sensor-Based PMSM Control
+# EmbedSim Cython Control Wrapper
+#
+# Native controller:
+#   embed_sim_control.c
+#   embed_sim_dfc_controller.c
+#
+# Native transforms:
+#   embed_sim_coordinate_transform.c
+#
+# Native PWM:
+#   embed_sim_sv_pwm.c
+#
+# Cython adapter:
+#   embed_sim_cython_interface.c
 # =============================================================================
 
 import numpy as np
@@ -8,46 +22,60 @@ cimport numpy as cnp
 
 cnp.import_array()
 
+
 # =============================================================================
-# C declarations
+# Coordinate transform declarations
 # =============================================================================
 
 cdef extern from "embed_sim_coordinate_transform.h":
+
     ctypedef struct FocUvw_T:
         float U
         float V
         float W
+
     ctypedef struct FocAlphaBeta_T:
         float Alpha
         float Beta
+
     ctypedef struct FocDq_T:
         float D
         float Q
+
     ctypedef struct FocAngle_T:
         float ThetaE
 
     int Clarke_Transform_Matrix(
         const FocUvw_T* In_P,
         FocAlphaBeta_T* Out_P
-    ) nogil
+    ) noexcept nogil
+
     int Park_Transform_Matrix(
         const FocAlphaBeta_T* In_P,
         const FocAngle_T* Angle_P,
         FocDq_T* Out_P
-    ) nogil
+    ) noexcept nogil
+
     int InvPark_Transform_Matrix(
         const FocDq_T* In_P,
         const FocAngle_T* Angle_P,
         FocAlphaBeta_T* Out_P
-    ) nogil
+    ) noexcept nogil
+
     int InvClarke_Transform_Matrix(
         const FocAlphaBeta_T* In_P,
         FocUvw_T* Out_P
-    ) nogil
+    ) noexcept nogil
 
+
+# =============================================================================
+# Native control interface
+# =============================================================================
 
 cdef extern from "embed_sim_cython_interface.h":
-    void EmbedSim_CythonControlInit() nogil
+
+    void EmbedSim_CythonControlInit() noexcept nogil
+
     void EmbedSim_CythonControlStep(
         float Iu,
         float Iv,
@@ -63,17 +91,321 @@ cdef extern from "embed_sim_cython_interface.h":
         float* PwmV,
         float* PwmW,
         unsigned int* ValidOut
-    ) nogil
+    ) noexcept nogil
 
 
 # =============================================================================
-# Public API - Control Functions
+# Native state structures
+# =============================================================================
+
+cdef extern from "embed_sim_control.h":
+
+    ctypedef struct EmbedSimMotorState_T:
+
+        # Mechanical
+        float SpeedRpm
+        float SpeedRadS
+        float PositionRad
+        float AccelerationRpmS
+        float JerkRpmS3
+
+        # Electrical
+        float Ia
+        float Ib
+        float Ic
+        float Id
+        float Iq
+        float Ialpha
+        float Ibeta
+        float Vd
+        float Vq
+        float Valpha
+        float Vbeta
+
+        # PWM
+        float DutyU
+        float DutyV
+        float DutyW
+        unsigned int SvmSector
+        float ModulationIndex
+
+        # References
+        float SpeedRefRpm
+        float SpeedRefRadS
+        float IqRef
+        float IqRefDot
+        float IdRef
+
+        # Control mode
+        unsigned int SwitchToClosedLoop
+        unsigned int ControlReInit
+        unsigned int ControllerMode
+
+        # Startup
+        float StartupModulation
+        float StartupTheta
+        float StartupTime
+
+        # PI states
+        float SpeedIntegral
+        float IdIntegral
+        float IqIntegral
+
+        # Spinning detection
+        unsigned int SpinningCounter
+        unsigned int StoppedCounter
+        unsigned int SpinningPastIndex
+        unsigned int StoppedPastIndex
+        unsigned int IsSpinning
+        unsigned int IsStopped
+
+        # Torque
+        float TorqueFF
+        float TorqueCorrection
+        float TorqueTotal
+        float TorqueConstant
+
+        # Voltage
+        float VdFF
+        float VqFF
+        float VdCorr
+        float VqCorr
+
+        # Speed error
+        float SpeedErrorRpm
+        float SpeedErrorRadS
+        float SpeedErrorPercent
+
+        # Trajectory
+        float TrajSpeedRpm
+        float TrajAccelRpmS
+        float TrajJerkRpmS3
+
+        # Timestamp
+        float Time
+        float Dt
+
+        # Status
+        unsigned int Valid
+        unsigned long long LoopCounter
+
+
+cdef extern from "embed_sim_cython_interface.h":
+
+    void EmbedSim_CythonGetMotorState(
+        EmbedSimMotorState_T* StatePtr
+    ) noexcept nogil
+
+
+# =============================================================================
+# C structure -> Python dictionary
+# =============================================================================
+
+cdef dict _motor_state_to_dict(
+    EmbedSimMotorState_T* state
+):
+    return {
+
+        # Mechanical
+        'speed_rpm':
+            float(state.SpeedRpm),
+
+        'speed_rad_s':
+            float(state.SpeedRadS),
+
+        'position_rad':
+            float(state.PositionRad),
+
+        'accel_rpm_s':
+            float(state.AccelerationRpmS),
+
+        'jerk_rpm_s3':
+            float(state.JerkRpmS3),
+
+        # Electrical
+        'ia':
+            float(state.Ia),
+
+        'ib':
+            float(state.Ib),
+
+        'ic':
+            float(state.Ic),
+
+        'id':
+            float(state.Id),
+
+        'iq':
+            float(state.Iq),
+
+        'ialpha':
+            float(state.Ialpha),
+
+        'ibeta':
+            float(state.Ibeta),
+
+        'vd':
+            float(state.Vd),
+
+        'vq':
+            float(state.Vq),
+
+        'valpha':
+            float(state.Valpha),
+
+        'vbeta':
+            float(state.Vbeta),
+
+        # PWM
+        'duty_u':
+            float(state.DutyU),
+
+        'duty_v':
+            float(state.DutyV),
+
+        'duty_w':
+            float(state.DutyW),
+
+        'svm_sector':
+            int(state.SvmSector),
+
+        'modulation_index':
+            float(state.ModulationIndex),
+
+        # References
+        'speed_ref_rpm':
+            float(state.SpeedRefRpm),
+
+        'speed_ref_rad_s':
+            float(state.SpeedRefRadS),
+
+        'iq_ref':
+            float(state.IqRef),
+
+        'iq_ref_dot':
+            float(state.IqRefDot),
+
+        'id_ref':
+            float(state.IdRef),
+
+        # Control
+        'closed_loop':
+            int(state.SwitchToClosedLoop),
+
+        'control_reinit':
+            int(state.ControlReInit),
+
+        'controller_mode':
+            int(state.ControllerMode),
+
+        # Startup
+        'startup_modulation':
+            float(state.StartupModulation),
+
+        'startup_theta':
+            float(state.StartupTheta),
+
+        'startup_time':
+            float(state.StartupTime),
+
+        # PI
+        'speed_integral':
+            float(state.SpeedIntegral),
+
+        'id_integral':
+            float(state.IdIntegral),
+
+        'iq_integral':
+            float(state.IqIntegral),
+
+        # Spinning
+        'spinning_counter':
+            int(state.SpinningCounter),
+
+        'stopped_counter':
+            int(state.StoppedCounter),
+
+        'spinning_past_index':
+            int(state.SpinningPastIndex),
+
+        'stopped_past_index':
+            int(state.StoppedPastIndex),
+
+        'is_spinning':
+            int(state.IsSpinning),
+
+        'is_stopped':
+            int(state.IsStopped),
+
+        # Torque
+        'torque_ff':
+            float(state.TorqueFF),
+
+        'torque_correction':
+            float(state.TorqueCorrection),
+
+        'torque_total':
+            float(state.TorqueTotal),
+
+        'torque_constant':
+            float(state.TorqueConstant),
+
+        # Voltage
+        'vd_ff':
+            float(state.VdFF),
+
+        'vq_ff':
+            float(state.VqFF),
+
+        'vd_corr':
+            float(state.VdCorr),
+
+        'vq_corr':
+            float(state.VqCorr),
+
+        # Speed error
+        'speed_error_rpm':
+            float(state.SpeedErrorRpm),
+
+        'speed_error_rad_s':
+            float(state.SpeedErrorRadS),
+
+        'speed_error_percent':
+            float(state.SpeedErrorPercent),
+
+        # Trajectory
+        'traj_speed_rpm':
+            float(state.TrajSpeedRpm),
+
+        'traj_accel_rpm_s':
+            float(state.TrajAccelRpmS),
+
+        'traj_jerk_rpm_s3':
+            float(state.TrajJerkRpmS3),
+
+        # Status
+        'valid':
+            int(state.Valid),
+
+        'loop_counter':
+            int(state.LoopCounter),
+
+        'dt':
+            float(state.Dt),
+    }
+
+
+# =============================================================================
+# Public API
 # =============================================================================
 
 def control_init():
     """
-    Initialize C control module. Call ONCE at startup.
+    Initialize the native EmbedSim controller.
+
+    Call once before the first control_step().
     """
+
     with nogil:
         EmbedSim_CythonControlInit()
 
@@ -91,56 +423,41 @@ def control_step(
     valid_in: int = 1,
 ) -> dict:
     """
-    Execute one control step using the Cython interface.
-
-    Parameters:
-    -----------
-    ia : float
-        Phase A current [A]
-    ib : float
-        Phase B current [A]
-    ic : float
-        Phase C current [A]
-    rotor_position_rad : float
-        Rotor position sensor reading [RAD]
-    rotor_velocity_rpm : float
-        Rotor velocity sensor reading [RPM Mechanical]
-    speed_ref_rpm : float
-        Angular velocity reference [RPM Mechanical]
-    vdc : float
-        DC bus voltage [V]
-    sample_time : float
-        Sample time [s]
-    ctrl_alg : int
-        Control algorithm (0=Open Loop, 1=DFC)
-    valid_in : int
-        Valid flag (1=valid, 0=invalid)
+    Execute one native controller cycle.
 
     Returns:
-    --------
-    dict:
-        - 'pwm_u': float - PWM duty cycle for phase U [0.0 ... 1.0]
-        - 'pwm_v': float - PWM duty cycle for phase V [0.0 ... 1.0]
-        - 'pwm_w': float - PWM duty cycle for phase W [0.0 ... 1.0]
-        - 'valid_out': int - Output valid flag
+        pwm_u
+        pwm_v
+        pwm_w
+        valid_out
+        motor_state
     """
-    cdef float pwm_u = 0.0
-    cdef float pwm_v = 0.0
-    cdef float pwm_w = 0.0
+
+    cdef float pwm_u = 0.5
+    cdef float pwm_v = 0.5
+    cdef float pwm_w = 0.5
+
     cdef unsigned int valid_out = 0
-    cdef unsigned int valid_in_c = <unsigned int>valid_in
-    cdef unsigned int ctrl_alg_c = <unsigned int>ctrl_alg
+
+    cdef unsigned int valid_in_c = \
+        <unsigned int>valid_in
+
+    cdef unsigned int ctrl_alg_c = \
+        <unsigned int>ctrl_alg
+
+    cdef EmbedSimMotorState_T motor_state
 
     with nogil:
+
         EmbedSim_CythonControlStep(
-            ia,
-            ib,
-            ic,
-            rotor_position_rad,
-            rotor_velocity_rpm,
-            speed_ref_rpm,
-            vdc,
-            sample_time,
+            <float>ia,
+            <float>ib,
+            <float>ic,
+            <float>rotor_position_rad,
+            <float>rotor_velocity_rpm,
+            <float>speed_ref_rpm,
+            <float>vdc,
+            <float>sample_time,
             ctrl_alg_c,
             valid_in_c,
             &pwm_u,
@@ -149,20 +466,52 @@ def control_step(
             &valid_out
         )
 
+        EmbedSim_CythonGetMotorState(
+            &motor_state
+        )
+
     return {
-        'pwm_u': float(pwm_u),
-        'pwm_v': float(pwm_v),
-        'pwm_w': float(pwm_w),
-        'valid_out': int(valid_out),
+        'pwm_u':
+            float(pwm_u),
+
+        'pwm_v':
+            float(pwm_v),
+
+        'pwm_w':
+            float(pwm_w),
+
+        'valid_out':
+            int(valid_out),
+
+        'motor_state':
+            _motor_state_to_dict(&motor_state),
     }
 
 
+def get_motor_state() -> dict:
+    """
+    Return the current native motor state without executing a controller step.
+    """
+
+    cdef EmbedSimMotorState_T motor_state
+
+    with nogil:
+
+        EmbedSim_CythonGetMotorState(
+            &motor_state
+        )
+
+    return _motor_state_to_dict(
+        &motor_state
+    )
+
+
 # =============================================================================
-# Public API - Transform Functions (for PMSM Python Plant)
+# Clarke
 # =============================================================================
 
 def clarke(float u, float v, float w):
-    """Clarke transform: UVW -> AlphaBeta"""
+
     cdef FocUvw_T uvw
     cdef FocAlphaBeta_T ab
     cdef int status
@@ -172,16 +521,33 @@ def clarke(float u, float v, float w):
     uvw.W = w
 
     with nogil:
-        status = Clarke_Transform_Matrix(&uvw, &ab)
+
+        status = Clarke_Transform_Matrix(
+            &uvw,
+            &ab
+        )
 
     if status != 0:
-        raise RuntimeError(f"Clarke failed with status: {status}")
+        raise RuntimeError(
+            f"Clarke failed with status: {status}"
+        )
 
-    return ab.Alpha, ab.Beta
+    return (
+        float(ab.Alpha),
+        float(ab.Beta)
+    )
 
 
-def park(float alpha, float beta, float theta):
-    """Park transform: AlphaBeta -> DQ"""
+# =============================================================================
+# Park
+# =============================================================================
+
+def park(
+    float alpha,
+    float beta,
+    float theta
+):
+
     cdef FocAlphaBeta_T ab
     cdef FocAngle_T angle
     cdef FocDq_T dq
@@ -189,19 +555,38 @@ def park(float alpha, float beta, float theta):
 
     ab.Alpha = alpha
     ab.Beta = beta
+
     angle.ThetaE = theta
 
     with nogil:
-        status = Park_Transform_Matrix(&ab, &angle, &dq)
+
+        status = Park_Transform_Matrix(
+            &ab,
+            &angle,
+            &dq
+        )
 
     if status != 0:
-        raise RuntimeError(f"Park failed with status: {status}")
+        raise RuntimeError(
+            f"Park failed with status: {status}"
+        )
 
-    return dq.D, dq.Q
+    return (
+        float(dq.D),
+        float(dq.Q)
+    )
 
 
-def inv_park(float d, float q, float theta):
-    """Inverse Park transform: DQ -> AlphaBeta"""
+# =============================================================================
+# Inverse Park
+# =============================================================================
+
+def inv_park(
+    float d,
+    float q,
+    float theta
+):
+
     cdef FocDq_T dq
     cdef FocAngle_T angle
     cdef FocAlphaBeta_T ab
@@ -209,19 +594,37 @@ def inv_park(float d, float q, float theta):
 
     dq.D = d
     dq.Q = q
+
     angle.ThetaE = theta
 
     with nogil:
-        status = InvPark_Transform_Matrix(&dq, &angle, &ab)
+
+        status = InvPark_Transform_Matrix(
+            &dq,
+            &angle,
+            &ab
+        )
 
     if status != 0:
-        raise RuntimeError(f"Inverse Park failed with status: {status}")
+        raise RuntimeError(
+            f"Inverse Park failed with status: {status}"
+        )
 
-    return ab.Alpha, ab.Beta
+    return (
+        float(ab.Alpha),
+        float(ab.Beta)
+    )
 
 
-def inv_clarke(float alpha, float beta):
-    """Inverse Clarke transform: AlphaBeta -> UVW"""
+# =============================================================================
+# Inverse Clarke
+# =============================================================================
+
+def inv_clarke(
+    float alpha,
+    float beta
+):
+
     cdef FocAlphaBeta_T ab
     cdef FocUvw_T uvw
     cdef int status
@@ -230,22 +633,34 @@ def inv_clarke(float alpha, float beta):
     ab.Beta = beta
 
     with nogil:
-        status = InvClarke_Transform_Matrix(&ab, &uvw)
+
+        status = InvClarke_Transform_Matrix(
+            &ab,
+            &uvw
+        )
 
     if status != 0:
-        raise RuntimeError(f"Inverse Clarke failed with status: {status}")
+        raise RuntimeError(
+            f"Inverse Clarke failed with status: {status}"
+        )
 
-    return uvw.U, uvw.V, uvw.W
+    return (
+        float(uvw.U),
+        float(uvw.V),
+        float(uvw.W)
+    )
 
 
 # =============================================================================
-# EXPORTS - No circular imports!
+# Module information
 # =============================================================================
 
-__version__ = "1.0.0"
+__version__ = "2.1.0"
+
 __all__ = [
     'control_init',
     'control_step',
+    'get_motor_state',
     'clarke',
     'park',
     'inv_park',

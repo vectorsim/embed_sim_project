@@ -153,4 +153,29 @@
  * ====================================================================
  */
 
+/**
+ * @def DFC_STARTUP_MOD_MIN
+ * @brief Minimum Modulation Index for Start UP
+ *
+ */
+#define DFC_STARTUP_MOD_MIN      (0.2F)
+
+/**
+ * @def DFC_STARTUP_MOD_MAX
+ * @brief Maximum Modulation Index
+ *
+ */
+#define DFC_STARTUP_MOD_MAX       (0.2F)
+
+
+
+
+#define ES_WRAP_2PI(ANGLE)  (((ANGLE) >= ES_MATH_2PI_F) ? ((ANGLE) - ES_MATH_2PI_F) :  (((ANGLE) < 0.0F) ? ((ANGLE) + ES_MATH_2PI_F) : (ANGLE)))
+
+#define ES_WRAP_PI(ANGLE)  (((ANGLE) >= ES_MATH_PI_F) ? ((ANGLE) - ES_MATH_2PI_F) : (((ANGLE) < -ES_MATH_PI_F) ? ((ANGLE) + ES_MATH_2PI_F) : (ANGLE)))
+
+
+
+
+
 #endif /* EMBEDSIM_EMBED_SIM_MOTOR_PARAMETER_H_ */
