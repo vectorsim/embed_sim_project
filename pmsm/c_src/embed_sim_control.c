@@ -200,49 +200,79 @@ static void EmbedSim_OpenLoopStep(EmbedSimCtrlInput_T*    const inputPtr,
 /**
  * \brief   Update observer estimates from sensor readings.
  *
- * \details This function copies the raw sensor values (position and speed)
- *          to the estimated fields used by the controller. It also increments
- *          the loop counter and clamps the speed reference to the allowed range.
+ * \details Copies raw sensor values to estimated fields, increments loop counter,
+ *          clamps speed reference, and implements a smooth convergence algorithm
+ *          for the electrical rotor angle model when in closed‑loop control.
  *
- * \param[in,out] InputPtr  Pointer to control input structure.
+ * \note    Assumes the observer (e.g., PLL or state estimator) has already
+ *          validated and filtered the sensor readings. This function only
+ *          aligns the internal model angle with the estimated angle.
+ *
+ * \param[in,out] MotorPtr  Pointer to the motor structure.
  */
 void EmbedSim_ExecuteObserver(EmbedSimMachine_T* const MotorPtr)
 {
-    EmbedSimCtrlInput_T*    iPtr;
-    EmbedSimMachineParam_T* mPtr;
-    real32_T angleDiff;
+    EmbedSimCtrlInput_T*    iPtr = MotorPtr->InputPtr;
+    EmbedSimMachineParam_T* mPtr = MotorPtr->MachinePtr;
     real32_T rotorSensorPosE;
-
-    iPtr = MotorPtr->InputPtr;
-    mPtr = MotorPtr->MachinePtr;
-
-    rotorSensorPosE = 0.0F;
-    angleDiff       = 0.0F;
+    real32_T angleDiff;
+    real32_T absErr;
+    real32_T gain;
+    real32_T omegaE;
+    real32_T feedforward;
 
     /* Increment loop counter for diagnostic purposes */
     iPtr->LoopCounter++;
 
-    /* Clamp RPM reference to maximum speed */
-    iPtr->AngularVelocityRefRpmM = EmbedSim_ClampValue(iPtr->AngularVelocityRefRpmM, -MAX_SPEED_RPM,MAX_SPEED_RPM);
-    /* Convert RPM reference to rad/s for use in control */
+    /* Clamp RPM reference to maximum speed and convert to rad/s */
+    iPtr->AngularVelocityRefRpmM = EmbedSim_ClampValue(iPtr->AngularVelocityRefRpmM,
+                                                       -MAX_SPEED_RPM, MAX_SPEED_RPM);
     iPtr->RotorVelocityRefM = CON_RPM_TO_RAD(iPtr->AngularVelocityRefRpmM);
 
-    /* Use sensor readings directly as estimates (no filtering) */
+    /* Copy observer estimates (already validated by the observer module) */
     iPtr->RotorPositionObsEstM = iPtr->RotorPositionSensorM;
     iPtr->RotorSpeedObsEstM    = iPtr->RotorSpeedSensorM;
 
-    if(iPtr->SwitchToClosedLoop == 0x1U)
+    /* Only update the model angle when in closed‑loop control */
+    if (iPtr->SwitchToClosedLoop == 0x1U)
     {
-        rotorSensorPosE  =  iPtr->RotorPositionObsEstM * mPtr->PolePairs;
+        /* Compute electrical angle from mechanical position */
+        rotorSensorPosE = iPtr->RotorPositionObsEstM * mPtr->PolePairs;
         EmbedSim_WrapAngleTwoPi(&rotorSensorPosE);
 
-        angleDiff = EmbedSim_AngleDistance(rotorSensorPosE,  mPtr->SvmRotorThetaE);
-        mPtr->SvmRotorThetaE += (0.3 *angleDiff);
+        /* Shortest signed angular distance [-π, π) */
+        angleDiff = EmbedSim_AngleDistance(rotorSensorPosE, mPtr->SvmRotorThetaE);
+        absErr = fabsf(angleDiff);
 
+        /* ---------- Smooth gain scheduling ---------- */
+        if (absErr < ES_ANGLE_CORR_THRESHOLD_RAD)
+        {
+            gain = 1.0F;   /* Full correction */
+        }
+        else
+        {
+            /* Gain smoothly transitions from ES_ANGLE_CORR_SLOW_GAIN to 1.0 */
+            gain = ES_ANGLE_CORR_SLOW_GAIN +
+                   (1.0F - ES_ANGLE_CORR_SLOW_GAIN) * (ES_ANGLE_CORR_THRESHOLD_RAD / absErr);
+            gain = EmbedSim_ClampValue(gain, ES_ANGLE_CORR_SLOW_GAIN, 1.0F);
+        }
+        mPtr->SvmRotorThetaE += gain * angleDiff;
+
+        /* ---------- Half‑sample delay compensation (only when locked) ---------- */
+        if (absErr < ES_ANGLE_CORR_THRESHOLD_RAD)
+        {
+            omegaE = CON_RPM_TO_RAD(iPtr->RotorSpeedObsEstM) * mPtr->PolePairs;
+            feedforward = omegaE * ES_MEASUREMENT_DELAY_FACTOR * iPtr->SampleTime;
+            feedforward = EmbedSim_ClampValue(feedforward,
+                                              -ES_MAX_ANGLE_STEP_RAD,
+                                               ES_MAX_ANGLE_STEP_RAD);
+            mPtr->SvmRotorThetaE += feedforward;
+        }
+
+        /* Keep angle within [0, 2π) */
+        EmbedSim_WrapAngleTwoPi(&mPtr->SvmRotorThetaE);
     }
-
 }
-
 
 /*********************************************************************************************************************/
 /*--------------------------------------Public Function Implementations----------------------------------------------*/
@@ -533,7 +563,6 @@ void EmbedSim_GetMotorState(EmbedSimMachine_T* const motorPtr, EmbedSimMotorStat
 
 
 }
-
 
 
 void EmbedSim_CalculateJerkLimitedTrajectory(EmbedSimCtrlInput_T* const InputPtr, const EmbedSimMachineParam_T* const ParaPtr)
