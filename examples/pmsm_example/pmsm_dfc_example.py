@@ -75,13 +75,13 @@ except ImportError:
 #   "C_OPEN_LOOP"        - C backend open-loop
 #   "C_DFC"              - C backend DFC
 
-CONTROLLER_MODE = "PYTHON_DFC"  # Change this to switch controllers
+CONTROLLER_MODE = "C_DFC"  # Change this to switch controllers
 
 # Plant options:
 #   "PYTHON"  - Python PMSM plant model
 #   "FMU"     - FMU-based plant model
 
-PLANT_MODE = "PYTHON"  # Change this to switch plants
+PLANT_MODE = "FMU"  # Change this to switch plants
 
 # =============================================================================
 # Simulation Parameters

@@ -235,7 +235,11 @@ void DFC_Step(EmbedSimMachine_T* const MotorPtr)
     {
         machinePtr->SvmStartUpTimer += inputPtr->SampleTime;
         tauStart = (machinePtr->SvmStartUpTimer / DFC_STARTUP_DURATION_S);
+    #if DFC_SIM_INVERTER == 0x1U
         machinePtr->SvmModulationIndex = DFC_STARTUP_MOD_MIN + (ES_SVM_START_MOD_FUNC(tauStart) * (DFC_STARTUP_MOD_MAX - DFC_STARTUP_MOD_MIN));
+    #else
+        machinePtr->SvmModulationIndex = DFC_STARTUP_MOD_MIN + (tauStart * (DFC_STARTUP_MOD_MAX - DFC_STARTUP_MOD_MIN));
+    #endif
         machinePtr->SvmModulationIndex = EmbedSim_ClampValue(machinePtr->SvmModulationIndex, DFC_STARTUP_MOD_MIN, DFC_STARTUP_MOD_MAX);
         machinePtr->SvmRotorThetaE += (machinePtr->PolePairs * CON_RPM_TO_RAD(inputPtr->AngularVelocityRefRpmM)) * inputPtr->SampleTime;
         EmbedSim_WrapAngleTwoPi(&machinePtr->SvmRotorThetaE);
@@ -368,15 +372,8 @@ void DFC_Step(EmbedSimMachine_T* const MotorPtr)
         outputPtr->Valid = 0x1U;
 #else
         /* ---------- Direct PWM generation (matching Python) ---------- */
-
         vHalf = machinePtr->Vdc / 2.0f;
-
         InvClarke_Transform_Matrix(&abVoltage, &phase);
-        /* Inverse Clarke: αβ → U,V,W phase voltages (no angle) */
-       /**phase.U = abVoltage.Alpha;
-        phase.V = -0.5f * abVoltage.Alpha + 0.8660254f * abVoltage.Beta;
-        phase.W = -0.5f * abVoltage.Alpha - 0.8660254f * abVoltage.Beta;*/
-
         /* Clamp to duty cycles */
         outputPtr->DutyU = EmbedSim_ClampValue((phase.U / vHalf + 1.0f) / 2.0f, 0.0f, 1.0f);
         outputPtr->DutyV = EmbedSim_ClampValue((phase.V / vHalf + 1.0f) / 2.0f, 0.0f, 1.0f);
