@@ -1,7 +1,7 @@
 """
 pmsm_dfc_example.py  -  PMSM Control Example with Mode Switching
                        Supports both Python and FMU plant models
-                       WITH UNIFIED MOTOR STATE REPORTING
+                       WITH ENHANCED MOTOR STATE DISPLAY & DIAGNOSTICS
                        CLEANED VERSION - Console + RPM Plot Only
 """
 
@@ -52,7 +52,7 @@ from embedsim_generic_control import GenericControlBlock
 from embedsim_connections import CtrlPacker, LoadAdapter, MotorVectorDelay
 
 # Python and C controllers
-from pmsm_dfc import PythonController
+from pmsm_dfc1 import PythonController
 from embedsim_control_block import EmbedSimControlBlock, SIM_CTRL_OPEN_LOOP, SIM_CTRL_DFC
 
 # Try to import motor state reporting
@@ -75,7 +75,7 @@ except ImportError:
 #   "C_OPEN_LOOP"        - C backend open-loop
 #   "C_DFC"              - C backend DFC
 
-CONTROLLER_MODE = "C_DFC"  # Change this to switch controllers
+CONTROLLER_MODE = "PYTHON_DFC"  # Change this to switch controllers
 
 # Plant options:
 #   "PYTHON"  - Python PMSM plant model
@@ -261,17 +261,20 @@ def create_controller(controller_mode: str, config: SimulationConfig, plant_type
 
 
 # =============================================================================
-# Motor State Display Function
+# Motor State Display Function (ENHANCED)
 # =============================================================================
 
-def display_motor_state(t: float, state: dict, prefix: str = ""):
+def display_motor_state(t: float, state: dict, prefix: str = "", verbose: bool = False):
     """
     Display motor state in a readable format.
+    Now includes numeric flags and diagnostic fields.
     """
     if not state:
         return
 
-    mode = "CLOSED" if state.get('closed_loop', 0) else "OPEN"
+    # Extract key fields with defaults
+    closed_loop = state.get('closed_loop', 0)
+    controller_mode = state.get('controller_mode', 0)   # 0=OPEN, 1=DFC (or other)
     speed = state.get('speed_rpm', 0.0)
     speed_ref = state.get('speed_ref_rpm', 0.0)
     id_val = state.get('id', 0.0)
@@ -281,9 +284,14 @@ def display_motor_state(t: float, state: dict, prefix: str = ""):
     duty_w = state.get('duty_w', 0.5)
     torque = state.get('torque_total', 0.0)
     spin_counter = state.get('spinning_counter', 0)
+    speed_error = state.get('speed_error_rpm', 0.0)
 
-    print(
-        f"{prefix}[{t:6.2f}s] {mode} "
+    # Determine mode string
+    mode_str = "CLOSED" if closed_loop else "OPEN"
+
+    # Build basic line
+    line = (
+        f"{prefix}[{t:6.2f}s] {mode_str}  "
         f"ω={speed:6.1f} RPM  "
         f"ω_ref={speed_ref:6.1f}  "
         f"Id={id_val:6.3f}A  "
@@ -292,6 +300,16 @@ def display_motor_state(t: float, state: dict, prefix: str = ""):
         f"spin={spin_counter:6d}  "
         f"duty=({duty_u:.3f},{duty_v:.3f},{duty_w:.3f})"
     )
+
+    # Append extra diagnostic info if verbose or if closed_loop=0 but speed error is small
+    show_diag = verbose or (closed_loop == 0 and abs(speed_error) < 50 and speed > 100)
+    if show_diag:
+        line += (
+            f"  [closed_loop={closed_loop}  ctrl_mode={controller_mode}  "
+            f"err={speed_error:6.1f} RPM]"
+        )
+
+    print(line)
 
 
 # =============================================================================
@@ -380,7 +398,9 @@ def run_simulation_with_logging(sim: EmbedSim, config: SimulationConfig):
                     state = get_motor_state()
                     if state and state.get('valid', 0):
                         motor_states.append((t, state))
-                        display_motor_state(t, state)
+                        # Use verbose flag to show diagnostics if closed_loop is 0 but speed is high
+                        verbose = (state.get('closed_loop', 0) == 0 and state.get('speed_rpm', 0) > 100)
+                        display_motor_state(t, state, verbose=verbose)
                 except Exception as e:
                     # Silent fail during simulation
                     pass
@@ -508,7 +528,7 @@ def main():
         motor_states = []
 
     # ------------------------------------------------------------
-    # 7. Get final motor state
+    # 7. Get final motor state (with full dump)
     # ------------------------------------------------------------
 
     if CONTROLLER_MODE in ["C_OPEN_LOOP", "C_DFC"] and HAS_C_WRAPPER:
@@ -517,8 +537,13 @@ def main():
             if state and state.get('valid', 0):
                 if not motor_states or motor_states[-1][0] < config.T_SIM:
                     motor_states.append((config.T_SIM, state))
-                print("\n📊 Final C Motor State:")
-                display_motor_state(config.T_SIM, state)
+                print("\n📊 Final C Motor State (full):")
+                # Print all keys and values for diagnosis
+                for key, value in state.items():
+                    print(f"    {key:20s} = {value}")
+                # Also a compact final display
+                print("\n📊 Final Summary:")
+                display_motor_state(config.T_SIM, state, verbose=True)
         except Exception as e:
             print(f"⚠️ Could not get motor state: {e}")
 
@@ -565,7 +590,7 @@ def main():
     print(f"  Final speed: {final_speed:.1f} RPM")
     print(f"  Steady-state speed: {steady_speed:.1f} ± {steady_std:.1f} RPM")
     print(f"  Steady-state error: {steady_speed - config.TARGET_RPM:+.1f} RPM")
-    print(f"  Closed-loop: {switched_to_closed_loop}")
+    print(f"  Closed-loop flag: {switched_to_closed_loop}")
 
     if abs(steady_speed - config.TARGET_RPM) < 50:
         if switched_to_closed_loop:

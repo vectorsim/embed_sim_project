@@ -28,6 +28,10 @@ from embedsim_control_wrapper import (
     control_init,
     control_step as c_control_step,
     get_motor_state,
+    clarke,           # added
+    park,             # added
+    inv_park,         # added
+    inv_clarke,       # added
 )
 
 # ===========================================================================
@@ -45,7 +49,7 @@ SIM_CTRL_DFC = 1
 DEBUG_IO = False  # <--- Toggle: True = print I/O, False = silent
 
 # Debug state: prints full motor state from C
-DEBUG_STATE = False   # <--- Toggle: True = print state, False = silent
+DEBUG_STATE = True  # <--- Toggle: True = print state, False = silent
 
 # Debug print interval (seconds)
 DEBUG_INTERVAL = 0.3 # Print every 0.1 seconds
@@ -176,6 +180,64 @@ class EmbedSimControlBlock(VectorBlock):
     def reset(self):
         super().reset()
         self._last_print_t = -1.0
+
+    # ------------------------------------------------------------------------
+    # Added transformation methods (direct wrappers around C functions)
+    # ------------------------------------------------------------------------
+    @staticmethod
+    def clarke(u, v, w):
+        """Clarke transform: (u,v,w) -> (alpha, beta)."""
+        return clarke(u, v, w)
+
+    @staticmethod
+    def park(alpha, beta, theta):
+        """Park transform: (alpha, beta, theta) -> (d, q)."""
+        return park(alpha, beta, theta)
+
+    @staticmethod
+    def inv_park(d, q, theta):
+        """Inverse Park transform: (d, q, theta) -> (alpha, beta)."""
+        return inv_park(d, q, theta)
+
+    @staticmethod
+    def inv_clarke(alpha, beta):
+        """Inverse Clarke transform: (alpha, beta) -> (u, v, w)."""
+        return inv_clarke(alpha, beta)
+
+    @staticmethod
+    def svm(alpha, beta, vdc):
+        """
+        Space Vector PWM from alpha/beta voltage references.
+
+        Parameters
+        ----------
+        alpha, beta : float
+            Voltage references in stationary frame (V).
+        vdc : float
+            DC bus voltage (V).
+
+        Returns
+        -------
+        (duty_u, duty_v, duty_w) : tuple of floats
+            Duty cycles in [0, 1] for phases U, V, W.
+        """
+        # Standard SVM algorithm using inverse Clarke and centre‑aligned PWM.
+        # We compute the three phase voltages from alpha/beta,
+        # then convert to duty cycles.
+
+        u, v, w = inv_clarke(alpha, beta)   # phase voltages (V)
+
+        # Duty cycles = (V_phase / Vdc) + 0.5  (for centre‑aligned PWM)
+        duty_u = (u / vdc) + 0.5
+        duty_v = (v / vdc) + 0.5
+        duty_w = (w / vdc) + 0.5
+
+        # Clamp to [0, 1] to avoid numerical overflow
+        duty_u = max(0.0, min(1.0, duty_u))
+        duty_v = max(0.0, min(1.0, duty_v))
+        duty_w = max(0.0, min(1.0, duty_w))
+
+        return duty_u, duty_v, duty_w
 
     def __repr__(self):
         mode_name = "DFC" if self.ctrl_alg == SIM_CTRL_DFC else "OPEN_LOOP"

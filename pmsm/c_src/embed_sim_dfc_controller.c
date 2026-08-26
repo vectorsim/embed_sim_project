@@ -78,7 +78,7 @@
  */
 #define DFC_STARTUP_DURATION_S          (3.0F)
 
-
+ #define DFC_SIM_INVERTER               (0x1U)
 
 /*********************************************************************************************************************/
 /*--------------------------------------------------Private Data-----------------------------------------------------*/
@@ -220,32 +220,26 @@ void DFC_Step(EmbedSimMachine_T* const MotorPtr)
     FocDq_T dqVoltage;
     FocAngle_T focAngle;
     FocAlphaBeta_T abVoltage;
-    SVM_DutyCycle_T svmDC;
-
-    real32_T vMag;
-    real32_T vPhaseMax;
+    SVM_DutyCycle_T svmDC;          /* unused in closed‑loop, kept for compatibility */
     SVM_DutyCycle_T startupSvmDC;
     real32_T tauStart;
+    FocUvw_T phase;                 /* for direct PWM generation */
+    real32_T vHalf;
 
     tauStart = 0.0F;
 
     /* ================================================================
-     * 1. Startup phase (open‑loop voltage ramp) & Startup Timer Management
+     * 1. Startup phase (open‑loop voltage ramp)
      * ================================================================ */
-    if (inputPtr->SwitchToClosedLoop == 0x0U)
+    if(inputPtr->SwitchToClosedLoop == 0x0U)
     {
         machinePtr->SvmStartUpTimer += inputPtr->SampleTime;
-        tauStart = (machinePtr->SvmStartUpTimer/DFC_STARTUP_DURATION_S);
+        tauStart = (machinePtr->SvmStartUpTimer / DFC_STARTUP_DURATION_S);
         machinePtr->SvmModulationIndex = DFC_STARTUP_MOD_MIN + (ES_SVM_START_MOD_FUNC(tauStart) * (DFC_STARTUP_MOD_MAX - DFC_STARTUP_MOD_MIN));
         machinePtr->SvmModulationIndex = EmbedSim_ClampValue(machinePtr->SvmModulationIndex, DFC_STARTUP_MOD_MIN, DFC_STARTUP_MOD_MAX);
-
-
-        /* Traditional calculated angle from reference speed */
         machinePtr->SvmRotorThetaE += (machinePtr->PolePairs * CON_RPM_TO_RAD(inputPtr->AngularVelocityRefRpmM)) * inputPtr->SampleTime;
-
         EmbedSim_WrapAngleTwoPi(&machinePtr->SvmRotorThetaE);
-
-        SVM_CalculateDutyCycle(machinePtr->SvmModulationIndex, &machinePtr->SvmRotorThetaE , &startupSvmDC);
+        SVM_CalculateDutyCycle(machinePtr->SvmModulationIndex, &machinePtr->SvmRotorThetaE, &startupSvmDC);
 
         outputPtr->DutyU = startupSvmDC.Ta;
         outputPtr->DutyV = startupSvmDC.Tb;
@@ -253,7 +247,8 @@ void DFC_Step(EmbedSimMachine_T* const MotorPtr)
         outputPtr->SvmSector = startupSvmDC.Sector;
         outputPtr->Valid = 0x1U;
 
-        if(machinePtr->SvmStartUpTimer > DFC_STARTUP_DURATION_S)
+        /* Switch to closed‑loop after 3 seconds */
+        if (machinePtr->SvmStartUpTimer > DFC_STARTUP_DURATION_S)
         {
             inputPtr->SwitchToClosedLoop = 0x1U;
             machinePtr->SvmStartUpTimer  = 0.0F;
@@ -262,13 +257,18 @@ void DFC_Step(EmbedSimMachine_T* const MotorPtr)
             machinePtr->SpeedIntegralError = 0.0F;
             machinePtr->IdIntegralError    = 0.0F;
             machinePtr->IqIntegralError    = 0.0F;
+
+            /* Initialise model angle from sensor */
+            machinePtr->SvmRotorThetaE = inputPtr->RotorPositionObsEstM * machinePtr->PolePairs;
+            EmbedSim_WrapAngleTwoPi(&machinePtr->SvmRotorThetaE);
+
             /* Re‑initialise trajectory from measured speed */
             inputPtr->ControlReInit = 0x1U;
         }
     }
 
     /* ================================================================
-     * 3. Normal DFC (closed‑loop)
+     * 2. Normal DFC (closed‑loop)
      * ================================================================ */
     if (inputPtr->SwitchToClosedLoop == 1U)
     {
@@ -281,17 +281,13 @@ void DFC_Step(EmbedSimMachine_T* const MotorPtr)
         omegaRefDDot = inputPtr->RotorJerkRefM;
         omegaMeas    = CON_RPM_TO_RAD(inputPtr->RotorSpeedObsEstM);
 
-        /* ---------- Speed PI (outer loop) ----------
-         * Integrator is updated with sample‑time compensation.
-         * Clamping is performed immediately after integration.
-         */
+        /* ---------- Speed PI (outer loop) ---------- */
         speedError = omegaRef - omegaMeas;
 
-        /* Update integral with sample time */
+        /* Integral update with sample‑time compensation */
         machinePtr->SpeedIntegralError += speedError * inputPtr->SampleTime;
         machinePtr->SpeedIntegralError = EmbedSim_ClampValue(machinePtr->SpeedIntegralError, -machinePtr->ParamPidIntegralLimit, machinePtr->ParamPidIntegralLimit);
 
-        /* Compute torque correction using the clamped integral */
         torqueCorrection = (machinePtr->ParamPidSpeedQProp * speedError) +
                            (machinePtr->ParamPidSpeedQInteg * machinePtr->SpeedIntegralError);
 
@@ -310,7 +306,7 @@ void DFC_Step(EmbedSimMachine_T* const MotorPtr)
 
             iqRefDot = ((machinePtr->J * omegaRefDDot) +
                         (machinePtr->B * omegaRefDot)) / torqueConstant;
-            iqRefDot = EmbedSim_ClampValue(iqRefDot, -DFC_MAX_IQ_DOT_F,  DFC_MAX_IQ_DOT_F);
+            iqRefDot = EmbedSim_ClampValue(iqRefDot, -DFC_MAX_IQ_DOT_F, DFC_MAX_IQ_DOT_F);
         }
         else
         {
@@ -330,11 +326,11 @@ void DFC_Step(EmbedSimMachine_T* const MotorPtr)
         idError = 0.0F - dqCurrentMeas.D;
         iqError = iqRef - dqCurrentMeas.Q;
 
-        /* ---------- Current PI (inner loops) with sample‑time compensation ---------- */
+        /* ---------- Current PI (inner loops) ---------- */
         machinePtr->IdIntegralError += idError * inputPtr->SampleTime;
         machinePtr->IqIntegralError += iqError * inputPtr->SampleTime;
 
-        machinePtr->IdIntegralError = EmbedSim_ClampValue(machinePtr->IdIntegralError, -machinePtr->ParamPidIntegralLimit,  machinePtr->ParamPidIntegralLimit);
+        machinePtr->IdIntegralError = EmbedSim_ClampValue(machinePtr->IdIntegralError, -machinePtr->ParamPidIntegralLimit, machinePtr->ParamPidIntegralLimit);
         machinePtr->IqIntegralError = EmbedSim_ClampValue(machinePtr->IqIntegralError, -machinePtr->ParamPidIntegralLimit, machinePtr->ParamPidIntegralLimit);
 
         /* Clamp errors to prevent excessive correction */
@@ -351,15 +347,16 @@ void DFC_Step(EmbedSimMachine_T* const MotorPtr)
         dqVoltage.D = vdRef + vdCorr;
         dqVoltage.Q = vqRef + vqCorr;
 
-        /* ---------- Inverse Park and SVM ---------- */
-        focAngle.ThetaE =  machinePtr->SvmRotorThetaE;                   //inputPtr->inputPtr->RotorPositionObsEstM * machinePtr->PolePairs;
+        /* ---------- Inverse Park: dq → αβ ---------- */
+        focAngle.ThetaE = machinePtr->SvmRotorThetaE;
         EmbedSim_WrapAngleTwoPi(&focAngle.ThetaE);
         InvPark_Transform_Matrix(&dqVoltage, &focAngle, &abVoltage);
 
-        vMag = sqrtf(abVoltage.Alpha * abVoltage.Alpha +
-                     abVoltage.Beta  * abVoltage.Beta);
-        vPhaseMax = machinePtr->Vdc / DFC_SQRT3_F;
-        machinePtr->SvmModulationIndex = vMag / vPhaseMax;
+
+#if DFC_SIM_INVERTER != 0x1U
+
+        vMag = sqrtf(abVoltage.Alpha*abVoltage.Alpha + abVoltage.Beta*abVoltage.Beta);
+        machinePtr->SvmModulationIndex = vMag / (machinePtr->Vdc / DFC_SQRT3_F);
         machinePtr->SvmModulationIndex = EmbedSim_ClampValue(machinePtr->SvmModulationIndex, 0.0F, 0.80F);
 
         SVM_CalculateDutyCycle(machinePtr->SvmModulationIndex, &focAngle, &svmDC);
@@ -369,12 +366,26 @@ void DFC_Step(EmbedSimMachine_T* const MotorPtr)
         outputPtr->DutyW = svmDC.Tc;
         outputPtr->SvmSector = svmDC.Sector;
         outputPtr->Valid = 0x1U;
+#else
+        /* ---------- Direct PWM generation (matching Python) ---------- */
 
-        if(EmbedSim_IsNotSpinning(inputPtr, 200)==0x1U)
-        {
-            DFC_Reset(MotorPtr);
-        }
+        vHalf = machinePtr->Vdc / 2.0f;
 
-        machinePtr->SvmRotorThetaE = focAngle.ThetaE;
+        InvClarke_Transform_Matrix(&abVoltage, &phase);
+        /* Inverse Clarke: αβ → U,V,W phase voltages (no angle) */
+       /**phase.U = abVoltage.Alpha;
+        phase.V = -0.5f * abVoltage.Alpha + 0.8660254f * abVoltage.Beta;
+        phase.W = -0.5f * abVoltage.Alpha - 0.8660254f * abVoltage.Beta;*/
+
+        /* Clamp to duty cycles */
+        outputPtr->DutyU = EmbedSim_ClampValue((phase.U / vHalf + 1.0f) / 2.0f, 0.0f, 1.0f);
+        outputPtr->DutyV = EmbedSim_ClampValue((phase.V / vHalf + 1.0f) / 2.0f, 0.0f, 1.0f);
+        outputPtr->DutyW = EmbedSim_ClampValue((phase.W / vHalf + 1.0f) / 2.0f, 0.0f, 1.0f);
+
+        /* Sector is not used, but keep for compatibility */
+        outputPtr->SvmSector = 0U;
+        outputPtr->Valid = 0x1U;
+#endif
+
     }
 }

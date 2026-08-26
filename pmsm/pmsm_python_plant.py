@@ -1,6 +1,7 @@
 """
 pmsm_python_plant.py  -  Python PMSM Motor Plant Model
                        USES C TRANSFORMS VIA CYTHON INTERFACE
+                       NOW WITH 4th-ORDER RUNGE-KUTTA INTEGRATION
 """
 
 from __future__ import annotations
@@ -21,8 +22,6 @@ for _p in (str(_HERE), str(_C_SRC)):
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
-
-
 from embedsim.core_blocks import (
     VectorSignal,
     DEFAULT_DTYPE,
@@ -41,8 +40,8 @@ from embedsim_control_wrapper import (
 class PMSM_Python_Plant(VectorBlock):
     """
     PMSM Motor Plant Model - USES C TRANSFORMS VIA CYTHON.
-
     All transforms call the C implementation directly.
+    States are integrated using 4th-order Runge-Kutta (RK4).
     """
 
     def __init__(
@@ -92,27 +91,19 @@ class PMSM_Python_Plant(VectorBlock):
     # ==================================================================
 
     def _clarke(self, u: float, v: float, w: float) -> Tuple[float, float]:
-        """
-        Clarke transform - CALLS C IMPLEMENTATION via Cython.
-        """
+        """Clarke transform - CALLS C IMPLEMENTATION via Cython."""
         return clarke(u, v, w)
 
     def _inv_clarke(self, alpha: float, beta: float) -> Tuple[float, float, float]:
-        """
-        Inverse Clarke transform - CALLS C IMPLEMENTATION via Cython.
-        """
+        """Inverse Clarke transform - CALLS C IMPLEMENTATION via Cython."""
         return inv_clarke(alpha, beta)
 
     def _park(self, alpha: float, beta: float, theta_elec: float) -> Tuple[float, float]:
-        """
-        Park transform - CALLS C IMPLEMENTATION via Cython.
-        """
+        """Park transform - CALLS C IMPLEMENTATION via Cython."""
         return park(alpha, beta, theta_elec)
 
     def _inv_park(self, vd: float, vq: float, theta_elec: float) -> Tuple[float, float]:
-        """
-        Inverse Park transform - CALLS C IMPLEMENTATION via Cython.
-        """
+        """Inverse Park transform - CALLS C IMPLEMENTATION via Cython."""
         return inv_park(vd, vq, theta_elec)
 
     def _currents_to_phase(self, theta_elec: float) -> Tuple[float, float, float]:
@@ -129,18 +120,39 @@ class PMSM_Python_Plant(VectorBlock):
         return ia, ib, ic
 
     # ==================================================================
-    # Motor Dynamics
+    # Derivatives for RK4
     # ==================================================================
 
-    def _compute_electrical(self, vd: float, vq: float, omega_e: float, dt: float):
+    def _derivatives(
+        self,
+        id_: float,
+        iq_: float,
+        omega_m_: float,
+        theta_m_: float,
+        vd: float,
+        vq: float,
+        T_load: float
+    ) -> Tuple[float, float, float, float]:
         """
-        Compute electrical dynamics.
-        """
-        did_dt = (vd - self.R * self.id + omega_e * self.L_q * self.iq) / self.L_d
-        diq_dt = (vq - self.R * self.iq - omega_e * (self.L_d * self.id + self.lambda_pm)) / self.L_q
+        Compute time derivatives of the state variables at a given operating point.
 
-        self.id += did_dt * dt
-        self.iq += diq_dt * dt
+        Returns:
+            (did_dt, diq_dt, domega_dt, dtheta_dt)
+        """
+        omega_e = omega_m_ * self.p
+
+        # Electrical derivatives (PMSM dq equations)
+        did_dt = (vd - self.R * id_ + omega_e * self.L_q * iq_) / self.L_d
+        diq_dt = (vq - self.R * iq_ - omega_e * (self.L_d * id_ + self.lambda_pm)) / self.L_q
+
+        # Electromagnetic torque
+        T_em = 1.5 * self.p * self.lambda_pm * iq_
+
+        # Mechanical derivatives
+        domega_dt = (T_em - self.B_fric * omega_m_ - T_load) / self.J
+        dtheta_dt = omega_m_
+
+        return did_dt, diq_dt, domega_dt, dtheta_dt
 
     # ==================================================================
     # Main Block Method
@@ -148,7 +160,7 @@ class PMSM_Python_Plant(VectorBlock):
 
     def compute(self, t: float, dt: float, input_values=None) -> VectorSignal:
         """
-        Compute one step of the motor model.
+        Compute one step of the motor model using RK4 integration.
 
         Input vector (from controller):
         [0] duty_u
@@ -188,41 +200,78 @@ class PMSM_Python_Plant(VectorBlock):
         v_v = (duty_v - 0.5) * vdc
         v_w = (duty_w - 0.5) * vdc
 
-        # --- CRITICAL: Ensure balanced 3-phase voltages ---
-        # The Clarke transform assumes u + v + w = 0
+        # Ensure balanced 3-phase voltages (sum=0) for Clarke transform
         v_offset = (v_u + v_v + v_w) / 3.0
         v_u -= v_offset
         v_v -= v_offset
         v_w -= v_offset
 
-        # --- Convert to alpha-beta using C Clarke ---
+        # Convert phase voltages to alpha-beta using C Clarke
         valpha, vbeta = self._clarke(v_u, v_v, v_w)
 
-        # --- Electrical angle ---
+        # Electrical angle (mechanical * pole pairs)
         theta_elec = self.theta_m * self.p
 
-        # --- Convert to dq using C Park ---
+        # Convert alpha-beta voltages to dq using C Park
         vd, vq = self._park(valpha, vbeta, theta_elec)
 
-        # --- Electrical speed ---
-        omega_e = self.omega_m * self.p
+        # ------------------------------------------------------------
+        # RK4 integration of states (id, iq, omega_m, theta_m)
+        # ------------------------------------------------------------
+        id_curr = self.id
+        iq_curr = self.iq
+        omega_curr = self.omega_m
+        theta_curr = self.theta_m
 
-        # --- Update electrical dynamics ---
-        self._compute_electrical(vd, vq, omega_e, dt)
+        # Stage 1
+        k1_id, k1_iq, k1_omega, k1_theta = self._derivatives(
+            id_curr, iq_curr, omega_curr, theta_curr, vd, vq, T_load
+        )
 
-        # --- Compute electromagnetic torque ---
-        T_em = 1.5 * self.p * self.lambda_pm * self.iq
+        # Stage 2
+        id2 = id_curr + 0.5 * dt * k1_id
+        iq2 = iq_curr + 0.5 * dt * k1_iq
+        omega2 = omega_curr + 0.5 * dt * k1_omega
+        theta2 = theta_curr + 0.5 * dt * k1_theta
+        k2_id, k2_iq, k2_omega, k2_theta = self._derivatives(
+            id2, iq2, omega2, theta2, vd, vq, T_load
+        )
 
-        # --- Update mechanical dynamics ---
-        domega_dt = (T_em - self.B_fric * self.omega_m - T_load) / self.J
-        self.omega_m += domega_dt * dt
-        self.theta_m += self.omega_m * dt
+        # Stage 3
+        id3 = id_curr + 0.5 * dt * k2_id
+        iq3 = iq_curr + 0.5 * dt * k2_iq
+        omega3 = omega_curr + 0.5 * dt * k2_omega
+        theta3 = theta_curr + 0.5 * dt * k2_theta
+        k3_id, k3_iq, k3_omega, k3_theta = self._derivatives(
+            id3, iq3, omega3, theta3, vd, vq, T_load
+        )
+
+        # Stage 4
+        id4 = id_curr + dt * k3_id
+        iq4 = iq_curr + dt * k3_iq
+        omega4 = omega_curr + dt * k3_omega
+        theta4 = theta_curr + dt * k3_theta
+        k4_id, k4_iq, k4_omega, k4_theta = self._derivatives(
+            id4, iq4, omega4, theta4, vd, vq, T_load
+        )
+
+        # Update states with weighted average
+        self.id = id_curr + (dt / 6.0) * (k1_id + 2.0*k2_id + 2.0*k3_id + k4_id)
+        self.iq = iq_curr + (dt / 6.0) * (k1_iq + 2.0*k2_iq + 2.0*k3_iq + k4_iq)
+        self.omega_m = omega_curr + (dt / 6.0) * (k1_omega + 2.0*k2_omega + 2.0*k3_omega + k4_omega)
+        self.theta_m = theta_curr + (dt / 6.0) * (k1_theta + 2.0*k2_theta + 2.0*k3_theta + k4_theta)
+
+        # Wrap mechanical angle to [0, 2π)
         self.theta_m = self.theta_m % (2.0 * math.pi)
 
-        # --- Convert currents to phase currents using C transforms ---
-        ia, ib, ic = self._currents_to_phase(theta_elec)
+        # Compute electromagnetic torque from updated iq
+        T_em = 1.5 * self.p * self.lambda_pm * self.iq
 
-        # --- Convert speed to RPM ---
+        # Convert updated dq currents to phase currents using updated theta_elec
+        theta_elec_new = self.theta_m * self.p
+        ia, ib, ic = self._currents_to_phase(theta_elec_new)
+
+        # Convert speed to RPM
         rpm = self.omega_m * 60.0 / (2.0 * math.pi)
 
         out = np.array([
@@ -246,6 +295,4 @@ class PMSM_Python_Plant(VectorBlock):
         self.theta_m = 0.0
         self.id = 0.0
         self.iq = 0.0
-        self.ia = 0.0
-        self.ib = 0.0
-        self.ic = 0.0
+        # Note: ia, ib, ic are not stored as states; they are derived.

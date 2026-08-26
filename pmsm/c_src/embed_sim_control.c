@@ -711,10 +711,6 @@ void EmbedSim_WrapAngleTwoPi(real32_T* AnglePtr)
     }
 }
 
-
-
-
-
  real32_T EmbedSim_ClampValue(real32_T Val, real32_T MinVal, real32_T MaxVal)
  {
      real32_T result;
