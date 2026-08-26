@@ -79,8 +79,8 @@ extern MatrixStatus_T SVM_CalculateDutyCycle(
  */
 extern MatrixStatus_T SVM_CalculateDutyCycleFromAlphaBeta(
     const FocAlphaBeta_T * const V_AlphaBeta_P,
-    const FocAngle_T     * const Angle_P,
     MatrixFloat                  Vdc,
+    MatrixFloat                  maxModulationIndex,   /* New parameter (e.g., 0.80F) */
     SVM_DutyCycle_T      * const DutyOut_P);
 
 /**

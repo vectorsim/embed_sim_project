@@ -205,37 +205,50 @@ MatrixStatus_T SVM_CalculateDutyCycle(
 
 MatrixStatus_T SVM_CalculateDutyCycleFromAlphaBeta(
     const FocAlphaBeta_T * const V_AlphaBeta_P,
-    const FocAngle_T     * const Angle_P,
     MatrixFloat                  Vdc,
+    MatrixFloat                  maxModulationIndex,   /* New parameter (e.g., 0.80F) */
     SVM_DutyCycle_T      * const DutyOut_P)
 {
     MatrixFloat       t1, t2, angle_rad, mod_index, magnitude;
     SVM_Sector_T      sector;
     MatrixStatus_T status = MATRIX_SUCCESS;
 
-    if ((V_AlphaBeta_P == NULL) || (Angle_P == NULL) || (DutyOut_P == NULL))
+    /* Validate all inputs */
+    if ((V_AlphaBeta_P == NULL) || (DutyOut_P == NULL))
     {
         status = MATRIX_ERROR_NULL_PTR;
     }
-    else if (Vdc <= 0.0F)
+    else if ((Vdc <= 0.0F) || (maxModulationIndex <= 0.0F))
     {
         status = MATRIX_ERROR_OUT_OF_BOUNDS;
     }
     else
     {
-        /* Calculate magnitude of αβ voltage */
+        /* 1. Calculate magnitude of αβ voltage */
         magnitude = sqrtf((V_AlphaBeta_P->Alpha * V_AlphaBeta_P->Alpha) +
                           (V_AlphaBeta_P->Beta  * V_AlphaBeta_P->Beta));
 
-        /* Normalize by Vdc/√3 (SVPWM linear range) */
+        /* 2. Normalize by Vdc/√3 (SVPWM linear range base) */
         MatrixFloat Vphase_max = Vdc / SVM_SQRT3_F;
         mod_index = magnitude / Vphase_max;
 
-        /* Clamp to [0, 1] */
-        if (mod_index > ES_MATH_ONE_F) mod_index = ES_MATH_ONE_F;
-        else if (mod_index < SVM_ZERO_F) mod_index = SVM_ZERO_F;
+        /* 3. Clamp to [0, maxModulationIndex] (instead of hardcoded 1.0) */
+        if (mod_index > maxModulationIndex) {
+            mod_index = maxModulationIndex;
+        } else if (mod_index < SVM_ZERO_F) {
+            mod_index = SVM_ZERO_F;
+        }
 
-        angle_rad = Angle_P->ThetaE;
+        /* 4. Calculate the actual voltage angle directly from αβ.
+              This is the CORRECT angle for SVM, NOT the rotor angle. */
+        angle_rad = atan2f(V_AlphaBeta_P->Beta, V_AlphaBeta_P->Alpha);
+
+        /* Normalize angle to [0, 2π) for sector determination */
+        if (angle_rad < 0.0F) {
+            angle_rad += TWO_PI_F;  /* Ensure TWO_PI_F is defined (e.g., 6.28318530718f) */
+        }
+
+        /* 5. Generate SVPWM duty cycles */
         sector = SVM_GetSectorFromAngle(angle_rad);
         SVM_CalculateTimes(sector, angle_rad, mod_index, &t1, &t2);
         SVM_CalculateDutyFromTimes(t1, t2, sector, DutyOut_P);
