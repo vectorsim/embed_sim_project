@@ -1,6 +1,5 @@
 """
-pmsm_c_dfc_only.py  -  Minimal simulation using C DFC controller only.
-                       Use this to isolate and test the C closed‑loop implementation.
+pmsm_dfc_c_example_fixed.py  -  Fixed closed‑loop simulation with C DFC.
 """
 
 from __future__ import annotations
@@ -27,10 +26,11 @@ matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 
 from embedsim import EmbedSim, ODESolver, VectorEnd
+from embedsim.core_blocks import VectorBlock, VectorSignal, DEFAULT_DTYPE
 from embedsim.source_blocks import VectorStep
 from embedsim.plot_helper import create_plotter
 
-# Plant
+# Plant – use the RK4 version (original)
 from pmsm_python_plant import PMSM_Python_Plant
 
 # Helpers
@@ -39,17 +39,72 @@ from embedsim_connections import CtrlPacker, LoadAdapter, MotorVectorDelay
 # C controller
 from embedsim_control_block import EmbedSimControlBlock, SIM_CTRL_DFC
 
+
+# =============================================================================
+# DEBUG Motor wrapper – prints internal state and input
+# =============================================================================
+
+class DebugMotor(PMSM_Python_Plant):
+    """
+    Subclass that prints debug info without changing the plant logic.
+    """
+    def compute(self, t, dt, input_values=None):
+        # Call parent (RK4 integration)
+        result = super().compute(t, dt, input_values)
+
+        # Print internal state every 0.3 s
+        if not hasattr(self, '_last_print_t'):
+            self._last_print_t = -1.0
+        if t - self._last_print_t >= 0.3:
+            print(f"\n[Motor] t={t:.3f}  omega_m={self.omega_m:.3f} rad/s  "
+                  f"id={self.id:.4f} A  iq={self.iq:.4f} A  "
+                  f"theta_m={self.theta_m:.4f} rad")
+            # Also print input duty cycles
+            if input_values is not None and len(input_values) > 0:
+                u = input_values[0].value
+                if len(u) >= 3:
+                    print(f"[Motor] input duty: {u[0]:.4f}, {u[1]:.4f}, {u[2]:.4f}, Vdc={u[3]:.2f}")
+            self._last_print_t = t
+
+        return result
+
+
+# =============================================================================
+# SpeedPrinter as a SINK (parallel tap, no pass‑through)
+# =============================================================================
+
+class SpeedPrinter(VectorBlock):
+    """
+    Sink that prints motor speed every interval – no output.
+    """
+    NUM_INPUTS = 1
+    OUTPUT_SIZE = 0
+
+    def __init__(self, name="speed_printer", print_interval=0.3):
+        super().__init__(name, use_c_backend=False, dtype=DEFAULT_DTYPE)
+        self._last_print_t = -1.0
+        self._print_interval = float(print_interval)
+
+    def compute(self, t, dt, input_values=None):
+        if input_values is not None and len(input_values) > 0:
+            speed = float(input_values[0].value[0])
+            if t - self._last_print_t >= self._print_interval:
+                print(f"[SpeedPrinter] t={t:6.2f}s  Speed={speed:7.1f} RPM")
+                self._last_print_t = t
+        return None
+
+
 # =============================================================================
 # Simulation Parameters
 # =============================================================================
 
-T_SIM = 10.0
-DT = 50e-6
+T_SIM = 5.0           # shorter for quick test
+DT = 100e-6           # 100 µs – faster simulation (still stable)
 V_DC = 12.0
 TARGET_RPM = 850.0
 STEP_TIME = 0.01
 
-# Motor parameters (Python plant)
+# Motor parameters (same as before)
 R_S = 0.19
 L_D = 0.125e-3
 L_Q = 0.125e-3
@@ -62,17 +117,12 @@ P_POLES = 4.0
 # Build blocks
 # =============================================================================
 
-# Speed reference step
-speed_ref = VectorStep(
-    "speed_ref",
-    step_time=STEP_TIME,
-    before_value=0.0,
-    after_value=TARGET_RPM,
-    dim=1
-)
+# Speed reference
+speed_ref = VectorStep("speed_ref", step_time=STEP_TIME,
+                        before_value=0.0, after_value=TARGET_RPM, dim=1)
 
-# Motor plant
-motor = PMSM_Python_Plant(
+# Motor – using debug wrapper to see what happens inside
+motor = DebugMotor(
     name="motor",
     R=R_S,
     L_d=L_D,
@@ -89,83 +139,88 @@ motor_out_size = 8
 ctrl = EmbedSimControlBlock(
     name="ctrl",
     dt_s=DT,
-    ctrl_alg=SIM_CTRL_DFC,       # DFC mode in C
+    ctrl_alg=SIM_CTRL_DFC,
     vdc_nom=V_DC,
     use_c_backend=True,
 )
 
-# Packer, adapter, delay, sink
-valid_flag = 1
-ctrl_packer = CtrlPacker("ctrl_packer", vdc=V_DC, valid_flag=valid_flag)
+# Packer, adapter, delay
+ctrl_packer = CtrlPacker("ctrl_packer", vdc=V_DC, valid_flag=1)
 load_adapter = LoadAdapter("load_adapter", vdc=V_DC, tload=0.0)
 motor_delay = MotorVectorDelay("motor_delay", vector_size=motor_out_size)
+
+# Sinks
 sink = VectorEnd("sink")
+speed_printer = SpeedPrinter("speed_printer", print_interval=0.3)
 
 # =============================================================================
-# Connections
+# Connections – CLEAN TOPOLOGY
 # =============================================================================
 
+# Forward path
 speed_ref >> ctrl_packer
 motor_delay >> ctrl_packer
 ctrl_packer >> ctrl
 ctrl >> load_adapter
 load_adapter >> motor
-motor >> motor_delay
-motor >> sink
+
+# Feedback & outputs – parallel taps
+motor >> motor_delay   # feedback to controller
+motor >> sink          # terminal sink for simulation
+motor >> speed_printer # speed printer as a separate tap (sink)
 
 # =============================================================================
 # Simulation
 # =============================================================================
 
 sim = EmbedSim(
-    sinks=[sink],
+    sinks=[sink, speed_printer],   # both sinks
     T=T_SIM,
     dt=DT,
-    solver=ODESolver.EULER
+    solver=ODESolver.EULER,        # Euler is fine with this DT
 )
 
-# Scope: speed reference and motor speed (RPM)
+# Topology
+sim.print_topology()
+
+# Scope
 sim.scope.add(speed_ref, indices=[0], label="SpeedRef")
 sim.scope.add(motor, indices=[0], label="Motor")
 
 print("\n" + "="*60)
-print(" MINIMAL C DFC SIMULATION")
+print(" FIXED CLOSED‑LOOP SIMULATION")
 print("="*60)
 print(f" Target: {TARGET_RPM} RPM")
 print(f" Time: {T_SIM}s, dt={DT*1e6:.0f}µs")
-print(f" Controller: C_DFC")
-print(f" Plant: Python PMSM")
 print("="*60 + "\n")
 
-# Run (standard, no custom logging)
 sim.run(progress_bar=True)
 
+print("\n✓ Simulation complete")
+
 # =============================================================================
-# Plot RPM
+# Plot
 # =============================================================================
 
 ph = create_plotter(sim)
 ph.easyplot(
     ["SpeedRef[0]", "Motor[0]"],
-    title="Speed Control - C DFC (Python Plant)",
+    title="Speed Control – Fixed Topology",
     time_range=(0, T_SIM),
     figsize=(10, 4),
-    save_path=None   # or set a path if desired
+    save_path=None
 )
 
-# =============================================================================
-# Quick summary
-# =============================================================================
-
+# Summary
 sc = sim.scope
 speed_data = sc.get_signal("Motor", 0)
 if speed_data is not None and len(speed_data) > 0:
     final_speed = speed_data[-1]
-    steady_start = int(len(speed_data) * 0.9)
+    steady_start = int(len(speed_data) * 0.8)
     steady_speed = np.mean(speed_data[steady_start:])
     steady_std = np.std(speed_data[steady_start:])
     print("\n" + "="*60)
-    print(" C DFC SUMMARY")
+    print(" SUMMARY")
     print("="*60)
     print(f" Final speed: {final_speed:.1f} RPM")
     print(f" Steady-state: {steady_speed:.1f} ± {steady_std:.1f} RPM")

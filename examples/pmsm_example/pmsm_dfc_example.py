@@ -3,6 +3,8 @@ pmsm_dfc_example.py  -  PMSM Control Example with Mode Switching
                        Supports both Python and FMU plant models
                        WITH ENHANCED MOTOR STATE DISPLAY & DIAGNOSTICS
                        CLEANED VERSION - Console + RPM Plot Only
+                       ADDED: Live speed printer from Python plant (no threads)
+                       FIXED: Closed-loop detection for Python controller
 """
 
 from __future__ import annotations
@@ -39,7 +41,7 @@ matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 
 from embedsim import EmbedSim, ODESolver, VectorEnd
-from embedsim.core_blocks import VectorSignal, DEFAULT_DTYPE
+from embedsim.core_blocks import VectorBlock, VectorSignal, DEFAULT_DTYPE
 from embedsim.source_blocks import VectorStep
 from embedsim.plot_helper import create_plotter
 
@@ -52,7 +54,7 @@ from embedsim_generic_control import GenericControlBlock
 from embedsim_connections import CtrlPacker, LoadAdapter, MotorVectorDelay
 
 # Python and C controllers
-from pmsm_dfc1 import PythonController
+from pmsm_dfc import PythonController
 from embedsim_control_block import EmbedSimControlBlock, SIM_CTRL_OPEN_LOOP, SIM_CTRL_DFC
 
 # Try to import motor state reporting
@@ -75,13 +77,13 @@ except ImportError:
 #   "C_OPEN_LOOP"        - C backend open-loop
 #   "C_DFC"              - C backend DFC
 
-CONTROLLER_MODE = "C_DFC"  # Change this to switch controllers
+CONTROLLER_MODE = "PYTHON_DFC"  # Change this to switch controllers
 
 # Plant options:
 #   "PYTHON"  - Python PMSM plant model
 #   "FMU"     - FMU-based plant model
 
-PLANT_MODE = "FMU"  # Change this to switch plants
+PLANT_MODE = "PYTHON"  # Change this to switch plants
 
 # =============================================================================
 # Simulation Parameters
@@ -109,7 +111,7 @@ class SimulationConfig:
 
         # Control parameters
         self.TARGET_RPM = 850.0
-        self.STEP_TIME = 0.01
+        self.STEP_TIME = 0.5
 
         # FMU path
         self.fmu_path = FMU_PATH
@@ -261,55 +263,90 @@ def create_controller(controller_mode: str, config: SimulationConfig, plant_type
 
 
 # =============================================================================
-# Motor State Display Function (ENHANCED)
+# Motor State Display Function (ENHANCED - handles C and Python states)
 # =============================================================================
 
 def display_motor_state(t: float, state: dict, prefix: str = "", verbose: bool = False):
     """
     Display motor state in a readable format.
-    Now includes numeric flags and diagnostic fields.
+    Detects whether state is from C or Python and uses appropriate keys.
     """
     if not state:
         return
 
-    # Extract key fields with defaults
-    closed_loop = state.get('closed_loop', 0)
-    controller_mode = state.get('controller_mode', 0)   # 0=OPEN, 1=DFC (or other)
+    # Detect if this is C state (has switch_to_closed_loop) or Python state (has closed_loop)
+    is_c_state = 'switch_to_closed_loop' in state
+    is_python_state = 'closed_loop' in state
+
+    # Determine closed-loop status
+    if is_c_state:
+        closed_loop = state.get('switch_to_closed_loop', 0)
+    elif is_python_state:
+        closed_loop = state.get('closed_loop', 0)
+    else:
+        closed_loop = 0
+
+    # Common fields
     speed = state.get('speed_rpm', 0.0)
-    speed_ref = state.get('speed_ref_rpm', 0.0)
-    id_val = state.get('id', 0.0)
-    iq_val = state.get('iq', 0.0)
     duty_u = state.get('duty_u', 0.5)
     duty_v = state.get('duty_v', 0.5)
     duty_w = state.get('duty_w', 0.5)
-    torque = state.get('torque_total', 0.0)
-    spin_counter = state.get('spinning_counter', 0)
-    speed_error = state.get('speed_error_rpm', 0.0)
 
-    # Determine mode string
+    # Build basic line with available info
     mode_str = "CLOSED" if closed_loop else "OPEN"
+    line = f"{prefix}[{t:6.2f}s] {mode_str}  ω={speed:6.1f} RPM"
 
-    # Build basic line
-    line = (
-        f"{prefix}[{t:6.2f}s] {mode_str}  "
-        f"ω={speed:6.1f} RPM  "
-        f"ω_ref={speed_ref:6.1f}  "
-        f"Id={id_val:6.3f}A  "
-        f"Iq={iq_val:6.3f}A  "
-        f"T={torque:6.3f}Nm  "
-        f"spin={spin_counter:6d}  "
-        f"duty=({duty_u:.3f},{duty_v:.3f},{duty_w:.3f})"
-    )
-
-    # Append extra diagnostic info if verbose or if closed_loop=0 but speed error is small
-    show_diag = verbose or (closed_loop == 0 and abs(speed_error) < 50 and speed > 100)
-    if show_diag:
+    # Add extra fields if present (Python state has more)
+    if is_python_state:
+        speed_ref = state.get('speed_ref_rpm', 0.0)
+        id_val = state.get('id', 0.0)
+        iq_val = state.get('iq', 0.0)
+        torque = state.get('torque_total', 0.0)
+        spin_counter = state.get('spinning_counter', 0)
+        speed_error = state.get('speed_error_rpm', 0.0)
         line += (
-            f"  [closed_loop={closed_loop}  ctrl_mode={controller_mode}  "
-            f"err={speed_error:6.1f} RPM]"
+            f"  ω_ref={speed_ref:6.1f}  "
+            f"Id={id_val:6.3f}A  Iq={iq_val:6.3f}A  "
+            f"T={torque:6.3f}Nm  spin={spin_counter:6d}  "
+            f"duty=({duty_u:.3f},{duty_v:.3f},{duty_w:.3f})"
         )
+        if verbose:
+            line += f"  [err={speed_error:6.1f} RPM]"
+    else:
+        # C state: only show duties and loop counter
+        loop_cnt = state.get('loop_counter', 0)
+        line += f"  duty=({duty_u:.3f},{duty_v:.3f},{duty_w:.3f})  loop={loop_cnt}"
 
     print(line)
+
+
+# =============================================================================
+# Speed Printer Block (from Python plant, no threads)
+# =============================================================================
+
+class SpeedPrinter(VectorBlock):
+    """
+    A sink that prints the motor speed every 0.3 seconds during simulation.
+    This runs inside the simulation loop – no threads needed.
+    """
+    NUM_INPUTS = 1
+    OUTPUT_SIZE = 0  # no output, it's a sink
+
+    def __init__(self, name="speed_printer", print_interval=0.3):
+        super().__init__(name, use_c_backend=False, dtype=DEFAULT_DTYPE)
+        self._last_print_t = -1.0
+        self._print_interval = float(print_interval)
+
+    def compute(self, t, dt, input_values=None):
+        # input_values[0] is the motor output vector
+        if input_values is not None and len(input_values) > 0:
+            # Motor output: [speed_rpm, position_rad, ia, ib, ic, vdc, valpha, vbeta]
+            speed = float(input_values[0].value[0])
+            if t - self._last_print_t >= self._print_interval:
+                print(f"Time: {t:6.2f}s  Speed (Python plant): {speed:7.1f} RPM")
+                self._last_print_t = t
+        # No output signal
+        return None
 
 
 # =============================================================================
@@ -398,8 +435,10 @@ def run_simulation_with_logging(sim: EmbedSim, config: SimulationConfig):
                     state = get_motor_state()
                     if state and state.get('valid', 0):
                         motor_states.append((t, state))
-                        # Use verbose flag to show diagnostics if closed_loop is 0 but speed is high
-                        verbose = (state.get('closed_loop', 0) == 0 and state.get('speed_rpm', 0) > 100)
+                        # Verbose if closed-loop is 0 but speed is high (indicates detection issue)
+                        closed_loop = state.get('switch_to_closed_loop', 0)
+                        speed = state.get('speed_rpm', 0.0)
+                        verbose = (closed_loop == 0 and speed > 100)
                         display_motor_state(t, state, verbose=verbose)
                 except Exception as e:
                     # Silent fail during simulation
@@ -474,6 +513,9 @@ def main():
     motor_delay = MotorVectorDelay("motor_delay", vector_size=motor_out_size)
     sink = VectorEnd("sink")
 
+    # ----- Speed Printer (from Python plant) -----
+    speed_printer = SpeedPrinter("speed_printer", print_interval=0.3)
+
     # ------------------------------------------------------------
     # 2. Connect blocks
     # ------------------------------------------------------------
@@ -485,13 +527,14 @@ def main():
     load_adapter >> motor
     motor >> motor_delay
     motor >> sink
+    motor >> speed_printer   # tap the motor output for live speed printing
 
     # ------------------------------------------------------------
     # 3. Create simulation object
     # ------------------------------------------------------------
 
     sim = EmbedSim(
-        sinks=[sink],
+        sinks=[sink, speed_printer],   # both sinks
         T=config.T_SIM,
         dt=config.DT,
         solver=ODESolver.EULER
@@ -528,7 +571,7 @@ def main():
         motor_states = []
 
     # ------------------------------------------------------------
-    # 7. Get final motor state (with full dump)
+    # 7. Get final motor state (if using C backend)
     # ------------------------------------------------------------
 
     if CONTROLLER_MODE in ["C_OPEN_LOOP", "C_DFC"] and HAS_C_WRAPPER:
@@ -538,10 +581,8 @@ def main():
                 if not motor_states or motor_states[-1][0] < config.T_SIM:
                     motor_states.append((config.T_SIM, state))
                 print("\n📊 Final C Motor State (full):")
-                # Print all keys and values for diagnosis
                 for key, value in state.items():
                     print(f"    {key:20s} = {value}")
-                # Also a compact final display
                 print("\n📊 Final Summary:")
                 display_motor_state(config.T_SIM, state, verbose=True)
         except Exception as e:
@@ -576,12 +617,30 @@ def main():
         steady_speed = final_speed
         steady_std = 0.0
 
+    # --- Determine if closed-loop was achieved ---
     switched_to_closed_loop = False
+
+    # 1) If we have motor states from C, use the flag directly
     if motor_states:
         for t, state in motor_states:
-            if state.get('closed_loop', 0):
+            # Check both possible keys
+            if state.get('switch_to_closed_loop', 0) or state.get('closed_loop', 0):
                 switched_to_closed_loop = True
                 break
+    else:
+        # 2) For Python controller: infer from speed data
+        #    The controller switches at 3 seconds (60000 steps at 50us)
+        #    Check if speed is near target and stable after that point
+        if len(speed_data) > 0:
+            # Convert time to index: dt = config.DT
+            switch_time = 3.0  # seconds
+            start_idx = int(switch_time / config.DT)
+            if start_idx < len(speed_data):
+                after_switch = speed_data[start_idx:]
+                # If average speed > 90% of target and std < 50 RPM, assume closed-loop
+                if (np.mean(after_switch) > 0.9 * config.TARGET_RPM and
+                    np.std(after_switch) < 50.0):
+                    switched_to_closed_loop = True
 
     print(f"\n{'='*60}")
     print(f" {ctrl_label} SUMMARY ({PLANT_MODE} Plant)")

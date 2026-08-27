@@ -504,6 +504,8 @@ uint32_T EmbedSim_IsNotSpinning(const EmbedSimCtrlInput_T* const InputPtr, uint3
  *
  * \return  void
  */
+
+
 void EmbedSim_GetMotorState(EmbedSimMachine_T* const motorPtr, EmbedSimMotorState_T* const statePtr)
 {
     EmbedSimCtrlInput_T*    inputPtr  = motorPtr->InputPtr;
@@ -515,31 +517,9 @@ void EmbedSim_GetMotorState(EmbedSimMachine_T* const motorPtr, EmbedSimMotorStat
     FocDq_T dq;
 
     /* ===== Mechanical ===== */
-    statePtr->SpeedRpm = inputPtr->RotorSpeedSensorM;
-    statePtr->SpeedRadS = CON_RPM_TO_RAD(inputPtr->RotorSpeedSensorM);
-    statePtr->PositionRad = inputPtr->RotorPositionSensorM;
-    statePtr->AccelerationRpmS = CON_RAD_TO_RPM(inputPtr->RotorAccelerationRefM);
-    statePtr->JerkRpmS3 = CON_RAD_TO_RPM(inputPtr->RotorJerkRefM);
+    statePtr->SpeedRpm = inputPtr->RotorSpeedObsEstM;;
+    statePtr->PositionRad = inputPtr->RotorPositionObsEstM;
 
-    /* ===== Currents ===== */
-    statePtr->Ia = inputPtr->Iu;
-    statePtr->Ib = inputPtr->Iv;
-    statePtr->Ic = inputPtr->Iw;
-
-    /* DQ currents - use coordinate transforms */
-    uvw.U = inputPtr->Iu;
-    uvw.V = inputPtr->Iv;
-    uvw.W = inputPtr->Iw;
-
-    Clarke_Transform_Matrix(&uvw, &ab);
-    statePtr->Ialpha = ab.Alpha;
-    statePtr->Ibeta = ab.Beta;
-
-    angle.ThetaE = inputPtr->RotorPositionSensorM * paraPtr->PolePairs;
-    EmbedSim_WrapAngleTwoPi(&angle.ThetaE);
-    Park_Transform_Matrix(&ab, &angle, &dq);
-    statePtr->Id = dq.D;
-    statePtr->Iq = dq.Q;
 
     /* ===== PWM ===== */
     statePtr->DutyU = outputPtr->DutyU;
@@ -547,21 +527,11 @@ void EmbedSim_GetMotorState(EmbedSimMachine_T* const motorPtr, EmbedSimMotorStat
     statePtr->DutyW = outputPtr->DutyW;
     statePtr->SvmSector = outputPtr->SvmSector;
 
-    /* ===== References ===== */
-    statePtr->SpeedRefRpm = inputPtr->AngularVelocityRefRpmM;
-    statePtr->SpeedRefRadS = CON_RPM_TO_RAD(inputPtr->AngularVelocityRefRpmM);
 
     /* ===== Control Mode ===== */
     statePtr->SwitchToClosedLoop = inputPtr->SwitchToClosedLoop;
-    statePtr->ControlReInit = inputPtr->ControlReInit;
-    statePtr->ControllerMode = inputPtr->CtrlAlg;
-
-    /* ===== PI States ===== */
-    statePtr->SpeedIntegral = paraPtr->SpeedIntegralError;
-    statePtr->IdIntegral = paraPtr->IdIntegralError;
-    statePtr->IqIntegral = paraPtr->IqIntegralError;
-
-
+    statePtr->LoopCounter        = inputPtr->LoopCounter;
+    statePtr->Valid              = inputPtr->Valid;
 }
 
 
@@ -843,8 +813,7 @@ void EmbedSim_ControlStatePrint(const EmbedSimMotorState_T* const StatePtr)
    printf("MECHANICAL\n");
    printf("------------------------------------------------------------\n");
    printf("  Speed              = %10.3f RPM\n", StatePtr->SpeedRpm);
-   printf("  SpeedRef           = %10.3f RPM\n", StatePtr->SpeedRefRpm);
-   printf("  SpeedError         = %10.3f RPM\n", StatePtr->SpeedErrorRpm);
+
 
 
    printf("============================================================\n");

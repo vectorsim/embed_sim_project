@@ -48,7 +48,7 @@ SIM_CTRL_DFC = 1
 # Debug input/output: prints control inputs and outputs (duties)
 DEBUG_IO = False  # <--- Toggle: True = print I/O, False = silent
 
-# Debug state: prints full motor state from C
+# Debug state: prints full motor state from C (now using EmbedSimCtrlOutput_T)
 DEBUG_STATE = True  # <--- Toggle: True = print state, False = silent
 
 # Debug print interval (seconds)
@@ -134,29 +134,24 @@ class EmbedSimControlBlock(VectorBlock):
             print(f"    duty_w        = {result['pwm_w']:8.4f}")
             print(f"    valid_out     = {result['valid_out']:8d}")
 
-        # ---- Debug: Print Motor State (if enabled) ----
+        # ---- Debug: Print Motor State (now using EmbedSimCtrlOutput_T) ----
+        # ---- Debug: Print Motor State ----
         if DEBUG_STATE and (t - self._last_print_t >= DEBUG_INTERVAL):
             try:
                 state = get_motor_state()
                 if state and state.get('valid', 0):
-                    mode = "CLOSED" if state.get('closed_loop', 0) else "OPEN"
                     print(f"  MOTOR STATE:")
-                    print(f"    mode          = {mode}")
                     print(f"    speed_rpm     = {state.get('speed_rpm', 0):8.1f} RPM")
-                    print(f"    speed_ref_rpm = {state.get('speed_ref_rpm', 0):8.1f} RPM")
-                    print(f"    id            = {state.get('id', 0):8.3f} A")
-                    print(f"    iq            = {state.get('iq', 0):8.3f} A")
-                    print(f"    torque_total  = {state.get('torque_total', 0):8.4f} Nm")
-                    print(f"    closed_loop   = {state.get('closed_loop', 0):8d}")
-                    print(f"    control_reinit= {state.get('control_reinit', 0):8d}")
-                    print(f"    spinning_cnt  = {state.get('spinning_counter', 0):8d}")
-                    print(f"    is_spinning   = {state.get('is_spinning', 0):8d}")
-                    print(f"    is_stopped    = {state.get('is_stopped', 0):8d}")
-                    print(f"    speed_error   = {state.get('speed_error_rpm', 0):8.1f} RPM")
-                    print(f"    modulation_idx= {state.get('modulation_index', 0):8.4f}")
+                    print(f"    position_rad  = {state.get('position_rad', 0):8.4f} rad")
                     print(f"    duty_u        = {state.get('duty_u', 0):8.4f}")
                     print(f"    duty_v        = {state.get('duty_v', 0):8.4f}")
                     print(f"    duty_w        = {state.get('duty_w', 0):8.4f}")
+                    print(f"    svm_sector    = {state.get('svm_sector', 0):8d}")
+                    print(f"    valid         = {state.get('valid', 0):8d}")
+                    print(f"    loop_counter  = {state.get('loop_counter', 0):8d}")
+                    print(f"    closed_loop   = {state.get('switch_to_closed_loop', 0):8d}")
+                else:
+                    print(f"  MOTOR STATE: invalid or empty")
             except Exception as e:
                 print(f"  ⚠️ Error getting motor state: {e}")
 

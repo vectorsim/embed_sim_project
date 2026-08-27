@@ -95,99 +95,26 @@ cdef extern from "embed_sim_cython_interface.h":
 
 
 # =============================================================================
-# Native state structures
+# Native state structures – exactly matching embed_sim_control.h
 # =============================================================================
 
 cdef extern from "embed_sim_control.h":
 
     ctypedef struct EmbedSimMotorState_T:
-
         # Mechanical
         float SpeedRpm
-        float SpeedRadS
         float PositionRad
-        float AccelerationRpmS
-        float JerkRpmS3
-
-        # Electrical
-        float Ia
-        float Ib
-        float Ic
-        float Id
-        float Iq
-        float Ialpha
-        float Ibeta
-        float Vd
-        float Vq
-        float Valpha
-        float Vbeta
 
         # PWM
         float DutyU
         float DutyV
         float DutyW
         unsigned int SvmSector
-        float ModulationIndex
-
-        # References
-        float SpeedRefRpm
-        float SpeedRefRadS
-        float IqRef
-        float IqRefDot
-        float IdRef
-
-        # Control mode
-        unsigned int SwitchToClosedLoop
-        unsigned int ControlReInit
-        unsigned int ControllerMode
-
-        # Startup
-        float StartupModulation
-        float StartupTheta
-        float StartupTime
-
-        # PI states
-        float SpeedIntegral
-        float IdIntegral
-        float IqIntegral
-
-        # Spinning detection
-        unsigned int SpinningCounter
-        unsigned int StoppedCounter
-        unsigned int SpinningPastIndex
-        unsigned int StoppedPastIndex
-        unsigned int IsSpinning
-        unsigned int IsStopped
-
-        # Torque
-        float TorqueFF
-        float TorqueCorrection
-        float TorqueTotal
-        float TorqueConstant
-
-        # Voltage
-        float VdFF
-        float VqFF
-        float VdCorr
-        float VqCorr
-
-        # Speed error
-        float SpeedErrorRpm
-        float SpeedErrorRadS
-        float SpeedErrorPercent
-
-        # Trajectory
-        float TrajSpeedRpm
-        float TrajAccelRpmS
-        float TrajJerkRpmS3
-
-        # Timestamp
-        float Time
-        float Dt
 
         # Status
         unsigned int Valid
         unsigned long long LoopCounter
+        unsigned int SwitchToClosedLoop
 
 
 cdef extern from "embed_sim_cython_interface.h":
@@ -205,193 +132,15 @@ cdef dict _motor_state_to_dict(
     EmbedSimMotorState_T* state
 ):
     return {
-
-        # Mechanical
-        'speed_rpm':
-            float(state.SpeedRpm),
-
-        'speed_rad_s':
-            float(state.SpeedRadS),
-
-        'position_rad':
-            float(state.PositionRad),
-
-        'accel_rpm_s':
-            float(state.AccelerationRpmS),
-
-        'jerk_rpm_s3':
-            float(state.JerkRpmS3),
-
-        # Electrical
-        'ia':
-            float(state.Ia),
-
-        'ib':
-            float(state.Ib),
-
-        'ic':
-            float(state.Ic),
-
-        'id':
-            float(state.Id),
-
-        'iq':
-            float(state.Iq),
-
-        'ialpha':
-            float(state.Ialpha),
-
-        'ibeta':
-            float(state.Ibeta),
-
-        'vd':
-            float(state.Vd),
-
-        'vq':
-            float(state.Vq),
-
-        'valpha':
-            float(state.Valpha),
-
-        'vbeta':
-            float(state.Vbeta),
-
-        # PWM
-        'duty_u':
-            float(state.DutyU),
-
-        'duty_v':
-            float(state.DutyV),
-
-        'duty_w':
-            float(state.DutyW),
-
-        'svm_sector':
-            int(state.SvmSector),
-
-        'modulation_index':
-            float(state.ModulationIndex),
-
-        # References
-        'speed_ref_rpm':
-            float(state.SpeedRefRpm),
-
-        'speed_ref_rad_s':
-            float(state.SpeedRefRadS),
-
-        'iq_ref':
-            float(state.IqRef),
-
-        'iq_ref_dot':
-            float(state.IqRefDot),
-
-        'id_ref':
-            float(state.IdRef),
-
-        # Control
-        'closed_loop':
-            int(state.SwitchToClosedLoop),
-
-        'control_reinit':
-            int(state.ControlReInit),
-
-        'controller_mode':
-            int(state.ControllerMode),
-
-        # Startup
-        'startup_modulation':
-            float(state.StartupModulation),
-
-        'startup_theta':
-            float(state.StartupTheta),
-
-        'startup_time':
-            float(state.StartupTime),
-
-        # PI
-        'speed_integral':
-            float(state.SpeedIntegral),
-
-        'id_integral':
-            float(state.IdIntegral),
-
-        'iq_integral':
-            float(state.IqIntegral),
-
-        # Spinning
-        'spinning_counter':
-            int(state.SpinningCounter),
-
-        'stopped_counter':
-            int(state.StoppedCounter),
-
-        'spinning_past_index':
-            int(state.SpinningPastIndex),
-
-        'stopped_past_index':
-            int(state.StoppedPastIndex),
-
-        'is_spinning':
-            int(state.IsSpinning),
-
-        'is_stopped':
-            int(state.IsStopped),
-
-        # Torque
-        'torque_ff':
-            float(state.TorqueFF),
-
-        'torque_correction':
-            float(state.TorqueCorrection),
-
-        'torque_total':
-            float(state.TorqueTotal),
-
-        'torque_constant':
-            float(state.TorqueConstant),
-
-        # Voltage
-        'vd_ff':
-            float(state.VdFF),
-
-        'vq_ff':
-            float(state.VqFF),
-
-        'vd_corr':
-            float(state.VdCorr),
-
-        'vq_corr':
-            float(state.VqCorr),
-
-        # Speed error
-        'speed_error_rpm':
-            float(state.SpeedErrorRpm),
-
-        'speed_error_rad_s':
-            float(state.SpeedErrorRadS),
-
-        'speed_error_percent':
-            float(state.SpeedErrorPercent),
-
-        # Trajectory
-        'traj_speed_rpm':
-            float(state.TrajSpeedRpm),
-
-        'traj_accel_rpm_s':
-            float(state.TrajAccelRpmS),
-
-        'traj_jerk_rpm_s3':
-            float(state.TrajJerkRpmS3),
-
-        # Status
-        'valid':
-            int(state.Valid),
-
-        'loop_counter':
-            int(state.LoopCounter),
-
-        'dt':
-            float(state.Dt),
+        'speed_rpm': float(state.SpeedRpm),
+        'position_rad': float(state.PositionRad),
+        'duty_u': float(state.DutyU),
+        'duty_v': float(state.DutyV),
+        'duty_w': float(state.DutyW),
+        'svm_sector': int(state.SvmSector),
+        'valid': int(state.Valid),
+        'loop_counter': int(state.LoopCounter),
+        'switch_to_closed_loop': int(state.SwitchToClosedLoop),
     }
 
 
@@ -471,20 +220,11 @@ def control_step(
         )
 
     return {
-        'pwm_u':
-            float(pwm_u),
-
-        'pwm_v':
-            float(pwm_v),
-
-        'pwm_w':
-            float(pwm_w),
-
-        'valid_out':
-            int(valid_out),
-
-        'motor_state':
-            _motor_state_to_dict(&motor_state),
+        'pwm_u': float(pwm_u),
+        'pwm_v': float(pwm_v),
+        'pwm_w': float(pwm_w),
+        'valid_out': int(valid_out),
+        'motor_state': _motor_state_to_dict(&motor_state),
     }
 
 
