@@ -125,9 +125,9 @@ canvas{display:block;}
 <div id="tip"></div>
 <script>
 /* ── Data ── */
-const NODES=[{"id": "speed_ref", "x": 40, "y": 50, "w": 160, "h": 60, "cat": "source", "cls": "VectorStep", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {"step_time": "0.01"}}, {"id": "ctrl_packer", "x": 240, "y": 50, "w": 160, "h": 60, "cat": "generic", "cls": "CtrlPacker", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {"vector_size": "10"}}, {"id": "ctrl", "x": 440, "y": 50, "w": 160, "h": 60, "cat": "generic", "cls": "EmbedSimControlBlock", "dyn": false, "lb": false, "c": true, "lbl": "[duty_u,duty_v,duty_w,valid]", "attrs": {"vector_size": "4"}}, {"id": "load_adapter", "x": 640, "y": 50, "w": 160, "h": 60, "cat": "generic", "cls": "LoadAdapter", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {"vector_size": "5"}}, {"id": "sink", "x": 840, "y": 50, "w": 160, "h": 60, "cat": "sink", "cls": "VectorEnd", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {}}, {"id": "speed_printer", "x": 1040, "y": 50, "w": 160, "h": 60, "cat": "generic", "cls": "SpeedPrinter", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {}}, {"id": "motor_delay", "x": 240, "y": 330, "w": 160, "h": 60, "cat": "delay", "cls": "MotorDelay", "dyn": false, "lb": true, "c": false, "lbl": "", "attrs": {}}, {"id": "motor", "x": 640, "y": 490, "w": 160, "h": 60, "cat": "plant", "cls": "PMSM_Python_Plant", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {"vector_size": "8", "R": "0.19", "L_d": "0.000125", "L_q": "0.000125", "lambda_pm": "0.0014", "J": "2.4e-06", "p": "4"}}];
-const EDGES=[{"src": "motor", "dst": "motor_delay", "lb": false, "lbl": "motor states"}, {"src": "motor", "dst": "sink", "lb": false, "lbl": "all states"}, {"src": "motor", "dst": "speed_printer", "lb": false, "lbl": "speed"}, {"src": "speed_ref", "dst": "ctrl_packer", "lb": false, "lbl": "ω_ref"}, {"src": "motor_delay", "dst": "ctrl_packer", "lb": true, "lbl": "ω_prev, i_dq_prev"}, {"src": "ctrl_packer", "dst": "ctrl", "lb": false, "lbl": "packed refs"}, {"src": "ctrl", "dst": "load_adapter", "lb": false, "lbl": "duty signals"}, {"src": "load_adapter", "dst": "motor", "lb": false, "lbl": "v_dq"}];
-const CG_REGION=null;
+const NODES=[{"id": "sine_a", "x": 40, "y": 50, "w": 160, "h": 60, "cat": "source", "cls": "SineSource", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {}}, {"id": "sine_b", "x": 240, "y": 50, "w": 160, "h": 60, "cat": "source", "cls": "SineSource", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {}}, {"id": "gain_b", "x": 440, "y": 50, "w": 160, "h": 60, "cat": "processing", "cls": "GainBlock", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {}}, {"id": "summer", "x": 640, "y": 50, "w": 160, "h": 60, "cat": "processing", "cls": "SumBlock", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {}}, {"id": "cg_start", "x": 40, "y": 190, "w": 160, "h": 60, "cat": "codegen", "cls": "CodeGenStart", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {}}, {"id": "cg_end", "x": 640, "y": 190, "w": 160, "h": 60, "cat": "codegen", "cls": "CodeGenEnd", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {}}, {"id": "sink", "x": 840, "y": 190, "w": 160, "h": 60, "cat": "sink", "cls": "VectorEnd", "dyn": false, "lb": false, "c": false, "lbl": "", "attrs": {}}];
+const EDGES=[{"src": "sine_b", "dst": "gain_b", "lb": false, "lbl": ""}, {"src": "sine_a", "dst": "cg_start", "lb": false, "lbl": ""}, {"src": "gain_b", "dst": "cg_start", "lb": false, "lbl": ""}, {"src": "cg_start", "dst": "summer", "lb": false, "lbl": ""}, {"src": "summer", "dst": "cg_end", "lb": false, "lbl": ""}, {"src": "cg_end", "dst": "sink", "lb": false, "lbl": ""}];
+const CG_REGION={"x": 22, "y": 6, "w": 796, "h": 262};
 
 /* ── Category colours — vivid, fully saturated ── */
 const CC={
@@ -154,7 +154,7 @@ const ctx=canvas.getContext('2d');
 const wrap=document.getElementById('cw');
 const nm={};
 NODES.forEach(n=>nm[n.id]=n);
-const BW=1280, BH=650;
+const BW=1080, BH=350;
 
 /* ── Viewport state ── */
 let scale=1, originX=0, originY=0;

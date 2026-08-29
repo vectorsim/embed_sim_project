@@ -143,22 +143,63 @@ class MotorVectorDelay(VectorDelay):
         self.output = VectorSignal(self._state.copy(), self.name)
 
     def compute(self, t, dt, input_values=None):
-        """
-        Compute the delayed output.
+        # 1. Output the currently stored state
+        if self._state is not None:
+            out = self._state.copy()
+        else:
+            # Fallback: zeros if no state (should not happen after init)
+            out = np.zeros(self.vector_size, dtype=DEFAULT_DTYPE)
 
-        Stores input value and outputs the previously stored value.
-        """
+        # 2. Update storage with the new input for the next step
         if input_values and len(input_values) > 0:
             new_val = input_values[0].value
             if len(new_val) == self.vector_size:
                 self._state = new_val.copy()
-        self.output = VectorSignal(self._state.copy(), self.name)
+            else:
+                # handle size mismatch (e.g., raise ValueError)
+                pass
+
+        self.output = VectorSignal(out, self.name)
         return self.output
 
     def reset(self):
         """Reset the delay state to zeros."""
         self._state = np.zeros(self.vector_size, dtype=DEFAULT_DTYPE)
         self.output = VectorSignal(self._state.copy(), self.name)
+
+
+class SignalPrinter(VectorBlock):
+    """
+    A debug block that prints the input signal with descriptive labels and passes it through unchanged.
+    """
+    C_CODEGEN_EXCLUDE = True
+
+    def __init__(self, name="signal_printer", fields=None, print_prefix="", every_n=1):
+        super().__init__(name)
+        self.fields = fields or []
+        self.print_prefix = print_prefix
+        self.every_n = every_n
+        self._counter = 0
+
+    def compute_py(self, t, dt, input_values=None):
+        self._counter += 1
+        val = input_values[0].value
+
+        if self._counter % self.every_n == 0:
+            parts = []
+            if self.fields:
+                for i, f in enumerate(self.fields):
+                    parts.append(f"{f}={val[i]:.6f}" if i < len(val) else f"{f}=N/A")
+            else:
+                parts = [f"[{i}]={v:.6f}" for i, v in enumerate(val)]
+
+            print(f"[{self.name}] t={t:.6f} | {self.print_prefix}{', '.join(parts)}")
+
+        self.output = VectorSignal(val.copy(), self.name)
+        return self.output
+
+    def compute(self, t, dt, input_values=None):
+        return self.compute_py(t, dt, input_values)
 
 
 # =============================================================================
@@ -169,6 +210,7 @@ __all__ = [
     'CtrlPacker',
     'LoadAdapter',
     'MotorVectorDelay',
+    'SignalPrinter',
 ]
 
 __version__ = '1.0.0'

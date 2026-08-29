@@ -1,0 +1,10 @@
+Instructions to Setup
+
+1. Install Pycharm (Python Development) and Python Framework (3.12)
+
+2. Build Cython Interface for simulation examples
+      -excecute pmsm/c_src/build.bat (windows) or build.sh (Linux)
+
+3. Install Open Modelica and export PMSM_Motor.mo as FMU
+       - pmsm/modelica/PMSM_Motor.mo (Modelica Model)
+       - execute gen_fmu.py (pmsm/modelica/gen_fmu.py) to generate python class
