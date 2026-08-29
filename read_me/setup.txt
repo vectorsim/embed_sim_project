@@ -8,3 +8,11 @@ Instructions to Setup
 3. Install Open Modelica and export PMSM_Motor.mo as FMU
        - pmsm/modelica/PMSM_Motor.mo (Modelica Model)
        - execute gen_fmu.py (pmsm/modelica/gen_fmu.py) to generate python class
+       - this step is optional, one can work with python model
+       
+       
+4. Explore simple examples 
+      - examples/simple_signal_flow
+      
+      
+5.    
