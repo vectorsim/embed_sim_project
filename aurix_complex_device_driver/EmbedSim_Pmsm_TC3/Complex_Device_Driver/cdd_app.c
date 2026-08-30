@@ -65,6 +65,7 @@
 #include "cdd_gtm_app.h"
 #include "cdd_evadc_app.h"
 #include "cdd_gpt12_app.h"
+#include "cdd_encoder_app.h"
 
 
 /**********************************************************************************************************************
@@ -145,7 +146,7 @@ void CddApp_Init(void)
     CddApp_G.OffsetIw    = 0.0F;
 
     CddApp_G.CtrlMode    = CDDAPP_CTRL_CLOSEDLOOP; //CDDAPP_CTRL_CLOSEDLOOP;  CDDAPP_CTRL_CLOSEDLOOP
-    CddApp_G.SpeedRefRpm = 1200.0F;
+    CddApp_G.SpeedRefRpm =  800.0F;
     CddApp_G.SensorReadingBitField = 0x0U;
 
     /* Re-entrant / repeated call guard: CDDAPP_INIT_PENDING = 0 (set by .bss at reset) */
@@ -198,8 +199,9 @@ void CddApp_Init(void)
         /* Init GPIT Module(Encoder) */
         if(ok == 0x1U)
         {
-            CddGpt12_Init();
-            ok  = CddGpt12_IsInitialized();
+             CddGpt12_Init();
+             ok  = CddGpt12_IsInitialized();
+            //ok = Encoder_Init();
             if (ok != 0x1U)
             {
                 CddApp_G.CDDAppStatus = CDDAPP_INIT_ERR_GPT12;
@@ -267,10 +269,6 @@ void CddApp_Init(void)
                 }
             }
         }
-
-
-
-
     }
 }
 

@@ -169,7 +169,7 @@
 
 
 
-
+#define  ES_SVM_LEAD_ANGLE_RAD   (0.3F)
 
 
 /**

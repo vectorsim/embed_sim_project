@@ -68,6 +68,7 @@
 #include "cdd_app.h"
 #include "cdd_gpio_app.h"
 #include "cdd_gpt12_app.h"
+#include "cdd_encoder_app.h"
 #include "cdd_sys_utility.h"
 #include "cdd_config.h"
 #include "cdd_evadc_app.h"
@@ -256,6 +257,11 @@ void GTM_Atom_00_Ch_00_Isr(void)
     CddGpt12_Update();
     CddApp_G.RotorSpeedRpm = CddGpt12_GetSpeedRpm();
     CddApp_G.RotorPosition = CddGpt12_GetMechanicalPosition();
+   /* Encoder_Update();
+    CddApp_G.RotorSpeedRpm = Encoder_GetSpeedRpm();
+    CddApp_G.RotorPosition = Encoder_GetMechanicalPosition();*/
+
+
 
     if((CddApp_G.CDDAppStatus == CDDAPP_INIT_OK) || (CddApp_G.CDDAppStatus == CDDAPP_RUN_STATE))
     {

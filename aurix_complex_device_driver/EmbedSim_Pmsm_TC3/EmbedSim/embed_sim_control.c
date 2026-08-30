@@ -198,17 +198,29 @@ static void EmbedSim_OpenLoopStep(EmbedSimCtrlInput_T*    const inputPtr,
 
 
 /**
- * \brief   Update observer estimates from sensor readings.
+ * \brief Update observer estimates and synchronize the SVM rotor angle.
  *
- * \details Copies raw sensor values to estimated fields, increments loop counter,
- *          clamps speed reference, and implements a smooth convergence algorithm
- *          for the electrical rotor angle model when in closed‑loop control.
+ * \details
+ * The observer provides the measured/estimated rotor position and speed.
+ * This function synchronizes SvmRotorThetaE with the rotor while preserving
+ * the commanded direction of rotation.
  *
- * \note    Assumes the observer (e.g., PLL or state estimator) has already
- *          validated and filtered the sensor readings. This function only
- *          aligns the internal model angle with the estimated angle.
+ * Direction convention:
  *
- * \param[in,out] MotorPtr  Pointer to the motor structure.
+ *     RotorVelocityRefM > 0:
+ *         SVM electrical angle increases.
+ *         Positive direction / clockwise.
+ *
+ *     RotorVelocityRefM < 0:
+ *         SVM electrical angle decreases.
+ *         Negative direction / anticlockwise.
+ *
+ * The SVM angle is maintained slightly AHEAD of the rotor in the
+ * commanded direction.
+ *
+ * IMPORTANT:
+ *     RotorVelocityRefM is NOT modified in this function.
+ *     The jerk-limited trajectory generator owns RotorVelocityRefM.
  */
 void EmbedSim_ExecuteObserver(EmbedSimMachine_T* const MotorPtr)
 {
@@ -220,13 +232,16 @@ void EmbedSim_ExecuteObserver(EmbedSimMachine_T* const MotorPtr)
     real32_T gain;
     real32_T omegaE;
     real32_T feedforward;
+    real32_T leadAngle;
+    real32_T desiredSvmAngle;
+    real32_T correction;
 
     /* Increment loop counter for diagnostic purposes */
     iPtr->LoopCounter++;
 
-    /* Clamp RPM reference to maximum speed and convert to rad/s */
+    /* Clamp RPM reference to maximum speed */
     iPtr->AngularVelocityRefRpmM = EmbedSim_ClampValue(iPtr->AngularVelocityRefRpmM,
-                                                       -MAX_SPEED_RPM, MAX_SPEED_RPM);
+                                                        -MAX_SPEED_RPM, MAX_SPEED_RPM);
     iPtr->RotorVelocityRefM = CON_RPM_TO_RAD(iPtr->AngularVelocityRefRpmM);
 
     /* Copy observer estimates (already validated by the observer module) */
@@ -240,25 +255,113 @@ void EmbedSim_ExecuteObserver(EmbedSimMachine_T* const MotorPtr)
         rotorSensorPosE = iPtr->RotorPositionObsEstM * mPtr->PolePairs;
         EmbedSim_WrapAngleTwoPi(&rotorSensorPosE);
 
-        /* Shortest signed angular distance [-π, π) */
-        angleDiff = EmbedSim_AngleDistance(rotorSensorPosE, mPtr->SvmRotorThetaE);
-        absErr = fabsf(angleDiff);
+        /*
+         * Desired SVM angle = Sensor angle + Lead angle in the direction of rotation
+         *
+         * Positive speed:  SVM = Sensor + Lead  (SVM leads the rotor)
+         * Negative speed:  SVM = Sensor - Lead  (SVM leads the rotor in reverse)
+         * Zero speed:      SVM = Sensor         (no lead)
+         */
+        leadAngle = ES_SVM_LEAD_ANGLE_RAD;
 
-        /* ---------- Smooth gain scheduling ---------- */
-        if (absErr < ES_ANGLE_CORR_THRESHOLD_RAD)
+        if (iPtr->RotorVelocityRefM > 0.0F)
         {
-            gain = 1.0F;   /* Full correction */
+            /* FORWARD: SVM should be AHEAD of rotor by leadAngle */
+            desiredSvmAngle = rotorSensorPosE + leadAngle;
+        }
+        else if (iPtr->RotorVelocityRefM < 0.0F)
+        {
+            /* REVERSE: SVM should be AHEAD of rotor by leadAngle (in negative direction) */
+            desiredSvmAngle = rotorSensorPosE - leadAngle;
         }
         else
         {
-            /* Gain smoothly transitions from ES_ANGLE_CORR_SLOW_GAIN to 1.0 */
+            /* ZERO SPEED: SVM should match rotor position */
+            desiredSvmAngle = rotorSensorPosE;
+        }
+
+        /* Normalize desired angle to [0, 2π) */
+        EmbedSim_WrapAngleTwoPi(&desiredSvmAngle);
+
+        /*
+         * Calculate shortest signed angular difference
+         * angleDiff = desiredSvmAngle - mPtr->SvmRotorThetaE
+         *
+         * angleDiff > 0  → Need to INCREASE model angle
+         * angleDiff < 0  → Need to DECREASE model angle
+         */
+        angleDiff = EmbedSim_AngleDistance(desiredSvmAngle, mPtr->SvmRotorThetaE);
+
+        /*
+         * ============================================================
+         * DIRECTION ENFORCEMENT
+         * ============================================================
+         *
+         * We MUST respect the commanded direction:
+         *
+         * Positive speed:  Model angle MUST INCREASE
+         *                   → angleDiff MUST be positive
+         *
+         * Negative speed:  Model angle MUST DECREASE
+         *                   → angleDiff MUST be negative
+         *
+         * If angleDiff would move the model in the wrong direction,
+         * we take the LONGER path (add/subtract 2π) to force the
+         * correct direction.
+         * ============================================================
+         */
+
+        if (iPtr->RotorVelocityRefM > 0.0F)
+        {
+            /* FORWARD: angleDiff MUST be positive (model increases) */
+            if (angleDiff < 0.0F)
+            {
+                /* angleDiff is negative → would decrease model */
+                /* Take the longer path by adding 2π to make it positive */
+                angleDiff = angleDiff + ES_MATH_2PI_F;
+            }
+            /* angleDiff >= 0 → model increases → OK */
+        }
+        else if (iPtr->RotorVelocityRefM < 0.0F)
+        {
+            /* REVERSE: angleDiff MUST be negative (model decreases) */
+            if (angleDiff > 0.0F)
+            {
+                /* angleDiff is positive → would increase model */
+                /* Take the longer path by subtracting 2π to make it negative */
+                angleDiff = angleDiff - ES_MATH_2PI_F;
+            }
+            /* angleDiff <= 0 → model decreases → OK */
+        }
+        /* Zero speed: keep shortest path from EmbedSim_AngleDistance() */
+
+        absErr = fabsf(angleDiff);
+
+        /* Smooth gain scheduling - prevent division by zero */
+        if (absErr < ES_ANGLE_CORR_THRESHOLD_RAD)
+        {
+            gain = 1.0F;
+        }
+        else
+        {
             gain = ES_ANGLE_CORR_SLOW_GAIN +
                    (1.0F - ES_ANGLE_CORR_SLOW_GAIN) * (ES_ANGLE_CORR_THRESHOLD_RAD / absErr);
             gain = EmbedSim_ClampValue(gain, ES_ANGLE_CORR_SLOW_GAIN, 1.0F);
         }
-        mPtr->SvmRotorThetaE += gain * angleDiff;
 
-        /* ---------- Half‑sample delay compensation (only when locked) ---------- */
+        /* Calculate correction */
+        correction = gain * angleDiff;
+
+        /* Limit maximum correction per cycle to prevent jumps */
+        correction = EmbedSim_ClampValue(correction, -ES_MAX_ANGLE_STEP_RAD, ES_MAX_ANGLE_STEP_RAD);
+
+        /* Apply correction: angleDiff positive → increase, negative → decrease */
+        mPtr->SvmRotorThetaE += correction;
+
+        /*
+         * Half-sample delay compensation (only when locked)
+         * Predicts rotor movement during measurement delay
+         */
         if (absErr < ES_ANGLE_CORR_THRESHOLD_RAD)
         {
             omegaE = CON_RPM_TO_RAD(iPtr->RotorSpeedObsEstM) * mPtr->PolePairs;
@@ -266,6 +369,17 @@ void EmbedSim_ExecuteObserver(EmbedSimMachine_T* const MotorPtr)
             feedforward = EmbedSim_ClampValue(feedforward,
                                               -ES_MAX_ANGLE_STEP_RAD,
                                                ES_MAX_ANGLE_STEP_RAD);
+
+            /* Direction protection for feedforward */
+            if (iPtr->RotorVelocityRefM > 0.0F)
+            {
+                if (feedforward < 0.0F) { feedforward = 0.0F; }
+            }
+            else if (iPtr->RotorVelocityRefM < 0.0F)
+            {
+                if (feedforward > 0.0F) { feedforward = 0.0F; }
+            }
+
             mPtr->SvmRotorThetaE += feedforward;
         }
 
@@ -273,7 +387,6 @@ void EmbedSim_ExecuteObserver(EmbedSimMachine_T* const MotorPtr)
         EmbedSim_WrapAngleTwoPi(&mPtr->SvmRotorThetaE);
     }
 }
-
 /*********************************************************************************************************************/
 /*--------------------------------------Public Function Implementations----------------------------------------------*/
 /*********************************************************************************************************************/
@@ -701,22 +814,27 @@ void EmbedSim_WrapAngleTwoPi(real32_T* AnglePtr)
      return result;
  }
 
-real32_T EmbedSim_AngleDistance(real32_T Angle1, real32_T Angle2)
+
+ real32_T EmbedSim_AngleDistance(real32_T ObservedAngle, real32_T ModelAngle)
  {
-     real32_T AngleDistance;
+     real32_T angleDistance;
 
-     AngleDistance = Angle1 - Angle2;
+     /* Raw difference: ObservedAngle - ModelAngle */
+     angleDistance = ObservedAngle - ModelAngle;
 
-     if(AngleDistance >= ES_MATH_PI_F)
+     /* Normalize to [-π, π) - the shortest angular distance */
+     if (angleDistance >= ES_MATH_PI_F)
      {
-         AngleDistance -= ES_MATH_2PI_F;
+         /* Distance is more than π, take the shorter path in negative direction */
+         angleDistance -= ES_MATH_2PI_F;
      }
-     else if (AngleDistance < -ES_MATH_PI_F)
+     else if (angleDistance < -ES_MATH_PI_F)
      {
-         AngleDistance += ES_MATH_2PI_F;
+         /* Distance is less than -π, take the shorter path in positive direction */
+         angleDistance += ES_MATH_2PI_F;
      }
 
-     return AngleDistance;
+     return angleDistance;
  }
 
 

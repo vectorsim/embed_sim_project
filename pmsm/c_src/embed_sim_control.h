@@ -395,20 +395,24 @@ extern void EmbedSim_GetMotorState(EmbedSimMachine_T* const motorPtr,  EmbedSimM
 
 
  /**
-  * @brief Calculates the shortest signed angular distance between two angles.
+  * \brief   Calculate the shortest signed angular distance between two angles.
   *
-  * Both input angles are expected to be in the range [0, 2*PI).
-  * The returned angular distance is in the range [-PI, PI).
+  * \details Computes the shortest signed distance from ModelAngle to ObservedAngle
+  *          in the range [-π, π). Positive value means ObservedAngle is ahead
+  *          (counter-clockwise) of ModelAngle. Negative value means ObservedAngle
+  *          is behind (clockwise) of ModelAngle.
   *
-  * A positive result means Angle1 is ahead of Angle2.
-  * A negative result means Angle1 is behind Angle2.
+  * \param[in] ObservedAngle  The target/observed angle [rad], typically from sensor
+  * \param[in] ModelAngle     The current model angle [rad], typically the estimator state
   *
-  * @param[in] Angle1 First angle in radians.
-  * @param[in] Angle2 Second angle in radians.
+  * \return  Signed angular distance from ModelAngle to ObservedAngle in [-π, π)
   *
-  * @return Shortest signed angular distance Angle1 - Angle2 in radians.
+  * \note    Example: If ObservedAngle = 6.0 rad and ModelAngle = 0.1 rad,
+  *          the shortest distance is 6.0 - 0.1 = 5.9 rad, but since 5.9 > π,
+  *          we subtract 2π → 5.9 - 6.283 = -0.383 rad.
+  *          Meaning: ObservedAngle is 0.383 rad BEHIND ModelAngle.
   */
- extern real32_T EmbedSim_AngleDistance(real32_T Angle1, real32_T Angle2);
+ extern real32_T EmbedSim_AngleDistance(real32_T ObservedAngle, real32_T ModelAngle);
 
 
  /**
