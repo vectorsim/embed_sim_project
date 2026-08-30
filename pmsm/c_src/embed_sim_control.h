@@ -306,7 +306,7 @@ typedef struct
     /* Status */
     uint32_T    Valid;                       /**< 1=valid, 0=invalid */
     uint64_T    LoopCounter;                 /**< Loop counter */
-    uint32_T    SwitchToClosedLoop
+    uint32_T    SwitchToClosedLoop;
 
 } EmbedSimMotorState_T;
 

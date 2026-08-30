@@ -36,6 +36,7 @@
 #include "embed_sim_coordinate_transform.h"
 #include "embed_sim_dfc_controller.h"
 #include "embed_sim_cython_interface.h"
+#include <stdio.h>
 #include <stddef.h>
 #include <math.h>
 #include <string.h>
@@ -110,6 +111,16 @@ static void EmbedSim_OpenLoopStep(EmbedSimCtrlInput_T* const inputPtr,
  */
 static void EmbedSim_ExecuteObserver(EmbedSimMachine_T* const MotorPtr);
 
+
+/**
+ * \brief   Prints Debug Information
+ *
+ * \details Used in Python Simulation
+ *
+ * \param[in,out] inputPtr  Pointer to State Structue(Cythen)
+ *
+ */
+static void EmbedSim_ControlStatePrint(const EmbedSimMotorState_T* const StatePtr);
 
 /*********************************************************************************************************************/
 /*--------------------------------------Private Function Implementations---------------------------------------------*/
@@ -189,49 +200,79 @@ static void EmbedSim_OpenLoopStep(EmbedSimCtrlInput_T*    const inputPtr,
 /**
  * \brief   Update observer estimates from sensor readings.
  *
- * \details This function copies the raw sensor values (position and speed)
- *          to the estimated fields used by the controller. It also increments
- *          the loop counter and clamps the speed reference to the allowed range.
+ * \details Copies raw sensor values to estimated fields, increments loop counter,
+ *          clamps speed reference, and implements a smooth convergence algorithm
+ *          for the electrical rotor angle model when in closed‑loop control.
  *
- * \param[in,out] InputPtr  Pointer to control input structure.
+ * \note    Assumes the observer (e.g., PLL or state estimator) has already
+ *          validated and filtered the sensor readings. This function only
+ *          aligns the internal model angle with the estimated angle.
+ *
+ * \param[in,out] MotorPtr  Pointer to the motor structure.
  */
 void EmbedSim_ExecuteObserver(EmbedSimMachine_T* const MotorPtr)
 {
-    EmbedSimCtrlInput_T*    iPtr;
-    EmbedSimMachineParam_T* mPtr;
-    real32_T angleDiff;
+    EmbedSimCtrlInput_T*    iPtr = MotorPtr->InputPtr;
+    EmbedSimMachineParam_T* mPtr = MotorPtr->MachinePtr;
     real32_T rotorSensorPosE;
-
-    iPtr = MotorPtr->InputPtr;
-    mPtr = MotorPtr->MachinePtr;
-
-    rotorSensorPosE = 0.0F;
-    angleDiff       = 0.0F;
+    real32_T angleDiff;
+    real32_T absErr;
+    real32_T gain;
+    real32_T omegaE;
+    real32_T feedforward;
 
     /* Increment loop counter for diagnostic purposes */
     iPtr->LoopCounter++;
 
-    /* Clamp RPM reference to maximum speed */
-    iPtr->AngularVelocityRefRpmM = EmbedSim_ClampValue(iPtr->AngularVelocityRefRpmM, -MAX_SPEED_RPM,MAX_SPEED_RPM);
-    /* Convert RPM reference to rad/s for use in control */
+    /* Clamp RPM reference to maximum speed and convert to rad/s */
+    iPtr->AngularVelocityRefRpmM = EmbedSim_ClampValue(iPtr->AngularVelocityRefRpmM,
+                                                       -MAX_SPEED_RPM, MAX_SPEED_RPM);
     iPtr->RotorVelocityRefM = CON_RPM_TO_RAD(iPtr->AngularVelocityRefRpmM);
 
-    /* Use sensor readings directly as estimates (no filtering) */
+    /* Copy observer estimates (already validated by the observer module) */
     iPtr->RotorPositionObsEstM = iPtr->RotorPositionSensorM;
     iPtr->RotorSpeedObsEstM    = iPtr->RotorSpeedSensorM;
 
-    if(iPtr->SwitchToClosedLoop == 0x1U)
+    /* Only update the model angle when in closed‑loop control */
+    if (iPtr->SwitchToClosedLoop == 0x1U)
     {
-        rotorSensorPosE  =  iPtr->RotorPositionObsEstM * mPtr->PolePairs;
+        /* Compute electrical angle from mechanical position */
+        rotorSensorPosE = iPtr->RotorPositionObsEstM * mPtr->PolePairs;
         EmbedSim_WrapAngleTwoPi(&rotorSensorPosE);
 
-        angleDiff = EmbedSim_AngleDistance(rotorSensorPosE,  mPtr->SvmRotorThetaE);
-        mPtr->SvmRotorThetaE += (0.3 *angleDiff);
+        /* Shortest signed angular distance [-π, π) */
+        angleDiff = EmbedSim_AngleDistance(rotorSensorPosE, mPtr->SvmRotorThetaE);
+        absErr = fabsf(angleDiff);
 
+        /* ---------- Smooth gain scheduling ---------- */
+        if (absErr < ES_ANGLE_CORR_THRESHOLD_RAD)
+        {
+            gain = 1.0F;   /* Full correction */
+        }
+        else
+        {
+            /* Gain smoothly transitions from ES_ANGLE_CORR_SLOW_GAIN to 1.0 */
+            gain = ES_ANGLE_CORR_SLOW_GAIN +
+                   (1.0F - ES_ANGLE_CORR_SLOW_GAIN) * (ES_ANGLE_CORR_THRESHOLD_RAD / absErr);
+            gain = EmbedSim_ClampValue(gain, ES_ANGLE_CORR_SLOW_GAIN, 1.0F);
+        }
+        mPtr->SvmRotorThetaE += gain * angleDiff;
+
+        /* ---------- Half‑sample delay compensation (only when locked) ---------- */
+        if (absErr < ES_ANGLE_CORR_THRESHOLD_RAD)
+        {
+            omegaE = CON_RPM_TO_RAD(iPtr->RotorSpeedObsEstM) * mPtr->PolePairs;
+            feedforward = omegaE * ES_MEASUREMENT_DELAY_FACTOR * iPtr->SampleTime;
+            feedforward = EmbedSim_ClampValue(feedforward,
+                                              -ES_MAX_ANGLE_STEP_RAD,
+                                               ES_MAX_ANGLE_STEP_RAD);
+            mPtr->SvmRotorThetaE += feedforward;
+        }
+
+        /* Keep angle within [0, 2π) */
+        EmbedSim_WrapAngleTwoPi(&mPtr->SvmRotorThetaE);
     }
-
 }
-
 
 /*********************************************************************************************************************/
 /*--------------------------------------Public Function Implementations----------------------------------------------*/
@@ -439,8 +480,33 @@ uint32_T EmbedSim_IsNotSpinning(const EmbedSimCtrlInput_T* const InputPtr, uint3
  *
  * \return  void
  */
-void EmbedSim_GetMotorState(EmbedSimMachine_T* const motorPtr,
-                            EmbedSimMotorState_T* const statePtr)
+/**
+ * \brief   Get current motor state for unified reporting
+ *
+ * \details Fills the motor state structure with current values from
+ *          the control system. This provides a unified view of motor
+ *          operation for display and logging.
+ *
+ * \param[in]  motorPtr   Pointer to motor structure
+ * \param[out] statePtr   Pointer to state structure to fill
+ *
+ * \return  void
+ */
+/**
+ * \brief   Get current motor state for unified reporting
+ *
+ * \details Fills the motor state structure with current values from
+ *          the control system. This provides a unified view of motor
+ *          operation for display and logging.
+ *
+ * \param[in]  motorPtr   Pointer to motor structure
+ * \param[out] statePtr   Pointer to state structure to fill
+ *
+ * \return  void
+ */
+
+
+void EmbedSim_GetMotorState(EmbedSimMachine_T* const motorPtr, EmbedSimMotorState_T* const statePtr)
 {
     EmbedSimCtrlInput_T*    inputPtr  = motorPtr->InputPtr;
     EmbedSimCtrlOutput_T*   outputPtr = motorPtr->OutputPtr;
@@ -450,33 +516,10 @@ void EmbedSim_GetMotorState(EmbedSimMachine_T* const motorPtr,
     FocAngle_T angle;
     FocDq_T dq;
 
-
     /* ===== Mechanical ===== */
-    statePtr->SpeedRpm = inputPtr->RotorSpeedSensorM;
-    statePtr->SpeedRadS = CON_RPM_TO_RAD(inputPtr->RotorSpeedSensorM);
-    statePtr->PositionRad = inputPtr->RotorPositionSensorM;
-    statePtr->AccelerationRpmS = CON_RAD_TO_RPM(inputPtr->RotorAccelerationRefM);
-    statePtr->JerkRpmS3 = CON_RAD_TO_RPM(inputPtr->RotorJerkRefM);
+    statePtr->SpeedRpm = inputPtr->RotorSpeedObsEstM;;
+    statePtr->PositionRad = inputPtr->RotorPositionObsEstM;
 
-    /* ===== Currents ===== */
-    statePtr->Ia = inputPtr->Iu;
-    statePtr->Ib = inputPtr->Iv;
-    statePtr->Ic = inputPtr->Iw;
-
-    /* DQ currents - use coordinate transforms */
-    uvw.U = inputPtr->Iu;
-    uvw.V = inputPtr->Iv;
-    uvw.W = inputPtr->Iw;
-
-    Clarke_Transform_Matrix(&uvw, &ab);
-    statePtr->Ialpha = ab.Alpha;
-    statePtr->Ibeta = ab.Beta;
-
-    angle.ThetaE = inputPtr->RotorPositionSensorM * paraPtr->PolePairs;
-    EmbedSim_WrapAngleTwoPi(&angle.ThetaE);
-    Park_Transform_Matrix(&ab, &angle, &dq);
-    statePtr->Id = dq.D;
-    statePtr->Iq = dq.Q;
 
     /* ===== PWM ===== */
     statePtr->DutyU = outputPtr->DutyU;
@@ -484,155 +527,11 @@ void EmbedSim_GetMotorState(EmbedSimMachine_T* const motorPtr,
     statePtr->DutyW = outputPtr->DutyW;
     statePtr->SvmSector = outputPtr->SvmSector;
 
-    /* ===== References ===== */
-    statePtr->SpeedRefRpm = inputPtr->AngularVelocityRefRpmM;
-    statePtr->SpeedRefRadS = CON_RPM_TO_RAD(inputPtr->AngularVelocityRefRpmM);
-    statePtr->IqRef = 0.0F;  /* Calculated in DFC */
-    statePtr->IdRef = 0.0F;
 
     /* ===== Control Mode ===== */
     statePtr->SwitchToClosedLoop = inputPtr->SwitchToClosedLoop;
-    statePtr->ControlReInit = inputPtr->ControlReInit;
-    statePtr->ControllerMode = inputPtr->CtrlAlg;
-
-    /* ===== PI States ===== */
-    statePtr->SpeedIntegral = paraPtr->SpeedIntegralError;
-    statePtr->IdIntegral = paraPtr->IdIntegralError;
-    statePtr->IqIntegral = paraPtr->IqIntegralError;
-
-    /* ===== Startup ===== */
-    statePtr->StartupModulation = paraPtr->SvmModulationIndex;
-    statePtr->StartupTheta = paraPtr->SvmRotorThetaE;
-    statePtr->StartupTime = 0.0F;  /* Tracked in DFC */
-
-    /* ===== Spinning ===== */
-    statePtr->SpinningPastIndex = DFC_SPINNING_PAST_INDEX;
-    statePtr->StoppedPastIndex = DFC_STOPPED_PAST_INDEX;
-   // statePtr->IsSpinning = EmbedSim_IsMotorSpinning(inputPtr, DFC_SPINNING_PAST_INDEX);
-    statePtr->IsStopped = EmbedSim_IsNotSpinning(inputPtr, DFC_STOPPED_PAST_INDEX);
-
-    /* ===== Trajectory ===== */
-    statePtr->TrajSpeedRpm = CON_RAD_TO_RPM(inputPtr->RotorVelocityRefM);
-    statePtr->TrajAccelRpmS = CON_RAD_TO_RPM(inputPtr->RotorAccelerationRefM);
-    statePtr->TrajJerkRpmS3 = CON_RAD_TO_RPM(inputPtr->RotorJerkRefM);
-
-    /* ===== Speed Error ===== */
-    statePtr->SpeedErrorRpm = inputPtr->AngularVelocityRefRpmM - inputPtr->RotorSpeedSensorM;
-    statePtr->SpeedErrorRadS = CON_RPM_TO_RAD(statePtr->SpeedErrorRpm);
-    if (fabsf(inputPtr->AngularVelocityRefRpmM) > 0.1F)
-    {
-        statePtr->SpeedErrorPercent = (statePtr->SpeedErrorRpm / inputPtr->AngularVelocityRefRpmM) * 100.0F;
-    }
-    else
-    {
-        statePtr->SpeedErrorPercent = 0.0F;
-    }
-
-    /* ===== Status ===== */
-    statePtr->Valid = 0x1U;
-    statePtr->LoopCounter = inputPtr->LoopCounter;
-    statePtr->Dt = inputPtr->SampleTime;
-
-    /* ===== Torque ===== */
-    if (statePtr->SwitchToClosedLoop == 0x1U)
-    {
-        real32_T omega_rad = statePtr->SpeedRadS;
-        real32_T omega_dot_rad = statePtr->AccelerationRpmS * ES_MATH_2PI_F / 60.0F;
-
-        /* Mechanical flatness */
-        statePtr->TorqueFF = paraPtr->J * omega_dot_rad + paraPtr->B * omega_rad;
-        statePtr->TorqueConstant = 1.5F * paraPtr->PolePairs * paraPtr->FluxPm;
-        if (fabsf(statePtr->TorqueConstant) > 1e-6F)
-        {
-            statePtr->IqRef = statePtr->TorqueFF / statePtr->TorqueConstant;
-        }
-        statePtr->TorqueTotal = statePtr->TorqueFF;
-    }
-}
-
-
-/**
- * \brief   Cython interface control step
- *
- * \details Wrapper function for Python/Cython interface to execute one
- *          control step with direct parameter passing.
- *
- * \param[in]  Iu                      Phase U current [A]
- * \param[in]  Iv                      Phase V current [A]
- * \param[in]  Iw                      Phase W current [A]
- * \param[in]  RotorPositionSensor     Rotor position from sensor [rad]
- * \param[in]  RotorVelocitySensor     Rotor speed from sensor [RPM]
- * \param[in]  AngularVelocityRefRpm   Speed reference [RPM]
- * \param[in]  Vdc                     DC bus voltage [V]
- * \param[in]  SampleTime              Sample time [s]
- * \param[in]  CtrlAlg                 Control algorithm selection
- * \param[in]  ValidIn                 Input validity flag
- * \param[out] PwmU                    Phase U PWM duty cycle [0-1]
- * \param[out] PwmV                    Phase V PWM duty cycle [0-1]
- * \param[out] PwmW                    Phase W PWM duty cycle [0-1]
- * \param[out] ValidOut                Output validity flag
- *
- * \return  void
- */
-void EmbedSim_CythonControlStep(
-    /* Inputs */
-    real32_T  Iu,                      /* [A] */
-    real32_T  Iv,                      /* [A] */
-    real32_T  Iw,                      /* [A] */
-    real32_T  RotorPositionSensor,     /* [rad] */
-    real32_T  RotorVelocitySensor,     /* [RPM] */
-    real32_T  AngularVelocityRefRpm,   /* [RPM] */
-    real32_T  Vdc,                     /* [V] */
-    real32_T  SampleTime,              /* [s] */
-    uint32_T  CtrlAlg,
-    uint32_T  ValidIn,
-    /* Outputs */
-    real32_T* PwmU,
-    real32_T* PwmV,
-    real32_T* PwmW,
-    uint32_T* ValidOut)
-{
-    /* Copy input data to global structure */
-    TractionMotorInput_G.Iu = Iu;
-    TractionMotorInput_G.Iv = Iv;
-    TractionMotorInput_G.Iw = Iw;
-    TractionMotorInput_G.RotorPositionSensorM = RotorPositionSensor;
-    TractionMotorInput_G.RotorSpeedSensorM = RotorVelocitySensor;
-    TractionMotorInput_G.AngularVelocityRefRpmM = AngularVelocityRefRpm;
-    TractionMotorInput_G.SampleTime = SampleTime;
-    TractionMotorInput_G.Vdc = Vdc;
-    TractionMotorInput_G.CtrlAlg = CtrlAlg;
-    TractionMotorInput_G.Valid = ValidIn;
-
-    /* Execute one control step */
-    EmbedSim_ControlStep(&TractionMotor_G);
-
-    /* Copy output data */
-    *PwmU  = TractionMotorOutput_G.DutyU;
-    *PwmV  = TractionMotorOutput_G.DutyV;
-    *PwmW  = TractionMotorOutput_G.DutyW;
-    *ValidOut = TractionMotorOutput_G.Valid;
-}
-
-
-/**
- * \brief   Get motor state for unified reporting via Cython
- *
- * \details Returns the current motor state structure filled with values
- *          from the control system. This provides a unified view of motor
- *          operation for display and logging in Python.
- *
- * \param[out] statePtr  Pointer to state structure to fill
- *
- * \return  void
- */
-void EmbedSim_CythonGetMotorState(EmbedSimMotorState_T* const StatePtr)
-{
-    /* Check if pointer is valid using NULL (not comparing to int) */
-    if (StatePtr != NULL)
-    {
-        EmbedSim_GetMotorState(&TractionMotor_G, StatePtr);
-    }
+    statePtr->LoopCounter        = inputPtr->LoopCounter;
+    statePtr->Valid              = inputPtr->Valid;
 }
 
 
@@ -660,6 +559,7 @@ void EmbedSim_CalculateJerkLimitedTrajectory(EmbedSimCtrlInput_T* const InputPtr
      * limit it to the configured maximum speed.
      */
     targetOmega = CON_RPM_TO_RAD(InputPtr->AngularVelocityRefRpmM);
+    speedMax    = CON_RPM_TO_RAD(MAX_SPEED_RPM);
     accelMax    = CON_RPM_TO_RAD(MAX_ACCEL_RPM);
     jerkMax     = CON_RPM_TO_RAD(MAX_JERK_RPM);
 
@@ -781,21 +681,6 @@ void EmbedSim_WrapAngleTwoPi(real32_T* AnglePtr)
     }
 }
 
-
- /**
-  * \brief   Cython interface initialization
-  *
-  * \details Wrapper function for Python/Cython interface to initialize
-  *          the control module.
-  *
-  * \return  void
-  */
- void EmbedSim_CythonControlInit(void)
- {
-     EmbedSim_ControlInit();
- }
-
-
  real32_T EmbedSim_ClampValue(real32_T Val, real32_T MinVal, real32_T MaxVal)
  {
      real32_T result;
@@ -833,6 +718,116 @@ real32_T EmbedSim_AngleDistance(real32_T Angle1, real32_T Angle2)
 
      return AngleDistance;
  }
+
+
+
+void EmbedSim_ControlDebug(const EmbedSimMachine_T * const MotorPtr)
+{
+   const EmbedSimCtrlInput_T * const inputPtr = MotorPtr->InputPtr;
+   const EmbedSimCtrlOutput_T * const outputPtr = MotorPtr->OutputPtr;
+   const EmbedSimMachineParam_T * const paraPtr = MotorPtr->MachinePtr;
+
+   printf("\n");
+   printf("============================================================\n");
+   printf("              EmbedSim_ControlStep DEBUG\n");
+   printf("============================================================\n");
+
+   /* ------------------------------------------------------------
+    * Controller inputs
+    * ------------------------------------------------------------ */
+   printf("INPUTS\n");
+   printf("------------------------------------------------------------\n");
+
+   printf("  Iu                  = %10.5f A\n", inputPtr->Iu);
+   printf("  Iv                  = %10.5f A\n", inputPtr->Iv);
+   printf("  Iw                  = %10.5f A\n", inputPtr->Iw);
+
+   printf("  RotorPosition       = %10.6f rad\n",
+          inputPtr->RotorPositionSensorM);
+
+   printf("  RotorSpeed          = %10.3f RPM\n",
+          inputPtr->RotorSpeedSensorM);
+
+   printf("  SpeedReference      = %10.3f RPM\n",
+          inputPtr->AngularVelocityRefRpmM);
+
+   printf("  Vdc                 = %10.4f V\n",
+          inputPtr->Vdc);
+
+   printf("  SampleTime          = %10.8f s\n",
+          inputPtr->SampleTime);
+
+   printf("  CtrlAlg             = %u\n",
+          inputPtr->CtrlAlg);
+
+   printf("  Valid               = %u\n",
+          inputPtr->Valid);
+
+
+   /* ------------------------------------------------------------
+    * Machine parameters
+    * ------------------------------------------------------------ */
+   printf("\n");
+   printf("MACHINE PARAMETERS\n");
+   printf("------------------------------------------------------------\n");
+
+   printf("  Vdc                 = %10.4f V\n",
+          paraPtr->Vdc);
+
+
+   /* ------------------------------------------------------------
+    * Controller outputs
+    * ------------------------------------------------------------ */
+   printf("\n");
+   printf("OUTPUTS\n");
+   printf("------------------------------------------------------------\n");
+
+   printf("  DutyU               = %10.6f\n",
+          outputPtr->DutyU);
+
+   printf("  DutyV               = %10.6f\n",
+          outputPtr->DutyV);
+
+   printf("  DutyW               = %10.6f\n",
+          outputPtr->DutyW);
+
+   printf("  Valid               = %u\n",
+          outputPtr->Valid);
+
+   printf("============================================================\n");
+
+   fflush(stdout);
+}
+
+
+
+void EmbedSim_ControlStatePrint(const EmbedSimMotorState_T* const StatePtr)
+{
+
+   printf("\n");
+   printf("============================================================\n");
+   printf("              EmbedSim MOTOR STATE DEBUG\n");
+   printf("============================================================\n");
+
+   /* ===== Mechanical ===== */
+   printf("MECHANICAL\n");
+   printf("------------------------------------------------------------\n");
+   printf("  Speed              = %10.3f RPM\n", StatePtr->SpeedRpm);
+
+
+
+   printf("============================================================\n");
+}
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -158,7 +158,7 @@
  * @brief Minimum Modulation Index for Start UP
  *
  */
-#define DFC_STARTUP_MOD_MIN      (0.2F)
+#define DFC_STARTUP_MOD_MIN      (0.1F)
 
 /**
  * @def DFC_STARTUP_MOD_MAX

@@ -295,90 +295,18 @@ typedef struct
 {
     /* Mechanical */
     real32_T    SpeedRpm;                    /**< Measured speed [RPM] */
-    real32_T    SpeedRadS;                   /**< Measured speed [rad/s] */
-    real32_T    PositionRad;                 /**< Rotor position [rad] */
-    real32_T    AccelerationRpmS;            /**< Acceleration [RPM/s] */
-    real32_T    JerkRpmS3;                   /**< Jerk [RPM/s³] */
-
-    /* Electrical */
-    real32_T    Ia;                          /**< Phase A current [A] */
-    real32_T    Ib;                          /**< Phase B current [A] */
-    real32_T    Ic;                          /**< Phase C current [A] */
-    real32_T    Id;                          /**< D-axis current [A] */
-    real32_T    Iq;                          /**< Q-axis current [A] */
-    real32_T    Ialpha;                      /**< Alpha current [A] */
-    real32_T    Ibeta;                       /**< Beta current [A] */
-    real32_T    Vd;                          /**< D-axis voltage [V] */
-    real32_T    Vq;                          /**< Q-axis voltage [V] */
-    real32_T    Valpha;                      /**< Alpha voltage [V] */
-    real32_T    Vbeta;                       /**< Beta voltage [V] */
+    real32_T    PositionRad;                 /**< Rotor position mechanica [rad] */
 
     /* PWM */
-    real32_T    DutyU;                       /**< Phase U duty [0-1] */
-    real32_T    DutyV;                       /**< Phase V duty [0-1] */
-    real32_T    DutyW;                       /**< Phase W duty [0-1] */
-    uint32_T    SvmSector;                   /**< SVM sector [0-6] */
-    real32_T    ModulationIndex;             /**< Modulation index */
-
-    /* References */
-    real32_T    SpeedRefRpm;                 /**< Speed reference [RPM] */
-    real32_T    SpeedRefRadS;                /**< Speed reference [rad/s] */
-    real32_T    IqRef;                       /**< Q-current reference [A] */
-    real32_T    IqRefDot;                    /**< Q-current derivative [A/s] */
-    real32_T    IdRef;                       /**< D-current reference [A] */
-
-    /* Control Mode */
-    uint32_T    SwitchToClosedLoop;          /**< Closed-loop flag */
-    uint32_T    ControlReInit;               /**< Reinit flag */
-    uint32_T    ControllerMode;              /**< 0=OPEN_LOOP, 1=DFC */
-
-    /* Startup */
-    real32_T    StartupModulation;           /**< Startup modulation index */
-    real32_T    StartupTheta;                /**< Startup angle [rad] */
-    real32_T    StartupTime;                 /**< Startup elapsed time [s] */
-
-    /* PI States */
-    real32_T    SpeedIntegral;               /**< Speed PI integral */
-    real32_T    IdIntegral;                  /**< D-current PI integral */
-    real32_T    IqIntegral;                  /**< Q-current PI integral */
-
-    /* Spinning Detection */
-    uint32_T    SpinningCounter;             /**< Spinning counter */
-    uint32_T    StoppedCounter;              /**< Stopped counter */
-    uint32_T    SpinningPastIndex;           /**< Spinning past index */
-    uint32_T    StoppedPastIndex;            /**< Stopped past index */
-    uint32_T    IsSpinning;                  /**< 1=spinning, 0=not */
-    uint32_T    IsStopped;                   /**< 1=stopped, 0=not */
-
-    /* Torque */
-    real32_T    TorqueFF;                    /**< Feedforward torque [Nm] */
-    real32_T    TorqueCorrection;            /**< Torque correction [Nm] */
-    real32_T    TorqueTotal;                 /**< Total torque [Nm] */
-    real32_T    TorqueConstant;              /**< Torque constant [Nm/A] */
-
-    /* Voltage */
-    real32_T    VdFF;                        /**< D feedforward voltage [V] */
-    real32_T    VqFF;                        /**< Q feedforward voltage [V] */
-    real32_T    VdCorr;                      /**< D correction voltage [V] */
-    real32_T    VqCorr;                      /**< Q correction voltage [V] */
-
-    /* Speed Error */
-    real32_T    SpeedErrorRpm;               /**< Speed error [RPM] */
-    real32_T    SpeedErrorRadS;              /**< Speed error [rad/s] */
-    real32_T    SpeedErrorPercent;           /**< Speed error [%] */
-
-    /* Trajectory */
-    real32_T    TrajSpeedRpm;                /**< Trajectory speed [RPM] */
-    real32_T    TrajAccelRpmS;               /**< Trajectory accel [RPM/s] */
-    real32_T    TrajJerkRpmS3;               /**< Trajectory jerk [RPM/s³] */
-
-    /* Timestamp */
-    real32_T    Time;                        /**< Current time [s] */
-    real32_T    Dt;                          /**< Sample time [s] */
+    real32_T    DutyU;                       /**< Phase U duty [0-1]  */
+    real32_T    DutyV;                       /**< Phase V duty [0-1]  */
+    real32_T    DutyW;                       /**< Phase W duty [0-1]  */
+    uint32_T    SvmSector;                   /**< SVM sector [0-6]    */
 
     /* Status */
     uint32_T    Valid;                       /**< 1=valid, 0=invalid */
     uint64_T    LoopCounter;                 /**< Loop counter */
+    uint32_T    SwitchToClosedLoop;
 
 } EmbedSimMotorState_T;
 

@@ -60,14 +60,19 @@ static Matrix_T Inv_Park_Sin_Matrix_G;
  *------------------------------------------------------------------------------------------------------------------*/
 void Transform_Init(void)
 {
-    /* Initialize Clarke transform matrix: [1, 0; 1/√3, 2/√3] */
+    /* --- CHANGED: Full Clarke transform matrix (2×3) ---
+     * [ 2/3,  -1/3,  -1/3 ]
+     * [ 0,     1/√3, -1/√3 ]
+     */
     Matrix_Init(&Clarke_Matrix_G, Clarke_Matrix_Data_G, CLARKE_ROWS, CLARKE_COLS);
-    Matrix_SetElementFloat(&Clarke_Matrix_G, 0U, 0U, ES_MATH_ONE_F);
-    Matrix_SetElementFloat(&Clarke_Matrix_G, 0U, 1U, 0.0f);
-    Matrix_SetElementFloat(&Clarke_Matrix_G, 1U, 0U, ES_MATH_INV_SQRT3_F);
-    Matrix_SetElementFloat(&Clarke_Matrix_G, 1U, 1U, ES_MATH_TWO_INV_SQRT3_F);
+    Matrix_SetElementFloat(&Clarke_Matrix_G, 0U, 0U,  2.0f / 3.0f);          /* 2/3  */
+    Matrix_SetElementFloat(&Clarke_Matrix_G, 0U, 1U, -1.0f / 3.0f);          /* -1/3 */
+    Matrix_SetElementFloat(&Clarke_Matrix_G, 0U, 2U, -1.0f / 3.0f);          /* -1/3 */
+    Matrix_SetElementFloat(&Clarke_Matrix_G, 1U, 0U,  0.0f);                 /* 0    */
+    Matrix_SetElementFloat(&Clarke_Matrix_G, 1U, 1U,  ES_MATH_INV_SQRT3_F);  /* 1/√3 */
+    Matrix_SetElementFloat(&Clarke_Matrix_G, 1U, 2U, -ES_MATH_INV_SQRT3_F);  /* -1/√3 */
 
-    /* Initialize Inverse-Clarke transform matrix */
+    /* Initialize Inverse-Clarke transform matrix (unchanged) */
     Matrix_Init(&Inv_Clarke_Matrix_G, Inv_Clarke_Matrix_Data_G, INV_CLARKE_ROWS, INV_CLARKE_COLS);
     Matrix_SetElementFloat(&Inv_Clarke_Matrix_G, 0U, 0U,  ES_MATH_ONE_F);
     Matrix_SetElementFloat(&Inv_Clarke_Matrix_G, 0U, 1U,  0.0f);
@@ -91,7 +96,7 @@ MatrixStatus_T Clarke_Transform_Matrix(
     FocAlphaBeta_T       * const Out_P)
 {
     MatrixStatus_T status;
-    MatrixElement     input_buffer[CLARKE_COLS];
+    MatrixElement     input_buffer[CLARKE_COLS]; /* Now sized to 3 */
     MatrixElement     output_buffer[CLARKE_ROWS];
     Matrix_T       input_vec;
     Matrix_T       output_vec;
@@ -104,15 +109,16 @@ MatrixStatus_T Clarke_Transform_Matrix(
     }
     else
     {
-        /* Create input vector [U; V] (2×1) */
+        /* --- CHANGED: Create input vector [U; V; W] (3×1) --- */
         Matrix_Init(&input_vec, input_buffer, CLARKE_COLS, 1U);
         Matrix_SetElementFloat(&input_vec, 0U, 0U, In_P->U);
         Matrix_SetElementFloat(&input_vec, 1U, 0U, In_P->V);
+        Matrix_SetElementFloat(&input_vec, 2U, 0U, In_P->W); /* <-- W is now explicitly used! */
 
         /* Create output vector (2×1) */
         Matrix_Init(&output_vec, output_buffer, CLARKE_ROWS, 1U);
 
-        /* Multiply: output = Clarke_matrix × input */
+        /* Multiply: output = Clarke_matrix (2×3) × input (3×1) = output (2×1) */
         status = Matrix_Multiply(&Clarke_Matrix_G, &input_vec, &output_vec);
 
         if (status == MATRIX_SUCCESS)

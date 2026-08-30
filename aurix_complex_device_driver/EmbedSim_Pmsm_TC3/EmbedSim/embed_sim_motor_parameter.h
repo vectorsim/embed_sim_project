@@ -158,7 +158,7 @@
  * @brief Minimum Modulation Index for Start UP
  *
  */
-#define DFC_STARTUP_MOD_MIN      (0.2F)
+#define DFC_STARTUP_MOD_MIN      (0.1F)
 
 /**
  * @def DFC_STARTUP_MOD_MAX
@@ -170,12 +170,99 @@
 
 
 
-#define ES_WRAP_2PI(ANGLE)  (((ANGLE) >= ES_MATH_2PI_F) ? ((ANGLE) - ES_MATH_2PI_F) :  (((ANGLE) < 0.0F) ? ((ANGLE) + ES_MATH_2PI_F) : (ANGLE)))
-
-#define ES_WRAP_PI(ANGLE)  (((ANGLE) >= ES_MATH_PI_F) ? ((ANGLE) - ES_MATH_2PI_F) : (((ANGLE) < -ES_MATH_PI_F) ? ((ANGLE) + ES_MATH_2PI_F) : (ANGLE)))
 
 
+/**
+ * \def ES_ANGLE_CORR_THRESHOLD_RAD
+ * \brief   Threshold for switching between slow and fast angle convergence.
+ *
+ * \details When the angular error between the model angle and the sensor‑based
+ *          angle is below this value, the model angle is corrected fully
+ *          (gain = 1.0) and the half‑sample delay feedforward is applied.
+ *          Above this threshold, a slow gain (ES_ANGLE_CORR_SLOW_GAIN) is used
+ *          to avoid abrupt voltage steps.
+ *
+ * \note    This value must be larger than the worst‑case sensor noise and
+ *          quantisation error to prevent unnecessary full corrections.
+ *          Typical values: 0.01 rad (0.57°) to 0.03 rad (1.72°).
+ *
+ * \warning Increasing this threshold may cause larger angle jumps during
+ *          the fast‑correction phase, potentially introducing torque ripple.
+ *          Decreasing it may slow down convergence when the error is small.
+ *
+ * \unit    rad
+ * \range   0.001 to 0.1 (recommended)
+ */
+#define ES_ANGLE_CORR_THRESHOLD_RAD   (0.0223F)   /* ~1.28° */
 
+/**
+ * \def ES_ANGLE_CORR_SLOW_GAIN
+ * \brief   Proportional gain used when the angular error is large.
+ *
+ * \details When the error exceeds ES_ANGLE_CORR_THRESHOLD_RAD, the model angle
+ *          is corrected using this gain. It provides a slow, smooth convergence
+ *          to prevent sudden voltage changes that could cause current spikes
+ *          or torque disturbances.
+ *
+ *          The effective gain is actually scheduled smoothly from this value
+ *          to 1.0 as the error decreases below the threshold (see
+ *          EmbedSim_ExecuteObserver for the exact formula).
+ *
+ * \note    A value of 0.1 results in a convergence time constant of ~10 samples.
+ *          For a 10 kHz loop, this is ~1 ms, which is fast enough for most
+ *          motor control applications.
+ *
+ * \unit    dimensionless
+ * \range   0.01 to 0.3 (recommended)
+ */
+#define ES_ANGLE_CORR_SLOW_GAIN       (0.1F)
 
+/**
+ * \def ES_MEASUREMENT_DELAY_FACTOR
+ * \brief   Factor to compensate for the delay between sensor sampling and
+ *          control update.
+ *
+ * \details In many digital control systems, the sensor value is sampled at the
+ *          start of the control cycle, but the PWM voltage is applied at the
+ *          end of the cycle. This delay causes a phase lag in the rotor angle.
+ *
+ *          The feedforward term added to the model angle is:
+ *          \f[ \Delta\theta = \omega_e \cdot \text{delay\_factor} \cdot T_s \f]
+ *
+ *          Typically, the delay is half the sample period, hence a factor of 0.5.
+ *
+ * \note    This factor should match the actual delay in your hardware.
+ *          If the measurement is taken exactly at the midpoint, use 0.5.
+ *          If it is taken at the beginning, use 1.0 for fully synchronous
+ *          implementation (rare).
+ *
+ * \unit    dimensionless
+ * \range   0.0 to 1.0 (typical)
+ */
+#define ES_MEASUREMENT_DELAY_FACTOR   (0.5F)
+
+/**
+ * \def ES_MAX_ANGLE_STEP_RAD
+ * \brief   Safety clamp for the half‑sample delay feedforward term.
+ *
+ * \details The feedforward correction is limited to ±this value per sample to
+ *          prevent the model angle from jumping excessively due to sensor noise
+ *          or erroneous speed readings (e.g., a glitch reporting 1e6 RPM).
+ *
+ *          If the computed feedforward exceeds this limit, it is clamped,
+ *          preventing a large angle step that could cause current transients
+ *          or loss of field orientation.
+ *
+ *          A typical value of 0.5 rad (~28.6°) is sufficient for most traction
+ *          motors running at 10–20 kHz sample rates and up to 8 pole pairs.
+ *          For very high pole counts or slower sample rates, increase accordingly.
+ *
+ * \note    This clamp only limits the feedforward term, not the main
+ *          proportional correction (which is clamped via the gain scheduling).
+ *
+ * \unit    rad
+ * \range   0.1 to 1.0 (recommended)
+ */
+#define ES_MAX_ANGLE_STEP_RAD  (0.5F)   /* ~28.6 degrees */
 
 #endif /* EMBEDSIM_EMBED_SIM_MOTOR_PARAMETER_H_ */

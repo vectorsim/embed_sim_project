@@ -27,7 +27,7 @@
  * Transform Matrices Dimensions
  *********************************************************************************************************************/
 #define CLARKE_ROWS      (2U)    /**< Clarke output: Alpha, Beta          */
-#define CLARKE_COLS      (2U)    /**< Clarke input: U, V (W derived)      */
+#define CLARKE_COLS      (3U)    /**< Clarke input: U, V, W               */  /* <-- CHANGED from 2 to 3 */
 #define PARK_ROWS        (2U)    /**< Park output: D, Q                   */
 #define PARK_COLS        (2U)    /**< Park input: Alpha, Beta             */
 #define INV_PARK_ROWS    (2U)    /**< Inverse-Park output: Alpha, Beta    */
@@ -50,10 +50,11 @@ extern void Transform_Init(void);
 /**
  * \brief   Apply the amplitude-invariant Clarke transform using matrix multiplication.
  *
- * \details Formula:
+ * \details Formula (now using all 3 phases):
  * \code
- *   [Alpha]   = [1      0    ] * [U]
- *   [Beta ]     [1/√3   2/√3]   [V]
+ *   [Alpha]   = [ 2/3   -1/3   -1/3 ]   [U]
+ *   [Beta ]     [ 0     1/√3  -1/√3 ]   [V]
+ *                                        [W]
  * \endcode
  *
  * \param[in]  In_P   UVW phase signals (must not be NULL)
