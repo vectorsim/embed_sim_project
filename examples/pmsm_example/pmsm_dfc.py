@@ -2,31 +2,25 @@
 pmsm_dfc.py
 ===========
 
-PMSM Control - Single Python Controller with Mode Switching
-**ALIGNED WITH C IMPLEMENTATION** (including observer and integral scaling)
+PMSM Control - Python Controller **EXACTLY ALIGNED WITH C DFC IMPLEMENTATION**
 
-This version replicates the C DFC controller's behaviour exactly, including:
+- Linear startup ramp (no smoothstep)
 - PI integral updates multiplied by dt
-- C's hardcoded gains (very small integral gains)
-- Timer‑based startup (3s smoothstep ramp)
-- Angle observer (smooth correction towards sensor angle)
-- Modulation index clamping to 0.80
-- Direct sensor angle used only for observer correction, not directly for inverse Park
-
-Use this to debug the C implementation by comparing step‑by‑step.
+- Observer with direction enforcement
+- Direct duty‑cycle clamping (no modulation index limit)
+- Configurable startup duration (default 3.0s to match C)
 """
 
 from __future__ import annotations
 
 import sys
 import math
-from pathlib import Path
-from typing import Dict, Any
+from typing import Any
 
 import numpy as np
 
 # ================================================================
-# Path setup
+# Path setup (keep as in original)
 # ================================================================
 
 from _path_utils import (
@@ -76,7 +70,6 @@ class SpeedTrajectory:
             max_accel_rpm_s=800.0,      # C: MAX_ACCEL_RPM = 800
             max_jerk_rpm_s3=3500.0,     # C: MAX_JERK_RPM = 3500
             settle_tolerance=0.1,       # C: SPEED_SETTLE_TOL
-            debug=False,
     ):
         self.max_speed_rpm = float(max_speed_rpm)
         self.max_accel_rpm_s = float(max_accel_rpm_s)
@@ -87,8 +80,6 @@ class SpeedTrajectory:
         self.accel = 0.0      # RPM/s
         self.jerk = 0.0       # RPM/s³
 
-        self.debug = debug
-
     def reset(self):
         self.speed = 0.0
         self.accel = 0.0
@@ -98,12 +89,18 @@ class SpeedTrajectory:
     def _clamp(value, minimum, maximum):
         return max(minimum, min(maximum, value))
 
-    def update(self, target_rpm, dt):
+    def update(self, target_rpm, dt, reinit=False):
         """
         Update trajectory by one step - matches C's EmbedSim_CalculateJerkLimitedTrajectory.
+        If reinit=True, set accel and jerk to zero (keep speed).
         """
         if dt <= 0.0:
             return self._output()
+
+        # If reinit, reset accel and jerk but keep speed (C does this when ControlReInit=1)
+        if reinit:
+            self.accel = 0.0
+            self.jerk = 0.0
 
         target = self._clamp(float(target_rpm), -self.max_speed_rpm, self.max_speed_rpm)
         error = target - self.speed
@@ -154,13 +151,12 @@ class SpeedTrajectory:
 
 
 # =============================================================================
-# Python Controller - ALIGNED WITH C
+# Python Controller - EXACTLY ALIGNED WITH C
 # =============================================================================
 
 class PythonController(GenericControlBlock):
     """
     PMSM controller that exactly replicates the C DFC behaviour.
-    Includes observer, integral scaling, timer‑based startup, and C gains.
     """
 
     def __init__(
@@ -179,13 +175,10 @@ class PythonController(GenericControlBlock):
             integral_limit=25.0,
             max_current=100.0,
             max_iq_dot=1000.0,
-            modulation_limit=0.80,       # C uses 0.80
-            # Startup (C uses smoothstep over 3s)
+            # Startup (linear ramp over `startup_duration` seconds)
+            startup_duration=3.0,        # <-- now configurable, default matches C
             startup_mod_min=0.05,
             startup_mod_max=0.20,
-            # Spinning detection – C uses timer, but we'll keep for compatibility
-            spinning_past_index=8950,    # not used when timer‑based
-            stopped_past_index=200,
             # PMSM parameters
             pole_pairs=4.0,
             rs=0.19,
@@ -195,10 +188,6 @@ class PythonController(GenericControlBlock):
             j=2.4e-6,
             b=1.0e-6,
             tload=0.0,
-            # Open‑loop parameters (not used in DFC)
-            open_loop_amp=0.3,
-            open_loop_ramp_rate=200.0,
-            use_python=True,
             debug=False,
             **kwargs,
     ):
@@ -212,7 +201,6 @@ class PythonController(GenericControlBlock):
         )
 
         self.controller_mode = controller_mode
-        self.use_python = use_python
         self.debug = debug
 
         # Motor parameters
@@ -242,30 +230,25 @@ class PythonController(GenericControlBlock):
         self.max_current = max_current
         self.max_iq_dot = max_iq_dot
         self.integral_limit = integral_limit
-        self.modulation_limit = modulation_limit
 
-        # Startup (timer‑based smoothstep)
+        # Startup (timer‑based linear ramp)
+        self.startup_duration = float(startup_duration)
         self.startup_timer = 0.0
         self.startup_mod_min = startup_mod_min
         self.startup_mod_max = startup_mod_max
         self.startup_modulation = 0.0
         self.theta_open_loop = 0.0
 
-        # Switch flag and counters
+        # Switch flag and reinit
         self.switch_to_closed_loop = False
         self.control_reinit = False
-        self.spinning_counter = 0
-        self.stopped_counter = 0
-        self.spinning_past_index = spinning_past_index
-        self.stopped_past_index = stopped_past_index
 
         # Trajectory (uses C limits)
         self.trajectory = SpeedTrajectory(
             max_speed_rpm=3000.0,
-            max_accel_rpm_s=800.0,   # C: MAX_ACCEL_RPM
-            max_jerk_rpm_s3=3500.0,  # C: MAX_JERK_RPM
+            max_accel_rpm_s=800.0,
+            max_jerk_rpm_s3=3500.0,
             settle_tolerance=0.1,
-            debug=debug,
         )
 
         # Observer state (model angle)
@@ -277,17 +260,13 @@ class PythonController(GenericControlBlock):
 
         print(f"\n{'=' * 70}")
         print(f" PYTHON CONTROLLER - Mode: {controller_mode} (ALIGNED WITH C)")
-        print(f"  Using Python implementation (use_python={use_python})")
+        print(f"  Using Python implementation (exact C behaviour)")
         print(f"{'=' * 70}")
-        print(f"  Speed PI (torque): Kp={self.Kp_speed}, Ki={self.Ki_speed}")
-        print(f"  Current PI: Kp_d={self.Kp_d}, Kp_q={self.Kp_q}")
-        print(f"  Current PI: Ki_d={self.Ki_d}, Ki_q={self.Ki_q}")
+        print(f"  Speed PI: Kp={self.Kp_speed}, Ki={self.Ki_speed}")
+        print(f"  Current PI: Kp_d={self.Kp_d}, Kp_q={self.Kp_q}, Ki_d={self.Ki_d}, Ki_q={self.Ki_q}")
         print(f"  Integral limit: {self.integral_limit}")
-        print(f"  Max current: {self.max_current} A")
-        print(f"  S-curve: Jmax={self.trajectory.max_jerk_rpm_s3:.1f} RPM/s³")
-        print(f"  S-curve: Amax={self.trajectory.max_accel_rpm_s:.1f} RPM/s")
-        print(f"  Startup: modulation {self.startup_mod_min} → {self.startup_mod_max} over 3s")
-        print(f"  Modulation limit: {self.modulation_limit}")
+        print(f"  Startup: linear modulation {self.startup_mod_min} → {self.startup_mod_max} over {self.startup_duration}s")
+        print(f"  S-curve: Jmax={self.trajectory.max_jerk_rpm_s3:.1f} RPM/s³, Amax={self.trajectory.max_accel_rpm_s:.1f} RPM/s")
         print(f"{'=' * 70}\n")
 
     # ------------------------------------------------------------------
@@ -319,20 +298,29 @@ class PythonController(GenericControlBlock):
     # Observer (matches C's EmbedSim_ExecuteObserver)
     # ------------------------------------------------------------------
 
-    def _observer_update(self, position_mech_rad, speed_rpm, dt):
+    def _observer_update(self, position_mech_rad, speed_rpm, ref_speed_rpm, dt):
         """
         Update the model angle theta_model to track the sensor angle.
-        Matches C's smoothing and half‑sample feedforward.
+        Matches C's direction enforcement, gain scheduling, and half‑sample feedforward.
         """
         # Electrical angle from sensor
         sensor_elec = position_mech_rad * self.pole_pairs
         sensor_elec = self._wrap_angle(sensor_elec)
 
-        # Shortest distance
+        # Raw difference
         diff = self._angle_distance(sensor_elec, self.theta_model)
+
+        # ===== DIRECTION ENFORCEMENT (matches C) =====
+        if ref_speed_rpm > 0.0:
+            if diff < 0.0:
+                diff += 2.0 * math.pi
+        elif ref_speed_rpm < 0.0:
+            if diff > 0.0:
+                diff -= 2.0 * math.pi
+
         abs_err = abs(diff)
 
-        # Gain scheduling
+        # Gain scheduling (same as C)
         threshold = 0.1  # ES_ANGLE_CORR_THRESHOLD_RAD
         if abs_err < threshold:
             gain = 1.0
@@ -343,11 +331,11 @@ class PythonController(GenericControlBlock):
         # Apply correction
         self.theta_model += gain * diff
 
-        # Half‑sample delay compensation when locked
+        # Half‑sample delay feedforward (when locked)
         if abs_err < threshold:
-            omega_e = CON_RPM_TO_RAD(speed_rpm) * self.pole_pairs
-            feedforward = omega_e * 0.5 * dt  # ES_MEASUREMENT_DELAY_FACTOR = 0.5
-            feedforward = self._clamp(feedforward, -0.01, 0.01)  # ES_MAX_ANGLE_STEP_RAD
+            omega_e = (speed_rpm * (2.0 * math.pi / 60.0)) * self.pole_pairs
+            feedforward = omega_e * 0.5 * dt
+            feedforward = self._clamp(feedforward, -0.01, 0.01)
             self.theta_model += feedforward
 
         # Wrap
@@ -355,32 +343,21 @@ class PythonController(GenericControlBlock):
         return self.theta_model
 
     # ------------------------------------------------------------------
-    # SVM (matches C's SVM_CalculateDutyCycle behaviour)
+    # Direct PWM generation (matches C's direct clamping)
     # ------------------------------------------------------------------
 
-    def _svm(self, valpha, vbeta, vdc):
-        """
-        Convert alpha‑beta voltage to PWM duties, with modulation index clamped to 0.80.
-        """
-        v_mag = math.sqrt(valpha * valpha + vbeta * vbeta)
-        v_max = vdc / math.sqrt(3.0)
-
-        if v_mag > 0.0:
-            mod_idx = self._clamp(v_mag / v_max, 0.0, self.modulation_limit)
-            valpha = (valpha / v_mag) * mod_idx * v_max
-            vbeta = (vbeta / v_mag) * mod_idx * v_max
-
-        # Inverse Clarke
+    def _duty_from_alpha_beta(self, valpha, vbeta, vdc):
+        """Inverse Clarke + clamping – no modulation index limit."""
         vu, vv, vw = self.inv_clarke(valpha, vbeta)
 
-        vmax = vdc / 2.0
-        if vmax > 0.0:
-            duty_u = self._clamp((vu / vmax + 1.0) / 2.0, 0.0, 1.0)
-            duty_v = self._clamp((vv / vmax + 1.0) / 2.0, 0.0, 1.0)
-            duty_w = self._clamp((vw / vmax + 1.0) / 2.0, 0.0, 1.0)
-            return duty_u, duty_v, duty_w
+        vhalf = vdc / 2.0
+        if vhalf <= 0.0:
+            return 0.5, 0.5, 0.5
 
-        return 0.5, 0.5, 0.5
+        duty_u = self._clamp((vu / vhalf + 1.0) / 2.0, 0.0, 1.0)
+        duty_v = self._clamp((vv / vhalf + 1.0) / 2.0, 0.0, 1.0)
+        duty_w = self._clamp((vw / vhalf + 1.0) / 2.0, 0.0, 1.0)
+        return duty_u, duty_v, duty_w
 
     # ------------------------------------------------------------------
     # Main compute method
@@ -388,7 +365,7 @@ class PythonController(GenericControlBlock):
 
     def compute_py(self, t, dt, input_values=None):
         """
-        Main controller step - ALIGNED WITH C.
+        Main controller step - EXACTLY ALIGNED WITH C.
         Input vector:
             [0] speed_ref_rpm
             [1] ia
@@ -432,58 +409,51 @@ class PythonController(GenericControlBlock):
             )
 
         # ================================================================
-        # 1. Update trajectory (S‑curve) – matches C
+        # 1. Update trajectory (only in closed‑loop, matches C)
         # ================================================================
-        ref = self.trajectory.update(speed_ref_rpm, dt)
+        if self.switch_to_closed_loop:
+            ref = self.trajectory.update(speed_ref_rpm, dt, reinit=self.control_reinit)
+            self.control_reinit = False
+        else:
+            ref = self.trajectory._output()
 
         # ================================================================
-        # 2. Measure currents in dq – using raw sensor angle for Park
-        #    (but we use observer for inverse Park)
+        # 2. Measure currents in dq
         # ================================================================
-        # Clarke
         ialpha, ibeta = self.clarke(ia, ib, ic)
-        # Park using raw sensor angle (for current feedback)
         theta_elec_sensor = position_sensor_rad * self.pole_pairs
         theta_elec_sensor = self._wrap_angle(theta_elec_sensor)
         id_meas, iq_meas = self.park(ialpha, ibeta, theta_elec_sensor)
 
         # ================================================================
-        # 3. Startup phase (open‑loop ramp) – timer‑based smoothstep (3s)
+        # 3. Startup phase – LINEAR RAMP (matches C)
         # ================================================================
         if not self.switch_to_closed_loop:
-            # Update startup timer and modulation
             self.startup_timer += dt
-            tau = self.startup_timer / 3.0  # 3 seconds total
+            tau = self.startup_timer / self.startup_duration   # <-- now uses configurable duration
             tau = self._clamp(tau, 0.0, 1.0)
-            smooth = 3.0 * tau * tau - 2.0 * tau * tau * tau
-            self.startup_modulation = self.startup_mod_min + (self.startup_mod_max - self.startup_mod_min) * smooth
+
+            # LINEAR interpolation (NO smoothstep)
+            self.startup_modulation = self.startup_mod_min + tau * (self.startup_mod_max - self.startup_mod_min)
             self.startup_modulation = self._clamp(self.startup_modulation, self.startup_mod_min, self.startup_mod_max)
 
-            # Electrical speed (from reference)
             omega_e_startup = self.pole_pairs * (speed_ref_rpm * (2.0 * math.pi / 60.0))
             self.theta_open_loop += omega_e_startup * dt
             self.theta_open_loop = self._wrap_angle(self.theta_open_loop)
 
-            # Voltage command: Vd=0, Vq = (Vdc/sqrt(3)) * modulation
             startup_vd = 0.0
             startup_vq = (vdc / math.sqrt(3.0)) * self.startup_modulation
             valpha, vbeta = self.inv_park(startup_vd, startup_vq, self.theta_open_loop)
-            duty_u, duty_v, duty_w = self._svm(valpha, vbeta, vdc)
+            duty_u, duty_v, duty_w = self._duty_from_alpha_beta(valpha, vbeta, vdc)
 
-            # Check if we should switch to closed‑loop (timer‑based)
-            if self.startup_timer >= 3.0:
+            if self.startup_timer >= self.startup_duration:   # <-- now uses configurable duration
                 self.switch_to_closed_loop = True
                 print(f"[C‑Aligned DFC t={t:.2f}s] SWITCHING TO CLOSED‑LOOP (timer)")
-                # Reset integrators and trajectory (matches C)
                 self.speed_integral = 0.0
                 self.id_integral = 0.0
                 self.iq_integral = 0.0
                 self.control_reinit = True
-                self.trajectory.speed = speed_sensor_rpm
-                self.trajectory.accel = 0.0
-                self.trajectory.jerk = 0.0
                 self.startup_modulation = 0.0
-                # Initialise model angle to sensor angle
                 self.theta_model = position_sensor_rad * self.pole_pairs
                 self.theta_model = self._wrap_angle(self.theta_model)
 
@@ -492,32 +462,30 @@ class PythonController(GenericControlBlock):
             return self.output
 
         # ================================================================
-        # 4. Closed‑loop DFC (with observer)
+        # 4. Closed‑loop DFC
         # ================================================================
 
-        # Update observer (model angle) – matches C's ExecuteObserver
-        self._observer_update(position_sensor_rad, speed_sensor_rpm, dt)
-
-        # Use model angle for inverse Park
+        # Observer update
+        ref_speed_rpm = self.trajectory.speed
+        self._observer_update(position_sensor_rad, speed_sensor_rpm, ref_speed_rpm, dt)
         theta_elec = self.theta_model
 
-        # References from trajectory (rad/s, rad/s², rad/s³)
         omega_ref = ref["omega_ref"]
         omega_dot = ref["omega_dot"]
         omega_ddot = ref["omega_ddot"]
         omega_meas = speed_sensor_rpm * (2.0 * math.pi / 60.0)
 
-        # ----- Speed PI (torque correction) -----
+        # Speed PI
         speed_error = omega_ref - omega_meas
-        self.speed_integral += speed_error * dt   # integral multiplied by dt (matches C)
+        self.speed_integral += speed_error * dt
         self.speed_integral = self._clamp(self.speed_integral, -self.integral_limit, self.integral_limit)
         torque_correction = self.Kp_speed * speed_error + self.Ki_speed * self.speed_integral
 
-        # ----- Mechanical flatness -----
+        # Mechanical flatness
         torque_ff = self.J * omega_dot + self.B * omega_ref + self.Tload
         torque_required = torque_ff + torque_correction
 
-        # ----- Electrical flatness (iq_ref) -----
+        # Electrical flatness
         torque_constant = 1.5 * self.pole_pairs * self.lambda_pm
         if abs(torque_constant) > 1.0e-6:
             iq_ref = self._clamp(torque_required / torque_constant, -self.max_current, self.max_current)
@@ -529,39 +497,34 @@ class PythonController(GenericControlBlock):
             iq_ref = 0.0
             iq_ref_dot = 0.0
 
-        # ----- Voltage feedforward -----
+        # Voltage feedforward
         omega_e_ref = self.pole_pairs * omega_ref
         vd_ff = -omega_e_ref * self.Lq * iq_ref
         vq_ff = self.Rs * iq_ref + self.Lq * iq_ref_dot + omega_e_ref * self.lambda_pm
 
-        # ----- Current PI (voltage correction) -----
+        # Current PI
         id_ref = 0.0
         id_error = id_ref - id_meas
         iq_error = iq_ref - iq_meas
 
-        self.id_integral += id_error * dt   # integral multiplied by dt
+        self.id_integral += id_error * dt
         self.iq_integral += iq_error * dt
         self.id_integral = self._clamp(self.id_integral, -self.integral_limit, self.integral_limit)
         self.iq_integral = self._clamp(self.iq_integral, -self.integral_limit, self.integral_limit)
 
-        # Clamp errors
         id_error = self._clamp(id_error, -self.max_current, self.max_current)
         iq_error = self._clamp(iq_error, -self.max_current, self.max_current)
 
         vd_corr = self.Kp_d * id_error + self.Ki_d * self.id_integral
         vq_corr = self.Kp_q * iq_error + self.Ki_q * self.iq_integral
 
-        # Final voltages
         vd_ref = vd_ff + vd_corr
         vq_ref = vq_ff + vq_corr
 
-        # Inverse Park using model angle
+        # Inverse Park + direct PWM
         valpha, vbeta = self.inv_park(vd_ref, vq_ref, theta_elec)
+        duty_u, duty_v, duty_w = self._duty_from_alpha_beta(valpha, vbeta, vdc)
 
-        # SVM
-        duty_u, duty_v, duty_w = self._svm(valpha, vbeta, vdc)
-
-        # Output
         out = np.array([duty_u, duty_v, duty_w, 1.0], dtype=DEFAULT_DTYPE)
         self.output = VectorSignal(out, self.name)
         return self.output
@@ -577,22 +540,11 @@ class PythonController(GenericControlBlock):
         self.theta_open_loop = 0.0
         self.theta_model = 0.0
         self.switch_to_closed_loop = False
-        self.control_reinit = True
-        self.spinning_counter = 0
-        self.stopped_counter = 0
+        self.control_reinit = False
         self.trajectory.reset()
         self._last_print = -1.0
         self._print_counter = 0
 
     # ------------------------------------------------------------------
     def compute(self, t, dt, input_values=None):
-        # Force Python implementation
         return self.compute_py(t, dt, input_values)
-
-
-# ================================================================
-# Helper for RPM <-> rad/s (matches C macros)
-# ================================================================
-
-def CON_RPM_TO_RAD(rpm):
-    return rpm * (2.0 * math.pi / 60.0)

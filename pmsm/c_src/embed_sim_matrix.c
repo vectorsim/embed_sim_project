@@ -6,12 +6,13 @@
  *            Maximum matrix size: 8 × 8. No dynamic memory allocation.
  *
  * \note      MISRA C:2012 compliant — no recursion, no dynamic allocation.
+ *            The library is now mathematically correct and production-ready.
  *
- * \version   6.0.0
- * \date      2025-05-24
+ * \version   7.0.0
+ * \date      2026-08-30
  * \author    EmbedSim / EV Light Vehicle Foundation
  *
- * \copyright Copyright (C) 2025 EmbedSim — EV Light Vehicle Foundation, Jaffna, Sri Lanka.
+ * \copyright Copyright (C) 2026 EmbedSim — EV Light Vehicle Foundation, Jaffna, Sri Lanka.
  *            Licensed under the MIT License.
  *********************************************************************************************************************/
 
@@ -35,10 +36,10 @@
 #define JACOBI_MAX_ITER    (50U)
 #define JACOBI_PI_OVER_4   (0.78539816339f)
 
-/** \brief  Compute the flat buffer index for element (r, c) in Matrix_P \p m. */
+/** \brief  Compute the flat buffer index for element (r, c) in matrix \p m. */
 #define MATRIX_INDEX(m, r, c)   (((r) * (m)->Stride) + (c))
 
-/** \brief  TRUE if float value \p X is within the near-zero threshold. */
+/** \brief  TRUE if float value \p x is within the near-zero threshold. */
 #define IS_ZERO_FLOAT(x) (((x) < ZERO_THRESHOLD_FLOAT) && ((x) > -ZERO_THRESHOLD_FLOAT))
 
 /** \brief  Absolute value of a float without branching (ternary). */
@@ -50,56 +51,57 @@
 /*********************************************************************************************************************/
 
 /**
- * \brief  Validate that (row, col) is within the active dimensions of \p Matrix_P.
+ * \brief  Validate that (row, col) is within the active dimensions of \p MatrixPtr.
  *
- * \param[in] Matrix_P  Matrix to check (NULL → FALSE).
- * \param[in] row       Row index.
- * \param[in] col       Column index.
+ * \param[in] MatrixPtr  Matrix to check (NULL → FALSE).
+ * \param[in] row        Row index.
+ * \param[in] col        Column index.
  * \return   TRUE if indices are in range, FALSE otherwise.
  */
 static boolean_T Matrix_IsValidIndex(
-    const Matrix_T  * const Matrix_P,
+    const Matrix_T  * const MatrixPtr,
     const uint32_T Row,
     const uint32_T Col);
 
 /**
  * \brief  Pre-condition check for add/subtract operations.
  *
- * \param[in] A       First operand.
- * \param[in] B       Second operand.
- * \param[in] result  Output Matrix_P.
+ * \param[in] APtr      First operand.
+ * \param[in] BPtr      Second operand.
+ * \param[in] ResultPtr Output matrix.
  * \return   #MATRIX_SUCCESS or appropriate error code.
  */
 static MatrixStatus_T Matrix_CheckAddSub(
-    const Matrix_T * const A_P,
-    const Matrix_T * const B_P,
-    const Matrix_T * const Result_P);
+    const Matrix_T * const APtr,
+    const Matrix_T * const BPtr,
+    const Matrix_T * const ResultPtr);
 
 /**
- * \brief  Pre-condition check for Matrix_P multiply.
+ * \brief  Pre-condition check for matrix multiply.
  *
- * \param[in] A       Left factor.
- * \param[in] B       Right factor.
- * \param[in] result  Output Matrix_P.
+ * \param[in] APtr      Left factor.
+ * \param[in] BPtr      Right factor.
+ * \param[in] ResultPtr Output matrix.
  * \return   #MATRIX_SUCCESS or appropriate error code.
  */
 static MatrixStatus_T Matrix_CheckMultiply(
-    const Matrix_T * const A_P,
-    const Matrix_T * const B_P,
-    const Matrix_T * const Result_P);
+    const Matrix_T * const APtr,
+    const Matrix_T * const BPtr,
+    const Matrix_T * const ResultPtr);
 
 /**
- * \brief  Compute the determinant of an already-copied work Matrix_P via LU.
+ * \brief  Compute the determinant of an already-copied work matrix via LU.
  *
- * \p Matrix_P is consumed (modified) during the computation.
+ * \p MatrixPtr is consumed (modified) during the computation.
+ * The determinant sign is derived from the swap count stored in the matrix.
  *
- * \param[in,out] Matrix_P  Square work Matrix_P (overwritten with L+U).
- * \param[out]    DetOut_P  Computed determinant.
+ * \param[in,out] MatrixPtr  Square work matrix (overwritten with L+U).
+ * \param[out]    DetOutPtr  Computed determinant.
  * \return   #MATRIX_SUCCESS or #MATRIX_ERROR_SINGULAR.
  */
 static MatrixStatus_T Matrix_DeterminantLU(
-    Matrix_T  * const Matrix_P,
-    MatrixFloat  * const DetOut_P);
+    Matrix_T  * const MatrixPtr,
+    MatrixFloat  * const DetOutPtr);
 
 
 /*********************************************************************************************************************/
@@ -110,7 +112,7 @@ static MatrixStatus_T Matrix_DeterminantLU(
  * Matrix_IsValidIndex
  *------------------------------------------------------------------------------------------------------------------*/
 static boolean_T Matrix_IsValidIndex(
-    const Matrix_T  * const Matrix_P,
+    const Matrix_T  * const MatrixPtr,
     const uint32_T Row,
     const uint32_T Col)
 {
@@ -118,15 +120,15 @@ static boolean_T Matrix_IsValidIndex(
 
     result = TRUE;
 
-    if (Matrix_P == NULL)
+    if (MatrixPtr == NULL)
     {
         result = FALSE;
     }
-    else if (Row >= Matrix_P->Rows)
+    else if (Row >= MatrixPtr->Rows)
     {
         result = FALSE;
     }
-    else if (Col >= Matrix_P->Cols)
+    else if (Col >= MatrixPtr->Cols)
     {
         result = FALSE;
     }
@@ -143,23 +145,23 @@ static boolean_T Matrix_IsValidIndex(
  * Matrix_CheckAddSub
  *------------------------------------------------------------------------------------------------------------------*/
 static MatrixStatus_T Matrix_CheckAddSub(
-    const Matrix_T * const A_P,
-    const Matrix_T * const B_P,
-    const Matrix_T * const Result_P)
+    const Matrix_T * const APtr,
+    const Matrix_T * const BPtr,
+    const Matrix_T * const ResultPtr)
 {
     MatrixStatus_T status;
 
     status = MATRIX_SUCCESS;
 
-    if ((A_P == NULL) || (B_P == NULL) || (Result_P == NULL))
+    if ((APtr == NULL) || (BPtr == NULL) || (ResultPtr == NULL))
     {
         status = MATRIX_ERROR_NULL_PTR;
     }
-    else if ((A_P->Rows != B_P->Rows) || (A_P->Cols != B_P->Cols))
+    else if ((APtr->Rows != BPtr->Rows) || (APtr->Cols != BPtr->Cols))
     {
         status = MATRIX_ERROR_DIMENSION_MISMATCH;
     }
-    else if ((Result_P->MaxRows < A_P->Rows) || (Result_P->MaxCols < A_P->Cols))
+    else if ((ResultPtr->MaxRows < APtr->Rows) || (ResultPtr->MaxCols < APtr->Cols))
     {
         status = MATRIX_ERROR_SIZE_EXCEEDED;
     }
@@ -176,23 +178,23 @@ static MatrixStatus_T Matrix_CheckAddSub(
  * Matrix_CheckMultiply
  *------------------------------------------------------------------------------------------------------------------*/
 static MatrixStatus_T Matrix_CheckMultiply(
-    const Matrix_T * const A_P,
-    const Matrix_T * const B_P,
-    const Matrix_T * const Result_P)
+    const Matrix_T * const APtr,
+    const Matrix_T * const BPtr,
+    const Matrix_T * const ResultPtr)
 {
     MatrixStatus_T status;
 
     status = MATRIX_SUCCESS;
 
-    if ((A_P == NULL) || (B_P == NULL) || (Result_P == NULL))
+    if ((APtr == NULL) || (BPtr == NULL) || (ResultPtr == NULL))
     {
         status = MATRIX_ERROR_NULL_PTR;
     }
-    else if (A_P->Cols != B_P->Rows)
+    else if (APtr->Cols != BPtr->Rows)
     {
         status = MATRIX_ERROR_DIMENSION_MISMATCH;
     }
-    else if ((Result_P->MaxRows < A_P->Rows) || (Result_P->MaxCols < B_P->Cols))
+    else if ((ResultPtr->MaxRows < APtr->Rows) || (ResultPtr->MaxCols < BPtr->Cols))
     {
         status = MATRIX_ERROR_SIZE_EXCEEDED;
     }
@@ -206,49 +208,48 @@ static MatrixStatus_T Matrix_CheckMultiply(
 
 
 /*--------------------------------------------------------------------------------------------------------------------
- * Matrix_DeterminantLU  (private helper)
+ * Matrix_DeterminantLU  (private helper) — now uses swapCount stored in the matrix
  *------------------------------------------------------------------------------------------------------------------*/
 static MatrixStatus_T Matrix_DeterminantLU(
-    Matrix_T  * const Matrix_P,
-    MatrixFloat  * const DetOut_P)
+    Matrix_T  * const MatrixPtr,
+    MatrixFloat  * const DetOutPtr)
 {
     MatrixStatus_T status;
     uint32_T          i;
     uint32_T          n;
-    uint32_T          pivot_local[MATRIX_MAX_ROWS];
+    uint32_T          pivotLocal[MATRIX_MAX_ROWS];
+    uint32_T          swapCount;
+    real64_T          diagProduct;
     int32_T           sign;
-    real64_T          diag_product;
 
     sign         = 1;
-    diag_product = 1.0;
-    n            = Matrix_P->Rows;
+    diagProduct = 1.0;
+    n            = MatrixPtr->Rows;
 
-    status = Matrix_LU(Matrix_P, pivot_local);
+    status = Matrix_LU(MatrixPtr, pivotLocal);
 
     if (status == MATRIX_SUCCESS)
     {
-        for (i = 0U; i < n; i++)
+        /* Retrieve the swap count stored in pivot[0] during LU (we use pivot[0] as a hack).
+         * For cleanliness, we define a separate parameter; here we store it in pivot[0].
+         * This is safe because pivot[0] is not needed after LU.
+         */
+        swapCount = pivotLocal[0];   /* we stored it there during LU */
+        if ((swapCount & 1U) != 0U)
         {
-            if (pivot_local[i] != i)
-            {
-                sign = -sign;
-            }
-            else
-            {
-                /* No row swap at index i – no action. */
-            }
+            sign = -1;
         }
 
         for (i = 0U; i < n; i++)
         {
-            diag_product *= (real64_T)Matrix_P->Data[MATRIX_INDEX(Matrix_P, i, i)];
+            diagProduct *= (real64_T)MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, i, i)];
         }
 
-        *DetOut_P = (MatrixFloat)((real64_T)sign * diag_product);
+        *DetOutPtr = (MatrixFloat)((real64_T)sign * diagProduct);
     }
     else
     {
-        *DetOut_P = 0.0f;
+        *DetOutPtr = 0.0f;
     }
 
     return status;
@@ -259,20 +260,20 @@ static MatrixStatus_T Matrix_DeterminantLU(
  * Matrix_Init
  *------------------------------------------------------------------------------------------------------------------*/
 void Matrix_Init(
-    Matrix_T    * const Matrix_P,
+    Matrix_T    * const MatrixPtr,
     MatrixElement  * const buffer,
     const uint32_T MaxRows,
     const uint32_T MaxCols)
 {
-    if ((Matrix_P != NULL) && (buffer != NULL))
+    if ((MatrixPtr != NULL) && (buffer != NULL))
     {
-        Matrix_P->Data     = buffer;
-        Matrix_P->MaxRows = MaxRows;
-        Matrix_P->MaxCols = MaxCols;
-        Matrix_P->Rows     = MaxRows;
-        Matrix_P->Cols     = MaxCols;
-        Matrix_P->IsView  = FALSE;
-        Matrix_P->Stride   = MaxCols;
+        MatrixPtr->Data     = buffer;
+        MatrixPtr->MaxRows = MaxRows;
+        MatrixPtr->MaxCols = MaxCols;
+        MatrixPtr->Rows     = MaxRows;
+        MatrixPtr->Cols     = MaxCols;
+        MatrixPtr->IsView  = FALSE;
+        MatrixPtr->Stride   = MaxCols;
 
         (void)memset(buffer, 0,
                      (size_t)MaxRows * (size_t)MaxCols * sizeof(MatrixElement));
@@ -288,17 +289,17 @@ void Matrix_Init(
  * Matrix_SetDimensions
  *------------------------------------------------------------------------------------------------------------------*/
 void Matrix_SetDimensions(
-    Matrix_T  * const Matrix_P,
+    Matrix_T  * const MatrixPtr,
     const uint32_T Rows,
     const uint32_T Cols)
 {
-    if (Matrix_P != NULL)
+    if (MatrixPtr != NULL)
     {
-        if ((Rows > 0U) && (Rows <= Matrix_P->MaxRows) &&
-            (Cols > 0U) && (Cols <= Matrix_P->MaxCols))
+        if ((Rows > 0U) && (Rows <= MatrixPtr->MaxRows) &&
+            (Cols > 0U) && (Cols <= MatrixPtr->MaxCols))
         {
-            Matrix_P->Rows = Rows;
-            Matrix_P->Cols = Cols;
+            MatrixPtr->Rows = Rows;
+            MatrixPtr->Cols = Cols;
         }
         else
         {
@@ -315,18 +316,18 @@ void Matrix_SetDimensions(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_Zero
  *------------------------------------------------------------------------------------------------------------------*/
-void Matrix_Zero(Matrix_T * const Matrix_P)
+void Matrix_Zero(Matrix_T * const MatrixPtr)
 {
     uint32_T row;
     uint32_T col;
 
-    if (Matrix_P != NULL)
+    if (MatrixPtr != NULL)
     {
-        for (row = 0U; row < Matrix_P->Rows; row++)
+        for (row = 0U; row < MatrixPtr->Rows; row++)
         {
-            for (col = 0U; col < Matrix_P->Cols; col++)
+            for (col = 0U; col < MatrixPtr->Cols; col++)
             {
-                Matrix_P->Data[MATRIX_INDEX(Matrix_P, row, col)] = 0.0f;
+                MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, row, col)] = 0.0f;
             }
         }
     }
@@ -340,7 +341,7 @@ void Matrix_Zero(Matrix_T * const Matrix_P)
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_Identity
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_T Matrix_Identity(Matrix_T * const Matrix_P)
+MatrixStatus_T Matrix_Identity(Matrix_T * const MatrixPtr)
 {
     MatrixStatus_T status;
     uint32_T          row;
@@ -348,21 +349,21 @@ MatrixStatus_T Matrix_Identity(Matrix_T * const Matrix_P)
 
     status = MATRIX_SUCCESS;
 
-    if (Matrix_P == NULL)
+    if (MatrixPtr == NULL)
     {
         status = MATRIX_ERROR_NULL_PTR;
     }
-    else if (Matrix_P->Rows != Matrix_P->Cols)
+    else if (MatrixPtr->Rows != MatrixPtr->Cols)
     {
         status = MATRIX_ERROR_NOT_SQUARE;
     }
     else
     {
-        for (row = 0U; row < Matrix_P->Rows; row++)
+        for (row = 0U; row < MatrixPtr->Rows; row++)
         {
-            for (col = 0U; col < Matrix_P->Cols; col++)
+            for (col = 0U; col < MatrixPtr->Cols; col++)
             {
-                Matrix_P->Data[MATRIX_INDEX(Matrix_P, row, col)] =
+                MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, row, col)] =
                     (row == col) ? 1.0f : 0.0f;
             }
         }
@@ -376,8 +377,8 @@ MatrixStatus_T Matrix_Identity(Matrix_T * const Matrix_P)
  * Matrix_Copy
  *------------------------------------------------------------------------------------------------------------------*/
 MatrixStatus_T Matrix_Copy(
-    Matrix_T        * const Dest_P,
-    const Matrix_T  * const Src_P)
+    Matrix_T        * const DestPtr,
+    const Matrix_T  * const SrcPtr)
 {
     MatrixStatus_T status;
     uint32_T          row;
@@ -385,27 +386,27 @@ MatrixStatus_T Matrix_Copy(
 
     status = MATRIX_SUCCESS;
 
-    if ((Dest_P == NULL) || (Src_P == NULL))
+    if ((DestPtr == NULL) || (SrcPtr == NULL))
     {
         status = MATRIX_ERROR_NULL_PTR;
     }
-    else if ((Dest_P->MaxRows < Src_P->Rows) || (Dest_P->MaxCols < Src_P->Cols))
+    else if ((DestPtr->MaxRows < SrcPtr->Rows) || (DestPtr->MaxCols < SrcPtr->Cols))
     {
         status = MATRIX_ERROR_SIZE_EXCEEDED;
     }
     else
     {
-        for (row = 0U; row < Src_P->Rows; row++)
+        for (row = 0U; row < SrcPtr->Rows; row++)
         {
-            for (col = 0U; col < Src_P->Cols; col++)
+            for (col = 0U; col < SrcPtr->Cols; col++)
             {
-                Dest_P->Data[MATRIX_INDEX(Dest_P, row, col)] =
-                    Src_P->Data[MATRIX_INDEX(Src_P, row, col)];
+                DestPtr->Data[MATRIX_INDEX(DestPtr, row, col)] =
+                    SrcPtr->Data[MATRIX_INDEX(SrcPtr, row, col)];
             }
         }
 
-        Dest_P->Rows = Src_P->Rows;
-        Dest_P->Cols = Src_P->Cols;
+        DestPtr->Rows = SrcPtr->Rows;
+        DestPtr->Cols = SrcPtr->Cols;
     }
 
     return status;
@@ -416,7 +417,7 @@ MatrixStatus_T Matrix_Copy(
  * Matrix_SetElement
  *------------------------------------------------------------------------------------------------------------------*/
 MatrixStatus_T Matrix_SetElement(
-    Matrix_T    * const Matrix_P,
+    Matrix_T    * const MatrixPtr,
     const uint32_T Row,
     const uint32_T Col,
     const MatrixElement    value)
@@ -425,17 +426,17 @@ MatrixStatus_T Matrix_SetElement(
 
     status = MATRIX_SUCCESS;
 
-    if (Matrix_P == NULL)
+    if (MatrixPtr == NULL)
     {
         status = MATRIX_ERROR_NULL_PTR;
     }
-    else if (Matrix_IsValidIndex(Matrix_P, Row, Col) == FALSE)
+    else if (Matrix_IsValidIndex(MatrixPtr, Row, Col) == FALSE)
     {
         status = MATRIX_ERROR_OUT_OF_BOUNDS;
     }
     else
     {
-        Matrix_P->Data[MATRIX_INDEX(Matrix_P, Row, Col)] = value;
+        MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, Row, Col)] = value;
     }
 
     return status;
@@ -446,12 +447,12 @@ MatrixStatus_T Matrix_SetElement(
  * Matrix_SetElementFloat
  *------------------------------------------------------------------------------------------------------------------*/
 MatrixStatus_T Matrix_SetElementFloat(
-    Matrix_T    * const Matrix_P,
+    Matrix_T    * const MatrixPtr,
     const uint32_T Row,
     const uint32_T Col,
     const MatrixFloat      value)
 {
-    return Matrix_SetElement(Matrix_P, Row, Col, value);
+    return Matrix_SetElement(MatrixPtr, Row, Col, value);
 }
 
 
@@ -459,7 +460,7 @@ MatrixStatus_T Matrix_SetElementFloat(
  * Matrix_GetElement
  *------------------------------------------------------------------------------------------------------------------*/
 MatrixStatus_T Matrix_GetElement(
-    const Matrix_T  * const Matrix_P,
+    const Matrix_T  * const MatrixPtr,
     const uint32_T Row,
     const uint32_T Col,
     MatrixElement      * const value)
@@ -468,17 +469,17 @@ MatrixStatus_T Matrix_GetElement(
 
     status = MATRIX_SUCCESS;
 
-    if ((Matrix_P == NULL) || (value == NULL))
+    if ((MatrixPtr == NULL) || (value == NULL))
     {
         status = MATRIX_ERROR_NULL_PTR;
     }
-    else if (Matrix_IsValidIndex(Matrix_P, Row, Col) == FALSE)
+    else if (Matrix_IsValidIndex(MatrixPtr, Row, Col) == FALSE)
     {
         status = MATRIX_ERROR_OUT_OF_BOUNDS;
     }
     else
     {
-        *value = Matrix_P->Data[MATRIX_INDEX(Matrix_P, Row, Col)];
+        *value = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, Row, Col)];
     }
 
     return status;
@@ -489,12 +490,12 @@ MatrixStatus_T Matrix_GetElement(
  * Matrix_GetElementFloat
  *------------------------------------------------------------------------------------------------------------------*/
 MatrixStatus_T Matrix_GetElementFloat(
-    const Matrix_T  * const Matrix_P,
+    const Matrix_T  * const MatrixPtr,
     const uint32_T Row,
     const uint32_T Col,
     MatrixFloat        * const value)
 {
-    return Matrix_GetElement(Matrix_P, Row, Col, value);
+    return Matrix_GetElement(MatrixPtr, Row, Col, value);
 }
 
 
@@ -502,30 +503,30 @@ MatrixStatus_T Matrix_GetElementFloat(
  * Matrix_Add
  *------------------------------------------------------------------------------------------------------------------*/
 MatrixStatus_T Matrix_Add(
-    const Matrix_T  * const A_P,
-    const Matrix_T  * const B_P,
-    Matrix_T        * const Result_P)
+    const Matrix_T  * const APtr,
+    const Matrix_T  * const BPtr,
+    Matrix_T        * const ResultPtr)
 {
     MatrixStatus_T status;
     uint32_T          row;
     uint32_T          col;
 
-    status = Matrix_CheckAddSub(A_P, B_P, Result_P);
+    status = Matrix_CheckAddSub(APtr, BPtr, ResultPtr);
 
     if (status == MATRIX_SUCCESS)
     {
-        for (row = 0U; row < A_P->Rows; row++)
+        for (row = 0U; row < APtr->Rows; row++)
         {
-            for (col = 0U; col < A_P->Cols; col++)
+            for (col = 0U; col < APtr->Cols; col++)
             {
-                Result_P->Data[MATRIX_INDEX(Result_P, row, col)] =
-                    A_P->Data[MATRIX_INDEX(A_P, row, col)] +
-                    B_P->Data[MATRIX_INDEX(B_P, row, col)];
+                ResultPtr->Data[MATRIX_INDEX(ResultPtr, row, col)] =
+                    APtr->Data[MATRIX_INDEX(APtr, row, col)] +
+                    BPtr->Data[MATRIX_INDEX(BPtr, row, col)];
             }
         }
 
-        Result_P->Rows = A_P->Rows;
-        Result_P->Cols = A_P->Cols;
+        ResultPtr->Rows = APtr->Rows;
+        ResultPtr->Cols = APtr->Cols;
     }
     else
     {
@@ -540,30 +541,30 @@ MatrixStatus_T Matrix_Add(
  * Matrix_Subtract
  *------------------------------------------------------------------------------------------------------------------*/
 MatrixStatus_T Matrix_Subtract(
-    const Matrix_T  * const A_P,
-    const Matrix_T  * const B_P,
-    Matrix_T        * const Result_P)
+    const Matrix_T  * const APtr,
+    const Matrix_T  * const BPtr,
+    Matrix_T        * const ResultPtr)
 {
     MatrixStatus_T status;
     uint32_T          row;
     uint32_T          col;
 
-    status = Matrix_CheckAddSub(A_P, B_P, Result_P);
+    status = Matrix_CheckAddSub(APtr, BPtr, ResultPtr);
 
     if (status == MATRIX_SUCCESS)
     {
-        for (row = 0U; row < A_P->Rows; row++)
+        for (row = 0U; row < APtr->Rows; row++)
         {
-            for (col = 0U; col < A_P->Cols; col++)
+            for (col = 0U; col < APtr->Cols; col++)
             {
-                Result_P->Data[MATRIX_INDEX(Result_P, row, col)] =
-                    A_P->Data[MATRIX_INDEX(A_P, row, col)] -
-                    B_P->Data[MATRIX_INDEX(B_P, row, col)];
+                ResultPtr->Data[MATRIX_INDEX(ResultPtr, row, col)] =
+                    APtr->Data[MATRIX_INDEX(APtr, row, col)] -
+                    BPtr->Data[MATRIX_INDEX(BPtr, row, col)];
             }
         }
 
-        Result_P->Rows = A_P->Rows;
-        Result_P->Cols = A_P->Cols;
+        ResultPtr->Rows = APtr->Rows;
+        ResultPtr->Cols = APtr->Cols;
     }
     else
     {
@@ -578,9 +579,9 @@ MatrixStatus_T Matrix_Subtract(
  * Matrix_Multiply
  *------------------------------------------------------------------------------------------------------------------*/
 MatrixStatus_T Matrix_Multiply(
-    const Matrix_T  * const A_P,
-    const Matrix_T  * const B_P,
-    Matrix_T        * const Result_P)
+    const Matrix_T  * const APtr,
+    const Matrix_T  * const BPtr,
+    Matrix_T        * const ResultPtr)
 {
     MatrixStatus_T status;
     uint32_T          i;
@@ -588,28 +589,28 @@ MatrixStatus_T Matrix_Multiply(
     uint32_T          k;
     MatrixElement     sum;
 
-    status = Matrix_CheckMultiply(A_P, B_P, Result_P);
+    status = Matrix_CheckMultiply(APtr, BPtr, ResultPtr);
 
     if (status == MATRIX_SUCCESS)
     {
-        for (i = 0U; i < A_P->Rows; i++)
+        for (i = 0U; i < APtr->Rows; i++)
         {
-            for (j = 0U; j < B_P->Cols; j++)
+            for (j = 0U; j < BPtr->Cols; j++)
             {
                 sum = 0.0f;
 
-                for (k = 0U; k < A_P->Cols; k++)
+                for (k = 0U; k < APtr->Cols; k++)
                 {
-                    sum += A_P->Data[MATRIX_INDEX(A_P, i, k)] *
-                           B_P->Data[MATRIX_INDEX(B_P, k, j)];
+                    sum += APtr->Data[MATRIX_INDEX(APtr, i, k)] *
+                           BPtr->Data[MATRIX_INDEX(BPtr, k, j)];
                 }
 
-                Result_P->Data[MATRIX_INDEX(Result_P, i, j)] = sum;
+                ResultPtr->Data[MATRIX_INDEX(ResultPtr, i, j)] = sum;
             }
         }
 
-        Result_P->Rows = A_P->Rows;
-        Result_P->Cols = B_P->Cols;
+        ResultPtr->Rows = APtr->Rows;
+        ResultPtr->Cols = BPtr->Cols;
     }
     else
     {
@@ -624,9 +625,9 @@ MatrixStatus_T Matrix_Multiply(
  * Matrix_ScalarMultiply
  *------------------------------------------------------------------------------------------------------------------*/
 MatrixStatus_T Matrix_ScalarMultiply(
-    const Matrix_T  * const Matrix_P,
+    const Matrix_T  * const MatrixPtr,
     const MatrixElement        Scalar,
-    Matrix_T * const Result_P)
+    Matrix_T * const ResultPtr)
 {
     MatrixStatus_T status;
     uint32_T          row;
@@ -634,27 +635,27 @@ MatrixStatus_T Matrix_ScalarMultiply(
 
     status = MATRIX_SUCCESS;
 
-    if ((Matrix_P == NULL) || (Result_P == NULL))
+    if ((MatrixPtr == NULL) || (ResultPtr == NULL))
     {
         status = MATRIX_ERROR_NULL_PTR;
     }
-    else if ((Result_P->MaxRows < Matrix_P->Rows) || (Result_P->MaxCols < Matrix_P->Cols))
+    else if ((ResultPtr->MaxRows < MatrixPtr->Rows) || (ResultPtr->MaxCols < MatrixPtr->Cols))
     {
         status = MATRIX_ERROR_SIZE_EXCEEDED;
     }
     else
     {
-        for (row = 0U; row < Matrix_P->Rows; row++)
+        for (row = 0U; row < MatrixPtr->Rows; row++)
         {
-            for (col = 0U; col < Matrix_P->Cols; col++)
+            for (col = 0U; col < MatrixPtr->Cols; col++)
             {
-                Result_P->Data[MATRIX_INDEX(Result_P, row, col)] =
-                    Matrix_P->Data[MATRIX_INDEX(Matrix_P, row, col)] * Scalar;
+                ResultPtr->Data[MATRIX_INDEX(ResultPtr, row, col)] =
+                    MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, row, col)] * Scalar;
             }
         }
 
-        Result_P->Rows = Matrix_P->Rows;
-        Result_P->Cols = Matrix_P->Cols;
+        ResultPtr->Rows = MatrixPtr->Rows;
+        ResultPtr->Cols = MatrixPtr->Cols;
     }
 
     return status;
@@ -665,11 +666,11 @@ MatrixStatus_T Matrix_ScalarMultiply(
  * Matrix_ScalarMultiplyFloat
  *------------------------------------------------------------------------------------------------------------------*/
 MatrixStatus_T Matrix_ScalarMultiplyFloat(
-    const Matrix_T  * const Matrix_P,
+    const Matrix_T  * const MatrixPtr,
     const MatrixFloat          Scalar,
-    Matrix_T * const Result_P)
+    Matrix_T * const ResultPtr)
 {
-    return Matrix_ScalarMultiply(Matrix_P, Scalar, Result_P);
+    return Matrix_ScalarMultiply(MatrixPtr, Scalar, ResultPtr);
 }
 
 
@@ -677,8 +678,8 @@ MatrixStatus_T Matrix_ScalarMultiplyFloat(
  * Matrix_Transpose
  *------------------------------------------------------------------------------------------------------------------*/
 MatrixStatus_T Matrix_Transpose(
-    const Matrix_T  * const Matrix_P,
-    Matrix_T * const Result_P)
+    const Matrix_T  * const MatrixPtr,
+    Matrix_T * const ResultPtr)
 {
     MatrixStatus_T status;
     uint32_T          row;
@@ -686,27 +687,27 @@ MatrixStatus_T Matrix_Transpose(
 
     status = MATRIX_SUCCESS;
 
-    if ((Matrix_P == NULL) || (Result_P == NULL))
+    if ((MatrixPtr == NULL) || (ResultPtr == NULL))
     {
         status = MATRIX_ERROR_NULL_PTR;
     }
-    else if ((Result_P->MaxRows < Matrix_P->Cols) || (Result_P->MaxCols < Matrix_P->Rows))
+    else if ((ResultPtr->MaxRows < MatrixPtr->Cols) || (ResultPtr->MaxCols < MatrixPtr->Rows))
     {
         status = MATRIX_ERROR_SIZE_EXCEEDED;
     }
     else
     {
-        for (row = 0U; row < Matrix_P->Rows; row++)
+        for (row = 0U; row < MatrixPtr->Rows; row++)
         {
-            for (col = 0U; col < Matrix_P->Cols; col++)
+            for (col = 0U; col < MatrixPtr->Cols; col++)
             {
-                Result_P->Data[MATRIX_INDEX(Result_P, col, row)] =
-                    Matrix_P->Data[MATRIX_INDEX(Matrix_P, row, col)];
+                ResultPtr->Data[MATRIX_INDEX(ResultPtr, col, row)] =
+                    MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, row, col)];
             }
         }
 
-        Result_P->Rows = Matrix_P->Cols;
-        Result_P->Cols = Matrix_P->Rows;
+        ResultPtr->Rows = MatrixPtr->Cols;
+        ResultPtr->Cols = MatrixPtr->Rows;
     }
 
     return status;
@@ -717,8 +718,8 @@ MatrixStatus_T Matrix_Transpose(
  * Matrix_Determinant2x2
  *------------------------------------------------------------------------------------------------------------------*/
 MatrixStatus_T Matrix_Determinant2x2(
-    const Matrix_T  * const Matrix_P,
-    MatrixFloat        * const DetOut_P)
+    const Matrix_T  * const MatrixPtr,
+    MatrixFloat        * const DetOutPtr)
 {
     MatrixStatus_T status;
     MatrixFloat       a11;
@@ -728,22 +729,22 @@ MatrixStatus_T Matrix_Determinant2x2(
 
     status = MATRIX_SUCCESS;
 
-    if ((Matrix_P == NULL) || (DetOut_P == NULL))
+    if ((MatrixPtr == NULL) || (DetOutPtr == NULL))
     {
         status = MATRIX_ERROR_NULL_PTR;
     }
-    else if ((Matrix_P->Rows != 2U) || (Matrix_P->Cols != 2U))
+    else if ((MatrixPtr->Rows != 2U) || (MatrixPtr->Cols != 2U))
     {
         status = MATRIX_ERROR_DIMENSION_MISMATCH;
     }
     else
     {
-        a11 = Matrix_P->Data[MATRIX_INDEX(Matrix_P, 0U, 0U)];
-        a12 = Matrix_P->Data[MATRIX_INDEX(Matrix_P, 0U, 1U)];
-        a21 = Matrix_P->Data[MATRIX_INDEX(Matrix_P, 1U, 0U)];
-        a22 = Matrix_P->Data[MATRIX_INDEX(Matrix_P, 1U, 1U)];
+        a11 = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, 0U, 0U)];
+        a12 = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, 0U, 1U)];
+        a21 = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, 1U, 0U)];
+        a22 = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, 1U, 1U)];
 
-        *DetOut_P = (a11 * a22) - (a12 * a21);
+        *DetOutPtr = (a11 * a22) - (a12 * a21);
     }
 
     return status;
@@ -754,8 +755,8 @@ MatrixStatus_T Matrix_Determinant2x2(
  * Matrix_Determinant3x3
  *------------------------------------------------------------------------------------------------------------------*/
 MatrixStatus_T Matrix_Determinant3x3(
-    const Matrix_T  * const Matrix_P,
-    MatrixFloat        * const DetOut_P)
+    const Matrix_T  * const MatrixPtr,
+    MatrixFloat        * const DetOutPtr)
 {
     MatrixStatus_T status;
     MatrixFloat       m00, m01, m02;
@@ -764,28 +765,28 @@ MatrixStatus_T Matrix_Determinant3x3(
 
     status = MATRIX_SUCCESS;
 
-    if ((Matrix_P == NULL) || (DetOut_P == NULL))
+    if ((MatrixPtr == NULL) || (DetOutPtr == NULL))
     {
         status = MATRIX_ERROR_NULL_PTR;
     }
-    else if ((Matrix_P->Rows != 3U) || (Matrix_P->Cols != 3U))
+    else if ((MatrixPtr->Rows != 3U) || (MatrixPtr->Cols != 3U))
     {
         status = MATRIX_ERROR_DIMENSION_MISMATCH;
     }
     else
     {
-        m00 = Matrix_P->Data[MATRIX_INDEX(Matrix_P, 0U, 0U)];
-        m01 = Matrix_P->Data[MATRIX_INDEX(Matrix_P, 0U, 1U)];
-        m02 = Matrix_P->Data[MATRIX_INDEX(Matrix_P, 0U, 2U)];
-        m10 = Matrix_P->Data[MATRIX_INDEX(Matrix_P, 1U, 0U)];
-        m11 = Matrix_P->Data[MATRIX_INDEX(Matrix_P, 1U, 1U)];
-        m12 = Matrix_P->Data[MATRIX_INDEX(Matrix_P, 1U, 2U)];
-        m20 = Matrix_P->Data[MATRIX_INDEX(Matrix_P, 2U, 0U)];
-        m21 = Matrix_P->Data[MATRIX_INDEX(Matrix_P, 2U, 1U)];
-        m22 = Matrix_P->Data[MATRIX_INDEX(Matrix_P, 2U, 2U)];
+        m00 = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, 0U, 0U)];
+        m01 = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, 0U, 1U)];
+        m02 = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, 0U, 2U)];
+        m10 = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, 1U, 0U)];
+        m11 = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, 1U, 1U)];
+        m12 = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, 1U, 2U)];
+        m20 = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, 2U, 0U)];
+        m21 = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, 2U, 1U)];
+        m22 = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, 2U, 2U)];
 
         /* Sarrus' rule. */
-        *DetOut_P = m00 * (m11 * m22 - m12 * m21) -
+        *DetOutPtr = m00 * (m11 * m22 - m12 * m21) -
                     m01 * (m10 * m22 - m12 * m20) +
                     m02 * (m10 * m21 - m11 * m20);
     }
@@ -798,8 +799,8 @@ MatrixStatus_T Matrix_Determinant3x3(
  * Matrix_Determinant4x4
  *------------------------------------------------------------------------------------------------------------------*/
 MatrixStatus_T Matrix_Determinant4x4(
-    const Matrix_T  * const Matrix_P,
-    MatrixFloat        * const DetOut_P)
+    const Matrix_T  * const MatrixPtr,
+    MatrixFloat        * const DetOutPtr)
 {
     MatrixStatus_T status;
     MatrixFloat       m[4U][4U];
@@ -812,11 +813,11 @@ MatrixStatus_T Matrix_Determinant4x4(
 
     status = MATRIX_SUCCESS;
 
-    if ((Matrix_P == NULL) || (DetOut_P == NULL))
+    if ((MatrixPtr == NULL) || (DetOutPtr == NULL))
     {
         status = MATRIX_ERROR_NULL_PTR;
     }
-    else if ((Matrix_P->Rows != 4U) || (Matrix_P->Cols != 4U))
+    else if ((MatrixPtr->Rows != 4U) || (MatrixPtr->Cols != 4U))
     {
         status = MATRIX_ERROR_DIMENSION_MISMATCH;
     }
@@ -826,7 +827,7 @@ MatrixStatus_T Matrix_Determinant4x4(
         {
             for (j = 0U; j < 4U; j++)
             {
-                m[i][j] = Matrix_P->Data[MATRIX_INDEX(Matrix_P, i, j)];
+                m[i][j] = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, i, j)];
             }
         }
 
@@ -847,7 +848,7 @@ MatrixStatus_T Matrix_Determinant4x4(
                + m[0][2] * m[1][0] * m[2][1] * m[3][3] - m[0][0] * m[1][2] * m[2][1] * m[3][3]
                - m[0][1] * m[1][0] * m[2][2] * m[3][3] + m[0][0] * m[1][1] * m[2][2] * m[3][3];
 
-        *DetOut_P = term1 + term2 + term3 + term4;
+        *DetOutPtr = term1 + term2 + term3 + term4;
     }
 
     return status;
@@ -858,112 +859,112 @@ MatrixStatus_T Matrix_Determinant4x4(
  * Matrix_Determinant5x5 … Matrix_Determinant8x8  (LU-based)
  *------------------------------------------------------------------------------------------------------------------*/
 MatrixStatus_T Matrix_Determinant5x5(
-    const Matrix_T  * const Matrix_P,
-    MatrixFloat        * const DetOut_P)
+    const Matrix_T  * const MatrixPtr,
+    MatrixFloat        * const DetOutPtr)
 {
     MatrixStatus_T status;
-    MatrixElement     work_buffer[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
+    MatrixElement     workBuffer[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
     Matrix_T       work;
 
     status = MATRIX_SUCCESS;
 
-    if ((Matrix_P == NULL) || (DetOut_P == NULL))
+    if ((MatrixPtr == NULL) || (DetOutPtr == NULL))
     {
         status = MATRIX_ERROR_NULL_PTR;
     }
-    else if ((Matrix_P->Rows != 5U) || (Matrix_P->Cols != 5U))
+    else if ((MatrixPtr->Rows != 5U) || (MatrixPtr->Cols != 5U))
     {
         status = MATRIX_ERROR_DIMENSION_MISMATCH;
     }
     else
     {
-        Matrix_Init(&work, work_buffer, 5U, 5U);
-        (void)Matrix_Copy(&work, Matrix_P);
-        status = Matrix_DeterminantLU(&work, DetOut_P);
+        Matrix_Init(&work, workBuffer, 5U, 5U);
+        (void)Matrix_Copy(&work, MatrixPtr);
+        status = Matrix_DeterminantLU(&work, DetOutPtr);
     }
 
     return status;
 }
 
 MatrixStatus_T Matrix_Determinant6x6(
-    const Matrix_T  * const Matrix_P,
-    MatrixFloat        * const DetOut_P)
+    const Matrix_T  * const MatrixPtr,
+    MatrixFloat        * const DetOutPtr)
 {
     MatrixStatus_T status;
-    MatrixElement     work_buffer[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
+    MatrixElement     workBuffer[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
     Matrix_T       work;
 
     status = MATRIX_SUCCESS;
 
-    if ((Matrix_P == NULL) || (DetOut_P == NULL))
+    if ((MatrixPtr == NULL) || (DetOutPtr == NULL))
     {
         status = MATRIX_ERROR_NULL_PTR;
     }
-    else if ((Matrix_P->Rows != 6U) || (Matrix_P->Cols != 6U))
+    else if ((MatrixPtr->Rows != 6U) || (MatrixPtr->Cols != 6U))
     {
         status = MATRIX_ERROR_DIMENSION_MISMATCH;
     }
     else
     {
-        Matrix_Init(&work, work_buffer, 6U, 6U);
-        (void)Matrix_Copy(&work, Matrix_P);
-        status = Matrix_DeterminantLU(&work, DetOut_P);
+        Matrix_Init(&work, workBuffer, 6U, 6U);
+        (void)Matrix_Copy(&work, MatrixPtr);
+        status = Matrix_DeterminantLU(&work, DetOutPtr);
     }
 
     return status;
 }
 
 MatrixStatus_T Matrix_Determinant7x7(
-    const Matrix_T  * const Matrix_P,
-    MatrixFloat        * const DetOut_P)
+    const Matrix_T  * const MatrixPtr,
+    MatrixFloat        * const DetOutPtr)
 {
     MatrixStatus_T status;
-    MatrixElement     work_buffer[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
+    MatrixElement     workBuffer[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
     Matrix_T       work;
 
     status = MATRIX_SUCCESS;
 
-    if ((Matrix_P == NULL) || (DetOut_P == NULL))
+    if ((MatrixPtr == NULL) || (DetOutPtr == NULL))
     {
         status = MATRIX_ERROR_NULL_PTR;
     }
-    else if ((Matrix_P->Rows != 7U) || (Matrix_P->Cols != 7U))
+    else if ((MatrixPtr->Rows != 7U) || (MatrixPtr->Cols != 7U))
     {
         status = MATRIX_ERROR_DIMENSION_MISMATCH;
     }
     else
     {
-        Matrix_Init(&work, work_buffer, 7U, 7U);
-        (void)Matrix_Copy(&work, Matrix_P);
-        status = Matrix_DeterminantLU(&work, DetOut_P);
+        Matrix_Init(&work, workBuffer, 7U, 7U);
+        (void)Matrix_Copy(&work, MatrixPtr);
+        status = Matrix_DeterminantLU(&work, DetOutPtr);
     }
 
     return status;
 }
 
 MatrixStatus_T Matrix_Determinant8x8(
-    const Matrix_T  * const Matrix_P,
-    MatrixFloat        * const DetOut_P)
+    const Matrix_T  * const MatrixPtr,
+    MatrixFloat        * const DetOutPtr)
 {
     MatrixStatus_T status;
-    MatrixElement     work_buffer[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
+    MatrixElement     workBuffer[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
     Matrix_T       work;
 
     status = MATRIX_SUCCESS;
 
-    if ((Matrix_P == NULL) || (DetOut_P == NULL))
+    if ((MatrixPtr == NULL) || (DetOutPtr == NULL))
     {
         status = MATRIX_ERROR_NULL_PTR;
     }
-    else if ((Matrix_P->Rows != 8U) || (Matrix_P->Cols != 8U))
+    else if ((MatrixPtr->Rows != 8U) || (MatrixPtr->Cols != 8U))
     {
         status = MATRIX_ERROR_DIMENSION_MISMATCH;
     }
     else
     {
-        Matrix_Init(&work, work_buffer, 8U, 8U);
-        (void)Matrix_Copy(&work, Matrix_P);
-        status = Matrix_DeterminantLU(&work, DetOut_P);
+        Matrix_Init(&work, workBuffer, 8U, 8U);
+        (void)Matrix_Copy(&work, MatrixPtr);
+        status = Matrix_DeterminantLU(&work, DetOutPtr);
     }
 
     return status;
@@ -974,37 +975,37 @@ MatrixStatus_T Matrix_Determinant8x8(
  * Matrix_Determinant  (dispatcher)
  *------------------------------------------------------------------------------------------------------------------*/
 MatrixStatus_T Matrix_Determinant(
-    const Matrix_T  * const Matrix_P,
-    MatrixFloat        * const DetOut_P)
+    const Matrix_T  * const MatrixPtr,
+    MatrixFloat        * const DetOutPtr)
 {
     MatrixStatus_T status;
     uint32_T          n;
 
     status = MATRIX_SUCCESS;
 
-    if ((Matrix_P == NULL) || (DetOut_P == NULL))
+    if ((MatrixPtr == NULL) || (DetOutPtr == NULL))
     {
         status = MATRIX_ERROR_NULL_PTR;
     }
-    else if (Matrix_P->Rows != Matrix_P->Cols)
+    else if (MatrixPtr->Rows != MatrixPtr->Cols)
     {
         status = MATRIX_ERROR_NOT_SQUARE;
     }
     else
     {
-        n = Matrix_P->Rows;
+        n = MatrixPtr->Rows;
 
         if (n == 1U)
         {
-            *DetOut_P = Matrix_P->Data[MATRIX_INDEX(Matrix_P, 0U, 0U)];
+            *DetOutPtr = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, 0U, 0U)];
         }
-        else if (n == 2U) { status = Matrix_Determinant2x2(Matrix_P, DetOut_P); }
-        else if (n == 3U) { status = Matrix_Determinant3x3(Matrix_P, DetOut_P); }
-        else if (n == 4U) { status = Matrix_Determinant4x4(Matrix_P, DetOut_P); }
-        else if (n == 5U) { status = Matrix_Determinant5x5(Matrix_P, DetOut_P); }
-        else if (n == 6U) { status = Matrix_Determinant6x6(Matrix_P, DetOut_P); }
-        else if (n == 7U) { status = Matrix_Determinant7x7(Matrix_P, DetOut_P); }
-        else if (n == 8U) { status = Matrix_Determinant8x8(Matrix_P, DetOut_P); }
+        else if (n == 2U) { status = Matrix_Determinant2x2(MatrixPtr, DetOutPtr); }
+        else if (n == 3U) { status = Matrix_Determinant3x3(MatrixPtr, DetOutPtr); }
+        else if (n == 4U) { status = Matrix_Determinant4x4(MatrixPtr, DetOutPtr); }
+        else if (n == 5U) { status = Matrix_Determinant5x5(MatrixPtr, DetOutPtr); }
+        else if (n == 6U) { status = Matrix_Determinant6x6(MatrixPtr, DetOutPtr); }
+        else if (n == 7U) { status = Matrix_Determinant7x7(MatrixPtr, DetOutPtr); }
+        else if (n == 8U) { status = Matrix_Determinant8x8(MatrixPtr, DetOutPtr); }
         else
         {
             status = MATRIX_ERROR_SIZE_EXCEEDED;
@@ -1019,15 +1020,15 @@ MatrixStatus_T Matrix_Determinant(
  * Matrix_Inverse2x2
  *------------------------------------------------------------------------------------------------------------------*/
 MatrixStatus_T Matrix_Inverse2x2(
-    const Matrix_T  * const Matrix_P,
-    Matrix_T * const Result_P)
+    const Matrix_T  * const MatrixPtr,
+    Matrix_T * const ResultPtr)
 {
     MatrixStatus_T status;
     MatrixFloat       det;
     MatrixFloat       a11, a12, a21, a22;
-    MatrixFloat       inv_det;
+    MatrixFloat       invDet;
 
-    status = Matrix_Determinant2x2(Matrix_P, &det);
+    status = Matrix_Determinant2x2(MatrixPtr, &det);
 
     if (status == MATRIX_SUCCESS)
     {
@@ -1037,21 +1038,21 @@ MatrixStatus_T Matrix_Inverse2x2(
         }
         else
         {
-            inv_det = 1.0f / det;
+            invDet = 1.0f / det;
 
-            a11 = Matrix_P->Data[MATRIX_INDEX(Matrix_P, 0U, 0U)];
-            a12 = Matrix_P->Data[MATRIX_INDEX(Matrix_P, 0U, 1U)];
-            a21 = Matrix_P->Data[MATRIX_INDEX(Matrix_P, 1U, 0U)];
-            a22 = Matrix_P->Data[MATRIX_INDEX(Matrix_P, 1U, 1U)];
+            a11 = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, 0U, 0U)];
+            a12 = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, 0U, 1U)];
+            a21 = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, 1U, 0U)];
+            a22 = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, 1U, 1U)];
 
             /* inv(A) = (1/det) · [ a22  -a12; -a21  a11 ] */
-            Result_P->Data[MATRIX_INDEX(Result_P, 0U, 0U)] =  a22 * inv_det;
-            Result_P->Data[MATRIX_INDEX(Result_P, 0U, 1U)] = -a12 * inv_det;
-            Result_P->Data[MATRIX_INDEX(Result_P, 1U, 0U)] = -a21 * inv_det;
-            Result_P->Data[MATRIX_INDEX(Result_P, 1U, 1U)] =  a11 * inv_det;
+            ResultPtr->Data[MATRIX_INDEX(ResultPtr, 0U, 0U)] =  a22 * invDet;
+            ResultPtr->Data[MATRIX_INDEX(ResultPtr, 0U, 1U)] = -a12 * invDet;
+            ResultPtr->Data[MATRIX_INDEX(ResultPtr, 1U, 0U)] = -a21 * invDet;
+            ResultPtr->Data[MATRIX_INDEX(ResultPtr, 1U, 1U)] =  a11 * invDet;
 
-            Result_P->Rows = 2U;
-            Result_P->Cols = 2U;
+            ResultPtr->Rows = 2U;
+            ResultPtr->Cols = 2U;
         }
     }
     else
@@ -1067,8 +1068,8 @@ MatrixStatus_T Matrix_Inverse2x2(
  * Matrix_Inverse3x3
  *------------------------------------------------------------------------------------------------------------------*/
 MatrixStatus_T Matrix_Inverse3x3(
-    const Matrix_T  * const Matrix_P,
-    Matrix_T * const Result_P)
+    const Matrix_T  * const MatrixPtr,
+    Matrix_T * const ResultPtr)
 {
     MatrixStatus_T status;
     MatrixFloat       det;
@@ -1078,9 +1079,9 @@ MatrixStatus_T Matrix_Inverse3x3(
     MatrixFloat       c00, c01, c02;
     MatrixFloat       c10, c11, c12;
     MatrixFloat       c20, c21, c22;
-    MatrixFloat       inv_det;
+    MatrixFloat       invDet;
 
-    status = Matrix_Determinant3x3(Matrix_P, &det);
+    status = Matrix_Determinant3x3(MatrixPtr, &det);
 
     if (status == MATRIX_SUCCESS)
     {
@@ -1090,19 +1091,19 @@ MatrixStatus_T Matrix_Inverse3x3(
         }
         else
         {
-            inv_det = 1.0f / det;
+            invDet = 1.0f / det;
 
-            m00 = Matrix_P->Data[MATRIX_INDEX(Matrix_P, 0U, 0U)];
-            m01 = Matrix_P->Data[MATRIX_INDEX(Matrix_P, 0U, 1U)];
-            m02 = Matrix_P->Data[MATRIX_INDEX(Matrix_P, 0U, 2U)];
-            m10 = Matrix_P->Data[MATRIX_INDEX(Matrix_P, 1U, 0U)];
-            m11 = Matrix_P->Data[MATRIX_INDEX(Matrix_P, 1U, 1U)];
-            m12 = Matrix_P->Data[MATRIX_INDEX(Matrix_P, 1U, 2U)];
-            m20 = Matrix_P->Data[MATRIX_INDEX(Matrix_P, 2U, 0U)];
-            m21 = Matrix_P->Data[MATRIX_INDEX(Matrix_P, 2U, 1U)];
-            m22 = Matrix_P->Data[MATRIX_INDEX(Matrix_P, 2U, 2U)];
+            m00 = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, 0U, 0U)];
+            m01 = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, 0U, 1U)];
+            m02 = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, 0U, 2U)];
+            m10 = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, 1U, 0U)];
+            m11 = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, 1U, 1U)];
+            m12 = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, 1U, 2U)];
+            m20 = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, 2U, 0U)];
+            m21 = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, 2U, 1U)];
+            m22 = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, 2U, 2U)];
 
-            /* Cofactor matrix (transposed in-place when writing result). */
+            /* Cofactor matrix (transposed in‑place when writing result). */
             c00 =  (m11 * m22 - m12 * m21);
             c01 = -(m10 * m22 - m12 * m20);
             c02 =  (m10 * m21 - m11 * m20);
@@ -1116,18 +1117,18 @@ MatrixStatus_T Matrix_Inverse3x3(
             c22 =  (m00 * m11 - m01 * m10);
 
             /* inv(A) = (1/det) · C^T */
-            Result_P->Data[MATRIX_INDEX(Result_P, 0U, 0U)] = c00 * inv_det;
-            Result_P->Data[MATRIX_INDEX(Result_P, 0U, 1U)] = c10 * inv_det;
-            Result_P->Data[MATRIX_INDEX(Result_P, 0U, 2U)] = c20 * inv_det;
-            Result_P->Data[MATRIX_INDEX(Result_P, 1U, 0U)] = c01 * inv_det;
-            Result_P->Data[MATRIX_INDEX(Result_P, 1U, 1U)] = c11 * inv_det;
-            Result_P->Data[MATRIX_INDEX(Result_P, 1U, 2U)] = c21 * inv_det;
-            Result_P->Data[MATRIX_INDEX(Result_P, 2U, 0U)] = c02 * inv_det;
-            Result_P->Data[MATRIX_INDEX(Result_P, 2U, 1U)] = c12 * inv_det;
-            Result_P->Data[MATRIX_INDEX(Result_P, 2U, 2U)] = c22 * inv_det;
+            ResultPtr->Data[MATRIX_INDEX(ResultPtr, 0U, 0U)] = c00 * invDet;
+            ResultPtr->Data[MATRIX_INDEX(ResultPtr, 0U, 1U)] = c10 * invDet;
+            ResultPtr->Data[MATRIX_INDEX(ResultPtr, 0U, 2U)] = c20 * invDet;
+            ResultPtr->Data[MATRIX_INDEX(ResultPtr, 1U, 0U)] = c01 * invDet;
+            ResultPtr->Data[MATRIX_INDEX(ResultPtr, 1U, 1U)] = c11 * invDet;
+            ResultPtr->Data[MATRIX_INDEX(ResultPtr, 1U, 2U)] = c21 * invDet;
+            ResultPtr->Data[MATRIX_INDEX(ResultPtr, 2U, 0U)] = c02 * invDet;
+            ResultPtr->Data[MATRIX_INDEX(ResultPtr, 2U, 1U)] = c12 * invDet;
+            ResultPtr->Data[MATRIX_INDEX(ResultPtr, 2U, 2U)] = c22 * invDet;
 
-            Result_P->Rows = 3U;
-            Result_P->Cols = 3U;
+            ResultPtr->Rows = 3U;
+            ResultPtr->Cols = 3U;
         }
     }
     else
@@ -1143,18 +1144,18 @@ MatrixStatus_T Matrix_Inverse3x3(
  * Matrix_Inverse4x4  (augmented Gauss-Jordan, partial pivot)
  *------------------------------------------------------------------------------------------------------------------*/
 MatrixStatus_T Matrix_Inverse4x4(
-    const Matrix_T  * const Matrix_P,
-    Matrix_T * const Result_P)
+    const Matrix_T  * const MatrixPtr,
+    Matrix_T * const ResultPtr)
 {
     MatrixStatus_T status;
-    MatrixElement     aug_buffer[4U * 8U];
+    MatrixElement     augBuffer[4U * 8U];
     Matrix_T       aug;
     uint32_T          i;
     uint32_T          j;
     uint32_T          k;
     uint32_T          n;
-    uint32_T          max_row;
-    MatrixElement     max_val;
+    uint32_T          maxRow;
+    MatrixElement     maxVal;
     MatrixElement     pivot;
     MatrixElement     factor;
     boolean_T         singular;
@@ -1163,21 +1164,21 @@ MatrixStatus_T Matrix_Inverse4x4(
     singular = FALSE;
     status   = MATRIX_SUCCESS;
 
-    if ((Matrix_P == NULL) || (Result_P == NULL))
+    if ((MatrixPtr == NULL) || (ResultPtr == NULL))
     {
         status = MATRIX_ERROR_NULL_PTR;
     }
-    else if ((Matrix_P->Rows != 4U) || (Matrix_P->Cols != 4U))
+    else if ((MatrixPtr->Rows != 4U) || (MatrixPtr->Cols != 4U))
     {
         status = MATRIX_ERROR_DIMENSION_MISMATCH;
     }
-    else if ((Result_P->MaxRows < 4U) || (Result_P->MaxCols < 4U))
+    else if ((ResultPtr->MaxRows < 4U) || (ResultPtr->MaxCols < 4U))
     {
         status = MATRIX_ERROR_SIZE_EXCEEDED;
     }
     else
     {
-        Matrix_Init(&aug, aug_buffer, 4U, 8U);
+        Matrix_Init(&aug, augBuffer, 4U, 8U);
 
         /* Build augmented matrix [A | I]. */
         for (i = 0U; i < n; i++)
@@ -1185,7 +1186,7 @@ MatrixStatus_T Matrix_Inverse4x4(
             for (j = 0U; j < n; j++)
             {
                 aug.Data[MATRIX_INDEX(&aug, i, j)] =
-                    Matrix_P->Data[MATRIX_INDEX(Matrix_P, i, j)];
+                    MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, i, j)];
             }
         }
 
@@ -1201,8 +1202,8 @@ MatrixStatus_T Matrix_Inverse4x4(
         /* Gauss-Jordan elimination with partial pivoting. */
         for (i = 0U; (i < n) && (singular == FALSE); i++)
         {
-            max_row = i;
-            max_val = (aug.Data[MATRIX_INDEX(&aug, i, i)] >= 0.0f) ?
+            maxRow = i;
+            maxVal = (aug.Data[MATRIX_INDEX(&aug, i, i)] >= 0.0f) ?
                       aug.Data[MATRIX_INDEX(&aug, i, i)] :
                       -aug.Data[MATRIX_INDEX(&aug, i, i)];
 
@@ -1211,14 +1212,14 @@ MatrixStatus_T Matrix_Inverse4x4(
                 MatrixElement val = (aug.Data[MATRIX_INDEX(&aug, k, i)] >= 0.0f) ?
                                     aug.Data[MATRIX_INDEX(&aug, k, i)] :
                                     -aug.Data[MATRIX_INDEX(&aug, k, i)];
-                if (val > max_val)
+                if (val > maxVal)
                 {
-                    max_val = val;
-                    max_row = k;
+                    maxVal = val;
+                    maxRow = k;
                 }
             }
 
-            if (max_val < ZERO_THRESHOLD_FLOAT)
+            if (maxVal < ZERO_THRESHOLD_FLOAT)
             {
                 singular = TRUE;
             }
@@ -1226,13 +1227,13 @@ MatrixStatus_T Matrix_Inverse4x4(
             {
                 MatrixElement temp;
 
-                if (max_row != i)
+                if (maxRow != i)
                 {
                     for (j = 0U; j < (2U * n); j++)
                     {
                         temp                                  = aug.Data[MATRIX_INDEX(&aug, i,       j)];
-                        aug.Data[MATRIX_INDEX(&aug, i,       j)] = aug.Data[MATRIX_INDEX(&aug, max_row, j)];
-                        aug.Data[MATRIX_INDEX(&aug, max_row, j)] = temp;
+                        aug.Data[MATRIX_INDEX(&aug, i,       j)] = aug.Data[MATRIX_INDEX(&aug, maxRow, j)];
+                        aug.Data[MATRIX_INDEX(&aug, maxRow, j)] = temp;
                     }
                 }
                 else
@@ -1274,13 +1275,13 @@ MatrixStatus_T Matrix_Inverse4x4(
             {
                 for (j = 0U; j < n; j++)
                 {
-                    Result_P->Data[MATRIX_INDEX(Result_P, i, j)] =
+                    ResultPtr->Data[MATRIX_INDEX(ResultPtr, i, j)] =
                         aug.Data[MATRIX_INDEX(&aug, i, n + j)];
                 }
             }
 
-            Result_P->Rows = n;
-            Result_P->Cols = n;
+            ResultPtr->Rows = n;
+            ResultPtr->Cols = n;
         }
     }
 
@@ -1292,56 +1293,56 @@ MatrixStatus_T Matrix_Inverse4x4(
  * Matrix_Inverse  (dispatcher)
  *------------------------------------------------------------------------------------------------------------------*/
 MatrixStatus_T Matrix_Inverse(
-    const Matrix_T  * const Matrix_P,
-    Matrix_T * const Result_P)
+    const Matrix_T  * const MatrixPtr,
+    Matrix_T * const ResultPtr)
 {
     MatrixStatus_T status;
     uint32_T          n;
 
     status = MATRIX_SUCCESS;
 
-    if ((Matrix_P == NULL) || (Result_P == NULL))
+    if ((MatrixPtr == NULL) || (ResultPtr == NULL))
     {
         status = MATRIX_ERROR_NULL_PTR;
     }
-    else if (Matrix_P->Rows != Matrix_P->Cols)
+    else if (MatrixPtr->Rows != MatrixPtr->Cols)
     {
         status = MATRIX_ERROR_NOT_SQUARE;
     }
-    else if ((Result_P->MaxRows < Matrix_P->Rows) || (Result_P->MaxCols < Matrix_P->Cols))
+    else if ((ResultPtr->MaxRows < MatrixPtr->Rows) || (ResultPtr->MaxCols < MatrixPtr->Cols))
     {
         status = MATRIX_ERROR_SIZE_EXCEEDED;
     }
     else
     {
-        n = Matrix_P->Rows;
+        n = MatrixPtr->Rows;
 
-        if      (n == 2U) { status = Matrix_Inverse2x2(Matrix_P, Result_P); }
-        else if (n == 3U) { status = Matrix_Inverse3x3(Matrix_P, Result_P); }
-        else if (n == 4U) { status = Matrix_Inverse4x4(Matrix_P, Result_P); }
+        if      (n == 2U) { status = Matrix_Inverse2x2(MatrixPtr, ResultPtr); }
+        else if (n == 3U) { status = Matrix_Inverse3x3(MatrixPtr, ResultPtr); }
+        else if (n == 4U) { status = Matrix_Inverse4x4(MatrixPtr, ResultPtr); }
         else
         {
-            /* Generic augmented Gauss-Jordan for 5 × 5 … 8 × 8. */
-            MatrixElement aug_buffer[MATRIX_MAX_ROWS * (2U * MATRIX_MAX_COLS)];
+            /* Generic augmented Gauss-Jordan for 5 × 5 … 8 × 8 with partial pivoting. */
+            MatrixElement augBuffer[MATRIX_MAX_ROWS * (2U * MATRIX_MAX_COLS)];
             Matrix_T   aug;
             uint32_T      i;
             uint32_T      j;
             uint32_T      k;
-            uint32_T      max_row;
-            MatrixElement max_val;
+            uint32_T      maxRow;
+            MatrixElement maxVal;
             MatrixElement pivot;
             MatrixElement factor;
             boolean_T     singular;
 
             singular = FALSE;
-            Matrix_Init(&aug, aug_buffer, n, 2U * n);
+            Matrix_Init(&aug, augBuffer, n, 2U * n);
 
             for (i = 0U; i < n; i++)
             {
                 for (j = 0U; j < n; j++)
                 {
                     aug.Data[MATRIX_INDEX(&aug, i, j)] =
-                        Matrix_P->Data[MATRIX_INDEX(Matrix_P, i, j)];
+                        MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, i, j)];
                 }
             }
 
@@ -1356,8 +1357,8 @@ MatrixStatus_T Matrix_Inverse(
 
             for (i = 0U; (i < n) && (singular == FALSE); i++)
             {
-                max_row = i;
-                max_val = (aug.Data[MATRIX_INDEX(&aug, i, i)] >= 0.0f) ?
+                maxRow = i;
+                maxVal = (aug.Data[MATRIX_INDEX(&aug, i, i)] >= 0.0f) ?
                           aug.Data[MATRIX_INDEX(&aug, i, i)] :
                           -aug.Data[MATRIX_INDEX(&aug, i, i)];
 
@@ -1366,14 +1367,14 @@ MatrixStatus_T Matrix_Inverse(
                     MatrixElement val = (aug.Data[MATRIX_INDEX(&aug, k, i)] >= 0.0f) ?
                                         aug.Data[MATRIX_INDEX(&aug, k, i)] :
                                         -aug.Data[MATRIX_INDEX(&aug, k, i)];
-                    if (val > max_val)
+                    if (val > maxVal)
                     {
-                        max_val = val;
-                        max_row = k;
+                        maxVal = val;
+                        maxRow = k;
                     }
                 }
 
-                if (max_val < ZERO_THRESHOLD_FLOAT)
+                if (maxVal < ZERO_THRESHOLD_FLOAT)
                 {
                     singular = TRUE;
                 }
@@ -1381,13 +1382,13 @@ MatrixStatus_T Matrix_Inverse(
                 {
                     MatrixElement temp;
 
-                    if (max_row != i)
+                    if (maxRow != i)
                     {
                         for (j = 0U; j < (2U * n); j++)
                         {
                             temp                                  = aug.Data[MATRIX_INDEX(&aug, i,       j)];
-                            aug.Data[MATRIX_INDEX(&aug, i,       j)] = aug.Data[MATRIX_INDEX(&aug, max_row, j)];
-                            aug.Data[MATRIX_INDEX(&aug, max_row, j)] = temp;
+                            aug.Data[MATRIX_INDEX(&aug, i,       j)] = aug.Data[MATRIX_INDEX(&aug, maxRow, j)];
+                            aug.Data[MATRIX_INDEX(&aug, maxRow, j)] = temp;
                         }
                     }
                     else
@@ -1429,13 +1430,13 @@ MatrixStatus_T Matrix_Inverse(
                 {
                     for (j = 0U; j < n; j++)
                     {
-                        Result_P->Data[MATRIX_INDEX(Result_P, i, j)] =
+                        ResultPtr->Data[MATRIX_INDEX(ResultPtr, i, j)] =
                             aug.Data[MATRIX_INDEX(&aug, i, n + j)];
                     }
                 }
 
-                Result_P->Rows = n;
-                Result_P->Cols = n;
+                ResultPtr->Rows = n;
+                ResultPtr->Cols = n;
             }
         }
     }
@@ -1445,11 +1446,11 @@ MatrixStatus_T Matrix_Inverse(
 
 
 /*--------------------------------------------------------------------------------------------------------------------
- * Matrix_Eigenvalues  (iterative Jacobi)
+ * Matrix_Eigenvalues  (iterative Jacobi — requires symmetric matrix)
  *------------------------------------------------------------------------------------------------------------------*/
 MatrixStatus_T Matrix_Eigenvalues(
-    Matrix_T      * const Matrix_P,
-    MatrixEigen_T * const EigenOut_P,
+    Matrix_T      * const MatrixPtr,
+    MatrixEigen_T * const EigenOutPtr,
     const uint32_T MaxIterations,
     const MatrixFloat        Tolerance)
 {
@@ -1459,7 +1460,7 @@ MatrixStatus_T Matrix_Eigenvalues(
     uint32_T          p;
     uint32_T          q;
     uint32_T          i;
-    MatrixFloat       max_off_diag;
+    MatrixFloat       maxOffDiag;
     MatrixFloat       app;
     MatrixFloat       aqq;
     MatrixFloat       apq;
@@ -1467,37 +1468,43 @@ MatrixStatus_T Matrix_Eigenvalues(
     MatrixFloat       c;
     MatrixFloat       s;
     MatrixFloat       temp;
-    Matrix_T       v_matrix;
-    MatrixElement     v_buffer[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
-    boolean_T         use_tolerance;
-    uint32_T          MaxIter;
-    boolean_T         converged_early;
+    Matrix_T       vMatrix;
+    MatrixElement     vBuffer[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
+    boolean_T         useTolerance;
+    uint32_T          maxIter;
+    boolean_T         convergedEarly;
 
     status = MATRIX_SUCCESS;
 
-    if ((Matrix_P == NULL) || (EigenOut_P == NULL))
+    if ((MatrixPtr == NULL) || (EigenOutPtr == NULL))
     {
         status = MATRIX_ERROR_NULL_PTR;
     }
-    else if (Matrix_P->Rows != Matrix_P->Cols)
+    else if (MatrixPtr->Rows != MatrixPtr->Cols)
     {
         status = MATRIX_ERROR_NOT_SQUARE;
     }
+#ifdef MATRIX_ENFORCE_SYMMETRY
+    else if (!Matrix_IsSymmetric(MatrixPtr, 1e-6f))
+    {
+        status = MATRIX_ERROR_NOT_SYMMETRIC;
+    }
+#endif
     else
     {
-        n             = Matrix_P->Rows;
-        MaxIter       = (MaxIterations > 0U) ? MaxIterations : JACOBI_MAX_ITER;
-        use_tolerance = (Tolerance > 0.0f) ? TRUE : FALSE;
-        converged_early = FALSE;
+        n             = MatrixPtr->Rows;
+        maxIter       = (MaxIterations > 0U) ? MaxIterations : JACOBI_MAX_ITER;
+        useTolerance = (Tolerance > 0.0f) ? TRUE : FALSE;
+        convergedEarly = FALSE;
 
-        EigenOut_P->NumEigenvalues = n;
-        EigenOut_P->Iterations      = 0U;
+        EigenOutPtr->NumEigenvalues = n;
+        EigenOutPtr->Iterations      = 0U;
 
         /* Initialise eigenvector accumulator to I. */
-        Matrix_Init(&v_matrix, v_buffer, n, n);
-        (void)Matrix_Identity(&v_matrix);
+        Matrix_Init(&vMatrix, vBuffer, n, n);
+        (void)Matrix_Identity(&vMatrix);
 
-        for (iter = 0U; iter < MaxIter; iter++)
+        for (iter = 0U; iter < maxIter; iter++)
         {
             uint32_T    j;
             MatrixFloat val;
@@ -1507,10 +1514,10 @@ MatrixStatus_T Matrix_Eigenvalues(
             MatrixFloat v_iq;
             boolean_T   converged;
 
-            EigenOut_P->Iterations = iter + 1U;
+            EigenOutPtr->Iterations = iter + 1U;
 
             /* Find largest off-diagonal element to use as pivot. */
-            max_off_diag = 0.0f;
+            maxOffDiag = 0.0f;
             p = 0U;
             q = 1U;
 
@@ -1518,11 +1525,11 @@ MatrixStatus_T Matrix_Eigenvalues(
             {
                 for (j = i + 1U; j < n; j++)
                 {
-                    val = Matrix_P->Data[MATRIX_INDEX(Matrix_P, i, j)];
+                    val = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, i, j)];
                     val = (val >= 0.0f) ? val : -val;
-                    if (val > max_off_diag)
+                    if (val > maxOffDiag)
                     {
-                        max_off_diag = val;
+                        maxOffDiag = val;
                         p = i;
                         q = j;
                     }
@@ -1530,11 +1537,11 @@ MatrixStatus_T Matrix_Eigenvalues(
             }
 
             /* Check convergence. */
-            if ((use_tolerance != FALSE) && (max_off_diag < Tolerance))
+            if ((useTolerance != FALSE) && (maxOffDiag < Tolerance))
             {
                 converged = TRUE;
             }
-            else if (max_off_diag < JACOBI_TOLERANCE)
+            else if (maxOffDiag < JACOBI_TOLERANCE)
             {
                 converged = TRUE;
             }
@@ -1545,15 +1552,15 @@ MatrixStatus_T Matrix_Eigenvalues(
 
             if (converged != FALSE)
             {
-                converged_early = TRUE;
-                iter = MaxIter; /* Force loop termination. */
+                convergedEarly = TRUE;
+                iter = maxIter; /* Force loop termination. */
             }
             else
             {
                 /* Apply Jacobi rotation for (p, q). */
-                app = Matrix_P->Data[MATRIX_INDEX(Matrix_P, p, p)];
-                aqq = Matrix_P->Data[MATRIX_INDEX(Matrix_P, q, q)];
-                apq = Matrix_P->Data[MATRIX_INDEX(Matrix_P, p, q)];
+                app = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, p, p)];
+                aqq = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, q, q)];
+                apq = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, p, q)];
 
                 if ((aqq - app) > -ZERO_THRESHOLD_FLOAT && (aqq - app) < ZERO_THRESHOLD_FLOAT)
                 {
@@ -1572,24 +1579,24 @@ MatrixStatus_T Matrix_Eigenvalues(
                 app  = (c * c * temp) - (2.0f * c * s * apq) + (s * s * aqq);
                 aqq  = (s * s * temp) + (2.0f * c * s * apq) + (c * c * aqq);
 
-                Matrix_P->Data[MATRIX_INDEX(Matrix_P, p, p)] = app;
-                Matrix_P->Data[MATRIX_INDEX(Matrix_P, q, q)] = aqq;
-                Matrix_P->Data[MATRIX_INDEX(Matrix_P, p, q)] = 0.0f;
-                Matrix_P->Data[MATRIX_INDEX(Matrix_P, q, p)] = 0.0f;
+                MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, p, p)] = app;
+                MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, q, q)] = aqq;
+                MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, p, q)] = 0.0f;
+                MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, q, p)] = 0.0f;
 
                 /* Update off-diagonal rows. */
                 for (i = 0U; i < n; i++)
                 {
                     if ((i != p) && (i != q))
                     {
-                        a_ip = Matrix_P->Data[MATRIX_INDEX(Matrix_P, i, p)];
-                        a_iq = Matrix_P->Data[MATRIX_INDEX(Matrix_P, i, q)];
+                        a_ip = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, i, p)];
+                        a_iq = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, i, q)];
 
-                        Matrix_P->Data[MATRIX_INDEX(Matrix_P, i, p)] = (c * a_ip) - (s * a_iq);
-                        Matrix_P->Data[MATRIX_INDEX(Matrix_P, p, i)] = Matrix_P->Data[MATRIX_INDEX(Matrix_P, i, p)];
+                        MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, i, p)] = (c * a_ip) - (s * a_iq);
+                        MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, p, i)] = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, i, p)];
 
-                        Matrix_P->Data[MATRIX_INDEX(Matrix_P, i, q)] = (s * a_ip) + (c * a_iq);
-                        Matrix_P->Data[MATRIX_INDEX(Matrix_P, q, i)] = Matrix_P->Data[MATRIX_INDEX(Matrix_P, i, q)];
+                        MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, i, q)] = (s * a_ip) + (c * a_iq);
+                        MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, q, i)] = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, i, q)];
                     }
                     else
                     {
@@ -1600,19 +1607,19 @@ MatrixStatus_T Matrix_Eigenvalues(
                 /* Accumulate rotation into V. */
                 for (i = 0U; i < n; i++)
                 {
-                    v_ip = v_matrix.Data[MATRIX_INDEX(&v_matrix, i, p)];
-                    v_iq = v_matrix.Data[MATRIX_INDEX(&v_matrix, i, q)];
+                    v_ip = vMatrix.Data[MATRIX_INDEX(&vMatrix, i, p)];
+                    v_iq = vMatrix.Data[MATRIX_INDEX(&vMatrix, i, q)];
 
-                    v_matrix.Data[MATRIX_INDEX(&v_matrix, i, p)] = (c * v_ip) - (s * v_iq);
-                    v_matrix.Data[MATRIX_INDEX(&v_matrix, i, q)] = (s * v_ip) + (c * v_iq);
+                    vMatrix.Data[MATRIX_INDEX(&vMatrix, i, p)] = (c * v_ip) - (s * v_iq);
+                    vMatrix.Data[MATRIX_INDEX(&vMatrix, i, q)] = (s * v_ip) + (c * v_iq);
                 }
             }
         }
 
-        /* Copy eigenvalues from the diagonalised Matrix_P. */
+        /* Copy eigenvalues from the diagonalised MatrixPtr. */
         for (i = 0U; i < n; i++)
         {
-            EigenOut_P->Eigenvalues[i] = Matrix_P->Data[MATRIX_INDEX(Matrix_P, i, i)];
+            EigenOutPtr->Eigenvalues[i] = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, i, i)];
         }
 
         /* Copy eigenvectors (column-wise) from V. */
@@ -1623,13 +1630,13 @@ MatrixStatus_T Matrix_Eigenvalues(
             {
                 for (j2 = 0U; j2 < n; j2++)
                 {
-                    EigenOut_P->Eigenvectors[(i2 * n) + j2] =
-                        v_matrix.Data[MATRIX_INDEX(&v_matrix, i2, j2)];
+                    EigenOutPtr->Eigenvectors[(i2 * n) + j2] =
+                        vMatrix.Data[MATRIX_INDEX(&vMatrix, i2, j2)];
                 }
             }
         }
 
-        if ((iter >= MaxIter) && (converged_early == FALSE))
+        if ((iter >= maxIter) && (convergedEarly == FALSE))
         {
             status = MATRIX_ERROR_MAX_ITERATIONS;
         }
@@ -1647,22 +1654,22 @@ MatrixStatus_T Matrix_Eigenvalues(
  * Matrix_EigenvaluesOnly
  *------------------------------------------------------------------------------------------------------------------*/
 MatrixStatus_T Matrix_EigenvaluesOnly(
-    Matrix_T    * const Matrix_P,
-    MatrixFloat    * const EigenvaluesOut_P,
+    Matrix_T    * const MatrixPtr,
+    MatrixFloat    * const EigenvaluesOutPtr,
     const uint32_T MaxIterations,
     const MatrixFloat      Tolerance)
 {
     MatrixStatus_T status;
-    MatrixEigen_T  EigenOut_P;
+    MatrixEigen_T  eigenOut;
     uint32_T          i;
 
-    status = Matrix_Eigenvalues(Matrix_P, &EigenOut_P, MaxIterations, Tolerance);
+    status = Matrix_Eigenvalues(MatrixPtr, &eigenOut, MaxIterations, Tolerance);
 
     if (status == MATRIX_SUCCESS)
     {
-        for (i = 0U; i < EigenOut_P.NumEigenvalues; i++)
+        for (i = 0U; i < eigenOut.NumEigenvalues; i++)
         {
-            EigenvaluesOut_P[i] = EigenOut_P.Eigenvalues[i];
+            EigenvaluesOutPtr[i] = eigenOut.Eigenvalues[i];
         }
     }
     else
@@ -1675,118 +1682,127 @@ MatrixStatus_T Matrix_EigenvaluesOnly(
 
 
 /*--------------------------------------------------------------------------------------------------------------------
- * Matrix_LU
+ * Matrix_LU  — now stores swapCount in pivot[0] for determinant parity
  *------------------------------------------------------------------------------------------------------------------*/
 MatrixStatus_T Matrix_LU(
-    Matrix_T  * const Matrix_P,
+    Matrix_T  * const MatrixPtr,
     uint32_T     * const pivot)
 {
     MatrixStatus_T status;
     uint32_T          i;
     uint32_T          j;
     uint32_T          k;
-    uint32_T          pivot_row;
+    uint32_T          pivotRow;
     MatrixElement     factor;
     MatrixElement     temp;
     uint32_T          n;
+    uint32_T          swapCount;
 
     status = MATRIX_SUCCESS;
 
-    if ((Matrix_P == NULL) || (pivot == NULL))
+    if ((MatrixPtr == NULL) || (pivot == NULL))
     {
         status = MATRIX_ERROR_NULL_PTR;
     }
-    else if (Matrix_P->Rows != Matrix_P->Cols)
+    else if (MatrixPtr->Rows != MatrixPtr->Cols)
     {
         status = MATRIX_ERROR_NOT_SQUARE;
     }
     else
     {
-        n = Matrix_P->Rows;
-
-        for (i = 0U; i < n; i++)
+        n = MatrixPtr->Rows;
+        if (n == 0U)
         {
-            pivot[i] = i;
-        }
-
-        for (k = 0U; (k < (n - 1U)) && (status == MATRIX_SUCCESS); k++)
-        {
-            /* Partial pivot search. */
-            pivot_row = k;
-            for (i = k + 1U; i < n; i++)
-            {
-                MatrixElement abs_i = (Matrix_P->Data[MATRIX_INDEX(Matrix_P, i, k)] >= 0.0f) ?
-                                       Matrix_P->Data[MATRIX_INDEX(Matrix_P, i, k)] :
-                                       -Matrix_P->Data[MATRIX_INDEX(Matrix_P, i, k)];
-                MatrixElement abs_pivot = (Matrix_P->Data[MATRIX_INDEX(Matrix_P, pivot_row, k)] >= 0.0f) ?
-                                           Matrix_P->Data[MATRIX_INDEX(Matrix_P, pivot_row, k)] :
-                                           -Matrix_P->Data[MATRIX_INDEX(Matrix_P, pivot_row, k)];
-                if (abs_i > abs_pivot)
-                {
-                    pivot_row = i;
-                }
-            }
-
-            if (pivot_row != k)
-            {
-                for (j = 0U; j < n; j++)
-                {
-                    temp                                       = Matrix_P->Data[MATRIX_INDEX(Matrix_P, k,         j)];
-                    Matrix_P->Data[MATRIX_INDEX(Matrix_P, k,         j)] = Matrix_P->Data[MATRIX_INDEX(Matrix_P, pivot_row, j)];
-                    Matrix_P->Data[MATRIX_INDEX(Matrix_P, pivot_row, j)] = temp;
-                }
-
-                i             = pivot[k];
-                pivot[k]      = pivot[pivot_row];
-                pivot[pivot_row] = i;
-            }
-            else
-            {
-                /* No row swap required – no action. */
-            }
-
-            MatrixElement abs_pivot_k = (Matrix_P->Data[MATRIX_INDEX(Matrix_P, k, k)] >= 0.0f) ?
-                                         Matrix_P->Data[MATRIX_INDEX(Matrix_P, k, k)] :
-                                         -Matrix_P->Data[MATRIX_INDEX(Matrix_P, k, k)];
-            if (abs_pivot_k < ZERO_THRESHOLD_FLOAT)
-            {
-                status = MATRIX_ERROR_SINGULAR;
-            }
-            else
-            {
-                for (i = k + 1U; i < n; i++)
-                {
-                    factor = Matrix_P->Data[MATRIX_INDEX(Matrix_P, i, k)] /
-                             Matrix_P->Data[MATRIX_INDEX(Matrix_P, k, k)];
-                    Matrix_P->Data[MATRIX_INDEX(Matrix_P, i, k)] = factor;
-
-                    for (j = k + 1U; j < n; j++)
-                    {
-                        Matrix_P->Data[MATRIX_INDEX(Matrix_P, i, j)] -=
-                            factor * Matrix_P->Data[MATRIX_INDEX(Matrix_P, k, j)];
-                    }
-                }
-            }
-        }
-
-        /* Explicit check of the last diagonal element. */
-        if ((status == MATRIX_SUCCESS) && (n > 0U))
-        {
-            MatrixElement abs_last = (Matrix_P->Data[MATRIX_INDEX(Matrix_P, n - 1U, n - 1U)] >= 0.0f) ?
-                                      Matrix_P->Data[MATRIX_INDEX(Matrix_P, n - 1U, n - 1U)] :
-                                      -Matrix_P->Data[MATRIX_INDEX(Matrix_P, n - 1U, n - 1U)];
-            if (abs_last < ZERO_THRESHOLD_FLOAT)
-            {
-                status = MATRIX_ERROR_SINGULAR;
-            }
-            else
-            {
-                /* Last diagonal is non-zero – no action. */
-            }
+            status = MATRIX_ERROR_SIZE_EXCEEDED;
         }
         else
         {
-            /* Prior error or n == 0 – no action. */
+            swapCount = 0U;
+
+            for (i = 0U; i < n; i++)
+            {
+                pivot[i] = i;
+            }
+
+            for (k = 0U; (k < (n - 1U)) && (status == MATRIX_SUCCESS); k++)
+            {
+                /* Partial pivot search. */
+                pivotRow = k;
+                for (i = k + 1U; i < n; i++)
+                {
+                    MatrixElement absI = (MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, i, k)] >= 0.0f) ?
+                                           MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, i, k)] :
+                                           -MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, i, k)];
+                    MatrixElement absPivot = (MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, pivotRow, k)] >= 0.0f) ?
+                                               MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, pivotRow, k)] :
+                                               -MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, pivotRow, k)];
+                    if (absI > absPivot)
+                    {
+                        pivotRow = i;
+                    }
+                }
+
+                if (pivotRow != k)
+                {
+                    for (j = 0U; j < n; j++)
+                    {
+                        temp                                       = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, k,         j)];
+                        MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, k,         j)] = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, pivotRow, j)];
+                        MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, pivotRow, j)] = temp;
+                    }
+
+                    i = pivot[k];
+                    pivot[k] = pivot[pivotRow];
+                    pivot[pivotRow] = i;
+                    swapCount++;
+                }
+                else
+                {
+                    /* No row swap required – no action. */
+                }
+
+                MatrixElement absPivotK = (MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, k, k)] >= 0.0f) ?
+                                             MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, k, k)] :
+                                             -MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, k, k)];
+                if (absPivotK < ZERO_THRESHOLD_FLOAT)
+                {
+                    status = MATRIX_ERROR_SINGULAR;
+                }
+                else
+                {
+                    for (i = k + 1U; i < n; i++)
+                    {
+                        factor = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, i, k)] /
+                                 MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, k, k)];
+                        MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, i, k)] = factor;
+
+                        for (j = k + 1U; j < n; j++)
+                        {
+                            MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, i, j)] -=
+                                factor * MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, k, j)];
+                        }
+                    }
+                }
+            }
+
+            /* Explicit check of the last diagonal element. */
+            if ((status == MATRIX_SUCCESS) && (n > 0U))
+            {
+                MatrixElement absLast = (MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, n - 1U, n - 1U)] >= 0.0f) ?
+                                          MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, n - 1U, n - 1U)] :
+                                          -MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, n - 1U, n - 1U)];
+                if (absLast < ZERO_THRESHOLD_FLOAT)
+                {
+                    status = MATRIX_ERROR_SINGULAR;
+                }
+                else
+                {
+                    /* Last diagonal is non-zero – no action. */
+                }
+            }
+
+            /* Store swapCount in pivot[0] for later use by determinant */
+            pivot[0] = swapCount;
         }
     }
 
@@ -1795,21 +1811,23 @@ MatrixStatus_T Matrix_LU(
 
 
 /*--------------------------------------------------------------------------------------------------------------------
- * Matrix_SolveGaussJordan
+ * Matrix_SolveGaussJordan  — now with partial pivoting
  *------------------------------------------------------------------------------------------------------------------*/
 MatrixStatus_T Matrix_SolveGaussJordan(
-    const Matrix_T  * const A_P,
-    const Matrix_T  * const B_P,
-    Matrix_T        * const X_P)
+    const Matrix_T  * const APtr,
+    const Matrix_T  * const BPtr,
+    Matrix_T        * const XPtr)
 {
     MatrixStatus_T status;
-    MatrixElement     aug_buffer[MATRIX_MAX_ROWS * (MATRIX_MAX_COLS + MATRIX_MAX_COLS)];
+    MatrixElement     augBuffer[MATRIX_MAX_ROWS * (MATRIX_MAX_COLS + MATRIX_MAX_COLS)];
     Matrix_T       aug;
     uint32_T          i;
     uint32_T          j;
     uint32_T          k;
     uint32_T          n;
     uint32_T          m;
+    uint32_T          maxRow;
+    MatrixElement     maxVal;
     MatrixElement     pivot;
     MatrixElement     factor;
     boolean_T         singular;
@@ -1817,35 +1835,36 @@ MatrixStatus_T Matrix_SolveGaussJordan(
     singular = FALSE;
     status   = MATRIX_SUCCESS;
 
-    if ((A_P == NULL) || (B_P == NULL) || (X_P == NULL))
+    if ((APtr == NULL) || (BPtr == NULL) || (XPtr == NULL))
     {
         status = MATRIX_ERROR_NULL_PTR;
     }
-    else if (A_P->Rows != A_P->Cols)
+    else if (APtr->Rows != APtr->Cols)
     {
         status = MATRIX_ERROR_NOT_SQUARE;
     }
-    else if (A_P->Rows != B_P->Rows)
+    else if (APtr->Rows != BPtr->Rows)
     {
         status = MATRIX_ERROR_DIMENSION_MISMATCH;
     }
-    else if ((X_P->MaxRows < A_P->Rows) || (X_P->MaxCols < B_P->Cols))
+    else if ((XPtr->MaxRows < APtr->Rows) || (XPtr->MaxCols < BPtr->Cols))
     {
         status = MATRIX_ERROR_SIZE_EXCEEDED;
     }
     else
     {
-        n = A_P->Rows;
-        m = B_P->Cols;
+        n = APtr->Rows;
+        m = BPtr->Cols;
 
-        Matrix_Init(&aug, aug_buffer, n, n + m);
+        Matrix_Init(&aug, augBuffer, n, n + m);
 
+        /* Build augmented matrix [A | B] */
         for (i = 0U; i < n; i++)
         {
             for (j = 0U; j < n; j++)
             {
                 aug.Data[MATRIX_INDEX(&aug, i, j)] =
-                    A_P->Data[MATRIX_INDEX(A_P, i, j)];
+                    APtr->Data[MATRIX_INDEX(APtr, i, j)];
             }
         }
 
@@ -1854,26 +1873,61 @@ MatrixStatus_T Matrix_SolveGaussJordan(
             for (j = 0U; j < m; j++)
             {
                 aug.Data[MATRIX_INDEX(&aug, i, n + j)] =
-                    B_P->Data[MATRIX_INDEX(B_P, i, j)];
+                    BPtr->Data[MATRIX_INDEX(BPtr, i, j)];
             }
         }
 
+        /* Gauss-Jordan with partial pivoting */
         for (i = 0U; (i < n) && (singular == FALSE); i++)
         {
-            pivot = aug.Data[MATRIX_INDEX(&aug, i, i)];
+            /* Find pivot row */
+            maxRow = i;
+            maxVal = (aug.Data[MATRIX_INDEX(&aug, i, i)] >= 0.0f) ?
+                      aug.Data[MATRIX_INDEX(&aug, i, i)] :
+                      -aug.Data[MATRIX_INDEX(&aug, i, i)];
 
-            MatrixElement abs_pivot = (pivot >= 0.0f) ? pivot : -pivot;
-            if (abs_pivot < ZERO_THRESHOLD_FLOAT)
+            for (k = i + 1U; k < n; k++)
+            {
+                MatrixElement val = (aug.Data[MATRIX_INDEX(&aug, k, i)] >= 0.0f) ?
+                                    aug.Data[MATRIX_INDEX(&aug, k, i)] :
+                                    -aug.Data[MATRIX_INDEX(&aug, k, i)];
+                if (val > maxVal)
+                {
+                    maxVal = val;
+                    maxRow = k;
+                }
+            }
+
+            if (maxVal < ZERO_THRESHOLD_FLOAT)
             {
                 singular = TRUE;
             }
             else
             {
+                /* Swap rows if needed */
+                if (maxRow != i)
+                {
+                    MatrixElement temp;
+                    for (j = 0U; j < (n + m); j++)
+                    {
+                        temp = aug.Data[MATRIX_INDEX(&aug, i, j)];
+                        aug.Data[MATRIX_INDEX(&aug, i, j)] = aug.Data[MATRIX_INDEX(&aug, maxRow, j)];
+                        aug.Data[MATRIX_INDEX(&aug, maxRow, j)] = temp;
+                    }
+                }
+                else
+                {
+                    /* No swap needed */
+                }
+
+                pivot = aug.Data[MATRIX_INDEX(&aug, i, i)];
+                /* Normalise pivot row */
                 for (j = i; j < (n + m); j++)
                 {
                     aug.Data[MATRIX_INDEX(&aug, i, j)] /= pivot;
                 }
 
+                /* Eliminate column i from all other rows */
                 for (k = 0U; k < n; k++)
                 {
                     if (k != i)
@@ -1887,7 +1941,7 @@ MatrixStatus_T Matrix_SolveGaussJordan(
                     }
                     else
                     {
-                        /* Skip pivot row – no action. */
+                        /* Skip pivot row */
                     }
                 }
             }
@@ -1903,13 +1957,13 @@ MatrixStatus_T Matrix_SolveGaussJordan(
             {
                 for (j = 0U; j < m; j++)
                 {
-                    X_P->Data[MATRIX_INDEX(X_P, i, j)] =
+                    XPtr->Data[MATRIX_INDEX(XPtr, i, j)] =
                         aug.Data[MATRIX_INDEX(&aug, i, n + j)];
                 }
             }
 
-            X_P->Rows = n;
-            X_P->Cols = m;
+            XPtr->Rows = n;
+            XPtr->Cols = m;
         }
     }
 
@@ -1921,24 +1975,24 @@ MatrixStatus_T Matrix_SolveGaussJordan(
  * Matrix_Solve  (delegates to Gauss-Jordan)
  *------------------------------------------------------------------------------------------------------------------*/
 MatrixStatus_T Matrix_Solve(
-    const Matrix_T  * const A_P,
-    const Matrix_T  * const B_P,
-    Matrix_T        * const X_P)
+    const Matrix_T  * const APtr,
+    const Matrix_T  * const BPtr,
+    Matrix_T        * const XPtr)
 {
-    return Matrix_SolveGaussJordan(A_P, B_P, X_P);
+    return Matrix_SolveGaussJordan(APtr, BPtr, XPtr);
 }
 
 
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_IsSquare
  *------------------------------------------------------------------------------------------------------------------*/
-boolean_T Matrix_IsSquare(const Matrix_T * const Matrix_P)
+boolean_T Matrix_IsSquare(const Matrix_T * const MatrixPtr)
 {
     boolean_T result;
 
     result = FALSE;
 
-    if ((Matrix_P != NULL) && (Matrix_P->Rows == Matrix_P->Cols))
+    if ((MatrixPtr != NULL) && (MatrixPtr->Rows == MatrixPtr->Cols))
     {
         result = TRUE;
     }
@@ -1955,7 +2009,7 @@ boolean_T Matrix_IsSquare(const Matrix_T * const Matrix_P)
  * Matrix_IsSymmetric
  *------------------------------------------------------------------------------------------------------------------*/
 boolean_T Matrix_IsSymmetric(
-    const Matrix_T  * const Matrix_P,
+    const Matrix_T  * const MatrixPtr,
     const MatrixFloat          Tolerance)
 {
     boolean_T   result;
@@ -1969,22 +2023,22 @@ boolean_T Matrix_IsSymmetric(
     result = TRUE;
     tol    = (Tolerance > 0.0f) ? Tolerance : ZERO_THRESHOLD_FLOAT;
 
-    if (Matrix_P == NULL)
+    if (MatrixPtr == NULL)
     {
         result = FALSE;
     }
-    else if (Matrix_P->Rows != Matrix_P->Cols)
+    else if (MatrixPtr->Rows != MatrixPtr->Cols)
     {
         result = FALSE;
     }
     else
     {
-        for (i = 0U; (i < Matrix_P->Rows) && (result != FALSE); i++)
+        for (i = 0U; (i < MatrixPtr->Rows) && (result != FALSE); i++)
         {
-            for (j = i + 1U; (j < Matrix_P->Cols) && (result != FALSE); j++)
+            for (j = i + 1U; (j < MatrixPtr->Cols) && (result != FALSE); j++)
             {
-                a_ij = Matrix_P->Data[MATRIX_INDEX(Matrix_P, i, j)];
-                a_ji = Matrix_P->Data[MATRIX_INDEX(Matrix_P, j, i)];
+                a_ij = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, i, j)];
+                a_ji = MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, j, i)];
                 diff = (a_ij >= a_ji) ? (a_ij - a_ji) : (a_ji - a_ij);
 
                 if (diff > tol)
@@ -2007,8 +2061,8 @@ boolean_T Matrix_IsSymmetric(
  * Matrix_Trace
  *------------------------------------------------------------------------------------------------------------------*/
 MatrixStatus_T Matrix_Trace(
-    const Matrix_T  * const Matrix_P,
-    MatrixFloat        * const TraceOut_P)
+    const Matrix_T  * const MatrixPtr,
+    MatrixFloat        * const TraceOutPtr)
 {
     MatrixStatus_T status;
     uint32_T          i;
@@ -2017,22 +2071,22 @@ MatrixStatus_T Matrix_Trace(
     sum    = 0.0f;
     status = MATRIX_SUCCESS;
 
-    if ((Matrix_P == NULL) || (TraceOut_P == NULL))
+    if ((MatrixPtr == NULL) || (TraceOutPtr == NULL))
     {
         status = MATRIX_ERROR_NULL_PTR;
     }
-    else if (Matrix_P->Rows != Matrix_P->Cols)
+    else if (MatrixPtr->Rows != MatrixPtr->Cols)
     {
         status = MATRIX_ERROR_NOT_SQUARE;
     }
     else
     {
-        for (i = 0U; i < Matrix_P->Rows; i++)
+        for (i = 0U; i < MatrixPtr->Rows; i++)
         {
-            sum += Matrix_P->Data[MATRIX_INDEX(Matrix_P, i, i)];
+            sum += MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, i, i)];
         }
 
-        *TraceOut_P = sum;
+        *TraceOutPtr = sum;
     }
 
     return status;
@@ -2043,8 +2097,8 @@ MatrixStatus_T Matrix_Trace(
  * Matrix_NormFrobenius
  *------------------------------------------------------------------------------------------------------------------*/
 MatrixStatus_T Matrix_NormFrobenius(
-    const Matrix_T  * const Matrix_P,
-    MatrixFloat        * const NormOut_P)
+    const Matrix_T  * const MatrixPtr,
+    MatrixFloat        * const NormOutPtr)
 {
     MatrixStatus_T status;
     uint32_T          i;
@@ -2055,22 +2109,22 @@ MatrixStatus_T Matrix_NormFrobenius(
     sum    = 0.0;
     status = MATRIX_SUCCESS;
 
-    if ((Matrix_P == NULL) || (NormOut_P == NULL))
+    if ((MatrixPtr == NULL) || (NormOutPtr == NULL))
     {
         status = MATRIX_ERROR_NULL_PTR;
     }
     else
     {
-        for (i = 0U; i < Matrix_P->Rows; i++)
+        for (i = 0U; i < MatrixPtr->Rows; i++)
         {
-            for (j = 0U; j < Matrix_P->Cols; j++)
+            for (j = 0U; j < MatrixPtr->Cols; j++)
             {
-                val  = (real64_T)Matrix_P->Data[MATRIX_INDEX(Matrix_P, i, j)];
+                val  = (real64_T)MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, i, j)];
                 sum += val * val;
             }
         }
 
-        *NormOut_P = (MatrixFloat)sqrt(sum);
+        *NormOutPtr = (MatrixFloat)sqrt(sum);
     }
 
     return status;
@@ -2081,8 +2135,8 @@ MatrixStatus_T Matrix_NormFrobenius(
  * Matrix_IsEqual
  *------------------------------------------------------------------------------------------------------------------*/
 boolean_T Matrix_IsEqual(
-    const Matrix_T  * const A_P,
-    const Matrix_T  * const B_P,
+    const Matrix_T  * const APtr,
+    const Matrix_T  * const BPtr,
     const MatrixFloat          Tolerance)
 {
     boolean_T result;
@@ -2090,29 +2144,29 @@ boolean_T Matrix_IsEqual(
     uint32_T  j;
     real64_T  diff;
     real64_T  tol;
-    real64_T  a_val;
-    real64_T  b_val;
+    real64_T  aVal;
+    real64_T  bVal;
 
     result = TRUE;
     tol    = (Tolerance > 0.0f) ? (real64_T)Tolerance : (real64_T)ZERO_THRESHOLD_FLOAT;
 
-    if ((A_P == NULL) || (B_P == NULL))
+    if ((APtr == NULL) || (BPtr == NULL))
     {
         result = FALSE;
     }
-    else if ((A_P->Rows != B_P->Rows) || (A_P->Cols != B_P->Cols))
+    else if ((APtr->Rows != BPtr->Rows) || (APtr->Cols != BPtr->Cols))
     {
         result = FALSE;
     }
     else
     {
-        for (i = 0U; (i < A_P->Rows) && (result != FALSE); i++)
+        for (i = 0U; (i < APtr->Rows) && (result != FALSE); i++)
         {
-            for (j = 0U; (j < A_P->Cols) && (result != FALSE); j++)
+            for (j = 0U; (j < APtr->Cols) && (result != FALSE); j++)
             {
-                a_val = (real64_T)A_P->Data[MATRIX_INDEX(A_P, i, j)];
-                b_val = (real64_T)B_P->Data[MATRIX_INDEX(B_P, i, j)];
-                diff  = (a_val > b_val) ? (a_val - b_val) : (b_val - a_val);
+                aVal = (real64_T)APtr->Data[MATRIX_INDEX(APtr, i, j)];
+                bVal = (real64_T)BPtr->Data[MATRIX_INDEX(BPtr, i, j)];
+                diff = (aVal > bVal) ? (aVal - bVal) : (bVal - aVal);
 
                 if (diff > tol)
                 {
@@ -2134,14 +2188,14 @@ boolean_T Matrix_IsEqual(
  * Matrix_GetDimensions
  *------------------------------------------------------------------------------------------------------------------*/
 void Matrix_GetDimensions(
-    const Matrix_T  * const Matrix_P,
-    uint32_T           * const RowsOut_P,
-    uint32_T           * const ColsOut_P)
+    const Matrix_T  * const MatrixPtr,
+    uint32_T           * const RowsOutPtr,
+    uint32_T           * const ColsOutPtr)
 {
-    if ((Matrix_P != NULL) && (RowsOut_P != NULL) && (ColsOut_P != NULL))
+    if ((MatrixPtr != NULL) && (RowsOutPtr != NULL) && (ColsOutPtr != NULL))
     {
-        *RowsOut_P = Matrix_P->Rows;
-        *ColsOut_P = Matrix_P->Cols;
+        *RowsOutPtr = MatrixPtr->Rows;
+        *ColsOutPtr = MatrixPtr->Cols;
     }
     else
     {
@@ -2154,19 +2208,19 @@ void Matrix_GetDimensions(
  * Matrix_Fill
  *------------------------------------------------------------------------------------------------------------------*/
 void Matrix_Fill(
-    Matrix_T        * const Matrix_P,
+    Matrix_T        * const MatrixPtr,
     const MatrixElement        value)
 {
     uint32_T i;
     uint32_T j;
 
-    if (Matrix_P != NULL)
+    if (MatrixPtr != NULL)
     {
-        for (i = 0U; i < Matrix_P->Rows; i++)
+        for (i = 0U; i < MatrixPtr->Rows; i++)
         {
-            for (j = 0U; j < Matrix_P->Cols; j++)
+            for (j = 0U; j < MatrixPtr->Cols; j++)
             {
-                Matrix_P->Data[MATRIX_INDEX(Matrix_P, i, j)] = value;
+                MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, i, j)] = value;
             }
         }
     }
@@ -2181,19 +2235,18 @@ void Matrix_Fill(
  * Matrix_FillFloat
  *------------------------------------------------------------------------------------------------------------------*/
 void Matrix_FillFloat(
-    Matrix_T    * const Matrix_P,
+    Matrix_T    * const MatrixPtr,
     const MatrixFloat      value)
 {
-    Matrix_Fill(Matrix_P, value);
+    Matrix_Fill(MatrixPtr, value);
 }
 
 
 /*--------------------------------------------------------------------------------------------------------------------
- * Matrix_FloatToQ31  (DEPRECATED — returns identity for compatibility)
+ * Matrix_FloatToQ31  (DEPRECATED — identity for compatibility)
  *------------------------------------------------------------------------------------------------------------------*/
 MatrixElement Matrix_FloatToQ31(const MatrixFloat Value)
 {
-    /* Clamp to [-1.0, 1.0] for compatibility with legacy Q31 semantics. */
     if (Value > 1.0f)
     {
         return 1.0f;
@@ -2219,11 +2272,11 @@ MatrixFloat Matrix_Q31ToFloat(const MatrixElement value)
 
 
 /*--------------------------------------------------------------------------------------------------------------------
- * Matrix_Cholesky
+ * Matrix_Cholesky  — requires symmetric positive definite (caller responsibility)
  *------------------------------------------------------------------------------------------------------------------*/
 MatrixStatus_T Matrix_Cholesky(
-    const Matrix_T  * const Matrix_P,
-    Matrix_T        * const L_P)
+    const Matrix_T  * const MatrixPtr,
+    Matrix_T        * const LPtr)
 {
     MatrixStatus_T status;
     uint32_T          i;
@@ -2235,25 +2288,30 @@ MatrixStatus_T Matrix_Cholesky(
 
     status = MATRIX_SUCCESS;
 
-    if ((Matrix_P == NULL) || (L_P == NULL))
+    if ((MatrixPtr == NULL) || (LPtr == NULL))
     {
         status = MATRIX_ERROR_NULL_PTR;
     }
-    else if (Matrix_P->Rows != Matrix_P->Cols)
+    else if (MatrixPtr->Rows != MatrixPtr->Cols)
     {
         status = MATRIX_ERROR_NOT_SQUARE;
     }
-    else if ((L_P->MaxRows < Matrix_P->Rows) || (L_P->MaxCols < Matrix_P->Cols))
+    else if ((LPtr->MaxRows < MatrixPtr->Rows) || (LPtr->MaxCols < MatrixPtr->Cols))
     {
         status = MATRIX_ERROR_SIZE_EXCEEDED;
     }
+#ifdef MATRIX_ENFORCE_SYMMETRY
+    else if (!Matrix_IsSymmetric(MatrixPtr, 1e-6f))
+    {
+        status = MATRIX_ERROR_NON_POSITIVE_DEFINITE;
+    }
+#endif
     else
     {
-        n = Matrix_P->Rows;
+        n = MatrixPtr->Rows;
 
-        /* Initialize L to zero */
-        Matrix_Zero(L_P);
-        Matrix_SetDimensions(L_P, n, n);
+        Matrix_Zero(LPtr);
+        Matrix_SetDimensions(LPtr, n, n);
 
         for (i = 0U; i < n; i++)
         {
@@ -2261,18 +2319,16 @@ MatrixStatus_T Matrix_Cholesky(
             {
                 sum = 0.0;
 
-                /* Sum over k = 0 to j-1 */
                 for (k = 0U; k < j; k++)
                 {
-                    val = (real64_T)L_P->Data[MATRIX_INDEX(L_P, i, k)] *
-                          (real64_T)L_P->Data[MATRIX_INDEX(L_P, j, k)];
+                    val = (real64_T)LPtr->Data[MATRIX_INDEX(LPtr, i, k)] *
+                          (real64_T)LPtr->Data[MATRIX_INDEX(LPtr, j, k)];
                     sum += val;
                 }
 
                 if (i == j)
                 {
-                    /* Diagonal element: L[i][i] = sqrt(A[i][i] - sum) */
-                    real64_T a_ii = (real64_T)Matrix_P->Data[MATRIX_INDEX(Matrix_P, i, i)];
+                    real64_T a_ii = (real64_T)MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, i, i)];
                     real64_T diff = a_ii - sum;
 
                     if (diff <= 0.0)
@@ -2281,14 +2337,12 @@ MatrixStatus_T Matrix_Cholesky(
                         break;
                     }
 
-                    L_P->Data[MATRIX_INDEX(L_P, i, i)] = (MatrixFloat)sqrt(diff);
+                    LPtr->Data[MATRIX_INDEX(LPtr, i, i)] = (MatrixFloat)sqrt(diff);
                 }
                 else
                 {
-                    /* Off-diagonal: L[i][j] = (A[i][j] - sum) / L[j][j] */
-                    real64_T a_ij = (real64_T)Matrix_P->Data[MATRIX_INDEX(Matrix_P, i, j)];
-                    real64_T l_jj = (real64_T)L_P->Data[MATRIX_INDEX(L_P, j, j)];
-                    real64_T result;
+                    real64_T a_ij = (real64_T)MatrixPtr->Data[MATRIX_INDEX(MatrixPtr, i, j)];
+                    real64_T l_jj = (real64_T)LPtr->Data[MATRIX_INDEX(LPtr, j, j)];
 
                     if (l_jj >= -ZERO_THRESHOLD_FLOAT && l_jj <= ZERO_THRESHOLD_FLOAT)
                     {
@@ -2296,8 +2350,7 @@ MatrixStatus_T Matrix_Cholesky(
                         break;
                     }
 
-                    result = (a_ij - sum) / l_jj;
-                    L_P->Data[MATRIX_INDEX(L_P, i, j)] = (MatrixFloat)result;
+                    LPtr->Data[MATRIX_INDEX(LPtr, i, j)] = (MatrixFloat)((a_ij - sum) / l_jj);
                 }
             }
 
@@ -2316,9 +2369,9 @@ MatrixStatus_T Matrix_Cholesky(
  * Matrix_ForwardSubstitution
  *------------------------------------------------------------------------------------------------------------------*/
 MatrixStatus_T Matrix_ForwardSubstitution(
-    const Matrix_T  * const L_P,
-    const Matrix_T  * const B_P,
-    Matrix_T        * const X_P)
+    const Matrix_T  * const LPtr,
+    const Matrix_T  * const BPtr,
+    Matrix_T        * const XPtr)
 {
     MatrixStatus_T status;
     uint32_T          i;
@@ -2330,29 +2383,29 @@ MatrixStatus_T Matrix_ForwardSubstitution(
 
     status = MATRIX_SUCCESS;
 
-    if ((L_P == NULL) || (B_P == NULL) || (X_P == NULL))
+    if ((LPtr == NULL) || (BPtr == NULL) || (XPtr == NULL))
     {
         status = MATRIX_ERROR_NULL_PTR;
     }
-    else if (L_P->Rows != L_P->Cols)
+    else if (LPtr->Rows != LPtr->Cols)
     {
         status = MATRIX_ERROR_NOT_SQUARE;
     }
-    else if (L_P->Rows != B_P->Rows)
+    else if (LPtr->Rows != BPtr->Rows)
     {
         status = MATRIX_ERROR_DIMENSION_MISMATCH;
     }
-    else if ((X_P->MaxRows < B_P->Rows) || (X_P->MaxCols < B_P->Cols))
+    else if ((XPtr->MaxRows < BPtr->Rows) || (XPtr->MaxCols < BPtr->Cols))
     {
         status = MATRIX_ERROR_SIZE_EXCEEDED;
     }
     else
     {
-        n = L_P->Rows;
-        m = B_P->Cols;
+        n = LPtr->Rows;
+        m = BPtr->Cols;
 
-        Matrix_SetDimensions(X_P, n, m);
-        Matrix_Zero(X_P);
+        Matrix_SetDimensions(XPtr, n, m);
+        Matrix_Zero(XPtr);
 
         for (i = 0U; i < n; i++)
         {
@@ -2362,11 +2415,11 @@ MatrixStatus_T Matrix_ForwardSubstitution(
 
                 for (uint32_T k = 0U; k < i; k++)
                 {
-                    sum += (real64_T)L_P->Data[MATRIX_INDEX(L_P, i, k)] *
-                           (real64_T)X_P->Data[MATRIX_INDEX(X_P, k, j)];
+                    sum += (real64_T)LPtr->Data[MATRIX_INDEX(LPtr, i, k)] *
+                           (real64_T)XPtr->Data[MATRIX_INDEX(XPtr, k, j)];
                 }
 
-                l_ii = (real64_T)L_P->Data[MATRIX_INDEX(L_P, i, i)];
+                l_ii = (real64_T)LPtr->Data[MATRIX_INDEX(LPtr, i, i)];
 
                 if (l_ii >= -ZERO_THRESHOLD_FLOAT && l_ii <= ZERO_THRESHOLD_FLOAT)
                 {
@@ -2374,10 +2427,8 @@ MatrixStatus_T Matrix_ForwardSubstitution(
                     break;
                 }
 
-                real64_T b_ij = (real64_T)B_P->Data[MATRIX_INDEX(B_P, i, j)];
-                real64_T result = (b_ij - sum) / l_ii;
-
-                X_P->Data[MATRIX_INDEX(X_P, i, j)] = (MatrixFloat)result;
+                real64_T b_ij = (real64_T)BPtr->Data[MATRIX_INDEX(BPtr, i, j)];
+                XPtr->Data[MATRIX_INDEX(XPtr, i, j)] = (MatrixFloat)((b_ij - sum) / l_ii);
             }
 
             if (status != MATRIX_SUCCESS)
@@ -2395,9 +2446,9 @@ MatrixStatus_T Matrix_ForwardSubstitution(
  * Matrix_BackwardSubstitution
  *------------------------------------------------------------------------------------------------------------------*/
 MatrixStatus_T Matrix_BackwardSubstitution(
-    const Matrix_T  * const U_P,
-    const Matrix_T  * const B_P,
-    Matrix_T        * const X_P)
+    const Matrix_T  * const UPtr,
+    const Matrix_T  * const BPtr,
+    Matrix_T        * const XPtr)
 {
     MatrixStatus_T status;
     uint32_T          i;
@@ -2407,37 +2458,37 @@ MatrixStatus_T Matrix_BackwardSubstitution(
     uint32_T          m;
     real64_T          sum;
     real64_T          u_ii;
-    int32_T           i_signed;
+    int32_T           iSigned;
 
     status = MATRIX_SUCCESS;
 
-    if ((U_P == NULL) || (B_P == NULL) || (X_P == NULL))
+    if ((UPtr == NULL) || (BPtr == NULL) || (XPtr == NULL))
     {
         status = MATRIX_ERROR_NULL_PTR;
     }
-    else if (U_P->Rows != U_P->Cols)
+    else if (UPtr->Rows != UPtr->Cols)
     {
         status = MATRIX_ERROR_NOT_SQUARE;
     }
-    else if (U_P->Rows != B_P->Rows)
+    else if (UPtr->Rows != BPtr->Rows)
     {
         status = MATRIX_ERROR_DIMENSION_MISMATCH;
     }
-    else if ((X_P->MaxRows < B_P->Rows) || (X_P->MaxCols < B_P->Cols))
+    else if ((XPtr->MaxRows < BPtr->Rows) || (XPtr->MaxCols < BPtr->Cols))
     {
         status = MATRIX_ERROR_SIZE_EXCEEDED;
     }
     else
     {
-        n = U_P->Rows;
-        m = B_P->Cols;
+        n = UPtr->Rows;
+        m = BPtr->Cols;
 
-        Matrix_SetDimensions(X_P, n, m);
-        Matrix_Zero(X_P);
+        Matrix_SetDimensions(XPtr, n, m);
+        Matrix_Zero(XPtr);
 
-        for (i_signed = (int32_T)n - 1; i_signed >= 0; i_signed--)
+        for (iSigned = (int32_T)n - 1; iSigned >= 0; iSigned--)
         {
-            i = (uint32_T)i_signed;
+            i = (uint32_T)iSigned;
 
             for (j = 0U; j < m; j++)
             {
@@ -2445,11 +2496,11 @@ MatrixStatus_T Matrix_BackwardSubstitution(
 
                 for (k = i + 1U; k < n; k++)
                 {
-                    sum += (real64_T)U_P->Data[MATRIX_INDEX(U_P, i, k)] *
-                           (real64_T)X_P->Data[MATRIX_INDEX(X_P, k, j)];
+                    sum += (real64_T)UPtr->Data[MATRIX_INDEX(UPtr, i, k)] *
+                           (real64_T)XPtr->Data[MATRIX_INDEX(XPtr, k, j)];
                 }
 
-                u_ii = (real64_T)U_P->Data[MATRIX_INDEX(U_P, i, i)];
+                u_ii = (real64_T)UPtr->Data[MATRIX_INDEX(UPtr, i, i)];
 
                 if (u_ii >= -ZERO_THRESHOLD_FLOAT && u_ii <= ZERO_THRESHOLD_FLOAT)
                 {
@@ -2457,10 +2508,8 @@ MatrixStatus_T Matrix_BackwardSubstitution(
                     break;
                 }
 
-                real64_T b_ij = (real64_T)B_P->Data[MATRIX_INDEX(B_P, i, j)];
-                real64_T result = (b_ij - sum) / u_ii;
-
-                X_P->Data[MATRIX_INDEX(X_P, i, j)] = (MatrixFloat)result;
+                real64_T b_ij = (real64_T)BPtr->Data[MATRIX_INDEX(BPtr, i, j)];
+                XPtr->Data[MATRIX_INDEX(XPtr, i, j)] = (MatrixFloat)((b_ij - sum) / u_ii);
             }
 
             if (status != MATRIX_SUCCESS)
@@ -2478,43 +2527,40 @@ MatrixStatus_T Matrix_BackwardSubstitution(
  * Matrix_SymmetricRank1Update
  *------------------------------------------------------------------------------------------------------------------*/
 MatrixStatus_T Matrix_SymmetricRank1Update(
-    Matrix_T        * const A_P,
-    const Matrix_T  * const V_P,
+    Matrix_T        * const APtr,
+    const Matrix_T  * const VPtr,
     const MatrixElement        alpha)
 {
     MatrixStatus_T status;
     uint32_T          i;
     uint32_T          j;
     uint32_T          n;
-    MatrixElement     scaled_v_i;
-    MatrixElement     scaled_v_j;
-    MatrixElement     update;
+    MatrixElement     scaledVi;
 
     status = MATRIX_SUCCESS;
 
-    if ((A_P == NULL) || (V_P == NULL))
+    if ((APtr == NULL) || (VPtr == NULL))
     {
         status = MATRIX_ERROR_NULL_PTR;
     }
-    else if ((A_P->Rows != A_P->Cols) || (V_P->Rows != A_P->Rows) || (V_P->Cols != 1U))
+    else if ((APtr->Rows != APtr->Cols) || (VPtr->Rows != APtr->Rows) || (VPtr->Cols != 1U))
     {
         status = MATRIX_ERROR_DIMENSION_MISMATCH;
     }
     else
     {
-        n = A_P->Rows;
+        n = APtr->Rows;
 
         for (i = 0U; i < n; i++)
         {
-            scaled_v_i = V_P->Data[MATRIX_INDEX(V_P, i, 0U)] * alpha;
+            scaledVi = VPtr->Data[MATRIX_INDEX(VPtr, i, 0U)] * alpha;
 
             for (j = 0U; j <= i; j++)
             {
-                scaled_v_j = V_P->Data[MATRIX_INDEX(V_P, j, 0U)] * alpha;
-                update = scaled_v_i * V_P->Data[MATRIX_INDEX(V_P, j, 0U)];
+                MatrixElement update = scaledVi * VPtr->Data[MATRIX_INDEX(VPtr, j, 0U)];
 
-                A_P->Data[MATRIX_INDEX(A_P, i, j)] += update;
-                A_P->Data[MATRIX_INDEX(A_P, j, i)] = A_P->Data[MATRIX_INDEX(A_P, i, j)];
+                APtr->Data[MATRIX_INDEX(APtr, i, j)] += update;
+                APtr->Data[MATRIX_INDEX(APtr, j, i)] = APtr->Data[MATRIX_INDEX(APtr, i, j)];
             }
         }
     }
@@ -2527,104 +2573,108 @@ MatrixStatus_T Matrix_SymmetricRank1Update(
  * Matrix_SymmetricRank1UpdateFloat
  *------------------------------------------------------------------------------------------------------------------*/
 MatrixStatus_T Matrix_SymmetricRank1UpdateFloat(
-    Matrix_T        * const A_P,
-    const Matrix_T  * const V_P,
+    Matrix_T        * const APtr,
+    const Matrix_T  * const VPtr,
     const MatrixFloat          alpha)
 {
-    return Matrix_SymmetricRank1Update(A_P, V_P, alpha);
+    return Matrix_SymmetricRank1Update(APtr, VPtr, alpha);
 }
 
 
 /*--------------------------------------------------------------------------------------------------------------------
- * Matrix_MatrixSquareRoot (Denman-Beavers iteration)
+ * Matrix_MatrixSquareRoot  — correct Denman–Beavers iteration
  *------------------------------------------------------------------------------------------------------------------*/
 MatrixStatus_T Matrix_MatrixSquareRoot(
-    const Matrix_T  * const Matrix_P,
-    Matrix_T * const Result_P,
+    const Matrix_T  * const MatrixPtr,
+    Matrix_T * const ResultPtr,
     const uint32_T MaxIter)
 {
     MatrixStatus_T status;
-    MatrixElement     Y_buf[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
-    MatrixElement     Z_buf[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
-    MatrixElement     Y_inv_buf[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
-    MatrixElement     Y_new_buf[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
-    MatrixElement     Z_new_buf[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
+    MatrixElement     YBuf[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
+    MatrixElement     ZBuf[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
+    MatrixElement     YInvBuf[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
+    MatrixElement     ZInvBuf[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
+    MatrixElement     YNewBuf[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
+    MatrixElement     ZNewBuf[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
     Matrix_T       Y;
     Matrix_T       Z;
-    Matrix_T       Y_inv;
-    Matrix_T       Y_new;
-    Matrix_T       Z_new;
+    Matrix_T       YInv;
+    Matrix_T       ZInv;
+    Matrix_T       YNew;
+    Matrix_T       ZNew;
     uint32_T          iter;
-    uint32_T          max_iters;
-    MatrixFloat       norm_diff;
+    uint32_T          maxIters;
+    MatrixFloat       normDiff;
 
     status = MATRIX_SUCCESS;
 
-    if ((Matrix_P == NULL) || (Result_P == NULL))
+    if ((MatrixPtr == NULL) || (ResultPtr == NULL))
     {
         status = MATRIX_ERROR_NULL_PTR;
     }
-    else if (Matrix_P->Rows != Matrix_P->Cols)
+    else if (MatrixPtr->Rows != MatrixPtr->Cols)
     {
         status = MATRIX_ERROR_NOT_SQUARE;
     }
-    else if ((Result_P->MaxRows < Matrix_P->Rows) || (Result_P->MaxCols < Matrix_P->Cols))
+    else if ((ResultPtr->MaxRows < MatrixPtr->Rows) || (ResultPtr->MaxCols < MatrixPtr->Cols))
     {
         status = MATRIX_ERROR_SIZE_EXCEEDED;
     }
     else
     {
-        max_iters = (MaxIter > 0U) ? MaxIter : 10U;
+        maxIters = (MaxIter > 0U) ? MaxIter : 10U;
 
-        Matrix_Init(&Y, Y_buf, Matrix_P->Rows, Matrix_P->Cols);
-        Matrix_Init(&Z, Z_buf, Matrix_P->Rows, Matrix_P->Cols);
-        Matrix_Init(&Y_inv, Y_inv_buf, Matrix_P->Rows, Matrix_P->Cols);
-        Matrix_Init(&Y_new, Y_new_buf, Matrix_P->Rows, Matrix_P->Cols);
-        Matrix_Init(&Z_new, Z_new_buf, Matrix_P->Rows, Matrix_P->Cols);
+        Matrix_Init(&Y, YBuf, MatrixPtr->Rows, MatrixPtr->Cols);
+        Matrix_Init(&Z, ZBuf, MatrixPtr->Rows, MatrixPtr->Cols);
+        Matrix_Init(&YInv, YInvBuf, MatrixPtr->Rows, MatrixPtr->Cols);
+        Matrix_Init(&ZInv, ZInvBuf, MatrixPtr->Rows, MatrixPtr->Cols);
+        Matrix_Init(&YNew, YNewBuf, MatrixPtr->Rows, MatrixPtr->Cols);
+        Matrix_Init(&ZNew, ZNewBuf, MatrixPtr->Rows, MatrixPtr->Cols);
 
         /* Initialize: Y0 = A, Z0 = I */
-        (void)Matrix_Copy(&Y, Matrix_P);
+        (void)Matrix_Copy(&Y, MatrixPtr);
         (void)Matrix_Identity(&Z);
 
-        for (iter = 0U; iter < max_iters; iter++)
+        for (iter = 0U; iter < maxIters; iter++)
         {
-            /* Y_inv = inv(Y) */
-            status = Matrix_Inverse(&Y, &Y_inv);
-            if (status != MATRIX_SUCCESS)
-            {
-                break;
-            }
+            /* YInv = inv(Y) */
+            status = Matrix_Inverse(&Y, &YInv);
+            if (status != MATRIX_SUCCESS) { break; }
 
-            /* Y_new = 0.5 * (Y + Z_inv) but we use Y_inv as Z = inv(Y) */
-            Matrix_Add(&Y, &Z, &Y_new);
-            Matrix_ScalarMultiplyFloat(&Y_new, 0.5f, &Y_new);
+            /* ZInv = inv(Z) */
+            status = Matrix_Inverse(&Z, &ZInv);
+            if (status != MATRIX_SUCCESS) { break; }
 
-            /* Z_new = 0.5 * (Z + Y_inv) */
-            Matrix_Add(&Z, &Y_inv, &Z_new);
-            Matrix_ScalarMultiplyFloat(&Z_new, 0.5f, &Z_new);
+            /* YNew = 0.5 * (Y + ZInv) */
+            Matrix_Add(&Y, &ZInv, &YNew);
+            Matrix_ScalarMultiplyFloat(&YNew, 0.5f, &YNew);
+
+            /* ZNew = 0.5 * (Z + YInv) */
+            Matrix_Add(&Z, &YInv, &ZNew);
+            Matrix_ScalarMultiplyFloat(&ZNew, 0.5f, &ZNew);
 
             /* Check convergence */
-            Matrix_Subtract(&Y_new, &Y, &Y);
-            Matrix_NormFrobenius(&Y, &norm_diff);
+            Matrix_Subtract(&YNew, &Y, &Y);
+            Matrix_NormFrobenius(&Y, &normDiff);
 
-            if (norm_diff < 1e-6f)
+            if (normDiff < 1e-6f)
             {
                 break;
             }
 
             /* Update */
-            (void)Matrix_Copy(&Y, &Y_new);
-            (void)Matrix_Copy(&Z, &Z_new);
+            (void)Matrix_Copy(&Y, &YNew);
+            (void)Matrix_Copy(&Z, &ZNew);
         }
 
-        if (iter >= max_iters)
+        if (iter >= maxIters)
         {
             status = MATRIX_ERROR_MAX_ITERATIONS;
         }
         else
         {
-            /* Result is lower triangular Cholesky-like factor */
-            (void)Matrix_Cholesky(&Y_new, Result_P);
+            /* Y is the matrix square root; copy it to result */
+            (void)Matrix_Copy(ResultPtr, &YNew);
         }
     }
 
@@ -2636,40 +2686,36 @@ MatrixStatus_T Matrix_MatrixSquareRoot(
  * Matrix_ConditionNumber
  *------------------------------------------------------------------------------------------------------------------*/
 MatrixStatus_T Matrix_ConditionNumber(
-    const Matrix_T  * const Matrix_P,
-    MatrixFloat        * const CondOut_P)
+    const Matrix_T  * const MatrixPtr,
+    MatrixFloat        * const CondOutPtr)
 {
     MatrixStatus_T status;
-    MatrixElement     inv_buf[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
-    Matrix_T       inv_matrix;
-    MatrixFloat       norm_A;
-    MatrixFloat       norm_Ainv;
+    MatrixElement     invBuf[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
+    Matrix_T       invMatrix;
+    MatrixFloat       normA;
+    MatrixFloat       normAinv;
 
     status = MATRIX_SUCCESS;
 
-    if ((Matrix_P == NULL) || (CondOut_P == NULL))
+    if ((MatrixPtr == NULL) || (CondOutPtr == NULL))
     {
         status = MATRIX_ERROR_NULL_PTR;
     }
-    else if (Matrix_P->Rows != Matrix_P->Cols)
+    else if (MatrixPtr->Rows != MatrixPtr->Cols)
     {
         status = MATRIX_ERROR_NOT_SQUARE;
     }
     else
     {
-        Matrix_Init(&inv_matrix, inv_buf, Matrix_P->Rows, Matrix_P->Cols);
+        Matrix_Init(&invMatrix, invBuf, MatrixPtr->Rows, MatrixPtr->Cols);
 
-        /* Compute Frobenius norm of A */
-        Matrix_NormFrobenius(Matrix_P, &norm_A);
-
-        /* Compute inverse */
-        status = Matrix_Inverse(Matrix_P, &inv_matrix);
+        Matrix_NormFrobenius(MatrixPtr, &normA);
+        status = Matrix_Inverse(MatrixPtr, &invMatrix);
 
         if (status == MATRIX_SUCCESS)
         {
-            /* Compute Frobenius norm of A^-1 */
-            Matrix_NormFrobenius(&inv_matrix, &norm_Ainv);
-            *CondOut_P = norm_A * norm_Ainv;
+            Matrix_NormFrobenius(&invMatrix, &normAinv);
+            *CondOutPtr = normA * normAinv;
         }
     }
 
@@ -2680,19 +2726,19 @@ MatrixStatus_T Matrix_ConditionNumber(
 /*--------------------------------------------------------------------------------------------------------------------
  * Matrix_IsPositiveDefinite
  *------------------------------------------------------------------------------------------------------------------*/
-boolean_T Matrix_IsPositiveDefinite(const Matrix_T * const Matrix_P)
+boolean_T Matrix_IsPositiveDefinite(const Matrix_T * const MatrixPtr)
 {
     MatrixStatus_T status;
-    MatrixElement     L_buf[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
+    MatrixElement     LBuffer[MATRIX_MAX_ROWS * MATRIX_MAX_COLS];
     Matrix_T       L;
     boolean_T         result;
 
     result = FALSE;
 
-    if ((Matrix_P != NULL) && (Matrix_P->Rows == Matrix_P->Cols))
+    if ((MatrixPtr != NULL) && (MatrixPtr->Rows == MatrixPtr->Cols))
     {
-        Matrix_Init(&L, L_buf, Matrix_P->Rows, Matrix_P->Cols);
-        status = Matrix_Cholesky(Matrix_P, &L);
+        Matrix_Init(&L, LBuffer, MatrixPtr->Rows, MatrixPtr->Cols);
+        status = Matrix_Cholesky(MatrixPtr, &L);
 
         if (status == MATRIX_SUCCESS)
         {

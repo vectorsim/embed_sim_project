@@ -1,4 +1,4 @@
-Instructions to Setup
+Instructions to Setup and Explore
 
 1. Install Pycharm (Python Development) and Python Framework (3.12)
 
@@ -8,11 +8,19 @@ Instructions to Setup
 3. Install Open Modelica and export PMSM_Motor.mo as FMU
        - pmsm/modelica/PMSM_Motor.mo (Modelica Model)
        - execute gen_fmu.py (pmsm/modelica/gen_fmu.py) to generate python class
-       - this step is optional, one can work with python model
+       - this step is optional, one can work with python models
        
        
 4. Explore simple examples 
       - examples/simple_signal_flow
       
       
-5.    
+5. Explore Pmsm examples
+      - examples/pmsm_examples
+      
+      
+6. Run in Microcontroller
+   - install Aurix Developer  Studio
+   - import source code aurix_tc3xxx_source/EmbedSim_Pmsm_TC3
+   - if you have Infineon Aurix Motor Kit, there no need to adjust pins
+   - Directores aurix_tc3xxx_source/EmbedSim_Pmsm_TC3/EmbedSim  and pmsm/c_src have the same files but they not shared
