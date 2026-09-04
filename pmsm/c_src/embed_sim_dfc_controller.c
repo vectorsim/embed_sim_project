@@ -78,7 +78,7 @@
  */
 #define DFC_STARTUP_DURATION_S          (3.0F)
 
- #define DFC_SIM_INVERTER               (0x1U)
+
 
 /*********************************************************************************************************************/
 /*--------------------------------------------------Private Data-----------------------------------------------------*/
@@ -356,7 +356,7 @@ void DFC_Step(EmbedSimMachine_T* const MotorPtr)
         InvPark_Transform_Matrix(&dqVoltage, &focAngle, &abVoltage);
 
 
-#if DFC_SIM_INVERTER != 0x1U
+#if ES_SIM_OP_MODE == 0x0U
 
         vMag = sqrtf(abVoltage.Alpha*abVoltage.Alpha + abVoltage.Beta*abVoltage.Beta);
         machinePtr->SvmModulationIndex = vMag / (machinePtr->Vdc / DFC_SQRT3_F);

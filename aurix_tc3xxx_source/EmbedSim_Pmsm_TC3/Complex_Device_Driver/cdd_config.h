@@ -47,17 +47,18 @@
 #define EMBED_SIM_INTERRUPT(Isr, VectabNum, Prio) \
     void __interrupt(Prio) __vector_table(VectabNum) Isr(void)
 
-#define CORE_00_GPT12_ENCODER_ZERO_SRPN         (20U)
+
 #define STM0_CMP0_IR_SRPN                       (50U)
 #define CORE_00_QSPI4_TX_SRPN                   (55U)
 #define CORE_00_QSPI4_RX_SRPN                   (56U)
 #define CORE_00_QSPI4_ERR_SRPN                  (57U)
 #define CORE_00_ATOM_00_CH_00_CL_SRPN           (80U)
-#define CORE_01_ATOM_00_CH_00_CL_SRPN           (80U)
 #define CORE_00_ADC_PHASE_U_SRPN                (90U)
 #define CORE_00_ADC_PHASE_V_SRPN                (91U)
 #define CORE_00_ADC_PHASE_W_SRPN                (92U)
 #define CORE_00_ADC_DC_LINK                     (95U)
+#define CORE_00_GPT12_ENCODER_ZERO_SRPN         (100U)
+#define CORE_00_GPT12_ENCODER_ZERO_SRPN1        (101U)
 
 /**********************************************************************************************************************
  * GTM Software Dead-Time  [CLK0 ticks]

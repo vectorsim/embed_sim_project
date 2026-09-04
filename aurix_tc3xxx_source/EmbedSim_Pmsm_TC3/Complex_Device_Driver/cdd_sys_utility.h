@@ -377,6 +377,26 @@ extern real64_T CddSys_GetStmFreq(void);
  */
 extern real64_T CddSys_GetSpbFreq(void);
 
+
+/**
+ * \brief   Returns the Gpt12 clock frequency.
+ *
+ * \details
+ *
+ * \return  gpt12 frequency   [Hz]
+ */
+extern real64_T CddSys_GetGpt12Freq(void);
+
+
+/**
+ * @brief   Calculate the current input clock frequency of timer T5 in the GPT12 module.
+ *
+ * @details Reads the T5CON, T6CON registers directly via the provided macros.
+ * @return  T5 timer input frequency in Hz as real64_T.
+ */
+extern real64_T CddSys_GetGpt12_T5Freq(void);
+
+
 /**
  * \brief   Returns the GTM clock source frequency (fGTMSRC) before the GTM module divider.
  *

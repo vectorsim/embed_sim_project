@@ -44,6 +44,16 @@
 /*********************************************************************************************************************/
 
 /**
+ * @def ES_SIM_OP_MODE
+ * @brief Selects the EmbedSim operating mode.
+ *
+ * 0U: Real-time microcontroller operation
+ * 1U: Simulation operation
+ */
+#define ES_SIM_OP_MODE    (0x1U)
+
+
+/**
  * \brief  Conversion: RPM to rad/s
  *
  * \param[in] RPM  Speed in revolutions per minute.
@@ -149,7 +159,7 @@
  *          The integral term eliminates steady-state speed error.
  */
 #define DFC_SPEED_KP_Q_F                (0.00092F)       /**< Speed proportional gain (for torque correction) */
-#define DFC_SPEED_KI_Q_F                (0.00091F)    /**< Speed integral gain */
+#define DFC_SPEED_KI_Q_F                (0.00091F)      /**< Speed integral gain                              */
 
 /**
  * \brief   Maximum integrator anti-windup limit (common for speed and current)
@@ -162,7 +172,7 @@
 #define DFC_INTEGRAL_LIMIT_F            (25.0F)
 
 
-#define DFC_MIN_VELOCITY               (500.0F)
+#define DFC_MIN_VELOCITY                (500.0F)
 
 /*********************************************************************************************************************/
 /*-------------------------------------------------Data Structures---------------------------------------------------*/

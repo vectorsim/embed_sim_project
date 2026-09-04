@@ -64,7 +64,6 @@
 #include "cdd_gpio_app.h"
 #include "cdd_gtm_app.h"
 #include "cdd_evadc_app.h"
-#include "cdd_gpt12_app.h"
 #include "cdd_encoder_app.h"
 
 
@@ -145,7 +144,7 @@ void CddApp_Init(void)
     CddApp_G.OffsetIv    = 0.0F;
     CddApp_G.OffsetIw    = 0.0F;
 
-    CddApp_G.CtrlMode    = CDDAPP_CTRL_CLOSEDLOOP; //CDDAPP_CTRL_CLOSEDLOOP;  CDDAPP_CTRL_CLOSEDLOOP
+    CddApp_G.CtrlMode    =  CDDAPP_CTRL_CLOSEDLOOP ; //CDDAPP_CTRL_CLOSEDLOOP;  CDDAPP_CTRL_CLOSEDLOOP
     CddApp_G.SpeedRefRpm =  800.0F;
     CddApp_G.SensorReadingBitField = 0x0U;
 
@@ -199,9 +198,7 @@ void CddApp_Init(void)
         /* Init GPIT Module(Encoder) */
         if(ok == 0x1U)
         {
-             CddGpt12_Init();
-             ok  = CddGpt12_IsInitialized();
-            //ok = Encoder_Init();
+            ok = CddEncoder_Init();
             if (ok != 0x1U)
             {
                 CddApp_G.CDDAppStatus = CDDAPP_INIT_ERR_GPT12;
@@ -209,7 +206,7 @@ void CddApp_Init(void)
             }
             else
             {
-                CddApp_G.CDDAppStatus = CDDAPP_INIT_ERR_GPT12;
+                CddApp_G.CDDAppStatus = CDDAPP_INIT_DONE_GPT12;
                 CddApp_G.DTC          = CDDAPP_DTC_NONE;
             }
         }
@@ -303,27 +300,11 @@ uint32_T CddApp_Start(void)
 {
     static uint32_T started = 0x0U;
 
-
-
     if((CddApp_G.CDDAppStatus == CDDAPP_INIT_DONE_INV) && (started != 0x1U))
     {
-
-
-       /* Step 7 — CALIBRATION WINDOW: gates hard-off while everything else
-        * runs.  PowerOnSequence leaves /SOFF deasserted, so it must be
-        * re-asserted HERE, before ENA and the PWM carrier, to guarantee the
-        * bridge is never energised during offset calibration.                 */
-       CddTle9180_AssertSafeOff();            /* gates hard-off (latched)                */
-       CddTle9180_AssertEnable();             /* pre-drivers active, outputs held off    */
-                              /* PWM carrier live, 20 kHz ISR firing,
-                                               * EVADC conversions flowing (ISR reads
-                                               * sensors in every state)                 */
-
-
-       /* Step 9 — clear any faults logged while inputs toggled against
-        * /SOFF (Err_indiag class), then release the gates and go live.        */
-       //(void)CddTle9180_ClearFaults(&clrErr);
-       CddTle9180_DeassertSafeOff();          /* bridge live                             */
+       CddTle9180_AssertSafeOff();
+       CddTle9180_AssertEnable();
+       CddTle9180_DeassertSafeOff();
        CddGtm_Start();
        CddApp_G.CDDAppStatus = CDDAPP_INIT_OK;
 

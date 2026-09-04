@@ -54,16 +54,14 @@ extern void Transform_Init(void);
  * \code
  *   [Alpha]   = [ 2/3   -1/3   -1/3 ]   [U]
  *   [Beta ]     [ 0     1/√3  -1/√3 ]   [V]
- *                                        [W]
+ *                                       [W]
  * \endcode
  *
  * \param[in]  In_P   UVW phase signals (must not be NULL)
  * \param[out] Out_P  αβ output (must not be NULL)
  * \return  MATRIX_SUCCESS or error code
  */
-extern MatrixStatus_T Clarke_Transform_Matrix(
-    const FocUvw_T       * const In_P,
-    FocAlphaBeta_T       * const Out_P);
+extern MatrixStatus_T Clarke_Transform_Matrix(const FocUvw_T* const InPtr, FocAlphaBeta_T* const OutPtr);
 
 /**
  * \brief   Apply the Park (forward) transform using matrix multiplication.
@@ -80,9 +78,9 @@ extern MatrixStatus_T Clarke_Transform_Matrix(
  * \return  MATRIX_SUCCESS or error code
  */
 extern MatrixStatus_T Park_Transform_Matrix(
-    const FocAlphaBeta_T * const In_P,
+    const FocAlphaBeta_T * const InPtr,
     const FocAngle_T     * const Angle_P,
-    FocDq_T              * const Out_P);
+    FocDq_T              * const OutPtr);
 
 /**
  * \brief   Apply the Inverse-Park transform using matrix multiplication.
@@ -99,9 +97,9 @@ extern MatrixStatus_T Park_Transform_Matrix(
  * \return  MATRIX_SUCCESS or error code
  */
 extern MatrixStatus_T InvPark_Transform_Matrix(
-    const FocDq_T        * const In_P,
+    const FocDq_T        * const InPtr,
     const FocAngle_T     * const Angle_P,
-    FocAlphaBeta_T       * const Out_P);
+    FocAlphaBeta_T       * const OutPtr);
 
 /**
  * \brief   Apply the Inverse-Clarke transform using matrix multiplication.
@@ -118,7 +116,7 @@ extern MatrixStatus_T InvPark_Transform_Matrix(
  * \return  MATRIX_SUCCESS or error code
  */
 extern MatrixStatus_T InvClarke_Transform_Matrix(
-    const FocAlphaBeta_T * const In_P,
-    FocUvw_T             * const Out_P);
+    const FocAlphaBeta_T * const InPtr,
+    FocUvw_T             * const OutPtr);
 
 #endif /* EMBED_SIM_COORDINATE_TRANSFORM_H_ */

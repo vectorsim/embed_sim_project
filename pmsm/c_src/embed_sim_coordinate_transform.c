@@ -91,40 +91,38 @@ void Transform_Init(void)
 /*--------------------------------------------------------------------------------------------------------------------
  * Clarke_Transform_Matrix
  *------------------------------------------------------------------------------------------------------------------*/
-MatrixStatus_T Clarke_Transform_Matrix(
-    const FocUvw_T       * const In_P,
-    FocAlphaBeta_T       * const Out_P)
+MatrixStatus_T Clarke_Transform_Matrix(const FocUvw_T* const InPtr, FocAlphaBeta_T* const OutPtr)
 {
-    MatrixStatus_T status;
-    MatrixElement     input_buffer[CLARKE_COLS]; /* Now sized to 3 */
-    MatrixElement     output_buffer[CLARKE_ROWS];
-    Matrix_T       input_vec;
-    Matrix_T       output_vec;
+    MatrixStatus_T    status;
+    MatrixElement     inputBuffer[CLARKE_COLS];
+    MatrixElement     outputBuffer[CLARKE_ROWS];
+    Matrix_T          inputVec;
+    Matrix_T          outputVec;
 
     status = MATRIX_SUCCESS;
 
-    if ((In_P == NULL) || (Out_P == NULL))
+    if ((InPtr == NULL) || (OutPtr == NULL))
     {
         status = MATRIX_ERROR_NULL_PTR;
     }
     else
     {
         /* --- CHANGED: Create input vector [U; V; W] (3×1) --- */
-        Matrix_Init(&input_vec, input_buffer, CLARKE_COLS, 1U);
-        Matrix_SetElementFloat(&input_vec, 0U, 0U, In_P->U);
-        Matrix_SetElementFloat(&input_vec, 1U, 0U, In_P->V);
-        Matrix_SetElementFloat(&input_vec, 2U, 0U, In_P->W); /* <-- W is now explicitly used! */
+        Matrix_Init(&inputVec, inputBuffer, CLARKE_COLS, 1U);
+        Matrix_SetElementFloat(&inputVec, 0U, 0U, InPtr->U);
+        Matrix_SetElementFloat(&inputVec, 1U, 0U, InPtr->V);
+        Matrix_SetElementFloat(&inputVec, 2U, 0U, InPtr->W);
 
         /* Create output vector (2×1) */
-        Matrix_Init(&output_vec, output_buffer, CLARKE_ROWS, 1U);
+        Matrix_Init(&outputVec, outputBuffer, CLARKE_ROWS, 1U);
 
         /* Multiply: output = Clarke_matrix (2×3) × input (3×1) = output (2×1) */
-        status = Matrix_Multiply(&Clarke_Matrix_G, &input_vec, &output_vec);
+        status = Matrix_Multiply(&Clarke_Matrix_G, &inputVec, &outputVec);
 
         if (status == MATRIX_SUCCESS)
         {
-            Matrix_GetElementFloat(&output_vec, 0U, 0U, &Out_P->Alpha);
-            Matrix_GetElementFloat(&output_vec, 1U, 0U, &Out_P->Beta);
+            Matrix_GetElementFloat(&outputVec, 0U, 0U, &OutPtr->Alpha);
+            Matrix_GetElementFloat(&outputVec, 1U, 0U, &OutPtr->Beta);
         }
         else
         {

@@ -67,7 +67,6 @@
 #include "cdd_gtm_app.h"
 #include "cdd_app.h"
 #include "cdd_gpio_app.h"
-#include "cdd_gpt12_app.h"
 #include "cdd_encoder_app.h"
 #include "cdd_sys_utility.h"
 #include "cdd_config.h"
@@ -78,17 +77,9 @@
 #include "IfxSrc_reg.h"
 #include <math.h>
 
-
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
 /*********************************************************************************************************************/
-
-/** \brief  Target OS / CPU for GTM ATOM0 CH0 ISR — CPU0 (TOS = 0)                  */
-#define TOS_GTM_ISR     (0x0U)
-
-/** \brief  Service request priority number for ATOM0 CH0 on CPU0                   */
-#define SRPN_GTM_ISR    CORE_00_ATOM_00_CH_00_CL_SRPN
-
 /** \brief  ATOM SOMP mode — master only; CN0 resets at CM0 = carrier period         */
 #define ATOM_MODE_SOMP              (0x2U)
 
@@ -209,7 +200,7 @@ static void CddGtm_ConfigurePhase(real32_T Duty,
 /**********************************************************************************************************************
  * ISR — GTM ATOM0 CH0 CCU1 (20 kHz control loop)
  *********************************************************************************************************************/
-EMBED_SIM_INTERRUPT(GTM_Atom_00_Ch_00_Isr, TOS_GTM_ISR, SRPN_GTM_ISR);
+EMBED_SIM_INTERRUPT(GTM_Atom_00_Ch_00_Isr,0x0U, CORE_00_ATOM_00_CH_00_CL_SRPN);
 
 /**
  * \brief   20 kHz control-loop ISR, routed to CPU0 via SRC_GTM_ATOM0_0.
@@ -247,20 +238,16 @@ void GTM_Atom_00_Ch_00_Isr(void)
     EmbedSimCtrlOutput_T*  outputPtr;
 
 
-    inputPtr   = TractionMotor_G.InputPtr;
+    inputPtr  = TractionMotor_G.InputPtr;
     outputPtr = TractionMotor_G.OutputPtr;
 
     CddApp_G.ControlLoopCounter++;
 
     CddApp_G.DutyAdcTrig = 0.8F;
     CddEvadc_ConvertPhaseCurrents(&CddApp_G);
-    CddGpt12_Update();
-    CddApp_G.RotorSpeedRpm = CddGpt12_GetSpeedRpm();
-    CddApp_G.RotorPosition = CddGpt12_GetMechanicalPosition();
-   /* Encoder_Update();
-    CddApp_G.RotorSpeedRpm = Encoder_GetSpeedRpm();
-    CddApp_G.RotorPosition = Encoder_GetMechanicalPosition();*/
-
+    CddEncoder_Update();
+    CddApp_G.RotorSpeedRpm = CddEncoder_GetSpeedRpm();
+    CddApp_G.RotorPosition = CddEncoder_GetRotorPosition();
 
 
     if((CddApp_G.CDDAppStatus == CDDAPP_INIT_OK) || (CddApp_G.CDDAppStatus == CDDAPP_RUN_STATE))
@@ -517,8 +504,8 @@ void CddGtm_InitInverter(void)
 
     /* M4. Service request node: route to CPU0, SRPN set, clear pending, SRE=1      */
     srcCfg.U      = SRC_GTM_ATOM0_0.U;
-    srcCfg.B.SRPN = CORE_01_ATOM_00_CH_00_CL_SRPN;
-    srcCfg.B.TOS  = TOS_GTM_ISR;
+    srcCfg.B.SRPN = CORE_00_ATOM_00_CH_00_CL_SRPN;
+    srcCfg.B.TOS  = 0x0U;
     srcCfg.B.CLRR = 0x1U;   /* Clear pending request before arming                 */
     srcCfg.B.SRE  = 0x1U;   /* Arm: ISR will fire after HOST_TRIG in CddGtm_Start()*/
     SRC_GTM_ATOM0_0.U = srcCfg.U;

@@ -49,6 +49,8 @@
 #include "IfxScu_reg.h"
 #include "IfxCpu.h"
 #include "IfxGtm_reg.h"
+#include "IfxGpt12_reg.h"
+#include "IfxGpt12_regdef.h"
 
 /**********************************************************************************************************************
  * Private Macros
@@ -837,6 +839,65 @@ real64_T CddSys_GetSpbFreq(void)
             break;
     }
     return spb_freq;
+}
+
+
+
+
+/**
+ * @brief   Calculate the current input clock frequency of timer T5 in the GPT12 module.
+ * @details Reads the T5CON, T6CON registers directly via the provided macros.
+ * @return  T5 timer input frequency in Hz as real64_T.
+ */
+real64_T CddSys_GetGpt12_T5Freq(void)
+{
+    uint32_T  mode;          /* T5M field (bits 3‑5) */
+    uint32_T  prescaler;     /* T5I field (bits 0‑2) */
+    uint32_T  bps2;          /* BPS2 field (bits 11‑12 of T6CON) */
+    real64_T freq;
+
+    /* Read control fields directly from register macros */
+    mode      = GPT120_T5CON.B.T5M;
+    prescaler = GPT120_T5CON.B.T5I;
+    bps2      = GPT120_T6CON.B.BPS2;
+
+    freq = CddSys_GetGpt12Freq();
+
+    /* GPT2 block prescaler */
+    switch (bps2)
+    {
+        case 0u:   freq /= 2.0;  break;
+        case 1u:   freq /= 4.0;  break;
+        case 2u:   freq /= 8.0;  break;
+        default:   freq /= 16.0; break;
+    }
+
+    /* T5 input prescaler and mode */
+    if ((mode == 0u) || (mode == 2u) || (mode == 3u))
+    {
+        freq /= (1u << prescaler);
+    }
+    else
+    {
+        freq /= 2.0;
+    }
+
+    return freq;
+}
+
+
+/**
+ * \brief   Returns the Gpt12 clock frequency.
+ *
+ * \details
+ *
+ *
+ *
+ * \return  gpt12 frequency   [Hz]
+ */
+real64_T CddSys_GetGpt12Freq(void)
+{
+    return CddSys_GetSpbFreq();
 }
 
 /**
