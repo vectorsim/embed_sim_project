@@ -83,7 +83,7 @@ CONTROLLER_MODE = "PYTHON_DFC"  # Change this to switch controllers
 #   "PYTHON"  - Python PMSM plant model
 #   "FMU"     - FMU-based plant model
 
-PLANT_MODE = "PYTHON"  # Change this to switch plants
+PLANT_MODE = "FMU"  # Change this to switch plants
 
 # =============================================================================
 # Simulation Parameters
