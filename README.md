@@ -1,51 +1,62 @@
 # EmbedSim
 
-**EmbedSim** is a Python-based simulation framework for developing and validating control algorithms and transferring them to embedded systems.
+**PMSM Fachschale Motor Development and Embedded Control Simulation**
 
-The framework provides a common simulation environment for **pure Python models** and **FMU-based models**, including models developed in **Modelica** and exported as FMUs.
+**EmbedSim** is a Python-based development and simulation environment for **PMSM (Permanent Magnet Synchronous Motor) Fachschale development**.
 
-The current control implementation is based on **Differential Flatness Control (DFC)**. The architecture is designed to allow additional control algorithms to be added in the future.
+It provides a common environment for developing and validating PMSM motor models and control algorithms, with support for **pure Python models** and **FMU-based models**, including models developed in **Modelica** and exported as FMUs.
 
-EmbedSim also includes a **C implementation targeting Infineon AURIX / TriCore**, providing a path from simulation to real-time embedded execution.
+The current control implementation is based on **Differential Flatness Control (DFC)**. The architecture is designed to allow additional control algorithms to be implemented in the future.
+
+EmbedSim also includes a **C implementation targeting Infineon AURIX / TriCore**, providing a path from PMSM simulation and control development to real-time embedded execution.
 
 ```text
-System Model
-   │
-   ├── Python
-   │
-   └── FMU
-        ▲
-        │
-     Modelica
-   │
-   ▼
-EmbedSim
-   │
-   ▼
-Differential Flatness Control
-   │
-   ▼
-Embedded C
-   │
-   ▼
-AURIX / TriCore
+                         PMSM Fachschale
+                              │
+                 ┌────────────┴────────────┐
+                 │                         │
+                 ▼                         ▼
+          Pure Python Model              FMU
+                                           ▲
+                                           │
+                                        Modelica
+                 │                         │
+                 └────────────┬────────────┘
+                              │
+                              ▼
+                         EmbedSim
+                       Simulation
+                              │
+                              ▼
+                 Differential Flatness
+                       Control (DFC)
+                              │
+                              ▼
+                        Embedded C
+                              │
+                              ▼
+                     AURIX / TriCore
 ```
 
 ## Documentation
 
-Detailed information about the architecture, system models, control algorithms, simulation and embedded implementation is provided in the documentation pages of this repository.
+Detailed information about the **PMSM Fachschale**, system models, simulation environment, Differential Flatness Control and AURIX implementation is provided in the documentation pages of this repository.
 
 ## Project Status
 
 EmbedSim is under active development.
 
-The framework currently provides:
+Currently implemented:
 
+* PMSM Fachschale motor development
 * Python-based simulation
-* Python and FMU-based system models
+* Pure Python system models
+* FMU-based system models
 * Modelica models through FMU
-* Differential Flatness Control
+* Differential Flatness Control (DFC)
 * Embedded C implementation
-* Infineon AURIX / TriCore support
+* Infineon AURIX / TriCore target
 
-**From simulation to embedded control.**
+Additional control algorithms can be implemented within the framework in the future.
+
+**PMSM development — from model and simulation to embedded control.**
