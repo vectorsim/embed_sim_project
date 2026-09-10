@@ -91,7 +91,7 @@ printer = SignalPrinter(
     name="motor_debug",
     fields=motor_fields,
     print_prefix="Motor State: ",
-    every_n=10000          # print once every 100 calls (5 ms at 50 µs)
+    every_n=10000          # print once every 10000 calls
 )
 
 # C DFC controller
