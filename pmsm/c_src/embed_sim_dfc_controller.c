@@ -240,7 +240,7 @@ void DFC_Step(EmbedSimMachine_T* const MotorPtr)
 
         machinePtr->SvmModulationIndex = DFC_STARTUP_MOD_MIN + (tauStart * (DFC_STARTUP_MOD_MAX - DFC_STARTUP_MOD_MIN));
         machinePtr->SvmModulationIndex = EmbedSim_ClampValue(machinePtr->SvmModulationIndex, DFC_STARTUP_MOD_MIN, DFC_STARTUP_MOD_MAX);
-        machinePtr->SvmRotorThetaE += (machinePtr->PolePairs * CON_RPM_TO_RAD(inputPtr->AngularVelocityRefRpmM * tauStart) * inputPtr->SampleTime);
+        machinePtr->SvmRotorThetaE += (machinePtr->PolePairs * ES_CON_RPM_TO_RAD(inputPtr->AngularVelocityRefRpmM * tauStart) * inputPtr->SampleTime);
         EmbedSim_WrapAngleTwoPi(&machinePtr->SvmRotorThetaE);
         SVM_CalculateDutyCycle(machinePtr->SvmModulationIndex, &machinePtr->SvmRotorThetaE, &startupSvmDC);
 
@@ -282,7 +282,7 @@ void DFC_Step(EmbedSimMachine_T* const MotorPtr)
         omegaRef     = inputPtr->RotorVelocityRefM;
         omegaRefDot  = inputPtr->RotorAccelerationRefM;
         omegaRefDDot = inputPtr->RotorJerkRefM;
-        omegaMeas    = CON_RPM_TO_RAD(inputPtr->RotorSpeedObsEstM);
+        omegaMeas    = ES_CON_RPM_TO_RAD(inputPtr->RotorSpeedObsEstM);
 
         /* ---------- Speed PI (outer loop) ---------- */
         speedError = omegaRef - omegaMeas;

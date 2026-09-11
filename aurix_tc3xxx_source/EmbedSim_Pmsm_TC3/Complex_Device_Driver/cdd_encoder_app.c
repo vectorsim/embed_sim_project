@@ -69,39 +69,6 @@ CddEncoder_State_T EncoderState_G;
 /*********************************************************************************************************************/
 /*-------------------------------------------------private functions--------------------------------------------------*/
 /*********************************************************************************************************************/
-/**
- * \brief   Clamp a floating-point value to a specified range
- * \param[in]  Value  Value to be clamped
- * \param[in]  MinVal Minimum allowed value
- * \param[in]  MaxVal Maximum allowed value
- * \return     real32_T - Clamped value within [MinVal, MaxVal]
- *
- * \details   If Value < MinVal, returns MinVal.
- *            If Value > MaxVal, returns MaxVal.
- *            Otherwise returns Value unchanged.
- *
- * \note      Single exit point for MISRA compliance.
- */
-static real32_T Cdd_ClampValue(real32_T Value, real32_T MinVal, real32_T MaxVal)
-{
-    real32_T result;
-
-    if (Value < MinVal)
-    {
-        result = MinVal;
-    }
-    else if (Value > MaxVal)
-    {
-        result = MaxVal;
-    }
-    else
-    {
-        result = Value;
-    }
-
-    return result;
-}
-
 
 /**
  * \brief   Internal function to initialize the GPT12 hardware
@@ -401,7 +368,7 @@ void CddEncoder_Update(void)
             blendFactor = 0.5F +  0.5*(speedMagnitudeRpm - ENCODER_BLEND_LOW_SPEED_RPM) /  (ENCODER_BLEND_HIGH_SPEED_RPM - ENCODER_BLEND_LOW_SPEED_RPM);
         }
 
-        blendFactor = Cdd_ClampValue(blendFactor, 0.0F, 1.0F);
+        blendFactor = EmbedSim_ClampValue(blendFactor, 0.0F, 1.0F);
 
         EncoderState_G.SpeedRad = (blendFactor * EncoderState_G.SpeedRad) +
                                   ((1.0F - blendFactor) * speedFromTurns);
@@ -418,19 +385,9 @@ void CddEncoder_Update(void)
     /* Update rotor position */
     EncoderState_G.RotorPositionCounter += deltaT3;
 
-    /* Wrap position to [0, ENCODER_COUNTS_PER_REV) */
-    if ((int32_T)EncoderState_G.RotorPositionCounter >= (int32_T)ENCODER_COUNTS_PER_REV)
-    {
-        EncoderState_G.RotorPositionCounter -= ENCODER_COUNTS_PER_REV;
-    }
-    else if ((int32_T)EncoderState_G.RotorPositionCounter < 0)
-    {
-        EncoderState_G.RotorPositionCounter += ENCODER_COUNTS_PER_REV;
-    }
-
     /* Convert to radians */
-    EncoderState_G.RotorAngle = ((real32_T)EncoderState_G.RotorPositionCounter * ES_MATH_2PI_F) /
-                                (real32_T)ENCODER_COUNTS_PER_REV;
+    EncoderState_G.RotorAngle = ((real32_T)EncoderState_G.RotorPositionCounter * ES_MATH_2PI_F) / (real32_T)ENCODER_COUNTS_PER_REV;
+    EmbedSim_WrapAngleTwoPi(&EncoderState_G.RotorAngle);
 
     EncoderState_G.T3Counter = currentT3Counter;
 }

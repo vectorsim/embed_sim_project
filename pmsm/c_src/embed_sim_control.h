@@ -15,7 +15,7 @@
  * \note      EmbedSim naming convention:
  *              - Functions      : Pascal_Snake_Case
  *              - Parameters     : PascalCase  (single-letter → Uppercase)
- *              - Output pointers: PascalCase_P
+ *              - Output pointers: PascalCasePtr
  *              - Local variables: Lower camelCase
  *              - Struct members : PascalCase
  *              - Macros         : UPPER_SNAKE_CASE
@@ -54,25 +54,6 @@
 
 
 /**
- * \brief  Conversion: RPM to rad/s
- *
- * \param[in] RPM  Speed in revolutions per minute.
- *
- * \return  Speed in radians per second.
- */
-#define CON_RPM_TO_RAD(RPM)             ((RPM * ES_MATH_2PI_F) / 60.0F)
-
-/**
- * \brief  Conversion: rad/s to RPM
- *
- * \param[in] RAD  Speed in radians per second.
- *
- * \return  Speed in revolutions per minute.
- */
-#define CON_RAD_TO_RPM(RAD)             ((RAD * 60.0F) / ES_MATH_2PI_F)
-
-
-/**
  * @def ES_SVM_START_MOD_FUNC(TAU)
  * @brief Calculates a smooth start modulation factor.
  *
@@ -89,11 +70,6 @@
  */
 
 #define ES_SVM_START_MOD_FUNC(TAU)   ((3.0 * (TAU) * (TAU)) - (2.0 * (TAU) * (TAU) * (TAU)))
-
-
-
-#include <math.h>
-
 
 /**
  * \brief  Maximum speed in RPM
@@ -141,13 +117,6 @@
 #define DFC_CURRENT_KP_Q_F              (0.019995F)    /**< q-axis proportional gain */
 #define DFC_CURRENT_KI_Q_F              (0.00000025F)    /**< q-axis integral gain     */
 
-
-/**
- * \brief  Spinning detection parameters
- */
-#define DFC_SPINNING_PAST_INDEX  (8950U)     /**< 0.45s debounce time */
-#define DFC_STOPPED_PAST_INDEX    (200U)      /**< 0.01s debounce time */
-
 /**
  * \brief   Speed PI controller gains (outer loop)
  *
@@ -170,9 +139,6 @@
  *          excessive voltage commands.
  */
 #define DFC_INTEGRAL_LIMIT_F            (25.0F)
-
-
-#define DFC_MIN_VELOCITY                (500.0F)
 
 /*********************************************************************************************************************/
 /*-------------------------------------------------Data Structures---------------------------------------------------*/
@@ -393,17 +359,6 @@ extern uint32_T EmbedSim_IsNotSpinning(const EmbedSimCtrlInput_T* const InputPtr
  */
 extern void EmbedSim_GetMotorState(EmbedSimMachine_T* const motorPtr,  EmbedSimMotorState_T* const statePtr);
 
-/**
- * \brief   Wrap angle to [0, 2pi)
- *
- * \details Normalizes an angle to the range [0, 2π) using fmodf.
- *          Useful for rotor angle and Park transform calculations.
- *
- * \param[in,out] anglePtr  Pointer to angle value to be wrapped (in radians).
- */
- extern void EmbedSim_WrapAngleTwoPi(real32_T* AnglePtr);
-
-
  /**
   * \brief   Calculate the shortest signed angular distance between two angles.
   *
@@ -423,23 +378,6 @@ extern void EmbedSim_GetMotorState(EmbedSimMachine_T* const motorPtr,  EmbedSimM
   *          Meaning: ObservedAngle is 0.383 rad BEHIND ModelAngle.
   */
  extern real32_T EmbedSim_AngleDistance(real32_T ObservedAngle, real32_T ModelAngle);
-
-
- /**
-  * \brief   Clamp value to specified limits
-  *
-  * \details Limits a value to a range defined by minVal and maxVal.
-  *          If value is below minVal, returns minVal.
-  *          If value is above maxVal, returns maxVal.
-  *          Otherwise returns the original value.
-  *
-  * \param[in] val     Value to clamp.
-  * \param[in] minVal  Minimum allowed value.
-  * \param[in] maxVal  Maximum allowed value.
-  *
-  * \return  Clamped value within [minVal, maxVal].
-  */
-extern  real32_T EmbedSim_ClampValue(real32_T Val, real32_T MinVal, real32_T MaxVal);
 
 
  /**

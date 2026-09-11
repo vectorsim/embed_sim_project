@@ -1,15 +1,41 @@
-/*
- * embed_sim_sys_types.h
- * ===========
+/**********************************************************************************************************************
+ * \file      embed_sim_cython_interface.h
+ * \brief     Top-level PMSM control module with DFC controller.
  *
- * Fixed-width type definitions for EmbedSim C code targeting Aurix TriCore.
+ * \details   Defines the main control structures and functions for permanent magnet
+ *            synchronous motors (PMSM). Supports open-loop and DFC control modes
+ *            with smooth reference trajectory generation.
+ *            Targets 32-bit MCUs (Infineon AURIX TriCore, ARM Cortex-M4).
  *
- * Author : EmbedSim Framework
- * Version: 1.1.0
- */
-
+ * \note      MISRA C:2012 compliance:
+ *              - Rule  8.5 : One declaration per identifier
+ *              - Rule  8.6 : No definitions in header files
+ *              - Rule 17.2 : No recursion
+ *
+ * \note      EmbedSim naming convention:
+ *              - Functions      : Pascal_Snake_Case
+ *              - Parameters     : PascalCase  (single-letter → Uppercase)
+ *              - Output pointers: PascalCasePtr
+ *              - Local variables: Lower camelCase
+ *              - Struct members : PascalCase
+ *              - Macros         : UPPER_SNAKE_CASE
+ *              - Typedefs       : Pascal_Snake_Case_T
+ *
+ * \version   2.0.0
+ * \date      2026-08-12
+ * \author    EmbedSim / EV Light Vehicle Foundation
+ *
+ * \copyright Copyright (C) 2026 EmbedSim — EV Light Vehicle Foundation, Jaffna, Sri Lanka.
+ *            Licensed under the MIT License.
+ *********************************************************************************************************************/
 #ifndef SYS_TYPES_H
 #define SYS_TYPES_H
+
+
+#include <stdio.h>
+#include <stddef.h>
+#include <math.h>
+#include <string.h>
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * Boolean constants
@@ -156,5 +182,73 @@ typedef void *             pointer_T;
 
 /** \brief  2π   = 360°  ≈ 6.28318530718             [rad] */
 #define ES_MATH_2PI_F               ((real32_T)6.28318530718f)
+
+/**
+ * \brief  Conversion: RPM to rad/s
+ *
+ * \param[in] RPM  Speed in revolutions per minute.
+ *
+ * \return  Speed in radians per second.
+ */
+#define ES_CON_RPM_TO_RAD(RPM)             ((RPM * ES_MATH_2PI_F) / 60.0F)
+
+/**
+ * \brief  Conversion: rad/s to RPM
+ *
+ * \param[in] RAD  Speed in radians per second.
+ *
+ * \return  Speed in revolutions per minute.
+ */
+#define ES_CON_RAD_TO_RPM(RAD)             ((RAD * 60.0F) / ES_MATH_2PI_F)
+
+
+
+/*********************************************************************************************************************/
+/*------------------------------------------------common inline function --------------------------------------------*/
+/*********************************************************************************************************************/
+inline void EmbedSim_WrapAngleTwoPi(real32_T* AnglePtr)
+{
+    *AnglePtr = fmodf(*AnglePtr, ES_MATH_2PI_F);
+    if(*AnglePtr < 0.0F)
+    {
+        *AnglePtr += ES_MATH_2PI_F;
+    }
+}
+
+
+
+/**
+ * \brief   Clamp value to specified limits
+ *
+ * \details Limits a value to a range defined by minVal and maxVal.
+ *          If value is below minVal, returns minVal.
+ *          If value is above maxVal, returns maxVal.
+ *          Otherwise returns the original value.
+ *
+ * \param[in] val     Value to clamp.
+ * \param[in] minVal  Minimum allowed value.
+ * \param[in] maxVal  Maximum allowed value.
+ *
+ * \return  Clamped value within [minVal, maxVal].
+ */
+inline  real32_T EmbedSim_ClampValue(real32_T Val, real32_T MinVal, real32_T MaxVal)
+ {
+     real32_T result;
+
+     if(Val < MinVal)
+     {
+         result = MinVal;
+     }
+     else if (Val > MaxVal)
+     {
+         result = MaxVal;
+     }
+     else
+     {
+         result = Val;
+     }
+
+     return result;
+ }
 
 #endif /* SYS_TYPES_H */

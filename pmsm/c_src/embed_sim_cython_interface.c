@@ -85,9 +85,9 @@ void EmbedSim_CythonControlStep(
     float SampleTime,
     unsigned int CtrlAlg,
     unsigned int ValidIn,
-    float * const PwmU_P,
-    float * const PwmV_P,
-    float * const PwmW_P,
+    float* const PwmU_P,
+    float* const PwmV_P,
+    float* const PwmW_P,
     unsigned int * const ValidOut_P)
 {
     EmbedSimCtrlInput_T *inputPtr;
@@ -96,98 +96,26 @@ void EmbedSim_CythonControlStep(
     inputPtr = TractionMotor_G.InputPtr;
     outputPtr = TractionMotor_G.OutputPtr;
 
-    if ((inputPtr != NULL) &&
-        (outputPtr != NULL))
-    {
-        /*
-         * --------------------------------------------------------------
-         * Populate controller inputs.
-         * --------------------------------------------------------------
-         */
-        inputPtr->Iu = Iu_P;
-        inputPtr->Iv = Iv_P;
-        inputPtr->Iw = Iw_P;
+    /* Populate Input Structure */
+    inputPtr->Iu = Iu_P;
+    inputPtr->Iv = Iv_P;
+    inputPtr->Iw = Iw_P;
+    inputPtr->RotorPositionSensorM   = RotorPositionSensor;
+    inputPtr->RotorSpeedSensorM      = RotorVelocitySensor;
+    inputPtr->AngularVelocityRefRpmM = AngularVelocityRefRpm;
+    inputPtr->Vdc                    = Vdc;
+    inputPtr->SampleTime             = SampleTime;
+    inputPtr->CtrlAlg                = CtrlAlg;
+    inputPtr->Valid                  = ValidIn;
 
-        inputPtr->RotorPositionSensorM =
-            RotorPositionSensor;
+    /*  Execute main control */
+    EmbedSim_ControlStep(&TractionMotor_G);
 
-        inputPtr->RotorSpeedSensorM =
-            RotorVelocitySensor;
-
-        inputPtr->AngularVelocityRefRpmM =
-            AngularVelocityRefRpm;
-
-        inputPtr->Vdc =
-            Vdc;
-
-        inputPtr->SampleTime =
-            SampleTime;
-
-        inputPtr->CtrlAlg =
-            CtrlAlg;
-
-        inputPtr->Valid =
-            ValidIn;
-
-        /*
-         * --------------------------------------------------------------
-         * Execute main control.
-         * --------------------------------------------------------------
-         */
-        EmbedSim_ControlStep(
-            &TractionMotor_G);
-
-        /*
-         * --------------------------------------------------------------
-         * Return PWM outputs.
-         * --------------------------------------------------------------
-         */
-        if (PwmU_P != NULL)
-        {
-            *PwmU_P =
-                outputPtr->DutyU;
-        }
-
-        if (PwmV_P != NULL)
-        {
-            *PwmV_P =
-                outputPtr->DutyV;
-        }
-
-        if (PwmW_P != NULL)
-        {
-            *PwmW_P =
-                outputPtr->DutyW;
-        }
-
-        if (ValidOut_P != NULL)
-        {
-            *ValidOut_P =
-                outputPtr->Valid;
-        }
-    }
-    else
-    {
-        if (PwmU_P != NULL)
-        {
-            *PwmU_P = 0.5F;
-        }
-
-        if (PwmV_P != NULL)
-        {
-            *PwmV_P = 0.5F;
-        }
-
-        if (PwmW_P != NULL)
-        {
-            *PwmW_P = 0.5F;
-        }
-
-        if (ValidOut_P != NULL)
-        {
-            *ValidOut_P = 0U;
-        }
-    }
+    /* Populate Output Structure */
+    *PwmU_P     = outputPtr->DutyU;
+    *PwmV_P     = outputPtr->DutyV;
+    *PwmW_P     = outputPtr->DutyW;
+    *ValidOut_P =outputPtr->Valid;
 }
 
 /**
@@ -201,13 +129,8 @@ void EmbedSim_CythonControlStep(
  *
  * \return  void
  */
-void EmbedSim_CythonGetMotorState(
-    EmbedSimMotorState_T * const StatePtr)
+void EmbedSim_CythonGetMotorState(EmbedSimMotorState_T * const StatePtr)
 {
-    if (StatePtr != NULL)
-    {
-        EmbedSim_GetMotorState(
-            &TractionMotor_G,
-            StatePtr);
-    }
+    EmbedSim_GetMotorState(&TractionMotor_G, StatePtr);
+
 }
