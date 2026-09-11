@@ -72,10 +72,10 @@ extern void EmbedSim_CythonControlStep(
     float SampleTime,
     unsigned int CtrlAlg,
     unsigned int ValidIn,
-    float * const PwmU_P,
-    float * const PwmV_P,
-    float * const PwmW_P,
-    unsigned int * const ValidOut_P
+    float* const PwmU_P,
+    float* const PwmV_P,
+    float* const PwmW_P,
+    unsigned int* const ValidOut_P
 );
 
 /**
@@ -83,7 +83,7 @@ extern void EmbedSim_CythonControlStep(
  *
  * @param[out] StatePtr Pointer to motor state structure.
  */
-extern void EmbedSim_CythonGetMotorState(EmbedSimMotorState_T * const StatePtr);
+extern void EmbedSim_CythonGetMotorState(EmbedSimMotorState_T* const StatePtr);
 
 #ifdef __cplusplus
 }

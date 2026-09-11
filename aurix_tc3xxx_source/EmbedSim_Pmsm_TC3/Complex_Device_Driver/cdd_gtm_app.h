@@ -22,6 +22,31 @@
  *            STATIC (internal to cdd_gtm_app.c) — dispatched by the 20 kHz
  *            ISR on the mode latched from CddApp_G.CtrlMode.
  *
+ *            ## Public API surface
+ *            Only three functions are exported by this module:
+ *              - `CddGtm_InitModule()`   — bring the GTM module clock up and
+ *                                          release write-protection.
+ *              - `CddGtm_InitInverter()` — full ATOM0 / CDTM0 / pin-mux setup
+ *                                          with shadow registers pre-loaded
+ *                                          to the 50 % zero vector.
+ *              - `CddGtm_Start()`        — issue HOST_TRIG; PWM goes live.
+ *
+ *            Everything else (duty writes, open-loop ramp, DFC dispatch) is
+ *            driven from the 20 kHz ATOM0_CH0 CCU1 ISR defined in the .c file.
+ *
+ *            ## Required call order
+ *            ```
+ *            CddGtm_InitModule();        // clock + write-protect off
+ *            CddGtm_InitInverter();      // channels, mux, shadow pre-load
+ *            CddApp_InitInverter();      // gate-driver enable (elsewhere)
+ *            CddGtm_Start();             // HOST_TRIG -> PWM live
+ *            // SRC SRE = 1 -> ISR armed
+ *            ```
+ *            Issuing HOST_TRIG before the gate driver is enabled would expose
+ *            the power stage to an undefined duty; the split between
+ *            `CddGtm_InitInverter()` and `CddGtm_Start()` exists precisely to
+ *            let the application interleave `CddApp_InitInverter()`.
+ *
  * \note      MISRA C:2012 compliance:
  *              - Rule  8.1 : All functions have explicit return type
  *              - Rule  8.5 : One declaration per function
@@ -70,6 +95,12 @@
  * The control-mode selection (CddApp_CtrlMode_T: CDDAPP_CTRL_OPENLOOP /
  * CDDAPP_CTRL_CLOSEDLOOP) and the speed reference live in the central
  * CddApp_T — see cdd_app.h.  This module only executes the latched mode.
+ *
+ * Rationale: the mode is latched once at the RUN-entry edge and held for the
+ * entire run.  Changing CddApp_G.CtrlMode mid-run has no effect until the
+ * next fault / stop / re-entry.  This avoids a mode switch mid-PWM-period
+ * (which would leave the DFC and open-loop states inconsistent) at the cost
+ * of requiring an explicit stop/start to change strategy.
  */
 
 /*********************************************************************************************************************/
@@ -82,9 +113,26 @@
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
 /*********************************************************************************************************************/
 
-
+/**
+ * \brief   Bring up the GTM module clock and disable cluster write-protection.
+ * \return  void
+ *
+ * \details Releases the GTM module from reset (GTM_CLC.DISR = 0), waits for
+ *          the clock to be running (GTM_CLC.DISS == 0), clears
+ *          GTM_CTRL.RF_PROT and GTM_CCM0_PROT.CLS_PROT so subsequent register
+ *          writes to the cluster are accepted, sets the cluster-0 clock
+ *          divider, disables all CMU clocks, and finally programs CMU CLK0 to
+ *          GTM_CMU_CLK0_FREQUENCY.
+ *
+ *          Must be the first GTM call in the boot sequence. Idempotency is
+ *          not guaranteed — calling twice will re-run the clock-enable
+ *          handshake and re-program CLK0.  Call once, before
+ *          CddGtm_InitInverter().
+ *
+ * \note    The watchdog is briefly disabled around the GTM_CLC write so the
+ *          clock-enable handshake does not trip the CPU WDT.
+ */
 extern void CddGtm_InitModule(void);
-
 
 
 /**
@@ -102,6 +150,13 @@ extern void CddGtm_InitModule(void);
  *
  *          HOST_TRIG is NOT issued here. Call CddGtm_Start() after CddApp_InitInverter().
  *
+ *          After this function returns, all ATOM0 channels are configured and
+ *          their shadow registers hold the zero vector, but the carrier is
+ *          not yet running: the outputs sit at whatever the SL bit dictates
+ *          (idle state) and no CCU1 interrupt can fire.  This is the
+ *          "configured but not armed" state, deliberately split from Start()
+ *          so the application can bring the gate driver up first.
+ *
  * \return  void
  */
 extern void CddGtm_InitInverter(void);
@@ -113,12 +168,20 @@ extern void CddGtm_InitInverter(void);
  * \details Must be called after CddGtm_Init() and CddApp_InitInverter().
  *          Arm the ISR (SRC SRE=1) after this.
  *
+ *          HOST_TRIG is a single-shot write: after it lands, ATOM0 begins
+ *          counting on the next CMU CLK0 edge and the ISR begins firing at
+ *          each half-period valley.  There is no software path to un-trigger
+ *          the carrier short of a hardware reset or clearing
+ *          GTM_ATOM0_AGC_GLB_CTRL.HOST_TRIG back to zero.
+ *
+ * \warning Do not call before the gate driver is enabled and the DC link is
+ *          within its valid operating window.  Once HOST_TRIG is issued, the
+ *          PWM outputs are live and the power stage will switch on the next
+ *          control-loop tick.
+ *
  * \return  void
  */
 extern void CddGtm_Start(void);
-
-
-
 
 
 #endif /* CDD_GTM_APP_H_ */

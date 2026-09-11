@@ -19,18 +19,18 @@
  *
  * \note      EmbedSim naming convention:
  *              - Functions      : Pascal_Snake_Case
- *              - Parameters     : PascalCase  (single-letter → Uppercase)
- *              - Output pointers: PascalCase_P
- *              - Local variables: lower_snake_case
+ *              - Parameters     : PascalCasePtr  (e.g., MatrixPtr, DetOutPtr)
+ *              - Output pointers: PascalCasePtr
+ *              - Local variables: Lower camelCase
  *              - Struct members : PascalCase
  *              - Macros         : UPPER_SNAKE_CASE
  *              - Typedefs       : Pascal_Snake_Case_T
  *
- * \version   5.1.0
- * \date      2025-05-24
+ * \version   6.1.0
+ * \date      2026-08-30
  * \author    EmbedSim / EV Light Vehicle Foundation
  *
- * \copyright Copyright (C) 2025 EmbedSim — EV Light Vehicle Foundation, Jaffna, Sri Lanka.
+ * \copyright Copyright (C) 2026 EmbedSim — EV Light Vehicle Foundation, Jaffna, Sri Lanka.
  *            Licensed under the MIT License.
  *********************************************************************************************************************/
 
@@ -109,7 +109,7 @@ typedef enum
 } MatrixStatus_T;
 
 /**
- * \struct Matrix_Type
+ * \struct Matrix_T
  * \brief  Matrix handle for static-allocation use.
  *
  * All storage is provided by the caller via a fixed-size buffer; no heap
@@ -128,7 +128,7 @@ typedef struct
 } Matrix_T;
 
 /**
- * \struct MatrixEigen_Type
+ * \struct MatrixEigen_T
  * \brief  Result container for eigenvalue / eigenvector decomposition.
  */
 typedef struct
@@ -140,12 +140,6 @@ typedef struct
 } MatrixEigen_T;
 
 /** \} */
-
-
-/*********************************************************************************************************************/
-/*--------------------------------------------Private Variables/Constants--------------------------------------------*/
-/*********************************************************************************************************************/
-/* None */
 
 
 /*********************************************************************************************************************/
@@ -166,57 +160,57 @@ typedef struct
  * Sets \c Rows and \c Cols to \p MaxRows and \p MaxCols respectively and
  * zero-fills the entire buffer via \c memset.
  *
- * \param[out] matrix    Matrix handle to initialise (must not be NULL).
- * \param[in]  buffer    Caller-allocated buffer of size
- *                       \p MaxRows × \p MaxCols × sizeof(#MatrixElement).
- * \param[in] MaxRows  Row capacity (1 … #MATRIX_MAX_ROWS).
- * \param[in] MaxCols  Column capacity (1 … #MATRIX_MAX_COLS).
+ * \param[out] MatrixPtr   Matrix handle to initialise (must not be NULL).
+ * \param[in]  buffer      Caller-allocated buffer of size
+ *                         \p MaxRows × \p MaxCols × sizeof(#MatrixElement).
+ * \param[in] MaxRows      Row capacity (1 … #MATRIX_MAX_ROWS).
+ * \param[in] MaxCols      Column capacity (1 … #MATRIX_MAX_COLS).
  */
 extern void Matrix_Init(
-    Matrix_T    * const Matrix_P,
-    MatrixElement  * const Buffer,
+    Matrix_T    * const MatrixPtr,
+    MatrixElement  * const buffer,
     const uint32_T MaxRows,
     const uint32_T MaxCols);
 
 /**
  * \brief  Set the active dimensions of a matrix without touching data.
  *
- * \param[in,out] matrix  Matrix handle (must not be NULL).
- * \param[in]     rows    Active rows    (1 … \c matrix->MaxRows).
- * \param[in]     cols    Active columns (1 … \c matrix->MaxCols).
+ * \param[in,out] MatrixPtr  Matrix handle (must not be NULL).
+ * \param[in]     Rows       Active rows    (1 … \c MatrixPtr->MaxRows).
+ * \param[in]     Cols       Active columns (1 … \c MatrixPtr->MaxCols).
  */
 extern void Matrix_SetDimensions(
-    Matrix_T  * const Matrix_P,
+    Matrix_T  * const MatrixPtr,
     const uint32_T Rows,
     const uint32_T Cols);
 
 /**
  * \brief  Zero all elements within the active dimensions.
  *
- * \param[in,out] matrix  Matrix handle (must not be NULL).
+ * \param[in,out] MatrixPtr  Matrix handle (must not be NULL).
  */
-extern void Matrix_Zero(Matrix_T * const Matrix_P);
+extern void Matrix_Zero(Matrix_T * const MatrixPtr);
 
 /**
  * \brief  Set a square matrix to the identity (I).
  *
- * \param[in,out] matrix  Square matrix handle (must not be NULL).
+ * \param[in,out] MatrixPtr  Square matrix handle (must not be NULL).
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_NOT_SQUARE.
  */
-extern MatrixStatus_T Matrix_Identity(Matrix_T * const Matrix_P);
+extern MatrixStatus_T Matrix_Identity(Matrix_T * const MatrixPtr);
 
 /**
- * \brief  Copy \p src into \p dest.
+ * \brief  Copy \p SrcPtr into \p DestPtr.
  *
- * \p dest must have sufficient capacity to hold all elements of \p src.
+ * \p DestPtr must have sufficient capacity to hold all elements of \p SrcPtr.
  *
- * \param[out] dest  Destination matrix (must not be NULL).
- * \param[in]  src   Source matrix (must not be NULL).
+ * \param[out] DestPtr  Destination matrix (must not be NULL).
+ * \param[in]  SrcPtr   Source matrix (must not be NULL).
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_SIZE_EXCEEDED.
  */
 extern MatrixStatus_T Matrix_Copy(
-    Matrix_T        * const Dest_P,
-    const Matrix_T  * const Src_P);
+    Matrix_T        * const DestPtr,
+    const Matrix_T  * const SrcPtr);
 
 /** \} */
 
@@ -231,14 +225,14 @@ extern MatrixStatus_T Matrix_Copy(
 /**
  * \brief  Write a real32_T value to a single element.
  *
- * \param[in,out] matrix  Target matrix (must not be NULL).
- * \param[in]     row     0-based row index (< \c Matrix_P->Rows).
- * \param[in]     col     0-based column index (< \c Matrix_P->Cols).
- * \param[in]     value   real32_T value to write.
+ * \param[in,out] MatrixPtr  Target matrix (must not be NULL).
+ * \param[in]     Row        0-based row index (< \c MatrixPtr->Rows).
+ * \param[in]     Col        0-based column index (< \c MatrixPtr->Cols).
+ * \param[in]     Value      real32_T value to write.
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_OUT_OF_BOUNDS.
  */
 extern MatrixStatus_T Matrix_SetElement(
-    Matrix_T    * const Matrix_P,
+    Matrix_T    * const MatrixPtr,
     const uint32_T Row,
     const uint32_T Col,
     const MatrixElement    Value);
@@ -246,14 +240,14 @@ extern MatrixStatus_T Matrix_SetElement(
 /**
  * \brief  Write a float value to a single element.
  *
- * \param[in,out] matrix  Target matrix (must not be NULL).
- * \param[in]     row     0-based row index.
- * \param[in]     col     0-based column index.
- * \param[in]     value   Float in [−1.0, 1.0] (clamped).
+ * \param[in,out] MatrixPtr  Target matrix (must not be NULL).
+ * \param[in]     Row        0-based row index.
+ * \param[in]     Col        0-based column index.
+ * \param[in]     Value      Float in [−1.0, 1.0] (clamped).
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_OUT_OF_BOUNDS.
  */
 extern MatrixStatus_T Matrix_SetElementFloat(
-    Matrix_T    * const Matrix_P,
+    Matrix_T    * const MatrixPtr,
     const uint32_T Row,
     const uint32_T Col,
     const MatrixFloat      Value);
@@ -261,32 +255,32 @@ extern MatrixStatus_T Matrix_SetElementFloat(
 /**
  * \brief  Read a real32_T value from a single element.
  *
- * \param[in]  matrix  Source matrix (must not be NULL).
- * \param[in]  row     0-based row index.
- * \param[in]  col     0-based column index.
- * \param[out] value   Receives the real32_T value (must not be NULL).
+ * \param[in]  MatrixPtr  Source matrix (must not be NULL).
+ * \param[in]  Row        0-based row index.
+ * \param[in]  Col        0-based column index.
+ * \param[out] ValueOutPtr Receives the real32_T value (must not be NULL).
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_OUT_OF_BOUNDS.
  */
 extern MatrixStatus_T Matrix_GetElement(
-    const Matrix_T  * const Matrix_P,
+    const Matrix_T  * const MatrixPtr,
     const uint32_T Row,
     const uint32_T Col,
-    MatrixElement      * const ValueOut_P);
+    MatrixElement      * const ValueOutPtr);
 
 /**
  * \brief  Read a single element and return it as a float.
  *
- * \param[in]  matrix  Source matrix (must not be NULL).
- * \param[in]  row     0-based row index.
- * \param[in]  col     0-based column index.
- * \param[out] value   Receives the float value (must not be NULL).
+ * \param[in]  MatrixPtr   Source matrix (must not be NULL).
+ * \param[in]  Row         0-based row index.
+ * \param[in]  Col         0-based column index.
+ * \param[out] ValueOutPtr Receives the float value (must not be NULL).
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_OUT_OF_BOUNDS.
  */
 extern MatrixStatus_T Matrix_GetElementFloat(
-    const Matrix_T  * const Matrix_P,
+    const Matrix_T  * const MatrixPtr,
     const uint32_T Row,
     const uint32_T Col,
-    MatrixFloat        * const ValueOut_P);
+    MatrixFloat        * const ValueOutPtr);
 
 /** \} */
 
@@ -299,85 +293,85 @@ extern MatrixStatus_T Matrix_GetElementFloat(
  */
 
 /**
- * \brief  Element-wise addition: \p result = \p A + \p B .
+ * \brief  Element-wise addition: \p ResultPtr = \p APtr + \p BPtr .
  *
- * \param[in]  a       Left operand.
- * \param[in]  b       Right operand (same dimensions as \p A).
- * \param[out] result  Output matrix (buffer must be ≥ \p A dimensions).
+ * \param[in]  APtr       Left operand.
+ * \param[in]  BPtr       Right operand (same dimensions as \p APtr).
+ * \param[out] ResultPtr  Output matrix (buffer must be ≥ \p APtr dimensions).
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR;
  *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SIZE_EXCEEDED.
  */
 extern MatrixStatus_T Matrix_Add(
-    const Matrix_T  * const A_P,
-    const Matrix_T  * const B_P,
-    Matrix_T        * const Result_P);
+    const Matrix_T  * const APtr,
+    const Matrix_T  * const BPtr,
+    Matrix_T        * const ResultPtr);
 
 /**
- * \brief  Element-wise subtraction: \p result = \p A − \p B .
+ * \brief  Element-wise subtraction: \p ResultPtr = \p APtr − \p BPtr .
  *
- * \param[in]  a       Minuend.
- * \param[in]  b       Subtrahend (same dimensions as \p A).
- * \param[out] result  Output matrix.
+ * \param[in]  APtr       Minuend.
+ * \param[in]  BPtr       Subtrahend (same dimensions as \p APtr).
+ * \param[out] ResultPtr  Output matrix.
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR;
  *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SIZE_EXCEEDED.
  */
 extern MatrixStatus_T Matrix_Subtract(
-    const Matrix_T  * const A_P,
-    const Matrix_T  * const B_P,
-    Matrix_T        * const Result_P);
+    const Matrix_T  * const APtr,
+    const Matrix_T  * const BPtr,
+    Matrix_T        * const ResultPtr);
 
 /**
- * \brief  Matrix multiplication: \p result = \p A × \p B .
+ * \brief  Matrix multiplication: \p ResultPtr = \p APtr × \p BPtr .
  *
- * \p A is (m × n), \p B is (n × p), \p result is (m × p).
+ * \p APtr is (m × n), \p BPtr is (n × p), \p ResultPtr is (m × p).
  *
- * \param[in]  a       Left factor  (m × n).
- * \param[in]  b       Right factor (n × p).
- * \param[out] result  Product matrix (buffer must be ≥ m × p).
+ * \param[in]  APtr       Left factor  (m × n).
+ * \param[in]  BPtr       Right factor (n × p).
+ * \param[out] ResultPtr  Product matrix (buffer must be ≥ m × p).
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR;
  *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SIZE_EXCEEDED.
  */
 extern MatrixStatus_T Matrix_Multiply(
-    const Matrix_T  * const A_P,
-    const Matrix_T  * const B_P,
-    Matrix_T        * const Result_P);
+    const Matrix_T  * const APtr,
+    const Matrix_T  * const BPtr,
+    Matrix_T        * const ResultPtr);
 
 /**
- * \brief  Scalar multiplication: \p result = \p scalar × \p matrix .
+ * \brief  Scalar multiplication: \p ResultPtr = \p Scalar × \p MatrixPtr .
  *
- * \param[in]  matrix  Input matrix.
- * \param[in]  scalar  real32_T scalar.
- * \param[out] result  Output matrix.
+ * \param[in]  MatrixPtr  Input matrix.
+ * \param[in]  Scalar     real32_T scalar.
+ * \param[out] ResultPtr  Output matrix.
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_SIZE_EXCEEDED.
  */
 extern MatrixStatus_T Matrix_ScalarMultiply(
-    const Matrix_T  * const Matrix_P,
+    const Matrix_T  * const MatrixPtr,
     const MatrixElement        Scalar,
-    Matrix_T        * const Result_P);
+    Matrix_T        * const ResultPtr);
 
 /**
  * \brief  Scalar multiplication with float input.
  *
- * \param[in]  matrix  Input matrix.
- * \param[in]  scalar  Float scalar (clamped to [−1.0, 1.0]).
- * \param[out] result  Output matrix.
+ * \param[in]  MatrixPtr  Input matrix.
+ * \param[in]  Scalar     Float scalar (clamped to [−1.0, 1.0]).
+ * \param[out] ResultPtr  Output matrix.
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_SIZE_EXCEEDED.
  */
 extern MatrixStatus_T Matrix_ScalarMultiplyFloat(
-    const Matrix_T  * const Matrix_P,
+    const Matrix_T  * const MatrixPtr,
     const MatrixFloat          Scalar,
-    Matrix_T        * const Result_P);
+    Matrix_T        * const ResultPtr);
 
 /**
- * \brief  Transpose: \p result = \p matrix ᵀ.
+ * \brief  Transpose: \p ResultPtr = \p MatrixPtr ᵀ.
  *
- * \param[in]  matrix  Input matrix (m × n).
- * \param[out] result  Output matrix (buffer must be ≥ n × m).
+ * \param[in]  MatrixPtr  Input matrix (m × n).
+ * \param[out] ResultPtr  Output matrix (buffer must be ≥ n × m).
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_SIZE_EXCEEDED.
  */
 extern MatrixStatus_T Matrix_Transpose(
-    const Matrix_T  * const Matrix_P,
-    Matrix_T        * const Result_P);
+    const Matrix_T  * const MatrixPtr,
+    Matrix_T        * const ResultPtr);
 
 /** \} */
 
@@ -394,96 +388,96 @@ extern MatrixStatus_T Matrix_Transpose(
  *
  * Delegates to the appropriately-sized specialised function below.
  *
- * \param[in]  matrix  Square input matrix (must not be NULL).
- * \param[out] det     Computed determinant (must not be NULL).
+ * \param[in]  MatrixPtr   Square input matrix (must not be NULL).
+ * \param[out] DetOutPtr   Computed determinant (must not be NULL).
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_NOT_SQUARE;
  *          #MATRIX_ERROR_SIZE_EXCEEDED; #MATRIX_ERROR_SINGULAR.
  */
 extern MatrixStatus_T Matrix_Determinant(
-    const Matrix_T  * const Matrix_P,
-    MatrixFloat        * const DetOut_P);
+    const Matrix_T  * const MatrixPtr,
+    MatrixFloat        * const DetOutPtr);
 
 /**
  * \brief  Determinant of a 2 × 2 matrix.
  *         Formula: det = a₁₁·a₂₂ − a₁₂·a₂₁ (double-precision intermediate).
  *
- * \param[in]  matrix  2 × 2 input matrix.
- * \param[out] det     Computed determinant.
+ * \param[in]  MatrixPtr  2 × 2 input matrix.
+ * \param[out] DetOutPtr  Computed determinant.
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_DIMENSION_MISMATCH.
  */
 extern MatrixStatus_T Matrix_Determinant2x2(
-    const Matrix_T  * const Matrix_P,
-    MatrixFloat        * const DetOut_P);
+    const Matrix_T  * const MatrixPtr,
+    MatrixFloat        * const DetOutPtr);
 
 /**
  * \brief  Determinant of a 3 × 3 matrix (Sarrus' rule, double precision).
  *
- * \param[in]  matrix  3 × 3 input matrix.
- * \param[out] det     Computed determinant.
+ * \param[in]  MatrixPtr  3 × 3 input matrix.
+ * \param[out] DetOutPtr  Computed determinant.
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_DIMENSION_MISMATCH.
  */
 extern MatrixStatus_T Matrix_Determinant3x3(
-    const Matrix_T  * const Matrix_P,
-    MatrixFloat        * const DetOut_P);
+    const Matrix_T  * const MatrixPtr,
+    MatrixFloat        * const DetOutPtr);
 
 /**
  * \brief  Determinant of a 4 × 4 matrix (direct formula, double precision).
  *
- * \param[in]  matrix  4 × 4 input matrix.
- * \param[out] det     Computed determinant.
+ * \param[in]  MatrixPtr  4 × 4 input matrix.
+ * \param[out] DetOutPtr  Computed determinant.
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_DIMENSION_MISMATCH.
  */
 extern MatrixStatus_T Matrix_Determinant4x4(
-    const Matrix_T  * const Matrix_P,
-    MatrixFloat        * const DetOut_P);
+    const Matrix_T  * const MatrixPtr,
+    MatrixFloat        * const DetOutPtr);
 
 /**
  * \brief  Determinant of a 5 × 5 matrix via LU decomposition.
  *
- * \param[in]  matrix  5 × 5 input matrix.
- * \param[out] det     Computed determinant.
+ * \param[in]  MatrixPtr  5 × 5 input matrix.
+ * \param[out] DetOutPtr  Computed determinant.
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR;
  *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SINGULAR.
  */
 extern MatrixStatus_T Matrix_Determinant5x5(
-    const Matrix_T  * const Matrix_P,
-    MatrixFloat        * const DetOut_P);
+    const Matrix_T  * const MatrixPtr,
+    MatrixFloat        * const DetOutPtr);
 
 /**
  * \brief  Determinant of a 6 × 6 matrix via LU decomposition.
  *
- * \param[in]  matrix  6 × 6 input matrix.
- * \param[out] det     Computed determinant.
+ * \param[in]  MatrixPtr  6 × 6 input matrix.
+ * \param[out] DetOutPtr  Computed determinant.
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR;
  *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SINGULAR.
  */
 extern MatrixStatus_T Matrix_Determinant6x6(
-    const Matrix_T  * const Matrix_P,
-    MatrixFloat        * const DetOut_P);
+    const Matrix_T  * const MatrixPtr,
+    MatrixFloat        * const DetOutPtr);
 
 /**
  * \brief  Determinant of a 7 × 7 matrix via LU decomposition.
  *
- * \param[in]  matrix  7 × 7 input matrix.
- * \param[out] det     Computed determinant.
+ * \param[in]  MatrixPtr  7 × 7 input matrix.
+ * \param[out] DetOutPtr  Computed determinant.
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR;
  *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SINGULAR.
  */
 extern MatrixStatus_T Matrix_Determinant7x7(
-    const Matrix_T  * const Matrix_P,
-    MatrixFloat        * const DetOut_P);
+    const Matrix_T  * const MatrixPtr,
+    MatrixFloat        * const DetOutPtr);
 
 /**
  * \brief  Determinant of an 8 × 8 matrix via LU decomposition.
  *
- * \param[in]  matrix  8 × 8 input matrix.
- * \param[out] det     Computed determinant.
+ * \param[in]  MatrixPtr  8 × 8 input matrix.
+ * \param[out] DetOutPtr  Computed determinant.
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR;
  *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SINGULAR.
  */
 extern MatrixStatus_T Matrix_Determinant8x8(
-    const Matrix_T  * const Matrix_P,
-    MatrixFloat        * const DetOut_P);
+    const Matrix_T  * const MatrixPtr,
+    MatrixFloat        * const DetOutPtr);
 
 /**
  * \brief  General matrix inverse dispatcher (2 × 2 … 8 × 8, Gauss-Jordan).
@@ -491,135 +485,135 @@ extern MatrixStatus_T Matrix_Determinant8x8(
  * Uses optimised closed-form implementations for 2 × 2, 3 × 3, and 4 × 4;
  * falls back to augmented Gauss-Jordan for larger sizes.
  *
- * \param[in]  matrix  Square, invertible input matrix.
- * \param[out] result  Inverse matrix (buffer must be ≥ input dimensions).
+ * \param[in]  MatrixPtr   Square, invertible input matrix.
+ * \param[out] ResultPtr   Inverse matrix (buffer must be ≥ input dimensions).
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_NOT_SQUARE;
  *          #MATRIX_ERROR_SIZE_EXCEEDED; #MATRIX_ERROR_SINGULAR.
  */
 extern MatrixStatus_T Matrix_Inverse(
-    const Matrix_T  * const Matrix_P,
-    Matrix_T        * const Result_P);
+    const Matrix_T  * const MatrixPtr,
+    Matrix_T        * const ResultPtr);
 
 /**
  * \brief  Inverse of a 2 × 2 matrix.
  *         Formula: inv(A) = (1/det) · [ a₂₂  −a₁₂; −a₂₁  a₁₁ ]
  *
- * \param[in]  matrix  2 × 2 input matrix.
- * \param[out] result  2 × 2 inverse matrix.
+ * \param[in]  MatrixPtr  2 × 2 input matrix.
+ * \param[out] ResultPtr  2 × 2 inverse matrix.
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR;
  *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SINGULAR.
  */
 extern MatrixStatus_T Matrix_Inverse2x2(
-    const Matrix_T  * const Matrix_P,
-    Matrix_T        * const Result_P);
+    const Matrix_T  * const MatrixPtr,
+    Matrix_T        * const ResultPtr);
 
 /**
  * \brief  Inverse of a 3 × 3 matrix (cofactor / adjugate method).
  *
- * \param[in]  matrix  3 × 3 input matrix.
- * \param[out] result  3 × 3 inverse matrix.
+ * \param[in]  MatrixPtr  3 × 3 input matrix.
+ * \param[out] ResultPtr  3 × 3 inverse matrix.
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR;
  *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SINGULAR.
  */
 extern MatrixStatus_T Matrix_Inverse3x3(
-    const Matrix_T  * const Matrix_P,
-    Matrix_T        * const Result_P);
+    const Matrix_T  * const MatrixPtr,
+    Matrix_T        * const ResultPtr);
 
 /**
  * \brief  Inverse of a 4 × 4 matrix (augmented Gauss-Jordan, partial pivot).
  *
- * \param[in]  matrix  4 × 4 input matrix.
- * \param[out] result  4 × 4 inverse matrix.
+ * \param[in]  MatrixPtr  4 × 4 input matrix.
+ * \param[out] ResultPtr  4 × 4 inverse matrix.
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR;
  *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SINGULAR.
  */
 extern MatrixStatus_T Matrix_Inverse4x4(
-    const Matrix_T  * const Matrix_P,
-    Matrix_T        * const Result_P);
+    const Matrix_T  * const MatrixPtr,
+    Matrix_T        * const ResultPtr);
 
 /**
  * \brief  Eigenvalue decomposition via iterative Jacobi method (symmetric matrices).
  *
- * Modifies \p matrix in-place during the sweep.  On success, the diagonal
- * of \p matrix holds the eigenvalues and \p eigen carries copies plus the
+ * Modifies \p MatrixPtr in-place during the sweep.  On success, the diagonal
+ * of \p MatrixPtr holds the eigenvalues and \p EigenOutPtr carries copies plus the
  * eigenvector columns.
  *
- * \param[in,out] matrix          Symmetric input matrix (modified in-place).
- * \param[out]    eigen           Eigenvalue / eigenvector result structure.
- * \param[in] MaxIterations  Maximum Jacobi sweeps (0 uses #JACOBI_MAX_ITER).
- * \param[in]     tolerance       Off-diagonal convergence threshold (0 uses default).
+ * \param[in,out] MatrixPtr        Symmetric input matrix (modified in-place).
+ * \param[out]    EigenOutPtr      Eigenvalue / eigenvector result structure.
+ * \param[in]     MaxIterations    Maximum Jacobi sweeps (0 uses #JACOBI_MAX_ITER).
+ * \param[in]     Tolerance        Off-diagonal convergence threshold (0 uses default).
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_NOT_SQUARE;
  *          #MATRIX_ERROR_MAX_ITERATIONS.
  */
 extern MatrixStatus_T Matrix_Eigenvalues(
-    Matrix_T      * const Matrix_P,
-    MatrixEigen_T * const EigenOut_P,
+    Matrix_T      * const MatrixPtr,
+    MatrixEigen_T * const EigenOutPtr,
     const uint32_T MaxIterations,
     const MatrixFloat        Tolerance);
 
 /**
  * \brief  Eigenvalues only (no eigenvectors; faster than #Matrix_Eigenvalues).
  *
- * \param[in,out] matrix          Symmetric input matrix (modified in-place).
- * \param[out]    eigenvalues     Array of at least \c Matrix_P->Rows floats.
- * \param[in] MaxIterations  Maximum Jacobi sweeps.
- * \param[in]     tolerance       Off-diagonal convergence threshold.
+ * \param[in,out] MatrixPtr            Symmetric input matrix (modified in-place).
+ * \param[out]    EigenvaluesOutPtr    Array of at least \c MatrixPtr->Rows floats.
+ * \param[in]     MaxIterations        Maximum Jacobi sweeps.
+ * \param[in]     Tolerance            Off-diagonal convergence threshold.
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_NOT_SQUARE;
  *          #MATRIX_ERROR_MAX_ITERATIONS.
  */
 extern MatrixStatus_T Matrix_EigenvaluesOnly(
-    Matrix_T    * const Matrix_P,
-    MatrixFloat    * const EigenvaluesOut_P,
+    Matrix_T    * const MatrixPtr,
+    MatrixFloat    * const EigenvaluesOutPtr,
     const uint32_T MaxIterations,
     const MatrixFloat      Tolerance);
 
 /**
  * \brief  LU decomposition with partial pivoting (in-place, iterative).
  *
- * On return \p matrix contains L (strict lower triangular, unit diagonal
+ * On return \p MatrixPtr contains L (strict lower triangular, unit diagonal
  * not stored) and U (upper triangular) interleaved in the standard packed
  * form, and \p pivot records the row permutation.
  *
- * \param[in,out] matrix  Square input matrix; overwritten with L+U.
- * \param[out]    pivot   Permutation array (at least \c Matrix_P->Rows entries).
+ * \param[in,out] MatrixPtr  Square input matrix; overwritten with L+U.
+ * \param[out]    pivot      Permutation array (at least \c MatrixPtr->Rows entries).
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_NOT_SQUARE;
  *          #MATRIX_ERROR_SINGULAR.
  */
 extern MatrixStatus_T Matrix_LU(
-    Matrix_T  * const Matrix_P,
+    Matrix_T  * const MatrixPtr,
     uint32_T     * const pivot);
 
 /**
  * \brief  Solve A·x = b via LU decomposition (delegates to Gauss-Jordan).
  *
- * \param[in]  a  Square coefficient matrix.
- * \param[in]  b  Right-hand side matrix or vector.
- * \param[out] x  Solution (buffer must be ≥ a->Rows × b->Cols).
+ * \param[in]  APtr  Square coefficient matrix.
+ * \param[in]  BPtr  Right-hand side matrix or vector.
+ * \param[out] XPtr  Solution (buffer must be ≥ APtr->Rows × BPtr->Cols).
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_NOT_SQUARE;
  *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SIZE_EXCEEDED;
  *          #MATRIX_ERROR_SINGULAR.
  */
 extern MatrixStatus_T Matrix_Solve(
-    const Matrix_T  * const A_P,
-    const Matrix_T  * const B_P,
-    Matrix_T        * const X_P);
+    const Matrix_T  * const APtr,
+    const Matrix_T  * const BPtr,
+    Matrix_T        * const XPtr);
 
 /**
  * \brief  Solve A·x = b via augmented Gauss-Jordan elimination (iterative).
  *
  * Well-suited for small systems (≤ 8 × 8).
  *
- * \param[in]  a  Square coefficient matrix.
- * \param[in]  b  Right-hand side matrix or vector.
- * \param[out] x  Solution.
+ * \param[in]  APtr  Square coefficient matrix.
+ * \param[in]  BPtr  Right-hand side matrix or vector.
+ * \param[out] XPtr  Solution.
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_NOT_SQUARE;
  *          #MATRIX_ERROR_DIMENSION_MISMATCH; #MATRIX_ERROR_SIZE_EXCEEDED;
  *          #MATRIX_ERROR_SINGULAR.
  */
 extern MatrixStatus_T Matrix_SolveGaussJordan(
-    const Matrix_T  * const A_P,
-    const Matrix_T  * const B_P,
-    Matrix_T        * const X_P);
+    const Matrix_T  * const APtr,
+    const Matrix_T  * const BPtr,
+    Matrix_T        * const XPtr);
 
 /** \} */
 
@@ -634,44 +628,44 @@ extern MatrixStatus_T Matrix_SolveGaussJordan(
 /**
  * \brief  Test whether a matrix is square.
  *
- * \param[in] matrix  Matrix to test (NULL → FALSE).
+ * \param[in] MatrixPtr  Matrix to test (NULL → FALSE).
  * \return   TRUE if \c Rows == \c Cols, FALSE otherwise.
  */
-extern boolean_T Matrix_IsSquare(const Matrix_T * const Matrix_P);
+extern boolean_T Matrix_IsSquare(const Matrix_T * const MatrixPtr);
 
 /**
  * \brief  Test whether a matrix is symmetric within a tolerance.
  *
- * \param[in] matrix     Matrix to test.
- * \param[in] tolerance  Maximum permitted element-wise asymmetry (float).
- *                       Pass 0.0f to use the internal default threshold.
- * \return   TRUE if |a[i][j] − a[j][i]| ≤ \p tolerance for all i, j.
+ * \param[in] MatrixPtr    Matrix to test.
+ * \param[in] Tolerance    Maximum permitted element-wise asymmetry (float).
+ *                         Pass 0.0f to use the internal default threshold.
+ * \return   TRUE if |a[i][j] − a[j][i]| ≤ \p Tolerance for all i, j.
  */
 extern boolean_T Matrix_IsSymmetric(
-    const Matrix_T  * const Matrix_P,
+    const Matrix_T  * const MatrixPtr,
     const MatrixFloat          Tolerance);
 
 /**
  * \brief  Compute the trace (sum of diagonal elements).
  *
- * \param[in]  matrix  Square input matrix.
- * \param[out] trace   Receives the trace value.
+ * \param[in]  MatrixPtr    Square input matrix.
+ * \param[out] TraceOutPtr  Receives the trace value.
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR; #MATRIX_ERROR_NOT_SQUARE.
  */
 extern MatrixStatus_T Matrix_Trace(
-    const Matrix_T  * const Matrix_P,
-    MatrixFloat        * const TraceOut_P);
+    const Matrix_T  * const MatrixPtr,
+    MatrixFloat        * const TraceOutPtr);
 
 /**
  * \brief  Compute the Frobenius norm: ‖A‖_F = √(Σᵢⱼ aᵢⱼ²).
  *
- * \param[in]  matrix  Input matrix.
- * \param[out] norm    Receives the Frobenius norm.
+ * \param[in]  MatrixPtr   Input matrix.
+ * \param[out] NormOutPtr  Receives the Frobenius norm.
  * \return  #MATRIX_SUCCESS; #MATRIX_ERROR_NULL_PTR.
  */
 extern MatrixStatus_T Matrix_NormFrobenius(
-    const Matrix_T  * const Matrix_P,
-    MatrixFloat        * const NormOut_P);
+    const Matrix_T  * const MatrixPtr,
+    MatrixFloat        * const NormOutPtr);
 
 /** \} */
 
@@ -686,14 +680,14 @@ extern MatrixStatus_T Matrix_NormFrobenius(
 /**
  * \brief  Test element-wise equality within a tolerance.
  *
- * \param[in] A          First matrix.
- * \param[in] B          Second matrix (must have same dimensions as \p A).
- * \param[in] tolerance  Maximum permitted element-wise difference (float).
- * \return   TRUE if all |a[i][j] − b[i][j]| ≤ \p tolerance.
+ * \param[in] APtr       First matrix.
+ * \param[in] BPtr       Second matrix (must have same dimensions as \p APtr).
+ * \param[in] Tolerance  Maximum permitted element-wise difference (float).
+ * \return   TRUE if all |a[i][j] − b[i][j]| ≤ \p Tolerance.
  */
 extern boolean_T Matrix_IsEqual(
-    const Matrix_T  * const A_P,
-    const Matrix_T  * const B_P,
+    const Matrix_T  * const APtr,
+    const Matrix_T  * const BPtr,
     const MatrixFloat          Tolerance);
 
 /**
@@ -701,33 +695,33 @@ extern boolean_T Matrix_IsEqual(
  *
  * Silently does nothing if any pointer is NULL.
  *
- * \param[in]  matrix  Source matrix.
- * \param[out] rows    Receives active row count.
- * \param[out] cols    Receives active column count.
+ * \param[in]  MatrixPtr   Source matrix.
+ * \param[out] RowsOutPtr  Receives active row count.
+ * \param[out] ColsOutPtr  Receives active column count.
  */
 extern void Matrix_GetDimensions(
-    const Matrix_T  * const Matrix_P,
-    uint32_T           * const RowsOut_P,
-    uint32_T           * const ColsOut_P);
+    const Matrix_T  * const MatrixPtr,
+    uint32_T           * const RowsOutPtr,
+    uint32_T           * const ColsOutPtr);
 
 /**
  * \brief  Fill all active elements with a constant real32_T value.
  *
- * \param[in,out] matrix  Target matrix (must not be NULL).
- * \param[in]     value   real32_T fill value.
+ * \param[in,out] MatrixPtr  Target matrix (must not be NULL).
+ * \param[in]     Value      real32_T fill value.
  */
 extern void Matrix_Fill(
-    Matrix_T        * const Matrix_P,
+    Matrix_T        * const MatrixPtr,
     const MatrixElement        Value);
 
 /**
  * \brief  Fill all active elements with a constant float value (auto-converted).
  *
- * \param[in,out] matrix  Target matrix (must not be NULL).
- * \param[in]     value   Float fill value (clamped to [−1.0, 1.0]).
+ * \param[in,out] MatrixPtr  Target matrix (must not be NULL).
+ * \param[in]     Value      Float fill value (clamped to [−1.0, 1.0]).
  */
 extern void Matrix_FillFloat(
-    Matrix_T    * const Matrix_P,
+    Matrix_T    * const MatrixPtr,
     const MatrixFloat      Value);
 
 /** \} */
@@ -774,67 +768,67 @@ extern MatrixFloat Matrix_Q31ToFloat(const MatrixElement Value);
 /**
  * \brief  Cholesky decomposition: A = L * L^T (positive definite symmetric)
  *
- * \param[in]  matrix  Symmetric positive definite matrix
- * \param[out] L       Lower triangular matrix (same dimensions)
+ * \param[in]  MatrixPtr  Symmetric positive definite matrix
+ * \param[out] LPtr       Lower triangular matrix (same dimensions)
  * \return  MATRIX_SUCCESS; MATRIX_ERROR_NOT_SQUARE;
  *          MATRIX_ERROR_NON_POSITIVE_DEFINITE; MATRIX_ERROR_SIZE_EXCEEDED
  */
 extern MatrixStatus_T Matrix_Cholesky(
-    const Matrix_T  * const Matrix_P,
-    Matrix_T        * const L_P);
+    const Matrix_T  * const MatrixPtr,
+    Matrix_T        * const LPtr);
 
 /**
  * \brief  Forward substitution: L * x = b (L lower triangular)
  *
- * \param[in]  L   Lower triangular matrix
- * \param[in]  b   Right-hand side
- * \param[out] x   Solution vector
+ * \param[in]  LPtr  Lower triangular matrix
+ * \param[in]  BPtr  Right-hand side
+ * \param[out] XPtr  Solution vector
  * \return  MATRIX_SUCCESS; MATRIX_ERROR_NULL_PTR; MATRIX_ERROR_DIMENSION_MISMATCH
  */
 extern MatrixStatus_T Matrix_ForwardSubstitution(
-    const Matrix_T  * const L_P,
-    const Matrix_T  * const B_P,
-    Matrix_T        * const X_P);
+    const Matrix_T  * const LPtr,
+    const Matrix_T  * const BPtr,
+    Matrix_T        * const XPtr);
 
 /**
  * \brief  Backward substitution: U * x = b (U upper triangular)
  *
- * \param[in]  U   Upper triangular matrix
- * \param[in]  b   Right-hand side
- * \param[out] x   Solution vector
+ * \param[in]  UPtr  Upper triangular matrix
+ * \param[in]  BPtr  Right-hand side
+ * \param[out] XPtr  Solution vector
  * \return  MATRIX_SUCCESS; MATRIX_ERROR_NULL_PTR; MATRIX_ERROR_DIMENSION_MISMATCH
  */
 extern MatrixStatus_T Matrix_BackwardSubstitution(
-    const Matrix_T  * const U_P,
-    const Matrix_T  * const B_P,
-    Matrix_T        * const X_P);
+    const Matrix_T  * const UPtr,
+    const Matrix_T  * const BPtr,
+    Matrix_T        * const XPtr);
 
 /**
  * \brief  Symmetric rank-1 update: A = A + alpha * v * v^T
  *
  * Used in Kalman filter covariance updates.
  *
- * \param[in,out] A     Symmetric matrix to update
- * \param[in]     v     Vector (n×1 matrix)
- * \param[in]     alpha Scalar (real32_T)
+ * \param[in,out] APtr   Symmetric matrix to update
+ * \param[in]     VPtr   Vector (n×1 matrix)
+ * \param[in]     Alpha  Scalar (real32_T)
  * \return  MATRIX_SUCCESS; MATRIX_ERROR_NULL_PTR; MATRIX_ERROR_DIMENSION_MISMATCH
  */
 extern MatrixStatus_T Matrix_SymmetricRank1Update(
-    Matrix_T        * const A_P,
-    const Matrix_T  * const V_P,
+    Matrix_T        * const APtr,
+    const Matrix_T  * const VPtr,
     const MatrixElement        Alpha);
 
 /**
  * \brief  Symmetric rank-1 update with float alpha
  *
- * \param[in,out] A     Symmetric matrix to update
- * \param[in]     v     Vector (n×1 matrix)
- * \param[in]     alpha Float scalar
+ * \param[in,out] APtr   Symmetric matrix to update
+ * \param[in]     VPtr   Vector (n×1 matrix)
+ * \param[in]     Alpha  Float scalar
  * \return  MATRIX_SUCCESS; MATRIX_ERROR_NULL_PTR; MATRIX_ERROR_DIMENSION_MISMATCH
  */
 extern MatrixStatus_T Matrix_SymmetricRank1UpdateFloat(
-    Matrix_T        * const A_P,
-    const Matrix_T  * const V_P,
+    Matrix_T        * const APtr,
+    const Matrix_T  * const VPtr,
     const MatrixFloat          Alpha);
 
 /**
@@ -842,35 +836,35 @@ extern MatrixStatus_T Matrix_SymmetricRank1UpdateFloat(
  *
  * Computes S such that S * S^T = A. Useful for square-root Kalman filters.
  *
- * \param[in]  matrix     Symmetric positive semidefinite matrix
- * \param[out] result     Square root matrix (lower triangular)
- * \param[in]  max_iter   Maximum iterations (0 = use default 10)
+ * \param[in]  MatrixPtr  Symmetric positive semidefinite matrix
+ * \param[out] ResultPtr  Square root matrix (lower triangular)
+ * \param[in]  MaxIter    Maximum iterations (0 = use default 10)
  * \return  MATRIX_SUCCESS; MATRIX_ERROR_NON_POSITIVE_DEFINITE;
  *          MATRIX_ERROR_MAX_ITERATIONS
  */
 extern MatrixStatus_T Matrix_MatrixSquareRoot(
-    const Matrix_T  * const Matrix_P,
-    Matrix_T        * const Result_P,
+    const Matrix_T  * const MatrixPtr,
+    Matrix_T        * const ResultPtr,
     const uint32_T MaxIter);
 
 /**
  * \brief  Condition number estimation (1-norm)
  *
- * \param[in]  matrix   Input matrix
- * \param[out] cond     Condition number estimate
+ * \param[in]  MatrixPtr   Input matrix
+ * \param[out] CondOutPtr  Condition number estimate
  * \return  MATRIX_SUCCESS; MATRIX_ERROR_NULL_PTR; MATRIX_ERROR_NOT_SQUARE
  */
 extern MatrixStatus_T Matrix_ConditionNumber(
-    const Matrix_T  * const Matrix_P,
-    MatrixFloat        * const CondOut_P);
+    const Matrix_T  * const MatrixPtr,
+    MatrixFloat        * const CondOutPtr);
 
 /**
  * \brief  Check if matrix is positive definite via Cholesky attempt
  *
- * \param[in]  matrix   Matrix to test
+ * \param[in]  MatrixPtr  Matrix to test
  * \return  TRUE if positive definite, FALSE otherwise
  */
-extern boolean_T Matrix_IsPositiveDefinite(const Matrix_T * const Matrix_P);
+extern boolean_T Matrix_IsPositiveDefinite(const Matrix_T * const MatrixPtr);
 
 /** \} */
 

@@ -15,7 +15,7 @@
  * \note      EmbedSim naming convention:
  *              - Functions      : Pascal_Snake_Case
  *              - Parameters     : PascalCase  (single-letter → Uppercase)
- *              - Output pointers: PascalCase_P
+ *              - Output pointers: PascalCasePtr
  *              - Local variables: Lower camelCase
  *              - Struct members : PascalCase
  *              - Macros         : UPPER_SNAKE_CASE
@@ -36,10 +36,6 @@
 #include "embed_sim_coordinate_transform.h"
 #include "embed_sim_dfc_controller.h"
 #include "embed_sim_cython_interface.h"
-#include <stdio.h>
-#include <stddef.h>
-#include <math.h>
-#include <string.h>
 
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
@@ -94,9 +90,9 @@ EmbedSimMachine_T      TractionMotor_G;          /**< Combined motor structure *
  * \param[in]  paraPtr   Pointer to motor parameters.
  * \param[out] outputPtr Pointer to output structure.
  */
-static void EmbedSim_OpenLoopStep(EmbedSimCtrlInput_T* const inputPtr,
-                                  EmbedSimMachineParam_T* const paraPtr,
-                                  EmbedSimCtrlOutput_T* const outputPtr);
+static void EmbedSim_OpenLoopStep(EmbedSimCtrlInput_T* const InputPtr,
+                                  EmbedSimMachineParam_T* const ParaPtr,
+                                  EmbedSimCtrlOutput_T* const OutputPtr);
 
 
 /**
@@ -134,12 +130,12 @@ static void EmbedSim_ControlStatePrint(const EmbedSimMotorState_T* const StatePt
  *          velocity, generates DQ voltage commands, and converts them to duty
  *          cycles using Space Vector PWM (SVPWM).
  *
- * \param[in]  inputPtr   Pointer to input structure containing:
+ * \param[in]  InputPtr   Pointer to input structure containing:
  *                        - AngularVelocityRef: Target angular velocity (rad/s)
  *                        - SampleTime: Time step for integration (s)
  *                        - Valid: Flag indicating if input data is valid
- * \param[in]  paraPtr    Pointer to motor parameters (Vdc, pole pairs).
- * \param[out] outputPtr  Pointer to output structure where results are stored:
+ * \param[in]  ParaPtr    Pointer to motor parameters (Vdc, pole pairs).
+ * \param[out] OutputPtr  Pointer to output structure where results are stored:
  *                        - DutyU, DutyV, DutyW: PWM duty cycles [0, 1]
  *                        - SvmSector: Active SVPWM sector (if valid)
  *                        - Valid: Status flag (0x1 if valid, 0x0 if invalid)
@@ -147,9 +143,9 @@ static void EmbedSim_ControlStatePrint(const EmbedSimMotorState_T* const StatePt
  * \note The modulation index is fixed at 0.2 in this implementation.
  * \note The rotor angle is wrapped to the range [0, 2π) after each step.
  */
-static void EmbedSim_OpenLoopStep(EmbedSimCtrlInput_T*    const inputPtr,
-                                  EmbedSimMachineParam_T* const paraPtr,
-                                  EmbedSimCtrlOutput_T*   const outputPtr)
+static void EmbedSim_OpenLoopStep(EmbedSimCtrlInput_T*    const InputPtr,
+                                  EmbedSimMachineParam_T* const ParaPtr,
+                                  EmbedSimCtrlOutput_T*   const OutputPtr)
 {
     static real32_T rotorAngleE = 0.0F;    /**< Electrical rotor angle [rad]        */
     FocAngle_T      focAngle;              /**< Field-oriented control angle        */
@@ -159,21 +155,21 @@ static void EmbedSim_OpenLoopStep(EmbedSimCtrlInput_T*    const inputPtr,
     real32_T        modulation;            /**< Modulation index (fixed at 0.2)     */
 
     /* Initialise outputs to safe default values */
-    outputPtr->DutyU = 0.5F;
-    outputPtr->DutyV = 0.5F;
-    outputPtr->DutyW = 0.5F;
-    outputPtr->Valid = 0x0U;
+    OutputPtr->DutyU = 0.5F;
+    OutputPtr->DutyV = 0.5F;
+    OutputPtr->DutyW = 0.5F;
+    OutputPtr->Valid = 0x0U;
 
     modulation = 0.2F;  /* Fixed modulation index for open-loop */
 
     /* Only execute if input data is valid */
-    if (inputPtr->Valid == 0x1U)
+    if(InputPtr->Valid == 0x1U)
     {
         /* Calculate electrical angular velocity (mechanical × pole pairs) */
-        angularVelocityE = inputPtr->RotorVelocityRefM * paraPtr->PolePairs;
+        angularVelocityE = InputPtr->RotorVelocityRefM * ParaPtr->PolePairs;
 
         /* Update rotor angle by integration */
-        rotorAngleE += (angularVelocityE * inputPtr->SampleTime);
+        rotorAngleE += (angularVelocityE * InputPtr->SampleTime);
         EmbedSim_WrapAngleTwoPi(&rotorAngleE);
 
         focAngle.ThetaE = rotorAngleE;
@@ -182,16 +178,16 @@ static void EmbedSim_OpenLoopStep(EmbedSimCtrlInput_T*    const inputPtr,
         dqVoltage.D = 0.0F;
 
         /* Vq magnitude = modulation × (Vdc/√3) */
-        dqVoltage.Q = (paraPtr->Vdc / SVM_SQRT3_F) * modulation;
+        dqVoltage.Q = (ParaPtr->Vdc / SVM_SQRT3_F) * modulation;
 
         /* Convert dq voltage to PWM using SVPWM */
-        if (SVM_CalculateDutyCycleFromDq(&dqVoltage, &focAngle, paraPtr->Vdc, &svmDC) == MATRIX_SUCCESS)
+        if (SVM_CalculateDutyCycleFromDq(&dqVoltage, &focAngle, ParaPtr->Vdc, &svmDC) == MATRIX_SUCCESS)
         {
-            outputPtr->DutyU = svmDC.Ta;
-            outputPtr->DutyV = svmDC.Tb;
-            outputPtr->DutyW = svmDC.Tc;
-            outputPtr->SvmSector = svmDC.Sector;
-            outputPtr->Valid = 0x1U;
+            OutputPtr->DutyU = svmDC.Ta;
+            OutputPtr->DutyV = svmDC.Tb;
+            OutputPtr->DutyW = svmDC.Tc;
+            OutputPtr->SvmSector = svmDC.Sector;
+            OutputPtr->Valid = 0x1U;
         }
     }
 }
@@ -240,16 +236,15 @@ void EmbedSim_ExecuteObserver(EmbedSimMachine_T* const MotorPtr)
     iPtr->LoopCounter++;
 
     /* Clamp RPM reference to maximum speed */
-    iPtr->AngularVelocityRefRpmM = EmbedSim_ClampValue(iPtr->AngularVelocityRefRpmM,
-                                                        -MAX_SPEED_RPM, MAX_SPEED_RPM);
-    iPtr->RotorVelocityRefM = CON_RPM_TO_RAD(iPtr->AngularVelocityRefRpmM);
+    iPtr->AngularVelocityRefRpmM = EmbedSim_ClampValue(iPtr->AngularVelocityRefRpmM, -MAX_SPEED_RPM, MAX_SPEED_RPM);
+    iPtr->RotorVelocityRefM = ES_CON_RPM_TO_RAD(iPtr->AngularVelocityRefRpmM);
 
     /* Copy observer estimates (already validated by the observer module) */
     iPtr->RotorPositionObsEstM = iPtr->RotorPositionSensorM;
     iPtr->RotorSpeedObsEstM    = iPtr->RotorSpeedSensorM;
 
     /* Only update the model angle when in closed‑loop control */
-    if (iPtr->SwitchToClosedLoop == 0x1U)
+    if(iPtr->SwitchToClosedLoop == 0x1U)
     {
         /* Compute electrical angle from mechanical position */
         rotorSensorPosE = iPtr->RotorPositionObsEstM * mPtr->PolePairs;
@@ -264,7 +259,7 @@ void EmbedSim_ExecuteObserver(EmbedSimMachine_T* const MotorPtr)
          */
         leadAngle = ES_SVM_LEAD_ANGLE_RAD;
 
-        if (iPtr->RotorVelocityRefM > 0.0F)
+        if(iPtr->RotorVelocityRefM > 0.0F)
         {
             /* FORWARD: SVM should be AHEAD of rotor by leadAngle */
             desiredSvmAngle = rotorSensorPosE + leadAngle;
@@ -311,7 +306,7 @@ void EmbedSim_ExecuteObserver(EmbedSimMachine_T* const MotorPtr)
          * ============================================================
          */
 
-        if (iPtr->RotorVelocityRefM > 0.0F)
+        if(iPtr->RotorVelocityRefM > 0.0F)
         {
             /* FORWARD: angleDiff MUST be positive (model increases) */
             if (angleDiff < 0.0F)
@@ -362,22 +357,26 @@ void EmbedSim_ExecuteObserver(EmbedSimMachine_T* const MotorPtr)
          * Half-sample delay compensation (only when locked)
          * Predicts rotor movement during measurement delay
          */
-        if (absErr < ES_ANGLE_CORR_THRESHOLD_RAD)
+        if(absErr < ES_ANGLE_CORR_THRESHOLD_RAD)
         {
-            omegaE = CON_RPM_TO_RAD(iPtr->RotorSpeedObsEstM) * mPtr->PolePairs;
+            omegaE = ES_CON_RPM_TO_RAD(iPtr->RotorSpeedObsEstM) * mPtr->PolePairs;
             feedforward = omegaE * ES_MEASUREMENT_DELAY_FACTOR * iPtr->SampleTime;
-            feedforward = EmbedSim_ClampValue(feedforward,
-                                              -ES_MAX_ANGLE_STEP_RAD,
-                                               ES_MAX_ANGLE_STEP_RAD);
+            feedforward = EmbedSim_ClampValue(feedforward, -ES_MAX_ANGLE_STEP_RAD, ES_MAX_ANGLE_STEP_RAD);
 
             /* Direction protection for feedforward */
             if (iPtr->RotorVelocityRefM > 0.0F)
             {
-                if (feedforward < 0.0F) { feedforward = 0.0F; }
+                if(feedforward < 0.0F)
+                {
+                    feedforward = 0.0F;
+                }
             }
             else if (iPtr->RotorVelocityRefM < 0.0F)
             {
-                if (feedforward > 0.0F) { feedforward = 0.0F; }
+                if(feedforward > 0.0F)
+                {
+                    feedforward = 0.0F;
+                }
             }
 
             mPtr->SvmRotorThetaE += feedforward;
@@ -671,10 +670,10 @@ void EmbedSim_CalculateJerkLimitedTrajectory(EmbedSimCtrlInput_T* const InputPtr
      * Convert the requested target speed from RPM to rad/s and
      * limit it to the configured maximum speed.
      */
-    targetOmega = CON_RPM_TO_RAD(InputPtr->AngularVelocityRefRpmM);
-    speedMax    = CON_RPM_TO_RAD(MAX_SPEED_RPM);
-    accelMax    = CON_RPM_TO_RAD(MAX_ACCEL_RPM);
-    jerkMax     = CON_RPM_TO_RAD(MAX_JERK_RPM);
+    targetOmega = ES_CON_RPM_TO_RAD(InputPtr->AngularVelocityRefRpmM);
+    speedMax    = ES_CON_RPM_TO_RAD(MAX_SPEED_RPM);
+    accelMax    = ES_CON_RPM_TO_RAD(MAX_ACCEL_RPM);
+    jerkMax     = ES_CON_RPM_TO_RAD(MAX_JERK_RPM);
 
     /*
      * Reset the dynamic trajectory states when control
@@ -785,36 +784,6 @@ void EmbedSim_CalculateJerkLimitedTrajectory(EmbedSimCtrlInput_T* const InputPtr
 }
 
 
-void EmbedSim_WrapAngleTwoPi(real32_T* AnglePtr)
-{
-    *AnglePtr = fmodf(*AnglePtr, ES_MATH_2PI_F);
-    if(*AnglePtr < 0.0F)
-    {
-        *AnglePtr += ES_MATH_2PI_F;
-    }
-}
-
- real32_T EmbedSim_ClampValue(real32_T Val, real32_T MinVal, real32_T MaxVal)
- {
-     real32_T result;
-
-     if(Val < MinVal)
-     {
-         result = MinVal;
-     }
-     else if (Val > MaxVal)
-     {
-         result = MaxVal;
-     }
-     else
-     {
-         result = Val;
-     }
-
-     return result;
- }
-
-
  real32_T EmbedSim_AngleDistance(real32_T ObservedAngle, real32_T ModelAngle)
  {
      real32_T angleDistance;
@@ -838,7 +807,6 @@ void EmbedSim_WrapAngleTwoPi(real32_T* AnglePtr)
  }
 
 
-
 void EmbedSim_ControlDebug(const EmbedSimMachine_T * const MotorPtr)
 {
    const EmbedSimCtrlInput_T * const inputPtr = MotorPtr->InputPtr;
@@ -860,26 +828,13 @@ void EmbedSim_ControlDebug(const EmbedSimMachine_T * const MotorPtr)
    printf("  Iv                  = %10.5f A\n", inputPtr->Iv);
    printf("  Iw                  = %10.5f A\n", inputPtr->Iw);
 
-   printf("  RotorPosition       = %10.6f rad\n",
-          inputPtr->RotorPositionSensorM);
-
-   printf("  RotorSpeed          = %10.3f RPM\n",
-          inputPtr->RotorSpeedSensorM);
-
-   printf("  SpeedReference      = %10.3f RPM\n",
-          inputPtr->AngularVelocityRefRpmM);
-
-   printf("  Vdc                 = %10.4f V\n",
-          inputPtr->Vdc);
-
-   printf("  SampleTime          = %10.8f s\n",
-          inputPtr->SampleTime);
-
-   printf("  CtrlAlg             = %u\n",
-          inputPtr->CtrlAlg);
-
-   printf("  Valid               = %u\n",
-          inputPtr->Valid);
+   printf("  RotorPosition       = %10.6f rad\n", inputPtr->RotorPositionSensorM);
+   printf("  RotorSpeed          = %10.3f RPM\n", inputPtr->RotorSpeedSensorM);
+   printf("  SpeedReference      = %10.3f RPM\n", inputPtr->AngularVelocityRefRpmM);
+   printf("  Vdc                 = %10.4f V\n", inputPtr->Vdc);
+   printf("  SampleTime          = %10.8f s\n", inputPtr->SampleTime);
+   printf("  CtrlAlg             = %u\n", inputPtr->CtrlAlg);
+   printf("  Valid               = %u\n", inputPtr->Valid);
 
 
    /* ------------------------------------------------------------
@@ -888,11 +843,7 @@ void EmbedSim_ControlDebug(const EmbedSimMachine_T * const MotorPtr)
    printf("\n");
    printf("MACHINE PARAMETERS\n");
    printf("------------------------------------------------------------\n");
-
-   printf("  Vdc                 = %10.4f V\n",
-          paraPtr->Vdc);
-
-
+   printf("  Vdc                 = %10.4f V\n", paraPtr->Vdc);
    /* ------------------------------------------------------------
     * Controller outputs
     * ------------------------------------------------------------ */
@@ -900,17 +851,11 @@ void EmbedSim_ControlDebug(const EmbedSimMachine_T * const MotorPtr)
    printf("OUTPUTS\n");
    printf("------------------------------------------------------------\n");
 
-   printf("  DutyU               = %10.6f\n",
-          outputPtr->DutyU);
+   printf("  DutyU               = %10.6f\n", outputPtr->DutyU);
+   printf("  DutyV               = %10.6f\n", outputPtr->DutyV);
+   printf("  DutyW               = %10.6f\n", outputPtr->DutyW);
 
-   printf("  DutyV               = %10.6f\n",
-          outputPtr->DutyV);
-
-   printf("  DutyW               = %10.6f\n",
-          outputPtr->DutyW);
-
-   printf("  Valid               = %u\n",
-          outputPtr->Valid);
+   printf("  Valid               = %u\n", outputPtr->Valid);
 
    printf("============================================================\n");
 

@@ -52,25 +52,6 @@
  */
 #define ES_SIM_OP_MODE    (0x1U)
 
-
-/**
- * @def ES_SVM_START_MOD_FUNC(TAU)
- * @brief Calculates a smooth start modulation factor.
- *
- * Uses a cubic smoothstep function:
- * @code
- * f(TAU) = 3 * TAU^2 - 2 * TAU^3
- * @endcode
- *
- * When @p TAU is in the range [0, 1], the function smoothly transitions
- * from 0 to 1 with zero slope at both endpoints.
- *
- * @param[in] TAU Normalized modulation time, typically in the range [0, 1].
- * @return Smooth modulation factor in the range [0, 1] for TAU in [0, 1].
- */
-
-#define ES_SVM_START_MOD_FUNC(TAU)   ((3.0 * (TAU) * (TAU)) - (2.0 * (TAU) * (TAU) * (TAU)))
-
 /**
  * \brief  Maximum speed in RPM
  */

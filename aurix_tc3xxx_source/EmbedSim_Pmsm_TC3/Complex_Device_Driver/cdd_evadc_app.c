@@ -267,25 +267,19 @@ EMBED_SIM_INTERRUPT(EVADC_ConvPhaseU_Isr, 0x0U, CORE_00_ADC_PHASE_U_SRPN);
 void EVADC_ConvPhaseU_Isr(void)
 {
     CddEvadc_ReadPhaseU(&CddApp_G);
-    CddSys_NopDelay(1U, 1U);
 
 }
 
 EMBED_SIM_INTERRUPT(EVADC_ConvPhaseV_Isr, 0x0U, CORE_00_ADC_PHASE_V_SRPN);
 void EVADC_ConvPhaseV_Isr(void)
 {
-
      CddEvadc_ReadPhaseV(&CddApp_G);
-
-
 }
 
 EMBED_SIM_INTERRUPT(EVADC_ConvPhaseW_Isr, 0x0U, CORE_00_ADC_PHASE_W_SRPN);
 void EVADC_ConvPhaseW_Isr(void)
 {
-
     CddEvadc_ReadPhaseW(&CddApp_G);
-
 }
 
 
@@ -325,7 +319,6 @@ static void CddEvadc_ConfigGlobal(void)
     EVADC_GLOBCFG.U  = globCfg.U;
 
 }
-
 
 
 /**********************************************************************************************************************
@@ -405,7 +398,7 @@ void CddEvadc_ConfigG0Ch0An0PhaseU(void)
     /* Enable Trigger & Gate for Request */
     qQmr.B.ENGT       = 0x1U;  /* Requests issued, gate ignored */
     qQmr.B.ENTR       = 0x1U;  /* External trigger enabled      */
-    EVADC_G0QMR0.U     = qQmr.U;
+    EVADC_G0QMR0.U    = qQmr.U;
 
     /* Configure Channel Settings */
     /*The global input class registers define the sample time and data conversion mode for each channel of any group
@@ -631,7 +624,6 @@ void CddEvadc_ConfigG2Ch0An16PhaseW(void)
     srcCfg.B.TOS         = 0x0u;
     SRC_VADC_G2_SR0.U    = srcCfg.U;
     SRC_VADC_G2_SR0.B.SRE = EVADC_ENABLE_PHASE_W_SR;
-
 }
 
 void CddEvadc_ConfigG01VroUdc(void)

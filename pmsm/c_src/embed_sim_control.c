@@ -361,18 +361,22 @@ void EmbedSim_ExecuteObserver(EmbedSimMachine_T* const MotorPtr)
         {
             omegaE = ES_CON_RPM_TO_RAD(iPtr->RotorSpeedObsEstM) * mPtr->PolePairs;
             feedforward = omegaE * ES_MEASUREMENT_DELAY_FACTOR * iPtr->SampleTime;
-            feedforward = EmbedSim_ClampValue(feedforward,
-                                              -ES_MAX_ANGLE_STEP_RAD,
-                                               ES_MAX_ANGLE_STEP_RAD);
+            feedforward = EmbedSim_ClampValue(feedforward, -ES_MAX_ANGLE_STEP_RAD, ES_MAX_ANGLE_STEP_RAD);
 
             /* Direction protection for feedforward */
             if (iPtr->RotorVelocityRefM > 0.0F)
             {
-                if (feedforward < 0.0F) { feedforward = 0.0F; }
+                if(feedforward < 0.0F)
+                {
+                    feedforward = 0.0F;
+                }
             }
             else if (iPtr->RotorVelocityRefM < 0.0F)
             {
-                if (feedforward > 0.0F) { feedforward = 0.0F; }
+                if(feedforward > 0.0F)
+                {
+                    feedforward = 0.0F;
+                }
             }
 
             mPtr->SvmRotorThetaE += feedforward;
@@ -824,26 +828,13 @@ void EmbedSim_ControlDebug(const EmbedSimMachine_T * const MotorPtr)
    printf("  Iv                  = %10.5f A\n", inputPtr->Iv);
    printf("  Iw                  = %10.5f A\n", inputPtr->Iw);
 
-   printf("  RotorPosition       = %10.6f rad\n",
-          inputPtr->RotorPositionSensorM);
-
-   printf("  RotorSpeed          = %10.3f RPM\n",
-          inputPtr->RotorSpeedSensorM);
-
-   printf("  SpeedReference      = %10.3f RPM\n",
-          inputPtr->AngularVelocityRefRpmM);
-
-   printf("  Vdc                 = %10.4f V\n",
-          inputPtr->Vdc);
-
-   printf("  SampleTime          = %10.8f s\n",
-          inputPtr->SampleTime);
-
-   printf("  CtrlAlg             = %u\n",
-          inputPtr->CtrlAlg);
-
-   printf("  Valid               = %u\n",
-          inputPtr->Valid);
+   printf("  RotorPosition       = %10.6f rad\n", inputPtr->RotorPositionSensorM);
+   printf("  RotorSpeed          = %10.3f RPM\n", inputPtr->RotorSpeedSensorM);
+   printf("  SpeedReference      = %10.3f RPM\n", inputPtr->AngularVelocityRefRpmM);
+   printf("  Vdc                 = %10.4f V\n", inputPtr->Vdc);
+   printf("  SampleTime          = %10.8f s\n", inputPtr->SampleTime);
+   printf("  CtrlAlg             = %u\n", inputPtr->CtrlAlg);
+   printf("  Valid               = %u\n", inputPtr->Valid);
 
 
    /* ------------------------------------------------------------
@@ -852,11 +843,7 @@ void EmbedSim_ControlDebug(const EmbedSimMachine_T * const MotorPtr)
    printf("\n");
    printf("MACHINE PARAMETERS\n");
    printf("------------------------------------------------------------\n");
-
-   printf("  Vdc                 = %10.4f V\n",
-          paraPtr->Vdc);
-
-
+   printf("  Vdc                 = %10.4f V\n", paraPtr->Vdc);
    /* ------------------------------------------------------------
     * Controller outputs
     * ------------------------------------------------------------ */
@@ -864,17 +851,11 @@ void EmbedSim_ControlDebug(const EmbedSimMachine_T * const MotorPtr)
    printf("OUTPUTS\n");
    printf("------------------------------------------------------------\n");
 
-   printf("  DutyU               = %10.6f\n",
-          outputPtr->DutyU);
+   printf("  DutyU               = %10.6f\n", outputPtr->DutyU);
+   printf("  DutyV               = %10.6f\n", outputPtr->DutyV);
+   printf("  DutyW               = %10.6f\n", outputPtr->DutyW);
 
-   printf("  DutyV               = %10.6f\n",
-          outputPtr->DutyV);
-
-   printf("  DutyW               = %10.6f\n",
-          outputPtr->DutyW);
-
-   printf("  Valid               = %u\n",
-          outputPtr->Valid);
+   printf("  Valid               = %u\n", outputPtr->Valid);
 
    printf("============================================================\n");
 

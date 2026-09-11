@@ -20,6 +20,21 @@
  *                             no function equivalent exists for storage class
  *                             specifiers or type qualifiers.
  *
+ * \note        EmbedSim naming convention:
+ *              - Functions      : Pascal_Snake_Case
+ *              - Parameters     : PascalCase  (single-letter → Uppercase)
+ *              - Output pointers: PascalCasePtr
+ *              - Local variables: lowerPascalCase
+ *              - Struct members : PascalCase
+ *              - Macros         : UPPER_SNAKE_CASE
+ *              - Typedefs       : Pascal_Snake_Case_T
+ *
+ * \note        The formal parameters of the function-like macros in this file
+ *              follow the EmbedSim "Parameters : PascalCase" rule even though
+ *              the AUTOSAR reference text writes them in lower case.  Macro
+ *              formal parameter names have no linkage and do not appear in
+ *              compiled output, so this is purely a source-style choice.
+ *
  * \version     1.0.0
  * \date        2025-05-24
  * \author      EmbedSim / EV Light Vehicle Foundation
@@ -70,40 +85,40 @@
  *
  * Usage examples:
  *
- *   void  CddQspi4_Exchange(P2CONST(uint32_T, AUTOMATIC, CDD_APPL_DATA) txBuf,
- *                           P2VAR  (uint32_T, AUTOMATIC, CDD_APPL_DATA) rxBuf,
- *                           uint32_T count);
+ *   void  CddQspi4_Exchange(P2CONST(uint32_T, AUTOMATIC, CDD_APPL_DATA) TxBuf,
+ *                           P2VAR  (uint32_T, AUTOMATIC, CDD_APPL_DATA) RxBuf,
+ *                           uint32_T Count);
  *
- *   void  CddSys_AcquireSpinLock(CONSTP2VAR(uint32_T, AUTOMATIC, CDD_APPL_DATA) lockPtr);
+ *   void  CddSys_AcquireSpinLock(CONSTP2VAR(uint32_T, AUTOMATIC, CDD_APPL_DATA) LockPtr);
  * ───────────────────────────────────────────────────────────────────────────*/
 
 /**
  * \brief  Pointer to variable data.  The pointer itself may be re-seated.
- *         \p ptrtype  pointed-at type  \p memclass  memory section of pointed data
- *         \p ptrclass memory section of the pointer variable itself
+ *         \p PtrType   pointed-at type          \p MemClass  memory section of pointed data
+ *         \p PtrClass  memory section of the pointer variable itself
  */
-#define P2VAR(ptrtype, memclass, ptrclass)          ptrtype *               /* PRQA S 3453 */
+#define P2VAR(PtrType, MemClass, PtrClass)          PtrType *               /* PRQA S 3453 */
 
 /**
  * \brief  Pointer to constant data.  The pointed-at value is read-only.
  */
-#define P2CONST(ptrtype, memclass, ptrclass)        const ptrtype *         /* PRQA S 3453 */
+#define P2CONST(PtrType, MemClass, PtrClass)        const PtrType *         /* PRQA S 3453 */
 
 /**
  * \brief  Constant pointer to variable data.  The pointer address is fixed
  *         (e.g. a pointer passed by address and never re-seated by callee).
  */
-#define CONSTP2VAR(ptrtype, memclass, ptrclass)     ptrtype * const         /* PRQA S 3453 */
+#define CONSTP2VAR(PtrType, MemClass, PtrClass)     PtrType * const         /* PRQA S 3453 */
 
 /**
  * \brief  Constant pointer to constant data.
  */
-#define CONSTP2CONST(ptrtype, memclass, ptrclass)   const ptrtype * const   /* PRQA S 3453 */
+#define CONSTP2CONST(PtrType, MemClass, PtrClass)   const PtrType * const   /* PRQA S 3453 */
 
 /**
  * \brief  Pointer to a function.
- *         \p rettype  return type  \p ptrclass  memory class  \p fctname  pointer name
+ *         \p RetType  return type  \p PtrClass  memory class  \p FctName  pointer name
  */
-#define P2FUNC(rettype, ptrclass, fctname)          rettype (* fctname)     /* PRQA S 3453 */
+#define P2FUNC(RetType, PtrClass, FctName)          RetType (* FctName)     /* PRQA S 3453 */
 
 #endif /* EMBED_SIM_COMPILER_H */

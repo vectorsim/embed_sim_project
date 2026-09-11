@@ -23,7 +23,7 @@
  * \note      EmbedSim naming convention:
  *              - Functions      : Pascal_Snake_Case
  *              - Parameters     : PascalCase
- *              - Output pointers: PascalCase_P
+ *              - Output pointers: PascalCasePtr
  *              - Local variables: Lower camelCase
  *              - Struct members : PascalCase
  *              - Macros         : UPPER_SNAKE_CASE
@@ -78,7 +78,7 @@
  */
 #define DFC_STARTUP_DURATION_S          (3.0F)
 
- #define DFC_SIM_INVERTER               (0x0U)
+
 
 /*********************************************************************************************************************/
 /*--------------------------------------------------Private Data-----------------------------------------------------*/
@@ -240,7 +240,7 @@ void DFC_Step(EmbedSimMachine_T* const MotorPtr)
 
         machinePtr->SvmModulationIndex = DFC_STARTUP_MOD_MIN + (tauStart * (DFC_STARTUP_MOD_MAX - DFC_STARTUP_MOD_MIN));
         machinePtr->SvmModulationIndex = EmbedSim_ClampValue(machinePtr->SvmModulationIndex, DFC_STARTUP_MOD_MIN, DFC_STARTUP_MOD_MAX);
-        machinePtr->SvmRotorThetaE += (machinePtr->PolePairs * CON_RPM_TO_RAD(inputPtr->AngularVelocityRefRpmM * tauStart) * inputPtr->SampleTime);
+        machinePtr->SvmRotorThetaE += (machinePtr->PolePairs * ES_CON_RPM_TO_RAD(inputPtr->AngularVelocityRefRpmM * tauStart) * inputPtr->SampleTime);
         EmbedSim_WrapAngleTwoPi(&machinePtr->SvmRotorThetaE);
         SVM_CalculateDutyCycle(machinePtr->SvmModulationIndex, &machinePtr->SvmRotorThetaE, &startupSvmDC);
 
@@ -282,7 +282,7 @@ void DFC_Step(EmbedSimMachine_T* const MotorPtr)
         omegaRef     = inputPtr->RotorVelocityRefM;
         omegaRefDot  = inputPtr->RotorAccelerationRefM;
         omegaRefDDot = inputPtr->RotorJerkRefM;
-        omegaMeas    = CON_RPM_TO_RAD(inputPtr->RotorSpeedObsEstM);
+        omegaMeas    = ES_CON_RPM_TO_RAD(inputPtr->RotorSpeedObsEstM);
 
         /* ---------- Speed PI (outer loop) ---------- */
         speedError = omegaRef - omegaMeas;
@@ -356,7 +356,7 @@ void DFC_Step(EmbedSimMachine_T* const MotorPtr)
         InvPark_Transform_Matrix(&dqVoltage, &focAngle, &abVoltage);
 
 
-#if DFC_SIM_INVERTER != 0x1U
+#if ES_SIM_OP_MODE == 0x0U
 
         vMag = sqrtf(abVoltage.Alpha*abVoltage.Alpha + abVoltage.Beta*abVoltage.Beta);
         machinePtr->SvmModulationIndex = vMag / (machinePtr->Vdc / DFC_SQRT3_F);
