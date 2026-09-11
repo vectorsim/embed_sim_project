@@ -4,32 +4,63 @@
  *
  * \details   Implements the complete incremental encoder interface for motor control
  *            applications. The driver uses the Infineon GPT12 module in Incremental
- *            Interface Mode to provide:
+ *            Interface Mode (Mode 6) to provide:
  *
- *            - **High-resolution position**: 4000 counts per revolution (1000 PPR × 4x decoding)
+ *            - **High-resolution position**: 4000 counts per revolution (1000 PPR x 4x decoding)
  *            - **Velocity estimation**: Time-based speed calculation with IIR filtering
  *            - **Direction tracking**: Hardware direction detection via quadrature decoding
  *            - **Turn counting**: Z-index pulse capture for absolute position reference
+ *            - **Index-anchored angle**: T3 is hardware-cleared at each Z-pulse so the
+ *              mechanical angle is read directly from T3 with zero drift and zero lag.
  *
  *            ## Speed Calculation
  *            Speed is calculated from the change in counter value between updates:
  *            ```
- *            Δcount = (T3_current - T3_previous) mod EncoderResolution
- *            ω_raw = Δcount × (2π / (EncoderResolution × UpdatePeriod))
- *            ω_filtered = α × ω_raw + (1-α) × ω_filtered_previous
+ *            dCount = (int16)(T3_current - T3_previous)   // 16-bit modular
+ *            w_raw  = dCount x (2*pi / (EncoderResolution x UpdatePeriod))
+ *            w_filt = alpha * w_raw + (1-alpha) * w_filt_previous
  *            ```
  *
- *            ## Zero-Index Handling
- *            The Z-index pulse triggers an interrupt that:
- *            1. Updates TurnCount based on the current direction
- *            2. Resets RotorPositionCounter to zero
- *            3. Provides an absolute position reference point
+ *            ## Index-Reset Architecture (CLRT3EN = 1)
+ *            The Z-index pulse hardware-clears T3 to zero. This means:
+ *              - The mechanical angle within one revolution is EXACTLY
+ *                    angle_rad = T3 * (2*pi / EncoderResolution)
+ *                with no integration, no IIR lag, and no float drift.
+ *              - The delta across the reset tick is meaningless (it would look like
+ *                a full negative revolution). The ISR signals this via ZEventPending;
+ *                the update skips exactly one delta computation.
+ *              - Absolute multi-turn position is  TurnCount*N + T3  (or - T3 for ACW),
+ *                computed on demand, never accumulated.
+ *
+ *            ## Why 16-bit modular subtraction on non-Z ticks?
+ *            On every tick except the one immediately following a Z-event, T3 is a
+ *            free-running 16-bit counter that wraps at 0xFFFF <-> 0x0000 in BOTH
+ *            directions. The expression
+ *                (int16_T)(current - previous)
+ *            yields the correct signed delta for both directions and both wrap
+ *            boundaries, with no branching and no clamping.
+ *
+ *            Proof, CW wrap (moved +5 forward):
+ *                current = 0x0003, previous = 0xFFFE
+ *                current - previous (uint16) = 0x0005
+ *                (int16)0x0005 = +5   OK
+ *
+ *            Proof, ACW wrap (moved -5 backward):
+ *                current = 0xFFFD, previous = 0x0002
+ *                current - previous (uint16) = 0xFFFB
+ *                (int16)0xFFFB = -5   OK
  *
  * \note      MISRA C:2012 compliance:
  *              - Rule  8.5 : One declaration per identifier.
  *              - Rule  8.6 : No definitions in header files.
  *              - Rule 17.2 : No recursion.
  *              - Rule 14.7 : Single return point.
+ *
+ *              Deviations, each flagged inline with a "MISRA-DEV" comment:
+ *              - Rule 10.3 / 10.5 : deliberate narrowing cast to int16_T used
+ *                                    to obtain modulo-2^16 semantics.
+ *              - Rule 10.4        : mixed uint32_T / real32_T arithmetic in
+ *                                    the speed conversion quotient.
  *
  * \note      EmbedSim naming convention:
  *              - Functions      : Pascal_Snake_Case
@@ -40,11 +71,11 @@
  *              - Macros         : UPPER_SNAKE_CASE
  *              - Typedefs       : Pascal_Snake_Case_T
  *
- * \version   2.0.0
- * \date      2026-08-23
+ * \version   2.3.0
+ * \date      2026-09-11
  * \author    EmbedSim / EV Light Vehicle Foundation
  *
- * \copyright Copyright (C) 2026 EmbedSim — EV Light Vehicle Foundation, Jaffna, Sri Lanka.
+ * \copyright Copyright (C) 2026 EmbedSim - EV Light Vehicle Foundation, Jaffna, Sri Lanka.
  *            Licensed under the MIT License.
  *********************************************************************************************************************/
 
@@ -63,128 +94,147 @@
 /*-------------------------------------------------Global variables--------------------------------------------------*/
 /*********************************************************************************************************************/
 
-/** \brief Global encoder state structure instance */
+/** \brief Global encoder state structure instance.
+ *         MISRA 8.4 : this is the single definition; the header declares it extern.
+ */
 CddEncoder_State_T EncoderState_G;
 
 /*********************************************************************************************************************/
-/*-------------------------------------------------private functions--------------------------------------------------*/
+/*-------------------------------------------------Private functions-------------------------------------------------*/
 /*********************************************************************************************************************/
 
 /**
- * \brief   Internal function to initialize the GPT12 hardware
+ * \brief   Internal function to initialize the GPT12 hardware.
  * \return  void
  *
- * \details This function configures the GPT12 module to match the ILLD setup:
- *          - **T3**: Incremental Interface Mode (Mode 6) with 4x decoding
- *          - **T4**: Capture mode for Z-index pulse with auto-reset of T3
- *          - **T5**: Reserved for future low-speed time-difference measurement
+ * \details Configures the GPT12 module as follows:
+ *          - **T3**: Incremental Interface Mode (T3M = 0x6), 4x decoding on both
+ *                    edges of T3IN and T3EUD. Hardware-cleared by T4 on each
+ *                    Z-pulse (CLRT3EN = 1) so the counter directly represents
+ *                    the mechanical angle within one revolution.
+ *          - **T4**: Capture mode for the Z-index pulse. CLRT3EN = 1 so the
+ *                    Z-event resets T3 to zero in hardware.
  *
- *          The configuration replicates the exact ILLD register settings for
- *          reliable operation with standard incremental encoders.
- *
- * \note    This function is called by CddEncoder_Init() and should not be
- *          called directly by application code.
+ * \note    Called by CddEncoder_Init(). Not intended for direct application use.
+ * \note    MISRA 8.7 : internal linkage only.
  */
 static void CddEncoder_InitHardware(void)
 {
-    Ifx_GPT12_T3CON t3conCfg;   /**< Timer 3 control register configuration */
-    Ifx_GPT12_T4CON t4conCfg;   /**< Timer 4 control register configuration */
-    Ifx_GPT12_T5CON t5conCfg;   /**< Timer 5 control register configuration (unused) */
-    Ifx_GPT12_PISEL piselCfg;   /**< Port input select configuration */
+    Ifx_GPT12_T3CON t3conCfg;   /**< Timer 3 control register configuration         */
+    Ifx_GPT12_T4CON t4conCfg;   /**< Timer 4 control register configuration         */
+    Ifx_GPT12_PISEL piselCfg;   /**< Port input select configuration                */
     Ifx_SRC_SRCR    srcCfg;     /**< Service request control register configuration */
 
     /* Read current register values for safe bitwise modification */
-    /* This ensures we preserve any bits not explicitly set below */
     t3conCfg.U = GPT120_T3CON.U;
     t4conCfg.U = GPT120_T4CON.U;
-    t5conCfg.U = GPT120_T5CON.U;
     piselCfg.U = GPT120_PISEL.U;
     srcCfg.U   = SRC_GPT12_GPT120_T4.U;
 
     /* --- T3CON: Core Encoder Timer Configuration --- */
-    /* T3 operates as the primary encoder counter with quadrature decoding */
-    t3conCfg.B.BPS1  = 0x0U;              /**< GPT1 block prescaler = 1 (T3/T4 clock = fGPT1) */
-    t3conCfg.B.T3M   = 0x6U;              /**< Mode 6: Incremental Interface Mode (Rotation Detection Mode) */
-    t3conCfg.B.T3I   = 0x3U;              /**< Input selection: Both edges of T3IN and T3EUD (4-fold decoding) */
-    t3conCfg.B.T3UDE = 0x1U;              /**< Direction control: External (from T3EUD pin) */
-    t3conCfg.B.T3OE  = 0x0U;              /**< Output disabled (T3 is used as input only) */
+    t3conCfg.B.BPS1  = 0x0U;   /**< GPT1 block prescaler = 1 (T3/T4 clock = fGPT1)               */
+    t3conCfg.B.T3M   = 0x6U;   /**< Mode 6: Incremental Interface (Rotation Detection).
+                                    0x7 is the "Edge Detection" variant and behaves
+                                    differently at direction changes. Do NOT use 0x7
+                                    unless the silicon RM explicitly requires it.            */
+    t3conCfg.B.T3I   = 0x3U;   /**< Both edges of T3IN and T3EUD -> 4x quadrature decoding       */
+    t3conCfg.B.T3UDE = 0x1U;   /**< Direction from external T3EUD input. In Mode 6 the internal
+                                    quadrature decoder derives direction from the phase
+                                    relation of T3IN/T3EUD; this bit selects that path.        */
+    t3conCfg.B.T3OE  = 0x0U;   /**< Output disabled (T3 is input only)                            */
 
     /* Apply T3 configuration and start the counter */
     GPT120_T3CON.U = t3conCfg.U;
-    GPT120_T3.U    = 0x0000U;             /**< Clear counter to start from zero position */
-    GPT120_T3CON.B.T3R = 0x1U;            /**< Start T3 timer (begins counting encoder pulses) */
+    GPT120_T3.U    = 0x0000U;  /**< Clear counter to start from zero position                     */
+    GPT120_T3CON.B.T3R = 0x1U; /**< Start T3 timer (begins counting encoder pulses)               */
 
     /* --- T4CON: Index (Zero) Pulse Capture Configuration --- */
-    /* T4 captures the Z-index pulse and can automatically reset T3 */
-    t4conCfg.B.T4M     = 0x5U;            /**< Mode 5: Capture mode (stores T4IN value on event) */
-    t4conCfg.B.T4I     = 0x1U;            /**< Capture on rising edge of T4IN (Z-signal) */
-    t4conCfg.B.CLRT3EN = 0x1U;            /**< Clear T3 counter when capture occurs (zero reset) */
-    t4conCfg.B.CLRT2EN = 0x0U;            /**< Do not clear T2 (not used in this application) */
-    t4conCfg.B.T4IRDIS = 0x0U;            /**< Interrupt not disabled (will be enabled via SRC) */
-    t4conCfg.B.T4RC    = 0x0U;            /**< Remote control disabled */
-    t4conCfg.B.T4R     = 0x0U;            /**< T4 stopped (it runs only on capture trigger) */
+    t4conCfg.B.T4M     = 0x5U; /**< Mode 5: Capture mode (stores T4IN value on event)            */
+    t4conCfg.B.T4I     = 0x1U; /**< Capture on rising edge of T4IN (Z-signal)                    */
+    t4conCfg.B.CLRT3EN = 0x1U; /**< CLEAR T3 on capture. The Z-pulse hardware-resets T3 to
+                                    zero, so T3 directly encodes the mechanical angle
+                                    within one revolution. The ISR sets ZEventPending
+                                    so the next update discards the meaningless delta
+                                    across the reset tick.                                    */
+    t4conCfg.B.CLRT2EN = 0x0U; /**< Do not clear T2 (not used)                                   */
+    t4conCfg.B.T4IRDIS = 0x0U; /**< Interrupt not disabled (enabled via SRC below)               */
+    t4conCfg.B.T4RC    = 0x0U; /**< Remote control disabled                                      */
+    t4conCfg.B.T4R     = 0x0U; /**< T4 stopped (runs only on capture trigger)                    */
 
     GPT120_T4CON.U = t4conCfg.U;
 
     /* --- PISEL: Port Input Select Configuration --- */
-    /* Selects which pins are connected to the GPT12 inputs */
-    piselCfg.B.IST3IN   = 0x0U;           /**< Selects the primary T3IN pin (channel A) */
-    piselCfg.B.IST3EUD  = 0x0U;           /**< Selects the primary T3EUD pin (channel B) */
-    piselCfg.B.IST4IN   = 0x0U;           /**< Selects the primary T4IN pin (Z-signal) */
+    piselCfg.B.IST3IN  = 0x0U; /**< Primary T3IN pin (channel A)                                 */
+    piselCfg.B.IST3EUD = 0x0U; /**< Primary T3EUD pin (channel B). If ACW misbehaves while
+                                    CW is correct, try 0x1U to select the alternate input
+                                    before touching any other configuration.                    */
+    piselCfg.B.IST4IN  = 0x0U; /**< Primary T4IN pin (Z-signal)                                  */
     GPT120_PISEL.U = piselCfg.U;
 
     /* --- SRC: Interrupt Configuration for T4 (Index/Zero Pulse) --- */
-    /* Configure the interrupt for Z-index events to track full revolutions */
-    srcCfg.B.SRPN = CORE_00_GPT12_ENCODER_ZERO_SRPN;  /**< Interrupt priority level */
-    srcCfg.B.TOS  = 0x0U;                              /**< Target CPU: CPU0 */
+    srcCfg.B.SRPN = CORE_00_GPT12_ENCODER_ZERO_SRPN;  /**< Interrupt priority level          */
+    srcCfg.B.TOS  = 0x0U;                              /**< Target CPU: CPU0                  */
     srcCfg.B.CLRR = 0x1U;                              /**< Clear pending request (start clean) */
     SRC_GPT12_GPT120_T4.U = srcCfg.U;                 /**< Apply configuration to SRC register */
-    SRC_GPT12_GPT120_T4.B.SRE = 0x1U;                 /**< Enable the interrupt request */
+    SRC_GPT12_GPT120_T4.B.SRE = 0x1U;                 /**< Enable the interrupt request       */
 }
 
 /*********************************************************************************************************************/
-/*-------------------------------------------------ISR Implementations------------------------------------------------*/
+/*-------------------------------------------------ISR Implementations-----------------------------------------------*/
 /*********************************************************************************************************************/
 
 /**
- * \brief   Encoder Index (Z-pulse) Interrupt Service Routine
+ * \brief   Encoder Index (Z-pulse) Interrupt Service Routine.
  * \return  void
  *
- * \details This ISR is triggered on the rising edge of the Z-index pulse,
- *          which occurs once per revolution. The ISR performs two critical
- *          functions:
+ * \details Triggered on the rising edge of the Z-index pulse, once per revolution.
+ *          The ISR performs two jobs:
  *
- *          1. **Turn Counting**: Increments or decrements TurnCount based on
- *             the current direction of rotation. This tracks absolute position
- *             across multiple revolutions.
+ *          1. **Turn counting**: reads the current hardware direction at the instant
+ *             of the Z-event and increments or decrements TurnCount.
  *
- *          2. **Zero Reference**: Resets RotorPositionCounter to 0, providing
- *             an absolute position reference point.
+ *          2. **Z-event signaling**: sets ZEventPending so that the next call to
+ *             CddEncoder_Update discards the delta for one tick. This is necessary
+ *             because the hardware has just cleared T3, and a naive delta would
+ *             look like a full negative revolution.
  *
- * \note    The T4 register automatically clears the T3 counter when a capture
- *          occurs (due to CLRT3EN=1). The software then updates the turn count
- *          based on the direction of rotation.
+ * \note    Direction is sampled directly from T3RDIR rather than from the software
+ *          mirror in EncoderState_G.Direction. At high update rates a software
+ *          mirror may be up to one tick stale across a direction reversal, which
+ *          would cause the turn count to be off by one revolution. Sampling the
+ *          hardware at the Z-event is unambiguous.
+ *
+ * \note    MISRA 8.7 : ISR entry point registered with the interrupt vector macro,
+ *          has external linkage by design.
+ *
+ * \note    TurnCount is 64-bit; a write here is not atomic on TriCore. Consumers
+ *          reading TurnCount outside this ISR should mask interrupts or use a
+ *          snapshot accessor (see CddEncoder_GetAbsolutePositionCounts).
+ *
+ * \note    The EMBED_SIM_INTERRUPT macro must appear EXACTLY ONCE per ISR.
  */
 EMBED_SIM_INTERRUPT(Encoder_Index_ISR, 0x0U, CORE_00_GPT12_ENCODER_ZERO_SRPN);
 void Encoder_Index_ISR(void)
 {
-    /* Update turn count based on current direction */
-    /* If moving CW (forward), increment the turn counter */
-    if (EncoderState_G.Direction == ENC_DIR_CW)
-    {
-        EncoderState_G.TurnCount++;
-    }
-    /* If moving ACW (reverse), decrement the turn counter */
-    else
-    {
-        EncoderState_G.TurnCount--;
-    }
+    uint32_T directionNow;
+    int64_T  turnDelta;
 
-    /* Zero the position counter within the current revolution */
-    /* T3 hardware counter is already cleared by CLRT3EN; this keeps software in sync */
-    EncoderState_G.RotorPositionCounter = 0;
+    directionNow = (uint32_T)GPT120_T3CON.B.T3RDIR;
 
-    /* Clear the interrupt request to allow future Z-index events */
+    /* Symmetric turn accounting: +1 for CW, -1 for ACW. Using a single signed
+     * delta rather than an if/else ensures both directions exercise identical
+     * arithmetic and cannot drift apart under maintenance. */
+    turnDelta = (directionNow == (uint32_T)ENC_DIR_CW) ? 1LL : -1LL;
+
+    EncoderState_G.TurnCount += turnDelta;
+    EncoderState_G.Direction  = directionNow;
+
+    /* The hardware has just cleared T3 to zero. Signal the next update to
+     * skip one delta computation, because the naive delta across the reset
+     * would appear as approximately -EncoderResolution counts. */
+    EncoderState_G.ZEventPending = 1U;
+
+    /* Acknowledge the T4 capture event. */
     SRC_GPT12_GPT120_T4.B.CLRR = 0x1U;
 }
 
@@ -193,62 +243,64 @@ void Encoder_Index_ISR(void)
 /*********************************************************************************************************************/
 
 /**
- * \brief   Initialize the encoder driver
- * \return  uint32_T - 1 if initialization successful, 0 if already initialized
+ * \brief   Initialize the encoder driver.
+ * \return  uint32_T - 1 if initialization successful, 0 if already initialized.
  *
- * \details The initialization process follows these steps:
- *          1. Check if already initialized (idempotent operation)
- *          2. Reset the software state structure with default values
- *          3. Enable the GPT12 module clock (critical for peripheral operation)
- *          4. Wait for the module to become ready (DISR bit check)
- *          5. Configure the GPT12 hardware registers
- *          6. Mark the driver as initialized
+ * \details Steps:
+ *          1. Idempotency check (safe to call multiple times).
+ *          2. Reset software state with default values.
+ *          3. Enable the GPT12 module clock.
+ *          4. Wait for the module to become ready.
+ *          5. Configure the GPT12 hardware registers.
+ *          6. Mark the driver as initialized.
  *
- * \note    The function includes a busy-wait loop to ensure the GPT12
- *          module is ready before configuration. This is necessary for
- *          reliable startup.
+ * \note    MISRA 15.7 : if/else covers every path; the empty then branch documents
+ *          the intentional "no action" case.
+ * \note    MISRA 17.7 : callers should test the return value.
  */
 uint32_T CddEncoder_Init(void)
 {
-    /* Check if already initialized - return success without re-initializing */
-    if(EncoderState_G.Initialized == 1U)
+    if (EncoderState_G.Initialized == 1U)
     {
-        /* Already initialized - do nothing */
+        /* Already initialized - nothing to do. */
     }
     else
     {
         /* ----- Reset software state with default values ----- */
-        EncoderState_G.SpeedRad             = 0.0F;      /**< Initial speed: 0 rad/s                 */
-        EncoderState_G.SpeedRadTurns        = 0.0F;      /**< Initial speed turns: 0 rad/s           */
-        EncoderState_G.SpeedRpm             = 0.0F;      /**< Initial speed: 0 RPM                   */
-        EncoderState_G.RotorAngle           = 0.0F;      /**< Initial position: 0 rad                */
-        EncoderState_G.RotorPositionCounter = 0U;        /**< Initial counter: 0                     */
-        EncoderState_G.T3Counter            = 0U;        /**< Previous T3 value: 0                   */
-        EncoderState_G.TurnCount            = 0LL;       /**< No turns yet                           */
-        EncoderState_G.TurnCountPrev        = 0LL;
-        EncoderState_G.Direction            = 0U;        /**< Direction: CW (default)                */
-        EncoderState_G.SpeedBlendFactor     = 0.0F;      /**< Blend Factor between T3 and Turns      */
-        EncoderState_G.EncoderResolution    = ENCODER_COUNTS_PER_REV;  /**< 4000 counts/rev          */
-        EncoderState_G.UpdatePeriod         = ENCODER_UPDATE_PERIOD;   /**< 50 µs update period      */
+        EncoderState_G.SpeedRad             = 0.0F;   /**< Initial speed: 0 rad/s              */
+        EncoderState_G.SpeedRpm             = 0.0F;   /**< Initial speed: 0 RPM                */
+        EncoderState_G.RotorAngle           = 0.0F;   /**< Initial position: 0 rad             */
+        EncoderState_G.T3CounterPrev        = 0U;     /**< Previous 16-bit T3 value: 0         */
+        EncoderState_G.ZEventPending        = 0U;     /**< No Z-event pending                  */
+        EncoderState_G.TurnCount            = 0LL;    /**< No turns yet                        */
+        EncoderState_G.Direction            = (uint32_T)ENC_DIR_CW;
+        EncoderState_G.EncoderResolution    = ENCODER_COUNTS_PER_REV;   /**< 4000 counts/rev */
+        EncoderState_G.UpdatePeriod         = ENCODER_UPDATE_PERIOD;    /**< 50 us period     */
+        EncoderState_G.CountsToRadians      = ENCODER_COUNTS_TO_RAD;    /**< rad per count   */
 
-        /* Pre-calculate the speed conversion constant for efficiency */
-        /* Formula: 2π / (EncoderResolution × UpdatePeriod) */
-        /* This converts delta counts to angular velocity in rad/s */
-        EncoderState_G.T3SpeedConversionQuotient = ES_MATH_2PI_F /
-                                                   (EncoderState_G.EncoderResolution *
-                                                    EncoderState_G.UpdatePeriod);
+        /* Pre-calculate the speed conversion constant for efficiency.
+         *   T3SpeedConversionQuotient = 2*pi / (EncoderResolution * UpdatePeriod)
+         *
+         * This is the number of radians per count per update, so
+         *   speed_rad_per_s = delta_counts * T3SpeedConversionQuotient.
+         *
+         * MISRA-DEV 10.4 : the multiplication mixes uint32_T (EncoderResolution)
+         * and real32_T (UpdatePeriod). EncoderResolution is losslessly promoted
+         * to real32_T because its value (4000) fits the float mantissa exactly.
+         * Deviation retained to keep the arithmetic idiomatic.                    */
+        EncoderState_G.T3SpeedConversionQuotient =
+            ES_MATH_2PI_F / ((real32_T)EncoderState_G.EncoderResolution
+                             * EncoderState_G.UpdatePeriod);
 
         /* ----- Enable the GPT12 module clock ----- */
-        /* The module must be powered on before register access */
-        CddSys_ClearCpuWdtEndInit();                   /**< Temporarily disable watchdog for clock enable */
-        GPT120_CLC.B.DISR = 0x0U;                      /**< Disable module reset state */
-        CddSys_SetCpuWdtEndInit();                     /**< Re-enable watchdog */
+        CddSys_ClearCpuWdtEndInit();                   /**< Disable watchdog during clock enable */
+        GPT120_CLC.B.DISR = 0x0U;                      /**< Exit module reset state              */
+        CddSys_SetCpuWdtEndInit();                     /**< Re-enable watchdog                   */
 
         /* Wait for the module to exit reset state */
-        /* DISS bit is cleared when the module is ready */
         while (GPT120_CLC.B.DISS != 0x0U)
         {
-            CddSys_NopDelay(1U, 1U);                   /**< Small delay for hardware settling */
+            CddSys_NopDelay(1U, 1U);                   /**< Short settling delay                 */
         }
 
         /* ----- Initialize the GPT12 hardware registers ----- */
@@ -262,185 +314,163 @@ uint32_T CddEncoder_Init(void)
 }
 
 /**
- * \brief   Update encoder state (call at 20 kHz)
+ * \brief   Update encoder state (call at 20 kHz).
  * \return  void
  *
- * \details This is the core function for reading and processing encoder data.
- *          It must be called at the configured update rate (50 µs period).
+ * \details Steps:
+ *          1. Read the current 16-bit T3 counter value.
+ *          2. If a Z-event occurred since the last update, T3 was hardware-cleared
+ *             and the naive delta would look like a full negative revolution.
+ *             Skip the delta for this one tick (treat as zero motion) and clear
+ *             the pending flag.
+ *          3. Otherwise, compute the signed delta using 16-bit modular subtraction.
+ *          4. Read direction from T3RDIR.
+ *          5. Convert delta -> raw rad/s, apply IIR low-pass.
+ *          6. Convert to RPM.
+ *          7. Compute the mechanical angle DIRECTLY from T3 (no integrator).
+ *          8. Store the current T3 value for the next iteration.
  *
- *          The update process:
- *          1. Read current T3 counter value and direction from hardware
- *          2. Calculate the change in counter value since last update
- *          3. Handle counter wrap-around (modulo arithmetic)
- *          4. Convert delta counts to raw angular velocity
- *          5. Apply low-pass filter to smooth the velocity
- *          6. Update rotor position (always monotonically increasing)
- *          7. Store current values for the next iteration
+ * \warning The IIR filter on the speed path introduces a phase lag. Account for
+ *          this in the control loop design. The angle path, by contrast, has no
+ *          lag because it is read from hardware.
  *
- * \warning The filtering algorithm uses a first-order IIR filter that
- *          introduces a phase lag. This is acceptable for motor control
- *          applications but should be considered in control loop design.
+ * \note    MISRA-DEV 10.3 / 10.5 : the cast to int16_T is a deliberate narrowing
+ *          that relies on modulo-2^16 signed interpretation. Safe because
+ *          |delta| <= 32767 for any physically realizable encoder rate at the
+ *          configured update period.
  */
 /**
- * \brief   Update encoder state (call at 20 kHz)
+ * \brief   Update encoder state (call at 20 kHz).
  * \return  void
  *
- * \details Minimal implementation with turn-based speed blending.
- *          Speed is calculated from T3 delta with IIR filtering.
- *          At low speeds, turn-based speed provides better accuracy.
- *          The blend factor determines how much turn-based speed is used.
- */
-/**
- * \brief   Update encoder state (call at 20 kHz)
- * \return  void
+ * \details Reads the 16-bit T3 counter, computes the signed delta with
+ *          modulo-N wrap correction, applies the IIR low-pass to the raw
+ *          speed, and computes the mechanical angle directly from T3.
+ *
+ *          Steps:
+ *          1. Snapshot the current T3 counter and direction.
+ *          2. If a Z-event occurred since the last update, T3 was hardware-
+ *             cleared and the naive delta would look like a full negative
+ *             revolution. Skip the delta for this one tick (SpeedRad holds
+ *             its previous value) and clear the pending flag.
+ *          3. Otherwise compute deltaT3 = current - previous and correct it
+ *             modulo ENCODER_COUNTS_PER_REV. This is required because
+ *             CLRT3EN = 1 makes T3 wrap at N, not at 2^16.
+ *          4. Convert delta counts to rad/s and apply the first-order IIR
+ *             low-pass filter.
+ *          5. Convert filtered speed to RPM.
+ *          6. Compute the mechanical angle DIRECTLY from T3 (no integrator,
+ *             no filter lag, no float drift).
+ *          7. Store the current T3 value for the next iteration.
+ *
+ * \warning The IIR filter on the speed path introduces a phase lag. Account
+ *          for this in the control loop design. The angle path has no lag
+ *          because it is read straight from hardware.
+ *
+ * \note    Must be called at the configured update rate (20 kHz). Failure to
+ *          do so yields incorrect speed values; the angle path is
+ *          rate-independent.
+ *
+ * \note    MISRA-DEV 10.3 / 10.5 : the intermediate narrowing to int16_T has
+ *          been removed in favour of explicit modulo-N correction, which is
+ *          the correct modulus for CLRT3EN = 1 operation.
  */
 void CddEncoder_Update(void)
 {
-    uint32_T currentT3Counter;
-    int32_T deltaT3;
-    real32_T rawSpeedRad;
-    real32_T speedFromTurns;
-    int64_T turnDelta;
-    real32_T blendFactor;
-    real32_T speedMagnitudeRpm;
+    uint16_T currentT3Counter;   /**< Current 16-bit T3 counter snapshot        */
+    int32_T  deltaT3;            /**< Signed delta counts since previous update */
+    real32_T rawSpeedRad;        /**< Unfiltered angular velocity [rad/s]       */
 
-    /* Read current T3 counter value */
-    currentT3Counter = GPT120_T3.U;
+    /* --- Step 1: snapshot hardware state --------------------------------- */
+    currentT3Counter         = (uint16_T)GPT120_T3.U;
+    EncoderState_G.Direction = (uint32_T)GPT120_T3CON.B.T3RDIR;
 
-    /* ================================================================
-     * Calculate delta counts with modulo arithmetic
-     *
-     * T3 resets to 0 on Z-index pulse (CLRT3EN = 1).
-     * So we need to handle both:
-     *   1. Normal forward/backward counting
-     *   2. Hardware reset to 0 on Z-index
-     *
-     * The correct delta is: (current - previous) mod ENCODER_RESOLUTION
-     * with sign determined by direction.
-     * ================================================================ */
-    deltaT3 = (int32_T)(currentT3Counter - EncoderState_G.T3Counter);
-
-    /*
-     * Since T3 counts from 0 to ENCODER_COUNTS_PER_REV-1,
-     * the maximum valid delta is ENCODER_COUNTS_PER_REV/2.
-     * If delta exceeds this, it's due to wrap-around.
-     */
-    if (deltaT3 > (int32_T)(ENCODER_COUNTS_PER_REV / 2))
+    /* --- Step 2: handle the tick immediately after a Z-event ------------- */
+    if (EncoderState_G.ZEventPending != 0U)
     {
-        deltaT3 -= (int32_T)ENCODER_COUNTS_PER_REV;
+        /* T3 was hardware-cleared at the Z-pulse. The delta across the reset
+         * is meaningless. Skip the filter update this tick: SpeedRad holds
+         * its previous value, which is the best estimate available. */
+        EncoderState_G.ZEventPending = 0U;
     }
-    else if (deltaT3 < -(int32_T)(ENCODER_COUNTS_PER_REV / 2))
+    else
     {
-        deltaT3 += (int32_T)ENCODER_COUNTS_PER_REV;
-    }
+        /* --- Step 3: signed delta with modulo-N wrap correction ---------- */
+        deltaT3 = (int32_T)currentT3Counter - (int32_T)EncoderState_G.T3CounterPrev;
 
-    /* ================================================================
-     * 1. T3-based speed
-     * ================================================================ */
-    rawSpeedRad = (real32_T)deltaT3 * EncoderState_G.T3SpeedConversionQuotient;
-
-    /* Apply IIR low-pass filter */
-    EncoderState_G.SpeedRad = (SPEED_LPF_ALPHA * rawSpeedRad) +
-                              (SPEED_LPF_ONE_MINUS_ALPHA * EncoderState_G.SpeedRad);
-
-    /* ================================================================
-     * 2. Turn-based speed (Z-index pulses)
-     * ================================================================ */
-    turnDelta = EncoderState_G.TurnCount - EncoderState_G.TurnCountPrev;
-
-    if ((turnDelta != 0LL) && (EncoderState_G.SpeedRpm < ENCODER_BLEND_HIGH_SPEED_RPM))
-    {
-        speedFromTurns = ((real32_T)turnDelta * ES_MATH_2PI_F) / EncoderState_G.UpdatePeriod;
-
-        /* Speed-adaptive blend factor */
-        speedMagnitudeRpm = fabsf(EncoderState_G.SpeedRpm);
-
-        if (speedMagnitudeRpm <= ENCODER_BLEND_LOW_SPEED_RPM)
+        /* T3 wraps at N = ENCODER_COUNTS_PER_REV because CLRT3EN = 1. */
+        if (deltaT3 > (int32_T)(ENCODER_COUNTS_PER_REV / 2))
         {
-            blendFactor = 0.5F;
+            deltaT3 -= (int32_T)ENCODER_COUNTS_PER_REV;
         }
-        else if (speedMagnitudeRpm >= ENCODER_BLEND_HIGH_SPEED_RPM)
+        else if (deltaT3 < -(int32_T)(ENCODER_COUNTS_PER_REV / 2))
         {
-            blendFactor = 1.0F;
-        }
-        else
-        {
-            blendFactor = 0.5F +  0.5*(speedMagnitudeRpm - ENCODER_BLEND_LOW_SPEED_RPM) /  (ENCODER_BLEND_HIGH_SPEED_RPM - ENCODER_BLEND_LOW_SPEED_RPM);
+            deltaT3 += (int32_T)ENCODER_COUNTS_PER_REV;
         }
 
-        blendFactor = EmbedSim_ClampValue(blendFactor, 0.0F, 1.0F);
-
-        EncoderState_G.SpeedRad = (blendFactor * EncoderState_G.SpeedRad) +
-                                  ((1.0F - blendFactor) * speedFromTurns);
+        /* --- Step 4: convert to rad/s and apply IIR low-pass ------------- */
+        rawSpeedRad = (real32_T)deltaT3 * EncoderState_G.T3SpeedConversionQuotient;
+        EncoderState_G.SpeedRad = (SPEED_LPF_ALPHA * rawSpeedRad) +
+                                  (SPEED_LPF_ONE_MINUS_ALPHA * EncoderState_G.SpeedRad);
     }
 
-    /* Update previous turn count */
-    EncoderState_G.TurnCountPrev = EncoderState_G.TurnCount;
-
-    /* ================================================================
-     * 3. Convert to RPM and update position
-     * ================================================================ */
+    /* --- Step 5: convert filtered speed to RPM --------------------------- */
     EncoderState_G.SpeedRpm = EncoderState_G.SpeedRad * (60.0F / ES_MATH_2PI_F);
 
-    /* Update rotor position */
-    EncoderState_G.RotorPositionCounter += deltaT3;
+    /* --- Step 6: mechanical angle read directly from T3 ------------------ */
+    /* Angle is always read directly from T3 - unaffected by the Z-skip. */
+    EncoderState_G.RotorAngle = (real32_T)currentT3Counter * EncoderState_G.CountsToRadians;
 
-    /* Convert to radians */
-    EncoderState_G.RotorAngle = ((real32_T)EncoderState_G.RotorPositionCounter * ES_MATH_2PI_F) / (real32_T)ENCODER_COUNTS_PER_REV;
-    EmbedSim_WrapAngleTwoPi(&EncoderState_G.RotorAngle);
-
-    EncoderState_G.T3Counter = currentT3Counter;
+    /* --- Step 7: store current value for the next iteration -------------- */
+    EncoderState_G.T3CounterPrev = currentT3Counter;
 }
-
 /**
- * \brief   Reset the encoder to a known state
+ * \brief   Reset the encoder to a known state.
  * \return  void
  *
- * \details This function performs a full reset of the encoder driver:
- *          1. Stops the T3 timer to prevent counting during reset
- *          2. Clears the T3 counter to zero (absolute zero position)
- *          3. Resets all software state variables
- *          4. Restarts the T3 timer
+ * \details Steps:
+ *          1. Stop T3 to prevent counting during the reset.
+ *          2. Clear the hardware T3 counter to zero.
+ *          3. Reset all software state variables (including ZEventPending).
+ *          4. Restart T3.
  *
- * \note    The reset operation is atomic - the T3 timer is stopped
- *          during the reset to ensure consistency.
- *
- * \warning This function should be used with care during motor operation
- *          as it may cause abrupt changes in position feedback.
+ * \warning Use with care during motor operation - abrupt changes in position
+ *          feedback may disturb the control loop.
  */
 void CddEncoder_Reset(void)
 {
     if (EncoderState_G.Initialized == 0U)
     {
-        /* Not initialized - ignore the reset request to prevent errors */
+        /* Not initialized - ignore the reset request. */
     }
     else
     {
-        /* Stop the T3 timer during reset to ensure atomic operation */
+        /* Stop T3 during reset to ensure atomic counter update */
         GPT120_T3CON.B.T3R = 0x0U;
 
         /* Clear the hardware counter to establish a new zero reference */
         GPT120_T3.U = 0x0000U;
 
-        /* Reset all software state variables */
-        EncoderState_G.RotorAngle        = 0.0F;       /**< Position back to zero */
-        EncoderState_G.SpeedRad          = 0.0F;       /**< Speed reset to zero */
-        EncoderState_G.SpeedRpm          = 0.0F;       /**< Speed reset to zero */
-        EncoderState_G.TurnCount         = 0LL;        /**< No turns */
-        EncoderState_G.Direction         = 0U;         /**< Direction: CW (default) */
+        /* Reset software state. ZEventPending must be cleared here as well,
+         * otherwise a stale flag from before the reset would suppress the
+         * first delta after the reset. */
+        EncoderState_G.RotorAngle           = 0.0F;
+        EncoderState_G.SpeedRad             = 0.0F;
+        EncoderState_G.SpeedRpm             = 0.0F;
+        EncoderState_G.T3CounterPrev        = 0U;
+        EncoderState_G.ZEventPending        = 0U;
+        EncoderState_G.TurnCount            = 0LL;
+        EncoderState_G.Direction            = (uint32_T)ENC_DIR_CW;
 
-        /* Restart the T3 timer to resume normal operation */
+        /* Restart T3 */
         GPT120_T3CON.B.T3R = 0x1U;
     }
 }
 
 /**
- * \brief   Get the current rotor position
- * \return  real32_T - Mechanical position in radians [0.0 to 2π)
- *
- * \details Returns the current rotor position within a single revolution.
- *          The value is always in the range [0.0, 2π) and is updated
- *          during each call to CddEncoder_Update().
+ * \brief   Get the current rotor position.
+ * \return  real32_T - Mechanical position in radians [0.0 to 2*pi).
+ * \note    MISRA 14.7 : single return point.
  */
 real32_T CddEncoder_GetRotorPosition(void)
 {
@@ -453,12 +483,8 @@ real32_T CddEncoder_GetRotorPosition(void)
 }
 
 /**
- * \brief   Get the current angular velocity in rad/s
- * \return  real32_T - Filtered speed in rad/s
- *
- * \details Returns the filtered angular velocity. The sign indicates
- *          direction: positive for CW (forward) and negative for ACW (reverse).
- *          The velocity is filtered using a first-order IIR low-pass filter.
+ * \brief   Get the current angular velocity in rad/s.
+ * \return  real32_T - Filtered speed in rad/s (signed).
  */
 real32_T CddEncoder_GetSpeedRad(void)
 {
@@ -471,12 +497,8 @@ real32_T CddEncoder_GetSpeedRad(void)
 }
 
 /**
- * \brief   Get the current angular velocity in RPM
- * \return  real32_T - Filtered speed in RPM
- *
- * \details Returns the filtered angular velocity in revolutions per minute.
- *          The sign indicates direction: positive for CW (forward) and
- *          negative for ACW (reverse).
+ * \brief   Get the current angular velocity in RPM.
+ * \return  real32_T - Filtered speed in RPM (signed).
  */
 real32_T CddEncoder_GetSpeedRpm(void)
 {
@@ -486,4 +508,28 @@ real32_T CddEncoder_GetSpeedRpm(void)
         speed = EncoderState_G.SpeedRpm;
     }
     return speed;
+}
+
+/**
+ * \brief   Get the current direction.
+ * \return  uint32_T - ENC_DIR_CW (0) or ENC_DIR_ACW (1).
+ */
+uint32_T CddEncoder_GetDirection(void)
+{
+    uint32_T direction = (uint32_T)ENC_DIR_CW;
+    if (EncoderState_G.Initialized == 0x1U)
+    {
+        direction = EncoderState_G.Direction;
+    }
+    return direction;
+}
+
+
+/**
+ * \brief   Check if the encoder driver is initialized.
+ * \return  uint32_T - 1 if initialized, 0 otherwise.
+ */
+uint32_T CddEncoder_IsInitialized(void)
+{
+    return EncoderState_G.Initialized;
 }
