@@ -1,26 +1,23 @@
 Instructions to Setup and Explore
 
-1. Install Pycharm (Python Development) and Python Framework (3.12)
+1. Install PyCharm (Python Development) and Python Framework (3.12)
 
-2. Build Cython Interface for simulation examples
-      -excecute pmsm/c_src/build.bat (windows) or build.sh (Linux)
+2. Build the Cython Interface for simulation examples
+   - Execute pmsm/c_src/build.bat (Windows) or build.sh (Linux)
 
-3. Install Open Modelica and export PMSM_Motor.mo as FMU
-       - pmsm/modelica/PMSM_Motor.mo (Modelica Model)
-       - execute gen_fmu.py (pmsm/modelica/gen_fmu.py) to generate python class
-       - this step is optional, one can work with python models
-       
-       
-4. Explore simple examples 
-      - examples/simple_signal_flow
-      
-      
-5. Explore Pmsm examples
-      - examples/pmsm_examples
-      
-      
-6. Run in Microcontroller
-   - install Aurix Developer  Studio
-   - import source code aurix_tc3xxx_source/EmbedSim_Pmsm_TC3
-   - if you have Infineon Aurix Motor Kit, there no need to adjust pins
-   - Directores aurix_tc3xxx_source/EmbedSim_Pmsm_TC3/EmbedSim  and pmsm/c_src have the same files but they not shared
+3. Install OpenModelica and export PMSM_Motor.mo as an FMU
+   - pmsm/modelica/PMSM_Motor.mo (Modelica Model)
+   - Execute gen_fmu.py (pmsm/modelica/gen_fmu.py) to generate the Python class
+   - This step is optional; one can work with Python models
+
+4. Explore simple examples
+   - examples/simple_signal_flow
+
+5. Explore PMSM examples
+   - examples/pmsm_examples
+
+6. Run on a Microcontroller
+   - Install AURIX Development Studio
+   - Import the source code from aurix_tc3xxx_source/EmbedSim_Pmsm_TC3
+   - If you have an Infineon AURIX Motor Kit, there is no need to adjust the pins
+   - Directories aurix_tc3xxx_source/EmbedSim_Pmsm_TC3/EmbedSim and pmsm/c_src contain the same files, but they are not shared.
