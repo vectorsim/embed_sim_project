@@ -698,7 +698,7 @@ void PMSM_Plant_FMU_setupDataStruc(DATA *data, threadData_t *threadData)
   data->modelData->modelFileName = "PMSM_Motor.mo";
   data->modelData->resultFileName = NULL;
   data->modelData->modelDir = "/home/epl05/EMProject/pmsm/modelica";
-  data->modelData->modelGUID = "{d55f05f3-cfd6-46d6-9519-581d0ff86ca6}";
+  data->modelData->modelGUID = "{d1243c03-6909-429e-9b76-75d84c324825}";
   data->modelData->initXMLData = NULL;
   data->modelData->modelDataXml.infoXMLData = NULL;
   GC_asprintf(&data->modelData->modelDataXml.fileName, "%s/PMSM_Plant_FMU_info.json", data->modelData->resourcesDir);

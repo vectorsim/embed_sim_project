@@ -492,7 +492,7 @@ void PMSM_Plant_FMU_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[27].attribute.fixed = 1;
   modelData->realVarsData[27].attribute.useNominal = 0;
   put_real_element(1.0, 0, &modelData->realVarsData[27].attribute.nominal);
-  put_real_element(17.0, 0, &modelData->realVarsData[27].attribute.start);
+  put_real_element(12.0, 0, &modelData->realVarsData[27].attribute.start);
   modelData->realVarsData[28].info.id = 1028;
   modelData->realVarsData[28].info.name = "v_neutral";
   modelData->realVarsData[28].info.comment = "";
@@ -509,7 +509,7 @@ void PMSM_Plant_FMU_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[28].attribute.fixed = 0;
   modelData->realVarsData[28].attribute.useNominal = 0;
   put_real_element(1.0, 0, &modelData->realVarsData[28].attribute.nominal);
-  put_real_element(8.5, 0, &modelData->realVarsData[28].attribute.start);
+  put_real_element(6.0, 0, &modelData->realVarsData[28].attribute.start);
   modelData->realVarsData[29].info.id = 1029;
   modelData->realVarsData[29].info.name = "v_q";
   modelData->realVarsData[29].info.comment = "";
@@ -560,7 +560,7 @@ void PMSM_Plant_FMU_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[31].attribute.fixed = 0;
   modelData->realVarsData[31].attribute.useNominal = 0;
   put_real_element(1.0, 0, &modelData->realVarsData[31].attribute.nominal);
-  put_real_element(8.5, 0, &modelData->realVarsData[31].attribute.start);
+  put_real_element(6.0, 0, &modelData->realVarsData[31].attribute.start);
   modelData->realVarsData[32].info.id = 1032;
   modelData->realVarsData[32].info.name = "vb";
   modelData->realVarsData[32].info.comment = "";
@@ -594,7 +594,7 @@ void PMSM_Plant_FMU_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[33].attribute.fixed = 0;
   modelData->realVarsData[33].attribute.useNominal = 0;
   put_real_element(1.0, 0, &modelData->realVarsData[33].attribute.nominal);
-  put_real_element(8.5, 0, &modelData->realVarsData[33].attribute.start);
+  put_real_element(6.0, 0, &modelData->realVarsData[33].attribute.start);
   modelData->realVarsData[34].info.id = 1034;
   modelData->realVarsData[34].info.name = "vc";
   modelData->realVarsData[34].info.comment = "";
@@ -628,7 +628,7 @@ void PMSM_Plant_FMU_read_input_fmu(MODEL_DATA* modelData)
   modelData->realVarsData[35].attribute.fixed = 0;
   modelData->realVarsData[35].attribute.useNominal = 0;
   put_real_element(1.0, 0, &modelData->realVarsData[35].attribute.nominal);
-  put_real_element(8.5, 0, &modelData->realVarsData[35].attribute.start);
+  put_real_element(6.0, 0, &modelData->realVarsData[35].attribute.start);
   modelData->realParameterData[0].info.id = 1036;
   modelData->realParameterData[0].info.name = "B_fric";
   modelData->realParameterData[0].info.comment = "";

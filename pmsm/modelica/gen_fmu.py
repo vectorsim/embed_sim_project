@@ -18,7 +18,6 @@ THIS SCRIPT DOES NOT:
 
 HOW TO RUN
 ----------
-    cd /home/epl05/EMProject/fs_electrical_machines
     python modelica/gen_fmu.py
 """
 

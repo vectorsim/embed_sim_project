@@ -2,11 +2,11 @@
 <fmiModelDescription
   fmiVersion="2.0"
   modelName="PMSM_Plant_FMU"
-  guid="{d55f05f3-cfd6-46d6-9519-581d0ff86ca6}"
+  guid="{d1243c03-6909-429e-9b76-75d84c324825}"
   description=""
   version=""
   generationTool="OpenModelica Compiler OpenModelica 1.27.0~5-ga0783c0"
-  generationDateAndTime="2026-09-05T21:24:51Z"
+  generationDateAndTime="2026-09-12T10:53:52Z"
   variableNamingConvention="structured"
   numberOfEventIndicators="0">
   <ModelExchange
@@ -435,7 +435,7 @@
     valueReference="27"
     causality="input"
     >
-    <Real start="17.0"/>
+    <Real start="12.0"/>
   </ScalarVariable>
   <!-- Index of variable = "22" -->
   <ScalarVariable
