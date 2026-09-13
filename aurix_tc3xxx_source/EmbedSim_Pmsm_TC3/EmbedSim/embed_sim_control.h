@@ -50,7 +50,7 @@
  * 0U: Real-time microcontroller operation
  * 1U: Simulation operation
  */
-#define ES_SIM_OP_MODE    (0x0U)
+#define ES_SIM_OP_MODE    (0x1U)
 
 /**
  * \brief  Maximum speed in RPM

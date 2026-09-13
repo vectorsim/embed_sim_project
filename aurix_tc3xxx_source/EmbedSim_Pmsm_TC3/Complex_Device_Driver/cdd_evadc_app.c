@@ -813,8 +813,6 @@ void CddEvadc_ReadPhaseW(P2VAR(volatile CddApp_T, AUTOMATIC, CDD_APPL_DATA) CddA
     {
         CddAppPtr->Vw = EVADC_CODE_TO_VOLT(Res.B.RESULT);
         CddAppPtr->SensorReadingBitField |= EVADC_CURRENT_W_READING_VALID;
-
-
     }
     else
     {

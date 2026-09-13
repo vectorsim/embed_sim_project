@@ -9,6 +9,7 @@
  *            - **Zero-Index (Z) Pulse**: Hardware-cleared T3 for exact single-turn angle
  *            - **Direction Detection**: Hardware direction tracking via quadrature decode
  *            - **Pulse-count Speed**: signed per-tick diff, converted to rad/s in FLOAT
+ *              and then smoothed by a first-order IIR low-pass
  *            - **Absolute Multi-turn Position**: TurnCount * N +/- T3, computed on demand
  *
  *            ## Design Note - T5 / time-diff mode removed
@@ -22,7 +23,7 @@
  *            The raw signed count delta `diff` for the current 20 kHz tick is
  *            converted straight to rad/s:
  *
- *                SpeedRad = (real32_T)diff * T3SpeedConversionQuotient
+ *                rawSpeed = (real32_T)diff * T3SpeedConversionQuotient
  *
  *            where T3SpeedConversionQuotient = 2*pi / (EncoderResolution * UpdatePeriod).
  *            No integer division is performed anywhere on the speed path, so the
@@ -30,13 +31,21 @@
  *            occur: the conversion is a single float multiply of a signed integer.
  *
  *            The previous round-buffer moving-average on `diff` has been removed.
- *            It is no longer needed once the divide-by-N is gone: there is no
- *            sub-unity average to preserve.
+ *            It is no longer needed once the divide-by-N is gone.
  *
- *            Trade-off: per-tick speed is noisier than the 4-tap MA output,
- *            because quantisation dither {3,3,2,...} is now visible directly.
- *            RotorAngle is unaffected (it comes straight from T3), and any
- *            downstream speed loop is expected to provide its own filtering.
+ *            ## Design Note - Speed IIR low-pass
+ *            Per-tick speed is quantisation-noisy: at 800 RPM and 4000 CPR the
+ *            delta dithers {3,3,2,...}. A first-order IIR is therefore applied
+ *            in the SpeedRad domain before publication:
+ *
+ *                SpeedRad = alpha * rawSpeed + (1 - alpha) * SpeedRad
+ *
+ *            with alpha = SPEED_LPF_ALPHA (0.0589), which yields approximately
+ *            a 600 Hz cutoff at the 20 kHz update rate. Downstream consumers
+ *            receive this already-filtered value from CddEncoder_GetSpeedRad()
+ *            and CddEncoder_GetSpeedRpm(); they are not expected to re-filter.
+ *            RotorAngle is not filtered - it is derived directly from T3 and is
+ *            exact to one count.
  *
  *            ## Design Note - T3 is a 16-bit counter
  *            T3 lives in the full 16-bit space even with CLRT3EN = 1. Over one
@@ -64,12 +73,19 @@
  *            resolution and adding/subtracting ENCODER_COUNTS_PER_REV. The
  *            corrected values are +8 (CW) and -12 (ACW) respectively.
  *
+ *            ## Concurrency
+ *            Encoder_Index_ISR updates TurnCount asynchronously to the readers
+ *            of EncoderState_G. No function in this driver reads TurnCount, so
+ *            no internal race exists. Any external reader MUST protect its
+ *            read with a critical section: 64-bit accesses are not atomic on
+ *            TriCore.
+ *
  *            ## Usage Example
  *            ```c
  *            CddEncoder_Init();
  *            // In 20 kHz control ISR:
  *            CddEncoder_Update();
- *            real32_T speed    = CddEncoder_GetSpeedRad();
+ *            real32_T speed    = CddEncoder_GetSpeedRad();  // already IIR-filtered
  *            real32_T position = CddEncoder_GetRotorPosition();
  *            ```
  *
@@ -78,14 +94,22 @@
  *              - Rule  8.5 : One declaration per identifier.
  *              - Rule  8.6 : No definitions in header files.
  *              - Rule  8.7 : Internal linkage for static helpers (in .c file).
- *              - Rule  8.9 : File-scope variables minimised.
+ *              - Rule  8.9 : No file-scope object with internal linkage in the
+ *                            .c file. EncoderState_G has external linkage by
+ *                            design and is declared extern below.
+ *              - Rule 13.1 : No initializer lists with side effects.
+ *              - Rule 13.2 : No persistent side effects in assignment RHS.
  *              - Rule 14.4 : Controlling expressions are essentially Boolean.
  *              - Rule 15.5 : Single exit point per function.
  *              - Rule 17.2 : No recursion.
  *              - Rule 18.4 : No non-constant pointer arithmetic.
  *
  *              Deviations, flagged inline in the .c file:
- *              - Rule 10.3 / 10.4 : int32_T -> real32_T at the speed conversion.
+ *              - Rule 10.3 : uint16_T -> int16_T and int32_T -> real32_T
+ *                            narrowing casts on the delta / angle paths.
+ *              - Rule 10.4 : mixed int32_T / real32_T arithmetic at the
+ *                            speed conversion and IIR update.
+ *              - Rule 10.5 : casts between signed and unsigned integer types.
  *
  * \note      EmbedSim naming convention:
  *              - Functions      : Pascal_Snake_Case
@@ -96,8 +120,8 @@
  *              - Macros         : UPPER_SNAKE_CASE
  *              - Typedefs       : Pascal_Snake_Case_T
  *
- * \version   2.8.0
- * \date      2026-09-11
+ * \version   2.8.1
+ * \date      2026-09-13
  * \author    EmbedSim / EV Light Vehicle Foundation
  *
  * \copyright Copyright (C) 2026 EmbedSim - EV Light Vehicle Foundation, Jaffna, Sri Lanka.
@@ -107,216 +131,140 @@
 #ifndef COMPLEX_DEVICE_DRIVER_CDD_ENCODER_APP_H_
 #define COMPLEX_DEVICE_DRIVER_CDD_ENCODER_APP_H_
 
-/*********************************************************************************************************************/
-/*-----------------------------------------------------Includes------------------------------------------------------*/
-/*********************************************************************************************************************/
-
 #include "embed_sim_sys_types.h"
 #include "embed_sim_compiler.h"
 
-/*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
-/*********************************************************************************************************************/
 
-/** \brief Encoder resolution in lines per revolution (PPR).
- *         Number of physical lines on the encoder disk. */
+/** \brief Encoder resolution in physical lines per revolution. */
 #define ENCODER_RESOLUTION                  (1000U)
 
-/** \brief 4x decoding factor.
- *         Quadrature decoding multiplies the resolution by 4 by detecting
- *         both rising and falling edges on both A and B channels. */
+/** \brief Quadrature decoding factor. */
 #define ENCODER_DECODING_FACTOR             (4U)
 
-/** \brief Counts per revolution.
- *         For 1000 PPR with 4x decoding: 1000 x 4 = 4000 counts/rev. */
+/** \brief Effective counts per mechanical revolution. */
 #define ENCODER_COUNTS_PER_REV              (ENCODER_RESOLUTION * ENCODER_DECODING_FACTOR)
 
-/** \brief Radians per encoder count.
- *         Used to convert count-based angle to radians. */
+/** \brief Radians per encoder count. */
 #define ENCODER_COUNTS_TO_RAD               (ES_MATH_2PI_F / (real32_T)ENCODER_COUNTS_PER_REV)
 
-/** \brief Update frequency in Hz (20 kHz).
- *         The encoder state is updated at this rate to provide smooth
- *         velocity and position data for the motor control loop. */
+/** \brief Encoder update frequency in Hz. */
 #define ENCODER_UPDATE_FREQ_HZ              (20000.0F)
 
-/** \brief Update period in seconds (50 us).
- *         Time interval between consecutive encoder updates.
- *         Matches the 20 kHz control loop frequency. */
+/** \brief Encoder update period in seconds. */
 #define ENCODER_UPDATE_PERIOD               (1.0F / ENCODER_UPDATE_FREQ_HZ)
 
+/** \brief rad/s to RPM conversion factor. */
+#define ENCODER_RAD_PER_SEC_TO_RPM          (60.0F / ES_MATH_2PI_F)
+
 /** \brief Speed filter coefficients.
- *         First-order IIR low-pass for velocity estimation. Alpha = 0.0589
- *         gives a cutoff of approximately 600 Hz at 20 kHz update rate. */
-#define SPEED_LPF_ALPHA                     (0.0589F)   /**< New-data weight     */
-#define SPEED_LPF_ONE_MINUS_ALPHA           (1.0F - SPEED_LPF_ALPHA)  /**< Old-data weight */
+ *         First-order IIR low-pass applied to SpeedRad inside CddEncoder_Update().
+ *         Alpha = 0.0589 gives an approximately 600 Hz cutoff at the 20 kHz
+ *         update rate. Downstream consumers receive the filtered value and are
+ *         not expected to re-filter. */
+#define SPEED_LPF_ALPHA                     (0.0589F)                    /**< New-data weight    */
+#define SPEED_LPF_ONE_MINUS_ALPHA           (1.0F - SPEED_LPF_ALPHA)     /**< Old-data weight    */
 
-/** \brief rad/s -> RPM conversion factor.
- *         1 rad/s = (60 / 2*pi) RPM = ~9.5493 RPM. */
-#define ENCODER_RAD_PER_SEC_TO_RPM           (60.0F / ES_MATH_2PI_F)
 
-/*********************************************************************************************************************/
 /*-------------------------------------------------Data Structures---------------------------------------------------*/
-/*********************************************************************************************************************/
 
 /**
- * \brief   Encoder direction enumeration (matches ILLD convention).
- *          T3RDIR bit from GPT12_T3CON: 0 = CW, 1 = ACW.
+ * \brief Encoder direction enumeration.
  *
- * \note    MISRA 8.5 : One declaration per identifier.
+ * \details GPT12 T3RDIR is mapped directly:
+ *          0 = CW, 1 = ACW.
  */
 typedef enum
 {
-    ENC_DIR_CW  = 0x0U,       /**< Clockwise direction (forward)        */
-    ENC_DIR_ACW = 0x1U,       /**< Anti-clockwise direction (reverse)   */
+    ENC_DIR_CW  = 0x0U,
+    ENC_DIR_ACW = 0x1U
 } Encoder_Direction_T;
 
 /**
- * \brief   Encoder state structure.
+ * \brief Encoder runtime state.
  *
- * \details Holds all runtime data for the encoder driver, including filtered
- *          speed, absolute position, turn count, and T3 snapshot for delta
- *          computation.
- *
- * \note    All integer types here use the project-native EmbedSim names
- *          (int32_T, uint32_T, ...) from embed_sim_sys_types.h. The short
- *          ILLD aliases (sint32, uint32, ...) are NOT visible from this
- *          header on its own; using them would break when the header is
- *          included before any iLLD header.
- *
- * \note    MISRA 8.5 : One declaration per identifier.
+ * \warning TurnCount is written from Encoder_Index_ISR without a critical
+ *          section. It is not read inside this driver. Any external reader
+ *          MUST protect the read against the ISR, because 64-bit accesses
+ *          are not atomic on TriCore.
  */
 typedef struct
 {
-    real32_T    SpeedRad;                    /**< Angular velocity [rad/s], signed, per-tick            */
-    real32_T    SpeedRpm;                    /**< Angular velocity [RPM], signed, per-tick              */
-    real32_T    RotorAngle;                  /**< Mechanical rotor position in [0.0, 2*pi) [rad]        */
+    real32_T    SpeedRad;            /**< IIR-filtered signed speed, rad/s          */
+    real32_T    SpeedRpm;            /**< IIR-filtered signed speed, RPM            */
+    real32_T    RotorAngle;          /**< Mechanical angle in [0, 2*pi) rad         */
 
-    uint16_T    T3CounterPrev;               /**< Raw T3 latched at the end of the previous update.
-                                                  Stored unsigned; ALWAYS cast to int16_T when used
-                                                  in the delta computation. */
+    /*
+     * Raw 16-bit T3 snapshot. Always interpret as int16_T before calculating
+     * a signed delta.
+     */
+    uint16_T    T3CounterPrev;
 
-    uint32_T    ZEventPending;               /**< Set by the Z-ISR; the update clears it and
-                                                  discards one tick of speed delta. */
+    /*
+     * Set by the Z ISR. The next update synchronizes T3CounterPrev to the
+     * post-Z counter and suppresses the reset-spanning speed delta.
+     */
+    uint32_T    ZEventPending;
 
-    real32_T    T3SpeedConversionQuotient;   /**< (2*pi) / (EncoderResolution * UpdatePeriod) */
+    real32_T    T3SpeedConversionQuotient;
+    real32_T    CountsToRadians;
+    uint32_T    EncoderResolution;
+    real32_T    UpdatePeriod;
 
-    real32_T    CountsToRadians;             /**< 2*pi / EncoderResolution */
+    /*
+     * Revolution count. Positive = CW, negative = ACW according to the
+     * selected GPT12 direction convention. Written only from the Z ISR;
+     * 64-bit reads from other contexts are not atomic.
+     */
+    int64_T     TurnCount;
 
-    uint32_T    EncoderResolution;           /**< Cached encoder resolution (4000 counts/rev) */
+    uint32_T    Direction;
+    uint32_T    Initialized;
 
-    real32_T    UpdatePeriod;                /**< Cached update period (50 us) */
-
-    int64_T     TurnCount;                   /**< Revolutions (positive = CW). Owned by the Z-ISR. */
-
-    uint32_T    Direction;                   /**< Latest direction (ENC_DIR_CW / ENC_DIR_ACW) */
-
-    uint32_T    Initialized;                 /**< Initialization flag (0 = uninit, 1 = initialized) */
 } CddEncoder_State_T;
 
-/*********************************************************************************************************************/
 /*-------------------------------------------------Global variables--------------------------------------------------*/
-/*********************************************************************************************************************/
 
-/** \brief Global encoder state instance.
- *         MISRA 8.4 : definition lives in cdd_encoder_app.c; only a declaration
- *         is placed here. */
+/** \brief Global encoder state instance. */
 extern CddEncoder_State_T EncoderState_G;
 
-/*********************************************************************************************************************/
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
-/*********************************************************************************************************************/
 
-/**
- * \brief   Initialize the encoder hardware and state.
- * \return  uint32_T - 1 if successful, 0 if already initialized.
- *
- * \note    MISRA 8.1 : Explicit return type (uint32_T).
- *
- * \details This function performs the following initialization steps:
- *          1. Resets the software state structure.
- *          2. Enables the GPT12 module clock.
- *          3. Configures T3 for Incremental Interface Mode (4x decoding).
- *          4. Configures T4 for Z-index capture with automatic T3 reset.
- *          5. Sets up the interrupt for Z-index events.
- *          6. Starts the T3 timer.
- *
- * \note    Idempotent - safe to call multiple times.
- */
+/** \brief Initialize encoder hardware and software state. */
 extern uint32_T CddEncoder_Init(void);
 
 /**
- * \brief   Update encoder state (call at 20 kHz).
- * \return  void
- *
- * \note    MISRA 8.1 : Explicit void return type.
- *
- * \details This function must be called at the configured update rate (20 kHz).
- *          It reads the current T3 counter, computes the signed delta since
- *          the last tick, converts to rad/s, applies IIR filtering, and
- *          updates the rotor angle.
- *
- * \warning Failure to call this function at the correct frequency will result
- *          in incorrect speed and position calculations.
+ * \brief Update encoder state.
+ * \details Call at exactly 20 kHz for the configured speed conversion and
+ *          IIR filter coefficient.
  */
 extern void CddEncoder_Update(void);
 
-/**
- * \brief   Reset encoder position and state.
- * \return  void
- *
- * \note    MISRA 8.1 : Explicit void return type.
- *
- * \details Stops T3, clears the hardware counter to zero, resets all software
- *          state fields, and restarts T3. Useful for homing sequences or
- *          recovering from errors.
- */
+/** \brief Reset encoder position and runtime state. */
 extern void CddEncoder_Reset(void);
 
-/**
- * \brief   Get mechanical rotor position.
- * \return  real32_T - Position in radians [0.0 to 2*pi).
- *
- * \note    MISRA 8.1 : Explicit return type (real32_T).
- */
+/** \brief Get mechanical rotor position in [0, 2*pi) rad. */
 extern real32_T CddEncoder_GetRotorPosition(void);
 
 /**
- * \brief   Get angular velocity in rad/s.
- * \return  real32_T - Filtered speed in rad/s.
- *
- * \note    MISRA 8.1 : Explicit return type (real32_T).
- *
- * \details Returns the filtered angular velocity. The sign indicates
- *          direction: positive for CW (forward), negative for ACW (reverse).
+ * \brief Get signed angular velocity in rad/s.
+ * \details Positive = CW, negative = ACW. The returned value has already been
+ *          smoothed by the SPEED_LPF_ALPHA first-order IIR; callers do not
+ *          need to re-filter.
  */
 extern real32_T CddEncoder_GetSpeedRad(void);
 
 /**
- * \brief   Get angular velocity in RPM.
- * \return  real32_T - Speed in RPM. Sign indicates direction:
- *                     positive = CW, negative = ACW.
- *
- * \note    MISRA 8.1 : Explicit return type (real32_T).
- *
- * \note    SpeedRpm should equal SpeedRad * 9.5493 ( = 60 / 2*pi).
+ * \brief Get signed angular velocity in RPM.
+ * \details Positive = CW, negative = ACW. Shares the IIR-filtered SpeedRad
+ *          source with CddEncoder_GetSpeedRad().
  */
 extern real32_T CddEncoder_GetSpeedRpm(void);
 
-/**
- * \brief   Get current direction.
- * \return  uint32_T - ENC_DIR_CW (0) or ENC_DIR_ACW (1).
- *
- * \note    MISRA 8.1 : Explicit return type (uint32_T).
- */
+/** \brief Get current direction: ENC_DIR_CW or ENC_DIR_ACW. */
 extern uint32_T CddEncoder_GetDirection(void);
 
-/**
- * \brief   Check if encoder driver is initialized.
- * \return  uint32_T - 1 if initialized, 0 otherwise.
- *
- * \note    MISRA 8.1 : Explicit return type (uint32_T).
- */
+/** \brief Return 1 when initialized, otherwise 0. */
 extern uint32_T CddEncoder_IsInitialized(void);
 
 #endif /* COMPLEX_DEVICE_DRIVER_CDD_ENCODER_APP_H_ */
