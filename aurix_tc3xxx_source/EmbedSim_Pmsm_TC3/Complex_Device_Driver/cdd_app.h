@@ -283,7 +283,7 @@ typedef struct
      *  \note   Not written by CddApp_Init(); confirm producer before use.                */
     real32_T                SampleTime;
 
-    /** \brief  TLE9180D gate driver runtime handle                                     */
+    /** \brief  TLE9180D gate driver runtime handle                                       */
     CddTle9180_T            Inverter;
 
     /** \brief  Control loop Counter

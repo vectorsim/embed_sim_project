@@ -213,7 +213,7 @@ void CddApp_Init(void)
     CddApp_G.OffsetIw    = 0.0F;
 
     CddApp_G.CtrlMode    =  CDDAPP_CTRL_DFC_CLOSEDLOOP;
-    CddApp_G.SpeedRefRpm =  -800.0F;
+    CddApp_G.SpeedRefRpm =  800.0F;
     CddApp_G.SensorReadingBitField = 0x0U;
 
     /* Guard: proceed only from the reset state.  CDDAPP_INIT_PENDING == 0 is
