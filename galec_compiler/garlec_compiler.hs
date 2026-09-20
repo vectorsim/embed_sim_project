@@ -1,12 +1,15 @@
+
+
 module Main where
 
 import Data.Char (isSpace, isDigit, isAlpha, isAlphaNum)
 import Data.List (intercalate, nub)
 import Control.Applicative (Alternative(empty, (<|>)))
+import System.Environment (getArgs)
 
 
-sourceFile :: FilePath
-sourceFile = "simple_galec.txt"
+defaultSource :: FilePath
+defaultSource = "pmsm.galec"
 
 
 --------------------------------------------------------------------------------
@@ -185,7 +188,7 @@ keyword kw = do
 reservedWords :: [String]
 reservedWords =
     [ "block", "method", "algorithm", "end", "public"
-    , "input", "output"
+    , "input", "output", "parameter", "state", "function", "external"
     , "Real", "Integer", "Boolean", "String"
     , "if", "then", "else"
     , "for", "in", "to", "do", "step"
@@ -215,7 +218,15 @@ identifier = token $ label "identifier" $
 
 data Type      = Real | Integer | Boolean | StringT deriving Show
 data Direction = Input | Output                     deriving Show
-data Decl      = Decl Direction Type String         deriving Show
+
+data Attr = Attr String Expr deriving Show
+
+data Decl
+    = Decl Direction Type String [Attr]
+    | ParamDecl Type String
+    | StateDecl Type String
+    | InternalDecl Type String
+    deriving Show
 
 data Expr
     = Var String
@@ -241,12 +252,16 @@ data Expr
 
 data Stmt
     = Assign String Expr
+    | MultiAssign [String] Expr
     | If  Expr [Stmt] [Stmt]
     | For String Expr Expr (Maybe Expr) [Stmt]
     deriving Show
 
 data Method = Method String [Stmt]         deriving Show
-data Block  = Block String [Decl] [Method] deriving Show
+
+data Func = Func String [Decl] String deriving Show  -- name, decls, external name
+
+data Block  = Block String [Decl] [Func] [Method] deriving Show
 
 
 --------------------------------------------------------------------------------
@@ -267,13 +282,61 @@ direction =
     <|> Output <$ keyword "output"
 
 
-decl :: Parser Decl
-decl = do
+attr :: Parser Attr
+attr = do
+    name <- identifier
+    _    <- symbol "="
+    val  <- expression
+    return (Attr name val)
+
+
+attrList :: Parser [Attr]
+attrList = do
+    _ <- symbol "("
+    first <- attr
+    rest  <- many (symbol "," *> attr)
+    _ <- symbol ")"
+    return (first : rest)
+
+
+ioDecl :: Parser Decl
+ioDecl = do
     d <- direction
     t <- dataType
     n <- identifier
+    attrs <- optional attrList
     _ <- symbol ";"
-    return (Decl d t n)
+    return (Decl d t n (maybe [] id attrs))
+
+
+paramDecl :: Parser Decl
+paramDecl = do
+    _ <- keyword "parameter"
+    t <- dataType
+    n <- identifier
+    _ <- symbol ";"
+    return (ParamDecl t n)
+
+
+stateDecl :: Parser Decl
+stateDecl = do
+    _ <- keyword "state"
+    t <- dataType
+    n <- identifier
+    _ <- symbol ";"
+    return (StateDecl t n)
+
+
+internalDecl :: Parser Decl
+internalDecl = do
+    t <- dataType
+    n <- identifier
+    _ <- symbol ";"
+    return (InternalDecl t n)
+
+
+decl :: Parser Decl
+decl = ioDecl <|> paramDecl <|> stateDecl <|> internalDecl
 
 
 qualifiedName :: Parser String
@@ -418,7 +481,19 @@ chainl1 p op = do
 --------------------------------------------------------------------------------
 
 statement :: Parser Stmt
-statement = ifStmt <|> forStmt <|> assignStmt
+statement = ifStmt <|> forStmt <|> multiAssignStmt <|> assignStmt
+
+
+multiAssignStmt :: Parser Stmt
+multiAssignStmt = do
+    _     <- symbol "("
+    first <- identifier
+    rest  <- many (symbol "," *> identifier)
+    _     <- symbol ")"
+    _     <- symbol ":="
+    value <- expression
+    _     <- symbol ";"
+    return (MultiAssign (first : rest) value)
 
 
 assignStmt :: Parser Stmt
@@ -478,18 +553,55 @@ method = do
         else empty
 
 
+funcDecl :: Parser Decl
+funcDecl = ioDecl  -- only input/output inside functions
+
+
+stringLit :: Parser String
+stringLit = token $ do
+    _ <- char '"'
+    content <- many (satisfy "string char" (/= '"'))
+    _ <- char '"'
+    return content
+
+
+function :: Parser Func
+function = do
+    _      <- keyword "function"
+    name   <- identifier
+    decls  <- many funcDecl
+    _      <- keyword "external"
+    _      <- stringLit  -- "C"
+    -- the call like InvPark(vd, vq, theta, v_alpha, v_beta);
+    _      <- identifier  -- external name
+    _      <- symbol "("
+    _      <- optional (do
+                _ <- identifier
+                many (symbol "," *> identifier)
+                return ())
+    _      <- symbol ")"
+    _      <- symbol ";"
+    _      <- keyword "end"
+    endName <- identifier
+    _      <- symbol ";"
+    if name == endName
+        then return (Func name decls name)
+        else empty
+
+
 block :: Parser Block
 block = do
     _            <- keyword "block"
     name         <- identifier
     declarations <- many decl
+    funcs        <- many function
     _            <- optional (keyword "public")
     methods      <- many method
     _            <- keyword "end"
     endName      <- identifier
     _            <- symbol ";"
     if name == endName
-        then return (Block name declarations methods)
+        then return (Block name declarations funcs methods)
         else empty
 
 
@@ -547,7 +659,7 @@ formatError src pos msgs =
 --------------------------------------------------------------------------------
 
 indent :: Int -> String -> String
-indent n s = replicate (n * 2) ' ' ++ s
+indent n s = replicate (n * 4) ' ' ++ s
 
 prettyDir :: Direction -> String
 prettyDir Input  = "input"
@@ -559,34 +671,73 @@ prettyType Integer = "Integer"
 prettyType Boolean = "Boolean"
 prettyType StringT = "String"
 
+prettyAttr :: Attr -> String
+prettyAttr (Attr name expr) = name ++ " = " ++ prettyExpr expr
+
+prettyExpr :: Expr -> String
+prettyExpr (Var n)     = n
+prettyExpr (IntLit n)  = show n
+prettyExpr (RealLit x) = show x
+prettyExpr (BoolLit b) = show b
+prettyExpr (Neg e)     = "-" ++ prettyExpr e
+prettyExpr (Not e)     = "not " ++ prettyExpr e
+prettyExpr (Add a b)   = prettyExpr a ++ " + " ++ prettyExpr b
+prettyExpr (Sub a b)   = prettyExpr a ++ " - " ++ prettyExpr b
+prettyExpr (Mul a b)   = prettyExpr a ++ " * " ++ prettyExpr b
+prettyExpr (Div a b)   = prettyExpr a ++ " / " ++ prettyExpr b
+prettyExpr (And a b)   = prettyExpr a ++ " and " ++ prettyExpr b
+prettyExpr (Or  a b)   = prettyExpr a ++ " or "  ++ prettyExpr b
+prettyExpr (Eq  a b)   = prettyExpr a ++ " = "  ++ prettyExpr b
+prettyExpr (Ne  a b)   = prettyExpr a ++ " <> " ++ prettyExpr b
+prettyExpr (Lt  a b)   = prettyExpr a ++ " < "  ++ prettyExpr b
+prettyExpr (Le  a b)   = prettyExpr a ++ " <= " ++ prettyExpr b
+prettyExpr (Gt  a b)   = prettyExpr a ++ " > "  ++ prettyExpr b
+prettyExpr (Ge  a b)   = prettyExpr a ++ " >= " ++ prettyExpr b
+prettyExpr (Call n as) = n ++ "(" ++ intercalate ", " (map prettyExpr as) ++ ")"
+
 printAST :: Block -> IO ()
 printAST block =
     putStrLn (treeBlock block)
 
 
 treeBlock :: Block -> String
-treeBlock (Block name decls methods) =
+treeBlock (Block name decls funcs methods) =
     unlines $
-        ["Block: " ++ name]
-        ++ concatMap treeDecl decls
-        ++ concatMap treeMethod methods
+        [ "Block: " ++ name
+        , ""
+        ]
+        ++ (if null decls then [] else ["  -- Declarations --"] ++ concatMap treeDecl decls ++ [""])
+        ++ (if null funcs then [] else ["  -- External Functions --"] ++ concatMap treeFunc funcs ++ [""])
+        ++ (if null methods then [] else ["  -- Methods --"] ++ concatMap treeMethod methods)
 
 
 treeDecl :: Decl -> [String]
-treeDecl (Decl dir ty name) =
-    [ "  Declaration: "
-      ++ prettyDir dir
-      ++ " "
-      ++ prettyType ty
-      ++ " "
-      ++ name
+treeDecl (Decl dir ty name attrs) =
+    [ "  " ++ prettyDir dir ++ " " ++ prettyType ty ++ " " ++ name
+      ++ if null attrs
+           then ""
+           else "  (" ++ intercalate ", " (map prettyAttr attrs) ++ ")"
     ]
+treeDecl (ParamDecl ty name) =
+    [ "  parameter " ++ prettyType ty ++ " " ++ name ]
+treeDecl (StateDecl ty name) =
+    [ "  state " ++ prettyType ty ++ " " ++ name ]
+treeDecl (InternalDecl ty name) =
+    [ "  " ++ prettyType ty ++ " " ++ name ]
+
+
+treeFunc :: Func -> [String]
+treeFunc (Func name decls _) =
+    [ "  function " ++ name ]
+    ++ map ("    " ++) (concatMap treeDecl decls)
+    ++ [ "    external \"C\"" ]
 
 
 treeMethod :: Method -> [String]
 treeMethod (Method name stmts) =
-    [ "  Method: " ++ name ]
+    [ "  method " ++ name ]
     ++ concatMap (treeStmt 2) stmts
+    ++ [ "" ]
 
 
 treeStmt :: Int -> Stmt -> [String]
@@ -594,6 +745,13 @@ treeStmt :: Int -> Stmt -> [String]
 treeStmt d (Assign name expr) =
     [ indent d "Assign"
     , indent (d + 1) ("Variable: " ++ name)
+    ]
+    ++ treeExpr (d + 1) expr
+
+
+treeStmt d (MultiAssign names expr) =
+    [ indent d "MultiAssign"
+    , indent (d + 1) ("Variables: " ++ intercalate ", " names)
     ]
     ++ treeExpr (d + 1) expr
 
@@ -700,12 +858,358 @@ binaryTree d name a b =
 
 
 --------------------------------------------------------------------------------
+-- C Code Generation
+--------------------------------------------------------------------------------
+-- C Code Generation  (EmbedSim / real32_T target)
+--------------------------------------------------------------------------------
+
+cType :: Type -> String
+cType Real    = "real32_T"
+cType Integer = "int32_T"
+cType Boolean = "boolean_T"
+cType StringT = "const char*"
+
+-- Collect field names from different decl kinds
+declName :: Decl -> String
+declName (Decl _ _ n _)     = n
+declName (ParamDecl _ n)    = n
+declName (StateDecl _ n)    = n
+declName (InternalDecl _ n) = n
+
+declCType :: Decl -> String
+declCType (Decl _ t _ _)     = cType t
+declCType (ParamDecl t _)    = cType t
+declCType (StateDecl t _)    = cType t
+declCType (InternalDecl t _) = cType t
+
+isInput  (Decl Input  _ _ _) = True
+isInput  _                   = False
+isOutput (Decl Output _ _ _) = True
+isOutput _                   = False
+isParam  (ParamDecl _ _)     = True
+isParam  _                   = False
+isState  (StateDecl _ _)     = True
+isState  _                   = False
+isInternal (InternalDecl _ _) = True
+isInternal _                  = False
+
+-- Format a real literal with 'f' suffix for real32_T
+cRealLit :: Double -> String
+cRealLit x = show x ++ "f"
+
+-- Precedence levels (higher = binds tighter)
+-- 0: or, 1: and, 2: comparison, 3: add/sub, 4: mul/div, 5: unary, 6: atom
+precOf :: Expr -> Int
+precOf (Or _ _)  = 0
+precOf (And _ _) = 1
+precOf (Eq _ _)  = 2
+precOf (Ne _ _)  = 2
+precOf (Lt _ _)  = 2
+precOf (Le _ _)  = 2
+precOf (Gt _ _)  = 2
+precOf (Ge _ _)  = 2
+precOf (Add _ _) = 3
+precOf (Sub _ _) = 3
+precOf (Mul _ _) = 4
+precOf (Div _ _) = 4
+precOf (Neg _)   = 5
+precOf (Not _)   = 5
+precOf _         = 6   -- Var, lit, Call
+
+-- Parenthesize child only when its precedence is lower than parent
+-- (or equal for non-associative right side of Sub/Div)
+parenIf :: Int -> Bool -> String -> [String] -> Expr -> String
+parenIf parentPrec isRight pref locals e =
+    let child = cExprPrec pref locals e
+        need  = precOf e < parentPrec
+                || (isRight && precOf e == parentPrec && parentPrec `elem` [3,4])
+    in if need then "(" ++ child ++ ")" else child
+
+-- Core expression printer with precedence
+cExprPrec :: String -> [String] -> Expr -> String
+cExprPrec pref locals (Var n)
+    | n `elem` locals = n
+    | otherwise       = pref ++ n
+cExprPrec _ _ (IntLit n)      = show n
+cExprPrec _ _ (RealLit x)     = cRealLit x
+cExprPrec _ _ (BoolLit True)  = "TRUE"
+cExprPrec _ _ (BoolLit False) = "FALSE"
+cExprPrec pref locals (Neg e) =
+    "-" ++ parenIf 5 False pref locals e
+cExprPrec pref locals (Not e) =
+    "!" ++ parenIf 5 False pref locals e
+cExprPrec pref locals (Add a b) =
+    parenIf 3 False pref locals a ++ " + " ++ parenIf 3 True pref locals b
+cExprPrec pref locals (Sub a b) =
+    parenIf 3 False pref locals a ++ " - " ++ parenIf 3 True pref locals b
+cExprPrec pref locals (Mul a b) =
+    parenIf 4 False pref locals a ++ " * " ++ parenIf 4 True pref locals b
+cExprPrec pref locals (Div a b) =
+    parenIf 4 False pref locals a ++ " / " ++ parenIf 4 True pref locals b
+cExprPrec pref locals (And a b) =
+    parenIf 1 False pref locals a ++ " && " ++ parenIf 1 True pref locals b
+cExprPrec pref locals (Or a b) =
+    parenIf 0 False pref locals a ++ " || " ++ parenIf 0 True pref locals b
+cExprPrec pref locals (Eq a b) =
+    parenIf 2 False pref locals a ++ " == " ++ parenIf 2 True pref locals b
+cExprPrec pref locals (Ne a b) =
+    parenIf 2 False pref locals a ++ " != " ++ parenIf 2 True pref locals b
+cExprPrec pref locals (Lt a b) =
+    parenIf 2 False pref locals a ++ " < "  ++ parenIf 2 True pref locals b
+cExprPrec pref locals (Le a b) =
+    parenIf 2 False pref locals a ++ " <= " ++ parenIf 2 True pref locals b
+cExprPrec pref locals (Gt a b) =
+    parenIf 2 False pref locals a ++ " > "  ++ parenIf 2 True pref locals b
+cExprPrec pref locals (Ge a b) =
+    parenIf 2 False pref locals a ++ " >= " ++ parenIf 2 True pref locals b
+cExprPrec pref locals (Call "abs" [e]) =
+    "fabsf(" ++ cExprPrec pref locals e ++ ")"
+cExprPrec pref locals (Call "min" [a,b]) =
+    "fminf(" ++ cExprPrec pref locals a ++ ", " ++ cExprPrec pref locals b ++ ")"
+cExprPrec pref locals (Call "max" [a,b]) =
+    "fmaxf(" ++ cExprPrec pref locals a ++ ", " ++ cExprPrec pref locals b ++ ")"
+cExprPrec pref locals (Call n as) =
+    n ++ "(" ++ intercalate ", " (map (cExprPrec pref locals) as) ++ ")"
+
+-- Public entry (no surrounding parentheses needed)
+cExprLocals :: String -> [String] -> Expr -> String
+cExprLocals = cExprPrec
+
+-- Look up min/max attributes for a signal name from the block decls
+lookupMinMax :: [Decl] -> String -> (Maybe Expr, Maybe Expr)
+lookupMinMax decls name =
+    let attrsOf (Decl _ _ n attrs) | n == name = attrs
+        attrsOf _ = []
+        attrs = concatMap attrsOf decls
+        findA key = case [e | Attr k e <- attrs, k == key] of
+                        (e:_) -> Just e
+                        []    -> Nothing
+    in (findA "min", findA "max")
+
+
+-- Emit optional EmbedSim_ClampValue for a signal that has min/max attributes
+emitClamp :: String -> [String] -> [Decl] -> Int -> String -> [String]
+emitClamp pref locals decls d name =
+    let (mMin, mMax) = lookupMinMax decls name
+        lhs = if name `elem` locals then name else pref ++ name
+    in case (mMin, mMax) of
+         (Just lo, Just hi) ->
+             [ indent d (lhs ++ " = EmbedSim_ClampValue(" ++ lhs ++ ", "
+                         ++ cExprLocals pref locals lo ++ ", "
+                         ++ cExprLocals pref locals hi ++ ");") ]
+         _ -> []
+
+-- Statement generator
+cStmt :: String -> [String] -> [Decl] -> Int -> Stmt -> [String]
+cStmt pref locals decls d (Assign name expr) =
+    let lhs = if name `elem` locals then name else pref ++ name
+        (mMin, mMax) = lookupMinMax decls name
+        rhs0 = cExprLocals pref locals expr
+        -- If both min and max exist, wrap with EmbedSim_ClampValue
+        rhs = case (mMin, mMax) of
+                (Just lo, Just hi) ->
+                    "EmbedSim_ClampValue(" ++ rhs0 ++ ", "
+                    ++ cExprLocals pref locals lo ++ ", "
+                    ++ cExprLocals pref locals hi ++ ")"
+                _ -> rhs0
+    in [ indent d (lhs ++ " = " ++ rhs ++ ";") ]
+
+-- Special-case known external functions to call real EmbedSim APIs
+cStmt pref locals decls d (MultiAssign names (Call "InvPark" args))
+    | length args >= 3 && length names >= 2 =
+        let vd    = cExprLocals pref locals (args !! 0)
+            vq    = cExprLocals pref locals (args !! 1)
+            theta = cExprLocals pref locals (args !! 2)
+            va    = if (names !! 0) `elem` locals then names !! 0 else pref ++ (names !! 0)
+            vb    = if (names !! 1) `elem` locals then names !! 1 else pref ++ (names !! 1)
+        in [ indent d "/* Inverse Park transform (EmbedSim) */"
+           , indent d "{"
+           , indent (d+1) "FocDq_T dqIn;"
+           , indent (d+1) "FocAngle_T angleIn;"
+           , indent (d+1) "FocAlphaBeta_T abOut;"
+           , indent (d+1) ("dqIn.D = " ++ vd ++ ";")
+           , indent (d+1) ("dqIn.Q = " ++ vq ++ ";")
+           , indent (d+1) ("angleIn.ThetaE = " ++ theta ++ ";")
+           , indent (d+1) "(void)InvPark_Transform_Matrix(&dqIn, &angleIn, &abOut);"
+           , indent (d+1) (va ++ " = abOut.Alpha;")
+           , indent (d+1) (vb ++ " = abOut.Beta;")
+           ]
+           ++ concatMap (\n -> emitClamp pref locals decls (d+1) n) names
+           ++ [ indent d "}" ]
+
+cStmt pref locals decls d (MultiAssign names (Call "SVPWM" args))
+    | length args >= 3 && length names >= 3 =
+        let va   = cExprLocals pref locals (args !! 0)
+            vb   = cExprLocals pref locals (args !! 1)
+            vdc  = cExprLocals pref locals (args !! 2)
+            da   = if (names !! 0) `elem` locals then names !! 0 else pref ++ (names !! 0)
+            db   = if (names !! 1) `elem` locals then names !! 1 else pref ++ (names !! 1)
+            dc   = if (names !! 2) `elem` locals then names !! 2 else pref ++ (names !! 2)
+        in [ indent d "/* Space Vector PWM (EmbedSim) */"
+           , indent d "{"
+           , indent (d+1) "FocAlphaBeta_T abIn;"
+           , indent (d+1) "FocAngle_T angleIn;"
+           , indent (d+1) "SVM_DutyCycle_T dutyOut;"
+           , indent (d+1) ("abIn.Alpha = " ++ va ++ ";")
+           , indent (d+1) ("abIn.Beta  = " ++ vb ++ ";")
+           , indent (d+1) "/* Prefer self->theta when available (common in FOC controllers) */"
+           , indent (d+1) ("angleIn.ThetaE = " ++ pref ++ "theta;")
+           , indent (d+1) ("(void)SVM_CalculateDutyCycleFromAlphaBeta(&abIn, &angleIn, " ++ vdc ++ ", &dutyOut);")
+           , indent (d+1) (da ++ " = dutyOut.Ta;")
+           , indent (d+1) (db ++ " = dutyOut.Tb;")
+           , indent (d+1) (dc ++ " = dutyOut.Tc;")
+           ]
+           ++ concatMap (\n -> emitClamp pref locals decls (d+1) n) names
+           ++ [ indent d "}" ]
+
+cStmt pref locals decls d (MultiAssign names (Call fname args)) =
+    -- Generic fallback: trailing pointer outputs
+    let inArgs  = map (cExprLocals pref locals) args
+        outArgs = map (\n -> "&(" ++ (if n `elem` locals then n else pref ++ n) ++ ")") names
+        allArgs = inArgs ++ outArgs
+    in [ indent d (fname ++ "(" ++ intercalate ", " allArgs ++ ");") ]
+
+cStmt pref locals decls d (MultiAssign names expr) =
+    [ indent d "/* multi-assign fallback */"
+    , indent d (intercalate " = " (map (\n -> if n `elem` locals then n else pref ++ n) names)
+                ++ " = " ++ cExprLocals pref locals expr ++ ";")
+    ]
+
+cStmt pref locals decls d (If cond thenStmts elseStmts) =
+    [ indent d ("if (" ++ cExprLocals pref locals cond ++ ")")
+    , indent d "{"
+    ]
+    ++ concatMap (cStmt pref locals decls (d+1)) thenStmts
+    ++ [ indent d "}"
+       , indent d "else"
+       , indent d "{"
+       ]
+    ++ concatMap (cStmt pref locals decls (d+1)) elseStmts
+    ++ [ indent d "}" ]
+
+cStmt pref locals decls d (For var lo hi mstep body) =
+    let step = case mstep of
+                 Just s  -> cExprLocals pref locals s
+                 Nothing -> "1"
+        init = "int32_T " ++ var ++ " = " ++ cExprLocals pref locals lo
+        cond = var ++ " <= " ++ cExprLocals pref locals hi
+        incr = var ++ " += " ++ step
+        newLocals = var : locals
+    in [ indent d ("for (" ++ init ++ "; " ++ cond ++ "; " ++ incr ++ ")")
+       , indent d "{"
+       ]
+       ++ concatMap (cStmt pref newLocals decls (d+1)) body
+       ++ [ indent d "}" ]
+
+-- Generate header
+genHeader :: Block -> String
+genHeader (Block name decls funcs methods) =
+    let guard = map toUpperChar name ++ "_H_"
+        inputs    = filter isInput decls
+        outputs   = filter isOutput decls
+        params    = filter isParam decls
+        states    = filter isState decls
+        internals = filter isInternal decls
+        allFields = inputs ++ outputs ++ params ++ states ++ internals
+        needsTransform = any (\(Func n _ _) -> n == "InvPark" || n == "SVPWM") funcs
+    in unlines $
+        [ "/**********************************************************************************************************************"
+        , " * Generated from GALEC block: " ++ name
+        , " * Target: EmbedSim (real32_T)"
+        , " *********************************************************************************************************************/"
+        , "#ifndef " ++ guard
+        , "#define " ++ guard
+        , ""
+        , "#include \"embed_sim_sys_types.h\""
+        ]
+        ++ (if needsTransform
+               then [ "#include \"embed_sim_foc_types.h\""
+                    , "#include \"embed_sim_coordinate_transform.h\""
+                    , "#include \"embed_sim_sv_pwm.h\""
+                    ]
+               else [])
+        ++ [ ""
+           , "typedef struct"
+           , "{"
+           ]
+        ++ map (\d -> "    " ++ declCType d ++ " " ++ declName d ++ ";") allFields
+        ++ [ "} " ++ name ++ ";"
+           , ""
+           , "/* Controller API */"
+           , "void " ++ name ++ "_Startup(" ++ name ++ "* const self);"
+           , "void " ++ name ++ "_DoStep(" ++ name ++ "* const self);"
+           , ""
+           , "#endif /* " ++ guard ++ " */"
+           ]
+
+-- Generate source
+genSource :: Block -> String
+genSource (Block name decls funcs methods) =
+    let startup = findMethod "Startup" methods
+        dostep  = findMethod "DoStep" methods
+        pref    = "self->"
+    in unlines $
+        [ "/**********************************************************************************************************************"
+        , " * Generated from GALEC block: " ++ name
+        , " * Target: EmbedSim (real32_T)"
+        , " *********************************************************************************************************************/"
+        , "#include \"" ++ name ++ ".h\""
+        , ""
+        , "void " ++ name ++ "_Startup(" ++ name ++ "* const self)"
+        , "{"
+        ]
+        ++ (case startup of
+              Just (Method _ stmts) -> concatMap (cStmt pref [] decls 1) stmts
+              Nothing               -> ["    /* empty */"])
+        ++ [ "}"
+           , ""
+           , "void " ++ name ++ "_DoStep(" ++ name ++ "* const self)"
+           , "{"
+           ]
+        ++ (case dostep of
+              Just (Method _ stmts) -> concatMap (cStmt pref [] decls 1) stmts
+              Nothing               -> ["    /* empty */"])
+        ++ [ "}"
+           , ""
+           ]
+
+findMethod :: String -> [Method] -> Maybe Method
+findMethod n ms = case filter (\(Method name _) -> name == n) ms of
+                    (m:_) -> Just m
+                    []    -> Nothing
+
+toUpperChar :: Char -> Char
+toUpperChar c | c >= 'a' && c <= 'z' = toEnum (fromEnum c - 32)
+              | otherwise            = c
+
+-- Write generated files
+generateC :: Block -> IO ()
+generateC block@(Block name _ _ _) = do
+    let hFile = name ++ ".h"
+        cFile = name ++ ".c"
+    writeFile hFile (genHeader block)
+    writeFile cFile (genSource block)
+    putStrLn $ "Generated: " ++ hFile
+    putStrLn $ "Generated: " ++ cFile
+
+
+--------------------------------------------------------------------------------
 -- Main
 --------------------------------------------------------------------------------
 
 main :: IO ()
 main = do
-    source <- readFile sourceFile
+    args <- getArgs
+    let file = case args of
+                   (f:_) -> f
+                   []    -> defaultSource
+    source <- readFile file
+    putStrLn $ "=== Parsing: " ++ file ++ " ==="
+    putStrLn ""
     case runParser galecFile source 0 of
-        Ok ast _ _   -> printAST ast
+        Ok ast _ _   -> do
+            printAST ast
+            putStrLn ""
+            putStrLn "=== Generating C code (EmbedSim / real32_T) ==="
+            generateC ast
         Err msgs pos -> putStrLn (formatError source pos msgs)
