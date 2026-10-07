@@ -152,6 +152,24 @@ static SVM_Sector_T SVM_GetSectorFromAngle(MatrixFloat AngleRad)
 /**
  * \brief   Calculate switching times T1 and T2 for active vectors.
  */
+/**
+ * \brief   Calculate switching times T1 and T2 for active vectors
+ *          using the classic sector-relative sine formulation.
+ *
+ * \details Standard textbook formulas:
+ *            T1 = m * sin(π/3 - γ)
+ *            T2 = m * sin(γ)
+ *          where γ is the angle inside the current sector [0, π/3).
+ *
+ *          Over-modulation is handled by simple linear scaling so that
+ *          T1 + T2 ≤ 1.0.
+ *
+ * \param[in]  ActiveSector  Current active sector
+ * \param[in]  AngleRad      Electrical angle [rad] (absolute)
+ * \param[in]  ModIndex      Modulation index [0.0 … 1.0]
+ * \param[out] T1OutPtr      Pointer to T1 switching time [pu]
+ * \param[out] T2OutPtr      Pointer to T2 switching time [pu]
+ */
 static void SVM_CalculateTimes(
     SVM_Sector_T     ActiveSector,
     MatrixFloat      AngleRad,
@@ -159,54 +177,67 @@ static void SVM_CalculateTimes(
     MatrixFloat    * const T1OutPtr,
     MatrixFloat    * const T2OutPtr)
 {
-    MatrixFloat cosT1 = SVM_ZERO_F;
-    MatrixFloat cosT2 = SVM_ZERO_F;
-    MatrixFloat scale = SVM_SQRT3_OVER_2_F * ModIndex;
+    MatrixFloat gamma;          /* angle inside the sector [0, π/3) */
+    MatrixFloat sinGamma;
+    MatrixFloat sinPi3MinusGamma;
     MatrixFloat sum;
 
-    /* Calculate cosine terms based on sector */
+    /* ------------------------------------------------------------------ */
+    /* 1. Compute γ = angle relative to the beginning of the sector       */
+    /* ------------------------------------------------------------------ */
     switch (ActiveSector)
     {
         case SVM_SECTOR_I:
-            cosT1 = cosf(AngleRad + SVM_PI_OVER_6_F);
-            cosT2 = cosf(AngleRad - SVM_PI_OVER_2_F);
+            gamma = AngleRad;                                   /* 0 … π/3   */
             break;
 
         case SVM_SECTOR_II:
-            cosT1 = cosf(AngleRad - SVM_PI_OVER_6_F);
-            cosT2 = cosf(AngleRad - (5.0f * SVM_PI_OVER_6_F));
+            gamma = AngleRad - SVM_PI_OVER_3_F;                 /* π/3 … 2π/3 */
             break;
 
         case SVM_SECTOR_III:
-            cosT1 = cosf(AngleRad - SVM_PI_OVER_2_F);
-            cosT2 = cosf(AngleRad - (7.0f * SVM_PI_OVER_6_F));
+            gamma = AngleRad - SVM_2PI_OVER_3_F;                /* 2π/3 … π  */
             break;
 
         case SVM_SECTOR_IV:
-            cosT1 = cosf(AngleRad - (5.0f * SVM_PI_OVER_6_F));
-            cosT2 = cosf(AngleRad - (3.0f * SVM_PI_OVER_2_F));
+            gamma = AngleRad - SVM_PI_F;                        /* π … 4π/3  */
             break;
 
         case SVM_SECTOR_V:
-            cosT1 = cosf(AngleRad - (7.0f * SVM_PI_OVER_6_F));
-            cosT2 = cosf(AngleRad - (11.0f * SVM_PI_OVER_6_F));
+            gamma = AngleRad - SVM_4PI_OVER_3_F;                /* 4π/3 … 5π/3 */
             break;
 
         case SVM_SECTOR_VI:
-            cosT1 = cosf(AngleRad - (3.0f * SVM_PI_OVER_2_F));
-            cosT2 = cosf(AngleRad - SVM_PI_OVER_6_F);
+            gamma = AngleRad - SVM_5PI_OVER_3_F;                /* 5π/3 … 2π */
             break;
 
         default:
-            /* No action for invalid sector */
+            gamma = SVM_ZERO_F;
             break;
     }
 
-    /* Calculate switching times */
-    *T1OutPtr = scale * cosT1;
-    *T2OutPtr = scale * cosT2;
+    /* Guarantee γ is in [0, π/3) even with floating-point noise */
+    if (gamma < SVM_ZERO_F)
+    {
+        gamma = SVM_ZERO_F;
+    }
+    else if (gamma >= SVM_PI_OVER_3_F)
+    {
+        gamma = SVM_PI_OVER_3_F - 1.0e-6f;   /* tiny epsilon to stay inside */
+    }
 
-    /* Clamp negative values to zero */
+    /* ------------------------------------------------------------------ */
+    /* 2. Classic T1 / T2 calculation                                     */
+    /* ------------------------------------------------------------------ */
+    sinGamma            = sinf(gamma);
+    sinPi3MinusGamma    = sinf(SVM_PI_OVER_3_F - gamma);
+
+    *T1OutPtr = ModIndex * sinPi3MinusGamma;
+    *T2OutPtr = ModIndex * sinGamma;
+
+    /* ------------------------------------------------------------------ */
+    /* 3. Safety clamps (should never be needed in linear range)          */
+    /* ------------------------------------------------------------------ */
     if (*T1OutPtr < SVM_ZERO_F)
     {
         *T1OutPtr = SVM_ZERO_F;
@@ -216,7 +247,9 @@ static void SVM_CalculateTimes(
         *T2OutPtr = SVM_ZERO_F;
     }
 
-    /* Normalize if sum exceeds unity (overmodulation handling) */
+    /* ------------------------------------------------------------------ */
+    /* 4. Simple over-modulation handling                                 */
+    /* ------------------------------------------------------------------ */
     sum = *T1OutPtr + *T2OutPtr;
     if (sum > ES_MATH_ONE_F)
     {
