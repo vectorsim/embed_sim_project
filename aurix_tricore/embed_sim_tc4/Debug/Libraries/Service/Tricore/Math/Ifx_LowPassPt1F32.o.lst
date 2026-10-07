@@ -1,0 +1,174 @@
+   1              	
+   2              	 .file "Ifx_LowPassPt1F32.c"
+   3              	 .file "Ifx_LowPassPt1F32.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.Ifx_LowPassPt1F32_init,"ax",@progbits
+   7              	 .align 1
+   8              	 .global Ifx_LowPassPt1F32_init
+  10              	Ifx_LowPassPt1F32_init:
+  11              	.LFB1:
+  12              	 .file 1 "../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c"
+   1:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c **** /**
+   2:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  * \file Ifx_LowPassPt1F32.c
+   3:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  * \brief Low pass filter PT1
+   4:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  *
+   5:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  *
+   8:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  *
+   9:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****   *                                 IMPORTANT NOTICE
+  10:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  *
+  11:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  *
+  12:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  * this file except in compliance with IFASLL.
+  15:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  *
+  16:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  *
+  26:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  */
+  27:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c **** 
+  28:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c **** //------------------------------------------------------------------------------
+  29:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c **** #include "Ifx_LowPassPt1F32.h"
+  30:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c **** //------------------------------------------------------------------------------
+  31:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c **** 
+  32:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c **** /** \brief Set the low pass filter configuration
+  33:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  *
+  34:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  * This function sets the low pass filter  configuration and reset the filter output.
+  35:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  *
+  36:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  * \param filter Specifies PT1 filter.
+  37:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  * \param config Specifies the PT1 filter configuration.
+  38:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  *
+  39:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  * \return None
+  40:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  */
+  41:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c **** void Ifx_LowPassPt1F32_init(Ifx_LowPassPt1F32 *filter, const Ifx_LowPassPt1F32_Config *config)
+  42:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c **** {
+  13              	 .loc 1 42 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  43:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****     float32 tStar;
+  17              	 .loc 1 43 5
+  44:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****     float32 T = 1 / config->cutOffFrequency;
+  18              	 .loc 1 44 5
+  19              	 .loc 1 44 27 is_stmt 0
+  20 0002 5453     	 ld.w %d3,[%a5]0
+  21              	 .loc 1 44 13
+  22 0004 7B00F823 	 movh %d2,16256
+  23 0008 4B325130 	 div.f %d3,%d2,%d3
+  24              	.LVL1:
+  45:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****     tStar       = 1 / (T / config->samplingTime + 1);
+  25              	 .loc 1 45 5 is_stmt 1
+  26              	 .loc 1 45 34 is_stmt 0
+  27 000c 19540800 	 ld.w %d4,[%a5]8
+  28              	 .loc 1 45 26
+  29 0010 4B435130 	 div.f %d3,%d3,%d4
+  30              	.LVL2:
+  31              	 .loc 1 45 49
+  32 0014 6B022133 	 add.f %d3,%d3,%d2
+  33              	 .loc 1 45 17
+  34 0018 4B325120 	 div.f %d2,%d2,%d3
+  35              	.LVL3:
+  46:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c **** 
+  47:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****     filter->a   = config->gain * tStar;
+  36              	 .loc 1 47 5 is_stmt 1
+  37              	 .loc 1 47 25 is_stmt 0
+  38 001c 19530400 	 ld.w %d3,[%a5]4
+  39              	 .loc 1 47 32
+  40 0020 4B234130 	 mul.f %d3,%d3,%d2
+  41              	 .loc 1 47 17
+  42 0024 7443     	 st.w [%a4]0,%d3
+  43              	.LVL4:
+  48:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****     filter->b   = tStar;
+  44              	 .loc 1 48 5 is_stmt 1
+  45              	 .loc 1 48 17 is_stmt 0
+  46 0026 59420400 	 st.w [%a4]4,%d2
+  49:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****     filter->out = 0;
+  47              	 .loc 1 49 5 is_stmt 1
+  48              	 .loc 1 49 17 is_stmt 0
+  49 002a 8202     	 mov %d2,0
+  50              	.LVL5:
+  51 002c 59420800 	 st.w [%a4]8,%d2
+  50:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c **** }
+  52              	 .loc 1 50 1
+  53 0030 0090     	 ret 
+  54              	.LFE1:
+  56              	 .global Ifx_LowPassPt1F32_init_end
+  57              	Ifx_LowPassPt1F32_init_end:
+  58              	 .section .text.Ifx_LowPassPt1F32_do,"ax",@progbits
+  59              	 .align 1
+  60              	 .global Ifx_LowPassPt1F32_do
+  62              	Ifx_LowPassPt1F32_do:
+  63              	.LFB2:
+  51:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c **** 
+  52:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c **** 
+  53:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c **** /** \brief Execute the low pass filter
+  54:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  * \param filter Specifies PT1 filter.
+  55:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  * \param input Specifies the filter input.
+  56:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  *
+  57:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  * \return Returns the filter output
+  58:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****  */
+  59:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c **** float32 Ifx_LowPassPt1F32_do(Ifx_LowPassPt1F32 *filter, float32 input)
+  60:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c **** {
+  64              	 .loc 1 60 1 is_stmt 1
+  65              	.LVL6:
+  66 0000 40AE     	 mov.aa %a14,%SP
+  67              	.LCFI1:
+  61:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****     filter->out = filter->out + filter->a * input - filter->b * filter->out;
+  68              	 .loc 1 61 5
+  69              	 .loc 1 61 25 is_stmt 0
+  70 0002 19450800 	 ld.w %d5,[%a4]8
+  71              	 .loc 1 61 39
+  72 0006 5442     	 ld.w %d2,[%a4]0
+  73              	 .loc 1 61 43
+  74 0008 4B424120 	 mul.f %d2,%d2,%d4
+  75              	 .loc 1 61 31
+  76 000c 6B022135 	 add.f %d3,%d5,%d2
+  77              	 .loc 1 61 59
+  78 0010 19420400 	 ld.w %d2,[%a4]4
+  79              	 .loc 1 61 63
+  80 0014 4B254120 	 mul.f %d2,%d5,%d2
+  81              	 .loc 1 61 51
+  82 0018 6B023123 	 sub.f %d2,%d3,%d2
+  83              	 .loc 1 61 17
+  84 001c 59420800 	 st.w [%a4]8,%d2
+  62:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c ****     return filter->out;
+  85              	 .loc 1 62 5 is_stmt 1
+  63:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.c **** }
+  86              	 .loc 1 63 1 is_stmt 0
+  87 0020 0090     	 ret 
+  88              	.LFE2:
+  90              	 .global Ifx_LowPassPt1F32_do_end
+  91              	Ifx_LowPassPt1F32_do_end:
+ 132              	.Letext0:
+ 133              	 .file 2 "../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h"
+ 134              	 .file 3 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 659 0000 00000000 	 .word Ifx_LowPassPt1F32_init
+ 660 0004 00000000 	 .word Ifx_LowPassPt1F32_init_end
+ 661 0008 1C003444 	 .word 0x4434001c
+ 662 000c 00003000 	 .word 0x00300000
+ 663 0010 00000000 	 .word 0x00000000
+ 664 0014 C0000000 	 .word 0x000000c0
+ 665 0018 00000000 	 .word Ifx_LowPassPt1F32_do
+ 666 001c 00000000 	 .word Ifx_LowPassPt1F32_do_end
+ 667 0020 3C001444 	 .word 0x4414003c
+ 668 0024 10001000 	 .word 0x00100010
+ 669 0028 04000000 	 .word 0x00000004
+ 670 002c C0000000 	 .word 0x000000c0
+DEFINED SYMBOLS
+                            *ABS*:00000000 Ifx_LowPassPt1F32.c
+                            *ABS*:00000000 Ifx_LowPassPt1F32.c
+    {standard input}:10     .text.Ifx_LowPassPt1F32_init:00000000 Ifx_LowPassPt1F32_init
+    {standard input}:57     .text.Ifx_LowPassPt1F32_init:00000032 Ifx_LowPassPt1F32_init_end
+    {standard input}:62     .text.Ifx_LowPassPt1F32_do:00000000 Ifx_LowPassPt1F32_do
+    {standard input}:91     .text.Ifx_LowPassPt1F32_do:00000022 Ifx_LowPassPt1F32_do_end
+
+NO UNDEFINED SYMBOLS

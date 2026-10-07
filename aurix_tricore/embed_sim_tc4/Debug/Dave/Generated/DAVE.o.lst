@@ -1,0 +1,106 @@
+   1              	
+   2              	 .file "DAVE.c"
+   3              	 .file "DAVE.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.DAVE_Init,"ax",@progbits
+   7              	 .align 1
+   8              	 .weak DAVE_Init
+  10              	DAVE_Init:
+  11              	.LFB0:
+  12              	 .file 1 "../Dave/Generated/DAVE.c"
+   1:../Dave/Generated/DAVE.c **** 
+   2:../Dave/Generated/DAVE.c **** /**
+   3:../Dave/Generated/DAVE.c ****  * @cond
+   4:../Dave/Generated/DAVE.c ****  **************************************************************************************************
+   5:../Dave/Generated/DAVE.c ****  *
+   6:../Dave/Generated/DAVE.c ****  * Copyright (c) 2015-2020, Infineon Technologies AG
+   7:../Dave/Generated/DAVE.c ****  * All rights reserved.
+   8:../Dave/Generated/DAVE.c ****  *
+   9:../Dave/Generated/DAVE.c ****  * Redistribution and use in source and binary forms, with or without modification,are permitted pr
+  10:../Dave/Generated/DAVE.c ****  * following conditions are met:
+  11:../Dave/Generated/DAVE.c ****  *
+  12:../Dave/Generated/DAVE.c ****  *   Redistributions of source code must retain the above copyright notice, this list of conditions
+  13:../Dave/Generated/DAVE.c ****  *   disclaimer.
+  14:../Dave/Generated/DAVE.c ****  *
+  15:../Dave/Generated/DAVE.c ****  *   Redistributions in binary form must reproduce the above copyright notice, this list of conditi
+  16:../Dave/Generated/DAVE.c ****  *   following disclaimer in the documentation and/or other materials provided with the distributio
+  17:../Dave/Generated/DAVE.c ****  *
+  18:../Dave/Generated/DAVE.c ****  *   Neither the name of the copyright holders nor the names of its contributors may be used to end
+  19:../Dave/Generated/DAVE.c ****  *   products derived from this software without specific prior written permission.
+  20:../Dave/Generated/DAVE.c ****  *
+  21:../Dave/Generated/DAVE.c ****  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR I
+  22:../Dave/Generated/DAVE.c ****  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTI
+  23:../Dave/Generated/DAVE.c ****  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE  FOR ANY DIRECT, IN
+  24:../Dave/Generated/DAVE.c ****  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBS
+  25:../Dave/Generated/DAVE.c ****  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THE
+  26:../Dave/Generated/DAVE.c ****  * WHETHER IN CONTRACT, STRICT LIABILITY,OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+  27:../Dave/Generated/DAVE.c ****  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  28:../Dave/Generated/DAVE.c ****  *
+  29:../Dave/Generated/DAVE.c ****  * To improve the quality of the software, users are encouraged to share modifications, enhancement
+  30:../Dave/Generated/DAVE.c ****  * with Infineon Technologies AG (dave@infineon.com).
+  31:../Dave/Generated/DAVE.c ****  **************************************************************************************************
+  32:../Dave/Generated/DAVE.c ****  *
+  33:../Dave/Generated/DAVE.c ****  * Change History
+  34:../Dave/Generated/DAVE.c ****  * --------------
+  35:../Dave/Generated/DAVE.c ****  *
+  36:../Dave/Generated/DAVE.c ****  * 2014-06-16:
+  37:../Dave/Generated/DAVE.c ****  *     - Initial version<br>
+  38:../Dave/Generated/DAVE.c ****  * 2015-08-28:
+  39:../Dave/Generated/DAVE.c ****  *     - Added CLOCK_XMC1_Init conditionally
+  40:../Dave/Generated/DAVE.c ****  * 2018-08-08:
+  41:../Dave/Generated/DAVE.c ****  *     - Add creation of projectData.bak file
+  42:../Dave/Generated/DAVE.c ****  * 2019-01-30:
+  43:../Dave/Generated/DAVE.c ****  *     - Fix creation of projectData.bak file
+  44:../Dave/Generated/DAVE.c ****  * 2019-04-29:
+  45:../Dave/Generated/DAVE.c ****  *     - Make DAVE_Init() weak, the user can reimplement the function
+  46:../Dave/Generated/DAVE.c ****  *
+  47:../Dave/Generated/DAVE.c ****  * @endcond
+  48:../Dave/Generated/DAVE.c ****  *
+  49:../Dave/Generated/DAVE.c ****  */
+  50:../Dave/Generated/DAVE.c **** 
+  51:../Dave/Generated/DAVE.c **** /**************************************************************************************************
+  52:../Dave/Generated/DAVE.c ****  * HEADER FILES
+  53:../Dave/Generated/DAVE.c ****  **************************************************************************************************
+  54:../Dave/Generated/DAVE.c **** #include "DAVE.h"
+  55:../Dave/Generated/DAVE.c **** 
+  56:../Dave/Generated/DAVE.c **** /**************************************************************************************************
+  57:../Dave/Generated/DAVE.c ****  * API IMPLEMENTATION
+  58:../Dave/Generated/DAVE.c ****  **************************************************************************************************
+  59:../Dave/Generated/DAVE.c **** 
+  60:../Dave/Generated/DAVE.c **** /*******************************************************************************
+  61:../Dave/Generated/DAVE.c ****  * @brief This function initializes the APPs Init Functions.
+  62:../Dave/Generated/DAVE.c ****  *
+  63:../Dave/Generated/DAVE.c ****  * @param[in]  None
+  64:../Dave/Generated/DAVE.c ****  *
+  65:../Dave/Generated/DAVE.c ****  * @return  DAVE_STATUS_t <BR>
+  66:../Dave/Generated/DAVE.c ****  ******************************************************************************/
+  67:../Dave/Generated/DAVE.c **** __attribute__((weak)) DAVE_STATUS_t DAVE_Init(void)
+  68:../Dave/Generated/DAVE.c **** {
+  13              	 .loc 1 68 1
+  14 0000 40AE     	 mov.aa %a14,%SP
+  15              	.LCFI0:
+  69:../Dave/Generated/DAVE.c ****   DAVE_STATUS_t init_status;
+  16              	 .loc 1 69 3
+  70:../Dave/Generated/DAVE.c ****   
+  71:../Dave/Generated/DAVE.c ****   init_status = DAVE_STATUS_SUCCESS; 
+  17              	 .loc 1 71 3
+  18              	.LVL0:
+  72:../Dave/Generated/DAVE.c ****   return init_status;
+  19              	 .loc 1 72 3
+  73:../Dave/Generated/DAVE.c **** } /**  End of function DAVE_Init */
+  20              	 .loc 1 73 1 is_stmt 0
+  21 0002 8202     	 mov %d2,0
+  22 0004 0090     	 ret 
+  23              	.LFE0:
+  25              	 .weak DAVE_Init_end
+  26              	DAVE_Init_end:
+  55              	.Letext0:
+  56              	 .file 2 "../Dave/Generated/DAVE.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 DAVE.c
+                            *ABS*:00000000 DAVE.c
+    {standard input}:10     .text.DAVE_Init:00000000 DAVE_Init
+    {standard input}:26     .text.DAVE_Init:00000006 DAVE_Init_end
+
+NO UNDEFINED SYMBOLS

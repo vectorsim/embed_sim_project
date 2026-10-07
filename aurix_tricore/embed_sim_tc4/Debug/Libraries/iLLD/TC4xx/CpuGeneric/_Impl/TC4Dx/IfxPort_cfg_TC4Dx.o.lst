@@ -1,0 +1,138 @@
+   1              	
+   2              	 .file "IfxPort_cfg_TC4Dx.c"
+   3              	 .file "IfxPort_cfg_TC4Dx.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .global IfxPort_cfg_indexMap
+   7              	 .section .rodata.IfxPort_cfg_indexMap,"a"
+   8              	 .align 2
+  11              	IfxPort_cfg_indexMap:
+  12 0000 00A003F0 	 .word -268197888
+  13 0004 00000000 	 .word 0
+  14 0008 00A403F0 	 .word -268196864
+  15 000c 01000000 	 .word 1
+  16 0010 00A803F0 	 .word -268195840
+  17 0014 02000000 	 .word 2
+  18 0018 00AC03F0 	 .word -268194816
+  19 001c 03000000 	 .word 3
+  20 0020 00B003F0 	 .word -268193792
+  21 0024 04000000 	 .word 4
+  22 0028 00C803F0 	 .word -268187648
+  23 002c 0A000000 	 .word 10
+  24 0030 00D403F0 	 .word -268184576
+  25 0034 0D000000 	 .word 13
+  26 0038 00D803F0 	 .word -268183552
+  27 003c 0E000000 	 .word 14
+  28 0040 00DC03F0 	 .word -268182528
+  29 0044 0F000000 	 .word 15
+  30 0048 00E003F0 	 .word -268181504
+  31 004c 10000000 	 .word 16
+  32 0050 00F003F0 	 .word -268177408
+  33 0054 14000000 	 .word 20
+  34 0058 00F403F0 	 .word -268176384
+  35 005c 15000000 	 .word 21
+  36 0060 00F803F0 	 .word -268175360
+  37 0064 16000000 	 .word 22
+  38 0068 00FC03F0 	 .word -268174336
+  39 006c 17000000 	 .word 23
+  40 0070 000404F0 	 .word -268172288
+  41 0074 19000000 	 .word 25
+  42 0078 001804F0 	 .word -268167168
+  43 007c 1E000000 	 .word 30
+  44 0080 001C04F0 	 .word -268166144
+  45 0084 1F000000 	 .word 31
+  46 0088 002004F0 	 .word -268165120
+  47 008c 20000000 	 .word 32
+  48 0090 002404F0 	 .word -268164096
+  49 0094 21000000 	 .word 33
+  50 0098 002804F0 	 .word -268163072
+  51 009c 22000000 	 .word 34
+  52 00a0 002C04F0 	 .word -268162048
+  53 00a4 23000000 	 .word 35
+  54 00a8 004004F0 	 .word -268156928
+  55 00ac 28000000 	 .word 40
+  56              	 .global IfxPort_cfg_esrMasks
+  57              	 .section .rodata.IfxPort_cfg_esrMasks,"a"
+  58              	 .align 2
+  61              	IfxPort_cfg_esrMasks:
+  62 0000 00A003F0 	 .word -268197888
+  63 0004 FFFF     	 .short -1
+  64 0006 0000     	 .zero 2
+  65 0008 00A403F0 	 .word -268196864
+  66 000c FFFF     	 .short -1
+  67 000e 0000     	 .zero 2
+  68 0010 00A803F0 	 .word -268195840
+  69 0014 FFFF     	 .short -1
+  70 0016 0000     	 .zero 2
+  71 0018 00AC03F0 	 .word -268194816
+  72 001c FFFF     	 .short -1
+  73 001e 0000     	 .zero 2
+  74 0020 00B003F0 	 .word -268193792
+  75 0024 FFFF     	 .short -1
+  76 0026 0000     	 .zero 2
+  77 0028 00C803F0 	 .word -268187648
+  78 002c FFFF     	 .short -1
+  79 002e 0000     	 .zero 2
+  80 0030 00D403F0 	 .word -268184576
+  81 0034 FFFF     	 .short -1
+  82 0036 0000     	 .zero 2
+  83 0038 00D803F0 	 .word -268183552
+  84 003c FFFF     	 .short -1
+  85 003e 0000     	 .zero 2
+  86 0040 00DC03F0 	 .word -268182528
+  87 0044 FFFF     	 .short -1
+  88 0046 0000     	 .zero 2
+  89 0048 00E003F0 	 .word -268181504
+  90 004c FFFF     	 .short -1
+  91 004e 0000     	 .zero 2
+  92 0050 00F003F0 	 .word -268177408
+  93 0054 FFFF     	 .short -1
+  94 0056 0000     	 .zero 2
+  95 0058 00F403F0 	 .word -268176384
+  96 005c FFFF     	 .short -1
+  97 005e 0000     	 .zero 2
+  98 0060 00F803F0 	 .word -268175360
+  99 0064 FFFF     	 .short -1
+ 100 0066 0000     	 .zero 2
+ 101 0068 00FC03F0 	 .word -268174336
+ 102 006c FFFF     	 .short -1
+ 103 006e 0000     	 .zero 2
+ 104 0070 000404F0 	 .word -268172288
+ 105 0074 FFFF     	 .short -1
+ 106 0076 0000     	 .zero 2
+ 107 0078 001804F0 	 .word -268167168
+ 108 007c FFFF     	 .short -1
+ 109 007e 0000     	 .zero 2
+ 110 0080 001C04F0 	 .word -268166144
+ 111 0084 FFFF     	 .short -1
+ 112 0086 0000     	 .zero 2
+ 113 0088 002004F0 	 .word -268165120
+ 114 008c FFFF     	 .short -1
+ 115 008e 0000     	 .zero 2
+ 116 0090 002404F0 	 .word -268164096
+ 117 0094 FFFF     	 .short -1
+ 118 0096 0000     	 .zero 2
+ 119 0098 002804F0 	 .word -268163072
+ 120 009c FFFF     	 .short -1
+ 121 009e 0000     	 .zero 2
+ 122 00a0 002C04F0 	 .word -268162048
+ 123 00a4 FFFF     	 .short -1
+ 124 00a6 0000     	 .zero 2
+ 125 00a8 004004F0 	 .word -268156928
+ 126 00ac FFFF     	 .short -1
+ 127 00ae 0000     	 .zero 2
+ 128              	.section .text,"ax",@progbits
+ 129              	.Letext0:
+ 130              	 .file 1 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 131              	 .file 2 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+ 132              	 .file 3 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 133              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/IfxPort_regdef.h"
+ 134              	 .file 5 "../Libraries/iLLD/TC4xx/CpuGeneric/_Impl/TC4Dx/IfxPort_cfg_TC4Dx.h"
+ 135              	 .file 6 "../Libraries/iLLD/TC4xx/CpuGeneric/_Impl/TC4Dx/IfxPort_cfg_TC4Dx.c"
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxPort_cfg_TC4Dx.c
+                            *ABS*:00000000 IfxPort_cfg_TC4Dx.c
+    {standard input}:11     .rodata.IfxPort_cfg_indexMap:00000000 IfxPort_cfg_indexMap
+    {standard input}:61     .rodata.IfxPort_cfg_esrMasks:00000000 IfxPort_cfg_esrMasks
+
+NO UNDEFINED SYMBOLS

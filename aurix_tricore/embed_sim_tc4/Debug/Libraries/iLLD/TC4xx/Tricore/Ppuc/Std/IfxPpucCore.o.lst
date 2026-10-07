@@ -1,0 +1,583 @@
+   1              	
+   2              	 .file "IfxPpucCore.c"
+   3              	 .file "IfxPpucCore.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.IfxPpucCore_configureCoreAndRun,"ax",@progbits
+   7              	 .align 1
+   8              	 .global IfxPpucCore_configureCoreAndRun
+  10              	IfxPpucCore_configureCoreAndRun:
+  11              	.LFB215:
+  12              	 .file 1 "../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c"
+   1:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** /**
+   2:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****  * \file IfxPpucCore.c
+   3:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****  * \brief PPUC basic functionality
+   4:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****  *
+   5:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****  *
+   8:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****  *
+   9:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****  *
+  10:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****  *                                 IMPORTANT NOTICE
+  11:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****  *
+  12:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****  * this file except in compliance with IFASLL.
+  15:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****  *
+  16:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****  *
+  26:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****  *
+  27:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****  */
+  28:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** 
+  29:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** /******************************************************************************/
+  30:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** /*----------------------------------Includes----------------------------------*/
+  31:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** /******************************************************************************/
+  32:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** 
+  33:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** #include "Ifx_Cfg.h"
+  34:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** #if defined (__TASKING__)
+  35:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** #pragma warning 508 	    /* To suppress empty file warning */
+  36:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** #endif    
+  37:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** #if defined (__ghs__)    
+  38:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** #pragma diag_suppress 96	/* To suppress empty file warning */
+  39:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** #endif
+  40:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** 
+  41:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** #if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) || defined(DEVICE_TC49XNAA) ||defined(DEVICE_TC
+  42:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** #include "IfxPpucCore.h"
+  43:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** 
+  44:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** /******************************************************************************/
+  45:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** /*-------------------------Function Implementations---------------------------*/
+  46:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** /******************************************************************************/
+  47:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** 
+  48:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** void IfxPpucCore_configureCoreAndRun(Ifx_PPU *ppuc, uint32 intVectAddress)
+  49:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** {
+  13              	 .loc 1 49 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  50:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****     ppuc->CLC.U = 0U;
+  17              	 .loc 1 50 5
+  18              	 .loc 1 50 17 is_stmt 0
+  19 0002 8202     	 mov %d2,0
+  20 0004 7442     	 st.w [%a4]0,%d2
+  51:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** 
+  52:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****     IfxPpucCore_configureInterruptVectorBaseAddress(ppuc, intVectAddress);
+  21              	 .loc 1 52 5 is_stmt 1
+  22              	.LVL1:
+  23              	.LBB4:
+  24              	.LBB5:
+  25              	 .file 2 "../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h"
+   1:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /**
+   2:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \file IfxPpucCore.h
+   3:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \brief PPUC  basic functionality
+   4:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \ingroup IfxLld_Ppuc
+   5:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  *
+   6:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \version iLLD-TC4-v2.7.0
+   7:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   8:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  *
+   9:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  *
+  10:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  *
+  11:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  *                                 IMPORTANT NOTICE
+  12:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  *
+  13:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  14:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  15:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * this file except in compliance with IFASLL.
+  16:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  *
+  17:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  18:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * Unless required by applicable law or agreed to in writing, software distributed
+  19:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  20:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  21:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * whether express, implied, statutory or otherwise, including but not limited to
+  22:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  23:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * defects in the licensed items, or non-infringement of third parties'
+  24:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * intellectual property rights. See the full license text for the specific
+  25:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * language governing permissions and limitations under IFASLL.
+  26:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  *
+  27:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  *
+  28:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * Contains the implementation related to the EV Core
+  29:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  *
+  30:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \defgroup IfxLld_Ppuc_Std_Core Core Basic Functionality
+  31:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \ingroup IfxLld_Ppuc_Std
+  32:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \defgroup IfxLld_Ppuc_Std_Core_Core Core_Functions
+  33:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \ingroup IfxLld_Ppuc_Std_Core
+  34:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \defgroup IfxLld_Ppuc_Std_Core_Enums Core_Enums
+  35:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \ingroup IfxLld_Ppuc_Std_Core
+  36:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \defgroup IfxLld_Ppuc_Std_Core_structures Core_Structures
+  37:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \ingroup IfxLld_Ppuc_Std_Core
+  38:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  */
+  39:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+  40:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** #ifndef IFXPPUCCORE_H
+  41:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** #define IFXPPUCCORE_H 1
+  42:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+  43:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /******************************************************************************/
+  44:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /*----------------------------------Includes----------------------------------*/
+  45:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /******************************************************************************/
+  46:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+  47:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** #include "_Impl/IfxPpuc_cfg.h"
+  48:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** #include "Cpu/Std/IfxCpu_Intrinsics.h"
+  49:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** #include "IfxPpu_reg.h"
+  50:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** #include "Ap/Std/IfxApApu.h"
+  51:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+  52:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /******************************************************************************/
+  53:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /*--------------------------------Enumerations--------------------------------*/
+  54:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /******************************************************************************/
+  55:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+  56:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /** \addtogroup IfxLld_Ppuc_Std_Core_Enums
+  57:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \{ */
+  58:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /** \brief Desribes the core status
+  59:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  */
+  60:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** typedef enum
+  61:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** {
+  62:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****     IfxPpucCore_Status_run   = 0,  /**< \brief The processor is in run state */
+  63:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****     IfxPpucCore_Status_sleep = 1,  /**< \brief The processor is in sleep state */
+  64:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****     IfxPpucCore_Status_halt  = 2   /**< \brief The processor is in halt state */
+  65:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** } IfxPpucCore_Status;
+  66:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+  67:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /** \} */
+  68:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+  69:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /******************************************************************************/
+  70:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /*-----------------------------Data Structures--------------------------------*/
+  71:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /******************************************************************************/
+  72:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+  73:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** typedef struct
+  74:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** {
+  75:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****     uint8   vmId;        /**< \brief The virtual machine ID */
+  76:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****     boolean vmEn;        /**< \brief Virtual machine enable */
+  77:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****     uint8   prsId;       /**< \brief The protection set ID */
+  78:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****     boolean prsEn;       /**< \brief Protection set enable */
+  79:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** } IfxPpucCore_Ptag;
+  80:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+  81:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /** \addtogroup IfxLld_Ppuc_Std_Core_Core
+  82:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \{ */
+  83:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+  84:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /******************************************************************************/
+  85:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /*-------------------------Inline Function Prototypes-------------------------*/
+  86:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /******************************************************************************/
+  87:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+  88:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /** \brief Starts the PPU core and waits until it transitions to the RUN state.
+  89:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \param ppuc PPUC module pointer
+  90:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \return None
+  91:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  */
+  92:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** IFX_INLINE void IfxPpucCore_startCore(Ifx_PPU *ppuc);
+  93:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+  94:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /** \brief Halts the PPU core by setting the request halt bit and waits until the core is in halt s
+  95:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \param ppuc PPUC module pointer
+  96:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \return None
+  97:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  */
+  98:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** IFX_INLINE void IfxPpucCore_haltCore(Ifx_PPU *ppuc);
+  99:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 100:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /** \brief Retrieves the current status of the PPU core.
+ 101:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \param ppuc PPUC module pointer
+ 102:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \return IfxPpucCore_Status The current status of the PPU core
+ 103:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  */
+ 104:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** IFX_INLINE IfxPpucCore_Status IfxPpucCore_getCoreStatus(Ifx_PPU *ppuc);
+ 105:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 106:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /** \brief Configures the interrupt vector base address for the PPU core.
+ 107:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \param ppuc PPUC module pointer
+ 108:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \param intVectAddress Interrupt vector base address
+ 109:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \return None
+ 110:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  */
+ 111:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** IFX_INLINE void IfxPpucCore_configureInterruptVectorBaseAddress(Ifx_PPU *ppuc, uint32 intVectAddres
+ 112:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 113:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /** \brief Enable the PPUC module
+ 114:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \param ppuc PPUC module pointer
+ 115:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \return None
+ 116:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  */
+ 117:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** IFX_INLINE void IfxPpucCore_enableModule(Ifx_PPU *ppuc);
+ 118:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 119:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /** \brief Disables the PPUC module
+ 120:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \param ppuc PPUC module pointer
+ 121:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \return None
+ 122:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  */
+ 123:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** IFX_INLINE void IfxPpucCore_disableModule(Ifx_PPU *ppuc);
+ 124:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 125:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /** \brief Check if the module is enabled or not
+ 126:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \param ppuc PPUC module pointer
+ 127:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \return module enable status
+ 128:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  */
+ 129:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** IFX_INLINE boolean IfxPpucCore_isModuleEnabled(Ifx_PPU *ppuc);
+ 130:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 131:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /** \brief Enable Interrupt handling for PPU as ISP
+ 132:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \param ppuc PPUC module pointer
+ 133:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \return None
+ 134:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  */
+ 135:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** IFX_INLINE void IfxPpucCore_enableInterruptHandling(Ifx_PPU *ppuc);
+ 136:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 137:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /** \brief Disable Interrupt handling for PPU as ISP
+ 138:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \param ppuc PPUC module pointer
+ 139:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \return None
+ 140:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  */
+ 141:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** IFX_INLINE void IfxPpucCore_disableInterruptHandling(Ifx_PPU *ppuc);
+ 142:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 143:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /** \brief Enable the CBU interface
+ 144:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \param ppuc PPUC module pointer
+ 145:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \return None
+ 146:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  */
+ 147:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** IFX_INLINE void IfxPpucCore_enableCBUInterface(Ifx_PPU *ppuc);
+ 148:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 149:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /** \brief Disable the CBU interface
+ 150:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \param ppuc PPUC module pointer
+ 151:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \return None
+ 152:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  */
+ 153:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** IFX_INLINE void IfxPpucCore_disableCBUInterface(Ifx_PPU *ppuc);
+ 154:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 155:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /** \brief Enable the STU interface
+ 156:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \param ppuc PPUC module pointer
+ 157:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \return None
+ 158:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  */
+ 159:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** IFX_INLINE void IfxPpucCore_enableSTUInterface(Ifx_PPU *ppuc);
+ 160:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 161:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /** \brief Disable the STU interface
+ 162:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \param ppuc PPUC module pointer
+ 163:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \return None
+ 164:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  */
+ 165:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** IFX_INLINE void IfxPpucCore_disableSTUInterface(Ifx_PPU *ppuc);
+ 166:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 167:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /** \brief Enables the LBU interface for the specified PPU core.
+ 168:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \param ppuc PPUC module pointer
+ 169:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \return None
+ 170:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  */
+ 171:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** IFX_INLINE void IfxPpucCore_enableLBUInterface(Ifx_PPU *ppuc);
+ 172:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 173:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /** \brief Disable the LBU interface of the specified PPU core.
+ 174:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \param ppuc PPUC module pointer
+ 175:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \return None
+ 176:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  */
+ 177:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** IFX_INLINE void IfxPpucCore_disableLBUInterface(Ifx_PPU *ppuc);
+ 178:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 179:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /** \brief Enable the CSMDMI interface for the PPU core.
+ 180:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \param ppuc PPUC module pointer
+ 181:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \return None
+ 182:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  */
+ 183:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** IFX_INLINE void IfxPpucCore_enableCSMDMIInterface(Ifx_PPU *ppuc);
+ 184:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 185:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /** \brief Disable the CSMDMI interface for the specified PPU core.
+ 186:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \param ppuc PPUC module pointer
+ 187:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \return None
+ 188:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  */
+ 189:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** IFX_INLINE void IfxPpucCore_disableCSMDMIInterface(Ifx_PPU *ppuc);
+ 190:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 191:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /** \brief Enable the STUDMI interface on the PPU core.
+ 192:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \param ppuc PPUC module pointer
+ 193:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \return None
+ 194:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  */
+ 195:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** IFX_INLINE void IfxPpucCore_enableSTUDMIInterface(Ifx_PPU *ppuc);
+ 196:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 197:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /** \brief Disable the STUDMI interface for the specified PPU core.
+ 198:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \param ppuc PPUC module pointer
+ 199:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \return None
+ 200:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  */
+ 201:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** IFX_INLINE void IfxPpucCore_disableSTUDMIInterface(Ifx_PPU *ppuc);
+ 202:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 203:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /** \brief Enable the VMDMI interface
+ 204:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \param ppuc PPUC module pointer
+ 205:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \return None
+ 206:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  */
+ 207:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** IFX_INLINE void IfxPpucCore_enableVMDMIInterface(Ifx_PPU *ppuc);
+ 208:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 209:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /** \brief Disable the VMDMI interface
+ 210:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \param ppuc PPUC module pointer
+ 211:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \return None
+ 212:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  */
+ 213:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** IFX_INLINE void IfxPpucCore_disableVMDMIInterface(Ifx_PPU *ppuc);
+ 214:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 215:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /** \brief API to define VM and PRS ID for PPU.CBU interface
+ 216:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \param ppuc PPUC module pointer
+ 217:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \param ptag ptag pointer
+ 218:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \return None
+ 219:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  */
+ 220:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** IFX_INLINE void IfxPpucCore_setPtagCBU(Ifx_PPU *ppuc, IfxPpucCore_Ptag *ptag);
+ 221:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 222:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /** \brief API to define VM and PRS ID for PPU.LBU interface
+ 223:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \param ppuc PPUC module pointer
+ 224:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \param ptag ptag pointer
+ 225:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \return None
+ 226:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  */
+ 227:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** IFX_INLINE void IfxPpucCore_setPtagLBU(Ifx_PPU *ppuc, IfxPpucCore_Ptag *ptag);
+ 228:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 229:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /** \brief Sets the Ptag STU configuration for a PPU core.
+ 230:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \param ppuc PPUC module pointer
+ 231:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \param ptag ptag pointer
+ 232:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \return None
+ 233:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  */
+ 234:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** IFX_INLINE void IfxPpucCore_setPtagSTU(Ifx_PPU *ppuc, IfxPpucCore_Ptag *ptag);
+ 235:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 236:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /******************************************************************************/
+ 237:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /*-------------------------Global Function Prototypes-------------------------*/
+ 238:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /******************************************************************************/
+ 239:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 240:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /** \brief Configures the interrupt vector base address, enables the PPU to ICU interface and remov
+ 241:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \param ppuc PPUC module pointer
+ 242:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \param intVectAddress interrupt vector base address
+ 243:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \return None
+ 244:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  */
+ 245:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** IFX_EXTERN void IfxPpucCore_configureCoreAndRun(Ifx_PPU *ppuc, uint32 intVectAddress);
+ 246:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 247:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /** \brief Configures access to all masters to the PPU in the device
+ 248:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \param apConfig config pointer to configuration structure.
+ 249:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \return None
+ 250:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  */
+ 251:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** IFX_EXTERN void IfxPpucCore_configureAccessToPpuc(IfxApApu_ApuConfig *apConfig);
+ 252:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 253:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /** \} */
+ 254:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 255:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /******************************************************************************/
+ 256:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /*-------------------------Inline Function Prototypes-------------------------*/
+ 257:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /******************************************************************************/
+ 258:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 259:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /** \brief API to trigger a SW reset and clear the status.
+ 260:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \param ppuc PPU module pointer
+ 261:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \return Returns TRUE if the software reset was successful, FALSE if the software reset was failu
+ 262:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  */
+ 263:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** IFX_INLINE boolean IfxPpucCore_triggerSwReset(Ifx_PPU *ppuc);
+ 264:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 265:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /** \brief API to request wake up from sleep
+ 266:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \param ppuc PPUC Module pointer
+ 267:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \return None
+ 268:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  */
+ 269:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** IFX_INLINE void IfxPpucCore_requestWakeUp(Ifx_PPU *ppuc);
+ 270:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 271:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /******************************************************************************/
+ 272:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /*-------------------------Global Function Prototypes-------------------------*/
+ 273:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /******************************************************************************/
+ 274:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 275:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /** \brief Configures access to all masters to the PPU CSM in the device
+ 276:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \param apConfig config pointer to configuration structure.
+ 277:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \return None
+ 278:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  */
+ 279:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** IFX_EXTERN void IfxPpucCore_configureAccessToPpucCsm(IfxApApu_ApuConfig *apConfig);
+ 280:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 281:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /** \brief Configures access to all masters to the PPU VMEM (VCCM) in the device
+ 282:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \param apConfig config pointer to configuration structure.
+ 283:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  * \return None
+ 284:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****  */
+ 285:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** IFX_EXTERN void IfxPpucCore_configureAccessToPpucVccm(IfxApApu_ApuConfig *apConfig);
+ 286:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 287:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /******************************************************************************/
+ 288:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /*---------------------Inline Function Implementations------------------------*/
+ 289:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** /******************************************************************************/
+ 290:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 291:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** IFX_INLINE void IfxPpucCore_startCore(Ifx_PPU *ppuc)
+ 292:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** {
+ 293:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****     ppuc->CTRL.B.REQR = 1U;
+ 294:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 295:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****     /* Wait till the status is changed to RUN */
+ 296:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****     while (ppuc->STAT.B.RUN != 0U)
+ 297:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****     {}
+ 298:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** }
+ 299:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 300:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 301:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** IFX_INLINE void IfxPpucCore_haltCore(Ifx_PPU *ppuc)
+ 302:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** {
+ 303:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****     ppuc->CTRL.B.REQH = 1U;
+ 304:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 305:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****     /* Wait till the processor is put to halt */
+ 306:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****     while (ppuc->STAT.B.RUN != 2U)
+ 307:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****     {}
+ 308:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** }
+ 309:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 310:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 311:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** IFX_INLINE IfxPpucCore_Status IfxPpucCore_getCoreStatus(Ifx_PPU *ppuc)
+ 312:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** {
+ 313:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****     return (IfxPpucCore_Status)(ppuc->STAT.B.RUN);
+ 314:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** }
+ 315:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 316:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** 
+ 317:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** IFX_INLINE void IfxPpucCore_configureInterruptVectorBaseAddress(Ifx_PPU *ppuc, uint32 intVectAddres
+ 318:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h **** {
+ 319:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h ****     ppuc->VECBASE.U = intVectAddress;
+  26              	 .loc 2 319 5
+  27              	 .loc 2 319 21 is_stmt 0
+  28 0006 59443410 	 st.w [%a4]116,%d4
+  29              	.LVL2:
+  30              	.LBE5:
+  31              	.LBE4:
+  53:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** 
+  54:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****     /* Trigger a Kernel reset once you configure the ivt base address */
+  55:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****     ppuc->RST.CTRLA.U = 0x1;
+  32              	 .loc 1 55 5 is_stmt 1
+  33              	 .loc 1 55 23 is_stmt 0
+  34 000a 8212     	 mov %d2,1
+  35 000c 59420C00 	 st.w [%a4]12,%d2
+  56:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****     ppuc->RST.CTRLB.U = 0x1;
+  36              	 .loc 1 56 5 is_stmt 1
+  37              	 .loc 1 56 23 is_stmt 0
+  38 0010 59421000 	 st.w [%a4]16,%d2
+  57:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** 
+  58:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****     /* Wait until the reset status is updated */
+  59:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****     while (ppuc->RST.STAT.B.KRST != 2U)
+  39              	 .loc 1 59 5 is_stmt 1
+  40              	.L2:
+  60:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****     {}
+  41              	 .loc 1 60 6 discriminator 1
+  59:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****     {}
+  42              	 .loc 1 59 34 discriminator 1
+  59:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****     {}
+  43              	 .loc 1 59 28 is_stmt 0 discriminator 1
+  44 0014 19421400 	 ld.w %d2,[%a4]20
+  45 0018 8F720021 	 and %d2,%d2,7
+  59:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****     {}
+  46              	 .loc 1 59 34 discriminator 1
+  47 001c DF220080 	 jne %d2,2,.L2
+  61:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** 
+  62:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****     /* Clear the RST STATUS */
+  63:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****     ppuc->RST.CTRLB.B.STATCLR = 1U;
+  48              	 .loc 1 63 5 is_stmt 1
+  49              	 .loc 1 63 31 is_stmt 0
+  50 0020 D9421000 	 lea %a2,[%a4]16
+  51 0024 19421000 	 ld.w %d2,[%a4]16
+  52 0028 B712812F 	 insert %d2,%d2,1,31,1
+  53 002c 7422     	 st.w [%a2]0,%d2
+  64:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** 
+  65:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****     /* Write into CTRL register to bring PPUC out of halt
+  66:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****      * Enable the PPUC-ICU interface
+  67:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****      * Enable the CBU interface
+  68:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****      * Enable the LBU interface
+  69:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****      * Enable the STU interface
+  70:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****      * Enable the STU-DMI interface
+  71:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****      * Enable the CSM-DMI interface
+  72:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****      * Enable the VM-DMI interface
+  73:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****      * */
+  74:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****     ppuc->CTRL.U = 0x3f09U;
+  54              	 .loc 1 74 5 is_stmt 1
+  55              	 .loc 1 74 18 is_stmt 0
+  56 002e 3B90F023 	 mov %d2,16137
+  57 0032 59422010 	 st.w [%a4]96,%d2
+  75:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** }
+  58              	 .loc 1 75 1
+  59 0036 0090     	 ret 
+  60              	.LFE215:
+  62              	 .global IfxPpucCore_configureCoreAndRun_end
+  63              	IfxPpucCore_configureCoreAndRun_end:
+  64              	 .section .text.IfxPpucCore_configureAccessToPpuc,"ax",@progbits
+  65              	 .align 1
+  66              	 .global IfxPpucCore_configureAccessToPpuc
+  68              	IfxPpucCore_configureAccessToPpuc:
+  69              	.LFB216:
+  76:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** 
+  77:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** 
+  78:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** void IfxPpucCore_configureAccessToPpuc(IfxApApu_ApuConfig *apConfig)
+  79:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** {
+  70              	 .loc 1 79 1 is_stmt 1
+  71              	.LVL3:
+  72 0000 40AE     	 mov.aa %a14,%SP
+  73              	.LCFI1:
+  80:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_PPU.SFR.ACCEN, apConfig);
+  74              	 .loc 1 80 5
+  75 0002 4045     	 mov.aa %a5,%a4
+  76 0004 9100984E 	 movh.a %a4,59776
+  77              	.LVL4:
+  78 0008 D9440010 	 lea %a4,[%a4]64
+  79 000c 6D000000 	 call IfxApApu_init
+  80              	.LVL5:
+  81:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** }
+  81              	 .loc 1 81 1 is_stmt 0
+  82 0010 0090     	 ret 
+  83              	.LFE216:
+  85              	 .global IfxPpucCore_configureAccessToPpuc_end
+  86              	IfxPpucCore_configureAccessToPpuc_end:
+  87              	 .section .text.IfxPpucCore_configureAccessToPpucCsm,"ax",@progbits
+  88              	 .align 1
+  89              	 .global IfxPpucCore_configureAccessToPpucCsm
+  91              	IfxPpucCore_configureAccessToPpucCsm:
+  92              	.LFB217:
+  82:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** 
+  83:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** 
+  84:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** void IfxPpucCore_configureAccessToPpucCsm(IfxApApu_ApuConfig *apConfig)
+  85:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** {
+  93              	 .loc 1 85 1 is_stmt 1
+  94              	.LVL6:
+  95 0000 40AE     	 mov.aa %a14,%SP
+  96              	.LCFI2:
+  86:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_PPU_CSMAP.CSM.ACCEN, apConfig);
+  97              	 .loc 1 86 5
+  98 0002 4045     	 mov.aa %a5,%a4
+  99 0004 9150984F 	 movh.a %a4,63877
+ 100              	.LVL7:
+ 101 0008 D9442000 	 lea %a4,[%a4]32
+ 102 000c 6D000000 	 call IfxApApu_init
+ 103              	.LVL8:
+  87:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** }
+ 104              	 .loc 1 87 1 is_stmt 0
+ 105 0010 0090     	 ret 
+ 106              	.LFE217:
+ 108              	 .global IfxPpucCore_configureAccessToPpucCsm_end
+ 109              	IfxPpucCore_configureAccessToPpucCsm_end:
+ 110              	 .section .text.IfxPpucCore_configureAccessToPpucVccm,"ax",@progbits
+ 111              	 .align 1
+ 112              	 .global IfxPpucCore_configureAccessToPpucVccm
+ 114              	IfxPpucCore_configureAccessToPpucVccm:
+ 115              	.LFB218:
+  88:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** 
+  89:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** 
+  90:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** void IfxPpucCore_configureAccessToPpucVccm(IfxApApu_ApuConfig *apConfig)
+  91:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** {
+ 116              	 .loc 1 91 1 is_stmt 1
+ 117              	.LVL9:
+ 118 0000 40AE     	 mov.aa %a14,%SP
+ 119              	.LCFI3:
+  92:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c ****     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_PPU_VMEMAP.VMEM.ACCEN, apConfig);
+ 120              	 .loc 1 92 5
+ 121 0002 4045     	 mov.aa %a5,%a4
+ 122 0004 9160984F 	 movh.a %a4,63878
+ 123              	.LVL10:
+ 124 0008 D9442000 	 lea %a4,[%a4]32
+ 125 000c 6D000000 	 call IfxApApu_init
+ 126              	.LVL11:
+  93:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.c **** }
+ 127              	 .loc 1 93 1 is_stmt 0
+ 128 0010 0090     	 ret 
+ 129              	.LFE218:
+ 131              	 .global IfxPpucCore_configureAccessToPpucVccm_end
+ 132              	IfxPpucCore_configureAccessToPpucVccm_end:
+ 197              	.Letext0:
+ 198              	 .file 3 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 199              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 200              	 .file 5 "../Libraries/Infra/Sfr/TC4Dx/IfxPpu_regdef.h"
+ 201              	 .file 6 "../Libraries/iLLD/TC4xx/CpuGeneric/Ap/IfxAccen_regdef.h"
+ 202              	 .file 7 "../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h"
+ 8427 0000 00000000 	 .word IfxPpucCore_configureCoreAndRun
+ 8428 0004 00000000 	 .word IfxPpucCore_configureCoreAndRun_end
+ 8429 0008 1C001444 	 .word 0x4414001c
+ 8430 000c 10001000 	 .word 0x00100010
+ 8431 0010 00000000 	 .word 0x00000000
+ 8432 0014 C0000000 	 .word 0x000000c0
+ 8433 0018 00000000 	 .word IfxPpucCore_configureAccessToPpuc
+ 8434 001c 00000000 	 .word IfxPpucCore_configureAccessToPpuc_end
+ 8435 0020 00003044 	 .word 0x44300000
+ 8436 0024 00001000 	 .word 0x00100000
+ 8437 0028 00000000 	 .word 0x00000000
+ 8438 002c 40000200 	 .word 0x00020040
+ 8439 0030 00000000 	 .word IfxPpucCore_configureAccessToPpucCsm
+ 8440 0034 00000000 	 .word IfxPpucCore_configureAccessToPpucCsm_end
+ 8441 0038 00003044 	 .word 0x44300000
+ 8442 003c 00001000 	 .word 0x00100000
+ 8443 0040 00000000 	 .word 0x00000000
+ 8444 0044 40000200 	 .word 0x00020040
+ 8445 0048 00000000 	 .word IfxPpucCore_configureAccessToPpucVccm
+ 8446 004c 00000000 	 .word IfxPpucCore_configureAccessToPpucVccm_end
+ 8447 0050 00003044 	 .word 0x44300000
+ 8448 0054 00001000 	 .word 0x00100000
+ 8449 0058 00000000 	 .word 0x00000000
+ 8450 005c 40000200 	 .word 0x00020040
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxPpucCore.c
+                            *ABS*:00000000 IfxPpucCore.c
+    {standard input}:10     .text.IfxPpucCore_configureCoreAndRun:00000000 IfxPpucCore_configureCoreAndRun
+    {standard input}:63     .text.IfxPpucCore_configureCoreAndRun:00000038 IfxPpucCore_configureCoreAndRun_end
+    {standard input}:68     .text.IfxPpucCore_configureAccessToPpuc:00000000 IfxPpucCore_configureAccessToPpuc
+    {standard input}:86     .text.IfxPpucCore_configureAccessToPpuc:00000012 IfxPpucCore_configureAccessToPpuc_end
+    {standard input}:91     .text.IfxPpucCore_configureAccessToPpucCsm:00000000 IfxPpucCore_configureAccessToPpucCsm
+    {standard input}:109    .text.IfxPpucCore_configureAccessToPpucCsm:00000012 IfxPpucCore_configureAccessToPpucCsm_end
+    {standard input}:114    .text.IfxPpucCore_configureAccessToPpucVccm:00000000 IfxPpucCore_configureAccessToPpucVccm
+    {standard input}:132    .text.IfxPpucCore_configureAccessToPpucVccm:00000012 IfxPpucCore_configureAccessToPpucVccm_end
+
+UNDEFINED SYMBOLS
+IfxApApu_init

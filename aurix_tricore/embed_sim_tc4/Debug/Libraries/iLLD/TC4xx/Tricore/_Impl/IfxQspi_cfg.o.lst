@@ -1,0 +1,39 @@
+   1              	
+   2              	 .file "IfxQspi_cfg.c"
+   3              	 .file "IfxQspi_cfg.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .global IfxQspi_cfg_indexMap
+   7              	 .section .rodata.IfxQspi_cfg_indexMap,"a"
+   8              	 .align 2
+  11              	IfxQspi_cfg_indexMap:
+  12 0000 001040F4 	 .word -197128192
+  13 0004 00000000 	 .word 0
+  14 0008 001240F4 	 .word -197127680
+  15 000c 01000000 	 .word 1
+  16 0010 001440F4 	 .word -197127168
+  17 0014 02000000 	 .word 2
+  18 0018 001640F4 	 .word -197126656
+  19 001c 03000000 	 .word 3
+  20 0020 001840F4 	 .word -197126144
+  21 0024 04000000 	 .word 4
+  22 0028 001A40F4 	 .word -197125632
+  23 002c 05000000 	 .word 5
+  24 0030 001C40F4 	 .word -197125120
+  25 0034 06000000 	 .word 6
+  26 0038 001E40F4 	 .word -197124608
+  27 003c 07000000 	 .word 7
+  28              	.section .text,"ax",@progbits
+  29              	.Letext0:
+  30              	 .file 1 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+  31              	 .file 2 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+  32              	 .file 3 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+  33              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/IfxQspi_regdef.h"
+  34              	 .file 5 "../Libraries/iLLD/TC4xx/Tricore/_Impl/TC4Dx/IfxQspi_cfg_TC4Dx.h"
+  35              	 .file 6 "../Libraries/iLLD/TC4xx/Tricore/_Impl/IfxQspi_cfg.c"
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxQspi_cfg.c
+                            *ABS*:00000000 IfxQspi_cfg.c
+    {standard input}:11     .rodata.IfxQspi_cfg_indexMap:00000000 IfxQspi_cfg_indexMap
+
+NO UNDEFINED SYMBOLS

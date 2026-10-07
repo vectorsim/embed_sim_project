@@ -1,0 +1,1896 @@
+   1              	
+   2              	 .file "IfxSmmRst.c"
+   3              	 .file "IfxSmmRst.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.IfxSmmRst_evaluateReset,"ax",@progbits
+   7              	 .align 1
+   8              	 .global IfxSmmRst_evaluateReset
+  10              	IfxSmmRst_evaluateReset:
+  11              	.LFB366:
+  12              	 .file 1 "../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c"
+   1:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** /**
+   2:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****  * \file IfxSmmRst.c
+   3:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****  * \brief SMM  basic functionality
+   4:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****  *
+   5:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****  *
+   8:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****  *
+   9:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****  *
+  10:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****  *                                 IMPORTANT NOTICE
+  11:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****  *
+  12:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****  * this file except in compliance with IFASLL.
+  15:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****  *
+  16:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****  *
+  26:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****  *
+  27:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****  */
+  28:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+  29:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** /******************************************************************************/
+  30:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** /*----------------------------------Includes----------------------------------*/
+  31:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** /******************************************************************************/
+  32:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+  33:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** #include "IfxSmmRst.h"
+  34:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+  35:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** /******************************************************************************/
+  36:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** /*------------------------Inline Function Prototypes--------------------------*/
+  37:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** /******************************************************************************/
+  38:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+  39:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** /** \brief Function to get counter and divider value from time period
+  40:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****  * \param timeInNs Time duration in Nanoseconds
+  41:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****  * \param clockDivider Address to store calculated clock divider value
+  42:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****  * \param counter Address to store calculated counter
+  43:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****  * \return None
+  44:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****  */
+  45:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** IFX_INLINE void IfxSmmRst_calculateDivAndCntValue(uint32 timeInNs, uint8 *clockDivider, uint16 *cou
+  46:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+  47:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** /******************************************************************************/
+  48:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** /*---------------------Inline Function Implementations------------------------*/
+  49:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** /******************************************************************************/
+  50:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+  51:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** IFX_INLINE void IfxSmmRst_calculateDivAndCntValue(uint32 timeInNs, uint8 *clockDivider, uint16 *cou
+  52:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** {
+  53:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     uint32  power = 1U;
+  54:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     uint8   index, powIndex;
+  55:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     float32 minCalTime, maxCalTime;
+  56:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+  57:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     /* Loop through possible divider to check if required time could be achieved with the divider s
+  58:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     for (index = 0; index < 16U; index++)
+  59:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     {
+  60:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         powIndex = index;
+  61:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+  62:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         while (powIndex != 0)
+  63:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         {
+  64:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             power *= 2U;
+  65:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             powIndex--;
+  66:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         }
+  67:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+  68:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         minCalTime = ((power / IFXSMMRST_RESET_COUNTER_BASE_CLOCK) * IFXSMMRST_TIME_IN_NS);
+  69:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         maxCalTime = (minCalTime * IFXSMMRST_RESET_COUNTER_MAX_VALUE);
+  70:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+  71:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         /* Break if the requested time could be achieved with the divider settings */
+  72:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         if ((timeInNs > (uint32)minCalTime) && (timeInNs < (uint32)maxCalTime))
+  73:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         {
+  74:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             break;
+  75:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         }
+  76:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         else
+  77:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         {
+  78:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             power = 1U;
+  79:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         }
+  80:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     }
+  81:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+  82:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     /* Store calculated value */
+  83:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     *counter      = (uint16)(timeInNs / minCalTime);
+  84:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     *clockDivider = index;
+  85:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** }
+  86:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+  87:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+  88:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** /******************************************************************************/
+  89:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** /*-------------------------Function Implementations---------------------------*/
+  90:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** /******************************************************************************/
+  91:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+  92:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** void IfxSmmRst_evaluateReset(IfxSmmRst_Reset *reset)
+  93:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** {
+  13              	 .loc 1 93 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  94:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     Ifx_SMM_WRMRSTTRIGH wrmRstTrigH;        /*highest warm reset event*/
+  17              	 .loc 1 94 5
+  95:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     Ifx_SMM_WRMRSTTRIG  wrmRstTrig;         /*Warm reset trigger*/
+  18              	 .loc 1 95 5
+  96:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     Ifx_SMM_RSTSTATH    rstStatH;           /*Highest reset status type*/
+  19              	 .loc 1 96 5
+  97:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     Ifx_SMM_RSTSTAT     rstStat;            /*Accumulated reset status*/
+  20              	 .loc 1 97 5
+  98:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     Ifx_PMS_CLDRSTRIGL  cldRstTrigL;        /*Last cold reset trigger*/
+  21              	 .loc 1 98 5
+  99:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     Ifx_PMS_CLDRSTSTAT  cldRstStat;         /*Cold reset status*/
+  22              	 .loc 1 99 5
+ 100:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     Ifx_PMS_CLDRSTRIG   cldRstTrig;         /*cold reset event*/
+  23              	 .loc 1 100 5
+ 101:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     uint8               index = 0;
+  24              	 .loc 1 101 5
+  25              	.LVL1:
+ 102:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     reset->highestResetType      = IfxSmmRst_ResetType_undefined;
+  26              	 .loc 1 102 5
+  27              	 .loc 1 102 34 is_stmt 0
+  28 0002 3BF00F20 	 mov %d2,255
+  29 0006 59421000 	 st.w [%a4]16,%d2
+ 103:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     reset->highestWarmRstTrigger = IfxSmmRst_WarmRstTrigger_undefined;
+  30              	 .loc 1 103 5 is_stmt 1
+  31              	 .loc 1 103 34 is_stmt 0
+  32 000a 59421400 	 st.w [%a4]20,%d2
+ 104:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     reset->lastColdRstTrigger    = IfxSmmRst_ColdResetTrigger_undefined;
+  33              	 .loc 1 104 5 is_stmt 1
+  34              	 .loc 1 104 34 is_stmt 0
+  35 000e 59421800 	 st.w [%a4]24,%d2
+ 105:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 106:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     /* Reading register */
+ 107:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     wrmRstTrigH.U = SMM_WRMRSTTRIGH.U;
+  36              	 .loc 1 107 5 is_stmt 1
+  37              	 .loc 1 107 36 is_stmt 0
+  38 0012 9160002F 	 movh.a %a2,61446
+  39 0016 D9220040 	 lea %a2,[%a2]256
+  40 001a 5425     	 ld.w %d5,[%a2]0
+ 108:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     wrmRstTrig.U  = SMM_WRMRSTTRIG.U;
+  41              	 .loc 1 108 5 is_stmt 1
+  42              	 .loc 1 108 35 is_stmt 0
+  43 001c 9160002F 	 movh.a %a2,61446
+  44 0020 D9223C30 	 lea %a2,[%a2]252
+  45 0024 5421     	 ld.w %d1,[%a2]0
+ 109:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     rstStatH.U    = SMM_RSTSTATH.U;
+  46              	 .loc 1 109 5 is_stmt 1
+  47              	 .loc 1 109 33 is_stmt 0
+  48 0026 9160002F 	 movh.a %a2,61446
+  49 002a D9220840 	 lea %a2,[%a2]264
+  50 002e 5426     	 ld.w %d6,[%a2]0
+ 110:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     rstStat.U     = SMM_RSTSTAT.U;
+  51              	 .loc 1 110 5 is_stmt 1
+  52              	 .loc 1 110 32 is_stmt 0
+  53 0030 9160002F 	 movh.a %a2,61446
+  54 0034 D9220440 	 lea %a2,[%a2]260
+  55 0038 5423     	 ld.w %d3,[%a2]0
+ 111:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     cldRstTrig.U  = PMS_CLDRSTRIG.U;
+  56              	 .loc 1 111 5 is_stmt 1
+  57              	 .loc 1 111 34 is_stmt 0
+  58 003a 9150022F 	 movh.a %a2,61477
+  59 003e D92218D9 	 lea %a2,[%a2]-27816
+  60 0042 5427     	 ld.w %d7,[%a2]0
+ 112:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     cldRstTrigL.U = PMS_CLDRSTRIGL.U;
+  61              	 .loc 1 112 5 is_stmt 1
+  62              	 .loc 1 112 35 is_stmt 0
+  63 0044 9150022F 	 movh.a %a2,61477
+  64 0048 D9221CD9 	 lea %a2,[%a2]-27812
+  65 004c 5424     	 ld.w %d4,[%a2]0
+ 113:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     cldRstStat.U  = PMS_CLDRSTSTAT.U;
+  66              	 .loc 1 113 5 is_stmt 1
+  67              	 .loc 1 113 35 is_stmt 0
+  68 004e 9150022F 	 movh.a %a2,61477
+  69 0052 D92214D9 	 lea %a2,[%a2]-27820
+  70 0056 5420     	 ld.w %d0,[%a2]0
+ 114:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 115:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     /* To check for safe state*/
+ 116:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     reset->cpuSafeState = (((SMM_SHSEQCTRLD.U >> IFX_SMM_SHSEQCTRLD_CSSX_OFF) & IFX_SMM_SHSEQCTRLD_
+  71              	 .loc 1 116 5 is_stmt 1
+  72              	 .loc 1 116 44 is_stmt 0
+  73 0058 9160002F 	 movh.a %a2,61446
+  74 005c D9223430 	 lea %a2,[%a2]244
+  75 0060 5422     	 ld.w %d2,[%a2]0
+  76              	 .loc 1 116 79
+  77 0062 3702E620 	 extr.u %d2,%d2,1,6
+  78              	 .loc 1 116 110
+  79 0066 8BF20322 	 eq %d2,%d2,63
+  80              	 .loc 1 116 25
+  81 006a E9421C00 	 st.b [%a4]28,%d2
+ 117:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 118:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     /*Update accumulated reset type since last clear */
+ 119:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     reset->resetStatus.U = rstStat.U;
+  82              	 .loc 1 119 5 is_stmt 1
+  83              	 .loc 1 119 26 is_stmt 0
+  84 006e 59430C00 	 st.w [%a4]12,%d3
+ 120:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 121:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     /* Update highest reset type */
+ 122:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     for (index = 0; index < 32; index++)
+  85              	 .loc 1 122 5 is_stmt 1
+  86              	 .loc 1 122 16 is_stmt 0
+  87 0072 8202     	 mov %d2,0
+  88              	 .loc 1 122 5
+  89 0074 1D000000 	 j .L2
+  90              	.LVL2:
+  91              	.L3:
+  92              	 .loc 1 122 38 is_stmt 1 discriminator 2
+  93 0078 C212     	 add %d2,1
+  94              	.LVL3:
+  95 007a 8FF20F21 	 and %d2,%d2,255
+  96              	.LVL4:
+  97              	.L2:
+  98              	 .loc 1 122 27 discriminator 1
+  99 007e 3BF00130 	 mov %d3,31
+ 100 0082 3F230080 	 jlt.u %d3,%d2,.L4
+ 123:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     {
+ 124:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         if (rstStatH.U & (1 << index))
+ 101              	 .loc 1 124 9
+ 102              	 .loc 1 124 29 is_stmt 0
+ 103 0086 8213     	 mov %d3,1
+ 104 0088 0F230030 	 sh %d3,%d3,%d2
+ 105              	 .loc 1 124 24
+ 106 008c 2663     	 and %d3,%d6
+ 107              	 .loc 1 124 12
+ 108 008e DF030000 	 jz %d3,.L3
+ 125:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         {
+ 126:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             reset->highestResetType = (IfxSmmRst_ResetType)index;
+ 109              	 .loc 1 126 13 is_stmt 1
+ 110              	 .loc 1 126 37 is_stmt 0
+ 111 0092 59421000 	 st.w [%a4]16,%d2
+ 127:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             break;
+ 112              	 .loc 1 127 13 is_stmt 1
+ 113              	.L4:
+ 128:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         }
+ 129:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     }
+ 130:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 131:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     /* Accumulated trigger for the last reset type*/
+ 132:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     reset->warmRstTrigger.U = wrmRstTrig.U;
+ 114              	 .loc 1 132 5
+ 115              	 .loc 1 132 29 is_stmt 0
+ 116 0096 7441     	 st.w [%a4]0,%d1
+ 133:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 134:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     /* Update reset trigger of Highest reset type*/
+ 135:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     for (index = 0; index < 32; index++)
+ 117              	 .loc 1 135 5 is_stmt 1
+ 118              	.LVL5:
+ 119              	 .loc 1 135 16 is_stmt 0
+ 120 0098 8202     	 mov %d2,0
+ 121              	.LVL6:
+ 122              	.L6:
+ 123              	 .loc 1 135 27 is_stmt 1 discriminator 1
+ 124 009a 3BF00130 	 mov %d3,31
+ 125 009e 3F230080 	 jlt.u %d3,%d2,.L8
+ 136:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     {
+ 137:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         if (wrmRstTrigH.U & (1 << index))
+ 126              	 .loc 1 137 9
+ 127              	 .loc 1 137 32 is_stmt 0
+ 128 00a2 8213     	 mov %d3,1
+ 129 00a4 0F230030 	 sh %d3,%d3,%d2
+ 130              	 .loc 1 137 27
+ 131 00a8 2653     	 and %d3,%d5
+ 132              	 .loc 1 137 12
+ 133 00aa DF030080 	 jnz %d3,.L14
+ 135:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     {
+ 134              	 .loc 1 135 38 is_stmt 1 discriminator 2
+ 135 00ae C212     	 add %d2,1
+ 136              	.LVL7:
+ 137 00b0 8FF20F21 	 and %d2,%d2,255
+ 138              	.LVL8:
+ 139 00b4 1D000000 	 j .L6
+ 140              	.L14:
+ 138:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         {
+ 139:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             reset->highestWarmRstTrigger = (IfxSmmRst_WarmRstTrigger)index;
+ 141              	 .loc 1 139 13
+ 142              	 .loc 1 139 42 is_stmt 0
+ 143 00b8 59421400 	 st.w [%a4]20,%d2
+ 140:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             break;
+ 144              	 .loc 1 140 13 is_stmt 1
+ 145              	.L8:
+ 141:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         }
+ 142:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     }
+ 143:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 144:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     /* Cold Reset status*/
+ 145:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     reset->coldResetStatus.U = cldRstStat.U;
+ 146              	 .loc 1 145 5
+ 147              	 .loc 1 145 30 is_stmt 0
+ 148 00bc 59400800 	 st.w [%a4]8,%d0
+ 146:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 147:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     /* Update accumulated cold reset trigger*/
+ 148:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     reset->coldResetTrigger.U = cldRstTrig.U;
+ 149              	 .loc 1 148 5 is_stmt 1
+ 150              	 .loc 1 148 31 is_stmt 0
+ 151 00c0 59470400 	 st.w [%a4]4,%d7
+ 149:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 150:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     /*Update last cold reset trigger */
+ 151:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     for (index = 0; index < 32; index++)
+ 152              	 .loc 1 151 5 is_stmt 1
+ 153              	.LVL9:
+ 154              	 .loc 1 151 16 is_stmt 0
+ 155 00c4 8202     	 mov %d2,0
+ 156              	.LVL10:
+ 157              	.L10:
+ 158              	 .loc 1 151 27 is_stmt 1 discriminator 1
+ 159 00c6 3BF00130 	 mov %d3,31
+ 160 00ca 3F230080 	 jlt.u %d3,%d2,.L15
+ 152:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     {
+ 153:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         if (cldRstTrigL.U & (1 << index))
+ 161              	 .loc 1 153 9
+ 162              	 .loc 1 153 32 is_stmt 0
+ 163 00ce 8213     	 mov %d3,1
+ 164 00d0 0F230030 	 sh %d3,%d3,%d2
+ 165              	 .loc 1 153 27
+ 166 00d4 2643     	 and %d3,%d4
+ 167              	 .loc 1 153 12
+ 168 00d6 DF030080 	 jnz %d3,.L16
+ 151:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     {
+ 169              	 .loc 1 151 38 is_stmt 1 discriminator 2
+ 170 00da C212     	 add %d2,1
+ 171              	.LVL11:
+ 172 00dc 8FF20F21 	 and %d2,%d2,255
+ 173              	.LVL12:
+ 174 00e0 1D000000 	 j .L10
+ 175              	.L16:
+ 154:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         {
+ 155:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             reset->lastColdRstTrigger = (IfxSmmRst_ColdResetTrigger)index;
+ 176              	 .loc 1 155 13
+ 177              	 .loc 1 155 39 is_stmt 0
+ 178 00e4 59421800 	 st.w [%a4]24,%d2
+ 156:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             break;
+ 179              	 .loc 1 156 13 is_stmt 1
+ 180 00e8 0090     	 ret 
+ 181              	.L15:
+ 157:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         }
+ 158:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     }
+ 159:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** }
+ 182              	 .loc 1 159 1 is_stmt 0
+ 183 00ea 0090     	 ret 
+ 184              	.LFE366:
+ 186              	 .global IfxSmmRst_evaluateReset_end
+ 187              	IfxSmmRst_evaluateReset_end:
+ 188              	 .section .text.IfxSmmRst_performReset,"ax",@progbits
+ 189              	 .align 1
+ 190              	 .global IfxSmmRst_performReset
+ 192              	IfxSmmRst_performReset:
+ 193              	.LFB367:
+ 160:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 161:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 162:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** void IfxSmmRst_performReset(const IfxSmmRst_TriggerRstCfgType rstCfgType, const uint16 userResetInf
+ 163:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** {
+ 194              	 .loc 1 163 1 is_stmt 1
+ 195              	.LVL13:
+ 196 0000 40AE     	 mov.aa %a14,%SP
+ 197              	.LCFI1:
+ 164:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     uint32 index;
+ 198              	 .loc 1 164 5
+ 165:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 166:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** #if (IFX_PROT_ENABLED == 1U)
+ 167:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMM.PROTE, IfxApProt_State_config);
+ 168:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** #endif
+ 169:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 170:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     /* Write the Reset Type - Application or System or Module Reset or Module group Reset */
+ 171:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     SMM_RSTTRIGCTRLA.B.SW = rstCfgType;
+ 199              	 .loc 1 171 5
+ 200              	 .loc 1 171 27 is_stmt 0
+ 201 0002 9160002F 	 movh.a %a2,61446
+ 202 0006 D9221440 	 lea %a2,[%a2]276
+ 203 000a 5422     	 ld.w %d2,[%a2]0
+ 204 000c 3742032C 	 insert %d2,%d2,%d4,24,3
+ 205 0010 7422     	 st.w [%a2]0,%d2
+ 172:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 173:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     /* Write the user DATA to reset evaluation */
+ 174:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     SMM_USRINFO.B.USRINFO = userResetInfo;
+ 206              	 .loc 1 174 5 is_stmt 1
+ 207              	 .loc 1 174 27 is_stmt 0
+ 208 0012 9160002F 	 movh.a %a2,61446
+ 209 0016 D9222840 	 lea %a2,[%a2]296
+ 210 001a 7425     	 st.w [%a2]0,%d5
+ 175:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 176:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     /* software Reset can be performed by writing to Reset Request register  SWRSTCON */
+ 177:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     SMM_SWRSTCON.B.SWRSTREQ = 1U;
+ 211              	 .loc 1 177 5 is_stmt 1
+ 212              	 .loc 1 177 29 is_stmt 0
+ 213 001c 9160002F 	 movh.a %a2,61446
+ 214 0020 D9220030 	 lea %a2,[%a2]192
+ 215 0024 5422     	 ld.w %d2,[%a2]0
+ 216 0026 B7128120 	 insert %d2,%d2,1,1,1
+ 217 002a 7422     	 st.w [%a2]0,%d2
+ 178:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 179:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     /* Add some delay for HW to reset */
+ 180:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     for (index = 0U; index < (uint32)IFXSMMRST_PERFORM_RESET_DELAY; index++)
+ 218              	 .loc 1 180 5 is_stmt 1
+ 219              	.LVL14:
+ 220              	 .loc 1 180 16 is_stmt 0
+ 221 002c 8202     	 mov %d2,0
+ 222              	 .loc 1 180 5
+ 223 002e 1D000000 	 j .L18
+ 224              	.LVL15:
+ 225              	.L19:
+ 181:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     {}
+ 226              	 .loc 1 181 6 is_stmt 1 discriminator 3
+ 180:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     {}
+ 227              	 .loc 1 180 74 discriminator 3
+ 228 0032 C212     	 add %d2,1
+ 229              	.LVL16:
+ 230              	.L18:
+ 180:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     {}
+ 231              	 .loc 1 180 28 discriminator 1
+ 232 0034 7B100030 	 movh %d3,1
+ 233 0038 1BF3F835 	 addi %d3,%d3,24463
+ 234 003c 7F230080 	 jge.u %d3,%d2,.L19
+ 182:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 183:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     /* Setting the PROT state back to RUN is not needed, as the micro would RESET */
+ 184:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** }
+ 235              	 .loc 1 184 1 is_stmt 0
+ 236 0040 0090     	 ret 
+ 237              	.LFE367:
+ 239              	 .global IfxSmmRst_performReset_end
+ 240              	IfxSmmRst_performReset_end:
+ 241              	 .section .text.IfxSmmRst_getSmuSafeRstTrigger,"ax",@progbits
+ 242              	 .align 1
+ 243              	 .global IfxSmmRst_getSmuSafeRstTrigger
+ 245              	IfxSmmRst_getSmuSafeRstTrigger:
+ 246              	.LFB368:
+ 185:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 186:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 187:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** void IfxSmmRst_getSmuSafeRstTrigger(IfxSmmRst_SmuSafeRstTrigger *safeTrigger, boolean smuSafeIndex)
+ 188:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** {
+ 247              	 .loc 1 188 1 is_stmt 1
+ 248              	.LVL17:
+ 249 0000 40AE     	 mov.aa %a14,%SP
+ 250              	.LCFI2:
+ 189:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     Ifx_SMM_SMURSTSTATA smuRSTA;
+ 251              	 .loc 1 189 5
+ 190:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     Ifx_SMM_SMURSTSTATB smuRSTB;
+ 252              	 .loc 1 190 5
+ 191:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 192:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     if (smuSafeIndex)
+ 253              	 .loc 1 192 5
+ 254              	 .loc 1 192 8 is_stmt 0
+ 255 0002 DF040000 	 jz %d4,.L21
+ 193:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     {
+ 194:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         /* If SAFE1 read the SAFE1 status register */
+ 195:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         smuRSTB.U                   = SMM_SMURSTSTATB.U;
+ 256              	 .loc 1 195 9 is_stmt 1
+ 257              	 .loc 1 195 54 is_stmt 0
+ 258 0006 9160002F 	 movh.a %a2,61446
+ 259 000a D9222440 	 lea %a2,[%a2]292
+ 260 000e 5422     	 ld.w %d2,[%a2]0
+ 196:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 197:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         safeTrigger->safe1AlmGrp[0] = smuRSTB.B.SMU1ALMGRP0;
+ 261              	 .loc 1 197 9 is_stmt 1
+ 262              	 .loc 1 197 48 is_stmt 0
+ 263 0010 37026530 	 extr.u %d3,%d2,0,5
+ 264              	 .loc 1 197 37
+ 265 0014 E9430400 	 st.b [%a4]4,%d3
+ 198:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         safeTrigger->safe1AlmId[0]  = smuRSTB.B.SMU1ALMID0;
+ 266              	 .loc 1 198 9 is_stmt 1
+ 267              	 .loc 1 198 48 is_stmt 0
+ 268 0018 3702E532 	 extr.u %d3,%d2,5,5
+ 269              	 .loc 1 198 37
+ 270 001c E9430600 	 st.b [%a4]6,%d3
+ 199:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         safeTrigger->safe1AlmGrp[1] = smuRSTB.B.SMU1ALRMGRP1;
+ 271              	 .loc 1 199 9 is_stmt 1
+ 272              	 .loc 1 199 48 is_stmt 0
+ 273 0020 37026535 	 extr.u %d3,%d2,10,5
+ 274              	 .loc 1 199 37
+ 275 0024 E9430500 	 st.b [%a4]5,%d3
+ 200:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         safeTrigger->safe1AlmId[1]  = smuRSTB.B.SMU1ALRMID1;
+ 276              	 .loc 1 200 9 is_stmt 1
+ 277              	 .loc 1 200 48 is_stmt 0
+ 278 0028 3702E527 	 extr.u %d2,%d2,15,5
+ 279              	 .loc 1 200 37
+ 280 002c E9420700 	 st.b [%a4]7,%d2
+ 281 0030 0090     	 ret 
+ 282              	.L21:
+ 201:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     }
+ 202:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     else
+ 203:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     {
+ 204:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         /* If SAFE0 read the SAFE0 status register */
+ 205:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         smuRSTA.U                   = SMM_SMURSTSTATA.U;
+ 283              	 .loc 1 205 9 is_stmt 1
+ 284              	 .loc 1 205 54 is_stmt 0
+ 285 0032 9160002F 	 movh.a %a2,61446
+ 286 0036 D9222040 	 lea %a2,[%a2]288
+ 287 003a 5422     	 ld.w %d2,[%a2]0
+ 206:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 207:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         safeTrigger->safe0AlmGrp[0] = smuRSTA.B.SMU0ALMGRP0;
+ 288              	 .loc 1 207 9 is_stmt 1
+ 289              	 .loc 1 207 48 is_stmt 0
+ 290 003c 37026530 	 extr.u %d3,%d2,0,5
+ 291              	 .loc 1 207 37
+ 292 0040 3443     	 st.b [%a4]0,%d3
+ 208:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         safeTrigger->safe0AlmId[0]  = smuRSTA.B.SMU0ALMID0;
+ 293              	 .loc 1 208 9 is_stmt 1
+ 294              	 .loc 1 208 48 is_stmt 0
+ 295 0042 3702E522 	 extr.u %d2,%d2,5,5
+ 296              	 .loc 1 208 37
+ 297 0046 E9420200 	 st.b [%a4]2,%d2
+ 209:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         safeTrigger->safe0AlmGrp[1] = smuRSTA.B.SMU0ALMGRP0;
+ 298              	 .loc 1 209 9 is_stmt 1
+ 299              	 .loc 1 209 37 is_stmt 0
+ 300 004a E9430100 	 st.b [%a4]1,%d3
+ 210:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         safeTrigger->safe0AlmId[1]  = smuRSTA.B.SMU0ALMID0;
+ 301              	 .loc 1 210 9 is_stmt 1
+ 302              	 .loc 1 210 37 is_stmt 0
+ 303 004e E9420300 	 st.b [%a4]3,%d2
+ 211:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     }
+ 212:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** }
+ 304              	 .loc 1 212 1
+ 305 0052 0090     	 ret 
+ 306              	.LFE368:
+ 308              	 .global IfxSmmRst_getSmuSafeRstTrigger_end
+ 309              	IfxSmmRst_getSmuSafeRstTrigger_end:
+ 310              	 .section .text.IfxSmmRst_getSmuSecureRstTrigger,"ax",@progbits
+ 311              	 .align 1
+ 312              	 .global IfxSmmRst_getSmuSecureRstTrigger
+ 314              	IfxSmmRst_getSmuSecureRstTrigger:
+ 315              	.LFB369:
+ 213:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 214:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 215:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** void IfxSmmRst_getSmuSecureRstTrigger(IfxSmmRst_SmuSecureRstTrigger *secureTrigger)
+ 216:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** {
+ 316              	 .loc 1 216 1 is_stmt 1
+ 317              	.LVL18:
+ 318 0000 40AE     	 mov.aa %a14,%SP
+ 319              	.LCFI3:
+ 217:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     Ifx_SMM_SMURSTSTATB smuRSTB;
+ 320              	 .loc 1 217 5
+ 218:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 219:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     if (secureTrigger != NULL_PTR)
+ 321              	 .loc 1 219 5
+ 322              	 .loc 1 219 8 is_stmt 0
+ 323 0002 BD040000 	 jz.a %a4,.L23
+ 220:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     {
+ 221:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         /* Read the RSTB status register */
+ 222:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         smuRSTB.U                   = SMM_SMURSTSTATB.U;
+ 324              	 .loc 1 222 9 is_stmt 1
+ 325              	 .loc 1 222 54 is_stmt 0
+ 326 0006 9160002F 	 movh.a %a2,61446
+ 327 000a D9222440 	 lea %a2,[%a2]292
+ 328 000e 5422     	 ld.w %d2,[%a2]0
+ 223:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 224:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         secureTrigger->secureAlmGrp = smuRSTB.B.SMUSECALMGRP;
+ 329              	 .loc 1 224 9 is_stmt 1
+ 330              	 .loc 1 224 48 is_stmt 0
+ 331 0010 3702633A 	 extr.u %d3,%d2,20,3
+ 332              	 .loc 1 224 37
+ 333 0014 3443     	 st.b [%a4]0,%d3
+ 225:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         secureTrigger->secureAlmId  = smuRSTB.B.SMUSECALMID;
+ 334              	 .loc 1 225 9 is_stmt 1
+ 335              	 .loc 1 225 48 is_stmt 0
+ 336 0016 3702E52B 	 extr.u %d2,%d2,23,5
+ 337              	 .loc 1 225 37
+ 338 001a E9420100 	 st.b [%a4]1,%d2
+ 339              	.L23:
+ 226:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     }
+ 227:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** }
+ 340              	 .loc 1 227 1
+ 341 001e 0090     	 ret 
+ 342              	.LFE369:
+ 344              	 .global IfxSmmRst_getSmuSecureRstTrigger_end
+ 345              	IfxSmmRst_getSmuSecureRstTrigger_end:
+ 346              	 .section .text.IfxSmmRst_configureEsr0ElongationTime,"ax",@progbits
+ 347              	 .align 1
+ 348              	 .global IfxSmmRst_configureEsr0ElongationTime
+ 350              	IfxSmmRst_configureEsr0ElongationTime:
+ 351              	.LFB370:
+ 228:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 229:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 230:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** void IfxSmmRst_configureEsr0ElongationTime(IfxSmmRst_Esr0RstOutputRelease esrBehaviour, uint32 time
+ 231:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** {
+ 352              	 .loc 1 231 1 is_stmt 1
+ 353              	.LVL19:
+ 354 0000 40AE     	 mov.aa %a14,%SP
+ 355              	.LCFI4:
+ 232:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     uint8               clkDiv;
+ 356              	 .loc 1 232 5
+ 233:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     uint16              counter;
+ 357              	 .loc 1 233 5
+ 234:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     Ifx_SMM_ESR0CNTCTRL esr0ctrl;
+ 358              	 .loc 1 234 5
+ 235:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 236:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     /* Reading register */
+ 237:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     esr0ctrl.U = SMM_ESR0CNTCTRL.U;
+ 359              	 .loc 1 237 5
+ 360              	 .loc 1 237 33 is_stmt 0
+ 361 0002 9160002F 	 movh.a %a2,61446
+ 362 0006 D9220050 	 lea %a2,[%a2]320
+ 363 000a 5427     	 ld.w %d7,[%a2]0
+ 364              	.LVL20:
+ 238:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 239:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     /* Non zero value */
+ 240:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     if (timeInNs)
+ 365              	 .loc 1 240 5 is_stmt 1
+ 366              	 .loc 1 240 8 is_stmt 0
+ 367 000c DF050080 	 jnz %d5,.L32
+ 368              	.LVL21:
+ 369              	.L27:
+ 241:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     {
+ 242:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         IfxSmmRst_calculateDivAndCntValue(timeInNs, &clkDiv, &counter);
+ 243:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esr0ctrl.B.CLKDIV  = clkDiv;
+ 244:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esr0ctrl.B.RSTECNT = counter;
+ 245:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esr0ctrl.B.RSTCON  = esrBehaviour;
+ 246:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     }
+ 247:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 248:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     /* Writing register back */
+ 249:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** #if (IFX_PROT_ENABLED == 1U)
+ 250:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMM.PROTE, IfxApProt_State_config);
+ 251:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** #endif
+ 252:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     SMM_ESR0CNTCTRL.U = esr0ctrl.U;
+ 370              	 .loc 1 252 5 is_stmt 1
+ 371              	 .loc 1 252 23 is_stmt 0
+ 372 0010 9160002F 	 movh.a %a2,61446
+ 373 0014 D9220050 	 lea %a2,[%a2]320
+ 374 0018 7427     	 st.w [%a2]0,%d7
+ 253:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** #if (IFX_PROT_ENABLED == 1U)
+ 254:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMM.PROTE, IfxApProt_State_run);
+ 255:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** #endif
+ 256:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** }
+ 375              	 .loc 1 256 1
+ 376 001a 0090     	 ret 
+ 377              	.LVL22:
+ 378              	.L28:
+ 379              	.LBB10:
+ 380              	.LBB11:
+  64:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             powIndex--;
+ 381              	 .loc 1 64 13 is_stmt 1
+  64:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             powIndex--;
+ 382              	 .loc 1 64 19 is_stmt 0
+ 383 001c 0612     	 sh %d2,1
+ 384              	.LVL23:
+  65:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         }
+ 385              	 .loc 1 65 13 is_stmt 1
+  65:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         }
+ 386              	 .loc 1 65 21 is_stmt 0
+ 387 001e C2F3     	 add %d3,-1
+ 388              	.LVL24:
+ 389 0020 8FF30F31 	 and %d3,%d3,255
+ 390              	.LVL25:
+ 391              	.L31:
+  62:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         {
+ 392              	 .loc 1 62 25 is_stmt 1
+ 393 0024 DF030080 	 jnz %d3,.L28
+  68:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         maxCalTime = (minCalTime * IFXSMMRST_RESET_COUNTER_MAX_VALUE);
+ 394              	 .loc 1 68 9
+  68:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         maxCalTime = (minCalTime * IFXSMMRST_RESET_COUNTER_MAX_VALUE);
+ 395              	 .loc 1 68 30 is_stmt 0
+ 396 0028 4B026121 	 utof %d2,%d2
+ 397              	.LVL26:
+ 398 002c 7BF0CB34 	 movh %d3,19647
+ 399              	.LVL27:
+ 400 0030 1B03C23B 	 addi %d3,%d3,-17376
+ 401 0034 4B325120 	 div.f %d2,%d2,%d3
+  68:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         maxCalTime = (minCalTime * IFXSMMRST_RESET_COUNTER_MAX_VALUE);
+ 402              	 .loc 1 68 20
+ 403 0038 7BE0E634 	 movh %d3,20078
+ 404 003c 1B83B236 	 addi %d3,%d3,27432
+ 405 0040 4B324120 	 mul.f %d2,%d2,%d3
+ 406              	.LVL28:
+  69:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 407              	 .loc 1 69 9 is_stmt 1
+  69:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 408              	 .loc 1 69 20 is_stmt 0
+ 409 0044 7B005804 	 movh %d0,17792
+ 410 0048 4B024100 	 mul.f %d0,%d2,%d0
+ 411              	.LVL29:
+  72:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         {
+ 412              	 .loc 1 72 9 is_stmt 1
+  72:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         {
+ 413              	 .loc 1 72 25 is_stmt 0
+ 414 004c 4B027131 	 ftouz %d3,%d2
+  72:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         {
+ 415              	 .loc 1 72 12
+ 416 0050 7F530080 	 jge.u %d3,%d5,.L29
+  72:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         {
+ 417              	 .loc 1 72 60
+ 418 0054 4B007101 	 ftouz %d0,%d0
+ 419              	.LVL30:
+  72:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         {
+ 420              	 .loc 1 72 45
+ 421 0058 3F050080 	 jlt.u %d5,%d0,.L30
+ 422              	.L29:
+  78:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         }
+ 423              	 .loc 1 78 13 is_stmt 1
+ 424              	.LVL31:
+  58:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     {
+ 425              	 .loc 1 58 39
+ 426 005c C216     	 add %d6,1
+ 427              	.LVL32:
+ 428 005e 8FF60F61 	 and %d6,%d6,255
+ 429              	.LVL33:
+ 430              	.L26:
+  58:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     {
+ 431              	 .loc 1 58 27
+ 432 0062 3BF00030 	 mov %d3,15
+ 433 0066 3F630080 	 jlt.u %d3,%d6,.L30
+  60:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 434              	 .loc 1 60 18 is_stmt 0
+ 435 006a 0263     	 mov %d3,%d6
+ 436 006c 8212     	 mov %d2,1
+ 437              	.LVL34:
+ 438 006e 1D000000 	 j .L31
+ 439              	.LVL35:
+ 440              	.L32:
+  58:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     {
+ 441              	 .loc 1 58 16
+ 442 0072 8206     	 mov %d6,0
+ 443 0074 1D000000 	 j .L26
+ 444              	.LVL36:
+ 445              	.L30:
+  83:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     *clockDivider = index;
+ 446              	 .loc 1 83 5 is_stmt 1
+  83:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     *clockDivider = index;
+ 447              	 .loc 1 83 39 is_stmt 0
+ 448 0078 4B056151 	 utof %d5,%d5
+ 449              	.LVL37:
+ 450 007c 4B255120 	 div.f %d2,%d5,%d2
+ 451              	.LVL38:
+  83:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     *clockDivider = index;
+ 452              	 .loc 1 83 21
+ 453 0080 4B027121 	 ftouz %d2,%d2
+ 454 0084 37027020 	 extr.u %d2,%d2,0,16
+ 455              	.LVL39:
+  84:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** }
+ 456              	 .loc 1 84 5 is_stmt 1
+ 457              	.LBE11:
+ 458              	.LBE10:
+ 243:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esr0ctrl.B.RSTECNT = counter;
+ 459              	 .loc 1 243 9
+ 243:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esr0ctrl.B.RSTECNT = counter;
+ 460              	 .loc 1 243 28 is_stmt 0
+ 461 0088 37670478 	 insert %d7,%d7,%d6,16,4
+ 244:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esr0ctrl.B.RSTCON  = esrBehaviour;
+ 462              	 .loc 1 244 9 is_stmt 1
+ 244:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esr0ctrl.B.RSTCON  = esrBehaviour;
+ 463              	 .loc 1 244 28 is_stmt 0
+ 464 008c 37270C70 	 insert %d7,%d7,%d2,0,12
+ 245:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     }
+ 465              	 .loc 1 245 9 is_stmt 1
+ 245:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     }
+ 466              	 .loc 1 245 28 is_stmt 0
+ 467 0090 3747027C 	 insert %d7,%d7,%d4,24,2
+ 468 0094 1D000000 	 j .L27
+ 469              	.LFE370:
+ 471              	 .global IfxSmmRst_configureEsr0ElongationTime_end
+ 472              	IfxSmmRst_configureEsr0ElongationTime_end:
+ 473              	 .section .text.IfxSmmRst_configureEsr2ElongationTime,"ax",@progbits
+ 474              	 .align 1
+ 475              	 .global IfxSmmRst_configureEsr2ElongationTime
+ 477              	IfxSmmRst_configureEsr2ElongationTime:
+ 478              	.LFB371:
+ 257:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 258:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 259:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** void IfxSmmRst_configureEsr2ElongationTime(uint32 timeInNs)
+ 260:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** {
+ 479              	 .loc 1 260 1 is_stmt 1
+ 480              	.LVL40:
+ 481 0000 40AE     	 mov.aa %a14,%SP
+ 482              	.LCFI5:
+ 261:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     uint8               clkDiv;
+ 483              	 .loc 1 261 5
+ 262:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     uint16              counter;
+ 484              	 .loc 1 262 5
+ 263:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     Ifx_PMS_PAD_ESR2CON esr2con;
+ 485              	 .loc 1 263 5
+ 264:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 265:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     /* Reading register */
+ 266:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     esr2con.U = PMS_PAD_ESR2CON.U;
+ 486              	 .loc 1 266 5
+ 487              	 .loc 1 266 32 is_stmt 0
+ 488 0002 9150022F 	 movh.a %a2,61477
+ 489 0006 D92208A9 	 lea %a2,[%a2]-28024
+ 490 000a 5427     	 ld.w %d7,[%a2]0
+ 491              	.LVL41:
+ 267:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 268:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     /* Non zero value */
+ 269:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     if (timeInNs)
+ 492              	 .loc 1 269 5 is_stmt 1
+ 493              	 .loc 1 269 8 is_stmt 0
+ 494 000c DF040080 	 jnz %d4,.L41
+ 495              	.LVL42:
+ 496              	.L36:
+ 270:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     {
+ 271:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         IfxSmmRst_calculateDivAndCntValue(timeInNs, &clkDiv, &counter);
+ 272:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esr2con.B.CLKDIV  = clkDiv;
+ 273:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esr2con.B.RSTECNT = counter;
+ 274:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     }
+ 275:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 276:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     /* Writing register back */
+ 277:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** #if (IFX_PROT_ENABLED == 1U)
+ 278:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_PMS.PROTE, IfxApProt_State_config);
+ 279:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** #endif
+ 280:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     PMS_PAD_ESR2CON.U = esr2con.U;
+ 497              	 .loc 1 280 5 is_stmt 1
+ 498              	 .loc 1 280 23 is_stmt 0
+ 499 0010 9150022F 	 movh.a %a2,61477
+ 500 0014 D92208A9 	 lea %a2,[%a2]-28024
+ 501 0018 7427     	 st.w [%a2]0,%d7
+ 281:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** #if (IFX_PROT_ENABLED == 1U)
+ 282:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_PMS.PROTE, IfxApProt_State_run);
+ 283:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** #endif
+ 284:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** }
+ 502              	 .loc 1 284 1
+ 503 001a 0090     	 ret 
+ 504              	.LVL43:
+ 505              	.L37:
+ 506              	.LBB12:
+ 507              	.LBB13:
+  64:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             powIndex--;
+ 508              	 .loc 1 64 13 is_stmt 1
+  64:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             powIndex--;
+ 509              	 .loc 1 64 19 is_stmt 0
+ 510 001c 0612     	 sh %d2,1
+ 511              	.LVL44:
+  65:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         }
+ 512              	 .loc 1 65 13 is_stmt 1
+  65:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         }
+ 513              	 .loc 1 65 21 is_stmt 0
+ 514 001e C2F3     	 add %d3,-1
+ 515              	.LVL45:
+ 516 0020 8FF30F31 	 and %d3,%d3,255
+ 517              	.LVL46:
+ 518              	.L40:
+  62:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         {
+ 519              	 .loc 1 62 25 is_stmt 1
+ 520 0024 DF030080 	 jnz %d3,.L37
+  68:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         maxCalTime = (minCalTime * IFXSMMRST_RESET_COUNTER_MAX_VALUE);
+ 521              	 .loc 1 68 9
+  68:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         maxCalTime = (minCalTime * IFXSMMRST_RESET_COUNTER_MAX_VALUE);
+ 522              	 .loc 1 68 30 is_stmt 0
+ 523 0028 4B026121 	 utof %d2,%d2
+ 524              	.LVL47:
+ 525 002c 7BF0CB34 	 movh %d3,19647
+ 526              	.LVL48:
+ 527 0030 1B03C23B 	 addi %d3,%d3,-17376
+ 528 0034 4B325120 	 div.f %d2,%d2,%d3
+  68:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         maxCalTime = (minCalTime * IFXSMMRST_RESET_COUNTER_MAX_VALUE);
+ 529              	 .loc 1 68 20
+ 530 0038 7BE0E634 	 movh %d3,20078
+ 531 003c 1B83B236 	 addi %d3,%d3,27432
+ 532 0040 4B324120 	 mul.f %d2,%d2,%d3
+ 533              	.LVL49:
+  69:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 534              	 .loc 1 69 9 is_stmt 1
+  69:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 535              	 .loc 1 69 20 is_stmt 0
+ 536 0044 7B005864 	 movh %d6,17792
+ 537 0048 4B624160 	 mul.f %d6,%d2,%d6
+ 538              	.LVL50:
+  72:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         {
+ 539              	 .loc 1 72 9 is_stmt 1
+  72:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         {
+ 540              	 .loc 1 72 25 is_stmt 0
+ 541 004c 4B027131 	 ftouz %d3,%d2
+  72:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         {
+ 542              	 .loc 1 72 12
+ 543 0050 7F430080 	 jge.u %d3,%d4,.L38
+  72:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         {
+ 544              	 .loc 1 72 60
+ 545 0054 4B067161 	 ftouz %d6,%d6
+ 546              	.LVL51:
+  72:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         {
+ 547              	 .loc 1 72 45
+ 548 0058 3F640080 	 jlt.u %d4,%d6,.L39
+ 549              	.L38:
+  78:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         }
+ 550              	 .loc 1 78 13 is_stmt 1
+ 551              	.LVL52:
+  58:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     {
+ 552              	 .loc 1 58 39
+ 553 005c C215     	 add %d5,1
+ 554              	.LVL53:
+ 555 005e 8FF50F51 	 and %d5,%d5,255
+ 556              	.LVL54:
+ 557              	.L35:
+  58:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     {
+ 558              	 .loc 1 58 27
+ 559 0062 3BF00030 	 mov %d3,15
+ 560 0066 3F530080 	 jlt.u %d3,%d5,.L39
+  60:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 561              	 .loc 1 60 18 is_stmt 0
+ 562 006a 0253     	 mov %d3,%d5
+ 563 006c 8212     	 mov %d2,1
+ 564              	.LVL55:
+ 565 006e 1D000000 	 j .L40
+ 566              	.LVL56:
+ 567              	.L41:
+  58:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     {
+ 568              	 .loc 1 58 16
+ 569 0072 8205     	 mov %d5,0
+ 570 0074 1D000000 	 j .L35
+ 571              	.LVL57:
+ 572              	.L39:
+  83:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     *clockDivider = index;
+ 573              	 .loc 1 83 5 is_stmt 1
+  83:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     *clockDivider = index;
+ 574              	 .loc 1 83 39 is_stmt 0
+ 575 0078 4B046141 	 utof %d4,%d4
+ 576              	.LVL58:
+ 577 007c 4B245120 	 div.f %d2,%d4,%d2
+ 578              	.LVL59:
+  83:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     *clockDivider = index;
+ 579              	 .loc 1 83 21
+ 580 0080 4B027121 	 ftouz %d2,%d2
+ 581 0084 37027020 	 extr.u %d2,%d2,0,16
+ 582              	.LVL60:
+  84:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** }
+ 583              	 .loc 1 84 5 is_stmt 1
+ 584              	.LBE13:
+ 585              	.LBE12:
+ 272:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esr2con.B.RSTECNT = counter;
+ 586              	 .loc 1 272 9
+ 272:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esr2con.B.RSTECNT = counter;
+ 587              	 .loc 1 272 27 is_stmt 0
+ 588 0088 3757047E 	 insert %d7,%d7,%d5,28,4
+ 273:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     }
+ 589              	 .loc 1 273 9 is_stmt 1
+ 273:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     }
+ 590              	 .loc 1 273 27 is_stmt 0
+ 591 008c 37270C78 	 insert %d7,%d7,%d2,16,12
+ 592 0090 1D000000 	 j .L36
+ 593              	.LFE371:
+ 595              	 .global IfxSmmRst_configureEsr2ElongationTime_end
+ 596              	IfxSmmRst_configureEsr2ElongationTime_end:
+ 597              	 .section .text.IfxSmmRst_initConfig,"ax",@progbits
+ 598              	 .align 1
+ 599              	 .global IfxSmmRst_initConfig
+ 601              	IfxSmmRst_initConfig:
+ 602              	.LFB372:
+ 285:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 286:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 287:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** void IfxSmmRst_initConfig(IfxSmmRst_Config *resetCfg)
+ 288:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** {
+ 603              	 .loc 1 288 1 is_stmt 1
+ 604              	.LVL61:
+ 605 0000 40AE     	 mov.aa %a14,%SP
+ 606              	.LCFI6:
+ 289:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     // initialize all to default values
+ 290:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     const IfxSmmRst_Config defaultResetConfig = {
+ 607              	 .loc 1 290 5
+ 291:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         .esr0Cfg                       = {
+ 292:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             .inputCfg                  = {
+ 293:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****                 .edge             = IfxSmmRst_EdgeTrigger_fallingEdge,
+ 294:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****                 .filter           = IfxSmmRst_EsrDigitalFilter_bypassed,
+ 295:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****                 .clkDiv           = IfxSmmRst_EsrCounterClock_fback,
+ 296:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****                 .eventSel         = TRUE,
+ 297:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****                 .rstPulseCmpValue = 0u,
+ 298:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             },
+ 299:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             .rstRelease     = IfxSmmRst_Esr0RstOutputRelease_esr0ElongatedByTime,
+ 300:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             .portMode       = IfxSmm_PortMode_outputOpenDrainAlt8,
+ 301:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             .padDriver      = IfxPort_PadDriver_ttlSpeed1,
+ 302:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             .rstElongTimeNs = 0u
+ 303:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         },
+ 304:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         .esr1Cfg                       = {
+ 305:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             .inputCfg                  = {
+ 306:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****                 .edge             = IfxSmmRst_EdgeTrigger_fallingEdge,
+ 307:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****                 .filter           = IfxSmmRst_EsrDigitalFilter_bypassed,
+ 308:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****                 .clkDiv           = IfxSmmRst_EsrCounterClock_fback,
+ 309:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****                 .eventSel         = TRUE,
+ 310:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****                 .rstPulseCmpValue = 0u,
+ 311:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             },
+ 312:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             .portMode  = IfxSmm_PortMode_inputPullUp,
+ 313:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             .padDriver = IfxPort_PadDriver_ttlSpeed1
+ 314:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         },
+ 315:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         .esr2Cfg                       = {
+ 316:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             .inputCfg                  = {
+ 317:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****                 .edge             = IfxSmmRst_EdgeTrigger_fallingEdge,
+ 318:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****                 .filter           = IfxSmmRst_EsrDigitalFilter_bypassed,
+ 319:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****                 .clkDiv           = IfxSmmRst_EsrCounterClock_fback,
+ 320:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****                 .eventSel         = TRUE,
+ 321:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****                 .rstPulseCmpValue = 0u,
+ 322:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             },
+ 323:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             .enableRstElongInWarmPorst = FALSE,
+ 324:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             .enableRstElongInAppRst    = FALSE,
+ 325:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             .rstElongTimeNs            = 0u
+ 326:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         },
+ 327:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         .rstTrigCfg                    = {
+ 328:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             .esr0       = IfxSmmRst_TriggerRstCfgType_noReset,
+ 329:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             .esr1       = IfxSmmRst_TriggerRstCfgType_noReset,
+ 330:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             .esr2       = IfxSmmRst_TriggerRstCfgType_noReset,
+ 331:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             .smuSafe0Ar = IfxSmmRst_TriggerRstCfgType_noReset,
+ 332:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             .smuSafe0Sr = IfxSmmRst_TriggerRstCfgType_noReset,
+ 333:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             .smuSafe1Ar = IfxSmmRst_TriggerRstCfgType_noReset,
+ 334:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             .smuSafe1Sr = IfxSmmRst_TriggerRstCfgType_noReset,
+ 335:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             .software   = IfxSmmRst_TriggerRstCfgType_noReset,
+ 336:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             .stm0       = IfxSmmRst_TriggerRstCfgType_noReset,
+ 337:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             .stm1       = IfxSmmRst_TriggerRstCfgType_noReset,
+ 338:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             .stm2       = IfxSmmRst_TriggerRstCfgType_noReset,
+ 339:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             .stm3       = IfxSmmRst_TriggerRstCfgType_noReset,
+ 340:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             .stm4       = IfxSmmRst_TriggerRstCfgType_noReset,
+ 341:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             .stm5       = IfxSmmRst_TriggerRstCfgType_noReset,
+ 342:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             .padRst     = FALSE,
+ 343:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             .phyRst     = FALSE
+ 344:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         },
+ 345:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     };
+ 346:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 347:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     *resetCfg = defaultResetConfig;
+ 608              	 .loc 1 347 5
+ 609              	 .loc 1 347 15 is_stmt 0
+ 610 0002 91000020 	 movh.a %a2,hi:defaultResetConfig.0
+ 611 0006 D9220000 	 lea %a2,[%a2]lo:defaultResetConfig.0
+ 612              	 
+ 613 000a 09245002 	 ld.dd %q4,[%a2+]16
+ 614 000e 89445002 	 st.dd [%a4+]16,%q4
+ 615 0012 09245002 	 ld.dd %q4,[%a2+]16
+ 616 0016 89445002 	 st.dd [%a4+]16,%q4
+ 617 001a 09245002 	 ld.dd %q4,[%a2+]16
+ 618 001e 89445002 	 st.dd [%a4+]16,%q4
+ 619 0022 09245002 	 ld.dd %q4,[%a2+]16
+ 620 0026 89445002 	 st.dd [%a4+]16,%q4
+ 621 002a 09245002 	 ld.dd %q4,[%a2+]16
+ 622 002e 89445002 	 st.dd [%a4+]16,%q4
+ 623 0032 09245002 	 ld.dd %q4,[%a2+]16
+ 624 0036 89445002 	 st.dd [%a4+]16,%q4
+ 625 003a 09245002 	 ld.dd %q4,[%a2+]16
+ 626 003e 89445002 	 st.dd [%a4+]16,%q4
+ 627 0042 09245002 	 ld.dd %q4,[%a2+]16
+ 628 0046 89445002 	 st.dd [%a4+]16,%q4
+ 629 004a 09244801 	 ld.d %e4,[%a2+]8
+ 630 004e 89444801 	 st.d [%a4+]8,%e4
+ 631 0052 4424     	 ld.w %d4,[%a2+]4
+ 632 0054 6444     	 st.w [%a4+]4,%d4
+ 633              	.LVL62:
+ 348:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** }
+ 634              	 .loc 1 348 1
+ 635 0056 0090     	 ret 
+ 636              	.LFE372:
+ 638              	 .global IfxSmmRst_initConfig_end
+ 639              	IfxSmmRst_initConfig_end:
+ 640              	 .section .text.IfxSmmRst_init,"ax",@progbits
+ 641              	 .align 1
+ 642              	 .global IfxSmmRst_init
+ 644              	IfxSmmRst_init:
+ 645              	.LFB373:
+ 349:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 350:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 351:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** void IfxSmmRst_init(IfxSmmRst_Config *resetCfg)
+ 352:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** {
+ 646              	 .loc 1 352 1 is_stmt 1
+ 647              	.LVL63:
+ 648 0000 40AE     	 mov.aa %a14,%SP
+ 649              	.LCFI7:
+ 353:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     IfxSmmRst_ResetTrigConfig *rstTrigCfgPtr = &(resetCfg->rstTrigCfg);
+ 650              	 .loc 1 353 5
+ 651              	.LVL64:
+ 354:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     IfxSmmRst_Esr0Config      *esr0CfgPtr    = &(resetCfg->esr0Cfg);
+ 652              	 .loc 1 354 5
+ 355:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     IfxSmmRst_Esr1Config      *esr1CfgPtr    = &(resetCfg->esr1Cfg);
+ 653              	 .loc 1 355 5
+ 356:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     IfxSmmRst_Esr2Config      *esr2CfgPtr    = &(resetCfg->esr2Cfg);
+ 654              	 .loc 1 356 5
+ 357:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     Ifx_SMM_ESRCFG             esrCfg0, esrCfg1, esrCfg2;
+ 655              	 .loc 1 357 5
+ 358:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     Ifx_SMM_ESR0CNTCTRL        esr0CntCtrl;
+ 656              	 .loc 1 358 5
+ 359:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     Ifx_PMS_PAD_ESR2CON        esr2con;
+ 657              	 .loc 1 359 5
+ 360:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     Ifx_SMM_RSTTRIGCTRLA       rstCona;
+ 658              	 .loc 1 360 5
+ 361:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     Ifx_SMM_RSTTRIGCTRLB       rstConb;
+ 659              	 .loc 1 361 5
+ 362:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     Ifx_SMM_PDISC              pdisc;
+ 660              	 .loc 1 362 5
+ 363:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     uint8                      clockDiv   = 0u;
+ 661              	 .loc 1 363 5
+ 364:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     uint16                     counter    = 0u;
+ 662              	 .loc 1 364 5
+ 365:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     uint32                     esr0PadCfg = 0u, esr1PadCfg = 0u;
+ 663              	 .loc 1 365 5
+ 366:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 367:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     /* Reading register */
+ 368:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     esrCfg0.U = SMM_ESRCFG0.U;
+ 664              	 .loc 1 368 5
+ 665              	 .loc 1 368 28 is_stmt 0
+ 666 0002 9160002F 	 movh.a %a2,61446
+ 667 0006 D9223440 	 lea %a2,[%a2]308
+ 668 000a 5420     	 ld.w %d0,[%a2]0
+ 669              	.LVL65:
+ 369:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     esrCfg1.U = SMM_ESRCFG1.U;
+ 670              	 .loc 1 369 5 is_stmt 1
+ 671              	 .loc 1 369 28 is_stmt 0
+ 672 000c 9160002F 	 movh.a %a2,61446
+ 673 0010 D9223840 	 lea %a2,[%a2]312
+ 674 0014 5427     	 ld.w %d7,[%a2]0
+ 675              	.LVL66:
+ 370:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     esrCfg2.U = SMM_ESRCFG2.U;
+ 676              	 .loc 1 370 5 is_stmt 1
+ 677              	 .loc 1 370 28 is_stmt 0
+ 678 0016 9160002F 	 movh.a %a2,61446
+ 679 001a D9223C40 	 lea %a2,[%a2]316
+ 680 001e 5426     	 ld.w %d6,[%a2]0
+ 681              	.LVL67:
+ 371:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 372:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     {
+ 373:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         /* ESR0 input configuration */
+ 374:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esrCfg0.B.EDCON = esr0CfgPtr->inputCfg.edge;
+ 682              	 .loc 1 374 9 is_stmt 1
+ 683              	 .loc 1 374 47 is_stmt 0
+ 684 0020 5443     	 ld.w %d3,[%a4]0
+ 685              	 .loc 1 374 25
+ 686 0022 37308203 	 insert %d0,%d0,%d3,7,2
+ 375:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esrCfg0.B.DFEN  = esr0CfgPtr->inputCfg.filter;
+ 687              	 .loc 1 375 9 is_stmt 1
+ 688              	 .loc 1 375 47 is_stmt 0
+ 689 0026 19430400 	 ld.w %d3,[%a4]4
+ 690              	 .loc 1 375 25
+ 691 002a 67300900 	 ins.t %d0,%d0,9,%d3,0
+ 376:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 377:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         IfxSmmRst_calculateDivAndCntValue(esr0CfgPtr->rstElongTimeNs, &clockDiv, &counter);
+ 692              	 .loc 1 377 9 is_stmt 1
+ 693 002e 19411400 	 ld.w %d1,[%a4]20
+ 694              	.LVL68:
+ 695              	.LBB14:
+ 696              	.LBB15:
+  53:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     uint8   index, powIndex;
+ 697              	 .loc 1 53 5
+  54:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     float32 minCalTime, maxCalTime;
+ 698              	 .loc 1 54 5
+  55:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 699              	 .loc 1 55 5
+  58:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     {
+ 700              	 .loc 1 58 5
+  58:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     {
+ 701              	 .loc 1 58 16 is_stmt 0
+ 702 0032 8205     	 mov %d5,0
+  58:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     {
+ 703              	 .loc 1 58 5
+ 704 0034 1D000000 	 j .L45
+ 705              	.LVL69:
+ 706              	.L46:
+  64:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             powIndex--;
+ 707              	 .loc 1 64 13 is_stmt 1
+  64:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             powIndex--;
+ 708              	 .loc 1 64 19 is_stmt 0
+ 709 0038 0612     	 sh %d2,1
+ 710              	.LVL70:
+  65:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         }
+ 711              	 .loc 1 65 13 is_stmt 1
+  65:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         }
+ 712              	 .loc 1 65 21 is_stmt 0
+ 713 003a C2F3     	 add %d3,-1
+ 714              	.LVL71:
+ 715 003c 8FF30F31 	 and %d3,%d3,255
+ 716              	.LVL72:
+ 717              	.L49:
+  62:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         {
+ 718              	 .loc 1 62 25 is_stmt 1
+ 719 0040 DF030080 	 jnz %d3,.L46
+  68:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         maxCalTime = (minCalTime * IFXSMMRST_RESET_COUNTER_MAX_VALUE);
+ 720              	 .loc 1 68 9
+  68:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         maxCalTime = (minCalTime * IFXSMMRST_RESET_COUNTER_MAX_VALUE);
+ 721              	 .loc 1 68 30 is_stmt 0
+ 722 0044 4B026121 	 utof %d2,%d2
+ 723              	.LVL73:
+ 724 0048 7BF0CB34 	 movh %d3,19647
+ 725              	.LVL74:
+ 726 004c 1B03C23B 	 addi %d3,%d3,-17376
+ 727 0050 4B325120 	 div.f %d2,%d2,%d3
+  68:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         maxCalTime = (minCalTime * IFXSMMRST_RESET_COUNTER_MAX_VALUE);
+ 728              	 .loc 1 68 20
+ 729 0054 7BE0E634 	 movh %d3,20078
+ 730 0058 1B83B236 	 addi %d3,%d3,27432
+ 731 005c 4B324120 	 mul.f %d2,%d2,%d3
+ 732              	.LVL75:
+  69:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 733              	 .loc 1 69 9 is_stmt 1
+  69:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 734              	 .loc 1 69 20 is_stmt 0
+ 735 0060 7B005884 	 movh %d8,17792
+ 736 0064 4B824180 	 mul.f %d8,%d2,%d8
+ 737              	.LVL76:
+  72:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         {
+ 738              	 .loc 1 72 9 is_stmt 1
+  72:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         {
+ 739              	 .loc 1 72 25 is_stmt 0
+ 740 0068 4B027131 	 ftouz %d3,%d2
+  72:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         {
+ 741              	 .loc 1 72 12
+ 742 006c 7F130080 	 jge.u %d3,%d1,.L47
+  72:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         {
+ 743              	 .loc 1 72 60
+ 744 0070 4B087181 	 ftouz %d8,%d8
+ 745              	.LVL77:
+  72:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         {
+ 746              	 .loc 1 72 45
+ 747 0074 3F810080 	 jlt.u %d1,%d8,.L48
+ 748              	.L47:
+  78:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         }
+ 749              	 .loc 1 78 13 is_stmt 1
+ 750              	.LVL78:
+  58:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     {
+ 751              	 .loc 1 58 39
+ 752 0078 C215     	 add %d5,1
+ 753              	.LVL79:
+ 754 007a 8FF50F51 	 and %d5,%d5,255
+ 755              	.LVL80:
+ 756              	.L45:
+  58:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     {
+ 757              	 .loc 1 58 27
+ 758 007e 3BF00030 	 mov %d3,15
+ 759 0082 3F530080 	 jlt.u %d3,%d5,.L48
+  60:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 760              	 .loc 1 60 18 is_stmt 0
+ 761 0086 0253     	 mov %d3,%d5
+ 762 0088 8212     	 mov %d2,1
+ 763              	.LVL81:
+ 764 008a 1D000000 	 j .L49
+ 765              	.LVL82:
+ 766              	.L48:
+  83:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     *clockDivider = index;
+ 767              	 .loc 1 83 5 is_stmt 1
+  83:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     *clockDivider = index;
+ 768              	 .loc 1 83 39 is_stmt 0
+ 769 008e 4B016111 	 utof %d1,%d1
+ 770              	.LVL83:
+ 771 0092 4B215120 	 div.f %d2,%d1,%d2
+ 772              	.LVL84:
+  83:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     *clockDivider = index;
+ 773              	 .loc 1 83 21
+ 774 0096 4B027121 	 ftouz %d2,%d2
+ 775 009a 37027020 	 extr.u %d2,%d2,0,16
+ 776              	.LVL85:
+  84:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** }
+ 777              	 .loc 1 84 5 is_stmt 1
+ 778              	.LBE15:
+ 779              	.LBE14:
+ 378:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         /* ESR0 reset elongation configuration */
+ 379:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esr0CntCtrl.B.CLKDIV  = clockDiv;
+ 780              	 .loc 1 379 9
+ 781              	 .loc 1 379 31 is_stmt 0
+ 782 009e 8208     	 mov %d8,0
+ 783              	.LVL86:
+ 784 00a0 37580488 	 insert %d8,%d8,%d5,16,4
+ 785              	.LVL87:
+ 380:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esr0CntCtrl.B.RSTECNT = counter;
+ 786              	 .loc 1 380 9 is_stmt 1
+ 787              	 .loc 1 380 31 is_stmt 0
+ 788 00a4 37280C80 	 insert %d8,%d8,%d2,0,12
+ 381:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esr0CntCtrl.B.RSTCON  = esr0CfgPtr->rstRelease;
+ 789              	 .loc 1 381 9 is_stmt 1
+ 790              	 .loc 1 381 43 is_stmt 0
+ 791 00a8 19421000 	 ld.w %d2,[%a4]16
+ 792              	.LVL88:
+ 793              	 .loc 1 381 31
+ 794 00ac 3728028C 	 insert %d8,%d8,%d2,24,2
+ 382:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 383:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         /* ESR0 pad configuration */
+ 384:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esr0PadCfg = (((((resetCfg->esr0Cfg.padDriver & 0x38U) << IFXSMMRST_DRVCFG_PL_OFF) | (reset
+ 795              	 .loc 1 384 9 is_stmt 1
+ 796              	 .loc 1 384 44 is_stmt 0
+ 797 00b0 19411C00 	 ld.w %d1,[%a4]28
+ 798              	 .loc 1 384 64
+ 799 00b4 8F910050 	 sh %d5,%d1,9
+ 800              	.LVL89:
+ 801 00b8 3B000027 	 mov %d2,28672
+ 802 00bc 2625     	 and %d5,%d2
+ 803              	 .loc 1 384 123
+ 804 00be 8F710031 	 and %d3,%d1,7
+ 805              	 .loc 1 384 92
+ 806 00c2 A653     	 or %d3,%d5
+ 807              	 .loc 1 384 132
+ 808 00c4 8F830030 	 sh %d3,%d3,8
+ 385:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****                       (resetCfg->esr0Cfg.portMode));
+ 809              	 .loc 1 385 41
+ 810 00c8 19451800 	 ld.w %d5,[%a4]24
+ 384:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****                       (resetCfg->esr0Cfg.portMode));
+ 811              	 .loc 1 384 20
+ 812 00cc 0F53A0A0 	 or %d10,%d3,%d5
+ 813              	.LVL90:
+ 386:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 387:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         pdisc.B.PDIS0 = 0u;
+ 814              	 .loc 1 387 9 is_stmt 1
+ 388:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     }
+ 389:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 390:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     /*ESR1 configuration */
+ 391:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     {
+ 392:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         /* ESR1 input configuration */
+ 393:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esrCfg1.B.EDCON = esr1CfgPtr->inputCfg.edge;
+ 815              	 .loc 1 393 9
+ 816              	 .loc 1 393 47 is_stmt 0
+ 817 00d0 19432000 	 ld.w %d3,[%a4]32
+ 818              	 .loc 1 393 25
+ 819 00d4 37378273 	 insert %d7,%d7,%d3,7,2
+ 394:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esrCfg1.B.DFEN  = esr1CfgPtr->inputCfg.filter;
+ 820              	 .loc 1 394 9 is_stmt 1
+ 821              	 .loc 1 394 47 is_stmt 0
+ 822 00d8 19432400 	 ld.w %d3,[%a4]36
+ 823              	 .loc 1 394 25
+ 824 00dc 67370970 	 ins.t %d7,%d7,9,%d3,0
+ 395:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 396:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         /* ESR1 pad configuration */
+ 397:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esr1PadCfg = (((((resetCfg->esr1Cfg.padDriver & 0x38U) << IFXSMMRST_DRVCFG_PL_OFF) | (reset
+ 825              	 .loc 1 397 9 is_stmt 1
+ 826              	 .loc 1 397 44 is_stmt 0
+ 827 00e0 19453400 	 ld.w %d5,[%a4]52
+ 828              	 .loc 1 397 64
+ 829 00e4 8F950030 	 sh %d3,%d5,9
+ 830 00e8 2623     	 and %d3,%d2
+ 831              	 .loc 1 397 123
+ 832 00ea 8F750021 	 and %d2,%d5,7
+ 833              	 .loc 1 397 92
+ 834 00ee A632     	 or %d2,%d3
+ 835              	 .loc 1 397 132
+ 836 00f0 8F820020 	 sh %d2,%d2,8
+ 398:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****                       (resetCfg->esr1Cfg.portMode));
+ 837              	 .loc 1 398 41
+ 838 00f4 19433000 	 ld.w %d3,[%a4]48
+ 397:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****                       (resetCfg->esr1Cfg.portMode));
+ 839              	 .loc 1 397 20
+ 840 00f8 0F32A090 	 or %d9,%d2,%d3
+ 841              	.LVL91:
+ 399:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 400:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         pdisc.B.PDIS1 = 0u;
+ 842              	 .loc 1 400 9 is_stmt 1
+ 401:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     }
+ 402:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 403:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     /*ESR2 configuration */
+ 404:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     {
+ 405:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         /* ESR2 input configuration */
+ 406:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esrCfg2.B.EDCON = esr2CfgPtr->inputCfg.edge;
+ 843              	 .loc 1 406 9
+ 844              	 .loc 1 406 47 is_stmt 0
+ 845 00fc 19423800 	 ld.w %d2,[%a4]56
+ 846              	 .loc 1 406 25
+ 847 0100 37268263 	 insert %d6,%d6,%d2,7,2
+ 407:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esrCfg2.B.DFEN  = esr2CfgPtr->inputCfg.filter;
+ 848              	 .loc 1 407 9 is_stmt 1
+ 849              	 .loc 1 407 47 is_stmt 0
+ 850 0104 19423C00 	 ld.w %d2,[%a4]60
+ 851              	 .loc 1 407 25
+ 852 0108 67260960 	 ins.t %d6,%d6,9,%d2,0
+ 408:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 409:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         IfxSmmRst_calculateDivAndCntValue(esr2CfgPtr->rstElongTimeNs, &clockDiv, &counter);
+ 853              	 .loc 1 409 9 is_stmt 1
+ 854 010c 19410C10 	 ld.w %d1,[%a4]76
+ 855              	.LVL92:
+ 856              	.LBB16:
+ 857              	.LBB17:
+  58:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     {
+ 858              	 .loc 1 58 16 is_stmt 0
+ 859 0110 8205     	 mov %d5,0
+ 860 0112 1D000000 	 j .L50
+ 861              	.LVL93:
+ 862              	.L51:
+  64:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             powIndex--;
+ 863              	 .loc 1 64 13 is_stmt 1
+  64:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****             powIndex--;
+ 864              	 .loc 1 64 19 is_stmt 0
+ 865 0116 0612     	 sh %d2,1
+ 866              	.LVL94:
+  65:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         }
+ 867              	 .loc 1 65 13 is_stmt 1
+  65:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         }
+ 868              	 .loc 1 65 21 is_stmt 0
+ 869 0118 C2F3     	 add %d3,-1
+ 870              	.LVL95:
+ 871 011a 8FF30F31 	 and %d3,%d3,255
+ 872              	.LVL96:
+ 873              	.L54:
+  62:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         {
+ 874              	 .loc 1 62 25 is_stmt 1
+ 875 011e DF030080 	 jnz %d3,.L51
+  68:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         maxCalTime = (minCalTime * IFXSMMRST_RESET_COUNTER_MAX_VALUE);
+ 876              	 .loc 1 68 9
+  68:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         maxCalTime = (minCalTime * IFXSMMRST_RESET_COUNTER_MAX_VALUE);
+ 877              	 .loc 1 68 30 is_stmt 0
+ 878 0122 4B026121 	 utof %d2,%d2
+ 879              	.LVL97:
+ 880 0126 7BF0CB34 	 movh %d3,19647
+ 881              	.LVL98:
+ 882 012a 1B03C23B 	 addi %d3,%d3,-17376
+ 883 012e 4B325120 	 div.f %d2,%d2,%d3
+  68:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         maxCalTime = (minCalTime * IFXSMMRST_RESET_COUNTER_MAX_VALUE);
+ 884              	 .loc 1 68 20
+ 885 0132 7BE0E644 	 movh %d4,20078
+ 886              	.LVL99:
+ 887 0136 1B84B246 	 addi %d4,%d4,27432
+ 888 013a 4B424140 	 mul.f %d4,%d2,%d4
+ 889              	.LVL100:
+  69:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 890              	 .loc 1 69 9 is_stmt 1
+  69:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 891              	 .loc 1 69 20 is_stmt 0
+ 892 013e 7B005834 	 movh %d3,17792
+ 893 0142 4B344130 	 mul.f %d3,%d4,%d3
+ 894              	.LVL101:
+  72:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         {
+ 895              	 .loc 1 72 9 is_stmt 1
+  72:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         {
+ 896              	 .loc 1 72 25 is_stmt 0
+ 897 0146 4B047121 	 ftouz %d2,%d4
+  72:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         {
+ 898              	 .loc 1 72 12
+ 899 014a 7F120080 	 jge.u %d2,%d1,.L52
+  72:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         {
+ 900              	 .loc 1 72 60
+ 901 014e 4B037131 	 ftouz %d3,%d3
+ 902              	.LVL102:
+  72:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         {
+ 903              	 .loc 1 72 45
+ 904 0152 3F310080 	 jlt.u %d1,%d3,.L53
+ 905              	.L52:
+  78:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         }
+ 906              	 .loc 1 78 13 is_stmt 1
+ 907              	.LVL103:
+  58:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     {
+ 908              	 .loc 1 58 39
+ 909 0156 C215     	 add %d5,1
+ 910              	.LVL104:
+ 911 0158 8FF50F51 	 and %d5,%d5,255
+ 912              	.LVL105:
+ 913              	.L50:
+  58:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     {
+ 914              	 .loc 1 58 27
+ 915 015c 3BF00020 	 mov %d2,15
+ 916 0160 3F520080 	 jlt.u %d2,%d5,.L53
+  60:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 917              	 .loc 1 60 18 is_stmt 0
+ 918 0164 0253     	 mov %d3,%d5
+ 919 0166 8212     	 mov %d2,1
+ 920 0168 1D000000 	 j .L54
+ 921              	.LVL106:
+ 922              	.L53:
+  83:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     *clockDivider = index;
+ 923              	 .loc 1 83 5 is_stmt 1
+  83:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     *clockDivider = index;
+ 924              	 .loc 1 83 39 is_stmt 0
+ 925 016c 4B016121 	 utof %d2,%d1
+ 926 0170 4B425120 	 div.f %d2,%d2,%d4
+  83:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     *clockDivider = index;
+ 927              	 .loc 1 83 21
+ 928 0174 4B027121 	 ftouz %d2,%d2
+ 929 0178 37027030 	 extr.u %d3,%d2,0,16
+ 930              	.LVL107:
+  84:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** }
+ 931              	 .loc 1 84 5 is_stmt 1
+ 932              	.LBE17:
+ 933              	.LBE16:
+ 410:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esr2con.B.CLKDIV    = clockDiv;
+ 934              	 .loc 1 410 9
+ 935              	 .loc 1 410 29 is_stmt 0
+ 936 017c 8202     	 mov %d2,0
+ 937              	.LVL108:
+ 938 017e 3752042E 	 insert %d2,%d2,%d5,28,4
+ 939              	.LVL109:
+ 411:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esr2con.B.RSTECNT   = counter;
+ 940              	 .loc 1 411 9 is_stmt 1
+ 941              	 .loc 1 411 29 is_stmt 0
+ 942 0182 37320C28 	 insert %d2,%d2,%d3,16,12
+ 412:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esr2con.B.ESR2ROEN  = resetCfg->esr2Cfg.enableRstElongInWarmPorst;
+ 943              	 .loc 1 412 9 is_stmt 1
+ 944              	 .loc 1 412 48 is_stmt 0
+ 945 0186 39430810 	 ld.bu %d3,[%a4]72
+ 946              	.LVL110:
+ 947              	 .loc 1 412 29
+ 948 018a 67320020 	 ins.t %d2,%d2,0,%d3,0
+ 413:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esr2con.B.ESR2ROAPP = resetCfg->esr2Cfg.enableRstElongInAppRst;
+ 949              	 .loc 1 413 9 is_stmt 1
+ 950              	 .loc 1 413 48 is_stmt 0
+ 951 018e 39430910 	 ld.bu %d3,[%a4]73
+ 952              	 .loc 1 413 29
+ 953 0192 67320120 	 ins.t %d2,%d2,1,%d3,0
+ 414:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     }
+ 415:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 416:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     /* Reset trigger configuration */
+ 417:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     {
+ 418:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         rstCona.U = (rstTrigCfgPtr->esr0) | (rstTrigCfgPtr->esr1 << IFX_SMM_RSTTRIGCTRLA_ESR1_OFF) 
+ 954              	 .loc 1 418 9 is_stmt 1
+ 955              	 .loc 1 418 35 is_stmt 0
+ 956 0196 19441010 	 ld.w %d4,[%a4]80
+ 957              	.LVL111:
+ 958              	 .loc 1 418 59
+ 959 019a 19431410 	 ld.w %d3,[%a4]84
+ 960              	 .loc 1 418 66
+ 961 019e 0633     	 sh %d3,3
+ 962              	 .loc 1 418 43
+ 963 01a0 A634     	 or %d4,%d3
+ 964              	 .loc 1 418 116
+ 965 01a2 19431810 	 ld.w %d3,[%a4]88
+ 966              	 .loc 1 418 123
+ 967 01a6 0663     	 sh %d3,6
+ 968              	 .loc 1 418 100
+ 969 01a8 A634     	 or %d4,%d3
+ 419:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****                     (rstTrigCfgPtr->smuSafe0Ar << IFX_SMM_RSTTRIGCTRLA_SMUSAFE0AR_OFF) | (rstTrigCf
+ 970              	 .loc 1 419 35
+ 971 01aa 19431C10 	 ld.w %d3,[%a4]92
+ 972              	 .loc 1 419 48
+ 973 01ae 8F930030 	 sh %d3,%d3,9
+ 418:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****                     (rstTrigCfgPtr->smuSafe0Ar << IFX_SMM_RSTTRIGCTRLA_SMUSAFE0AR_OFF) | (rstTrigCf
+ 974              	 .loc 1 418 157
+ 975 01b2 A634     	 or %d4,%d3
+ 976              	 .loc 1 419 104
+ 977 01b4 19432010 	 ld.w %d3,[%a4]96
+ 978              	 .loc 1 419 117
+ 979 01b8 8FC30030 	 sh %d3,%d3,12
+ 980              	 .loc 1 419 88
+ 981 01bc A634     	 or %d4,%d3
+ 420:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****                     (rstTrigCfgPtr->smuSafe1Ar << IFX_SMM_RSTTRIGCTRLA_SMUSAFE1AR_OFF) | (rstTrigCf
+ 982              	 .loc 1 420 35
+ 983 01be 19432410 	 ld.w %d3,[%a4]100
+ 984              	 .loc 1 420 48
+ 985 01c2 8FF30030 	 sh %d3,%d3,15
+ 419:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****                     (rstTrigCfgPtr->smuSafe0Ar << IFX_SMM_RSTTRIGCTRLA_SMUSAFE0AR_OFF) | (rstTrigCf
+ 986              	 .loc 1 419 157
+ 987 01c6 A634     	 or %d4,%d3
+ 988              	 .loc 1 420 104
+ 989 01c8 19432810 	 ld.w %d3,[%a4]104
+ 990              	 .loc 1 420 117
+ 991 01cc 8F230130 	 sh %d3,%d3,18
+ 992              	 .loc 1 420 88
+ 993 01d0 A634     	 or %d4,%d3
+ 421:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****                     (rstTrigCfgPtr->software << IFX_SMM_RSTTRIGCTRLA_SW_OFF) |                     
+ 994              	 .loc 1 421 35
+ 995 01d2 19432C10 	 ld.w %d3,[%a4]108
+ 996              	 .loc 1 421 46
+ 997 01d6 8F830130 	 sh %d3,%d3,24
+ 420:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****                     (rstTrigCfgPtr->smuSafe1Ar << IFX_SMM_RSTTRIGCTRLA_SMUSAFE1AR_OFF) | (rstTrigCf
+ 998              	 .loc 1 420 157
+ 999 01da A634     	 or %d4,%d3
+ 422:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****                     (rstTrigCfgPtr->padRst << IFX_SMM_RSTTRIGCTRLA_PINRST_OFF) | (rstTrigCfgPtr->ph
+ 1000              	 .loc 1 422 35
+ 1001 01dc 39430820 	 ld.bu %d3,[%a4]136
+ 1002              	 .loc 1 422 44
+ 1003 01e0 8FE30130 	 sh %d3,%d3,30
+ 421:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****                     (rstTrigCfgPtr->software << IFX_SMM_RSTTRIGCTRLA_SW_OFF) |                     
+ 1004              	 .loc 1 421 78
+ 1005 01e4 A634     	 or %d4,%d3
+ 1006              	 .loc 1 422 96
+ 1007 01e6 39430920 	 ld.bu %d3,[%a4]137
+ 1008              	 .loc 1 422 105
+ 1009 01ea 8FF30130 	 sh %d3,%d3,31
+ 1010              	 .loc 1 422 80
+ 1011 01ee 0F34A050 	 or %d5,%d4,%d3
+ 1012              	.LVL112:
+ 423:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 424:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         rstConb.U = (rstTrigCfgPtr->stm0) | (rstTrigCfgPtr->stm1 << IFX_SMM_RSTTRIGCTRLB_STM1_OFF) 
+ 1013              	 .loc 1 424 9 is_stmt 1
+ 1014              	 .loc 1 424 35 is_stmt 0
+ 1015 01f2 19443010 	 ld.w %d4,[%a4]112
+ 1016              	 .loc 1 424 59
+ 1017 01f6 19433410 	 ld.w %d3,[%a4]116
+ 1018              	 .loc 1 424 66
+ 1019 01fa 0633     	 sh %d3,3
+ 1020              	 .loc 1 424 43
+ 1021 01fc A634     	 or %d4,%d3
+ 1022              	 .loc 1 424 116
+ 1023 01fe 19433810 	 ld.w %d3,[%a4]120
+ 1024              	 .loc 1 424 123
+ 1025 0202 0663     	 sh %d3,6
+ 1026              	 .loc 1 424 100
+ 1027 0204 A634     	 or %d4,%d3
+ 425:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****                     (rstTrigCfgPtr->stm3 << IFX_SMM_RSTTRIGCTRLB_STM3_OFF) | (rstTrigCfgPtr->stm4 <
+ 1028              	 .loc 1 425 35
+ 1029 0206 19433C10 	 ld.w %d3,[%a4]124
+ 1030              	 .loc 1 425 42
+ 1031 020a 8F930030 	 sh %d3,%d3,9
+ 424:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****                     (rstTrigCfgPtr->stm3 << IFX_SMM_RSTTRIGCTRLB_STM3_OFF) | (rstTrigCfgPtr->stm4 <
+ 1032              	 .loc 1 424 157
+ 1033 020e A634     	 or %d4,%d3
+ 1034              	 .loc 1 425 92
+ 1035 0210 19430020 	 ld.w %d3,[%a4]128
+ 1036              	 .loc 1 425 99
+ 1037 0214 8FC30030 	 sh %d3,%d3,12
+ 1038              	 .loc 1 425 76
+ 1039 0218 A634     	 or %d4,%d3
+ 426:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****                     (rstTrigCfgPtr->stm5 << IFX_SMM_RSTTRIGCTRLB_STM5_OFF);
+ 1040              	 .loc 1 426 35
+ 1041 021a 19430420 	 ld.w %d3,[%a4]132
+ 1042              	 .loc 1 426 42
+ 1043 021e 8FF30030 	 sh %d3,%d3,15
+ 425:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****                     (rstTrigCfgPtr->stm3 << IFX_SMM_RSTTRIGCTRLB_STM3_OFF) | (rstTrigCfgPtr->stm4 <
+ 1044              	 .loc 1 425 133
+ 1045 0222 A643     	 or %d3,%d4
+ 427:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     }
+ 428:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** #if (IFX_PROT_ENABLED == 1U)
+ 429:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMM.PROTE, IfxApProt_State_config);
+ 430:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_PMS.PROTE, IfxApProt_State_config);
+ 431:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** #endif
+ 432:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     /* Writing register back */
+ 433:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     SMM_RSTTRIGCTRLA.U = rstCona.U;
+ 1046              	 .loc 1 433 5 is_stmt 1
+ 1047              	 .loc 1 433 24 is_stmt 0
+ 1048 0224 9160002F 	 movh.a %a2,61446
+ 1049 0228 D9221440 	 lea %a2,[%a2]276
+ 1050 022c 7425     	 st.w [%a2]0,%d5
+ 434:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     SMM_RSTTRIGCTRLB.U = rstConb.U;
+ 1051              	 .loc 1 434 5 is_stmt 1
+ 1052              	 .loc 1 434 24 is_stmt 0
+ 1053 022e 9160002F 	 movh.a %a2,61446
+ 1054 0232 D9221840 	 lea %a2,[%a2]280
+ 1055 0236 7423     	 st.w [%a2]0,%d3
+ 435:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 436:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     if (SMM_ESRCFG0.B.CNTLCK != 1u)
+ 1056              	 .loc 1 436 5 is_stmt 1
+ 1057              	 .loc 1 436 22 is_stmt 0
+ 1058 0238 9160002F 	 movh.a %a2,61446
+ 1059 023c D9223440 	 lea %a2,[%a2]308
+ 1060 0240 5423     	 ld.w %d3,[%a2]0
+ 1061              	 .loc 1 436 8
+ 1062 0242 6FD30080 	 jnz.t %d3,13,.L55
+ 437:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     {
+ 438:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esrCfg0.B.CLKDIV   = esr0CfgPtr->inputCfg.clkDiv;
+ 1063              	 .loc 1 438 9 is_stmt 1
+ 1064              	 .loc 1 438 50 is_stmt 0
+ 1065 0246 19430800 	 ld.w %d3,[%a4]8
+ 1066              	 .loc 1 438 28
+ 1067 024a 67300E00 	 ins.t %d0,%d0,14,%d3,0
+ 439:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esrCfg0.B.GL       = esr0CfgPtr->inputCfg.eventSel;
+ 1068              	 .loc 1 439 9 is_stmt 1
+ 1069              	 .loc 1 439 50 is_stmt 0
+ 1070 024e 39430C00 	 ld.bu %d3,[%a4]12
+ 1071              	 .loc 1 439 28
+ 1072 0252 67300F00 	 ins.t %d0,%d0,15,%d3,0
+ 440:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esrCfg0.B.RSTDELAY = esr0CfgPtr->inputCfg.rstPulseCmpValue;
+ 1073              	 .loc 1 440 9 is_stmt 1
+ 1074              	 .loc 1 440 50 is_stmt 0
+ 1075 0256 B9430E00 	 ld.hu %d3,[%a4]14
+ 1076              	 .loc 1 440 28
+ 1077 025a 37301008 	 insert %d0,%d0,%d3,16,32-16
+ 1078              	.LVL113:
+ 441:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esrCfg0.B.CNTLCK   = 1u;
+ 1079              	 .loc 1 441 9 is_stmt 1
+ 1080              	 .loc 1 441 28 is_stmt 0
+ 1081 025e B7108106 	 insert %d0,%d0,1,13,1
+ 1082              	.LVL114:
+ 1083              	.L55:
+ 442:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     }
+ 443:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 444:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     SMM_ESRCFG0.U     = esrCfg0.U;
+ 1084              	 .loc 1 444 5 is_stmt 1
+ 1085              	 .loc 1 444 23 is_stmt 0
+ 1086 0262 9160002F 	 movh.a %a2,61446
+ 1087 0266 D9223440 	 lea %a2,[%a2]308
+ 1088 026a 7420     	 st.w [%a2]0,%d0
+ 445:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     SMM_ESR0CNTCTRL.U = esr0CntCtrl.U;
+ 1089              	 .loc 1 445 5 is_stmt 1
+ 1090              	 .loc 1 445 23 is_stmt 0
+ 1091 026c 9160002F 	 movh.a %a2,61446
+ 1092 0270 D9220050 	 lea %a2,[%a2]320
+ 1093 0274 7428     	 st.w [%a2]0,%d8
+ 446:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     SMM_DRVCFGESR0.U  = esr0PadCfg;
+ 1094              	 .loc 1 446 5 is_stmt 1
+ 1095              	 .loc 1 446 23 is_stmt 0
+ 1096 0276 9160002F 	 movh.a %a2,61446
+ 1097 027a D9220850 	 lea %a2,[%a2]328
+ 1098 027e 742A     	 st.w [%a2]0,%d10
+ 447:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 448:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     if (SMM_ESRCFG1.B.CNTLCK != 1u)
+ 1099              	 .loc 1 448 5 is_stmt 1
+ 1100              	 .loc 1 448 22 is_stmt 0
+ 1101 0280 9160002F 	 movh.a %a2,61446
+ 1102 0284 D9223840 	 lea %a2,[%a2]312
+ 1103 0288 5423     	 ld.w %d3,[%a2]0
+ 1104              	 .loc 1 448 8
+ 1105 028a 6FD30080 	 jnz.t %d3,13,.L56
+ 449:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     {
+ 450:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esrCfg1.B.CLKDIV   = esr1CfgPtr->inputCfg.clkDiv;
+ 1106              	 .loc 1 450 9 is_stmt 1
+ 1107              	 .loc 1 450 50 is_stmt 0
+ 1108 028e 19432800 	 ld.w %d3,[%a4]40
+ 1109              	 .loc 1 450 28
+ 1110 0292 67370E70 	 ins.t %d7,%d7,14,%d3,0
+ 451:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esrCfg1.B.GL       = esr1CfgPtr->inputCfg.eventSel;
+ 1111              	 .loc 1 451 9 is_stmt 1
+ 1112              	 .loc 1 451 50 is_stmt 0
+ 1113 0296 39432C00 	 ld.bu %d3,[%a4]44
+ 1114              	 .loc 1 451 28
+ 1115 029a 67370F70 	 ins.t %d7,%d7,15,%d3,0
+ 452:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esrCfg1.B.RSTDELAY = esr1CfgPtr->inputCfg.rstPulseCmpValue;
+ 1116              	 .loc 1 452 9 is_stmt 1
+ 1117              	 .loc 1 452 50 is_stmt 0
+ 1118 029e B9432E00 	 ld.hu %d3,[%a4]46
+ 1119              	 .loc 1 452 28
+ 1120 02a2 37371078 	 insert %d7,%d7,%d3,16,32-16
+ 1121              	.LVL115:
+ 453:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esrCfg1.B.CNTLCK   = 1u;
+ 1122              	 .loc 1 453 9 is_stmt 1
+ 1123              	 .loc 1 453 28 is_stmt 0
+ 1124 02a6 B7178176 	 insert %d7,%d7,1,13,1
+ 1125              	.LVL116:
+ 1126              	.L56:
+ 454:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     }
+ 455:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 456:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     SMM_ESRCFG1.U    = esrCfg1.U;
+ 1127              	 .loc 1 456 5 is_stmt 1
+ 1128              	 .loc 1 456 22 is_stmt 0
+ 1129 02aa 9160002F 	 movh.a %a2,61446
+ 1130 02ae D9223840 	 lea %a2,[%a2]312
+ 1131 02b2 7427     	 st.w [%a2]0,%d7
+ 457:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     SMM_DRVCFGESR1.U = esr1PadCfg;
+ 1132              	 .loc 1 457 5 is_stmt 1
+ 1133              	 .loc 1 457 22 is_stmt 0
+ 1134 02b4 9160002F 	 movh.a %a2,61446
+ 1135 02b8 D9221050 	 lea %a2,[%a2]336
+ 1136 02bc 7429     	 st.w [%a2]0,%d9
+ 458:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 459:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     if (SMM_ESRCFG2.B.CNTLCK != 1u)
+ 1137              	 .loc 1 459 5 is_stmt 1
+ 1138              	 .loc 1 459 22 is_stmt 0
+ 1139 02be 9160002F 	 movh.a %a2,61446
+ 1140 02c2 D9223C40 	 lea %a2,[%a2]316
+ 1141 02c6 5423     	 ld.w %d3,[%a2]0
+ 1142              	 .loc 1 459 8
+ 1143 02c8 6FD30080 	 jnz.t %d3,13,.L57
+ 460:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     {
+ 461:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esrCfg2.B.CLKDIV   = esr2CfgPtr->inputCfg.clkDiv;
+ 1144              	 .loc 1 461 9 is_stmt 1
+ 1145              	 .loc 1 461 50 is_stmt 0
+ 1146 02cc 19430010 	 ld.w %d3,[%a4]64
+ 1147              	 .loc 1 461 28
+ 1148 02d0 67360E60 	 ins.t %d6,%d6,14,%d3,0
+ 462:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esrCfg2.B.GL       = esr2CfgPtr->inputCfg.eventSel;
+ 1149              	 .loc 1 462 9 is_stmt 1
+ 1150              	 .loc 1 462 50 is_stmt 0
+ 1151 02d4 39430410 	 ld.bu %d3,[%a4]68
+ 1152              	 .loc 1 462 28
+ 1153 02d8 67360F60 	 ins.t %d6,%d6,15,%d3,0
+ 463:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esrCfg2.B.RSTDELAY = esr2CfgPtr->inputCfg.rstPulseCmpValue;
+ 1154              	 .loc 1 463 9 is_stmt 1
+ 1155              	 .loc 1 463 50 is_stmt 0
+ 1156 02dc B9430610 	 ld.hu %d3,[%a4]70
+ 1157              	 .loc 1 463 28
+ 1158 02e0 37361068 	 insert %d6,%d6,%d3,16,32-16
+ 1159              	.LVL117:
+ 464:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****         esrCfg2.B.CNTLCK   = 1u;
+ 1160              	 .loc 1 464 9 is_stmt 1
+ 1161              	 .loc 1 464 28 is_stmt 0
+ 1162 02e4 B7168166 	 insert %d6,%d6,1,13,1
+ 1163              	.LVL118:
+ 1164              	.L57:
+ 465:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     }
+ 466:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 467:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     SMM_ESRCFG2.U     = esrCfg2.U;
+ 1165              	 .loc 1 467 5 is_stmt 1
+ 1166              	 .loc 1 467 23 is_stmt 0
+ 1167 02e8 9160002F 	 movh.a %a2,61446
+ 1168 02ec D9223C40 	 lea %a2,[%a2]316
+ 1169 02f0 7426     	 st.w [%a2]0,%d6
+ 468:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     SMM_PDISC.U       = pdisc.U;
+ 1170              	 .loc 1 468 5 is_stmt 1
+ 1171              	 .loc 1 468 23 is_stmt 0
+ 1172 02f2 8203     	 mov %d3,0
+ 1173              	.LVL119:
+ 1174 02f4 9160002F 	 movh.a %a2,61446
+ 1175 02f8 D9222C40 	 lea %a2,[%a2]300
+ 1176              	.LVL120:
+ 1177 02fc 7423     	 st.w [%a2]0,%d3
+ 469:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     PMS_PAD_ESR2CON.U = esr2con.U;
+ 1178              	 .loc 1 469 5 is_stmt 1
+ 1179              	 .loc 1 469 23 is_stmt 0
+ 1180 02fe 9150022F 	 movh.a %a2,61477
+ 1181 0302 D92208A9 	 lea %a2,[%a2]-28024
+ 1182 0306 7422     	 st.w [%a2]0,%d2
+ 470:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** 
+ 471:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** #if (IFX_PROT_ENABLED == 1U)
+ 472:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMM.PROTE, IfxApProt_State_run);
+ 473:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_PMS.PROTE, IfxApProt_State_run);
+ 474:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** #endif
+ 475:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.c **** }
+ 1183              	 .loc 1 475 1
+ 1184 0308 0090     	 ret 
+ 1185              	.LFE373:
+ 1187              	 .global IfxSmmRst_init_end
+ 1188              	IfxSmmRst_init_end:
+ 1189              	 .section .rodata.defaultResetConfig.0,"a"
+ 1190              	 .align 2
+ 1193              	defaultResetConfig.0:
+ 1194 0000 02000000 	 .word 2
+ 1195 0004 00000000 	 .word 0
+ 1196 0008 00000000 	 .word 0
+ 1197 000c 01       	 .byte 1
+ 1198 000d 00       	 .zero 1
+ 1199 000e 0000     	 .short 0
+ 1200 0010 02000000 	 .word 2
+ 1201 0014 00000000 	 .word 0
+ 1202 0018 83000000 	 .word 131
+ 1203 001c 10000000 	 .word 16
+ 1204 0020 02000000 	 .word 2
+ 1205 0024 00000000 	 .word 0
+ 1206 0028 00000000 	 .word 0
+ 1207 002c 01       	 .byte 1
+ 1208 002d 00       	 .zero 1
+ 1209 002e 0000     	 .short 0
+ 1210 0030 20000000 	 .word 32
+ 1211 0034 10000000 	 .word 16
+ 1212 0038 02000000 	 .word 2
+ 1213 003c 00000000 	 .word 0
+ 1214 0040 00000000 	 .word 0
+ 1215 0044 01       	 .byte 1
+ 1216 0045 00       	 .zero 1
+ 1217 0046 0000     	 .short 0
+ 1218 0048 00       	 .byte 0
+ 1219 0049 00       	 .byte 0
+ 1220 004a 0000     	 .zero 2
+ 1221 004c 00000000 	 .word 0
+ 1222 0050 00000000 	 .word 0
+ 1223 0054 00000000 	 .word 0
+ 1224 0058 00000000 	 .word 0
+ 1225 005c 00000000 	 .word 0
+ 1226 0060 00000000 	 .word 0
+ 1227 0064 00000000 	 .word 0
+ 1228 0068 00000000 	 .word 0
+ 1229 006c 00000000 	 .word 0
+ 1230 0070 00000000 	 .word 0
+ 1231 0074 00000000 	 .word 0
+ 1232 0078 00000000 	 .word 0
+ 1233 007c 00000000 	 .word 0
+ 1234 0080 00000000 	 .word 0
+ 1235 0084 00000000 	 .word 0
+ 1236 0088 00       	 .byte 0
+ 1237 0089 00       	 .byte 0
+ 1238 008a 0000     	 .zero 2
+ 1351              	.Letext0:
+ 1352              	 .file 2 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 1353              	 .file 3 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 1354              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/IfxSmm_regdef.h"
+ 1355              	 .file 5 "../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.h"
+ 1356              	 .file 6 "../Libraries/Infra/Sfr/TC4Dx/IfxPms_regdef.h"
+ 1357              	 .file 7 "../Libraries/iLLD/TC4xx/CpuGeneric/Port/Std/IfxPort.h"
+ 1358              	 .file 8 "../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmmRst.h"
+ 7593 0000 00000000 	 .word IfxSmmRst_evaluateReset
+ 7594 0004 00000000 	 .word IfxSmmRst_evaluateReset_end
+ 7595 0008 FF001444 	 .word 0x441400ff
+ 7596 000c 00001000 	 .word 0x00100000
+ 7597 0010 00000000 	 .word 0x00000000
+ 7598 0014 C0000000 	 .word 0x000000c0
+ 7599 0018 00000000 	 .word IfxSmmRst_performReset
+ 7600 001c 00000000 	 .word IfxSmmRst_performReset_end
+ 7601 0020 3C000444 	 .word 0x4404003c
+ 7602 0024 30000000 	 .word 0x00000030
+ 7603 0028 00000000 	 .word 0x00000000
+ 7604 002c C0000000 	 .word 0x000000c0
+ 7605 0030 00000000 	 .word IfxSmmRst_getSmuSafeRstTrigger
+ 7606 0034 00000000 	 .word IfxSmmRst_getSmuSafeRstTrigger_end
+ 7607 0038 1C001444 	 .word 0x4414001c
+ 7608 003c 10001000 	 .word 0x00100010
+ 7609 0040 00000000 	 .word 0x00000000
+ 7610 0044 C0000000 	 .word 0x000000c0
+ 7611 0048 00000000 	 .word IfxSmmRst_getSmuSecureRstTrigger
+ 7612 004c 00000000 	 .word IfxSmmRst_getSmuSecureRstTrigger_end
+ 7613 0050 0C001444 	 .word 0x4414000c
+ 7614 0054 00001000 	 .word 0x00100000
+ 7615 0058 00000000 	 .word 0x00000000
+ 7616 005c C0000000 	 .word 0x000000c0
+ 7617 0060 00000000 	 .word IfxSmmRst_configureEsr0ElongationTime
+ 7618 0064 00000000 	 .word IfxSmmRst_configureEsr0ElongationTime_end
+ 7619 0068 FD000444 	 .word 0x440400fd
+ 7620 006c 30000000 	 .word 0x00000030
+ 7621 0070 00000000 	 .word 0x00000000
+ 7622 0074 C0000000 	 .word 0x000000c0
+ 7623 0078 00000000 	 .word IfxSmmRst_configureEsr2ElongationTime
+ 7624 007c 00000000 	 .word IfxSmmRst_configureEsr2ElongationTime_end
+ 7625 0080 FC000444 	 .word 0x440400fc
+ 7626 0084 10000000 	 .word 0x00000010
+ 7627 0088 00000000 	 .word 0x00000000
+ 7628 008c C0000000 	 .word 0x000000c0
+ 7629 0090 00000000 	 .word IfxSmmRst_initConfig
+ 7630 0094 00000000 	 .word IfxSmmRst_initConfig_end
+ 7631 0098 F0003C44 	 .word 0x443c00f0
+ 7632 009c 00001000 	 .word 0x00100000
+ 7633 00a0 00000000 	 .word 0x00000000
+ 7634 00a4 C0000000 	 .word 0x000000c0
+ 7635 00a8 00000000 	 .word IfxSmmRst_init
+ 7636 00ac 00000000 	 .word IfxSmmRst_init_end
+ 7637 00b0 FF071444 	 .word 0x441407ff
+ 7638 00b4 00001000 	 .word 0x00100000
+ 7639 00b8 00000000 	 .word 0x00000000
+ 7640 00bc C0000000 	 .word 0x000000c0
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxSmmRst.c
+                            *ABS*:00000000 IfxSmmRst.c
+    {standard input}:10     .text.IfxSmmRst_evaluateReset:00000000 IfxSmmRst_evaluateReset
+    {standard input}:187    .text.IfxSmmRst_evaluateReset:000000ec IfxSmmRst_evaluateReset_end
+    {standard input}:192    .text.IfxSmmRst_performReset:00000000 IfxSmmRst_performReset
+    {standard input}:240    .text.IfxSmmRst_performReset:00000042 IfxSmmRst_performReset_end
+    {standard input}:245    .text.IfxSmmRst_getSmuSafeRstTrigger:00000000 IfxSmmRst_getSmuSafeRstTrigger
+    {standard input}:309    .text.IfxSmmRst_getSmuSafeRstTrigger:00000054 IfxSmmRst_getSmuSafeRstTrigger_end
+    {standard input}:314    .text.IfxSmmRst_getSmuSecureRstTrigger:00000000 IfxSmmRst_getSmuSecureRstTrigger
+    {standard input}:345    .text.IfxSmmRst_getSmuSecureRstTrigger:00000020 IfxSmmRst_getSmuSecureRstTrigger_end
+    {standard input}:350    .text.IfxSmmRst_configureEsr0ElongationTime:00000000 IfxSmmRst_configureEsr0ElongationTime
+    {standard input}:472    .text.IfxSmmRst_configureEsr0ElongationTime:00000098 IfxSmmRst_configureEsr0ElongationTime_end
+    {standard input}:477    .text.IfxSmmRst_configureEsr2ElongationTime:00000000 IfxSmmRst_configureEsr2ElongationTime
+    {standard input}:596    .text.IfxSmmRst_configureEsr2ElongationTime:00000094 IfxSmmRst_configureEsr2ElongationTime_end
+    {standard input}:601    .text.IfxSmmRst_initConfig:00000000 IfxSmmRst_initConfig
+    {standard input}:1193   .rodata.defaultResetConfig.0:00000000 defaultResetConfig.0
+    {standard input}:639    .text.IfxSmmRst_initConfig:00000058 IfxSmmRst_initConfig_end
+    {standard input}:644    .text.IfxSmmRst_init:00000000 IfxSmmRst_init
+    {standard input}:1188   .text.IfxSmmRst_init:0000030a IfxSmmRst_init_end
+
+NO UNDEFINED SYMBOLS

@@ -1,0 +1,2052 @@
+   1              	
+   2              	 .file "IfxI2c_I2c.c"
+   3              	 .file "IfxI2c_I2c.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.IfxI2c_I2c_getBaudrate,"ax",@progbits
+   7              	 .align 1
+   8              	 .global IfxI2c_I2c_getBaudrate
+  10              	IfxI2c_I2c_getBaudrate:
+  11              	.LFB379:
+  12              	 .file 1 "../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c"
+   1:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** /**
+   2:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****  * \file IfxI2c_I2c.c
+   3:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****  * \brief I2C I2C details
+   4:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****  *
+   5:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****  *
+   8:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****  *
+   9:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****  *
+  10:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****  *                                 IMPORTANT NOTICE
+  11:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****  *
+  12:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****  * this file except in compliance with IFASLL.
+  15:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****  *
+  16:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****  *
+  26:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****  *
+  27:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****  */
+  28:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** 
+  29:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** /******************************************************************************/
+  30:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** /*----------------------------------Includes----------------------------------*/
+  31:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** /******************************************************************************/
+  32:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** 
+  33:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** #include "IfxI2c_I2c.h"
+  34:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** 
+  35:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** /******************************************************************************/
+  36:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** /*-------------------------Function Implementations---------------------------*/
+  37:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** /******************************************************************************/
+  38:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** 
+  39:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** float32 IfxI2c_I2c_getBaudrate(IfxI2c_I2c *i2c)
+  40:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** {
+  13              	 .loc 1 40 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  41:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     return IfxI2c_getBaudrate(i2c->i2c);
+  17              	 .loc 1 41 5
+  18              	 .loc 1 41 12 is_stmt 0
+  19 0002 D444     	 ld.a %a4,[%a4]0
+  20              	.LVL1:
+  21 0004 6D000000 	 call IfxI2c_getBaudrate
+  22              	.LVL2:
+  42:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** }
+  23              	 .loc 1 42 1
+  24 0008 0090     	 ret 
+  25              	.LFE379:
+  27              	 .global IfxI2c_I2c_getBaudrate_end
+  28              	IfxI2c_I2c_getBaudrate_end:
+  29              	 .section .text.IfxI2c_I2c_initConfig,"ax",@progbits
+  30              	 .align 1
+  31              	 .global IfxI2c_I2c_initConfig
+  33              	IfxI2c_I2c_initConfig:
+  34              	.LFB380:
+  43:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** 
+  44:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** 
+  45:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** void IfxI2c_I2c_initConfig(IfxI2c_I2c_Config *config, Ifx_I2C *i2c)
+  46:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** {
+  35              	 .loc 1 46 1 is_stmt 1
+  36              	.LVL3:
+  37 0000 40AE     	 mov.aa %a14,%SP
+  38              	.LCFI1:
+  47:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     config->i2c                                            = i2c;
+  39              	 .loc 1 47 5
+  40              	 .loc 1 47 60 is_stmt 0
+  41 0002 F445     	 st.a [%a4]0,%a5
+  48:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     config->baudrate                                       = 400000;
+  42              	 .loc 1 48 5 is_stmt 1
+  43              	 .loc 1 48 60 is_stmt 0
+  44 0004 7B308C24 	 movh %d2,18627
+  45 0008 1B020025 	 addi %d2,%d2,20480
+  46 000c 59420400 	 st.w [%a4]4,%d2
+  49:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     config->pins                                           = NULL_PTR;
+  47              	 .loc 1 49 5 is_stmt 1
+  48              	 .loc 1 49 60 is_stmt 0
+  49 0010 8202     	 mov %d2,0
+  50 0012 59420800 	 st.w [%a4]8,%d2
+  50:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     config->mode                                           = IfxI2c_Mode_StandardAndFast;
+  51              	 .loc 1 50 5 is_stmt 1
+  52              	 .loc 1 50 60 is_stmt 0
+  53 0016 59420C00 	 st.w [%a4]12,%d2
+  51:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     config->peripheralMode                                 = IfxI2c_MasterNotSlave_master;
+  54              	 .loc 1 51 5 is_stmt 1
+  55              	 .loc 1 51 60 is_stmt 0
+  56 001a 8213     	 mov %d3,1
+  57 001c 59431000 	 st.w [%a4]16,%d3
+  52:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** 
+  53:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     config->addrFifoCfg.addressConfig.slaveAddress         = 0;
+  58              	 .loc 1 53 5 is_stmt 1
+  59              	 .loc 1 53 60 is_stmt 0
+  60 0020 59421400 	 st.w [%a4]20,%d2
+  54:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     config->addrFifoCfg.addressConfig.addressMode          = IfxI2c_AddressMode_7Bit;
+  61              	 .loc 1 54 5 is_stmt 1
+  62              	 .loc 1 54 60 is_stmt 0
+  63 0024 59421800 	 st.w [%a4]24,%d2
+  55:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     config->addrFifoCfg.addressConfig.generalCallEnable    = 0;
+  64              	 .loc 1 55 5 is_stmt 1
+  65              	 .loc 1 55 60 is_stmt 0
+  66 0028 E9421C00 	 st.b [%a4]28,%d2
+  56:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     config->addrFifoCfg.addressConfig.masterCodeEnable     = 0;
+  67              	 .loc 1 56 5 is_stmt 1
+  68              	 .loc 1 56 60 is_stmt 0
+  69 002c E9421D00 	 st.b [%a4]29,%d2
+  57:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     config->addrFifoCfg.addressConfig.stopOnNotAcknowledge = 0;
+  70              	 .loc 1 57 5 is_stmt 1
+  71              	 .loc 1 57 60 is_stmt 0
+  72 0030 E9421E00 	 st.b [%a4]30,%d2
+  58:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     config->addrFifoCfg.addressConfig.stopOnPacketEnd      = 0;
+  73              	 .loc 1 58 5 is_stmt 1
+  74              	 .loc 1 58 60 is_stmt 0
+  75 0034 E9421F00 	 st.b [%a4]31,%d2
+  59:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** 
+  60:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     config->addrFifoCfg.fifoConfig.rxBurstSize             = IfxI2c_RxBurstSize_1Word;
+  76              	 .loc 1 60 5 is_stmt 1
+  77              	 .loc 1 60 60 is_stmt 0
+  78 0038 59422000 	 st.w [%a4]32,%d2
+  61:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     config->addrFifoCfg.fifoConfig.txBurstSize             = IfxI2c_TxBurstSize_1Word;
+  79              	 .loc 1 61 5 is_stmt 1
+  80              	 .loc 1 61 60 is_stmt 0
+  81 003c 59422400 	 st.w [%a4]36,%d2
+  62:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     config->addrFifoCfg.fifoConfig.rxFifoAlignment         = IfxI2c_RxFifoAlignment_byte;
+  82              	 .loc 1 62 5 is_stmt 1
+  83              	 .loc 1 62 60 is_stmt 0
+  84 0040 59422800 	 st.w [%a4]40,%d2
+  63:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     config->addrFifoCfg.fifoConfig.txFifoAlignment         = IfxI2c_TxFifoAlignment_byte;
+  85              	 .loc 1 63 5 is_stmt 1
+  86              	 .loc 1 63 60 is_stmt 0
+  87 0044 59422C00 	 st.w [%a4]44,%d2
+  64:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     config->addrFifoCfg.fifoConfig.rxFifoFlowControl       = IfxI2c_RxFifoFlowControl_enable;
+  88              	 .loc 1 64 5 is_stmt 1
+  89              	 .loc 1 64 60 is_stmt 0
+  90 0048 59433000 	 st.w [%a4]48,%d3
+  65:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     config->addrFifoCfg.fifoConfig.txFifoFlowControl       = IfxI2c_TxFifoFlowControl_enable;
+  91              	 .loc 1 65 5 is_stmt 1
+  92              	 .loc 1 65 60 is_stmt 0
+  93 004c 59433400 	 st.w [%a4]52,%d3
+  66:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     config->addrFifoCfg.fifoConfig.clearRequestBehavior    = 0;
+  94              	 .loc 1 66 5 is_stmt 1
+  95              	 .loc 1 66 60 is_stmt 0
+  96 0050 E9423800 	 st.b [%a4]56,%d2
+  67:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** }
+  97              	 .loc 1 67 1
+  98 0054 0090     	 ret 
+  99              	.LFE380:
+ 101              	 .global IfxI2c_I2c_initConfig_end
+ 102              	IfxI2c_I2c_initConfig_end:
+ 103              	 .section .text.IfxI2c_I2c_initDevice,"ax",@progbits
+ 104              	 .align 1
+ 105              	 .global IfxI2c_I2c_initDevice
+ 107              	IfxI2c_I2c_initDevice:
+ 108              	.LFB381:
+  68:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** 
+  69:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** 
+  70:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** void IfxI2c_I2c_initDevice(IfxI2c_I2c_Device *i2cDevice, const IfxI2c_I2c_deviceConfig *i2cDeviceCo
+  71:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** {
+ 109              	 .loc 1 71 1 is_stmt 1
+ 110              	.LVL4:
+ 111 0000 40AE     	 mov.aa %a14,%SP
+ 112              	.LCFI2:
+  72:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     i2cDevice->i2c                 = i2cDeviceConfig->i2c;
+ 113              	 .loc 1 72 5
+ 114              	 .loc 1 72 36 is_stmt 0
+ 115 0002 5452     	 ld.w %d2,[%a5]0
+ 116 0004 7442     	 st.w [%a4]0,%d2
+  73:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     i2cDevice->deviceAddress       = i2cDeviceConfig->deviceAddress;
+ 117              	 .loc 1 73 5 is_stmt 1
+ 118              	 .loc 1 73 53 is_stmt 0
+ 119 0006 B9520400 	 ld.hu %d2,[%a5]4
+ 120              	 .loc 1 73 36
+ 121 000a F9420400 	 st.h [%a4]4,%d2
+  74:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     i2cDevice->addressMode         = i2cDeviceConfig->addressMode;
+ 122              	 .loc 1 74 5 is_stmt 1
+ 123              	 .loc 1 74 36 is_stmt 0
+ 124 000e 19520800 	 ld.w %d2,[%a5]8
+ 125 0012 59420800 	 st.w [%a4]8,%d2
+  75:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     i2cDevice->speedMode           = i2cDeviceConfig->speedMode;
+ 126              	 .loc 1 75 5 is_stmt 1
+ 127              	 .loc 1 75 36 is_stmt 0
+ 128 0016 19520C00 	 ld.w %d2,[%a5]12
+ 129 001a 59420C00 	 st.w [%a4]12,%d2
+  76:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     i2cDevice->enableRepeatedStart = i2cDeviceConfig->enableRepeatedStart;
+ 130              	 .loc 1 76 5 is_stmt 1
+ 131              	 .loc 1 76 53 is_stmt 0
+ 132 001e 39521000 	 ld.bu %d2,[%a5]16
+ 133              	 .loc 1 76 36
+ 134 0022 E9421000 	 st.b [%a4]16,%d2
+  77:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** }
+ 135              	 .loc 1 77 1
+ 136 0026 0090     	 ret 
+ 137              	.LFE381:
+ 139              	 .global IfxI2c_I2c_initDevice_end
+ 140              	IfxI2c_I2c_initDevice_end:
+ 141              	 .section .text.IfxI2c_I2c_initDeviceConfig,"ax",@progbits
+ 142              	 .align 1
+ 143              	 .global IfxI2c_I2c_initDeviceConfig
+ 145              	IfxI2c_I2c_initDeviceConfig:
+ 146              	.LFB382:
+  78:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** 
+  79:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** 
+  80:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** void IfxI2c_I2c_initDeviceConfig(IfxI2c_I2c_deviceConfig *i2cDeviceConfig, IfxI2c_I2c *i2c)
+  81:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** {
+ 147              	 .loc 1 81 1 is_stmt 1
+ 148              	.LVL5:
+ 149 0000 40AE     	 mov.aa %a14,%SP
+ 150              	.LCFI3:
+  82:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     i2cDeviceConfig->i2c                 = i2c;
+ 151              	 .loc 1 82 5
+ 152              	 .loc 1 82 42 is_stmt 0
+ 153 0002 F445     	 st.a [%a4]0,%a5
+  83:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     i2cDeviceConfig->deviceAddress       = 0xff;
+ 154              	 .loc 1 83 5 is_stmt 1
+ 155              	 .loc 1 83 42 is_stmt 0
+ 156 0004 3BF00F20 	 mov %d2,255
+ 157 0008 F9420400 	 st.h [%a4]4,%d2
+  84:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     i2cDeviceConfig->addressMode         = IfxI2c_AddressMode_7Bit;
+ 158              	 .loc 1 84 5 is_stmt 1
+ 159              	 .loc 1 84 42 is_stmt 0
+ 160 000c 8202     	 mov %d2,0
+ 161 000e 59420800 	 st.w [%a4]8,%d2
+  85:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     i2cDeviceConfig->speedMode           = IfxI2c_Mode_StandardAndFast;
+ 162              	 .loc 1 85 5 is_stmt 1
+ 163              	 .loc 1 85 42 is_stmt 0
+ 164 0012 59420C00 	 st.w [%a4]12,%d2
+  86:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     i2cDeviceConfig->enableRepeatedStart = FALSE;
+ 165              	 .loc 1 86 5 is_stmt 1
+ 166              	 .loc 1 86 42 is_stmt 0
+ 167 0016 E9421000 	 st.b [%a4]16,%d2
+  87:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** }
+ 168              	 .loc 1 87 1
+ 169 001a 0090     	 ret 
+ 170              	.LFE382:
+ 172              	 .global IfxI2c_I2c_initDeviceConfig_end
+ 173              	IfxI2c_I2c_initDeviceConfig_end:
+ 174              	 .section .text.IfxI2c_I2c_initModule,"ax",@progbits
+ 175              	 .align 1
+ 176              	 .global IfxI2c_I2c_initModule
+ 178              	IfxI2c_I2c_initModule:
+ 179              	.LFB383:
+  88:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** 
+  89:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** 
+  90:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** void IfxI2c_I2c_initModule(IfxI2c_I2c *i2c, const IfxI2c_I2c_Config *config)
+  91:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** {
+ 180              	 .loc 1 91 1 is_stmt 1
+ 181              	.LVL6:
+ 182 0000 40AE     	 mov.aa %a14,%SP
+ 183              	.LCFI4:
+ 184 0002 2028     	 sub.a %SP,40
+ 185 0004 404F     	 mov.aa %a15,%a4
+ 186 0006 405D     	 mov.aa %a13,%a5
+  92:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     IfxI2c_Config addressConfiglocal = config->addrFifoCfg;
+ 187              	 .loc 1 92 5
+ 188              	 .loc 1 92 19 is_stmt 0
+ 189 0008 D9531400 	 lea %a3,[%a5]20
+ 190 000c D9E2D8FF 	 lea %a2,[%a14]-40
+ 191              	 
+ 192 0010 09345002 	 ld.dd %q4,[%a3+]16
+ 193 0014 89245002 	 st.dd [%a2+]16,%q4
+ 194 0018 09345002 	 ld.dd %q4,[%a3+]16
+ 195 001c 89245002 	 st.dd [%a2+]16,%q4
+ 196 0020 09344801 	 ld.d %e4,[%a3+]8
+ 197 0024 89244801 	 st.d [%a2+]8,%e4
+ 198              	.LVL7:
+  93:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     Ifx_I2C      *i2cSFR             = config->i2c;
+ 199              	 .loc 1 93 5 is_stmt 1
+ 200              	 .loc 1 93 19 is_stmt 0
+ 201 0028 D45C     	 ld.a %a12,[%a5]0
+ 202              	.LVL8:
+  94:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     i2c->i2c = i2cSFR;
+ 203              	 .loc 1 94 5 is_stmt 1
+ 204              	 .loc 1 94 14 is_stmt 0
+ 205 002a E80C     	 st.a [%a15]0,%a12
+  95:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** 
+  96:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     /* Enable the I2C module */
+  97:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     IfxI2c_enableModule(i2cSFR);
+ 206              	 .loc 1 97 5 is_stmt 1
+ 207 002c 40C4     	 mov.aa %a4,%a12
+ 208 002e 6D000000 	 call IfxI2c_enableModule
+ 209              	.LVL9:
+  98:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** 
+  99:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     /* Stop the I2C module */
+ 100:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     IfxI2c_stop(i2cSFR);        
+ 210              	 .loc 1 100 5
+ 211              	.LBB24:
+ 212              	.LBB25:
+ 213              	 .file 2 "../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h"
+   1:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+   2:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \file IfxI2c.h
+   3:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief I2C  basic functionality
+   4:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \ingroup IfxLld_I2c
+   5:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+   6:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \version iLLD-TC4-v2.7.0
+   7:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   8:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+   9:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+  10:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+  11:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *                                 IMPORTANT NOTICE
+  12:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+  13:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  14:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  15:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * this file except in compliance with IFASLL.
+  16:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+  17:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  18:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * Unless required by applicable law or agreed to in writing, software distributed
+  19:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  20:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  21:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * whether express, implied, statutory or otherwise, including but not limited to
+  22:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  23:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * defects in the licensed items, or non-infringement of third parties'
+  24:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * intellectual property rights. See the full license text for the specific
+  25:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * language governing permissions and limitations under IFASLL.
+  26:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+  27:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+  28:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \defgroup IfxLld_I2c_Std_enums Enumerations
+  29:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \ingroup IfxLld_I2c_Std
+  30:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \defgroup IfxLld_I2c_Std_functions Functions
+  31:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \ingroup IfxLld_I2c_Std
+  32:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \defgroup IfxLld_I2c_Std_structures Data Structures
+  33:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \ingroup IfxLld_I2c_Std
+  34:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+  35:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+  36:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** #ifndef IFXI2C_H
+  37:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** #define IFXI2C_H 1
+  38:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+  39:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /******************************************************************************/
+  40:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /*----------------------------------Includes----------------------------------*/
+  41:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /******************************************************************************/
+  42:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+  43:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** #include "_Impl/IfxI2c_cfg.h"
+  44:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** #include "_PinMap/IfxI2c_PinMap.h"
+  45:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** #include "IfxI2c_bf.h"
+  46:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** #include "Cpu/Std/IfxCpu.h"
+  47:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** #include "Src/Std/IfxSrc.h"
+  48:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** #include "Clock/Std/IfxClock.h"
+  49:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** #include "Ap/Std/IfxApProt.h"
+  50:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** #include "Ap/Std/IfxApApu.h"
+  51:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+  52:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /******************************************************************************/
+  53:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /*-----------------------------------Macros-----------------------------------*/
+  54:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /******************************************************************************/
+  55:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+  56:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /** \brief Master code for high speed mode
+  57:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+  58:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** #define IFXI2C_HIGHSPEED_MASTER_CODE (0xEU)
+  59:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+  60:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /******************************************************************************/
+  61:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /*--------------------------------Enumerations--------------------------------*/
+  62:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /******************************************************************************/
+  63:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+  64:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /** \addtogroup IfxLld_I2c_Std_enums
+  65:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \{ */
+  66:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /** \brief Selects width of address bits (7 or 10 bits)
+  67:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * Definition in Ifx_I2C.ADDRCFG.B.TBAM
+  68:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+  69:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** typedef enum
+  70:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+  71:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_AddressMode_7Bit  = 0, /**< \brief sets 7 bit address */
+  72:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_AddressMode_10Bit = 1  /**< \brief sets 10 bit address */
+  73:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** } IfxI2c_AddressMode;
+  74:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+  75:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /** \brief Shows the current Bus status on the I2C-bus.
+  76:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * Definition in Ifx_I2C.BUSSTAT.B.BS
+  77:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+  78:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** typedef enum
+  79:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+  80:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_BusStatus_idle        = 0, /**< \brief idle */
+  81:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_BusStatus_started     = 1, /**< \brief started */
+  82:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_BusStatus_busyMaster  = 2, /**< \brief busy Master */
+  83:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_BusStatus_remoteSlave = 3  /**< \brief remote Slave */
+  84:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** } IfxI2c_BusStatus;
+  85:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+  86:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /** \brief enables DTR interrupt flags
+  87:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * Definition in Ifx_I2C.IMSC.U
+  88:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+  89:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** typedef enum
+  90:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+  91:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_DtrInterruptSource_lastSingleRequest = IFX_I2C_IMSC_LSREQ_INT_OFF,  /**< \brief last sin
+  92:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_DtrInterruptSource_singleRequest     = IFX_I2C_IMSC_SREQ_INT_OFF,   /**< \brief single s
+  93:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_DtrInterruptSource_lastBurstRequest  = IFX_I2C_IMSC_LBREQ_INT_OFF,  /**< \brief last bur
+  94:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_DtrInterruptSource_burstRequest      = IFX_I2C_IMSC_BREQ_INT_OFF    /**< \brief burst se
+  95:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** } IfxI2c_DtrInterruptSource;
+  96:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+  97:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /** \brief enable error interrupt request source
+  98:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * Definition in Ifx_I2C.ERRIRQSM.U
+  99:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 100:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** typedef enum
+ 101:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+ 102:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_ErrorInterruptSource_rxFifoUnderflow = IFX_I2C_ERRIRQSM_RXF_UFL_OFF,  /**< \brief receiv
+ 103:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_ErrorInterruptSource_rxFifoOverflow  = IFX_I2C_ERRIRQSM_RXF_OFL_OFF,  /**< \brief receiv
+ 104:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_ErrorInterruptSource_txFifoUnderflow = IFX_I2C_ERRIRQSM_TXF_UFL_OFF,  /**< \brief transm
+ 105:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_ErrorInterruptSource_txFifoOverflow  = IFX_I2C_ERRIRQSM_TXF_OFL_OFF   /**< \brief transm
+ 106:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** } IfxI2c_ErrorInterruptSource;
+ 107:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 108:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /** \brief Select speed mode. Standard and Fast or High Speed mode.
+ 109:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 110:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** typedef enum
+ 111:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+ 112:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_Mode_StandardAndFast = 0,  /**< \brief Sets Standard and Fast speed mode */
+ 113:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_Mode_HighSpeed       = 1   /**< \brief Sets HighSpeed Mode */
+ 114:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** } IfxI2c_Mode;
+ 115:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 116:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /** \brief Used to select the input pins providing the serial data and clock input signals
+ 117:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * Definition in Ifx_I2C.GPCTL.B.PISEL
+ 118:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 119:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** typedef enum
+ 120:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+ 121:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_PinSelect_a = 0,
+ 122:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_PinSelect_b = 1,
+ 123:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_PinSelect_c = 2,
+ 124:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_PinSelect_d = 3,
+ 125:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_PinSelect_e = 4,
+ 126:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_PinSelect_f = 5,
+ 127:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_PinSelect_g = 6,
+ 128:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_PinSelect_h = 7
+ 129:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** } IfxI2c_PinSelect;
+ 130:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 131:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /** \brief enable protocol interrupt source
+ 132:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * Definition in Ifx_I2C.PIRQSM.U
+ 133:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 134:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** typedef enum
+ 135:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+ 136:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_ProtocolInterruptSource_addressMatch           = IFX_I2C_PIRQSM_AM_OFF,     /**< \brief 
+ 137:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_ProtocolInterruptSource_generalCall            = IFX_I2C_PIRQSM_GC_OFF,     /**< \brief 
+ 138:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_ProtocolInterruptSource_masterCode             = IFX_I2C_PIRQSM_MC_OFF,     /**< \brief 
+ 139:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_ProtocolInterruptSource_arbitrationLost        = IFX_I2C_PIRQSM_AL_OFF,     /**< \brief 
+ 140:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_ProtocolInterruptSource_notAcknowledgeReceived = IFX_I2C_PIRQSM_NACK_OFF,   /**< \brief 
+ 141:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_ProtocolInterruptSource_transmissionEnd        = IFX_I2C_PIRQSM_TX_END_OFF, /**< \brief 
+ 142:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_ProtocolInterruptSource_receiveMode            = IFX_I2C_PIRQSM_RX_OFF      /**< \brief 
+ 143:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** } IfxI2c_ProtocolInterruptSource;
+ 144:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 145:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /** \brief Enable/disable the sensitivity of the module to sleep signal\n
+ 146:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * Definition in Ifx_I2C.CLC1.B.EDIS
+ 147:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 148:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** typedef enum
+ 149:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+ 150:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_SleepMode_enable  = 0, /**< \brief enables sleep mode */
+ 151:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_SleepMode_disable = 1  /**< \brief disables sleep mode */
+ 152:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** } IfxI2c_SleepMode;
+ 153:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 154:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /** \brief Bus status. Interface replica for Std layer.
+ 155:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 156:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** typedef enum
+ 157:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+ 158:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_Status_ok         = 0,  /**< \brief ok */
+ 159:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_Status_nak        = 1,  /**< \brief NAK */
+ 160:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_Status_al         = 2,  /**< \brief Arbitration Lost */
+ 161:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_Status_busNotFree = 3,  /**< \brief bus is not free */
+ 162:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_Status_error      = 4   /**< \brief error */
+ 163:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** } IfxI2c_Status;
+ 164:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 165:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /** \} */
+ 166:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 167:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /** \brief set interrupt request
+ 168:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * Definition in Ifx_I2C.INTRSET.U
+ 169:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 170:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** typedef enum
+ 171:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+ 172:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_InterruptRequest_lastSingleRequest = IFX_I2C_INTRSET_LSREQ_INT_OFF,   /**< \brief last s
+ 173:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_InterruptRequest_SingleRequest     = IFX_I2C_INTRSET_SREQ_INT_OFF,    /**< \brief single
+ 174:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_InterruptRequest_lastBurstRequest  = IFX_I2C_INTRSET_LBREQ_INT_OFF,   /**< \brief last b
+ 175:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_InterruptRequest_burstRequest      = IFX_I2C_INTRSET_BREQ_INT_OFF,    /**< \brief burst 
+ 176:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_InterruptRequest_i2cError          = IFX_I2C_INTRSET_I2C_ERR_INT_OFF, /**< \brief i2c er
+ 177:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_InterruptRequest_i2cProtocol       = IFX_I2C_INTRSET_I2C_P_INT_OFF    /**< \brief i2c pr
+ 178:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** } IfxI2c_InterruptRequest;
+ 179:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 180:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /** \brief Configure as master or slave
+ 181:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * Definition in Ifx_I2C.ADDRCFG.B.MnS
+ 182:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 183:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** typedef enum
+ 184:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+ 185:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_MasterNotSlave_slave  = 0, /**< \brief sets as slave */
+ 186:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_MasterNotSlave_master = 1  /**< \brief sets as master */
+ 187:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** } IfxI2c_MasterNotSlave;
+ 188:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 189:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /** \brief Selects RX burst size
+ 190:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * Definition in Ifx_I2C.FIFOCFG.B.RXBS
+ 191:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 192:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** typedef enum
+ 193:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+ 194:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_RxBurstSize_1Word = 0,  /**< \brief one word */
+ 195:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_RxBurstSize_2Word = 1,  /**< \brief two word */
+ 196:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_RxBurstSize_4Word = 2   /**< \brief four word */
+ 197:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** } IfxI2c_RxBurstSize;
+ 198:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 199:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /** \brief Selects RX FIFO alignment
+ 200:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * Definition in Ifx_I2C.FIFOCFG.B.RXFA
+ 201:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 202:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** typedef enum
+ 203:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+ 204:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_RxFifoAlignment_byte     = 0,  /**< \brief byte aligned */
+ 205:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_RxFifoAlignment_halfWord = 1,  /**< \brief half word aligned */
+ 206:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_RxFifoAlignment_word     = 2   /**< \brief word aligned */
+ 207:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** } IfxI2c_RxFifoAlignment;
+ 208:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 209:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /** \brief Selects RX FIFO flow control
+ 210:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * Definition in Ifx_I2C.FIFOCFG.B.RXFC
+ 211:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 212:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** typedef enum
+ 213:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+ 214:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_RxFifoFlowControl_disable = 0,  /**< \brief rx fifo not as flow controller */
+ 215:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_RxFifoFlowControl_enable  = 1   /**< \brief rx fifo as flow controller */
+ 216:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** } IfxI2c_RxFifoFlowControl;
+ 217:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 218:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /** \brief Selects TX burst size
+ 219:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * Definition in Ifx_I2C.FIFOCFG.B.TXBS
+ 220:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 221:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** typedef enum
+ 222:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+ 223:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_TxBurstSize_1Word = 0,  /**< \brief one word */
+ 224:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_TxBurstSize_2Word = 1,  /**< \brief two word */
+ 225:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_TxBurstSize_4Word = 2   /**< \brief four word */
+ 226:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** } IfxI2c_TxBurstSize;
+ 227:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 228:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /** \brief Selects TX FIFO alignment
+ 229:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * Definition in Ifx_I2C.FIFOCFG.B.TXFA
+ 230:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 231:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** typedef enum
+ 232:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+ 233:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_TxFifoAlignment_byte     = 0,  /**< \brief byte aligned */
+ 234:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_TxFifoAlignment_halfWord = 1,  /**< \brief half word aligned */
+ 235:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_TxFifoAlignment_word     = 2   /**< \brief word aligned */
+ 236:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** } IfxI2c_TxFifoAlignment;
+ 237:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 238:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /** \brief Selects TX FIFO flow control
+ 239:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * Definition in Ifx_I2C.FIFOCFG.B.TXFC
+ 240:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 241:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** typedef enum
+ 242:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+ 243:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_TxFifoFlowControl_disable = 0,  /**< \brief tx fifo not as flow controller */
+ 244:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_TxFifoFlowControl_enable  = 1   /**< \brief tx fifo as flow controller */
+ 245:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** } IfxI2c_TxFifoFlowControl;
+ 246:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 247:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /******************************************************************************/
+ 248:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /*-----------------------------Data Structures--------------------------------*/
+ 249:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /******************************************************************************/
+ 250:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 251:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /** \addtogroup IfxLld_I2c_Std_structures
+ 252:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \{ */
+ 253:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /** \brief Std Handler Replica
+ 254:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 255:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** typedef struct
+ 256:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+ 257:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     Ifx_I2C         *i2c;             /**< \brief Module Pointer */
+ 258:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_BusStatus busStatus;       /**< \brief Status of the bus */
+ 259:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_Status    status;          /**< \brief Status of the last bus operation */
+ 260:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     float32          baudrate;        /**< \brief Baudrate */
+ 261:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** } IfxI2c_I2cStd;
+ 262:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 263:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /** \} */
+ 264:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 265:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /** \brief Structure for Address configuration register
+ 266:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 267:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** typedef struct
+ 268:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+ 269:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     uint32             slaveAddress;               /**< \brief slave address, use default value 0 w
+ 270:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****      	 	 	 	 	 	 	 	 	 	 	 	 * - Range: 0 to 0x3FF. Depending on setting of TBAM, this is either a 
+ 271:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_AddressMode addressMode;                /**< \brief Ten bit address mode. */
+ 272:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     boolean            generalCallEnable;          /**< \brief General call enable.
+ 273:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     												 * - Range: TRUE - Enable general call detection. When detected, an acknowledge wil
+ 274:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     boolean            masterCodeEnable;           /**< \brief Master code enable. Range: TRUE - De
+ 275:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     boolean            stopOnNotAcknowledge;       /**< \brief stop on Not-acknowledge.
+ 276:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     												 * - Range: TRUE - Device puts a stop condition on the bus and changes to LISTENING
+ 277:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     boolean            stopOnPacketEnd;            /**< \brief stop on packet end.
+ 278:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****      	 	 	 	 	 	 	 	 	 	 	 	 * - Range: TRUE - Device puts a stop condition on the bus when the dat
+ 279:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****      	 	 	 	 	 	 	 	 	 	 	 	 * - FALSE - Device enters MASTER RESTART state when the data packet en
+ 280:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** } IfxI2c_AddrConfig;
+ 281:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 282:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /** \brief Structure for FIFO configuration register
+ 283:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 284:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** typedef struct
+ 285:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+ 286:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_RxBurstSize       rxBurstSize;                /**< \brief rx burst size */
+ 287:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_TxBurstSize       txBurstSize;                /**< \brief tx burst size */
+ 288:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_RxFifoAlignment   rxFifoAlignment;            /**< \brief rx fifo alignment */
+ 289:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_TxFifoAlignment   txFifoAlignment;            /**< \brief tx fifo alignment */
+ 290:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_RxFifoFlowControl rxFifoFlowControl;          /**< \brief rx fifo flow control */
+ 291:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_TxFifoFlowControl txFifoFlowControl;          /**< \brief tx fifo flow control */
+ 292:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     boolean                  clearRequestBehavior;       /**< \brief clear request behavior configu
+ 293:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****      	 	 	 	 	 	 	 	 	 	 	 	 	   * - Range: TRUE - Data request is cleared automatically when Write
+ 294:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** } IfxI2c_FifoConfig;
+ 295:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 296:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /** \addtogroup IfxLld_I2c_Std_structures
+ 297:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \{ */
+ 298:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /** \brief PROT and APU configuration
+ 299:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 300:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** typedef struct
+ 301:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+ 302:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxApProt_ProtConfig proteConfig;        /**< \brief PROTE Configurations */
+ 303:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxApProt_ProtConfig protseConfig;       /**< \brief PROTSE Configurations */
+ 304:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxApApu_ApuConfig   apuConfig;          /**< \brief APU Configurations */
+ 305:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** } IfxI2c_ApConfig;
+ 306:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 307:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /** \brief Structure with slave device data. Interface replica.
+ 308:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 309:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** typedef struct
+ 310:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+ 311:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_I2cStd     *i2c;                       /**< \brief Module Pointer */
+ 312:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     uint16             deviceAddress;             /**< \brief the slave device's address. Range: 0 
+ 313:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_AddressMode addressMode;               /**< \brief slave device's address (7 or 10 bits)
+ 314:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_Mode        speedMode;                 /**< \brief slave device in Standard/Fast or High
+ 315:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     boolean            enableRepeatedStart;       /**< \brief TRUE: Stop is not generated FALSE: De
+ 316:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** } IfxI2c_I2cStdDevice;
+ 317:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 318:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /** \brief Pin Structure
+ 319:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 320:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** typedef struct
+ 321:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+ 322:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_Scl_InOut *scl;
+ 323:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_Sda_InOut *sda;
+ 324:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxPort_PadDriver padDriver;
+ 325:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** } IfxI2c_Pins;
+ 326:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 327:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /** \} */
+ 328:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 329:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /** \brief Structure for Address and FIFO configuration registers
+ 330:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 331:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** typedef struct
+ 332:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+ 333:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_AddrConfig addressConfig;       /**< \brief address config */
+ 334:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_FifoConfig fifoConfig;          /**< \brief fifo config */
+ 335:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** } IfxI2c_Config;
+ 336:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 337:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /** \addtogroup IfxLld_I2c_Std_functions
+ 338:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \{ */
+ 339:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 340:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /******************************************************************************/
+ 341:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /*-------------------------Inline Function Prototypes-------------------------*/
+ 342:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /******************************************************************************/
+ 343:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 344:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 345:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Returns if the I2C bus is currently free (idle).
+ 346:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 347:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] i2c Pointer to the Ifx_I2C instance.
+ 348:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 349:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval TRUE  The bus is free and ready for new transactions.
+ 350:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *         FALSE The bus is currently busy and cannot accept new transactions.
+ 351:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 352:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE boolean IfxI2c_busIsFree(Ifx_I2C *i2c);
+ 353:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 354:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 355:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Clears all DTR (Data Transfer Request) interrupt sources for the specified I2C module.
+ 356:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 357:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *  \param[inout] i2c Pointer to the i2c registers.
+ 358:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 359:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 360:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 361:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_clearAllDtrInterruptSources(Ifx_I2C *i2c);
+ 362:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 363:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 364:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Clears all Error Interrupt sources
+ 365:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 366:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c Pointer to the i2c registers.
+ 367:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 368:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 369:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 370:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_clearAllErrorInterruptSources(Ifx_I2C *i2c);
+ 371:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 372:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 373:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Clears all protocol-related interrupt sources for the specified I2C instance.
+ 374:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 375:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c Pointer to the i2c registers.
+ 376:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 377:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 378:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 379:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_clearAllProtocolInterruptSources(Ifx_I2C *i2c);
+ 380:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 381:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 382:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief clears the specified source of DTR interrupt
+ 383:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 384:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c 	Pointer to the i2c registers.
+ 385:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in]    source DTR interrupt source.
+ 386:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 						Range: \ref IfxI2c_DtrInterruptSource
+ 387:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 388:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 389:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 390:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_clearDtrInterruptSource(Ifx_I2C *i2c, IfxI2c_DtrInterruptSource source);
+ 391:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 392:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 393:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief clears the specified source of error interrupt.
+ 394:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 395:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c 	Pointer to the i2c registers.
+ 396:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in]    source Error interrupt source.
+ 397:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 						Range: \ref IfxI2c_ErrorInterruptSource
+ 398:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 399:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 400:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_clearErrorInterruptSource(Ifx_I2C *i2c, IfxI2c_ErrorInterruptSource source);
+ 401:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 402:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 403:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief clears the specified source of protocol interrupt.
+ 404:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 405:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c 	Pointer to the i2c registers.
+ 406:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in]  	 source Protocol interrupt source
+ 407:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 						Range: \ref IfxI2c_ProtocolInterruptSource
+ 408:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 409:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 410:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 411:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_clearProtocolInterruptSource(Ifx_I2C *i2c, IfxI2c_ProtocolInterruptSource so
+ 412:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 413:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 414:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Data request is cleared automatically.
+ 415:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 416:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c Pointer to the i2c registers.
+ 417:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 418:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 419:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 420:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_clearRequestBuffer(Ifx_I2C *i2c);
+ 421:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 422:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 423:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Disables a specific DTR (Data Transfer Request) interrupt source for the I2C module.
+ 424:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 425:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c 	Pointer to the i2c registers.
+ 426:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in]	 source DTR interrupt source.
+ 427:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 						Range: \ref IfxI2c_DtrInterruptSource
+ 428:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 429:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 430:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 431:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_disableDtrInterruptSource(Ifx_I2C *i2c, IfxI2c_DtrInterruptSource source);
+ 432:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 433:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 434:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Disables the error interrupt flag.
+ 435:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 436:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c Pointer to the i2c registers.
+ 437:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 438:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 439:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 440:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_disableErrorInterruptFlag(Ifx_I2C *i2c);
+ 441:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 442:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 443:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Disables the specified source of error interrupt.
+ 444:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 445:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c 	Pointer to the i2c registers.
+ 446:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in]    source Error interrupt source.
+ 447:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 						Range: \ref IfxI2c_ErrorInterruptSource
+ 448:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 449:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 450:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 451:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_disableErrorInterruptSource(Ifx_I2C *i2c, IfxI2c_ErrorInterruptSource source
+ 452:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 453:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 454:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Disables the protocol interrupt flag for the I2C peripheral.
+ 455:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 456:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c Pointer to the i2c registers.
+ 457:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 458:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 459:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 460:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_disableProtocolInterruptFlag(Ifx_I2C *i2c);
+ 461:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 462:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 463:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Disables the specified protocol interrupt source for the I2C module.
+ 464:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 465:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c 	Pointer to the i2c registers.
+ 466:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] 	 source Protocol interrupt source.
+ 467:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 						Range: \ref IfxI2c_ProtocolInterruptSource
+ 468:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 469:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 470:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 471:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_disableProtocolInterruptSource(Ifx_I2C *i2c, IfxI2c_ProtocolInterruptSource 
+ 472:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 473:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 474:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Enables the specified source of DTR interrupt
+ 475:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 476:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c 	Pointer to the i2c registers.
+ 477:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in]    source DTR Interrupt source.
+ 478:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 						Range: \ref IfxI2c_DtrInterruptSource
+ 479:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 480:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 481:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 482:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_enableDtrInterruptSource(Ifx_I2C *i2c, IfxI2c_DtrInterruptSource source);
+ 483:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 484:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 485:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Enables the error interrupt flag for the I2C module.
+ 486:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 487:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c Pointer to the i2c registers.
+ 488:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 489:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 490:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 491:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_enableErrorInterruptFlag(Ifx_I2C *i2c);
+ 492:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 493:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 494:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Enables the specified error interrupt source for the I2C module.
+ 495:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 496:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c    Pointer to the i2c registers.
+ 497:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] 	 source Error interrupt source.
+ 498:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 						Range: \ref IfxI2c_ErrorInterruptSource
+ 499:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 500:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 501:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 502:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_enableErrorInterruptSource(Ifx_I2C *i2c, IfxI2c_ErrorInterruptSource source)
+ 503:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 504:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 505:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Enables the Protocol Interrupt Flag for the I2C module.
+ 506:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 507:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c Pointer to the i2c registers.
+ 508:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 509:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 510:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 511:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_enableProtocolInterruptFlag(Ifx_I2C *i2c);
+ 512:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 513:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 514:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Enables the specified source of protocol interrupt.
+ 515:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 516:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c 	Pointer to the i2c registers.
+ 517:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in]    source Protocol interrupt source.
+ 518:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 						Range: \ref IfxI2c_ProtocolInterruptSource
+ 519:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 520:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 521:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 522:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_enableProtocolInterruptSource(Ifx_I2C *i2c, IfxI2c_ProtocolInterruptSource s
+ 523:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 524:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 525:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Retrieves the current status of the I2C Bus.
+ 526:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 527:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] i2c Pointer to the i2c registers.
+ 528:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 529:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval BusStatus The current status of the I2C Bus. Possible Bus status:
+ 530:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 					 (\ref IfxI2c_BusStatus)
+ 531:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 					- IfxI2c_BusStatus_idle  	   I2C-bus is free (no start condition detected).
+ 532:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 					- IfxI2c_BusStatus_started     A start condition has been detected on the bus (bus busy).
+ 533:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 					- IfxI2c_BusStatus_busyMaster  The device is working as master and has claimed the control 
+ 534:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 					- IfxI2c_BusStatus_remoteSlave A remote master has accessed this device as slave.
+ 535:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 536:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE IfxI2c_BusStatus IfxI2c_getBusStatus(Ifx_I2C *i2c);
+ 537:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 538:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 539:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Returns the SRC pointer for I2C DTR interrupt.
+ 540:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 541:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] i2c Pointer to the i2c registers.
+ 542:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 543:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval Ifx_SRC_SRCR SRC pointer for I2C DTR interrupt.
+ 544:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 545:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE volatile Ifx_SRC_SRCR *IfxI2c_getDtrSrcPointer(Ifx_I2C *i2c);
+ 546:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 547:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 548:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Returns the status of specified DTR interrupt source
+ 549:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 550:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] i2c 	 Pointer to the i2c registers.
+ 551:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] source DTR interrupt source.
+ 552:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *  				 Range: \ref IfxI2c_DtrInterruptSource
+ 553:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 554:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval TRUE  The specified DTR Interrupt Source is active.
+ 555:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *         FALSE The specified DTR Interrupt Source is not active.
+ 556:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 557:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE boolean IfxI2c_getDtrinterruptSourceStatus(Ifx_I2C *i2c, IfxI2c_DtrInterruptSource sourc
+ 558:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 559:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 560:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Returns the current status of error interrupt flag
+ 561:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 562:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] i2c Pointer to the i2c registers.
+ 563:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 564:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval TRUE  The Error Interrupt Flag is set.
+ 565:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 		   FALSE The Error Interrupt Flag is not set.
+ 566:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 567:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE boolean IfxI2c_getErrorInterruptFlagStatus(Ifx_I2C *i2c);
+ 568:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 569:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 570:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Returns the status of the error interrupt source
+ 571:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 572:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] i2c 	 Pointer to the i2c registers.
+ 573:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] source Error interrupt source.
+ 574:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 				     Range: \ref IfxI2c_ErrorInterruptSource
+ 575:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 576:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval TRUE  The specified Error Interrupt Source is active.
+ 577:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *         FALSE The specified Error Interrupt Source is not active.
+ 578:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 579:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE boolean IfxI2c_getErrorInterruptSourceStatus(Ifx_I2C *i2c, IfxI2c_ErrorInterruptSource s
+ 580:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 581:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 582:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Returns the SRC pointer for I2C Error interrupt.
+ 583:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 584:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] i2c Pointer to the i2c registers.
+ 585:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 586:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval Ifx_SRC_SRCR SRC pointer for I2C Error Service interrupt.
+ 587:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 588:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE volatile Ifx_SRC_SRCR *IfxI2c_getErrorSrcPointer(Ifx_I2C *i2c);
+ 589:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 590:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 591:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Returns the current raw status of protocol interrupt.
+ 592:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 593:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] i2c Pointer to the i2c registers.
+ 594:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 595:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****   * \retval TRUE  The specified Protocol Interrupt Source is active.
+ 596:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 		    FALSE The specified Protocol Interrupt Source is not active.
+ 597:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 598:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE boolean IfxI2c_getProtocolInterruptFlagStatus(Ifx_I2C *i2c);
+ 599:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 600:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 601:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Returns the status of  specified protocol interrupt source.
+ 602:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 603:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] i2c    Pointer to the i2c registers.
+ 604:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] source Protocol interrupt source
+ 605:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 					 Range: \ref IfxI2c_ProtocolInterruptSource
+ 606:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 607:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval TRUE  The specified Protocol Interrupt Source is active.
+ 608:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 		   FALSE The specified Protocol Interrupt Source is not active.
+ 609:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 610:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE boolean IfxI2c_getProtocolInterruptSourceStatus(Ifx_I2C *i2c, IfxI2c_ProtocolInterruptSo
+ 611:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 612:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 613:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Returns the SRC pointer for I2C Protocol interrupt.
+ 614:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 615:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] i2c Pointer to the i2c registers.
+ 616:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 617:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval Ifx_SRC_SRCR SRC pointer for I2C Protocol Service interrupt.
+ 618:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 619:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE volatile Ifx_SRC_SRCR *IfxI2c_getProtocolSrcPointer(Ifx_I2C *i2c);
+ 620:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 621:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 622:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Returns if the Fifo is requesting new data.
+ 623:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 624:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] i2c Pointer to the i2c registers.
+ 625:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 626:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval TRUE  If the Fifo is requesting new data.
+ 627:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 		   FALSE If the Fifo is not requesting new data.
+ 628:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 629:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE boolean IfxI2c_isFifoRequest(Ifx_I2C *i2c);
+ 630:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 631:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 632:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Starts the I2C peripheral operation by setting the RUNCTRL bit.
+ 633:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 634:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c Pointer to the i2c registers.
+ 635:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 636:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 637:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 638:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_run(Ifx_I2C *i2c);
+ 639:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 640:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 641:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Sets width of I2C address to 7 or 10 bits
+ 642:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 643:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c  Pointer to the i2c registers.
+ 644:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in]	 mode Selects 7 or 10 bits address.
+ 645:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 646:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 647:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 648:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_setBitAddressMode(Ifx_I2C *i2c, IfxI2c_AddressMode mode);
+ 649:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 650:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 651:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Sets the pin selection for the I2C peripheral.
+ 652:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 653:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c   Pointer to the i2c registers.
+ 654:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in]    pisel Pin to be select.
+ 655:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 					   Range: \ref IfxI2c_PinSelect
+ 656:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 657:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 658:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 659:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_setPinSelection(Ifx_I2C *i2c, IfxI2c_PinSelect pisel);
+ 660:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 661:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 662:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Sets the number of bytes to be received
+ 663:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 664:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c  Pointer to the i2c registers.
+ 665:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param 		 size Number of packets.
+ 666:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 667:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 668:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 669:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_setReceivePacketSize(Ifx_I2C *i2c, Ifx_SizeT size);
+ 670:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 671:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 672:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Configures the slave device address for I2C communication.
+ 673:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 674:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c     Pointer to the i2c registers.
+ 675:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in]	 address Device address.
+ 676:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 						 Depending on setting of TBAM(Ten bit Address Mode),
+ 677:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *            	         this is either a 7-bit address (bits [7:1]) or a 10-bit address (bits [9:0]
+ 678:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *            	         Range: 0x1 to 0x7F (7-bit address), 0x00 to 0x3FF (10-bit address).
+ 679:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 680:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 681:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 682:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_setSlaveDeviceAddress(Ifx_I2C *i2c, uint16 address);
+ 683:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 684:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 685:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Sets the sensitivity of the module to sleep signal.
+ 686:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 687:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c  Pointer to the i2c registers.
+ 688:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] 	 mode Mode selection (enable / disable).
+ 689:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 				      Range: \ref IfxI2c_SleepMode
+ 690:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 691:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 692:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 693:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_setSleepMode(Ifx_I2C *i2c, IfxI2c_SleepMode mode);
+ 694:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 695:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 696:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Sets the number of bytes to be tansmitted
+ 697:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 698:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c  Pointer to the i2c registers.
+ 699:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in]    size Number of packets.
+ 700:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 701:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 702:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 703:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_setTransmitPacketSize(Ifx_I2C *i2c, Ifx_SizeT size);
+ 704:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 705:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 706:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Stops the I2C communication.
+ 707:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 708:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c Pointer to the i2c registers.
+ 709:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 710:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 711:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 712:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_stop(Ifx_I2C *i2c);
+ 713:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 714:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 715:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Waits until the I2C bus becomes free.
+ 716:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 717:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] i2c Pointer to the i2c registers.
+ 718:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 719:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 720:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 721:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_waitBusFree(Ifx_I2C *i2c);
+ 722:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 723:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 724:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Writes a packet (4 bytes) into the Fifo
+ 725:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 726:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c 	Pointer to the i2c registers.
+ 727:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in]    packet Specifies the byte to be transfer.
+ 728:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *						A 32-bit value containing the 4 bytes to be written into the FIFO. The bytes are written in
+ 729:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 					    - Byte 0: Most significant byte of the packet
+ 730:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 					    - Byte 1: Next most significant byte of the packet
+ 731:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 					    - Byte 2: Next least significant byte of the packet
+ 732:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 					    - Byte 3: Least significant byte of the packet
+ 733:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 					    Range: 0x8000H to 0xBFFCH
+ 734:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 735:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 736:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_writeFifo(Ifx_I2C *i2c, uint32 packet);
+ 737:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 738:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /******************************************************************************/
+ 739:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /*-------------------------Global Function Prototypes-------------------------*/
+ 740:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /******************************************************************************/
+ 741:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 742:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 743:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Configures the Module as Master
+ 744:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 745:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c Pointer to the i2c registers.
+ 746:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 747:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 748:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 749:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_EXTERN void IfxI2c_configureAsMaster(Ifx_I2C *i2c);
+ 750:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 751:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 752:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Disables the I2c Module
+ 753:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 754:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] i2c Pointer to the i2c registers.
+ 755:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 756:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 757:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 758:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_EXTERN void IfxI2c_disableModule(Ifx_I2C *i2c);
+ 759:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 760:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 761:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief enables the DTR interrupt
+ 762:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 763:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] i2c 		    Pointer to the i2c registers.
+ 764:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] typeOfService Type of Service (Cpu or DMA).
+ 765:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 							Range: \ref IfxSrc_Tos
+ 766:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] priority 	    Priority of the interrupt.
+ 767:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 							Range: 0x00 to 0xFF
+ 768:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] vmId 		    Virtual machine number.
+ 769:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 							Range: \ref IfxSrc_VmId
+ 770:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 771:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 772:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 773:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_EXTERN void IfxI2c_enableDtrInterrupt(Ifx_I2C *i2c, IfxSrc_Tos typeOfService, uint16 priority, 
+ 774:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 775:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 776:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Enables the Error interrupt
+ 777:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 778:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] i2c 		    Pointer to the i2c registers.
+ 779:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] typeOfService Type of Service (Cpu or DMA).
+ 780:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 							Range: \ref IfxSrc_Tos
+ 781:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] priority 	    Priority of the interrupt.
+ 782:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 							Range: 0x00 to 0xFF
+ 783:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] vmId 		    Virtual machine number.
+ 784:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 							Range: \ref IfxSrc_VmId
+ 785:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 786:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 787:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 788:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_EXTERN void IfxI2c_enableErrorInterrupt(Ifx_I2C *i2c, IfxSrc_Tos typeOfService, uint16 priority
+ 789:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 790:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 791:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Enables the I2c Module
+ 792:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 793:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c Pointer to the i2c registers.
+ 794:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 795:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 796:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 797:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_EXTERN void IfxI2c_enableModule(Ifx_I2C *i2c);
+ 798:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 799:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 800:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Enables the protocol interrupt
+ 801:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 802:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] i2c 		    Pointer to the i2c registers.
+ 803:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] typeOfService Type of Service (Cpu or DMA).
+ 804:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 							Range: \ref IfxSrc_Tos
+ 805:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in} priority 	    Priority of the interrupt.
+ 806:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 							Range: 0x00 to 0xFF
+ 807:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] vmId 		    Virtual machine number.
+ 808:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 							Range: \ref IfxSrc_VmId
+ 809:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 810:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 811:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 812:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_EXTERN void IfxI2c_enableProtocolInterrupt(void *i2c, IfxSrc_Tos typeOfService, uint16 priority
+ 813:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 814:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 815:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Retrieves the address of the I2C module based on the given index.
+ 816:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 817:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] i2c Resource index of the I2c.
+ 818:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 			      Range: \ref IfxI2c_Index
+ 819:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 820:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval Ifx_I2C I2C module register address.
+ 821:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 822:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_EXTERN Ifx_I2C *IfxI2c_getAddress(IfxI2c_Index i2c);
+ 823:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 824:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 825:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Returns the real Baudrate.
+ 826:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 827:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] i2c Pointer to the i2c registers.
+ 828:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 829:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval float32 The actual Baudrate configured for the I2C module in Hz.
+ 830:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 831:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_EXTERN float32 IfxI2c_getBaudrate(Ifx_I2C *i2c);
+ 832:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 833:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 834:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief API to get the resource index of the I2C specified.
+ 835:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 836:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] i2c Pointer to the I2C HW module (register memory map)
+ 837:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 838:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval IfxI2c_Index Resource index of the I2C
+ 839:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 						Range: \ref IfxI2c_Index
+ 840:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 841:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_EXTERN IfxI2c_Index IfxI2c_getIndex(Ifx_I2C *i2c);
+ 842:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 843:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 844:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Initializes the SCL and SDA pins for I2C communication.
+ 845:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 846:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] scl       Pointer to the SCL pin configuration structure.
+ 847:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] sda       Pointer to the SDA pin configuration structure.
+ 848:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] padDriver Pad driver configuration to be applied to both SCL and SDA pins.
+ 849:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 					    Range: \ref IfxPort_PadDriver
+ 850:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 851:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 852:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 853:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_EXTERN void IfxI2c_initSclSdaPin(const IfxI2c_Scl_InOut *scl, const IfxI2c_Sda_InOut *sda, IfxP
+ 854:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 855:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 856:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Releases the bus, i.e puts a stop condition on the bus.
+ 857:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 858:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c Pointer to the Ifx_I2C instance.
+ 859:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 860:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 861:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 862:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_EXTERN void IfxI2c_releaseBus(Ifx_I2C *i2c);
+ 863:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 864:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 865:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Resets the FIFO configuration of the I2C module to its default state.
+ 866:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 867:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c Pointer to the Ifx_I2C structure representing the I2C module instance.
+ 868:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 869:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 870:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 871:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_EXTERN void IfxI2c_resetFifo(Ifx_I2C *i2c);
+ 872:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 873:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 874:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Resets the I2c kernel
+ 875:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 876:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c pointer to i2c registers
+ 877:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 878:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 879:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 880:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_EXTERN void IfxI2c_resetModule(Ifx_I2C *i2c);
+ 881:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 882:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 883:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Calculates the desired baudrate
+ 884:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 885:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c 	  Pointer to i2c registers.
+ 886:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] 	 baudrate Specifies the baud rate.
+ 887:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 				 		  Range: StandardandFast mode up to 400 kHz/s (20kHz/s - 400kHz/s).
+ 888:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *                      		 High-speed mode up to 3.4 Mbit/s (500kHz/s - 3.4MHz/s).
+ 889:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 890:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 891:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 892:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_EXTERN void IfxI2c_setBaudrate(Ifx_I2C *i2c, float32 baudrate);
+ 893:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 894:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 895:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Initialize the PROT and APU structures with default configuration
+ 896:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 897:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] config Configuration pointer for the Access Protection.
+ 898:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 899:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 900:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 901:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_EXTERN void IfxI2c_initApConfig(IfxI2c_ApConfig *config);
+ 902:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 903:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 904:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Initialize the PROTs and all 5 APU register set.
+ 905:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 906:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c 	Pointer to i2c registers.
+ 907:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] 	 config Pointer to i2c registers.
+ 908:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 909:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 910:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 911:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_EXTERN void IfxI2c_initAp(Ifx_I2C *i2c, IfxI2c_ApConfig *config);
+ 912:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 913:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 914:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Reads the I2c device.
+ 915:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 916:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2cDevice Device Handler.
+ 917:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] data 	   Data pointer.
+ 918:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 						   Range: 0 to 0xFFFFFFFF
+ 919:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in]	 size 	   Size of data
+ 920:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 921:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval IfxI2c_Status Returns the bus status.
+ 922:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 						 Range: \ref IfxI2c_Status
+ 923:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 924:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_EXTERN IfxI2c_Status IfxI2c_read(IfxI2c_I2cStdDevice *i2cDevice, volatile uint8 *data, Ifx_Size
+ 925:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 926:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 927:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Writes to the I2c device.
+ 928:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 929:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c  Device Device Handler.
+ 930:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] data Data pointer.
+ 931:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 					  Range: 0 to 0xFFFFFFFF
+ 932:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in]    size Size of data.
+ 933:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 934:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval IfxI2c_Status Returns the bus status.
+ 935:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 						  Range: \ref IfxI2c_Status
+ 936:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 937:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_EXTERN IfxI2c_Status IfxI2c_write(IfxI2c_I2cStdDevice *i2cDevice, volatile uint8 *data, Ifx_Siz
+ 938:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 939:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /** \} */
+ 940:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 941:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /******************************************************************************/
+ 942:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /*-------------------------Inline Function Prototypes-------------------------*/
+ 943:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /******************************************************************************/
+ 944:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 945:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 946:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Sets the interrupt request.
+ 947:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 948:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c 	Pointer to I2C registers.
+ 949:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] 	 source Interrupt request source.
+ 950:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 						Range: \ref IfxI2c_InterruptRequest
+ 951:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 952:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 953:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 954:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_setInterruptRequest(Ifx_I2C *i2c, IfxI2c_InterruptRequest source);
+ 955:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 956:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 957:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Sets the interrupt mask.
+ 958:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 959:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c 	Pointer to I2C registers.
+ 960:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] 	 source Interrupt mask source.
+ 961:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 						Range: \ref IfxI2c_InterruptRequest
+ 962:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 963:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 964:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 965:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_setInterruptMask(Ifx_I2C *i2c, IfxI2c_InterruptRequest source);
+ 966:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 967:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 968:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Sets the Tx burst size.
+ 969:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 970:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c        Pointer to i2c registers.
+ 971:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in]    nDataWords TX burst size.
+ 972:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 							Range: \ref IfxI2c_TxBurstSize
+ 973:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 974:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 975:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 976:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_setTxBurstSize(Ifx_I2C *i2c, IfxI2c_TxBurstSize nDataWords);
+ 977:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 978:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 979:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Sets the Rx burst size.
+ 980:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 981:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c        Pointer to i2c registers.
+ 982:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in]    nDataWords Rx burst size.
+ 983:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 							Range: \ref IfxI2c_RxBurstSize
+ 984:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 985:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 986:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 987:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_setRxBurstSize(Ifx_I2C *i2c, IfxI2c_RxBurstSize nDataWords);
+ 988:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+ 989:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+ 990:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Sets the Tx Fifo alignment size.
+ 991:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 992:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c    Pointer to i2c registers.
+ 993:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in]    nBytes Tx Fifo alignment size.
+ 994:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 						Range: \ref IfxI2c_TxFifoAlignment
+ 995:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+ 996:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+ 997:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+ 998:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_setTxFifoAlignmentSize(Ifx_I2C *i2c, IfxI2c_TxFifoAlignment nBytes);
+ 999:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1000:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+1001:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Sets the Rx Fifo alignment size.
+1002:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+1003:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c    Pointer to i2c registers.
+1004:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in]    nBytes Rx Fifo alignment size.
+1005:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 						Range: \ref IfxI2c_RxFifoAlignment
+1006:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+1007:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+1008:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+1009:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_setRxFifoAlignmentSize(Ifx_I2C *i2c, IfxI2c_RxFifoAlignment nBytes);
+1010:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1011:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+1012:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Gets the Rx burst size.
+1013:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+1014:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] i2c Pointer to i2c registers.
+1015:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+1016:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval IfxI2c_RxBurstSize Rx burst size.
+1017:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *                            Range: \ref IfxI2c_RxBurstSize               
+1018:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+1019:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE IfxI2c_RxBurstSize IfxI2c_getRxBurstSize(Ifx_I2C *i2c);
+1020:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1021:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+1022:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Gets the Tx burst size.
+1023:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+1024:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] i2c Pointer to i2c registers.
+1025:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+1026:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval IfxI2c_TxBurstSize Tx burst size.
+1027:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *                            Range: \ref IfxI2c_TxBurstSize               
+1028:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+1029:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE IfxI2c_TxBurstSize IfxI2c_getTxBurstSize(Ifx_I2C *i2c);
+1030:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1031:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+1032:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Gets the Rx Fifo alignment size.
+1033:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+1034:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] i2c Pointer to i2c registers.
+1035:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+1036:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval IfxI2c_RxFifoAlignment Rx Fifo alignment size.
+1037:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *                                Range: \ref IfxI2c_RxFifoAlignment               
+1038:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+1039:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE IfxI2c_RxFifoAlignment IfxI2c_getRxFifoAlignmentSize(Ifx_I2C *i2c);
+1040:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1041:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+1042:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Gets the Tx Fifo alignment size.
+1043:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+1044:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] i2c Pointer to i2c registers.
+1045:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+1046:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval IfxI2c_TxFifoAlignment Tx Fifo alignment size.
+1047:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *                                Range: \ref IfxI2c_TxFifoAlignment               
+1048:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+1049:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE IfxI2c_TxFifoAlignment IfxI2c_getTxFifoAlignmentSize(Ifx_I2C *i2c);
+1050:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1051:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+1052:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Configures the Tx Fifo flow control.
+1053:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+1054:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c   Pointer to i2c registers.
+1055:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in]    state Tx Fifo flow control state.
+1056:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 					   Range: \ref IfxI2c_TxFifoFlowControl
+1057:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+1058:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+1059:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+1060:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_configureTxFlowControl(Ifx_I2C *i2c, IfxI2c_TxFifoFlowControl state);
+1061:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1062:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+1063:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Configures the Rx Fifo flow control.
+1064:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+1065:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c   Pointer to i2c registers.
+1066:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in]    state Rx Fifo flow control state.
+1067:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 					   Range: \ref IfxI2c_RxFifoFlowControl
+1068:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+1069:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+1070:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+1071:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_configureRxFlowControl(Ifx_I2C *i2c, IfxI2c_RxFifoFlowControl state);
+1072:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1073:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+1074:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Returns the address of TXD register.
+1075:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+1076:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] i2c Pointer to i2c registers.
+1077:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+1078:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval TXD register address.
+1079:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+1080:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE volatile Ifx_I2C_TXD *IfxI2c_getTxFifoAddress(Ifx_I2C *i2c);
+1081:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1082:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+1083:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Returns the address of RXD register.
+1084:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+1085:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] i2c Pointer to i2c registers.
+1086:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+1087:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval RXD register address.
+1088:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+1089:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE volatile Ifx_I2C_RXD *IfxI2c_getRxFifoAddress(Ifx_I2C *i2c);
+1090:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1091:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /******************************************************************************/
+1092:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /*-------------------------Global Function Prototypes-------------------------*/
+1093:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /******************************************************************************/
+1094:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1095:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+1096:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Configures access to all masters to all the I2Cs in the device
+1097:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+1098:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in] apConfig Config pointer to configuration structure.
+1099:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+1100:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+1101:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+1102:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_EXTERN void IfxI2c_configureAccessToI2cs(IfxApApu_ApuConfig *apConfig);
+1103:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1104:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+1105:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Configures the Module as Slave.
+1106:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+1107:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c Pointer to i2c registers.
+1108:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+1109:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+1110:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+1111:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_EXTERN void IfxI2c_configureAsSlave(Ifx_I2C *i2c);
+1112:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1113:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+1114:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Configures the Address and Fifo registers.
+1115:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+1116:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c    Pointer to i2c registers.
+1117:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[in]    config Pointer to address and fifo configuration structures.
+1118:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+1119:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval None
+1120:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+1121:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_EXTERN void IfxI2c_configureAddrFifo(Ifx_I2C *i2c, const IfxI2c_Config *config);
+1122:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1123:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /**
+1124:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \brief Switch to high speed modes.
+1125:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+1126:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \param[inout] i2c Pointer to i2c registers.
+1127:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  *
+1128:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * \retval IfxI2c_Status Return the bus status.
+1129:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  * 						 Range: \ref IfxI2c_Status
+1130:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****  */
+1131:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_EXTERN IfxI2c_Status IfxI2c_switch_to_highspeed(Ifx_I2C *i2c);
+1132:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1133:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /******************************************************************************/
+1134:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /*---------------------Inline Function Implementations------------------------*/
+1135:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** /******************************************************************************/
+1136:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1137:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE boolean IfxI2c_busIsFree(Ifx_I2C *i2c)
+1138:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1139:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     boolean free = FALSE;
+1140:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1141:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     if (i2c->BUSSTAT.B.BS == IfxI2c_BusStatus_idle)
+1142:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     {
+1143:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****         free = TRUE;
+1144:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     }
+1145:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1146:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     return free;
+1147:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+1148:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1149:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1150:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_clearAllDtrInterruptSources(Ifx_I2C *i2c)
+1151:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1152:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     i2c->ICR.U = (1 << IFX_I2C_ICR_LSREQ_INT_OFF) | (1 << IFX_I2C_ICR_SREQ_INT_OFF) | (1 << IFX_I2C
+1153:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+1154:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1155:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1156:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_clearAllErrorInterruptSources(Ifx_I2C *i2c)
+1157:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1158:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     i2c->ERRIRQSC.U = (1 << IFX_I2C_ERRIRQSC_RXF_UFL_OFF) | (1 << IFX_I2C_ERRIRQSC_RXF_OFL_OFF) | (
+1159:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+1160:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1161:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1162:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_clearAllProtocolInterruptSources(Ifx_I2C *i2c)
+1163:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1164:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     i2c->PIRQSC.U = (1 << IFX_I2C_PIRQSC_AM_OFF) | (1 << IFX_I2C_PIRQSC_GC_OFF) | (1 << IFX_I2C_PIR
+1165:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+1166:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1167:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1168:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_clearDtrInterruptSource(Ifx_I2C *i2c, IfxI2c_DtrInterruptSource source)
+1169:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1170:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     i2c->ICR.U = (1 << source);
+1171:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+1172:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1173:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1174:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_clearErrorInterruptSource(Ifx_I2C *i2c, IfxI2c_ErrorInterruptSource source)
+1175:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1176:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     i2c->ERRIRQSC.U = (1 << source);
+1177:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+1178:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1179:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1180:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_clearProtocolInterruptSource(Ifx_I2C *i2c, IfxI2c_ProtocolInterruptSource so
+1181:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1182:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     i2c->PIRQSC.U = (1 << source);
+1183:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+1184:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1185:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1186:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_clearRequestBuffer(Ifx_I2C *i2c)
+1187:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1188:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     i2c->FIFOCFG.B.CRBC = 1;
+1189:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+1190:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1191:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1192:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_disableDtrInterruptSource(Ifx_I2C *i2c, IfxI2c_DtrInterruptSource source)
+1193:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1194:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     i2c->IMSC.U &= ~(1 << source);
+1195:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+1196:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1197:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1198:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_disableErrorInterruptFlag(Ifx_I2C *i2c)
+1199:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1200:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     i2c->IMSC.B.I2C_ERR_INT = 0;
+1201:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+1202:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1203:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1204:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_disableErrorInterruptSource(Ifx_I2C *i2c, IfxI2c_ErrorInterruptSource source
+1205:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1206:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     i2c->ERRIRQSM.U &= ~(1 << source);
+1207:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+1208:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1209:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1210:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_disableProtocolInterruptFlag(Ifx_I2C *i2c)
+1211:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1212:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     i2c->IMSC.B.I2C_P_INT = 0;
+1213:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+1214:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1215:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1216:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_disableProtocolInterruptSource(Ifx_I2C *i2c, IfxI2c_ProtocolInterruptSource 
+1217:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1218:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     i2c->PIRQSM.U &= ~(1 << source);
+1219:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+1220:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1221:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1222:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_enableDtrInterruptSource(Ifx_I2C *i2c, IfxI2c_DtrInterruptSource source)
+1223:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1224:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     i2c->IMSC.U |= (1 << source);
+1225:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+1226:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1227:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1228:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_enableErrorInterruptFlag(Ifx_I2C *i2c)
+1229:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1230:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     i2c->IMSC.B.I2C_ERR_INT = 1;
+1231:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+1232:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1233:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1234:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_enableErrorInterruptSource(Ifx_I2C *i2c, IfxI2c_ErrorInterruptSource source)
+1235:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1236:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     i2c->ERRIRQSM.U |= (1 << source);
+1237:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+1238:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1239:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1240:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_enableProtocolInterruptFlag(Ifx_I2C *i2c)
+1241:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1242:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     i2c->IMSC.B.I2C_P_INT = 1;
+1243:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+1244:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1245:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1246:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_enableProtocolInterruptSource(Ifx_I2C *i2c, IfxI2c_ProtocolInterruptSource s
+1247:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1248:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     i2c->PIRQSM.U |= (1 << source);
+1249:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+1250:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1251:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1252:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE IfxI2c_BusStatus IfxI2c_getBusStatus(Ifx_I2C *i2c)
+1253:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1254:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     return (IfxI2c_BusStatus)i2c->BUSSTAT.B.BS;
+1255:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+1256:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1257:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1258:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE volatile Ifx_SRC_SRCR *IfxI2c_getDtrSrcPointer(Ifx_I2C *i2c)
+1259:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1260:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_Index index;
+1261:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     index = IfxI2c_getIndex(i2c);
+1262:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1263:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     return &MODULE_SRC.I2C[index].DTR;
+1264:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+1265:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1266:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1267:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE boolean IfxI2c_getDtrinterruptSourceStatus(Ifx_I2C *i2c, IfxI2c_DtrInterruptSource sourc
+1268:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1269:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     return (i2c->RIS.U & (1 << source)) ? TRUE : FALSE;
+1270:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+1271:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1272:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1273:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE boolean IfxI2c_getErrorInterruptFlagStatus(Ifx_I2C *i2c)
+1274:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1275:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     return i2c->RIS.B.I2C_ERR_INT;
+1276:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+1277:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1278:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1279:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE boolean IfxI2c_getErrorInterruptSourceStatus(Ifx_I2C *i2c, IfxI2c_ErrorInterruptSource s
+1280:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1281:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     return (i2c->ERRIRQSS.U & (1 << source)) ? TRUE : FALSE;
+1282:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+1283:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1284:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1285:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE volatile Ifx_SRC_SRCR *IfxI2c_getErrorSrcPointer(Ifx_I2C *i2c)
+1286:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1287:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_Index index;
+1288:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     index = IfxI2c_getIndex(i2c);
+1289:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1290:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     return &MODULE_SRC.I2C[index].ERR;
+1291:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+1292:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1293:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1294:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE boolean IfxI2c_getProtocolInterruptFlagStatus(Ifx_I2C *i2c)
+1295:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1296:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     return i2c->RIS.B.I2C_P_INT;
+1297:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+1298:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1299:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1300:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE boolean IfxI2c_getProtocolInterruptSourceStatus(Ifx_I2C *i2c, IfxI2c_ProtocolInterruptSo
+1301:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1302:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     return (i2c->PIRQSS.U & (1 << source)) ? TRUE : FALSE;
+1303:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+1304:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1305:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1306:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE volatile Ifx_SRC_SRCR *IfxI2c_getProtocolSrcPointer(Ifx_I2C *i2c)
+1307:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1308:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     IfxI2c_Index index;
+1309:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     index = IfxI2c_getIndex(i2c);
+1310:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1311:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     return &MODULE_SRC.I2C[index].P;
+1312:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+1313:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1314:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1315:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE boolean IfxI2c_isFifoRequest(Ifx_I2C *i2c)
+1316:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1317:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     return i2c->RIS.U & 0x0F ? TRUE : FALSE;
+1318:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+1319:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1320:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1321:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_run(Ifx_I2C *i2c)
+1322:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1323:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     i2c->RUNCTRL.U = 1;
+1324:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+1325:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1326:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1327:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_setBitAddressMode(Ifx_I2C *i2c, IfxI2c_AddressMode mode)
+1328:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1329:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     i2c->ADDRCFG.B.TBAM = mode;
+1330:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+1331:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1332:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1333:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_setPinSelection(Ifx_I2C *i2c, IfxI2c_PinSelect pisel)
+1334:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1335:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     i2c->GPCTL.B.PISEL = pisel;
+1336:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+1337:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1338:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1339:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_setReceivePacketSize(Ifx_I2C *i2c, Ifx_SizeT size)
+1340:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1341:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     i2c->MRPSCTRL.B.MRPS = size;
+1342:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+1343:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1344:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1345:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_setSlaveDeviceAddress(Ifx_I2C *i2c, uint16 address)
+1346:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1347:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     i2c->ADDRCFG.B.ADR = address;
+1348:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+1349:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1350:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1351:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_setSleepMode(Ifx_I2C *i2c, IfxI2c_SleepMode mode)
+1352:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1353:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     i2c->CLC1.B.EDIS = mode;
+1354:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+1355:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1356:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1357:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_setTransmitPacketSize(Ifx_I2C *i2c, Ifx_SizeT size)
+1358:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1359:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     i2c->TPSCTRL.B.TPS = size;
+1360:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+1361:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1362:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** 
+1363:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** IFX_INLINE void IfxI2c_stop(Ifx_I2C *i2c)
+1364:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** {
+1365:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h ****     i2c->RUNCTRL.U = 0;
+ 214              	 .loc 2 1365 5
+ 215              	 .loc 2 1365 20 is_stmt 0
+ 216 0032 8202     	 mov %d2,0
+ 217 0034 59C21000 	 st.w [%a12]16,%d2
+ 218              	.LVL10:
+ 219              	.LBE25:
+ 220              	.LBE24:
+ 101:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     
+ 102:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     /* Enter config mode */
+ 103:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     IfxI2c_configureAsMaster(i2cSFR);
+ 221              	 .loc 1 103 5 is_stmt 1
+ 222 0038 40C4     	 mov.aa %a4,%a12
+ 223 003a 6D000000 	 call IfxI2c_configureAsMaster
+ 224              	.LVL11:
+ 104:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** 
+ 105:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     if (config->peripheralMode == IfxI2c_MasterNotSlave_slave)
+ 225              	 .loc 1 105 5
+ 226              	 .loc 1 105 15 is_stmt 0
+ 227 003e 19D21000 	 ld.w %d2,[%a13]16
+ 228              	 .loc 1 105 8
+ 229 0042 DF020000 	 jz %d2,.L9
+ 230              	.L6:
+ 106:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     {
+ 107:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     	/* Configure peripheral as slave */
+ 108:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****         IfxI2c_configureAsSlave(i2cSFR);
+ 109:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     }
+ 110:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** 
+ 111:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     if (config->mode == IfxI2c_Mode_HighSpeed)
+ 231              	 .loc 1 111 5 is_stmt 1
+ 232              	 .loc 1 111 15 is_stmt 0
+ 233 0046 19D20C00 	 ld.w %d2,[%a13]12
+ 234              	 .loc 1 111 8
+ 235 004a DF120000 	 jeq %d2,1,.L10
+ 236              	.L7:
+ 112:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     {
+ 113:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****         addressConfiglocal.addressConfig.masterCodeEnable = TRUE;
+ 114:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     }
+ 115:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** 
+ 116:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     /* Configure address fifo */
+ 117:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     IfxI2c_configureAddrFifo(i2cSFR, &addressConfiglocal);
+ 237              	 .loc 1 117 5 is_stmt 1
+ 238 004e D9E5D8FF 	 lea %a5,[%a14]-40
+ 239 0052 40C4     	 mov.aa %a4,%a12
+ 240 0054 6D000000 	 call IfxI2c_configureAddrFifo
+ 241              	.LVL12:
+ 118:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** 
+ 119:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     /* In high speed mode the baud rate must be higher then 400kHz */
+ 120:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     IfxI2c_setBaudrate(i2cSFR, config->baudrate); 
+ 242              	 .loc 1 120 5
+ 243 0058 19D40400 	 ld.w %d4,[%a13]4
+ 244 005c 40C4     	 mov.aa %a4,%a12
+ 245 005e 6D000000 	 call IfxI2c_setBaudrate
+ 246              	.LVL13:
+ 121:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** 
+ 122:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     if (config->pins != NULL_PTR)
+ 247              	 .loc 1 122 5
+ 248              	 .loc 1 122 15 is_stmt 0
+ 249 0062 99D20800 	 ld.a %a2,[%a13]8
+ 250              	 .loc 1 122 8
+ 251 0066 BD020000 	 jz.a %a2,.L8
+ 123:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     {
+ 124:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     	/* Initialise the I2C SCL and SDA pins with the specified SCL, SDA and Pad Driver configuratio
+ 125:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****         IfxI2c_initSclSdaPin(config->pins->scl, config->pins->sda, config->pins->padDriver);
+ 252              	 .loc 1 125 9 is_stmt 1
+ 253 006a 19240800 	 ld.w %d4,[%a2]8
+ 254 006e 99250400 	 ld.a %a5,[%a2]4
+ 255 0072 D424     	 ld.a %a4,[%a2]0
+ 256 0074 6D000000 	 call IfxI2c_initSclSdaPin
+ 257              	.LVL14:
+ 258              	.L8:
+ 126:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     }
+ 127:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** 
+ 128:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     /* To see protocol interrupt in register RIS enable the corresponding sources */
+ 129:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     IfxI2c_enableProtocolInterruptSource(i2cSFR, IfxI2c_ProtocolInterruptSource_arbitrationLost);
+ 259              	 .loc 1 129 5
+ 260              	.LBB26:
+ 261              	.LBB27:
+1248:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+ 262              	 .loc 2 1248 5
+1248:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+ 263              	 .loc 2 1248 19 is_stmt 0
+ 264 0078 D9C23010 	 lea %a2,[%a12]112
+ 265 007c 19C23010 	 ld.w %d2,[%a12]112
+ 266 0080 8F824021 	 or %d2,%d2,8
+ 267 0084 7422     	 st.w [%a2]0,%d2
+ 268              	.LVL15:
+ 269              	.LBE27:
+ 270              	.LBE26:
+ 130:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     IfxI2c_enableProtocolInterruptSource(i2cSFR, IfxI2c_ProtocolInterruptSource_notAcknowledgeRecei
+ 271              	 .loc 1 130 5 is_stmt 1
+ 272              	.LBB28:
+ 273              	.LBB29:
+1248:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+ 274              	 .loc 2 1248 5
+1248:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+ 275              	 .loc 2 1248 19 is_stmt 0
+ 276 0086 5422     	 ld.w %d2,[%a2]0
+ 277 0088 8F024121 	 or %d2,%d2,16
+ 278 008c 7422     	 st.w [%a2]0,%d2
+ 279              	.LVL16:
+ 280              	.LBE29:
+ 281              	.LBE28:
+ 131:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     IfxI2c_enableProtocolInterruptSource(i2cSFR, IfxI2c_ProtocolInterruptSource_transmissionEnd);
+ 282              	 .loc 1 131 5 is_stmt 1
+ 283              	.LBB30:
+ 284              	.LBB31:
+1248:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+ 285              	 .loc 2 1248 5
+1248:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+ 286              	 .loc 2 1248 19 is_stmt 0
+ 287 008e 5422     	 ld.w %d2,[%a2]0
+ 288 0090 8F024221 	 or %d2,%d2,32
+ 289 0094 7422     	 st.w [%a2]0,%d2
+ 290              	.LVL17:
+ 291              	.LBE31:
+ 292              	.LBE30:
+ 132:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     IfxI2c_enableProtocolInterruptSource(i2cSFR, IfxI2c_ProtocolInterruptSource_receiveMode);
+ 293              	 .loc 1 132 5 is_stmt 1
+ 294              	.LBB32:
+ 295              	.LBB33:
+1248:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+ 296              	 .loc 2 1248 5
+1248:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+ 297              	 .loc 2 1248 19 is_stmt 0
+ 298 0096 5422     	 ld.w %d2,[%a2]0
+ 299 0098 8F024421 	 or %d2,%d2,64
+ 300 009c 7422     	 st.w [%a2]0,%d2
+ 301              	.LVL18:
+ 302              	.LBE33:
+ 303              	.LBE32:
+ 133:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     /* To see error interrupt in register RIS enable the corresponding sources */
+ 134:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     IfxI2c_enableErrorInterruptSource(i2cSFR, IfxI2c_ErrorInterruptSource_rxFifoUnderflow);
+ 304              	 .loc 1 134 5 is_stmt 1
+ 305              	.LBB34:
+ 306              	.LBB35:
+1236:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+ 307              	 .loc 2 1236 5
+1236:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+ 308              	 .loc 2 1236 21 is_stmt 0
+ 309 009e D9C22010 	 lea %a2,[%a12]96
+ 310 00a2 19C22010 	 ld.w %d2,[%a12]96
+ 311 00a6 8F124021 	 or %d2,%d2,1
+ 312 00aa 7422     	 st.w [%a2]0,%d2
+ 313              	.LVL19:
+ 314              	.LBE35:
+ 315              	.LBE34:
+ 135:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     IfxI2c_enableErrorInterruptSource(i2cSFR, IfxI2c_ErrorInterruptSource_rxFifoOverflow);
+ 316              	 .loc 1 135 5 is_stmt 1
+ 317              	.LBB36:
+ 318              	.LBB37:
+1236:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+ 319              	 .loc 2 1236 5
+1236:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+ 320              	 .loc 2 1236 21 is_stmt 0
+ 321 00ac 5422     	 ld.w %d2,[%a2]0
+ 322 00ae 8F224021 	 or %d2,%d2,2
+ 323 00b2 7422     	 st.w [%a2]0,%d2
+ 324              	.LVL20:
+ 325              	.LBE37:
+ 326              	.LBE36:
+ 136:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     IfxI2c_enableErrorInterruptSource(i2cSFR, IfxI2c_ErrorInterruptSource_txFifoUnderflow);
+ 327              	 .loc 1 136 5 is_stmt 1
+ 328              	.LBB38:
+ 329              	.LBB39:
+1236:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+ 330              	 .loc 2 1236 5
+1236:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+ 331              	 .loc 2 1236 21 is_stmt 0
+ 332 00b4 5422     	 ld.w %d2,[%a2]0
+ 333 00b6 8F424021 	 or %d2,%d2,4
+ 334 00ba 7422     	 st.w [%a2]0,%d2
+ 335              	.LVL21:
+ 336              	.LBE39:
+ 337              	.LBE38:
+ 137:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     IfxI2c_enableErrorInterruptSource(i2cSFR, IfxI2c_ErrorInterruptSource_txFifoOverflow);
+ 338              	 .loc 1 137 5 is_stmt 1
+ 339              	.LBB40:
+ 340              	.LBB41:
+1236:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+ 341              	 .loc 2 1236 5
+1236:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+ 342              	 .loc 2 1236 21 is_stmt 0
+ 343 00bc 5422     	 ld.w %d2,[%a2]0
+ 344 00be 8F824021 	 or %d2,%d2,8
+ 345 00c2 7422     	 st.w [%a2]0,%d2
+ 346              	.LVL22:
+ 347              	.LBE41:
+ 348              	.LBE40:
+ 138:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** 
+ 139:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     /* Start the I2C module */
+ 140:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     IfxI2c_run(i2cSFR);
+ 349              	 .loc 1 140 5 is_stmt 1
+ 350              	.LBB42:
+ 351              	.LBB43:
+1323:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+ 352              	 .loc 2 1323 5
+1323:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+ 353              	 .loc 2 1323 20 is_stmt 0
+ 354 00c4 8212     	 mov %d2,1
+ 355 00c6 59C21000 	 st.w [%a12]16,%d2
+ 356              	.LVL23:
+ 357              	.LBE43:
+ 358              	.LBE42:
+ 141:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** 
+ 142:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     /* Initialise the I2C with the current Baud rate, Bus status, and set status to OK */
+ 143:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     i2c->baudrate  = IfxI2c_getBaudrate(i2cSFR);
+ 359              	 .loc 1 143 5 is_stmt 1
+ 360              	 .loc 1 143 22 is_stmt 0
+ 361 00ca 40C4     	 mov.aa %a4,%a12
+ 362 00cc 6D000000 	 call IfxI2c_getBaudrate
+ 363              	.LVL24:
+ 364              	 .loc 1 143 20
+ 365 00d0 6832     	 st.w [%a15]12,%d2
+ 144:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     i2c->busStatus = IfxI2c_getBusStatus(i2cSFR);
+ 366              	 .loc 1 144 5 is_stmt 1
+ 367              	.LVL25:
+ 368              	.LBB44:
+ 369              	.LBB45:
+1254:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+ 370              	 .loc 2 1254 5
+1254:../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h **** }
+ 371              	 .loc 2 1254 44 is_stmt 0
+ 372 00d2 19C22400 	 ld.w %d2,[%a12]36
+ 373 00d6 8F320021 	 and %d2,%d2,3
+ 374              	.LVL26:
+ 375              	.LBE45:
+ 376              	.LBE44:
+ 377              	 .loc 1 144 20
+ 378 00da 6812     	 st.w [%a15]4,%d2
+ 145:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     i2c->status    = IfxI2c_I2c_Status_ok;
+ 379              	 .loc 1 145 5 is_stmt 1
+ 380              	 .loc 1 145 20 is_stmt 0
+ 381 00dc 8202     	 mov %d2,0
+ 382 00de 6822     	 st.w [%a15]8,%d2
+ 146:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** }
+ 383              	 .loc 1 146 1
+ 384 00e0 0090     	 ret 
+ 385              	.L9:
+ 108:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     }
+ 386              	 .loc 1 108 9 is_stmt 1
+ 387 00e2 40C4     	 mov.aa %a4,%a12
+ 388 00e4 6D000000 	 call IfxI2c_configureAsSlave
+ 389              	.LVL27:
+ 390 00e8 1D000000 	 j .L6
+ 391              	.L10:
+ 113:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     }
+ 392              	 .loc 1 113 9
+ 113:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     }
+ 393              	 .loc 1 113 59 is_stmt 0
+ 394 00ec E9E2E1FF 	 st.b [%a14]-31,%d2
+ 395 00f0 1D000000 	 j .L7
+ 396              	.LFE383:
+ 398              	 .global IfxI2c_I2c_initModule_end
+ 399              	IfxI2c_I2c_initModule_end:
+ 400              	 .section .text.IfxI2c_I2c_read,"ax",@progbits
+ 401              	 .align 1
+ 402              	 .global IfxI2c_I2c_read
+ 404              	IfxI2c_I2c_read:
+ 405              	.LFB384:
+ 147:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** 
+ 148:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** 
+ 149:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** IfxI2c_I2c_Status IfxI2c_I2c_read(IfxI2c_I2c_Device *i2cDevice, volatile uint8 *data, Ifx_SizeT siz
+ 150:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** {
+ 406              	 .loc 1 150 1 is_stmt 1
+ 407              	.LVL28:
+ 408 0000 40AE     	 mov.aa %a14,%SP
+ 409              	.LCFI5:
+ 151:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     return (IfxI2c_I2c_Status)IfxI2c_read((IfxI2c_I2cStdDevice *)i2cDevice, data, size);
+ 410              	 .loc 1 151 5
+ 411              	 .loc 1 151 31 is_stmt 0
+ 412 0002 37045040 	 extr %d4,%d4,0,16
+ 413 0006 6D000000 	 call IfxI2c_read
+ 414              	.LVL29:
+ 152:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** }
+ 415              	 .loc 1 152 1
+ 416 000a 0090     	 ret 
+ 417              	.LFE384:
+ 419              	 .global IfxI2c_I2c_read_end
+ 420              	IfxI2c_I2c_read_end:
+ 421              	 .section .text.IfxI2c_I2c_write,"ax",@progbits
+ 422              	 .align 1
+ 423              	 .global IfxI2c_I2c_write
+ 425              	IfxI2c_I2c_write:
+ 426              	.LFB385:
+ 153:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** 
+ 154:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** 
+ 155:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** IfxI2c_I2c_Status IfxI2c_I2c_write(IfxI2c_I2c_Device *i2cDevice, volatile uint8 *data, Ifx_SizeT si
+ 156:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** {
+ 427              	 .loc 1 156 1 is_stmt 1
+ 428              	.LVL30:
+ 429 0000 40AE     	 mov.aa %a14,%SP
+ 430              	.LCFI6:
+ 157:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c ****     return (IfxI2c_I2c_Status)IfxI2c_write((IfxI2c_I2cStdDevice *)i2cDevice, data, size);
+ 431              	 .loc 1 157 5
+ 432              	 .loc 1 157 31 is_stmt 0
+ 433 0002 37045040 	 extr %d4,%d4,0,16
+ 434 0006 6D000000 	 call IfxI2c_write
+ 435              	.LVL31:
+ 158:../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.c **** }
+ 436              	 .loc 1 158 1
+ 437 000a 0090     	 ret 
+ 438              	.LFE385:
+ 440              	 .global IfxI2c_I2c_write_end
+ 441              	IfxI2c_I2c_write_end:
+ 542              	.Letext0:
+ 543              	 .file 3 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 544              	 .file 4 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+ 545              	 .file 5 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 546              	 .file 6 "../Libraries/Infra/Sfr/TC4Dx/IfxI2c_regdef.h"
+ 547              	 .file 7 "../Libraries/Infra/Sfr/TC4Dx/IfxPort_regdef.h"
+ 548              	 .file 8 "../Libraries/iLLD/TC4xx/CpuGeneric/Port/Std/IfxPort.h"
+ 549              	 .file 9 "../Libraries/iLLD/TC4xx/Tricore/_PinMap/IfxI2c_PinMap.h"
+ 550              	 .file 10 "../Libraries/iLLD/TC4xx/Tricore/I2c/I2c/IfxI2c_I2c.h"
+ 15650 0000 00000000 	 .word IfxI2c_I2c_getBaudrate
+ 15651 0004 00000000 	 .word IfxI2c_I2c_getBaudrate_end
+ 15652 0008 04001044 	 .word 0x44100004
+ 15653 000c 00001000 	 .word 0x00100000
+ 15654 0010 04000000 	 .word 0x00000004
+ 15655 0014 40000200 	 .word 0x00020040
+ 15656 0018 00000000 	 .word IfxI2c_I2c_initConfig
+ 15657 001c 00000000 	 .word IfxI2c_I2c_initConfig_end
+ 15658 0020 0C003444 	 .word 0x4434000c
+ 15659 0024 00003000 	 .word 0x00300000
+ 15660 0028 00000000 	 .word 0x00000000
+ 15661 002c C0000000 	 .word 0x000000c0
+ 15662 0030 00000000 	 .word IfxI2c_I2c_initDevice
+ 15663 0034 00000000 	 .word IfxI2c_I2c_initDevice_end
+ 15664 0038 04003C44 	 .word 0x443c0004
+ 15665 003c 00003000 	 .word 0x00300000
+ 15666 0040 00000000 	 .word 0x00000000
+ 15667 0044 C0000000 	 .word 0x000000c0
+ 15668 0048 00000000 	 .word IfxI2c_I2c_initDeviceConfig
+ 15669 004c 00000000 	 .word IfxI2c_I2c_initDeviceConfig_end
+ 15670 0050 04003444 	 .word 0x44340004
+ 15671 0054 00003000 	 .word 0x00300000
+ 15672 0058 00000000 	 .word 0x00000000
+ 15673 005c C0000000 	 .word 0x000000c0
+ 15674 0060 00000000 	 .word IfxI2c_I2c_initModule
+ 15675 0064 00000000 	 .word IfxI2c_I2c_initModule_end
+ 15676 0068 F4003CF4 	 .word 0xf43c00f4
+ 15677 006c 00003000 	 .word 0x00300000
+ 15678 0070 00000000 	 .word 0x00000000
+ 15679 0074 40800200 	 .word 0x00028040
+ 15680 0078 00000000 	 .word IfxI2c_I2c_read
+ 15681 007c 00000000 	 .word IfxI2c_I2c_read_end
+ 15682 0080 14003044 	 .word 0x44300014
+ 15683 0084 10003000 	 .word 0x00300010
+ 15684 0088 04000000 	 .word 0x00000004
+ 15685 008c 40000200 	 .word 0x00020040
+ 15686 0090 00000000 	 .word IfxI2c_I2c_write
+ 15687 0094 00000000 	 .word IfxI2c_I2c_write_end
+ 15688 0098 14003044 	 .word 0x44300014
+ 15689 009c 10003000 	 .word 0x00300010
+ 15690 00a0 04000000 	 .word 0x00000004
+ 15691 00a4 40000200 	 .word 0x00020040
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxI2c_I2c.c
+                            *ABS*:00000000 IfxI2c_I2c.c
+    {standard input}:10     .text.IfxI2c_I2c_getBaudrate:00000000 IfxI2c_I2c_getBaudrate
+    {standard input}:28     .text.IfxI2c_I2c_getBaudrate:0000000a IfxI2c_I2c_getBaudrate_end
+    {standard input}:33     .text.IfxI2c_I2c_initConfig:00000000 IfxI2c_I2c_initConfig
+    {standard input}:102    .text.IfxI2c_I2c_initConfig:00000056 IfxI2c_I2c_initConfig_end
+    {standard input}:107    .text.IfxI2c_I2c_initDevice:00000000 IfxI2c_I2c_initDevice
+    {standard input}:140    .text.IfxI2c_I2c_initDevice:00000028 IfxI2c_I2c_initDevice_end
+    {standard input}:145    .text.IfxI2c_I2c_initDeviceConfig:00000000 IfxI2c_I2c_initDeviceConfig
+    {standard input}:173    .text.IfxI2c_I2c_initDeviceConfig:0000001c IfxI2c_I2c_initDeviceConfig_end
+    {standard input}:178    .text.IfxI2c_I2c_initModule:00000000 IfxI2c_I2c_initModule
+    {standard input}:399    .text.IfxI2c_I2c_initModule:000000f4 IfxI2c_I2c_initModule_end
+    {standard input}:404    .text.IfxI2c_I2c_read:00000000 IfxI2c_I2c_read
+    {standard input}:420    .text.IfxI2c_I2c_read:0000000c IfxI2c_I2c_read_end
+    {standard input}:425    .text.IfxI2c_I2c_write:00000000 IfxI2c_I2c_write
+    {standard input}:441    .text.IfxI2c_I2c_write:0000000c IfxI2c_I2c_write_end
+
+UNDEFINED SYMBOLS
+IfxI2c_getBaudrate
+IfxI2c_enableModule
+IfxI2c_configureAsMaster
+IfxI2c_configureAddrFifo
+IfxI2c_setBaudrate
+IfxI2c_initSclSdaPin
+IfxI2c_configureAsSlave
+IfxI2c_read
+IfxI2c_write

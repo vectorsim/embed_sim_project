@@ -1,0 +1,2277 @@
+   1              	
+   2              	 .file "IfxHsphy_Xpcs.c"
+   3              	 .file "IfxHsphy_Xpcs.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.IfxHsphy_Xpcs_sgmiiDataPathInit,"ax",@progbits
+   7              	 .align 1
+   8              	 .global IfxHsphy_Xpcs_sgmiiDataPathInit
+  10              	IfxHsphy_Xpcs_sgmiiDataPathInit:
+  11              	.LFB331:
+  12              	 .file 1 "../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c"
+   1:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** /**
+   2:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****  * \file IfxHsphy_Xpcs.c
+   3:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****  * \brief HSPHY XPCS details
+   4:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****  *
+   5:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****  *
+   8:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****  *
+   9:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****  *
+  10:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****  *                                 IMPORTANT NOTICE
+  11:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****  *
+  12:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****  * this file except in compliance with IFASLL.
+  15:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****  *
+  16:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****  *
+  26:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****  *
+  27:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****  */
+  28:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+  29:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** /******************************************************************************/
+  30:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** /*----------------------------------Includes----------------------------------*/
+  31:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** /******************************************************************************/
+  32:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+  33:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #include "Ifx_Cfg.h"
+  34:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #if defined (__TASKING__)
+  35:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #pragma warning 508			/* To suppress empty file warning */
+  36:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #endif
+  37:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #if defined (__ghs__)
+  38:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #pragma diag_suppress 96	/* To suppress empty file warning */
+  39:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #endif
+  40:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+  41:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #if !defined(DEVICE_TC4EX)  && !defined(DEVICE_TC4PX)
+  42:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #include "IfxHsphy_Xpcs.h"
+  43:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+  44:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** /******************************************************************************/
+  45:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** /*-------------------------Function Implementations---------------------------*/
+  46:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** /******************************************************************************/
+  47:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+  48:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** boolean IfxHsphy_Xpcs_sgmiiDataPathInit(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_XpcsIndex xpcsIndex)
+  49:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** {
+  13              	 .loc 1 49 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  50:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     uint32 timeoutCycleCount = IFXHSPHY_MAX_TIMEOUT;
+  17              	 .loc 1 50 5
+  18              	.LVL1:
+  51:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     uint8  timeOutError      = 0U;
+  19              	 .loc 1 51 5
+  52:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+  53:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #if IFXHSPHY_XDATAPATH_INIT_TRIG
+  54:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     /* Initialize XPCS data path */
+  55:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 	hsphyRegPtr->XPCS[xpcsIndex].PCS.VR_XS_DIG_CTRL1.B.INIT = 1;
+  56:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+  57:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 	while (hsphyRegPtr->XPCS[xpcsIndex].PCS.VR_XS_DIG_CTRL1.B.INIT == 1)
+  58:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 	{
+  59:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 		IFXHSPHY_LOOP_TIMEOUT_CHECK(timeoutCycleCount, timeOutError);
+  60:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 	}
+  61:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #endif /* #if IFXHSPHY_XDATAPATH_INIT_TRIG */
+  62:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+  63:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     /* Initialize XPCS data path */
+  64:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     hsphyRegPtr->XPCS[xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_TX_GENCTRL1.B.TX_CLK_RDY_0 = 0;
+  20              	 .loc 1 64 5
+  21              	 .loc 1 64 86 is_stmt 0
+  22 0002 8F740130 	 sh %d3,%d4,23
+  23 0006 8042     	 mov.d %d2,%a4
+  24 0008 4223     	 add %d3,%d2
+  25 000a 7B600820 	 movh %d2,134
+  26 000e 1B420C20 	 addi %d2,%d2,196
+  27 0012 6032     	 mov.a %a2,%d3
+  28 0014 01220026 	 addsc.a %a2,%a2,%d2,0
+  29 0018 5422     	 ld.w %d2,[%a2]0
+  30 001a B7020126 	 insert %d2,%d2,0,12,1
+  31 001e 7422     	 st.w [%a2]0,%d2
+  65:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     /* ower down the DWC_xpcs */
+  66:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     hsphyRegPtr->XPCS[xpcsIndex].PCS.SR_XS_CTRL1.B.LPM                               = 1; 
+  32              	 .loc 1 66 5 is_stmt 1
+  33              	 .loc 1 66 86 is_stmt 0
+  34 0020 6032     	 mov.a %a2,%d3
+  35 0022 11C20820 	 addih.a %a2,%a2,140
+  36 0026 5422     	 ld.w %d2,[%a2]0
+  37 0028 B7128125 	 insert %d2,%d2,1,11,1
+  38 002c 7422     	 st.w [%a2]0,%d2
+  67:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #if IFXHSPHY_TIMEOUT_CHECK
+  68:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     timeoutCycleCount                                                                = IFXHSPHY_MAX
+  69:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #endif /* #if IFXHSPHY_TIMEOUT_CHECK */
+  70:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+  71:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     while (hsphyRegPtr->XPCS[xpcsIndex].PCS.VR_XS_DIG_STS.B.PSEQ_STATE != IfxHsphy_XpcsPowerUpSeqSt
+  39              	 .loc 1 71 5 is_stmt 1
+  50:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     uint8  timeOutError      = 0U;
+  40              	 .loc 1 50 12 is_stmt 0
+  41 002e 7BF00020 	 movh %d2,15
+  42 0032 1B022424 	 addi %d2,%d2,16960
+  43              	.LVL2:
+  44              	.L2:
+  72:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     {
+  73:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         IFXHSPHY_LOOP_TIMEOUT_CHECK(timeoutCycleCount, timeOutError);
+  45              	 .loc 1 73 9 is_stmt 1 discriminator 2
+  46              	 .loc 1 73 69 discriminator 2
+  71:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     {
+  47              	 .loc 1 71 72 discriminator 2
+  71:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     {
+  48              	 .loc 1 71 60 is_stmt 0 discriminator 2
+  49 0036 8F740130 	 sh %d3,%d4,23
+  50 003a 8045     	 mov.d %d5,%a4
+  51 003c 4253     	 add %d3,%d5
+  52 003e 7BE00850 	 movh %d5,142
+  53 0042 1B050450 	 addi %d5,%d5,64
+  54 0046 6032     	 mov.a %a2,%d3
+  55 0048 01250026 	 addsc.a %a2,%a2,%d5,0
+  56 004c 5423     	 ld.w %d3,[%a2]0
+  57 004e 37036331 	 extr.u %d3,%d3,2,3
+  71:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     {
+  58              	 .loc 1 71 72 discriminator 2
+  59 0052 DF630000 	 jeq %d3,6,.L11
+  60              	 .loc 1 73 9 is_stmt 1
+  61 0056 C2F2     	 add %d2,-1
+  62              	.LVL3:
+  63 0058 DF020080 	 jnz %d2,.L2
+  64 005c 8212     	 mov %d2,1
+  65              	.LVL4:
+  66 005e 1D000000 	 j .L3
+  67              	.LVL5:
+  68              	.L11:
+  51:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+  69              	 .loc 1 51 12 is_stmt 0
+  70 0062 8202     	 mov %d2,0
+  71              	.LVL6:
+  72              	.L3:
+  74:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     }
+  75:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+  76:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     if (timeOutError == TRUE)
+  73              	 .loc 1 76 5 is_stmt 1
+  74              	 .loc 1 76 8 is_stmt 0
+  75 0064 DF020080 	 jnz %d2,.L5
+  77:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     {
+  78:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         return TRUE;
+  79:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     }
+  80:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     /* Power up the DWC_xpcs */
+  81:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     hsphyRegPtr->XPCS[xpcsIndex].PCS.SR_XS_CTRL1.U &= (uint32)(~((1 << IFX_HSPHY_XPCS_PCS_SR_XS_CTR
+  76              	 .loc 1 81 5 is_stmt 1
+  77              	 .loc 1 81 52 is_stmt 0
+  78 0068 8F740130 	 sh %d3,%d4,23
+  79 006c 8045     	 mov.d %d5,%a4
+  80 006e 4253     	 add %d3,%d5
+  81 0070 6032     	 mov.a %a2,%d3
+  82 0072 11C20820 	 addih.a %a2,%a2,140
+  83 0076 5423     	 ld.w %d3,[%a2]0
+  84 0078 7BF0FF5F 	 movh %d5,65535
+  85 007c 1BF57F57 	 addi %d5,%d5,30719
+  86 0080 2653     	 and %d3,%d5
+  87 0082 7423     	 st.w [%a2]0,%d3
+  82:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+  83:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     timeoutCycleCount                               = IFXHSPHY_MAX_TIMEOUT;
+  88              	 .loc 1 83 5 is_stmt 1
+  89              	.LVL7:
+  84:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+  85:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     while (hsphyRegPtr->XPCS[xpcsIndex].PCS.VR_XS_DIG_STS.B.PSEQ_STATE != IfxHsphy_XpcsPowerUpSeqSt
+  90              	 .loc 1 85 5
+  83:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+  91              	 .loc 1 83 53 is_stmt 0
+  92 0084 7BF00030 	 movh %d3,15
+  93 0088 1B032434 	 addi %d3,%d3,16960
+  94              	.LVL8:
+  95              	.L6:
+  86:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     {
+  87:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         IFXHSPHY_LOOP_TIMEOUT_CHECK(timeoutCycleCount, timeOutError);
+  96              	 .loc 1 87 9 is_stmt 1 discriminator 2
+  97              	 .loc 1 87 69 discriminator 2
+  85:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     {
+  98              	 .loc 1 85 72 discriminator 2
+  85:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     {
+  99              	 .loc 1 85 60 is_stmt 0 discriminator 2
+ 100 008c 8F740150 	 sh %d5,%d4,23
+ 101 0090 8046     	 mov.d %d6,%a4
+ 102 0092 4265     	 add %d5,%d6
+ 103 0094 7BE00860 	 movh %d6,142
+ 104 0098 1B060460 	 addi %d6,%d6,64
+ 105 009c 6052     	 mov.a %a2,%d5
+ 106 009e 01260026 	 addsc.a %a2,%a2,%d6,0
+ 107 00a2 5425     	 ld.w %d5,[%a2]0
+ 108 00a4 37056351 	 extr.u %d5,%d5,2,3
+  85:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     {
+ 109              	 .loc 1 85 72 discriminator 2
+ 110 00a8 DF450000 	 jeq %d5,4,.L7
+ 111              	 .loc 1 87 9 is_stmt 1
+ 112 00ac C2F3     	 add %d3,-1
+ 113              	.LVL9:
+ 114 00ae DF030080 	 jnz %d3,.L6
+ 115 00b2 8212     	 mov %d2,1
+ 116              	.LVL10:
+ 117              	.L7:
+  88:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     }
+  89:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+  90:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     hsphyRegPtr->XPCS[xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_TX_GENCTRL1.B.TX_CLK_RDY_0 = 1;
+ 118              	 .loc 1 90 5
+ 119              	 .loc 1 90 86 is_stmt 0
+ 120 00b4 8F740130 	 sh %d3,%d4,23
+ 121              	.LVL11:
+ 122 00b8 8044     	 mov.d %d4,%a4
+ 123              	.LVL12:
+ 124 00ba 4234     	 add %d4,%d3
+ 125 00bc 0243     	 mov %d3,%d4
+ 126 00be 7B600840 	 movh %d4,134
+ 127 00c2 1B440C40 	 addi %d4,%d4,196
+ 128 00c6 6032     	 mov.a %a2,%d3
+ 129 00c8 01240026 	 addsc.a %a2,%a2,%d4,0
+ 130 00cc 5423     	 ld.w %d3,[%a2]0
+ 131 00ce B7130136 	 insert %d3,%d3,1,12,1
+ 132 00d2 7423     	 st.w [%a2]0,%d3
+  91:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     return (boolean)timeOutError;
+ 133              	 .loc 1 91 5 is_stmt 1
+ 134              	.L5:
+  92:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** }
+ 135              	 .loc 1 92 1 is_stmt 0
+ 136 00d4 0090     	 ret 
+ 137              	.LFE331:
+ 139              	 .global IfxHsphy_Xpcs_sgmiiDataPathInit_end
+ 140              	IfxHsphy_Xpcs_sgmiiDataPathInit_end:
+ 141              	 .section .text.IfxHsphy_Xpcs_reset,"ax",@progbits
+ 142              	 .align 1
+ 143              	 .global IfxHsphy_Xpcs_reset
+ 145              	IfxHsphy_Xpcs_reset:
+ 146              	.LFB332:
+  93:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+  94:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+  95:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #if IFXHSPHY_IS_GETH_AVAILABLE
+  96:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** boolean IfxHsphy_Xpcs_reset(Ifx_HSPHY *hsphyRegPtr, const IfxHsphy_GethXpcsParams *xpcs)
+  97:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #else
+  98:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** boolean IfxHsphy_Xpcs_reset(Ifx_HSPHY *hsphyRegPtr, const IfxHsphy_XpcsParams *xpcs)
+  99:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #endif /* #if IFXHSPHY_IS_GETH_AVAILABLE */
+ 100:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** {
+ 147              	 .loc 1 100 1 is_stmt 1
+ 148              	.LVL13:
+ 149 0000 40AE     	 mov.aa %a14,%SP
+ 150              	.LCFI1:
+ 101:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     uint32 timeoutCycleCount = IFXHSPHY_MAX_TIMEOUT;
+ 151              	 .loc 1 101 5
+ 152              	.LVL14:
+ 102:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     uint8  timeOutError      = 0U;
+ 153              	 .loc 1 102 5
+ 103:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     hsphyRegPtr->XPCS[xpcs->xpcsIndex].MII.DIG_CTRL1.B.VR_RST = 0;
+ 154              	 .loc 1 103 5
+ 155              	 .loc 1 103 27 is_stmt 0
+ 156 0002 5452     	 ld.w %d2,[%a5]0
+ 157              	 .loc 1 103 63
+ 158 0004 8F720120 	 sh %d2,%d2,23
+ 159 0008 8043     	 mov.d %d3,%a4
+ 160 000a 4232     	 add %d2,%d3
+ 161 000c 6022     	 mov.a %a2,%d2
+ 162 000e 11E20F20 	 addih.a %a2,%a2,254
+ 163 0012 5422     	 ld.w %d2,[%a2]0
+ 164 0014 B7028127 	 insert %d2,%d2,0,15,1
+ 165 0018 7422     	 st.w [%a2]0,%d2
+ 104:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 105:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     hsphyRegPtr->XPCS[xpcs->xpcsIndex].MII.DIG_CTRL1.B.VR_RST = 1;
+ 166              	 .loc 1 105 5 is_stmt 1
+ 167              	 .loc 1 105 27 is_stmt 0
+ 168 001a 5452     	 ld.w %d2,[%a5]0
+ 169              	 .loc 1 105 63
+ 170 001c 8F720120 	 sh %d2,%d2,23
+ 171 0020 4232     	 add %d2,%d3
+ 172 0022 6022     	 mov.a %a2,%d2
+ 173 0024 11E20F20 	 addih.a %a2,%a2,254
+ 174 0028 5422     	 ld.w %d2,[%a2]0
+ 175 002a B7128127 	 insert %d2,%d2,1,15,1
+ 176 002e 7422     	 st.w [%a2]0,%d2
+ 106:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 107:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     while (hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_SRAM.B.INIT_DN != 1)
+ 177              	 .loc 1 107 5 is_stmt 1
+ 101:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     uint8  timeOutError      = 0U;
+ 178              	 .loc 1 101 12 is_stmt 0
+ 179 0030 7BF00020 	 movh %d2,15
+ 180 0034 1B022424 	 addi %d2,%d2,16960
+ 181              	.LVL15:
+ 182              	.L13:
+ 108:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     {
+ 109:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         IFXHSPHY_LOOP_TIMEOUT_CHECK(timeoutCycleCount, timeOutError);
+ 183              	 .loc 1 109 9 is_stmt 1 discriminator 2
+ 184              	 .loc 1 109 69 discriminator 2
+ 107:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     {
+ 185              	 .loc 1 107 87 discriminator 2
+ 107:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     {
+ 186              	 .loc 1 107 34 is_stmt 0 discriminator 2
+ 187 0038 5453     	 ld.w %d3,[%a5]0
+ 107:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     {
+ 188              	 .loc 1 107 78 discriminator 2
+ 189 003a 8F730140 	 sh %d4,%d3,23
+ 190 003e 8045     	 mov.d %d5,%a4
+ 191 0040 4254     	 add %d4,%d5
+ 192 0042 7B600850 	 movh %d5,134
+ 193 0046 1BC52650 	 addi %d5,%d5,620
+ 194 004a 6042     	 mov.a %a2,%d4
+ 195 004c 01250026 	 addsc.a %a2,%a2,%d5,0
+ 196 0050 5424     	 ld.w %d4,[%a2]0
+ 107:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     {
+ 197              	 .loc 1 107 87 discriminator 2
+ 198 0052 6F040080 	 jnz.t %d4,0,.L21
+ 199              	 .loc 1 109 9 is_stmt 1
+ 200 0056 C2F2     	 add %d2,-1
+ 201              	.LVL16:
+ 202 0058 DF020080 	 jnz %d2,.L13
+ 203 005c 8212     	 mov %d2,1
+ 204              	.LVL17:
+ 205 005e 1D000000 	 j .L14
+ 206              	.LVL18:
+ 207              	.L21:
+ 102:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     hsphyRegPtr->XPCS[xpcs->xpcsIndex].MII.DIG_CTRL1.B.VR_RST = 0;
+ 208              	 .loc 1 102 12 is_stmt 0
+ 209 0062 8202     	 mov %d2,0
+ 210              	.LVL19:
+ 211              	.L14:
+ 110:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     }
+ 111:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 112:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     if (timeOutError == TRUE)
+ 212              	 .loc 1 112 5 is_stmt 1
+ 213              	 .loc 1 112 8 is_stmt 0
+ 214 0064 DF020080 	 jnz %d2,.L16
+ 113:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     {
+ 114:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         return TRUE;
+ 115:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     }
+ 116:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 117:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_SRAM.B.EXT_LD_DN = 1;
+ 215              	 .loc 1 117 5 is_stmt 1
+ 216              	 .loc 1 117 82 is_stmt 0
+ 217 0068 8F730130 	 sh %d3,%d3,23
+ 218 006c 8044     	 mov.d %d4,%a4
+ 219 006e 4243     	 add %d3,%d4
+ 220 0070 7B600840 	 movh %d4,134
+ 221 0074 1BC42640 	 addi %d4,%d4,620
+ 222 0078 6032     	 mov.a %a2,%d3
+ 223 007a 01240026 	 addsc.a %a2,%a2,%d4,0
+ 224 007e 5423     	 ld.w %d3,[%a2]0
+ 225 0080 B7138130 	 insert %d3,%d3,1,1,1
+ 226 0084 7423     	 st.w [%a2]0,%d3
+ 118:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 119:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     timeoutCycleCount                                                            = IFXHSPHY_MAX_TIM
+ 227              	 .loc 1 119 5 is_stmt 1
+ 228              	.LVL20:
+ 120:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 121:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     while (hsphyRegPtr->XPCS[xpcs->xpcsIndex].PCS.SR_XS_CTRL1.B.RST == 1)
+ 229              	 .loc 1 121 5
+ 119:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 230              	 .loc 1 119 82 is_stmt 0
+ 231 0086 7BF00030 	 movh %d3,15
+ 232 008a 1B032434 	 addi %d3,%d3,16960
+ 233              	.LVL21:
+ 234              	.L17:
+ 122:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     {
+ 123:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         IFXHSPHY_LOOP_TIMEOUT_CHECK(timeoutCycleCount, timeOutError);
+ 235              	 .loc 1 123 9 is_stmt 1 discriminator 2
+ 236              	 .loc 1 123 69 discriminator 2
+ 121:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     {
+ 237              	 .loc 1 121 69 discriminator 2
+ 121:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     {
+ 238              	 .loc 1 121 34 is_stmt 0 discriminator 2
+ 239 008e 5454     	 ld.w %d4,[%a5]0
+ 121:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     {
+ 240              	 .loc 1 121 64 discriminator 2
+ 241 0090 8F740140 	 sh %d4,%d4,23
+ 242 0094 8045     	 mov.d %d5,%a4
+ 243 0096 4254     	 add %d4,%d5
+ 244 0098 6042     	 mov.a %a2,%d4
+ 245 009a 11C20820 	 addih.a %a2,%a2,140
+ 246 009e 5424     	 ld.w %d4,[%a2]0
+ 121:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     {
+ 247              	 .loc 1 121 69 discriminator 2
+ 248 00a0 6FF40000 	 jz.t %d4,15,.L22
+ 249              	.LVL22:
+ 250              	 .loc 1 123 9 is_stmt 1
+ 251 00a4 C2F3     	 add %d3,-1
+ 252              	.LVL23:
+ 253 00a6 DF030080 	 jnz %d3,.L17
+ 254 00aa 8212     	 mov %d2,1
+ 255              	.LVL24:
+ 256              	.L16:
+ 124:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     }
+ 125:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 126:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     return (boolean)timeOutError;
+ 127:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** }
+ 257              	 .loc 1 127 1 is_stmt 0
+ 258 00ac 0090     	 ret 
+ 259              	.LVL25:
+ 260              	.L22:
+ 261 00ae 0090     	 ret 
+ 262              	.LFE332:
+ 264              	 .global IfxHsphy_Xpcs_reset_end
+ 265              	IfxHsphy_Xpcs_reset_end:
+ 266              	 .section .text.IfxHsphy_Xpcs_setSgmiiSpeedMode,"ax",@progbits
+ 267              	 .align 1
+ 268              	 .global IfxHsphy_Xpcs_setSgmiiSpeedMode
+ 270              	IfxHsphy_Xpcs_setSgmiiSpeedMode:
+ 271              	.LFB333:
+ 128:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 129:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 130:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #if IFXHSPHY_IS_GETH_AVAILABLE
+ 131:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** IfxHsphy_Geth_SgmiiSpeedConfigStatus IfxHsphy_Xpcs_setSgmiiSpeedMode(Ifx_HSPHY *hsphyRegPtr, IfxHsp
+ 132:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #else
+ 133:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** IfxHsphy_SgmiiSpeedConfigStatus IfxHsphy_Xpcs_setSgmiiSpeedMode(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_Tr
+ 134:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #endif /* #if IFXHSPHY_IS_GETH_AVAILABLE */
+ 135:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** {
+ 272              	 .loc 1 135 1 is_stmt 1
+ 273              	.LVL26:
+ 274 0000 40AE     	 mov.aa %a14,%SP
+ 275              	.LCFI2:
+ 276 0002 8048     	 mov.d %d8,%a4
+ 277 0004 0249     	 mov %d9,%d4
+ 278 0006 405C     	 mov.aa %a12,%a5
+ 136:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     IfxHsphy_SgmiiSpeed sgmiiSpeed        = IfxHsphy_SgmiiSpeed_1G;
+ 279              	 .loc 1 136 5
+ 280              	.LVL27:
+ 137:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     boolean             relvalCheck;
+ 281              	 .loc 1 137 5
+ 138:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 139:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     relvalCheck = IfxHsphy_sgmiiMpllDisable(hsphyRegPtr, xpcs->xpcsIndex);
+ 282              	 .loc 1 139 5
+ 283              	 .loc 1 139 19 is_stmt 0
+ 284 0008 5454     	 ld.w %d4,[%a5]0
+ 285              	.LVL28:
+ 286 000a 6D000000 	 call IfxHsphy_sgmiiMpllDisable
+ 287              	.LVL29:
+ 140:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 141:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     if (relvalCheck == TRUE)
+ 288              	 .loc 1 141 5 is_stmt 1
+ 289              	 .loc 1 141 8 is_stmt 0
+ 290 000e DF120000 	 jeq %d2,1,.L34
+ 142:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     {
+ 143:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #if IFXHSPHY_IS_GETH_AVAILABLE	
+ 144:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         return IfxHsphy_Geth_SgmiiSpeedConfigStatus_timeOutError;	
+ 145:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #else	
+ 146:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         return IfxHsphy_SgmiiSpeedConfigStatus_timeOutError;
+ 147:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #endif /* #if IFXHSPHY_IS_GETH_AVAILABLE */
+ 148:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 	}
+ 149:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 150:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     if ((trgtSpeed == IfxHsphy_TrgtDeviceSpeed_0P1G) || (trgtSpeed == IfxHsphy_TrgtDeviceSpeed_0P1G
+ 291              	 .loc 1 150 5 is_stmt 1
+ 292              	 .loc 1 150 54 is_stmt 0
+ 293 0012 8B190022 	 eq %d2,%d9,1
+ 294              	.LVL30:
+ 295 0016 8B79E024 	 or.eq %d2,%d9,7
+ 296              	 .loc 1 150 8
+ 297 001a DF020080 	 jnz %d2,.L25
+ 298              	 .loc 1 150 111 discriminator 1
+ 299 001e DF190000 	 jeq %d9,1,.L25
+ 151:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     {
+ 152:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         /* Set XPCS in 100M mode */
+ 153:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         if (trgtSpeed == IfxHsphy_TrgtDeviceSpeed_0P1G)
+ 154:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         {
+ 155:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****             sgmiiSpeed = IfxHsphy_SgmiiSpeed_0P1G;
+ 156:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         }
+ 157:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         /* SGMII 100M 1.25gbps mode */
+ 158:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         else if (trgtSpeed == IfxHsphy_TrgtDeviceSpeed_0P1G_1P25gbps)
+ 159:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         {
+ 160:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****             sgmiiSpeed = IfxHsphy_SgmiiSpeed_0P1G_1P25gbps;
+ 161:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         }
+ 162:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         /* SGMII 100M 125mbps mode */
+ 163:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         else
+ 164:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         {
+ 165:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****             sgmiiSpeed = IfxHsphy_SgmiiSpeed_0P1G_125mbps;
+ 166:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         }
+ 167:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 168:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #if (IFXHSPHY_PLATFORM_SIMULATION == 1)
+ 169:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_RX_GENCTRL1.B.RX_RST_0 = 1;
+ 170:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #endif
+ 171:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PCS.SR_XS_CTRL2.B.PCS_TYPE_SEL                  = IFXHSP
+ 172:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 173:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         if (trgtSpeed == IfxHsphy_TrgtDeviceSpeed_0P1G_1P25gbps)
+ 174:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         {
+ 175:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****             hsphyRegPtr->XPCS[xpcs->xpcsIndex].MII.CTRL.B.SS6  = 0;
+ 176:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****             hsphyRegPtr->XPCS[xpcs->xpcsIndex].MII.CTRL.B.SS13 = 1;
+ 177:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         }
+ 178:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #if IFXHSPHY_IS_GETH_AVAILABLE
+ 179:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         if (trgtSpeed == IfxHsphy_TrgtDeviceSpeed_0P1G_125mbps)
+ 180:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #else
+ 181:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         if ((trgtSpeed == IfxHsphy_TrgtDeviceSpeed_0P1G) || (trgtSpeed == IfxHsphy_TrgtDeviceSpeed_
+ 182:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #endif /* #if IFXHSPHY_IS_GETH_AVAILABLE */
+ 183:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         {
+ 184:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****             hsphyRegPtr->XPCS[xpcs->xpcsIndex].MII.DIG_CTRL1.B.EN_100M = 1;
+ 185:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         }
+ 186:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 187:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_RX_GENCTRL1.B.RX_RST_0 = 0;
+ 188:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     }
+ 189:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 190:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     else if (trgtSpeed == IfxHsphy_TrgtDeviceSpeed_1G)
+ 300              	 .loc 1 190 10 is_stmt 1
+ 301              	 .loc 1 190 13 is_stmt 0
+ 302 0022 DF390000 	 jeq %d9,3,.L40
+ 191:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     {
+ 192:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         /* Set XPCS in 1G mode */
+ 193:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #if (IFXHSPHY_PLATFORM_SIMULATION == 1)
+ 194:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_RX_GENCTRL1.B.RX_RST_0 = 1;
+ 195:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #endif
+ 196:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         sgmiiSpeed                                                                         = IfxHsp
+ 197:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PCS.SR_XS_CTRL2.B.PCS_TYPE_SEL                  = IFXHSP
+ 198:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].MII.CTRL.B.SS6                                  = 1;
+ 199:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].MII.CTRL.B.SS13                                 = 0;
+ 200:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_RX_GENCTRL1.B.RX_RST_0 = 0;
+ 201:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     }
+ 202:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #if IFXHSPHY_IS_TRGTDEVICE_SPEED_2P5G
+ 203:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     else if (trgtSpeed == IfxHsphy_TrgtDeviceSpeed_2P5G)
+ 303              	 .loc 1 203 10 is_stmt 1
+ 304              	 .loc 1 203 13 is_stmt 0
+ 305 0026 DF490080 	 jne %d9,4,.L37
+ 204:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     {
+ 205:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         /* Set XPCS in 2.5G mode */
+ 206:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #if (IFXHSPHY_PLATFORM_SIMULATION == 1)
+ 207:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_RX_GENCTRL1.B.RX_RST_0 = 1;
+ 208:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #endif
+ 209:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         sgmiiSpeed                                                                         = IfxHsp
+ 306              	 .loc 1 209 9 is_stmt 1
+ 307              	.LVL31:
+ 210:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 211:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PCS.SR_XS_CTRL2.B.PCS_TYPE_SEL                  = IFXHSP
+ 308              	 .loc 1 211 9
+ 309              	 .loc 1 211 31 is_stmt 0
+ 310 002a 54C2     	 ld.w %d2,[%a12]0
+ 311              	 .loc 1 211 92
+ 312 002c 8F720120 	 sh %d2,%d2,23
+ 313 0030 4282     	 add %d2,%d8
+ 314 0032 7BC00830 	 movh %d3,140
+ 315 0036 1BC30130 	 addi %d3,%d3,28
+ 316 003a 6022     	 mov.a %a2,%d2
+ 317 003c 01230026 	 addsc.a %a2,%a2,%d3,0
+ 318 0040 5422     	 ld.w %d2,[%a2]0
+ 319 0042 B7120420 	 insert %d2,%d2,1,0,4
+ 320 0046 7422     	 st.w [%a2]0,%d2
+ 212:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PCS.VR_XS_DIG_CTRL1.B.EN_2_5G_MODE              = 1;
+ 321              	 .loc 1 212 9 is_stmt 1
+ 322              	 .loc 1 212 31 is_stmt 0
+ 323 0048 54C2     	 ld.w %d2,[%a12]0
+ 324              	 .loc 1 212 92
+ 325 004a 8F720120 	 sh %d2,%d2,23
+ 326 004e 4282     	 add %d2,%d8
+ 327 0050 6022     	 mov.a %a2,%d2
+ 328 0052 11E20820 	 addih.a %a2,%a2,142
+ 329 0056 5422     	 ld.w %d2,[%a2]0
+ 330 0058 B7120121 	 insert %d2,%d2,1,2,1
+ 331 005c 7422     	 st.w [%a2]0,%d2
+ 213:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].MII.CTRL.B.SS6                                  = 1;
+ 332              	 .loc 1 213 9 is_stmt 1
+ 333              	 .loc 1 213 31 is_stmt 0
+ 334 005e 54C2     	 ld.w %d2,[%a12]0
+ 335              	 .loc 1 213 92
+ 336 0060 8F720120 	 sh %d2,%d2,23
+ 337 0064 4282     	 add %d2,%d8
+ 338 0066 6022     	 mov.a %a2,%d2
+ 339 0068 11C20F20 	 addih.a %a2,%a2,252
+ 340 006c 5422     	 ld.w %d2,[%a2]0
+ 341 006e B7120123 	 insert %d2,%d2,1,6,1
+ 342 0072 7422     	 st.w [%a2]0,%d2
+ 214:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].MII.CTRL.B.SS13                                 = 0;
+ 343              	 .loc 1 214 9 is_stmt 1
+ 344              	 .loc 1 214 31 is_stmt 0
+ 345 0074 54C2     	 ld.w %d2,[%a12]0
+ 346              	 .loc 1 214 92
+ 347 0076 8F720120 	 sh %d2,%d2,23
+ 348 007a 4282     	 add %d2,%d8
+ 349 007c 6022     	 mov.a %a2,%d2
+ 350 007e 11C20F20 	 addih.a %a2,%a2,252
+ 351 0082 5422     	 ld.w %d2,[%a2]0
+ 352 0084 B7028126 	 insert %d2,%d2,0,13,1
+ 353 0088 7422     	 st.w [%a2]0,%d2
+ 215:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_RX_GENCTRL1.B.RX_RST_0 = 0;
+ 354              	 .loc 1 215 9 is_stmt 1
+ 355              	 .loc 1 215 31 is_stmt 0
+ 356 008a 54C2     	 ld.w %d2,[%a12]0
+ 357              	 .loc 1 215 92
+ 358 008c 8F720120 	 sh %d2,%d2,23
+ 359 0090 4282     	 add %d2,%d8
+ 360 0092 7B600830 	 movh %d3,134
+ 361 0096 1B431430 	 addi %d3,%d3,324
+ 362 009a 6022     	 mov.a %a2,%d2
+ 363 009c 01230026 	 addsc.a %a2,%a2,%d3,0
+ 364 00a0 5422     	 ld.w %d2,[%a2]0
+ 365 00a2 8F02C121 	 andn %d2,%d2,~(-17)
+ 366 00a6 7422     	 st.w [%a2]0,%d2
+ 209:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 367              	 .loc 1 209 92
+ 368 00a8 8224     	 mov %d4,2
+ 369 00aa 1D000000 	 j .L30
+ 370              	.LVL32:
+ 371              	.L25:
+ 153:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         {
+ 372              	 .loc 1 153 9 is_stmt 1
+ 153:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         {
+ 373              	 .loc 1 153 12 is_stmt 0
+ 374 00ae DF190000 	 jeq %d9,1,.L35
+ 158:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         {
+ 375              	 .loc 1 158 14 is_stmt 1
+ 158:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         {
+ 376              	 .loc 1 158 17 is_stmt 0
+ 377 00b2 DF790000 	 jeq %d9,7,.L41
+ 165:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         }
+ 378              	 .loc 1 165 24
+ 379 00b6 8254     	 mov %d4,5
+ 380              	.L27:
+ 381              	.LVL33:
+ 171:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 382              	 .loc 1 171 9 is_stmt 1
+ 171:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 383              	 .loc 1 171 31 is_stmt 0
+ 384 00b8 54C2     	 ld.w %d2,[%a12]0
+ 171:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 385              	 .loc 1 171 92
+ 386 00ba 8F720120 	 sh %d2,%d2,23
+ 387 00be 4282     	 add %d2,%d8
+ 388 00c0 7BC00830 	 movh %d3,140
+ 389 00c4 1BC30130 	 addi %d3,%d3,28
+ 390 00c8 6022     	 mov.a %a2,%d2
+ 391 00ca 01230026 	 addsc.a %a2,%a2,%d3,0
+ 392 00ce 5422     	 ld.w %d2,[%a2]0
+ 393 00d0 B7120420 	 insert %d2,%d2,1,0,4
+ 394 00d4 7422     	 st.w [%a2]0,%d2
+ 173:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         {
+ 395              	 .loc 1 173 9 is_stmt 1
+ 173:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         {
+ 396              	 .loc 1 173 12 is_stmt 0
+ 397 00d6 DF790000 	 jeq %d9,7,.L42
+ 398              	.L28:
+ 179:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #else
+ 399              	 .loc 1 179 9 is_stmt 1
+ 179:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #else
+ 400              	 .loc 1 179 12 is_stmt 0
+ 401 00da DF190000 	 jeq %d9,1,.L43
+ 402              	.L29:
+ 187:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     }
+ 403              	 .loc 1 187 9 is_stmt 1
+ 187:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     }
+ 404              	 .loc 1 187 31 is_stmt 0
+ 405 00de 54C2     	 ld.w %d2,[%a12]0
+ 187:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     }
+ 406              	 .loc 1 187 92
+ 407 00e0 8F720120 	 sh %d2,%d2,23
+ 408 00e4 4282     	 add %d2,%d8
+ 409 00e6 7B600830 	 movh %d3,134
+ 410 00ea 1B431430 	 addi %d3,%d3,324
+ 411 00ee 6022     	 mov.a %a2,%d2
+ 412 00f0 01230026 	 addsc.a %a2,%a2,%d3,0
+ 413 00f4 5422     	 ld.w %d2,[%a2]0
+ 414 00f6 8F02C121 	 andn %d2,%d2,~(-17)
+ 415 00fa 7422     	 st.w [%a2]0,%d2
+ 416              	.LVL34:
+ 417              	.L30:
+ 216:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     }
+ 217:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #elif IFXHSPHY_IS_TRGTDEVICE_SPEED_5G
+ 218:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     else if (trgtSpeed == IfxHsphy_TrgtDeviceSpeed_5G)
+ 219:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     {
+ 220:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         /* Set XPCS in 5G mode */
+ 221:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         sgmiiSpeed                                                        = IfxHsphy_SgmiiSpeed_5G;
+ 222:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PCS.SR_XS_CTRL2.B.PCS_TYPE_SEL = IFXHSPHY_SET_FIELD_VALU
+ 223:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.SR_CTRL1.B.SS13            = 0;
+ 224:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     }
+ 225:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #endif /*#if IFXHSPHY_IS_TRGTDEVICE_SPEED_2P5G */
+ 226:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     else
+ 227:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     {
+ 228:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #if IFXHSPHY_IS_GETH_AVAILABLE	
+ 229:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         return IfxHsphy_Geth_SgmiiSpeedConfigStatus_invalidConfigError;
+ 230:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #else			
+ 231:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         return IfxHsphy_SgmiiSpeedConfigStatus_invalidConfigError;
+ 232:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #endif /* #if IFXHSPHY_IS_GETH_AVAILABLE */
+ 233:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     }
+ 234:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 235:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     /* Config the ref freq selected */
+ 236:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_REF_CLK_CTRL.B.REF_MPLLA_DIV2 = Ifx
+ 418              	 .loc 1 236 5 is_stmt 1
+ 419              	 .loc 1 236 129 is_stmt 0
+ 420 00fc 19C30400 	 ld.w %d3,[%a12]4
+ 421              	 .loc 1 236 27
+ 422 0100 54C5     	 ld.w %d5,[%a12]0
+ 423              	 .loc 1 236 142
+ 424 0102 91000020 	 movh.a %a2,hi:IfxHsphy_Sgmii_refClkConfig
+ 425 0106 8022     	 mov.d %d2,%a2
+ 426 0108 1B020020 	 addi %d2,%d2,lo:IfxHsphy_Sgmii_refClkConfig
+ 427 010c 13C32032 	 madd %d3,%d2,%d3,12
+ 428 0110 6032     	 mov.a %a2,%d3
+ 429 0112 5426     	 ld.w %d6,[%a2]0
+ 430              	 .loc 1 236 95
+ 431 0114 8F750130 	 sh %d3,%d5,23
+ 432 0118 4283     	 add %d3,%d8
+ 433 011a 7B600850 	 movh %d5,134
+ 434 011e 1B452450 	 addi %d5,%d5,580
+ 435 0122 6032     	 mov.a %a2,%d3
+ 436 0124 01250026 	 addsc.a %a2,%a2,%d5,0
+ 437 0128 5423     	 ld.w %d3,[%a2]0
+ 438 012a 67630630 	 ins.t %d3,%d3,6,%d6,0
+ 439 012e 7423     	 st.w [%a2]0,%d3
+ 237:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_REF_CLK_CTRL.B.REF_CLK_DIV2   = Ifx
+ 440              	 .loc 1 237 5 is_stmt 1
+ 441              	 .loc 1 237 129 is_stmt 0
+ 442 0130 19C30400 	 ld.w %d3,[%a12]4
+ 443              	 .loc 1 237 27
+ 444 0134 54C7     	 ld.w %d7,[%a12]0
+ 445              	 .loc 1 237 142
+ 446 0136 13C32032 	 madd %d3,%d2,%d3,12
+ 447 013a 6032     	 mov.a %a2,%d3
+ 448 013c 19260400 	 ld.w %d6,[%a2]4
+ 449              	 .loc 1 237 95
+ 450 0140 8F770130 	 sh %d3,%d7,23
+ 451 0144 4283     	 add %d3,%d8
+ 452 0146 6032     	 mov.a %a2,%d3
+ 453 0148 01250026 	 addsc.a %a2,%a2,%d5,0
+ 454 014c 5423     	 ld.w %d3,[%a2]0
+ 455 014e 67630230 	 ins.t %d3,%d3,2,%d6,0
+ 456 0152 7423     	 st.w [%a2]0,%d3
+ 238:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_REF_CLK_CTRL.B.REF_RANGE      = Ifx
+ 457              	 .loc 1 238 5 is_stmt 1
+ 458              	 .loc 1 238 129 is_stmt 0
+ 459 0154 19C30400 	 ld.w %d3,[%a12]4
+ 460              	 .loc 1 238 27
+ 461 0158 54C6     	 ld.w %d6,[%a12]0
+ 462              	 .loc 1 238 142
+ 463 015a 13C32022 	 madd %d2,%d2,%d3,12
+ 464 015e 6022     	 mov.a %a2,%d2
+ 465 0160 19230800 	 ld.w %d3,[%a2]8
+ 466              	 .loc 1 238 95
+ 467 0164 8F760120 	 sh %d2,%d6,23
+ 468 0168 4282     	 add %d2,%d8
+ 469 016a 6022     	 mov.a %a2,%d2
+ 470 016c 01250026 	 addsc.a %a2,%a2,%d5,0
+ 471 0170 5422     	 ld.w %d2,[%a2]0
+ 472 0172 37328321 	 insert %d2,%d2,%d3,3,3
+ 473 0176 7422     	 st.w [%a2]0,%d2
+ 239:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 240:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_MPLLA_CTRL0.B.MPLLA_MULTIPLIER        =
+ 474              	 .loc 1 240 5 is_stmt 1
+ 475              	 .loc 1 240 144 is_stmt 0
+ 476 0178 19C30400 	 ld.w %d3,[%a12]4
+ 477              	 .loc 1 240 157
+ 478 017c 91000020 	 movh.a %a2,hi:IfxHsphy_Sgmii_paramConfig
+ 479 0180 D9220000 	 lea %a2,[%a2]lo:IfxHsphy_Sgmii_paramConfig
+ 480 0184 53442E20 	 mul %d2,%d4,228
+ 481 0188 13C32432 	 madd %d3,%d2,%d3,76
+ 482 018c 01230036 	 addsc.a %a3,%a2,%d3,0
+ 483              	 .loc 1 240 27
+ 484 0190 54C3     	 ld.w %d3,[%a12]0
+ 485              	 .loc 1 240 99
+ 486 0192 1435     	 ld.bu %d5,[%a3]0
+ 487 0194 8F730130 	 sh %d3,%d3,23
+ 488 0198 4283     	 add %d3,%d8
+ 489 019a 7B600860 	 movh %d6,134
+ 490 019e 1B461C60 	 addi %d6,%d6,452
+ 491 01a2 6033     	 mov.a %a3,%d3
+ 492 01a4 01360036 	 addsc.a %a3,%a3,%d6,0
+ 493 01a8 5433     	 ld.w %d3,[%a3]0
+ 494 01aa 37530830 	 insert %d3,%d3,%d5,0,8
+ 495 01ae 7433     	 st.w [%a3]0,%d3
+ 241:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_MPLLA_CTRL2.B.MPLLA_TX_CLK_DIV        =
+ 496              	 .loc 1 241 5 is_stmt 1
+ 497              	 .loc 1 241 144 is_stmt 0
+ 498 01b0 19C30400 	 ld.w %d3,[%a12]4
+ 499              	 .loc 1 241 27
+ 500 01b4 54C6     	 ld.w %d6,[%a12]0
+ 501              	 .loc 1 241 157
+ 502 01b6 13C32432 	 madd %d3,%d2,%d3,76
+ 503 01ba 01230036 	 addsc.a %a3,%a2,%d3,0
+ 504 01be 19350400 	 ld.w %d5,[%a3]4
+ 505              	 .loc 1 241 99
+ 506 01c2 8F760130 	 sh %d3,%d6,23
+ 507 01c6 4283     	 add %d3,%d8
+ 508 01c8 7B600860 	 movh %d6,134
+ 509 01cc 1BC61C60 	 addi %d6,%d6,460
+ 510 01d0 6033     	 mov.a %a3,%d3
+ 511 01d2 01360036 	 addsc.a %a3,%a3,%d6,0
+ 512 01d6 5433     	 ld.w %d3,[%a3]0
+ 513 01d8 37538335 	 insert %d3,%d3,%d5,11,3
+ 514 01dc 7433     	 st.w [%a3]0,%d3
+ 242:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_MPLLA_CTRL2.B.MPLLA_DIV16P5_CLK_EN    =
+ 515              	 .loc 1 242 5 is_stmt 1
+ 516              	 .loc 1 242 144 is_stmt 0
+ 517 01de 19C30400 	 ld.w %d3,[%a12]4
+ 518              	 .loc 1 242 27
+ 519 01e2 54C7     	 ld.w %d7,[%a12]0
+ 520              	 .loc 1 242 157
+ 521 01e4 13C32432 	 madd %d3,%d2,%d3,76
+ 522 01e8 01230036 	 addsc.a %a3,%a2,%d3,0
+ 523 01ec 19350800 	 ld.w %d5,[%a3]8
+ 524              	 .loc 1 242 99
+ 525 01f0 8F770130 	 sh %d3,%d7,23
+ 526 01f4 4283     	 add %d3,%d8
+ 527 01f6 6033     	 mov.a %a3,%d3
+ 528 01f8 01360036 	 addsc.a %a3,%a3,%d6,0
+ 529 01fc 5433     	 ld.w %d3,[%a3]0
+ 530 01fe 67530A30 	 ins.t %d3,%d3,10,%d5,0
+ 531 0202 7433     	 st.w [%a3]0,%d3
+ 243:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_8G_MPLLA_CTRL6.B.CP_PROP                      =
+ 532              	 .loc 1 243 5 is_stmt 1
+ 533              	 .loc 1 243 144 is_stmt 0
+ 534 0204 19C30400 	 ld.w %d3,[%a12]4
+ 535              	 .loc 1 243 27
+ 536 0208 54C6     	 ld.w %d6,[%a12]0
+ 537              	 .loc 1 243 157
+ 538 020a 13C32432 	 madd %d3,%d2,%d3,76
+ 539 020e 01230036 	 addsc.a %a3,%a2,%d3,0
+ 540 0212 19350C00 	 ld.w %d5,[%a3]12
+ 541              	 .loc 1 243 99
+ 542 0216 8F760130 	 sh %d3,%d6,23
+ 543 021a 4283     	 add %d3,%d8
+ 544 021c 7B600860 	 movh %d6,134
+ 545 0220 1B461F60 	 addi %d6,%d6,500
+ 546 0224 6033     	 mov.a %a3,%d3
+ 547 0226 01360036 	 addsc.a %a3,%a3,%d6,0
+ 548 022a 5433     	 ld.w %d3,[%a3]0
+ 549 022c 37530434 	 insert %d3,%d3,%d5,8,4
+ 550 0230 7433     	 st.w [%a3]0,%d3
+ 244:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_8G_MPLLA_CTRL6.B.CP_INT                       =
+ 551              	 .loc 1 244 5 is_stmt 1
+ 552              	 .loc 1 244 144 is_stmt 0
+ 553 0232 19C30400 	 ld.w %d3,[%a12]4
+ 554              	 .loc 1 244 27
+ 555 0236 54C7     	 ld.w %d7,[%a12]0
+ 556              	 .loc 1 244 157
+ 557 0238 13C32432 	 madd %d3,%d2,%d3,76
+ 558 023c 01230036 	 addsc.a %a3,%a2,%d3,0
+ 559 0240 19351000 	 ld.w %d5,[%a3]16
+ 560              	 .loc 1 244 99
+ 561 0244 8F770130 	 sh %d3,%d7,23
+ 562 0248 4283     	 add %d3,%d8
+ 563 024a 6033     	 mov.a %a3,%d3
+ 564 024c 01360036 	 addsc.a %a3,%a3,%d6,0
+ 565 0250 5433     	 ld.w %d3,[%a3]0
+ 566 0252 37530530 	 insert %d3,%d3,%d5,0,5
+ 567 0256 7433     	 st.w [%a3]0,%d3
+ 245:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_8G_MPLLA_CTRL7.B.CP_PROP_GS                   =
+ 568              	 .loc 1 245 5 is_stmt 1
+ 569              	 .loc 1 245 144 is_stmt 0
+ 570 0258 19C30400 	 ld.w %d3,[%a12]4
+ 571              	 .loc 1 245 27
+ 572 025c 54C6     	 ld.w %d6,[%a12]0
+ 573              	 .loc 1 245 157
+ 574 025e 13C32432 	 madd %d3,%d2,%d3,76
+ 575 0262 01230036 	 addsc.a %a3,%a2,%d3,0
+ 576 0266 19351400 	 ld.w %d5,[%a3]20
+ 577              	 .loc 1 245 99
+ 578 026a 8F760130 	 sh %d3,%d6,23
+ 579 026e 4283     	 add %d3,%d8
+ 580 0270 7B600860 	 movh %d6,134
+ 581 0274 1BC61F60 	 addi %d6,%d6,508
+ 582 0278 6033     	 mov.a %a3,%d3
+ 583 027a 01360036 	 addsc.a %a3,%a3,%d6,0
+ 584 027e 5433     	 ld.w %d3,[%a3]0
+ 585 0280 37530434 	 insert %d3,%d3,%d5,8,4
+ 586 0284 7433     	 st.w [%a3]0,%d3
+ 246:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_16G_MPLLA_CTRL1.B.MPLLA_FRACN_CTRL            =
+ 587              	 .loc 1 246 5 is_stmt 1
+ 588              	 .loc 1 246 144 is_stmt 0
+ 589 0286 19C30400 	 ld.w %d3,[%a12]4
+ 590              	 .loc 1 246 27
+ 591 028a 54C6     	 ld.w %d6,[%a12]0
+ 592              	 .loc 1 246 157
+ 593 028c 13C32432 	 madd %d3,%d2,%d3,76
+ 594 0290 01230036 	 addsc.a %a3,%a2,%d3,0
+ 595 0294 19351800 	 ld.w %d5,[%a3]24
+ 596              	 .loc 1 246 99
+ 597 0298 8F760130 	 sh %d3,%d6,23
+ 598 029c 4283     	 add %d3,%d8
+ 599 029e 7B600860 	 movh %d6,134
+ 600 02a2 1B861C60 	 addi %d6,%d6,456
+ 601 02a6 6033     	 mov.a %a3,%d3
+ 602 02a8 01360036 	 addsc.a %a3,%a3,%d6,0
+ 603 02ac 5433     	 ld.w %d3,[%a3]0
+ 604 02ae 37538B32 	 insert %d3,%d3,%d5,5,11
+ 605 02b2 7433     	 st.w [%a3]0,%d3
+ 247:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_VCO_CAL_LD0.B.VCO_LD_VAL_0        =
+ 606              	 .loc 1 247 5 is_stmt 1
+ 607              	 .loc 1 247 144 is_stmt 0
+ 608 02b4 19C30400 	 ld.w %d3,[%a12]4
+ 609              	 .loc 1 247 27
+ 610 02b8 54C6     	 ld.w %d6,[%a12]0
+ 611              	 .loc 1 247 157
+ 612 02ba 13C32432 	 madd %d3,%d2,%d3,76
+ 613 02be 01230036 	 addsc.a %a3,%a2,%d3,0
+ 614 02c2 19351C00 	 ld.w %d5,[%a3]28
+ 615              	 .loc 1 247 99
+ 616 02c6 8F760130 	 sh %d3,%d6,23
+ 617 02ca 4283     	 add %d3,%d8
+ 618 02cc 7B600860 	 movh %d6,134
+ 619 02d0 1B862460 	 addi %d6,%d6,584
+ 620 02d4 6033     	 mov.a %a3,%d3
+ 621 02d6 01360036 	 addsc.a %a3,%a3,%d6,0
+ 622 02da 5433     	 ld.w %d3,[%a3]0
+ 623 02dc 37530D30 	 insert %d3,%d3,%d5,0,13
+ 624 02e0 7433     	 st.w [%a3]0,%d3
+ 248:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_VCO_CAL_REF0.B.VCO_REF_LD_0               =
+ 625              	 .loc 1 248 5 is_stmt 1
+ 626              	 .loc 1 248 144 is_stmt 0
+ 627 02e2 19C30400 	 ld.w %d3,[%a12]4
+ 628              	 .loc 1 248 27
+ 629 02e6 54C6     	 ld.w %d6,[%a12]0
+ 630              	 .loc 1 248 157
+ 631 02e8 13C32432 	 madd %d3,%d2,%d3,76
+ 632 02ec 01230036 	 addsc.a %a3,%a2,%d3,0
+ 633 02f0 19352000 	 ld.w %d5,[%a3]32
+ 634              	 .loc 1 248 99
+ 635 02f4 8F760130 	 sh %d3,%d6,23
+ 636 02f8 4283     	 add %d3,%d8
+ 637 02fa 7B600860 	 movh %d6,134
+ 638 02fe 1B862560 	 addi %d6,%d6,600
+ 639 0302 6033     	 mov.a %a3,%d3
+ 640 0304 01360036 	 addsc.a %a3,%a3,%d6,0
+ 641 0308 5433     	 ld.w %d3,[%a3]0
+ 642 030a 37530630 	 insert %d3,%d3,%d5,0,6
+ 643 030e 7433     	 st.w [%a3]0,%d3
+ 249:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_16G_25G_MISC_CTRL2.B.SUP_MISC                 =
+ 644              	 .loc 1 249 5 is_stmt 1
+ 645              	 .loc 1 249 144 is_stmt 0
+ 646 0310 19C30400 	 ld.w %d3,[%a12]4
+ 647              	 .loc 1 249 157
+ 648 0314 13C32432 	 madd %d3,%d2,%d3,76
+ 649 0318 01230036 	 addsc.a %a3,%a2,%d3,0
+ 650              	 .loc 1 249 27
+ 651 031c 54C3     	 ld.w %d3,[%a12]0
+ 652              	 .loc 1 249 99
+ 653 031e 39352400 	 ld.bu %d5,[%a3]36
+ 654 0322 8F730130 	 sh %d3,%d3,23
+ 655 0326 4283     	 add %d3,%d8
+ 656 0328 7B600860 	 movh %d6,134
+ 657 032c 1B062760 	 addi %d6,%d6,624
+ 658 0330 6033     	 mov.a %a3,%d3
+ 659 0332 01360036 	 addsc.a %a3,%a3,%d6,0
+ 660 0336 5433     	 ld.w %d3,[%a3]0
+ 661 0338 37530830 	 insert %d3,%d3,%d5,0,8
+ 662 033c 7433     	 st.w [%a3]0,%d3
+ 250:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_RX_GENCTRL1.B.RX_DIV16P5_CLK_EN_0 =
+ 663              	 .loc 1 250 5 is_stmt 1
+ 664              	 .loc 1 250 144 is_stmt 0
+ 665 033e 19C30400 	 ld.w %d3,[%a12]4
+ 666              	 .loc 1 250 27
+ 667 0342 54C6     	 ld.w %d6,[%a12]0
+ 668              	 .loc 1 250 157
+ 669 0344 13C32432 	 madd %d3,%d2,%d3,76
+ 670 0348 01230036 	 addsc.a %a3,%a2,%d3,0
+ 671 034c 19352800 	 ld.w %d5,[%a3]40
+ 672              	 .loc 1 250 99
+ 673 0350 8F760130 	 sh %d3,%d6,23
+ 674 0354 4283     	 add %d3,%d8
+ 675 0356 7B600860 	 movh %d6,134
+ 676 035a 1B461460 	 addi %d6,%d6,324
+ 677 035e 6033     	 mov.a %a3,%d3
+ 678 0360 01360036 	 addsc.a %a3,%a3,%d6,0
+ 679 0364 5433     	 ld.w %d3,[%a3]0
+ 680 0366 67530C30 	 ins.t %d3,%d3,12,%d5,0
+ 681 036a 7433     	 st.w [%a3]0,%d3
+ 251:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_16G_25G_RX_GENCTRL4.B.RX_125MHZ_CLK_EN_0      =
+ 682              	 .loc 1 251 5 is_stmt 1
+ 683              	 .loc 1 251 144 is_stmt 0
+ 684 036c 19C30400 	 ld.w %d3,[%a12]4
+ 685              	 .loc 1 251 27
+ 686 0370 54C5     	 ld.w %d5,[%a12]0
+ 687              	 .loc 1 251 157
+ 688 0372 13C32422 	 madd %d2,%d2,%d3,76
+ 689 0376 01220026 	 addsc.a %a2,%a2,%d2,0
+ 690 037a 19232C00 	 ld.w %d3,[%a2]44
+ 691              	 .loc 1 251 99
+ 692 037e 8F750120 	 sh %d2,%d5,23
+ 693 0382 4282     	 add %d2,%d8
+ 694 0384 7B600850 	 movh %d5,134
+ 695 0388 1B051A50 	 addi %d5,%d5,416
+ 696 038c 6022     	 mov.a %a2,%d2
+ 697 038e 01250026 	 addsc.a %a2,%a2,%d5,0
+ 698 0392 5422     	 ld.w %d2,[%a2]0
+ 699 0394 67320C20 	 ins.t %d2,%d2,12,%d3,0
+ 700 0398 7422     	 st.w [%a2]0,%d2
+ 252:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 253:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     if (trgtSpeed == IfxHsphy_TrgtDeviceSpeed_0P1G)
+ 701              	 .loc 1 253 5 is_stmt 1
+ 702              	 .loc 1 253 8 is_stmt 0
+ 703 039a DF190000 	 jeq %d9,1,.L44
+ 254:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     {
+ 255:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_RX_CDR_CTRL.B.CDR_TRACK_EN_0 = 
+ 256:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     }
+ 257:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #if IFXHSPHY_IS_GETH_AVAILABLE
+ 258:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     else
+ 259:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     {
+ 260:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_RX_CDR_CTRL.B.CDR_TRACK_EN_0 = 
+ 704              	 .loc 1 260 9 is_stmt 1
+ 705              	 .loc 1 260 31 is_stmt 0
+ 706 039e 54C2     	 ld.w %d2,[%a12]0
+ 707              	 .loc 1 260 98
+ 708 03a0 8F720120 	 sh %d2,%d2,23
+ 709 03a4 4282     	 add %d2,%d8
+ 710 03a6 7B600830 	 movh %d3,134
+ 711 03aa 1B831530 	 addi %d3,%d3,344
+ 712 03ae 6022     	 mov.a %a2,%d2
+ 713 03b0 01230026 	 addsc.a %a2,%a2,%d3,0
+ 714 03b4 5422     	 ld.w %d2,[%a2]0
+ 715 03b6 B7120120 	 insert %d2,%d2,1,0,1
+ 716 03ba 7422     	 st.w [%a2]0,%d2
+ 717              	.L33:
+ 261:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     }
+ 262:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #else
+ 263:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     if (trgtSpeed == IfxHsphy_TrgtDeviceSpeed_0P1G_1P25gbps)
+ 264:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     {
+ 265:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_RX_CDR_CTRL.B.CDR_TRACK_EN_0 = 
+ 266:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     }
+ 267:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #endif /* #if IFXHSPHY_IS_GETH_AVAILABLE */
+ 268:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 269:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_TX_RATE_CTRL.B.TX0_RATE    = IfxHsp
+ 718              	 .loc 1 269 5 is_stmt 1
+ 719              	 .loc 1 269 137 is_stmt 0
+ 720 03bc 19C30400 	 ld.w %d3,[%a12]4
+ 721              	 .loc 1 269 27
+ 722 03c0 54C5     	 ld.w %d5,[%a12]0
+ 723              	 .loc 1 269 150
+ 724 03c2 91000020 	 movh.a %a2,hi:IfxHsphy_Sgmii_paramConfig
+ 725 03c6 D9220000 	 lea %a2,[%a2]lo:IfxHsphy_Sgmii_paramConfig
+ 726 03ca 53442E20 	 mul %d2,%d4,228
+ 727 03ce 13C32432 	 madd %d3,%d2,%d3,76
+ 728 03d2 01230036 	 addsc.a %a3,%a2,%d3,0
+ 729 03d6 19343000 	 ld.w %d4,[%a3]48
+ 730              	.LVL35:
+ 731              	 .loc 1 269 92
+ 732 03da 8F750130 	 sh %d3,%d5,23
+ 733 03de 4283     	 add %d3,%d8
+ 734 03e0 7B600850 	 movh %d5,134
+ 735 03e4 1B050D50 	 addi %d5,%d5,208
+ 736 03e8 6033     	 mov.a %a3,%d3
+ 737 03ea 01350036 	 addsc.a %a3,%a3,%d5,0
+ 738 03ee 5433     	 ld.w %d3,[%a3]0
+ 739 03f0 37430330 	 insert %d3,%d3,%d4,0,3
+ 740 03f4 7433     	 st.w [%a3]0,%d3
+ 270:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_RX_RATE_CTRL.B.RX0_RATE    = IfxHsp
+ 741              	 .loc 1 270 5 is_stmt 1
+ 742              	 .loc 1 270 137 is_stmt 0
+ 743 03f6 19C30400 	 ld.w %d3,[%a12]4
+ 744              	 .loc 1 270 27
+ 745 03fa 54C5     	 ld.w %d5,[%a12]0
+ 746              	 .loc 1 270 150
+ 747 03fc 13C32432 	 madd %d3,%d2,%d3,76
+ 748 0400 01230036 	 addsc.a %a3,%a2,%d3,0
+ 749 0404 19343400 	 ld.w %d4,[%a3]52
+ 750              	 .loc 1 270 92
+ 751 0408 8F750130 	 sh %d3,%d5,23
+ 752 040c 4283     	 add %d3,%d8
+ 753 040e 7B600850 	 movh %d5,134
+ 754 0412 1B051550 	 addi %d5,%d5,336
+ 755 0416 6033     	 mov.a %a3,%d3
+ 756 0418 01350036 	 addsc.a %a3,%a3,%d5,0
+ 757 041c 5433     	 ld.w %d3,[%a3]0
+ 758 041e 37430230 	 insert %d3,%d3,%d4,0,2
+ 759 0422 7433     	 st.w [%a3]0,%d3
+ 271:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_16G_25G_RX_MISC_CTRL0.B.RX0_MISC       = IfxHsp
+ 760              	 .loc 1 271 5 is_stmt 1
+ 761              	 .loc 1 271 137 is_stmt 0
+ 762 0424 19C30400 	 ld.w %d3,[%a12]4
+ 763              	 .loc 1 271 150
+ 764 0428 13C32432 	 madd %d3,%d2,%d3,76
+ 765 042c 01230036 	 addsc.a %a3,%a2,%d3,0
+ 766              	 .loc 1 271 27
+ 767 0430 54C3     	 ld.w %d3,[%a12]0
+ 768              	 .loc 1 271 92
+ 769 0432 39343800 	 ld.bu %d4,[%a3]56
+ 770 0436 8F730130 	 sh %d3,%d3,23
+ 771 043a 4283     	 add %d3,%d8
+ 772 043c 7B600850 	 movh %d5,134
+ 773 0440 1B451A50 	 addi %d5,%d5,420
+ 774 0444 6033     	 mov.a %a3,%d3
+ 775 0446 01350036 	 addsc.a %a3,%a3,%d5,0
+ 776 044a 5433     	 ld.w %d3,[%a3]0
+ 777 044c 37430830 	 insert %d3,%d3,%d4,0,8
+ 778 0450 7433     	 st.w [%a3]0,%d3
+ 272:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_TX_GENCTRL2.B.TX0_WIDTH        = IfxHsp
+ 779              	 .loc 1 272 5 is_stmt 1
+ 780              	 .loc 1 272 137 is_stmt 0
+ 781 0452 19C30400 	 ld.w %d3,[%a12]4
+ 782              	 .loc 1 272 27
+ 783 0456 54C5     	 ld.w %d5,[%a12]0
+ 784              	 .loc 1 272 150
+ 785 0458 13C32432 	 madd %d3,%d2,%d3,76
+ 786 045c 01230036 	 addsc.a %a3,%a2,%d3,0
+ 787 0460 19343C00 	 ld.w %d4,[%a3]60
+ 788              	 .loc 1 272 92
+ 789 0464 8F750130 	 sh %d3,%d5,23
+ 790 0468 4283     	 add %d3,%d8
+ 791 046a 7B600850 	 movh %d5,134
+ 792 046e 1B850C50 	 addi %d5,%d5,200
+ 793 0472 6033     	 mov.a %a3,%d3
+ 794 0474 01350036 	 addsc.a %a3,%a3,%d5,0
+ 795 0478 5433     	 ld.w %d3,[%a3]0
+ 796 047a 37430234 	 insert %d3,%d3,%d4,8,2
+ 797 047e 7433     	 st.w [%a3]0,%d3
+ 273:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_RX_GENCTRL2.B.RX0_WIDTH        = IfxHsp
+ 798              	 .loc 1 273 5 is_stmt 1
+ 799              	 .loc 1 273 137 is_stmt 0
+ 800 0480 19C30400 	 ld.w %d3,[%a12]4
+ 801              	 .loc 1 273 27
+ 802 0484 54C5     	 ld.w %d5,[%a12]0
+ 803              	 .loc 1 273 150
+ 804 0486 13C32432 	 madd %d3,%d2,%d3,76
+ 805 048a 01230036 	 addsc.a %a3,%a2,%d3,0
+ 806 048e 19340010 	 ld.w %d4,[%a3]64
+ 807              	 .loc 1 273 92
+ 808 0492 8F750130 	 sh %d3,%d5,23
+ 809 0496 4283     	 add %d3,%d8
+ 810 0498 7B600850 	 movh %d5,134
+ 811 049c 1B851450 	 addi %d5,%d5,328
+ 812 04a0 6033     	 mov.a %a3,%d3
+ 813 04a2 01350036 	 addsc.a %a3,%a3,%d5,0
+ 814 04a6 5433     	 ld.w %d3,[%a3]0
+ 815 04a8 37430234 	 insert %d3,%d3,%d4,8,2
+ 816 04ac 7433     	 st.w [%a3]0,%d3
+ 274:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_TX_BOOST_CTRL.B.TX0_IBOOST = IfxHsp
+ 817              	 .loc 1 274 5 is_stmt 1
+ 818              	 .loc 1 274 137 is_stmt 0
+ 819 04ae 19C30400 	 ld.w %d3,[%a12]4
+ 820              	 .loc 1 274 27
+ 821 04b2 54C5     	 ld.w %d5,[%a12]0
+ 822              	 .loc 1 274 150
+ 823 04b4 13C32432 	 madd %d3,%d2,%d3,76
+ 824 04b8 01230036 	 addsc.a %a3,%a2,%d3,0
+ 825 04bc 19340410 	 ld.w %d4,[%a3]68
+ 826              	 .loc 1 274 92
+ 827 04c0 8F750130 	 sh %d3,%d5,23
+ 828 04c4 4283     	 add %d3,%d8
+ 829 04c6 7B600850 	 movh %d5,134
+ 830 04ca 1BC50C50 	 addi %d5,%d5,204
+ 831 04ce 6033     	 mov.a %a3,%d3
+ 832 04d0 01350036 	 addsc.a %a3,%a3,%d5,0
+ 833 04d4 5433     	 ld.w %d3,[%a3]0
+ 834 04d6 37430430 	 insert %d3,%d3,%d4,0,4
+ 835 04da 7433     	 st.w [%a3]0,%d3
+ 275:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_TX_GENCTRL1.B.VBOOST_EN_0  = IfxHsp
+ 836              	 .loc 1 275 5 is_stmt 1
+ 837              	 .loc 1 275 137 is_stmt 0
+ 838 04dc 19C30400 	 ld.w %d3,[%a12]4
+ 839              	 .loc 1 275 27
+ 840 04e0 54C4     	 ld.w %d4,[%a12]0
+ 841              	 .loc 1 275 150
+ 842 04e2 13C32422 	 madd %d2,%d2,%d3,76
+ 843 04e6 01220026 	 addsc.a %a2,%a2,%d2,0
+ 844 04ea 19230810 	 ld.w %d3,[%a2]72
+ 845              	 .loc 1 275 92
+ 846 04ee 8F740120 	 sh %d2,%d4,23
+ 847 04f2 4282     	 add %d2,%d8
+ 848 04f4 7B600840 	 movh %d4,134
+ 849 04f8 1B440C40 	 addi %d4,%d4,196
+ 850 04fc 6022     	 mov.a %a2,%d2
+ 851 04fe 01240026 	 addsc.a %a2,%a2,%d4,0
+ 852 0502 5422     	 ld.w %d2,[%a2]0
+ 853 0504 67320420 	 ins.t %d2,%d2,4,%d3,0
+ 854 0508 7422     	 st.w [%a2]0,%d2
+ 276:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_AFE_DFE_EN_CTRL.B.AFE_EN_0         = 0;
+ 855              	 .loc 1 276 5 is_stmt 1
+ 856              	 .loc 1 276 27 is_stmt 0
+ 857 050a 54C2     	 ld.w %d2,[%a12]0
+ 858              	 .loc 1 276 92
+ 859 050c 8F720120 	 sh %d2,%d2,23
+ 860 0510 4282     	 add %d2,%d8
+ 861 0512 7B600830 	 movh %d3,134
+ 862 0516 1B431730 	 addi %d3,%d3,372
+ 863 051a 6022     	 mov.a %a2,%d2
+ 864 051c 01230026 	 addsc.a %a2,%a2,%d3,0
+ 865 0520 5422     	 ld.w %d2,[%a2]0
+ 866 0522 8F12C021 	 andn %d2,%d2,~(-2)
+ 867 0526 7422     	 st.w [%a2]0,%d2
+ 277:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_AFE_DFE_EN_CTRL.B.DFE_EN_0         = 0;
+ 868              	 .loc 1 277 5 is_stmt 1
+ 869              	 .loc 1 277 27 is_stmt 0
+ 870 0528 54C2     	 ld.w %d2,[%a12]0
+ 871              	 .loc 1 277 92
+ 872 052a 8F720120 	 sh %d2,%d2,23
+ 873 052e 4282     	 add %d2,%d8
+ 874 0530 6022     	 mov.a %a2,%d2
+ 875 0532 01230026 	 addsc.a %a2,%a2,%d3,0
+ 876 0536 5422     	 ld.w %d2,[%a2]0
+ 877 0538 8F02C121 	 andn %d2,%d2,~(-17)
+ 878 053c 7422     	 st.w [%a2]0,%d2
+ 278:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     relvalCheck                                                                            = IfxHsp
+ 879              	 .loc 1 278 5 is_stmt 1
+ 880              	 .loc 1 278 94 is_stmt 0
+ 881 053e 54C4     	 ld.w %d4,[%a12]0
+ 882 0540 6084     	 mov.a %a4,%d8
+ 883 0542 6D000000 	 call IfxHsphy_sgmiiMpllEnable
+ 884              	.LVL36:
+ 279:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 280:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     if (relvalCheck == TRUE)
+ 885              	 .loc 1 280 5 is_stmt 1
+ 886              	 .loc 1 280 8 is_stmt 0
+ 887 0546 DF120000 	 jeq %d2,1,.L38
+ 281:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     {
+ 282:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #if IFXHSPHY_IS_GETH_AVAILABLE	
+ 283:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         return IfxHsphy_Geth_SgmiiSpeedConfigStatus_timeOutError;	
+ 284:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #else	
+ 285:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         return IfxHsphy_SgmiiSpeedConfigStatus_timeOutError;
+ 286:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #endif /* #if IFXHSPHY_IS_GETH_AVAILABLE */
+ 287:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     }
+ 288:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 289:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     relvalCheck = IfxHsphy_sgmiiXpcsDataPathInit(hsphyRegPtr, xpcs->xpcsIndex);
+ 888              	 .loc 1 289 5 is_stmt 1
+ 889              	 .loc 1 289 19 is_stmt 0
+ 890 054a 54C4     	 ld.w %d4,[%a12]0
+ 891 054c 6084     	 mov.a %a4,%d8
+ 892 054e 6D000000 	 call IfxHsphy_sgmiiXpcsDataPathInit
+ 893              	.LVL37:
+ 290:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 291:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     if (relvalCheck == TRUE)
+ 894              	 .loc 1 291 5 is_stmt 1
+ 895              	 .loc 1 291 8 is_stmt 0
+ 896 0552 DF120000 	 jeq %d2,1,.L39
+ 292:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     {
+ 293:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #if IFXHSPHY_IS_GETH_AVAILABLE
+ 294:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         return IfxHsphy_Geth_SgmiiSpeedConfigStatus_timeOutError;	
+ 295:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #else	
+ 296:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         return IfxHsphy_SgmiiSpeedConfigStatus_timeOutError;
+ 297:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #endif /* #if IFXHSPHY_IS_GETH_AVAILABLE */
+ 298:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     }
+ 299:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 300:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #if IFXHSPHY_IS_GETH_AVAILABLE
+ 301:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     return IfxHsphy_Geth_SgmiiSpeedConfigStatus_success;
+ 897              	 .loc 1 301 12
+ 898 0556 8202     	 mov %d2,0
+ 899              	.LVL38:
+ 900 0558 0090     	 ret 
+ 901              	.LVL39:
+ 902              	.L41:
+ 160:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         }
+ 903              	 .loc 1 160 24
+ 904 055a 8244     	 mov %d4,4
+ 905 055c 1D000000 	 j .L27
+ 906              	.L35:
+ 155:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         }
+ 907              	 .loc 1 155 24
+ 908 0560 8204     	 mov %d4,0
+ 909 0562 1D000000 	 j .L27
+ 910              	.LVL40:
+ 911              	.L42:
+ 175:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****             hsphyRegPtr->XPCS[xpcs->xpcsIndex].MII.CTRL.B.SS13 = 1;
+ 912              	 .loc 1 175 13 is_stmt 1
+ 175:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****             hsphyRegPtr->XPCS[xpcs->xpcsIndex].MII.CTRL.B.SS13 = 1;
+ 913              	 .loc 1 175 35 is_stmt 0
+ 914 0566 54C2     	 ld.w %d2,[%a12]0
+ 175:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****             hsphyRegPtr->XPCS[xpcs->xpcsIndex].MII.CTRL.B.SS13 = 1;
+ 915              	 .loc 1 175 64
+ 916 0568 8F720120 	 sh %d2,%d2,23
+ 917 056c 4282     	 add %d2,%d8
+ 918 056e 6022     	 mov.a %a2,%d2
+ 919 0570 11C20F20 	 addih.a %a2,%a2,252
+ 920 0574 5422     	 ld.w %d2,[%a2]0
+ 921 0576 8F02C421 	 andn %d2,%d2,~(-65)
+ 922 057a 7422     	 st.w [%a2]0,%d2
+ 176:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         }
+ 923              	 .loc 1 176 13 is_stmt 1
+ 176:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         }
+ 924              	 .loc 1 176 35 is_stmt 0
+ 925 057c 54C2     	 ld.w %d2,[%a12]0
+ 176:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         }
+ 926              	 .loc 1 176 64
+ 927 057e 8F720120 	 sh %d2,%d2,23
+ 928 0582 4282     	 add %d2,%d8
+ 929 0584 6022     	 mov.a %a2,%d2
+ 930 0586 11C20F20 	 addih.a %a2,%a2,252
+ 931 058a 5422     	 ld.w %d2,[%a2]0
+ 932 058c B7128126 	 insert %d2,%d2,1,13,1
+ 933 0590 7422     	 st.w [%a2]0,%d2
+ 934 0592 1D000000 	 j .L28
+ 935              	.L43:
+ 184:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         }
+ 936              	 .loc 1 184 13 is_stmt 1
+ 184:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         }
+ 937              	 .loc 1 184 35 is_stmt 0
+ 938 0596 54C2     	 ld.w %d2,[%a12]0
+ 184:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         }
+ 939              	 .loc 1 184 72
+ 940 0598 8F720120 	 sh %d2,%d2,23
+ 941 059c 4282     	 add %d2,%d8
+ 942 059e 6022     	 mov.a %a2,%d2
+ 943 05a0 11E20F20 	 addih.a %a2,%a2,254
+ 944 05a4 5422     	 ld.w %d2,[%a2]0
+ 945 05a6 B7128122 	 insert %d2,%d2,1,5,1
+ 946 05aa 7422     	 st.w [%a2]0,%d2
+ 947 05ac 1D000000 	 j .L29
+ 948              	.LVL41:
+ 949              	.L40:
+ 196:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PCS.SR_XS_CTRL2.B.PCS_TYPE_SEL                  = IFXHSP
+ 950              	 .loc 1 196 9 is_stmt 1
+ 197:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].MII.CTRL.B.SS6                                  = 1;
+ 951              	 .loc 1 197 9
+ 197:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].MII.CTRL.B.SS6                                  = 1;
+ 952              	 .loc 1 197 31 is_stmt 0
+ 953 05b0 54C2     	 ld.w %d2,[%a12]0
+ 197:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].MII.CTRL.B.SS6                                  = 1;
+ 954              	 .loc 1 197 92
+ 955 05b2 8F720120 	 sh %d2,%d2,23
+ 956 05b6 4282     	 add %d2,%d8
+ 957 05b8 7BC00830 	 movh %d3,140
+ 958 05bc 1BC30130 	 addi %d3,%d3,28
+ 959 05c0 6022     	 mov.a %a2,%d2
+ 960 05c2 01230026 	 addsc.a %a2,%a2,%d3,0
+ 961 05c6 5422     	 ld.w %d2,[%a2]0
+ 962 05c8 B7120420 	 insert %d2,%d2,1,0,4
+ 963 05cc 7422     	 st.w [%a2]0,%d2
+ 198:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].MII.CTRL.B.SS13                                 = 0;
+ 964              	 .loc 1 198 9 is_stmt 1
+ 198:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].MII.CTRL.B.SS13                                 = 0;
+ 965              	 .loc 1 198 31 is_stmt 0
+ 966 05ce 54C2     	 ld.w %d2,[%a12]0
+ 198:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].MII.CTRL.B.SS13                                 = 0;
+ 967              	 .loc 1 198 92
+ 968 05d0 8F720120 	 sh %d2,%d2,23
+ 969 05d4 4282     	 add %d2,%d8
+ 970 05d6 6022     	 mov.a %a2,%d2
+ 971 05d8 11C20F20 	 addih.a %a2,%a2,252
+ 972 05dc 5422     	 ld.w %d2,[%a2]0
+ 973 05de B7120123 	 insert %d2,%d2,1,6,1
+ 974 05e2 7422     	 st.w [%a2]0,%d2
+ 199:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_RX_GENCTRL1.B.RX_RST_0 = 0;
+ 975              	 .loc 1 199 9 is_stmt 1
+ 199:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_RX_GENCTRL1.B.RX_RST_0 = 0;
+ 976              	 .loc 1 199 31 is_stmt 0
+ 977 05e4 54C2     	 ld.w %d2,[%a12]0
+ 199:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_RX_GENCTRL1.B.RX_RST_0 = 0;
+ 978              	 .loc 1 199 92
+ 979 05e6 8F720120 	 sh %d2,%d2,23
+ 980 05ea 4282     	 add %d2,%d8
+ 981 05ec 6022     	 mov.a %a2,%d2
+ 982 05ee 11C20F20 	 addih.a %a2,%a2,252
+ 983 05f2 5422     	 ld.w %d2,[%a2]0
+ 984 05f4 B7028126 	 insert %d2,%d2,0,13,1
+ 985 05f8 7422     	 st.w [%a2]0,%d2
+ 200:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     }
+ 986              	 .loc 1 200 9 is_stmt 1
+ 200:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     }
+ 987              	 .loc 1 200 31 is_stmt 0
+ 988 05fa 54C2     	 ld.w %d2,[%a12]0
+ 200:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     }
+ 989              	 .loc 1 200 92
+ 990 05fc 8F720120 	 sh %d2,%d2,23
+ 991 0600 4282     	 add %d2,%d8
+ 992 0602 7B600830 	 movh %d3,134
+ 993 0606 1B431430 	 addi %d3,%d3,324
+ 994 060a 6022     	 mov.a %a2,%d2
+ 995 060c 01230026 	 addsc.a %a2,%a2,%d3,0
+ 996 0610 5422     	 ld.w %d2,[%a2]0
+ 997 0612 8F02C121 	 andn %d2,%d2,~(-17)
+ 998 0616 7422     	 st.w [%a2]0,%d2
+ 196:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PCS.SR_XS_CTRL2.B.PCS_TYPE_SEL                  = IFXHSP
+ 999              	 .loc 1 196 92
+ 1000 0618 8214     	 mov %d4,1
+ 1001 061a 1D000000 	 j .L30
+ 1002              	.LVL42:
+ 1003              	.L44:
+ 255:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     }
+ 1004              	 .loc 1 255 9 is_stmt 1
+ 255:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     }
+ 1005              	 .loc 1 255 31 is_stmt 0
+ 1006 061e 54C2     	 ld.w %d2,[%a12]0
+ 255:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     }
+ 1007              	 .loc 1 255 98
+ 1008 0620 8F720120 	 sh %d2,%d2,23
+ 1009 0624 4282     	 add %d2,%d8
+ 1010 0626 7B600830 	 movh %d3,134
+ 1011 062a 1B831530 	 addi %d3,%d3,344
+ 1012 062e 6022     	 mov.a %a2,%d2
+ 1013 0630 01230026 	 addsc.a %a2,%a2,%d3,0
+ 1014 0634 5422     	 ld.w %d2,[%a2]0
+ 1015 0636 8F12C021 	 andn %d2,%d2,~(-2)
+ 1016 063a 7422     	 st.w [%a2]0,%d2
+ 1017 063c 1D000000 	 j .L33
+ 1018              	.LVL43:
+ 1019              	.L34:
+ 144:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #else	
+ 1020              	 .loc 1 144 16
+ 1021 0640 8212     	 mov %d2,1
+ 1022              	.LVL44:
+ 1023 0642 0090     	 ret 
+ 1024              	.L37:
+ 229:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #else			
+ 1025              	 .loc 1 229 16
+ 1026 0644 8222     	 mov %d2,2
+ 1027 0646 0090     	 ret 
+ 1028              	.LVL45:
+ 1029              	.L38:
+ 283:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #else	
+ 1030              	 .loc 1 283 16
+ 1031 0648 8212     	 mov %d2,1
+ 1032              	.LVL46:
+ 1033 064a 0090     	 ret 
+ 1034              	.LVL47:
+ 1035              	.L39:
+ 294:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #else	
+ 1036              	 .loc 1 294 16
+ 1037 064c 8212     	 mov %d2,1
+ 1038              	.LVL48:
+ 302:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #else
+ 303:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     return IfxHsphy_SgmiiSpeedConfigStatus_success;
+ 304:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #endif /* #if IFXHSPHY_IS_GETH_AVAILABLE */
+ 305:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** }
+ 1039              	 .loc 1 305 1
+ 1040 064e 0090     	 ret 
+ 1041              	.LFE333:
+ 1043              	 .global IfxHsphy_Xpcs_setSgmiiSpeedMode_end
+ 1044              	IfxHsphy_Xpcs_setSgmiiSpeedMode_end:
+ 1045              	 .section .text.IfxHsphy_Xpcs_setUsxgmiiSpeedMode,"ax",@progbits
+ 1046              	 .align 1
+ 1047              	 .global IfxHsphy_Xpcs_setUsxgmiiSpeedMode
+ 1049              	IfxHsphy_Xpcs_setUsxgmiiSpeedMode:
+ 1050              	.LFB334:
+ 306:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 307:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 308:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** #if IFXHSPHY_IS_PADINTERFACE_USXSGMII_AVAILABLE
+ 309:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** boolean IfxHsphy_Xpcs_setUsxgmiiSpeedMode(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_TrgtDeviceSpeed trgtSpee
+ 310:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** {
+ 1051              	 .loc 1 310 1 is_stmt 1
+ 1052              	.LVL49:
+ 1053 0000 40AE     	 mov.aa %a14,%SP
+ 1054              	.LCFI3:
+ 1055 0002 8048     	 mov.d %d8,%a4
+ 1056 0004 405C     	 mov.aa %a12,%a5
+ 311:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     uint32                timeoutCycleCount = IFXHSPHY_MAX_TIMEOUT;
+ 1057              	 .loc 1 311 5
+ 1058              	.LVL50:
+ 312:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     uint8                 timeOutError      = 0U;
+ 1059              	 .loc 1 312 5
+ 313:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     IfxHsphy_UsxgmiiSpeed usxgmiiSpeed      = (IfxHsphy_UsxgmiiSpeed)1;
+ 1060              	 .loc 1 313 5
+ 314:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     boolean               relvalCheck;
+ 1061              	 .loc 1 314 5
+ 315:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 316:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     if (trgtSpeed == IfxHsphy_TrgtDeviceSpeed_5G)
+ 1062              	 .loc 1 316 5
+ 1063              	 .loc 1 316 8 is_stmt 0
+ 1064 0006 DF540000 	 jeq %d4,5,.L63
+ 312:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     IfxHsphy_UsxgmiiSpeed usxgmiiSpeed      = (IfxHsphy_UsxgmiiSpeed)1;
+ 1065              	 .loc 1 312 27
+ 1066 000a 8202     	 mov %d2,0
+ 1067 000c 0090     	 ret 
+ 1068              	.L63:
+ 317:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     {
+ 318:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         /* Need to change the func name specific to serial 100M */
+ 319:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         relvalCheck = IfxHsphy_sgmiiMpllDisable(hsphyRegPtr, xpcs->xpcsIndex); 
+ 1069              	 .loc 1 319 9 is_stmt 1
+ 1070              	 .loc 1 319 23 is_stmt 0
+ 1071 000e 5454     	 ld.w %d4,[%a5]0
+ 1072              	.LVL51:
+ 1073 0010 6D000000 	 call IfxHsphy_sgmiiMpllDisable
+ 1074              	.LVL52:
+ 320:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 321:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         if (relvalCheck == TRUE)
+ 1075              	 .loc 1 321 9 is_stmt 1
+ 1076              	 .loc 1 321 12 is_stmt 0
+ 1077 0014 DF120000 	 jeq %d2,1,.L46
+ 322:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         {
+ 323:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****             return TRUE;
+ 324:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         }
+ 325:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 326:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         usxgmiiSpeed                                                     = (IfxHsphy_UsxgmiiSpeed)0
+ 1078              	 .loc 1 326 9 is_stmt 1
+ 1079              	.LVL53:
+ 327:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 328:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PCS.VR_XS_DIG_CTRL1.B.USXG_EN = 1;
+ 1080              	 .loc 1 328 9
+ 1081              	 .loc 1 328 31 is_stmt 0
+ 1082 0018 54C2     	 ld.w %d2,[%a12]0
+ 1083              	.LVL54:
+ 1084              	 .loc 1 328 74
+ 1085 001a 8F720120 	 sh %d2,%d2,23
+ 1086 001e 4282     	 add %d2,%d8
+ 1087 0020 6022     	 mov.a %a2,%d2
+ 1088 0022 11E20820 	 addih.a %a2,%a2,142
+ 1089 0026 5422     	 ld.w %d2,[%a2]0
+ 1090 0028 B7128124 	 insert %d2,%d2,1,9,1
+ 1091 002c 7422     	 st.w [%a2]0,%d2
+ 329:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PCS.VR_XS_KR_CTRL.B.USXG_MODE = 1;
+ 1092              	 .loc 1 329 9 is_stmt 1
+ 1093              	 .loc 1 329 31 is_stmt 0
+ 1094 002e 54C2     	 ld.w %d2,[%a12]0
+ 1095              	 .loc 1 329 74
+ 1096 0030 8F720120 	 sh %d2,%d2,23
+ 1097 0034 4282     	 add %d2,%d8
+ 1098 0036 7BE00830 	 movh %d3,142
+ 1099 003a 1BC30130 	 addi %d3,%d3,28
+ 1100 003e 6022     	 mov.a %a2,%d2
+ 1101 0040 01230026 	 addsc.a %a2,%a2,%d3,0
+ 1102 0044 5422     	 ld.w %d2,[%a2]0
+ 1103 0046 B7120325 	 insert %d2,%d2,1,10,3
+ 1104 004a 7422     	 st.w [%a2]0,%d2
+ 330:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 331:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_MPLLA_CTRL0.B.MPLLA_MULTIPLIER     
+ 1105              	 .loc 1 331 9 is_stmt 1
+ 1106              	 .loc 1 331 152 is_stmt 0
+ 1107 004c 19C30400 	 ld.w %d3,[%a12]4
+ 1108              	 .loc 1 331 165
+ 1109 0050 91000020 	 movh.a %a2,hi:IfxHsphy_Usxgmii_paramConfig
+ 1110 0054 8022     	 mov.d %d2,%a2
+ 1111 0056 1B020020 	 addi %d2,%d2,lo:IfxHsphy_Usxgmii_paramConfig
+ 1112 005a 13C32432 	 madd %d3,%d2,%d3,76
+ 1113              	 .loc 1 331 31
+ 1114 005e 54C5     	 ld.w %d5,[%a12]0
+ 1115              	 .loc 1 331 103
+ 1116 0060 6032     	 mov.a %a2,%d3
+ 1117 0062 1424     	 ld.bu %d4,[%a2]0
+ 1118 0064 8F750130 	 sh %d3,%d5,23
+ 1119 0068 4283     	 add %d3,%d8
+ 1120 006a 7B600850 	 movh %d5,134
+ 1121 006e 1B451C50 	 addi %d5,%d5,452
+ 1122 0072 6032     	 mov.a %a2,%d3
+ 1123 0074 01250026 	 addsc.a %a2,%a2,%d5,0
+ 1124 0078 5423     	 ld.w %d3,[%a2]0
+ 1125 007a 37430830 	 insert %d3,%d3,%d4,0,8
+ 1126 007e 7423     	 st.w [%a2]0,%d3
+ 332:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_MPLLA_CTRL2.B.MPLLA_TX_CLK_DIV     
+ 1127              	 .loc 1 332 9 is_stmt 1
+ 1128              	 .loc 1 332 152 is_stmt 0
+ 1129 0080 19C30400 	 ld.w %d3,[%a12]4
+ 1130              	 .loc 1 332 31
+ 1131 0084 54C5     	 ld.w %d5,[%a12]0
+ 1132              	 .loc 1 332 165
+ 1133 0086 13C32432 	 madd %d3,%d2,%d3,76
+ 1134 008a 6032     	 mov.a %a2,%d3
+ 1135 008c 19240400 	 ld.w %d4,[%a2]4
+ 1136              	 .loc 1 332 103
+ 1137 0090 8F750130 	 sh %d3,%d5,23
+ 1138 0094 4283     	 add %d3,%d8
+ 1139 0096 7B600850 	 movh %d5,134
+ 1140 009a 1BC51C50 	 addi %d5,%d5,460
+ 1141 009e 6032     	 mov.a %a2,%d3
+ 1142 00a0 01250026 	 addsc.a %a2,%a2,%d5,0
+ 1143 00a4 5423     	 ld.w %d3,[%a2]0
+ 1144 00a6 37438335 	 insert %d3,%d3,%d4,11,3
+ 1145 00aa 7423     	 st.w [%a2]0,%d3
+ 333:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_MPLLA_CTRL2.B.MPLLA_DIV16P5_CLK_EN 
+ 1146              	 .loc 1 333 9 is_stmt 1
+ 1147              	 .loc 1 333 152 is_stmt 0
+ 1148 00ac 19C30400 	 ld.w %d3,[%a12]4
+ 1149              	 .loc 1 333 31
+ 1150 00b0 54C6     	 ld.w %d6,[%a12]0
+ 1151              	 .loc 1 333 165
+ 1152 00b2 13C32432 	 madd %d3,%d2,%d3,76
+ 1153 00b6 6032     	 mov.a %a2,%d3
+ 1154 00b8 19240800 	 ld.w %d4,[%a2]8
+ 1155              	 .loc 1 333 103
+ 1156 00bc 8F760130 	 sh %d3,%d6,23
+ 1157 00c0 4283     	 add %d3,%d8
+ 1158 00c2 6032     	 mov.a %a2,%d3
+ 1159 00c4 01250026 	 addsc.a %a2,%a2,%d5,0
+ 1160 00c8 5423     	 ld.w %d3,[%a2]0
+ 1161 00ca 67430A30 	 ins.t %d3,%d3,10,%d4,0
+ 1162 00ce 7423     	 st.w [%a2]0,%d3
+ 334:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_8G_MPLLA_CTRL6.B.CP_PROP                   
+ 1163              	 .loc 1 334 9 is_stmt 1
+ 1164              	 .loc 1 334 152 is_stmt 0
+ 1165 00d0 19C30400 	 ld.w %d3,[%a12]4
+ 1166              	 .loc 1 334 31
+ 1167 00d4 54C5     	 ld.w %d5,[%a12]0
+ 1168              	 .loc 1 334 165
+ 1169 00d6 13C32432 	 madd %d3,%d2,%d3,76
+ 1170 00da 6032     	 mov.a %a2,%d3
+ 1171 00dc 19240C00 	 ld.w %d4,[%a2]12
+ 1172              	 .loc 1 334 103
+ 1173 00e0 8F750130 	 sh %d3,%d5,23
+ 1174 00e4 4283     	 add %d3,%d8
+ 1175 00e6 7B600850 	 movh %d5,134
+ 1176 00ea 1B451F50 	 addi %d5,%d5,500
+ 1177 00ee 6032     	 mov.a %a2,%d3
+ 1178 00f0 01250026 	 addsc.a %a2,%a2,%d5,0
+ 1179 00f4 5423     	 ld.w %d3,[%a2]0
+ 1180 00f6 37430434 	 insert %d3,%d3,%d4,8,4
+ 1181 00fa 7423     	 st.w [%a2]0,%d3
+ 335:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_8G_MPLLA_CTRL6.B.CP_INT                    
+ 1182              	 .loc 1 335 9 is_stmt 1
+ 1183              	 .loc 1 335 152 is_stmt 0
+ 1184 00fc 19C30400 	 ld.w %d3,[%a12]4
+ 1185              	 .loc 1 335 31
+ 1186 0100 54C6     	 ld.w %d6,[%a12]0
+ 1187              	 .loc 1 335 165
+ 1188 0102 13C32432 	 madd %d3,%d2,%d3,76
+ 1189 0106 6032     	 mov.a %a2,%d3
+ 1190 0108 19241000 	 ld.w %d4,[%a2]16
+ 1191              	 .loc 1 335 103
+ 1192 010c 8F760130 	 sh %d3,%d6,23
+ 1193 0110 4283     	 add %d3,%d8
+ 1194 0112 6032     	 mov.a %a2,%d3
+ 1195 0114 01250026 	 addsc.a %a2,%a2,%d5,0
+ 1196 0118 5423     	 ld.w %d3,[%a2]0
+ 1197 011a 37430530 	 insert %d3,%d3,%d4,0,5
+ 1198 011e 7423     	 st.w [%a2]0,%d3
+ 336:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_8G_MPLLA_CTRL7.B.CP_PROP_GS                
+ 1199              	 .loc 1 336 9 is_stmt 1
+ 1200              	 .loc 1 336 152 is_stmt 0
+ 1201 0120 19C30400 	 ld.w %d3,[%a12]4
+ 1202              	 .loc 1 336 31
+ 1203 0124 54C5     	 ld.w %d5,[%a12]0
+ 1204              	 .loc 1 336 165
+ 1205 0126 13C32432 	 madd %d3,%d2,%d3,76
+ 1206 012a 6032     	 mov.a %a2,%d3
+ 1207 012c 19241400 	 ld.w %d4,[%a2]20
+ 1208              	 .loc 1 336 103
+ 1209 0130 8F750130 	 sh %d3,%d5,23
+ 1210 0134 4283     	 add %d3,%d8
+ 1211 0136 7B600850 	 movh %d5,134
+ 1212 013a 1BC51F50 	 addi %d5,%d5,508
+ 1213 013e 6032     	 mov.a %a2,%d3
+ 1214 0140 01250026 	 addsc.a %a2,%a2,%d5,0
+ 1215 0144 5423     	 ld.w %d3,[%a2]0
+ 1216 0146 37430434 	 insert %d3,%d3,%d4,8,4
+ 1217 014a 7423     	 st.w [%a2]0,%d3
+ 337:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_16G_MPLLA_CTRL1.B.MPLLA_FRACN_CTRL         
+ 1218              	 .loc 1 337 9 is_stmt 1
+ 1219              	 .loc 1 337 152 is_stmt 0
+ 1220 014c 19C30400 	 ld.w %d3,[%a12]4
+ 1221              	 .loc 1 337 31
+ 1222 0150 54C5     	 ld.w %d5,[%a12]0
+ 1223              	 .loc 1 337 165
+ 1224 0152 13C32432 	 madd %d3,%d2,%d3,76
+ 1225 0156 6032     	 mov.a %a2,%d3
+ 1226 0158 19241800 	 ld.w %d4,[%a2]24
+ 1227              	 .loc 1 337 103
+ 1228 015c 8F750130 	 sh %d3,%d5,23
+ 1229 0160 4283     	 add %d3,%d8
+ 1230 0162 7B600850 	 movh %d5,134
+ 1231 0166 1B851C50 	 addi %d5,%d5,456
+ 1232 016a 6032     	 mov.a %a2,%d3
+ 1233 016c 01250026 	 addsc.a %a2,%a2,%d5,0
+ 1234 0170 5423     	 ld.w %d3,[%a2]0
+ 1235 0172 37438B32 	 insert %d3,%d3,%d4,5,11
+ 1236 0176 7423     	 st.w [%a2]0,%d3
+ 338:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_VCO_CAL_LD0.B.VCO_LD_VAL_0     
+ 1237              	 .loc 1 338 9 is_stmt 1
+ 1238              	 .loc 1 338 152 is_stmt 0
+ 1239 0178 19C30400 	 ld.w %d3,[%a12]4
+ 1240              	 .loc 1 338 31
+ 1241 017c 54C5     	 ld.w %d5,[%a12]0
+ 1242              	 .loc 1 338 165
+ 1243 017e 13C32432 	 madd %d3,%d2,%d3,76
+ 1244 0182 6032     	 mov.a %a2,%d3
+ 1245 0184 19241C00 	 ld.w %d4,[%a2]28
+ 1246              	 .loc 1 338 103
+ 1247 0188 8F750130 	 sh %d3,%d5,23
+ 1248 018c 4283     	 add %d3,%d8
+ 1249 018e 7B600850 	 movh %d5,134
+ 1250 0192 1B852450 	 addi %d5,%d5,584
+ 1251 0196 6032     	 mov.a %a2,%d3
+ 1252 0198 01250026 	 addsc.a %a2,%a2,%d5,0
+ 1253 019c 5423     	 ld.w %d3,[%a2]0
+ 1254 019e 37430D30 	 insert %d3,%d3,%d4,0,13
+ 1255 01a2 7423     	 st.w [%a2]0,%d3
+ 339:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_VCO_CAL_REF0.B.VCO_REF_LD_0            
+ 1256              	 .loc 1 339 9 is_stmt 1
+ 1257              	 .loc 1 339 152 is_stmt 0
+ 1258 01a4 19C30400 	 ld.w %d3,[%a12]4
+ 1259              	 .loc 1 339 31
+ 1260 01a8 54C5     	 ld.w %d5,[%a12]0
+ 1261              	 .loc 1 339 165
+ 1262 01aa 13C32432 	 madd %d3,%d2,%d3,76
+ 1263 01ae 6032     	 mov.a %a2,%d3
+ 1264 01b0 19242000 	 ld.w %d4,[%a2]32
+ 1265              	 .loc 1 339 103
+ 1266 01b4 8F750130 	 sh %d3,%d5,23
+ 1267 01b8 4283     	 add %d3,%d8
+ 1268 01ba 7B600850 	 movh %d5,134
+ 1269 01be 1B852550 	 addi %d5,%d5,600
+ 1270 01c2 6032     	 mov.a %a2,%d3
+ 1271 01c4 01250026 	 addsc.a %a2,%a2,%d5,0
+ 1272 01c8 5423     	 ld.w %d3,[%a2]0
+ 1273 01ca 37430630 	 insert %d3,%d3,%d4,0,6
+ 1274 01ce 7423     	 st.w [%a2]0,%d3
+ 340:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_16G_25G_MISC_CTRL2.B.SUP_MISC              
+ 1275              	 .loc 1 340 9 is_stmt 1
+ 1276              	 .loc 1 340 152 is_stmt 0
+ 1277 01d0 19C30400 	 ld.w %d3,[%a12]4
+ 1278              	 .loc 1 340 165
+ 1279 01d4 13C32432 	 madd %d3,%d2,%d3,76
+ 1280              	 .loc 1 340 31
+ 1281 01d8 54C5     	 ld.w %d5,[%a12]0
+ 1282              	 .loc 1 340 103
+ 1283 01da 6032     	 mov.a %a2,%d3
+ 1284 01dc 39242400 	 ld.bu %d4,[%a2]36
+ 1285 01e0 8F750130 	 sh %d3,%d5,23
+ 1286 01e4 4283     	 add %d3,%d8
+ 1287 01e6 7B600850 	 movh %d5,134
+ 1288 01ea 1B052750 	 addi %d5,%d5,624
+ 1289 01ee 6032     	 mov.a %a2,%d3
+ 1290 01f0 01250026 	 addsc.a %a2,%a2,%d5,0
+ 1291 01f4 5423     	 ld.w %d3,[%a2]0
+ 1292 01f6 37430830 	 insert %d3,%d3,%d4,0,8
+ 1293 01fa 7423     	 st.w [%a2]0,%d3
+ 341:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_RX_GENCTRL1.B.RX_DIV16P5_CLK_EN
+ 1294              	 .loc 1 341 9 is_stmt 1
+ 1295              	 .loc 1 341 152 is_stmt 0
+ 1296 01fc 19C30400 	 ld.w %d3,[%a12]4
+ 1297              	 .loc 1 341 31
+ 1298 0200 54C5     	 ld.w %d5,[%a12]0
+ 1299              	 .loc 1 341 165
+ 1300 0202 13C32432 	 madd %d3,%d2,%d3,76
+ 1301 0206 6032     	 mov.a %a2,%d3
+ 1302 0208 19242800 	 ld.w %d4,[%a2]40
+ 1303              	 .loc 1 341 103
+ 1304 020c 8F750130 	 sh %d3,%d5,23
+ 1305 0210 4283     	 add %d3,%d8
+ 1306 0212 7B600850 	 movh %d5,134
+ 1307 0216 1B451450 	 addi %d5,%d5,324
+ 1308 021a 6032     	 mov.a %a2,%d3
+ 1309 021c 01250026 	 addsc.a %a2,%a2,%d5,0
+ 1310 0220 5423     	 ld.w %d3,[%a2]0
+ 1311 0222 67430C30 	 ins.t %d3,%d3,12,%d4,0
+ 1312 0226 7423     	 st.w [%a2]0,%d3
+ 342:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_16G_25G_RX_GENCTRL4.B.RX_125MHZ_CLK_EN_0   
+ 1313              	 .loc 1 342 9 is_stmt 1
+ 1314              	 .loc 1 342 152 is_stmt 0
+ 1315 0228 19C30400 	 ld.w %d3,[%a12]4
+ 1316              	 .loc 1 342 31
+ 1317 022c 54C5     	 ld.w %d5,[%a12]0
+ 1318              	 .loc 1 342 165
+ 1319 022e 13C32432 	 madd %d3,%d2,%d3,76
+ 1320 0232 6032     	 mov.a %a2,%d3
+ 1321 0234 19242C00 	 ld.w %d4,[%a2]44
+ 1322              	 .loc 1 342 103
+ 1323 0238 8F750130 	 sh %d3,%d5,23
+ 1324 023c 4283     	 add %d3,%d8
+ 1325 023e 7B600850 	 movh %d5,134
+ 1326 0242 1B051A50 	 addi %d5,%d5,416
+ 1327 0246 6032     	 mov.a %a2,%d3
+ 1328 0248 01250026 	 addsc.a %a2,%a2,%d5,0
+ 1329 024c 5423     	 ld.w %d3,[%a2]0
+ 1330 024e 67430C30 	 ins.t %d3,%d3,12,%d4,0
+ 1331 0252 7423     	 st.w [%a2]0,%d3
+ 343:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_TX_RATE_CTRL.B.TX0_RATE        
+ 1332              	 .loc 1 343 9 is_stmt 1
+ 1333              	 .loc 1 343 152 is_stmt 0
+ 1334 0254 19C30400 	 ld.w %d3,[%a12]4
+ 1335              	 .loc 1 343 31
+ 1336 0258 54C5     	 ld.w %d5,[%a12]0
+ 1337              	 .loc 1 343 165
+ 1338 025a 13C32432 	 madd %d3,%d2,%d3,76
+ 1339 025e 6032     	 mov.a %a2,%d3
+ 1340 0260 19243000 	 ld.w %d4,[%a2]48
+ 1341              	 .loc 1 343 103
+ 1342 0264 8F750130 	 sh %d3,%d5,23
+ 1343 0268 4283     	 add %d3,%d8
+ 1344 026a 7B600850 	 movh %d5,134
+ 1345 026e 1B050D50 	 addi %d5,%d5,208
+ 1346 0272 6032     	 mov.a %a2,%d3
+ 1347 0274 01250026 	 addsc.a %a2,%a2,%d5,0
+ 1348 0278 5423     	 ld.w %d3,[%a2]0
+ 1349 027a 37430330 	 insert %d3,%d3,%d4,0,3
+ 1350 027e 7423     	 st.w [%a2]0,%d3
+ 344:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_RX_RATE_CTRL.B.RX0_RATE        
+ 1351              	 .loc 1 344 9 is_stmt 1
+ 1352              	 .loc 1 344 152 is_stmt 0
+ 1353 0280 19C30400 	 ld.w %d3,[%a12]4
+ 1354              	 .loc 1 344 31
+ 1355 0284 54C5     	 ld.w %d5,[%a12]0
+ 1356              	 .loc 1 344 165
+ 1357 0286 13C32432 	 madd %d3,%d2,%d3,76
+ 1358 028a 6032     	 mov.a %a2,%d3
+ 1359 028c 19243400 	 ld.w %d4,[%a2]52
+ 1360              	 .loc 1 344 103
+ 1361 0290 8F750130 	 sh %d3,%d5,23
+ 1362 0294 4283     	 add %d3,%d8
+ 1363 0296 7B600850 	 movh %d5,134
+ 1364 029a 1B051550 	 addi %d5,%d5,336
+ 1365 029e 6032     	 mov.a %a2,%d3
+ 1366 02a0 01250026 	 addsc.a %a2,%a2,%d5,0
+ 1367 02a4 5423     	 ld.w %d3,[%a2]0
+ 1368 02a6 37430230 	 insert %d3,%d3,%d4,0,2
+ 1369 02aa 7423     	 st.w [%a2]0,%d3
+ 345:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_16G_25G_RX_MISC_CTRL0.B.RX0_MISC           
+ 1370              	 .loc 1 345 9 is_stmt 1
+ 1371              	 .loc 1 345 152 is_stmt 0
+ 1372 02ac 19C30400 	 ld.w %d3,[%a12]4
+ 1373              	 .loc 1 345 165
+ 1374 02b0 13C32432 	 madd %d3,%d2,%d3,76
+ 1375              	 .loc 1 345 31
+ 1376 02b4 54C5     	 ld.w %d5,[%a12]0
+ 1377              	 .loc 1 345 103
+ 1378 02b6 6032     	 mov.a %a2,%d3
+ 1379 02b8 39243800 	 ld.bu %d4,[%a2]56
+ 1380 02bc 8F750130 	 sh %d3,%d5,23
+ 1381 02c0 4283     	 add %d3,%d8
+ 1382 02c2 7B600850 	 movh %d5,134
+ 1383 02c6 1B451A50 	 addi %d5,%d5,420
+ 1384 02ca 6032     	 mov.a %a2,%d3
+ 1385 02cc 01250026 	 addsc.a %a2,%a2,%d5,0
+ 1386 02d0 5423     	 ld.w %d3,[%a2]0
+ 1387 02d2 37430830 	 insert %d3,%d3,%d4,0,8
+ 1388 02d6 7423     	 st.w [%a2]0,%d3
+ 346:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_TX_GENCTRL2.B.TX0_WIDTH            
+ 1389              	 .loc 1 346 9 is_stmt 1
+ 1390              	 .loc 1 346 152 is_stmt 0
+ 1391 02d8 19C30400 	 ld.w %d3,[%a12]4
+ 1392              	 .loc 1 346 31
+ 1393 02dc 54C5     	 ld.w %d5,[%a12]0
+ 1394              	 .loc 1 346 165
+ 1395 02de 13C32432 	 madd %d3,%d2,%d3,76
+ 1396 02e2 6032     	 mov.a %a2,%d3
+ 1397 02e4 19243C00 	 ld.w %d4,[%a2]60
+ 1398              	 .loc 1 346 103
+ 1399 02e8 8F750130 	 sh %d3,%d5,23
+ 1400 02ec 4283     	 add %d3,%d8
+ 1401 02ee 7B600850 	 movh %d5,134
+ 1402 02f2 1B850C50 	 addi %d5,%d5,200
+ 1403 02f6 6032     	 mov.a %a2,%d3
+ 1404 02f8 01250026 	 addsc.a %a2,%a2,%d5,0
+ 1405 02fc 5423     	 ld.w %d3,[%a2]0
+ 1406 02fe 37430234 	 insert %d3,%d3,%d4,8,2
+ 1407 0302 7423     	 st.w [%a2]0,%d3
+ 347:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_RX_GENCTRL2.B.RX0_WIDTH            
+ 1408              	 .loc 1 347 9 is_stmt 1
+ 1409              	 .loc 1 347 152 is_stmt 0
+ 1410 0304 19C30400 	 ld.w %d3,[%a12]4
+ 1411              	 .loc 1 347 31
+ 1412 0308 54C5     	 ld.w %d5,[%a12]0
+ 1413              	 .loc 1 347 165
+ 1414 030a 13C32432 	 madd %d3,%d2,%d3,76
+ 1415 030e 6032     	 mov.a %a2,%d3
+ 1416 0310 19240010 	 ld.w %d4,[%a2]64
+ 1417              	 .loc 1 347 103
+ 1418 0314 8F750130 	 sh %d3,%d5,23
+ 1419 0318 4283     	 add %d3,%d8
+ 1420 031a 7B600850 	 movh %d5,134
+ 1421 031e 1B851450 	 addi %d5,%d5,328
+ 1422 0322 6032     	 mov.a %a2,%d3
+ 1423 0324 01250026 	 addsc.a %a2,%a2,%d5,0
+ 1424 0328 5423     	 ld.w %d3,[%a2]0
+ 1425 032a 37430234 	 insert %d3,%d3,%d4,8,2
+ 1426 032e 7423     	 st.w [%a2]0,%d3
+ 348:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_TX_BOOST_CTRL.B.TX0_IBOOST     
+ 1427              	 .loc 1 348 9 is_stmt 1
+ 1428              	 .loc 1 348 152 is_stmt 0
+ 1429 0330 19C30400 	 ld.w %d3,[%a12]4
+ 1430              	 .loc 1 348 31
+ 1431 0334 54C5     	 ld.w %d5,[%a12]0
+ 1432              	 .loc 1 348 165
+ 1433 0336 13C32432 	 madd %d3,%d2,%d3,76
+ 1434 033a 6032     	 mov.a %a2,%d3
+ 1435 033c 19240410 	 ld.w %d4,[%a2]68
+ 1436              	 .loc 1 348 103
+ 1437 0340 8F750130 	 sh %d3,%d5,23
+ 1438 0344 4283     	 add %d3,%d8
+ 1439 0346 7B600850 	 movh %d5,134
+ 1440 034a 1BC50C50 	 addi %d5,%d5,204
+ 1441 034e 6032     	 mov.a %a2,%d3
+ 1442 0350 01250026 	 addsc.a %a2,%a2,%d5,0
+ 1443 0354 5423     	 ld.w %d3,[%a2]0
+ 1444 0356 37430430 	 insert %d3,%d3,%d4,0,4
+ 1445 035a 7423     	 st.w [%a2]0,%d3
+ 349:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_TX_GENCTRL1.B.VBOOST_EN_0      
+ 1446              	 .loc 1 349 9 is_stmt 1
+ 1447              	 .loc 1 349 152 is_stmt 0
+ 1448 035c 19C30400 	 ld.w %d3,[%a12]4
+ 1449              	 .loc 1 349 31
+ 1450 0360 54C4     	 ld.w %d4,[%a12]0
+ 1451              	 .loc 1 349 165
+ 1452 0362 13C32422 	 madd %d2,%d2,%d3,76
+ 1453 0366 6022     	 mov.a %a2,%d2
+ 1454 0368 19230810 	 ld.w %d3,[%a2]72
+ 1455              	 .loc 1 349 103
+ 1456 036c 8F740120 	 sh %d2,%d4,23
+ 1457 0370 4282     	 add %d2,%d8
+ 1458 0372 7B600840 	 movh %d4,134
+ 1459 0376 1B440C40 	 addi %d4,%d4,196
+ 1460 037a 6022     	 mov.a %a2,%d2
+ 1461 037c 01240026 	 addsc.a %a2,%a2,%d4,0
+ 1462 0380 5422     	 ld.w %d2,[%a2]0
+ 1463 0382 67320420 	 ins.t %d2,%d2,4,%d3,0
+ 1464 0386 7422     	 st.w [%a2]0,%d2
+ 350:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 351:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_AFE_DFE_EN_CTRL.B.AFE_EN_0             
+ 1465              	 .loc 1 351 9 is_stmt 1
+ 1466              	 .loc 1 351 31 is_stmt 0
+ 1467 0388 54C2     	 ld.w %d2,[%a12]0
+ 1468              	 .loc 1 351 103
+ 1469 038a 8F720120 	 sh %d2,%d2,23
+ 1470 038e 4282     	 add %d2,%d8
+ 1471 0390 7B600830 	 movh %d3,134
+ 1472 0394 1B431730 	 addi %d3,%d3,372
+ 1473 0398 6022     	 mov.a %a2,%d2
+ 1474 039a 01230026 	 addsc.a %a2,%a2,%d3,0
+ 1475 039e 5422     	 ld.w %d2,[%a2]0
+ 1476 03a0 B7120120 	 insert %d2,%d2,1,0,1
+ 1477 03a4 7422     	 st.w [%a2]0,%d2
+ 352:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_AFE_DFE_EN_CTRL.B.DFE_EN_0             
+ 1478              	 .loc 1 352 9 is_stmt 1
+ 1479              	 .loc 1 352 31 is_stmt 0
+ 1480 03a6 54C2     	 ld.w %d2,[%a12]0
+ 1481              	 .loc 1 352 103
+ 1482 03a8 8F720120 	 sh %d2,%d2,23
+ 1483 03ac 4282     	 add %d2,%d8
+ 1484 03ae 6022     	 mov.a %a2,%d2
+ 1485 03b0 01230026 	 addsc.a %a2,%a2,%d3,0
+ 1486 03b4 5422     	 ld.w %d2,[%a2]0
+ 1487 03b6 B7120122 	 insert %d2,%d2,1,4,1
+ 1488 03ba 7422     	 st.w [%a2]0,%d2
+ 353:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         /* Need to change the func name specific to serial 100M */
+ 354:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         relvalCheck                                                                                
+ 1489              	 .loc 1 354 9 is_stmt 1
+ 1490              	 .loc 1 354 105 is_stmt 0
+ 1491 03bc 54C4     	 ld.w %d4,[%a12]0
+ 1492 03be 6084     	 mov.a %a4,%d8
+ 1493 03c0 6D000000 	 call IfxHsphy_sgmiiMpllEnable
+ 1494              	.LVL55:
+ 355:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 356:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         if (relvalCheck == TRUE)
+ 1495              	 .loc 1 356 9 is_stmt 1
+ 1496              	 .loc 1 356 12 is_stmt 0
+ 1497 03c4 DF120000 	 jeq %d2,1,.L46
+ 357:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         {
+ 358:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****             return TRUE;
+ 359:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         }
+ 360:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 361:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PCS.VR_XS_DIG_CTRL1.B.INIT = 1;
+ 1498              	 .loc 1 361 9 is_stmt 1
+ 1499              	 .loc 1 361 31 is_stmt 0
+ 1500 03c8 54C2     	 ld.w %d2,[%a12]0
+ 1501              	.LVL56:
+ 1502              	 .loc 1 361 71
+ 1503 03ca 8F720120 	 sh %d2,%d2,23
+ 1504 03ce 4282     	 add %d2,%d8
+ 1505 03d0 6022     	 mov.a %a2,%d2
+ 1506 03d2 11E20820 	 addih.a %a2,%a2,142
+ 1507 03d6 5422     	 ld.w %d2,[%a2]0
+ 1508 03d8 B7120124 	 insert %d2,%d2,1,8,1
+ 1509 03dc 7422     	 st.w [%a2]0,%d2
+ 362:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 363:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         timeoutCycleCount                                             = IFXHSPHY_MAX_TIMEOUT;
+ 1510              	 .loc 1 363 9 is_stmt 1
+ 364:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 365:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         while (hsphyRegPtr->XPCS[xpcs->xpcsIndex].PCS.VR_XS_DIG_CTRL1.B.INIT == 1)
+ 1511              	 .loc 1 365 9
+ 363:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 1512              	 .loc 1 363 71 is_stmt 0
+ 1513 03de 7BF00030 	 movh %d3,15
+ 1514 03e2 1B032434 	 addi %d3,%d3,16960
+ 1515              	.LVL57:
+ 1516              	.L47:
+ 366:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         {
+ 367:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****             IFXHSPHY_LOOP_TIMEOUT_CHECK(timeoutCycleCount, timeOutError);
+ 1517              	 .loc 1 367 13 is_stmt 1 discriminator 2
+ 1518              	 .loc 1 367 73 discriminator 2
+ 365:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         {
+ 1519              	 .loc 1 365 78 discriminator 2
+ 365:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         {
+ 1520              	 .loc 1 365 38 is_stmt 0 discriminator 2
+ 1521 03e6 54C4     	 ld.w %d4,[%a12]0
+ 365:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         {
+ 1522              	 .loc 1 365 72 discriminator 2
+ 1523 03e8 8F740120 	 sh %d2,%d4,23
+ 1524 03ec 4282     	 add %d2,%d8
+ 1525 03ee 6022     	 mov.a %a2,%d2
+ 1526 03f0 11E20820 	 addih.a %a2,%a2,142
+ 1527 03f4 5422     	 ld.w %d2,[%a2]0
+ 365:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         {
+ 1528              	 .loc 1 365 78 discriminator 2
+ 1529 03f6 6F820000 	 jz.t %d2,8,.L64
+ 1530              	 .loc 1 367 13 is_stmt 1
+ 1531 03fa C2F3     	 add %d3,-1
+ 1532              	.LVL58:
+ 1533 03fc DF030080 	 jnz %d3,.L47
+ 1534 0400 8212     	 mov %d2,1
+ 1535 0402 1D000000 	 j .L48
+ 1536              	.L64:
+ 312:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     IfxHsphy_UsxgmiiSpeed usxgmiiSpeed      = (IfxHsphy_UsxgmiiSpeed)1;
+ 1537              	 .loc 1 312 27 is_stmt 0
+ 1538 0406 8202     	 mov %d2,0
+ 1539              	.L48:
+ 1540              	.LVL59:
+ 368:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         }
+ 369:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 370:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_TX_GENCTRL1.B.TX_CLK_RDY_0 = 0;
+ 1541              	 .loc 1 370 9 is_stmt 1
+ 1542              	 .loc 1 370 96 is_stmt 0
+ 1543 0408 8F740140 	 sh %d4,%d4,23
+ 1544 040c 4284     	 add %d4,%d8
+ 1545 040e 7B600850 	 movh %d5,134
+ 1546 0412 1B450C50 	 addi %d5,%d5,196
+ 1547 0416 6042     	 mov.a %a2,%d4
+ 1548 0418 01250026 	 addsc.a %a2,%a2,%d5,0
+ 1549 041c 5424     	 ld.w %d4,[%a2]0
+ 1550 041e B7040146 	 insert %d4,%d4,0,12,1
+ 1551 0422 7424     	 st.w [%a2]0,%d4
+ 371:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         /* Power down the DWC_xpcs */
+ 372:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PCS.SR_XS_CTRL1.B.LPM                               = 1;
+ 1552              	 .loc 1 372 9 is_stmt 1
+ 1553              	 .loc 1 372 31 is_stmt 0
+ 1554 0424 54C4     	 ld.w %d4,[%a12]0
+ 1555              	 .loc 1 372 96
+ 1556 0426 8F740140 	 sh %d4,%d4,23
+ 1557 042a 4284     	 add %d4,%d8
+ 1558 042c 6042     	 mov.a %a2,%d4
+ 1559 042e 11C20820 	 addih.a %a2,%a2,140
+ 1560 0432 5424     	 ld.w %d4,[%a2]0
+ 1561 0434 B7148145 	 insert %d4,%d4,1,11,1
+ 1562 0438 7424     	 st.w [%a2]0,%d4
+ 373:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 374:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         while (hsphyRegPtr->XPCS[xpcs->xpcsIndex].PCS.VR_XS_DIG_STS.B.PSEQ_STATE != IfxHsphy_XpcsPo
+ 1563              	 .loc 1 374 9 is_stmt 1
+ 1564              	.L50:
+ 375:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         {
+ 376:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****             IFXHSPHY_LOOP_TIMEOUT_CHECK(timeoutCycleCount, timeOutError);
+ 1565              	 .loc 1 376 13 discriminator 2
+ 1566              	 .loc 1 376 73 discriminator 2
+ 374:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         {
+ 1567              	 .loc 1 374 82 discriminator 2
+ 374:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         {
+ 1568              	 .loc 1 374 38 is_stmt 0 discriminator 2
+ 1569 043a 54C5     	 ld.w %d5,[%a12]0
+ 374:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         {
+ 1570              	 .loc 1 374 70 discriminator 2
+ 1571 043c 8F750140 	 sh %d4,%d5,23
+ 1572 0440 4284     	 add %d4,%d8
+ 1573 0442 7BE00860 	 movh %d6,142
+ 1574 0446 1B060460 	 addi %d6,%d6,64
+ 1575 044a 6042     	 mov.a %a2,%d4
+ 1576 044c 01260026 	 addsc.a %a2,%a2,%d6,0
+ 1577 0450 5424     	 ld.w %d4,[%a2]0
+ 1578 0452 37046341 	 extr.u %d4,%d4,2,3
+ 374:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         {
+ 1579              	 .loc 1 374 82 discriminator 2
+ 1580 0456 DF640000 	 jeq %d4,6,.L51
+ 1581              	 .loc 1 376 13 is_stmt 1
+ 1582 045a C2F3     	 add %d3,-1
+ 1583              	.LVL60:
+ 1584 045c DF030080 	 jnz %d3,.L50
+ 1585 0460 8212     	 mov %d2,1
+ 1586              	.LVL61:
+ 1587              	.L51:
+ 377:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         }
+ 378:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 379:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         if (timeOutError == TRUE)
+ 1588              	 .loc 1 379 9
+ 1589              	 .loc 1 379 12 is_stmt 0
+ 1590 0462 DF120000 	 jeq %d2,1,.L46
+ 380:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         {
+ 381:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****             return TRUE;
+ 382:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         }
+ 383:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 384:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         /* Power up the DWC_xpcs */
+ 385:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PCS.SR_XS_CTRL1.U &= (uint32)(~((1 << IFX_HSPHY_XPCS_PCS
+ 1591              	 .loc 1 385 9 is_stmt 1
+ 1592              	 .loc 1 385 62 is_stmt 0
+ 1593 0466 8F750130 	 sh %d3,%d5,23
+ 1594              	.LVL62:
+ 1595 046a 4283     	 add %d3,%d8
+ 1596 046c 6032     	 mov.a %a2,%d3
+ 1597 046e 11C20820 	 addih.a %a2,%a2,140
+ 1598 0472 5423     	 ld.w %d3,[%a2]0
+ 1599 0474 7BF0FF4F 	 movh %d4,65535
+ 1600 0478 1BF47F47 	 addi %d4,%d4,30719
+ 1601 047c 2643     	 and %d3,%d4
+ 1602 047e 7423     	 st.w [%a2]0,%d3
+ 386:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 387:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         timeoutCycleCount                                     = IFXHSPHY_MAX_TIMEOUT;
+ 1603              	 .loc 1 387 9 is_stmt 1
+ 1604              	.LVL63:
+ 388:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 389:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         while (hsphyRegPtr->XPCS[xpcs->xpcsIndex].PCS.VR_XS_DIG_STS.B.PSEQ_STATE != IfxHsphy_XpcsPo
+ 1605              	 .loc 1 389 9
+ 387:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 1606              	 .loc 1 387 63 is_stmt 0
+ 1607 0480 7BF00030 	 movh %d3,15
+ 1608 0484 1B032434 	 addi %d3,%d3,16960
+ 1609              	.LVL64:
+ 1610              	.L53:
+ 390:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         {
+ 391:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****             IFXHSPHY_LOOP_TIMEOUT_CHECK(timeoutCycleCount, timeOutError);
+ 1611              	 .loc 1 391 13 is_stmt 1 discriminator 2
+ 1612              	 .loc 1 391 73 discriminator 2
+ 389:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         {
+ 1613              	 .loc 1 389 82 discriminator 2
+ 389:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         {
+ 1614              	 .loc 1 389 38 is_stmt 0 discriminator 2
+ 1615 0488 54C5     	 ld.w %d5,[%a12]0
+ 389:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         {
+ 1616              	 .loc 1 389 70 discriminator 2
+ 1617 048a 8F750140 	 sh %d4,%d5,23
+ 1618 048e 4284     	 add %d4,%d8
+ 1619 0490 7BE00860 	 movh %d6,142
+ 1620 0494 1B060460 	 addi %d6,%d6,64
+ 1621 0498 6042     	 mov.a %a2,%d4
+ 1622 049a 01260026 	 addsc.a %a2,%a2,%d6,0
+ 1623 049e 5424     	 ld.w %d4,[%a2]0
+ 1624 04a0 37046341 	 extr.u %d4,%d4,2,3
+ 389:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         {
+ 1625              	 .loc 1 389 82 discriminator 2
+ 1626 04a4 DF440000 	 jeq %d4,4,.L54
+ 1627              	 .loc 1 391 13 is_stmt 1
+ 1628 04a8 C2F3     	 add %d3,-1
+ 1629              	.LVL65:
+ 1630 04aa DF030080 	 jnz %d3,.L53
+ 1631 04ae 8212     	 mov %d2,1
+ 1632              	.LVL66:
+ 1633              	.L54:
+ 392:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         }
+ 393:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 394:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         if (timeOutError == TRUE)
+ 1634              	 .loc 1 394 9
+ 1635              	 .loc 1 394 12 is_stmt 0
+ 1636 04b0 DF120000 	 jeq %d2,1,.L46
+ 395:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         {
+ 396:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****             return TRUE;
+ 397:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         }
+ 398:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 399:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PMA.VR_XS_MP_12G_16G_25G_TX_GENCTRL1.B.TX_CLK_RDY_0 = 1;
+ 1637              	 .loc 1 399 9 is_stmt 1
+ 1638              	 .loc 1 399 96 is_stmt 0
+ 1639 04b4 8F750130 	 sh %d3,%d5,23
+ 1640              	.LVL67:
+ 1641 04b8 4283     	 add %d3,%d8
+ 1642 04ba 7B600840 	 movh %d4,134
+ 1643 04be 1B440C40 	 addi %d4,%d4,196
+ 1644 04c2 6032     	 mov.a %a2,%d3
+ 1645 04c4 01240026 	 addsc.a %a2,%a2,%d4,0
+ 1646 04c8 5423     	 ld.w %d3,[%a2]0
+ 1647 04ca B7130136 	 insert %d3,%d3,1,12,1
+ 1648 04ce 7423     	 st.w [%a2]0,%d3
+ 400:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 401:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].MII.CTRL.B.SS5                                      = 1;
+ 1649              	 .loc 1 401 9 is_stmt 1
+ 1650              	 .loc 1 401 31 is_stmt 0
+ 1651 04d0 54C3     	 ld.w %d3,[%a12]0
+ 1652              	 .loc 1 401 96
+ 1653 04d2 8F730130 	 sh %d3,%d3,23
+ 1654 04d6 4283     	 add %d3,%d8
+ 1655 04d8 6032     	 mov.a %a2,%d3
+ 1656 04da 11C20F20 	 addih.a %a2,%a2,252
+ 1657 04de 5423     	 ld.w %d3,[%a2]0
+ 1658 04e0 B7138132 	 insert %d3,%d3,1,5,1
+ 1659 04e4 7423     	 st.w [%a2]0,%d3
+ 402:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].MII.CTRL.B.SS6                                      = 0;
+ 1660              	 .loc 1 402 9 is_stmt 1
+ 1661              	 .loc 1 402 31 is_stmt 0
+ 1662 04e6 54C3     	 ld.w %d3,[%a12]0
+ 1663              	 .loc 1 402 96
+ 1664 04e8 8F730130 	 sh %d3,%d3,23
+ 1665 04ec 4283     	 add %d3,%d8
+ 1666 04ee 6032     	 mov.a %a2,%d3
+ 1667 04f0 11C20F20 	 addih.a %a2,%a2,252
+ 1668 04f4 5423     	 ld.w %d3,[%a2]0
+ 1669 04f6 8F03C431 	 andn %d3,%d3,~(-65)
+ 1670 04fa 7423     	 st.w [%a2]0,%d3
+ 403:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].MII.CTRL.B.SS13                                     = 1;
+ 1671              	 .loc 1 403 9 is_stmt 1
+ 1672              	 .loc 1 403 31 is_stmt 0
+ 1673 04fc 54C3     	 ld.w %d3,[%a12]0
+ 1674              	 .loc 1 403 96
+ 1675 04fe 8F730130 	 sh %d3,%d3,23
+ 1676 0502 4283     	 add %d3,%d8
+ 1677 0504 6032     	 mov.a %a2,%d3
+ 1678 0506 11C20F20 	 addih.a %a2,%a2,252
+ 1679 050a 5423     	 ld.w %d3,[%a2]0
+ 1680 050c B7138136 	 insert %d3,%d3,1,13,1
+ 1681 0510 7423     	 st.w [%a2]0,%d3
+ 404:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 405:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         /* Delay of 100ns to be added */
+ 406:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 407:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         hsphyRegPtr->XPCS[xpcs->xpcsIndex].PCS.VR_XS_DIG_CTRL1.B.USRA_RST = 1;
+ 1682              	 .loc 1 407 9 is_stmt 1
+ 1683              	 .loc 1 407 31 is_stmt 0
+ 1684 0512 54C3     	 ld.w %d3,[%a12]0
+ 1685              	 .loc 1 407 75
+ 1686 0514 8F730130 	 sh %d3,%d3,23
+ 1687 0518 4283     	 add %d3,%d8
+ 1688 051a 6032     	 mov.a %a2,%d3
+ 1689 051c 11E20820 	 addih.a %a2,%a2,142
+ 1690 0520 5423     	 ld.w %d3,[%a2]0
+ 1691 0522 B7130135 	 insert %d3,%d3,1,10,1
+ 1692 0526 7423     	 st.w [%a2]0,%d3
+ 408:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 409:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         timeoutCycleCount                                                 = IFXHSPHY_MAX_TIMEOUT;
+ 1693              	 .loc 1 409 9 is_stmt 1
+ 1694              	.LVL68:
+ 410:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 411:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         while (hsphyRegPtr->XPCS[xpcs->xpcsIndex].PCS.VR_XS_DIG_CTRL1.B.USRA_RST != 0)
+ 1695              	 .loc 1 411 9
+ 409:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 1696              	 .loc 1 409 75 is_stmt 0
+ 1697 0528 7BF00030 	 movh %d3,15
+ 1698 052c 1B032434 	 addi %d3,%d3,16960
+ 1699              	.LVL69:
+ 1700              	.L56:
+ 412:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         {
+ 413:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****             IFXHSPHY_LOOP_TIMEOUT_CHECK(timeoutCycleCount, timeOutError);
+ 1701              	 .loc 1 413 13 is_stmt 1 discriminator 2
+ 1702              	 .loc 1 413 73 discriminator 2
+ 411:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         {
+ 1703              	 .loc 1 411 82 discriminator 2
+ 411:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         {
+ 1704              	 .loc 1 411 38 is_stmt 0 discriminator 2
+ 1705 0530 54C4     	 ld.w %d4,[%a12]0
+ 411:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         {
+ 1706              	 .loc 1 411 72 discriminator 2
+ 1707 0532 8F740140 	 sh %d4,%d4,23
+ 1708 0536 4284     	 add %d4,%d8
+ 1709 0538 6042     	 mov.a %a2,%d4
+ 1710 053a 11E20820 	 addih.a %a2,%a2,142
+ 1711 053e 5424     	 ld.w %d4,[%a2]0
+ 411:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         {
+ 1712              	 .loc 1 411 82 discriminator 2
+ 1713 0540 6FA40000 	 jz.t %d4,10,.L65
+ 1714              	 .loc 1 413 13 is_stmt 1
+ 1715 0544 C2F3     	 add %d3,-1
+ 1716              	.LVL70:
+ 1717 0546 DF030080 	 jnz %d3,.L56
+ 1718 054a 8212     	 mov %d2,1
+ 1719              	.LVL71:
+ 1720              	.L46:
+ 414:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****         }
+ 415:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     }
+ 416:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** 
+ 417:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c ****     return (boolean)timeOutError;
+ 418:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Xpcs/IfxHsphy_Xpcs.c **** }
+ 1721              	 .loc 1 418 1 is_stmt 0
+ 1722 054c 0090     	 ret 
+ 1723              	.LVL72:
+ 1724              	.L65:
+ 1725 054e 0090     	 ret 
+ 1726              	.LFE334:
+ 1728              	 .global IfxHsphy_Xpcs_setUsxgmiiSpeedMode_end
+ 1729              	IfxHsphy_Xpcs_setUsxgmiiSpeedMode_end:
+ 1794              	.Letext0:
+ 1795              	 .file 2 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 1796              	 .file 3 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 1797              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/IfxHsphy_regdef.h"
+ 1798              	 .file 5 "../Libraries/iLLD/TC4xx/CpuGeneric/_Impl/TC4Dx/IfxHsphy_cfg_TC4Dx.h"
+ 1799              	 .file 6 "../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Std/IfxHsphy.h"
+ 23028 0000 00000000 	 .word IfxHsphy_Xpcs_sgmiiDataPathInit
+ 23029 0004 00000000 	 .word IfxHsphy_Xpcs_sgmiiDataPathInit_end
+ 23030 0008 7C001444 	 .word 0x4414007c
+ 23031 000c 10001000 	 .word 0x00100010
+ 23032 0010 04000000 	 .word 0x00000004
+ 23033 0014 C0000000 	 .word 0x000000c0
+ 23034 0018 00000000 	 .word IfxHsphy_Xpcs_reset
+ 23035 001c 00000000 	 .word IfxHsphy_Xpcs_reset_end
+ 23036 0020 3C003444 	 .word 0x4434003c
+ 23037 0024 00003000 	 .word 0x00300000
+ 23038 0028 04000000 	 .word 0x00000004
+ 23039 002c C0000000 	 .word 0x000000c0
+ 23040 0030 00000000 	 .word IfxHsphy_Xpcs_setSgmiiSpeedMode
+ 23041 0034 00000000 	 .word IfxHsphy_Xpcs_setSgmiiSpeedMode_end
+ 23042 0038 FC033C54 	 .word 0x543c03fc
+ 23043 003c 10003000 	 .word 0x00300010
+ 23044 0040 04000000 	 .word 0x00000004
+ 23045 0044 40000200 	 .word 0x00020040
+ 23046 0048 00000000 	 .word IfxHsphy_Xpcs_setUsxgmiiSpeedMode
+ 23047 004c 00000000 	 .word IfxHsphy_Xpcs_setUsxgmiiSpeedMode_end
+ 23048 0050 7C013454 	 .word 0x5434017c
+ 23049 0054 10003000 	 .word 0x00300010
+ 23050 0058 04000000 	 .word 0x00000004
+ 23051 005c 40000200 	 .word 0x00020040
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxHsphy_Xpcs.c
+                            *ABS*:00000000 IfxHsphy_Xpcs.c
+    {standard input}:10     .text.IfxHsphy_Xpcs_sgmiiDataPathInit:00000000 IfxHsphy_Xpcs_sgmiiDataPathInit
+    {standard input}:140    .text.IfxHsphy_Xpcs_sgmiiDataPathInit:000000d6 IfxHsphy_Xpcs_sgmiiDataPathInit_end
+    {standard input}:145    .text.IfxHsphy_Xpcs_reset:00000000 IfxHsphy_Xpcs_reset
+    {standard input}:265    .text.IfxHsphy_Xpcs_reset:000000b0 IfxHsphy_Xpcs_reset_end
+    {standard input}:270    .text.IfxHsphy_Xpcs_setSgmiiSpeedMode:00000000 IfxHsphy_Xpcs_setSgmiiSpeedMode
+    {standard input}:1044   .text.IfxHsphy_Xpcs_setSgmiiSpeedMode:00000650 IfxHsphy_Xpcs_setSgmiiSpeedMode_end
+    {standard input}:1049   .text.IfxHsphy_Xpcs_setUsxgmiiSpeedMode:00000000 IfxHsphy_Xpcs_setUsxgmiiSpeedMode
+    {standard input}:1729   .text.IfxHsphy_Xpcs_setUsxgmiiSpeedMode:00000550 IfxHsphy_Xpcs_setUsxgmiiSpeedMode_end
+
+UNDEFINED SYMBOLS
+IfxHsphy_sgmiiMpllDisable
+IfxHsphy_Sgmii_refClkConfig
+IfxHsphy_Sgmii_paramConfig
+IfxHsphy_sgmiiMpllEnable
+IfxHsphy_sgmiiXpcsDataPathInit
+IfxHsphy_Usxgmii_paramConfig

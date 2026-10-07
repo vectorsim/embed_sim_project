@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="com.infineon.aurix.buildsystem.flash.launchConfigurationType">
+    <stringAttribute key="com.infineon.aurix.buildsystem.flash.ADD_ARGS" value=""/>
+    <stringAttribute key="com.infineon.aurix.buildsystem.flash.ATTR_LOCATION" value="/EmbedSim_TC4_TC4/EmbedSim_TC4_FLASH_CONFIG.launch"/>
+    <booleanAttribute key="com.infineon.aurix.buildsystem.flash.BMHD_ON" value="false"/>
+    <booleanAttribute key="com.infineon.aurix.buildsystem.flash.BUILD_FIRST" value="true"/>
+    <intAttribute key="com.infineon.aurix.buildsystem.flash.DEV_ID" value="1"/>
+    <stringAttribute key="com.infineon.aurix.buildsystem.flash.DEV_NAME" value="AURIX LITE KIT V1.0 (TC4D7) LKBDUR94 - TC4Dx VMFDYM"/>
+    <intAttribute key="com.infineon.aurix.buildsystem.flash.FREQ" value="20"/>
+    <stringAttribute key="com.infineon.aurix.buildsystem.flash.PROJECT_NAME" value="EmbedSim_TC4_TC4"/>
+    <booleanAttribute key="com.infineon.aurix.buildsystem.flash.VER_ON" value="false"/>
+    <booleanAttribute key="com.infineon.aurix.buildsystem.flash.cdsp.0.active" value="false"/>
+    <stringAttribute key="com.infineon.aurix.buildsystem.flash.cdsp.0.hex" value=""/>
+    <booleanAttribute key="com.infineon.aurix.buildsystem.flash.cdsp.1.active" value="false"/>
+    <stringAttribute key="com.infineon.aurix.buildsystem.flash.cdsp.1.hex" value=""/>
+    <booleanAttribute key="com.infineon.aurix.buildsystem.flash.cdsp.10.active" value="false"/>
+    <stringAttribute key="com.infineon.aurix.buildsystem.flash.cdsp.10.hex" value=""/>
+    <booleanAttribute key="com.infineon.aurix.buildsystem.flash.cdsp.11.active" value="false"/>
+    <stringAttribute key="com.infineon.aurix.buildsystem.flash.cdsp.11.hex" value=""/>
+    <booleanAttribute key="com.infineon.aurix.buildsystem.flash.cdsp.2.active" value="false"/>
+    <stringAttribute key="com.infineon.aurix.buildsystem.flash.cdsp.2.hex" value=""/>
+    <booleanAttribute key="com.infineon.aurix.buildsystem.flash.cdsp.3.active" value="false"/>
+    <stringAttribute key="com.infineon.aurix.buildsystem.flash.cdsp.3.hex" value=""/>
+    <booleanAttribute key="com.infineon.aurix.buildsystem.flash.cdsp.4.active" value="false"/>
+    <stringAttribute key="com.infineon.aurix.buildsystem.flash.cdsp.4.hex" value=""/>
+    <booleanAttribute key="com.infineon.aurix.buildsystem.flash.cdsp.5.active" value="false"/>
+    <stringAttribute key="com.infineon.aurix.buildsystem.flash.cdsp.5.hex" value=""/>
+    <booleanAttribute key="com.infineon.aurix.buildsystem.flash.cdsp.6.active" value="false"/>
+    <stringAttribute key="com.infineon.aurix.buildsystem.flash.cdsp.6.hex" value=""/>
+    <booleanAttribute key="com.infineon.aurix.buildsystem.flash.cdsp.7.active" value="false"/>
+    <stringAttribute key="com.infineon.aurix.buildsystem.flash.cdsp.7.hex" value=""/>
+    <booleanAttribute key="com.infineon.aurix.buildsystem.flash.cdsp.8.active" value="false"/>
+    <stringAttribute key="com.infineon.aurix.buildsystem.flash.cdsp.8.hex" value=""/>
+    <booleanAttribute key="com.infineon.aurix.buildsystem.flash.cdsp.9.active" value="false"/>
+    <stringAttribute key="com.infineon.aurix.buildsystem.flash.cdsp.9.hex" value=""/>
+    <booleanAttribute key="com.infineon.aurix.buildsystem.flash.ppu.active" value="true"/>
+    <stringAttribute key="com.infineon.aurix.buildsystem.flash.ppu.hex" value="C:\Users\CSO212\ACS-v1.0.24-workspace\EmbedSim_TC4\EmbedSim_TC4_PPU\Debug\EmbedSim_TC4_PPU.hex"/>
+    <stringAttribute key="com.infineon.aurix.buildsystem.flash.tc.hex" value="C:\Users\CSO212\ACS-v1.0.24-workspace\EmbedSim_TC4\EmbedSim_TC4_TC4\Debug\EmbedSim_TC4_TC4.hex"/>
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+        <listEntry value="/EmbedSim_TC4_TC4"/>
+    </listAttribute>
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+        <listEntry value="4"/>
+    </listAttribute>
+</launchConfiguration>

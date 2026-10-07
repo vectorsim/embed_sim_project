@@ -1,0 +1,990 @@
+   1              	
+   2              	 .file "IfxPpucStu.c"
+   3              	 .file "IfxPpucStu.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.IfxPpucStu_initChannel,"ax",@progbits
+   7              	 .align 1
+   8              	 .global IfxPpucStu_initChannel
+  10              	IfxPpucStu_initChannel:
+  11              	.LFB199:
+  12              	 .file 1 "../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c"
+   1:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** /**
+   2:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****  * \file IfxPpucStu.c
+   3:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****  * \brief PPUC basic functionality
+   4:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****  *
+   5:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****  *
+   8:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****  *
+   9:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****  *
+  10:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****  *                                 IMPORTANT NOTICE
+  11:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****  *
+  12:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****  * this file except in compliance with IFASLL.
+  15:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****  *
+  16:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****  *
+  26:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****  *
+  27:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****  */
+  28:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** 
+  29:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** /******************************************************************************/
+  30:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** /*----------------------------------Includes----------------------------------*/
+  31:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** /******************************************************************************/
+  32:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** 
+  33:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** #include "Ifx_Cfg.h"
+  34:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** #if defined (__TASKING__)
+  35:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** #pragma warning 508 	    /* To suppress empty file warning */
+  36:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** #endif    
+  37:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** #if defined (__ghs__)    
+  38:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** #pragma diag_suppress 96    /* To suppress empty file warning */
+  39:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** #endif
+  40:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** 
+  41:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** #if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) || defined(DEVICE_TC49XNAA) ||defined(DEVICE_TC
+  42:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** #include "IfxPpucStu.h"
+  43:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** 
+  44:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** /******************************************************************************/
+  45:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** /*-------------------------Function Implementations---------------------------*/
+  46:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** /******************************************************************************/
+  47:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** 
+  48:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** void IfxPpucStu_initChannel(Ifx_PPU *ppuc, uint8 channelNum, uint32 stuDescriptor, IfxPpucStu_chann
+  49:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** {
+  13              	 .loc 1 49 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  50:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     uint32           tempStuCtrlReg = 0U;
+  17              	 .loc 1 50 5
+  18              	.LVL1:
+  51:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     volatile uint32 *stuCtrlReg;
+  19              	 .loc 1 51 5
+  52:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     volatile uint32 *stuSizeReg;
+  20              	 .loc 1 52 5
+  53:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     volatile uint32 *stuSrcReg;
+  21              	 .loc 1 53 5
+  54:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     volatile uint32 *stuDstReg;
+  22              	 .loc 1 54 5
+  55:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     volatile uint32 *stuWidth;
+  23              	 .loc 1 55 5
+  56:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     volatile uint32 *stuStride;
+  24              	 .loc 1 56 5
+  57:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     uint8            maxChannels = (1 << (IfxPpucStu_getMaxChannels(ppuc) + 4));
+  25              	 .loc 1 57 5
+  26              	.LBB4:
+  27              	.LBB5:
+  28              	 .file 2 "../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h"
+   1:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /**
+   2:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \file IfxPpucStu.h
+   3:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \brief PPUC  basic functionality
+   4:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \ingroup IfxLld_Ppuc
+   5:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *
+   6:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \version iLLD-TC4-v2.7.0
+   7:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   8:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *
+   9:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *
+  10:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *
+  11:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *                                 IMPORTANT NOTICE
+  12:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *
+  13:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  14:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  15:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * this file except in compliance with IFASLL.
+  16:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *
+  17:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  18:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * Unless required by applicable law or agreed to in writing, software distributed
+  19:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  20:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  21:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * whether express, implied, statutory or otherwise, including but not limited to
+  22:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  23:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * defects in the licensed items, or non-infringement of third parties'
+  24:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * intellectual property rights. See the full license text for the specific
+  25:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * language governing permissions and limitations under IFASLL.
+  26:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *
+  27:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *
+  28:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * Streaming transfer unit
+  29:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *
+  30:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \defgroup IfxLld_Ppuc_Usage How to use the Ppuc driver?
+  31:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \ingroup IfxLld_Ppuc
+  32:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *
+  33:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * The Ppuc driver provides a default configuration for data moves
+  34:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *
+  35:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * In the following sections it will be described, how to integrate the driver into the application
+  36:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *
+  37:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \section IfxLld_Ppuc_Preparation Preparation
+  38:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \subsection IfxLld_Ppuc_Include Include Files
+  39:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *
+  40:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * Include following header file into your C code:
+  41:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *
+  42:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \code
+  43:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *      #include <Ppuc/Std/IfxPpucStu.h>
+  44:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *      #define IFXPPUCSTU_TRANSFER_SIZE_BYTES	128U
+  45:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *      #define LMU_START	0x30000000U
+  46:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *      #define CSM_START	0xA0000000U
+  47:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \endcode
+  48:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *
+  49:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *
+  50:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \subsection IfxLld_Ppuc_STU	STU initialization
+  51:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *
+  52:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * Initialize the number of entries in FIFO with following code:
+  53:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \code
+  54:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *  // Configure the number of entries in FIFO
+  55:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *  IfxPpucStu_setMaxChannels(&MODULE_PPUC,16U);
+  56:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \endcode
+  57:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *
+  58:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * The above has to be only done once in the application.
+  59:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *
+  60:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \subsection IfxLld_Ppuc_Simple LMU-to-CSM Transfers
+  61:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *
+  62:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * Channel configuration and handling for the data move:
+  63:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \code
+  64:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *      // construct the channel configuration
+  65:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *      uint8 channelNum = 0U;
+  66:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *      IfxPpucStu_channelConfig chnCfg;
+  67:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *      IfxPpucStu_initChannelConfig(&chnCfg);
+  68:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *
+  69:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *      // Get the next free channel which should be used
+  70:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *      channelNum = IfxPpucStu_getNextFreeChannel(&MODULE_PPUC);
+  71:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *
+  72:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *      // source and destination address
+  73:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *      chnCfg.sourceAddress       = (uint32)LMU_START; // Provide src address
+  74:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *      chnCfg.destinationAddress  = (uint32)CSM_START; // Provide dst address
+  75:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *
+  76:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *      // Configure the transfer size
+  77:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *      chnCfg.transferSize		   =  IFXPPUCSTU_TRANSFER_SIZE_BYTES;
+  78:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *
+  79:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *      // Configure the start of descriptor area
+  80:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *      IfxPpucStu_setDescriptorBaseAddress(&MODULE_PPUC, CSM_START + IFXPPUCSTU_TRANSFER_SIZE_BYTE
+  81:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *
+  82:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *
+  83:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *      // transfer configuration into STU registers
+  84:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *      IfxPpucStu_initChannel(&MODULE_PPUC, channelNum, (CSM_START + IFXPPUCSTU_TRANSFER_SIZE_BYTE
+  85:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *
+  86:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *      // start transfer and wait until it's finished
+  87:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *      IfxPpucStu_startTransfer(&MODULE_PPUC,1U);
+  88:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *
+  89:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *      while(IfxPpucStu_getChannelEvent(&MODULE_PPUC, channelNum) != 1U)
+  90:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *      {
+  91:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *
+  92:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *      }
+  93:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *
+  94:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *      // Clear the event flag
+  95:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *      IfxPpucStu_clearAllEvents(&MODULE_PPUC);
+  96:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *
+  97:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \endcode
+  98:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  *
+  99:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \defgroup IfxLld_Ppuc_Std_Stu Stu Basic Functionality
+ 100:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \ingroup IfxLld_Ppuc_Std
+ 101:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \defgroup IfxLld_Ppuc_Std_Stu_Enum Stu_Enums
+ 102:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \ingroup IfxLld_Ppuc_Std_Stu
+ 103:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \defgroup IfxLld_Ppuc_Std_Stu_Stu Stu_Functions
+ 104:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \ingroup IfxLld_Ppuc_Std_Stu
+ 105:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \defgroup IfxLld_Ppuc_Std_Stu_Struct Stu_Struct
+ 106:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \ingroup IfxLld_Ppuc_Std_Stu
+ 107:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  */
+ 108:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 109:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** #ifndef IFXPPUCSTU_H
+ 110:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** #define IFXPPUCSTU_H 1
+ 111:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 112:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /******************************************************************************/
+ 113:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /*----------------------------------Includes----------------------------------*/
+ 114:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /******************************************************************************/
+ 115:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 116:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** #include "_Impl/IfxPpuc_cfg.h"
+ 117:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** #include "Cpu/Std/IfxCpu_Intrinsics.h"
+ 118:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** #include "IfxPpu_reg.h"
+ 119:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** #include "Ap/Std/IfxApApu.h"
+ 120:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 121:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /******************************************************************************/
+ 122:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /*-----------------------------------Macros-----------------------------------*/
+ 123:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /******************************************************************************/
+ 124:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 125:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /** \brief Source memory type offset
+ 126:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  */
+ 127:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** #define IFXPPUCSTU_SRC_MEMTYPE_OFFSET   (0U)
+ 128:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 129:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /** \brief Destination memory type offset
+ 130:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  */
+ 131:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** #define IFXPPUCSTU_DST_MEMTYPE_OFFSET   (12U)
+ 132:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 133:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /** \brief Source LandeID offset
+ 134:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  */
+ 135:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** #define IFXPPUCSTU_SRC_LANDEID_OFFSET   (4U)
+ 136:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 137:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /** \brief Destination LandeID offset
+ 138:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  */
+ 139:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** #define IFXPPUCSTU_DST_LANDEID_OFFSET   (16U)
+ 140:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 141:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /** \brief Source Lane Width offset
+ 142:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  */
+ 143:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** #define IFXPPUCSTU_SRC_LANEWIDTH_OFFSET (1U)
+ 144:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 145:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /** \brief Destination Lane Width offset
+ 146:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  */
+ 147:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** #define IFXPPUCSTU_DST_LANEWIDTH_OFFSET (13U)
+ 148:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 149:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /** \brief Addressing mode offset
+ 150:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  */
+ 151:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** #define IFXPPUCSTU_ADDR_MODE_OFFSET     (25U)
+ 152:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 153:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /** \brief Signal type offset
+ 154:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  */
+ 155:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** #define IFXPPUCSTU_SIGNALTYPE_OFFSET    (24U)
+ 156:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 157:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /** \brief Get the VCCM local address, Since the STU sees it at 0xC0000000
+ 158:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  */
+ 159:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** #define IFXPPUCSTU_VCCM_LOCAL_ADDRESS(x) ((uint32)((x & 0x0FFFFFFFU) | 0xC0000000U))
+ 160:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 161:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /** \brief Dst bitfield offset in width and stride registers
+ 162:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  */
+ 163:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** #define IFXPPUCSTU_DSTWIDTH_OFFSET      (16U)
+ 164:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 165:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /******************************************************************************/
+ 166:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /*--------------------------------Enumerations--------------------------------*/
+ 167:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /******************************************************************************/
+ 168:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 169:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /** \addtogroup IfxLld_Ppuc_Std_Stu_Enum
+ 170:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \{ */
+ 171:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /** \brief Addressing mode of the transfer
+ 172:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  */
+ 173:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** typedef enum
+ 174:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** {
+ 175:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_AddressingMode_linear = 0,  /**< \brief linear addressing mode for source/destinatio
+ 176:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_AddressingMode_block  = 1   /**< \brief block addressing mode for source/destination
+ 177:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** } IfxPpucStu_AddressingMode;
+ 178:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 179:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /** \brief Specifies the data width of lane
+ 180:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  */
+ 181:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** typedef enum
+ 182:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** {
+ 183:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LandeWidth_16 = 0,  /**< \brief 16 bits per lane */
+ 184:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LandeWidth_32 = 1   /**< \brief 32 bits per lane */
+ 185:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** } IfxPpucStu_LandeWidth;
+ 186:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 187:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /** \brief The lane ID for private vector memory
+ 188:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  */
+ 189:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** typedef enum
+ 190:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** {
+ 191:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_0 = 0,      /**< \brief IfxPpucStu_LaneId0  */
+ 192:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_1,          /**< \brief IfxPpucStu_LaneId1  */
+ 193:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_2,          /**< \brief IfxPpucStu_LaneId2  */
+ 194:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_3,          /**< \brief IfxPpucStu_LaneId3  */
+ 195:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_4,          /**< \brief IfxPpucStu_LaneId4  */
+ 196:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_5,          /**< \brief IfxPpucStu_LaneId5  */
+ 197:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_6,          /**< \brief IfxPpucStu_LaneId6  */
+ 198:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_7,          /**< \brief IfxPpucStu_LaneId7  */
+ 199:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_8,          /**< \brief IfxPpucStu_LaneId8  */
+ 200:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_9,          /**< \brief IfxPpucStu_LaneId9  */
+ 201:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_10,         /**< \brief IfxPpucStu_LaneId10  */
+ 202:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_11,         /**< \brief IfxPpucStu_LaneId11  */
+ 203:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_12,         /**< \brief IfxPpucStu_LaneId12  */
+ 204:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_13,         /**< \brief IfxPpucStu_LaneId13  */
+ 205:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_14,         /**< \brief IfxPpucStu_LaneId14  */
+ 206:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_15,         /**< \brief IfxPpucStu_LaneId15  */
+ 207:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_16,         /**< \brief IfxPpucStu_LaneId16  */
+ 208:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_17,         /**< \brief IfxPpucStu_LaneId17  */
+ 209:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_18,         /**< \brief IfxPpucStu_LaneId18  */
+ 210:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_19,         /**< \brief IfxPpucStu_LaneId19  */
+ 211:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_20,         /**< \brief IfxPpucStu_LaneId20  */
+ 212:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_21,         /**< \brief IfxPpucStu_LaneId21  */
+ 213:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_22,         /**< \brief IfxPpucStu_LaneId22  */
+ 214:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_23,         /**< \brief IfxPpucStu_LaneId23  */
+ 215:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_24,         /**< \brief IfxPpucStu_LaneId24  */
+ 216:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_25,         /**< \brief IfxPpucStu_LaneId25  */
+ 217:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_26,         /**< \brief IfxPpucStu_LaneId26  */
+ 218:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_27,         /**< \brief IfxPpucStu_LaneId27  */
+ 219:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_28,         /**< \brief IfxPpucStu_LaneId28  */
+ 220:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_29,         /**< \brief IfxPpucStu_LaneId29  */
+ 221:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_30,         /**< \brief IfxPpucStu_LaneId30  */
+ 222:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_31,         /**< \brief IfxPpucStu_LaneId31  */
+ 223:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_32,         /**< \brief IfxPpucStu_LaneId32  */
+ 224:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_33,         /**< \brief IfxPpucStu_LaneId33  */
+ 225:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_34,         /**< \brief IfxPpucStu_LaneId34  */
+ 226:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_35,         /**< \brief IfxPpucStu_LaneId35  */
+ 227:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_36,         /**< \brief IfxPpucStu_LaneId36  */
+ 228:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_37,         /**< \brief IfxPpucStu_LaneId37  */
+ 229:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_38,         /**< \brief IfxPpucStu_LaneId38  */
+ 230:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_39,         /**< \brief IfxPpucStu_LaneId39  */
+ 231:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_40,         /**< \brief IfxPpucStu_LaneId40  */
+ 232:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_41,         /**< \brief IfxPpucStu_LaneId41  */
+ 233:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_42,         /**< \brief IfxPpucStu_LaneId42  */
+ 234:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_43,         /**< \brief IfxPpucStu_LaneId43  */
+ 235:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_44,         /**< \brief IfxPpucStu_LaneId44  */
+ 236:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_45,         /**< \brief IfxPpucStu_LaneId45  */
+ 237:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_46,         /**< \brief IfxPpucStu_LaneId46  */
+ 238:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_47,         /**< \brief IfxPpucStu_LaneId47  */
+ 239:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_48,         /**< \brief IfxPpucStu_LaneId48  */
+ 240:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_49,         /**< \brief IfxPpucStu_LaneId49  */
+ 241:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_50,         /**< \brief IfxPpucStu_LaneId50  */
+ 242:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_51,         /**< \brief IfxPpucStu_LaneId51  */
+ 243:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_52,         /**< \brief IfxPpucStu_LaneId52  */
+ 244:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_53,         /**< \brief IfxPpucStu_LaneId53  */
+ 245:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_54,         /**< \brief IfxPpucStu_LaneId54  */
+ 246:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_55,         /**< \brief IfxPpucStu_LaneId55  */
+ 247:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_56,         /**< \brief IfxPpucStu_LaneId56  */
+ 248:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_57,         /**< \brief IfxPpucStu_LaneId57  */
+ 249:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_58,         /**< \brief IfxPpucStu_LaneId58  */
+ 250:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_59,         /**< \brief IfxPpucStu_LaneId59  */
+ 251:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_60,         /**< \brief IfxPpucStu_LaneId60  */
+ 252:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_61,         /**< \brief IfxPpucStu_LaneId61  */
+ 253:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_62,         /**< \brief IfxPpucStu_LaneId62  */
+ 254:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_63,         /**< \brief IfxPpucStu_LaneId63  */
+ 255:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_64,         /**< \brief IfxPpucStu_LaneId64  */
+ 256:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_65,         /**< \brief IfxPpucStu_LaneId65  */
+ 257:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_66,         /**< \brief IfxPpucStu_LaneId66  */
+ 258:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_67,         /**< \brief IfxPpucStu_LaneId67  */
+ 259:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_68,         /**< \brief IfxPpucStu_LaneId68  */
+ 260:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_69,         /**< \brief IfxPpucStu_LaneId69  */
+ 261:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_70,         /**< \brief IfxPpucStu_LaneId70  */
+ 262:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_71,         /**< \brief IfxPpucStu_LaneId71  */
+ 263:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_72,         /**< \brief IfxPpucStu_LaneId72  */
+ 264:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_73,         /**< \brief IfxPpucStu_LaneId73  */
+ 265:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_74,         /**< \brief IfxPpucStu_LaneId74  */
+ 266:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_75,         /**< \brief IfxPpucStu_LaneId75  */
+ 267:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_76,         /**< \brief IfxPpucStu_LaneId76  */
+ 268:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_77,         /**< \brief IfxPpucStu_LaneId77  */
+ 269:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_78,         /**< \brief IfxPpucStu_LaneId78  */
+ 270:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_79,         /**< \brief IfxPpucStu_LaneId79  */
+ 271:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_80,         /**< \brief IfxPpucStu_LaneId80  */
+ 272:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_81,         /**< \brief IfxPpucStu_LaneId81  */
+ 273:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_82,         /**< \brief IfxPpucStu_LaneId82  */
+ 274:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_83,         /**< \brief IfxPpucStu_LaneId83  */
+ 275:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_84,         /**< \brief IfxPpucStu_LaneId84  */
+ 276:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_85,         /**< \brief IfxPpucStu_LaneId85  */
+ 277:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_86,         /**< \brief IfxPpucStu_LaneId86  */
+ 278:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_87,         /**< \brief IfxPpucStu_LaneId87  */
+ 279:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_88,         /**< \brief IfxPpucStu_LaneId88  */
+ 280:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_89,         /**< \brief IfxPpucStu_LaneId89  */
+ 281:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_90,         /**< \brief IfxPpucStu_LaneId90  */
+ 282:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_91,         /**< \brief IfxPpucStu_LaneId91  */
+ 283:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_92,         /**< \brief IfxPpucStu_LaneId92  */
+ 284:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_93,         /**< \brief IfxPpucStu_LaneId93  */
+ 285:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_94,         /**< \brief IfxPpucStu_LaneId94  */
+ 286:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_95,         /**< \brief IfxPpucStu_LaneId95  */
+ 287:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_96,         /**< \brief IfxPpucStu_LaneId96  */
+ 288:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_97,         /**< \brief IfxPpucStu_LaneId97  */
+ 289:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_98,         /**< \brief IfxPpucStu_LaneId98  */
+ 290:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_99,         /**< \brief IfxPpucStu_LaneId99  */
+ 291:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_100,        /**< \brief IfxPpucStu_LaneId100  */
+ 292:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_101,        /**< \brief IfxPpucStu_LaneId101  */
+ 293:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_102,        /**< \brief IfxPpucStu_LaneId102  */
+ 294:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_103,        /**< \brief IfxPpucStu_LaneId103  */
+ 295:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_104,        /**< \brief IfxPpucStu_LaneId104  */
+ 296:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_105,        /**< \brief IfxPpucStu_LaneId105  */
+ 297:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_106,        /**< \brief IfxPpucStu_LaneId106  */
+ 298:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_107,        /**< \brief IfxPpucStu_LaneId107  */
+ 299:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_108,        /**< \brief IfxPpucStu_LaneId108  */
+ 300:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_109,        /**< \brief IfxPpucStu_LaneId109  */
+ 301:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_110,        /**< \brief IfxPpucStu_LaneId110  */
+ 302:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_111,        /**< \brief IfxPpucStu_LaneId111  */
+ 303:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_112,        /**< \brief IfxPpucStu_LaneId112  */
+ 304:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_113,        /**< \brief IfxPpucStu_LaneId113  */
+ 305:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_114,        /**< \brief IfxPpucStu_LaneId114  */
+ 306:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_115,        /**< \brief IfxPpucStu_LaneId115  */
+ 307:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_116,        /**< \brief IfxPpucStu_LaneId116  */
+ 308:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_117,        /**< \brief IfxPpucStu_LaneId117  */
+ 309:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_118,        /**< \brief IfxPpucStu_LaneId118  */
+ 310:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_119,        /**< \brief IfxPpucStu_LaneId119  */
+ 311:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_120,        /**< \brief IfxPpucStu_LaneId120  */
+ 312:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_121,        /**< \brief IfxPpucStu_LaneId121  */
+ 313:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_122,        /**< \brief IfxPpucStu_LaneId122  */
+ 314:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_123,        /**< \brief IfxPpucStu_LaneId123  */
+ 315:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_124,        /**< \brief IfxPpucStu_LaneId124  */
+ 316:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_125,        /**< \brief IfxPpucStu_LaneId125  */
+ 317:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_126,        /**< \brief IfxPpucStu_LaneId126  */
+ 318:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId_127         /**< \brief IfxPpucStu_LaneId127  */
+ 319:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** } IfxPpucStu_LaneId;
+ 320:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 321:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /** \brief Describes the type of memory, system or private
+ 322:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  */
+ 323:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** typedef enum
+ 324:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** {
+ 325:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_Memory_system  = 0, /**< \brief Source/Destination is in system memory */
+ 326:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_Memory_private = 1  /**< \brief Source/Destination is in private memory */
+ 327:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** } IfxPpucStu_Memory;
+ 328:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 329:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /** \brief Singal to be generated at end of transfer
+ 330:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  */
+ 331:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** typedef enum
+ 332:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** {
+ 333:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_SignalType_event     = 0, /**< \brief Generate an event signal */
+ 334:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_SignalType_interrupt = 1  /**< \brief Generate an interrupt signal */
+ 335:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** } IfxPpucStu_SignalType;
+ 336:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 337:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /** \} */
+ 338:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 339:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /******************************************************************************/
+ 340:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /*-----------------------------Data Structures--------------------------------*/
+ 341:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /******************************************************************************/
+ 342:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 343:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /** \addtogroup IfxLld_Ppuc_Std_Stu_Struct
+ 344:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \{ */
+ 345:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /** \brief Channel configuration
+ 346:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  */
+ 347:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** typedef struct
+ 348:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** {
+ 349:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     uint32                    sourceAddress;            /**< \brief source address */
+ 350:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     uint32                    destinationAddress;       /**< \brief destination address */
+ 351:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     uint32                    transferSize;             /**< \brief Data size to be transferred in 
+ 352:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     uint16                    srcWidth;                 /**< \brief In 2D Mode, Src width in bytes 
+ 353:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     uint16                    dstWidth;                 /**< \brief In 2D Mode, Dst width in bytes 
+ 354:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     uint16                    srcStride;                /**< \brief In 2D Mode, src stride in bytes
+ 355:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     uint16                    dstStride;                /**< \brief In 2D Mode, dst stride in bytes
+ 356:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_AddressingMode addressingMode;           /**< \brief Addressing mode of the transfer
+ 357:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_SignalType     signalType;               /**< \brief Signal type to be generated at 
+ 358:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_Memory         srcMemType;               /**< \brief Source memory type */
+ 359:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_Memory         dstMemType;               /**< \brief Destination memory type */
+ 360:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId         srcLaneId;                /**< \brief Source lane ID */
+ 361:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LaneId         dstLaneId;                /**< \brief Destination lane ID */
+ 362:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LandeWidth     srcLaneWidth;             /**< \brief Source lane width */
+ 363:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     IfxPpucStu_LandeWidth     dstLaneWidth;             /**< \brief Destination Lane width */
+ 364:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** } IfxPpucStu_channelConfig;
+ 365:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 366:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /** \} */
+ 367:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 368:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /** \addtogroup IfxLld_Ppuc_Std_Stu_Stu
+ 369:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \{ */
+ 370:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 371:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /******************************************************************************/
+ 372:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /*-------------------------Inline Function Prototypes-------------------------*/
+ 373:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /******************************************************************************/
+ 374:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 375:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /** \brief Sets the base address for the STU descriptor
+ 376:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \param ppuc PPUC module pointer
+ 377:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \param address Base address of STU descriptor
+ 378:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \return None
+ 379:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  */
+ 380:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** IFX_INLINE void IfxPpucStu_setDescriptorBaseAddress(Ifx_PPU *ppuc, uint32 address);
+ 381:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 382:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /** \brief Retrieves the next free channel that can be configured
+ 383:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \param ppuc PPUC module pointer
+ 384:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \return Returns the next free channel number
+ 385:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  */
+ 386:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** IFX_INLINE uint8 IfxPpucStu_getNextFreeChannel(Ifx_PPU *ppuc);
+ 387:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 388:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /** \brief Initiate the number of STU transfers
+ 389:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \param ppuc PPUC module pointer
+ 390:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \param numOfTransfers The number of data transfers to be triggered
+ 391:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \return None
+ 392:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  */
+ 393:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** IFX_INLINE void IfxPpucStu_startTransfer(Ifx_PPU *ppuc, uint8 numOfTransfers);
+ 394:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 395:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /** \brief Returns the channel status of specified channel.
+ 396:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \param ppuc PPUC module pointer
+ 397:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \param channelNum The virtual channel number
+ 398:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \return Returns the channel status
+ 399:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  */
+ 400:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** IFX_INLINE boolean IfxPpucStu_getChannelEvent(Ifx_PPU *ppuc, uint8 channelNum);
+ 401:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 402:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /** \brief Clears the channel event status of a specified channel.
+ 403:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \param ppuc PPUC module pointer
+ 404:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \param channelNum The virtual channel number
+ 405:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \return None
+ 406:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  */
+ 407:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** IFX_INLINE void IfxPpucStu_clearChannelEvent(Ifx_PPU *ppuc, uint8 channelNum);
+ 408:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 409:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /** \brief Clears the status of all the events
+ 410:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \param ppuc PPUC module pointer
+ 411:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \return None
+ 412:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  */
+ 413:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** IFX_INLINE void IfxPpucStu_clearAllEvents(Ifx_PPU *ppuc);
+ 414:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 415:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /** \brief Returns the max number of entries configured per FIFO
+ 416:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \param ppuc PPUC Module pointer
+ 417:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \return Returns the max number of channels
+ 418:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  */
+ 419:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** IFX_INLINE uint8 IfxPpucStu_getMaxChannels(Ifx_PPU *ppuc);
+ 420:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 421:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /** \brief Sets the maximum number of entries per transfer FIFO
+ 422:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \param ppuc PPUC Module pointer
+ 423:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \param maxChannels The maximum number of channels to be set
+ 424:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \return None
+ 425:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  */
+ 426:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** IFX_INLINE void IfxPpucStu_setMaxChannels(Ifx_PPU *ppuc, uint8 maxChannels);
+ 427:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 428:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /** \brief Checks if the specified PPU channel interrupt is done.
+ 429:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \param ppuc PPUC module pointer
+ 430:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \param channelNum The virtual channel number
+ 431:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \return Returns TRUE if Done interrupt flag is set, FALSE if the flag is not set
+ 432:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  */
+ 433:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** IFX_INLINE boolean IfxPpucStu_isChannelInterruptDone(Ifx_PPU *ppuc, uint8 channelNum);
+ 434:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 435:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /** \brief Returns TRUE if Error interrupt flag is set, FALSE if the flag is not set
+ 436:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \param ppuc PPUC module pointer
+ 437:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \param channelNum The virtual channel number
+ 438:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \return Returns the channel Error Interrupt status
+ 439:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  */
+ 440:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** IFX_INLINE boolean IfxPpucStu_isChannelErrorInterrupt(Ifx_PPU *ppuc, uint8 channelNum);
+ 441:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 442:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /******************************************************************************/
+ 443:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /*-------------------------Global Function Prototypes-------------------------*/
+ 444:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /******************************************************************************/
+ 445:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 446:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /** \brief Initialize the Channel
+ 447:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \param ppuc PPUC module pointer
+ 448:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \param channelNum The virtual channel number
+ 449:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \param stuDescriptor Address of the STU memory mapped registers
+ 450:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \param channelConfig STU channel config
+ 451:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \return None
+ 452:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  */
+ 453:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** IFX_EXTERN void IfxPpucStu_initChannel(Ifx_PPU *ppuc, uint8 channelNum, uint32 stuDescriptor, IfxPp
+ 454:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 455:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /** \brief Initializes the channel configuration with default values.
+ 456:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \param channelConfig Pointer to the channel configuration structure that will be initialized.
+ 457:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \return None
+ 458:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  */
+ 459:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** IFX_EXTERN void IfxPpucStu_initChannelConfig(IfxPpucStu_channelConfig *channelConfig);
+ 460:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 461:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /** \brief Configures access to the PPU STU DMI module.
+ 462:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \param apConfig config pointer to configuration structure.
+ 463:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  * \return None
+ 464:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****  */
+ 465:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** IFX_EXTERN void IfxPpucStu_configureAccessToPpucStuDmi(IfxApApu_ApuConfig *apConfig);
+ 466:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 467:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /** \} */
+ 468:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 469:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /******************************************************************************/
+ 470:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /*---------------------Inline Function Implementations------------------------*/
+ 471:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** /******************************************************************************/
+ 472:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 473:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** IFX_INLINE void IfxPpucStu_setDescriptorBaseAddress(Ifx_PPU *ppuc, uint32 address)
+ 474:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** {
+ 475:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     PPU_STU_BASE_L.U = address;
+ 476:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** }
+ 477:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 478:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 479:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** IFX_INLINE uint8 IfxPpucStu_getNextFreeChannel(Ifx_PPU *ppuc)
+ 480:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** {
+ 481:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     return (uint8)PPU_STU_NEXT_FREE.U;
+ 482:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** }
+ 483:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 484:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 485:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** IFX_INLINE void IfxPpucStu_startTransfer(Ifx_PPU *ppuc, uint8 numOfTransfers)
+ 486:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** {
+ 487:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     PPU_STU_NEXT_FREE_INC.U = numOfTransfers;
+ 488:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** }
+ 489:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 490:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 491:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** IFX_INLINE boolean IfxPpucStu_getChannelEvent(Ifx_PPU *ppuc, uint8 channelNum)
+ 492:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** {
+ 493:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     /* Select the entry */
+ 494:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     PPU_STU_ENTRY_SELECT.U = channelNum;
+ 495:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     /* Read the status register */
+ 496:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     return (boolean)((PPU_STU_ENTRY_STAT.U & (1U << 2U)) >> 2U);
+ 497:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** }
+ 498:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 499:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 500:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** IFX_INLINE void IfxPpucStu_clearChannelEvent(Ifx_PPU *ppuc, uint8 channelNum)
+ 501:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** {
+ 502:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     /* Select the entry */
+ 503:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     PPU_STU_ENTRY_SELECT.U = channelNum;
+ 504:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     /* clear the event status of the selected entry */
+ 505:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     PPU_STU_EVENT.U        = 0U;
+ 506:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** }
+ 507:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 508:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 509:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** IFX_INLINE void IfxPpucStu_clearAllEvents(Ifx_PPU *ppuc)
+ 510:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** {
+ 511:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     PPU_STU_EVENT.U = 0x80000000U;
+ 512:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** }
+ 513:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 514:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** 
+ 515:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** IFX_INLINE uint8 IfxPpucStu_getMaxChannels(Ifx_PPU *ppuc)
+ 516:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h **** {
+ 517:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h ****     return (uint8)(PPU_STU_ENTRY_NUM.U);
+  29              	 .loc 2 517 5
+  30              	 .loc 2 517 37 is_stmt 0
+  31 0002 9110982F 	 movh.a %a2,63873
+  32 0006 B042     	 add.a %a2,4
+  33 0008 5422     	 ld.w %d2,[%a2]0
+  34              	.LVL2:
+  35              	.LBE5:
+  36              	.LBE4:
+  37              	 .loc 1 57 43
+  38 000a 8FF20F21 	 and %d2,%d2,255
+  39              	 .loc 1 57 75
+  40 000e 1B420030 	 addi %d3,%d2,4
+  41              	 .loc 1 57 39
+  42 0012 8212     	 mov %d2,1
+  43 0014 0F320020 	 sh %d2,%d2,%d3
+  44              	.LVL3:
+  58:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     uint16           entryNum    = 4U * channelNum;
+  45              	 .loc 1 58 5 is_stmt 1
+  46              	 .loc 1 58 39 is_stmt 0
+  47 0018 8FF40F41 	 and %d4,%d4,255
+  48              	 .loc 1 58 22
+  49 001c 0624     	 sh %d4,2
+  50              	.LVL4:
+  59:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** 
+  60:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     stuCtrlReg      = (volatile uint32 *)(stuDescriptor + (0U * maxChannels) + (entryNum));
+  51              	 .loc 1 60 5 is_stmt 1
+  52              	 .loc 1 60 78 is_stmt 0
+  53 001e 6042     	 mov.a %a2,%d4
+  54 0020 01250066 	 addsc.a %a6,%a2,%d5,0
+  55              	.LVL5:
+  61:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     stuSizeReg      = (volatile uint32 *)(stuDescriptor + (4U * maxChannels) + (entryNum));
+  56              	 .loc 1 61 5 is_stmt 1
+  57              	 .loc 1 61 63 is_stmt 0
+  58 0024 8FF20F21 	 and %d2,%d2,255
+  59              	.LVL6:
+  60 0028 8F220030 	 sh %d3,%d2,2
+  61              	.LVL7:
+  62              	 .loc 1 61 57
+  63 002c 4253     	 add %d3,%d5
+  64              	 .loc 1 61 78
+  65 002e 01230046 	 addsc.a %a4,%a2,%d3,0
+  66              	.LVL8:
+  62:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     stuSrcReg       = (volatile uint32 *)(stuDescriptor + (8U * maxChannels) + (entryNum));
+  67              	 .loc 1 62 5 is_stmt 1
+  68              	 .loc 1 62 63 is_stmt 0
+  69 0032 8F320030 	 sh %d3,%d2,3
+  70              	 .loc 1 62 57
+  71 0036 4253     	 add %d3,%d5
+  72              	 .loc 1 62 78
+  73 0038 01230036 	 addsc.a %a3,%a2,%d3,0
+  74              	.LVL9:
+  63:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     stuDstReg       = (volatile uint32 *)(stuDescriptor + (12U * maxChannels) + (entryNum));
+  75              	 .loc 1 63 5 is_stmt 1
+  76              	 .loc 1 63 57 is_stmt 0
+  77 003c 13C22035 	 madd %d3,%d5,%d2,12
+  78              	 .loc 1 63 79
+  79 0040 01230026 	 addsc.a %a2,%a2,%d3,0
+  80              	.LVL10:
+  64:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     stuWidth        = (volatile uint32 *)(stuDescriptor + (16U * maxChannels) + (entryNum));
+  81              	 .loc 1 64 5 is_stmt 1
+  82              	 .loc 1 64 64 is_stmt 0
+  83 0044 8F420030 	 sh %d3,%d2,4
+  84              	 .loc 1 64 57
+  85 0048 4253     	 add %d3,%d5
+  86              	 .loc 1 64 79
+  87 004a 6047     	 mov.a %a7,%d4
+  88 004c 017300C6 	 addsc.a %a12,%a7,%d3,0
+  89              	.LVL11:
+  65:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     stuStride       = (volatile uint32 *)(stuDescriptor + (20U * maxChannels) + (entryNum));
+  90              	 .loc 1 65 5 is_stmt 1
+  91              	 .loc 1 65 57 is_stmt 0
+  92 0050 13422125 	 madd %d2,%d5,%d2,20
+  93              	 .loc 1 65 79
+  94 0054 01720076 	 addsc.a %a7,%a7,%d2,0
+  95              	.LVL12:
+  66:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** 
+  67:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     tempStuCtrlReg |= (channelConfig->srcMemType) << IFXPPUCSTU_SRC_MEMTYPE_OFFSET;
+  96              	 .loc 1 67 5 is_stmt 1
+  97              	 .loc 1 67 37 is_stmt 0
+  98 0058 19541C00 	 ld.w %d4,[%a5]28
+  99              	.LVL13:
+  68:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     tempStuCtrlReg |= (channelConfig->dstMemType) << IFXPPUCSTU_DST_MEMTYPE_OFFSET;
+ 100              	 .loc 1 68 5 is_stmt 1
+ 101              	 .loc 1 68 37 is_stmt 0
+ 102 005c 19532000 	 ld.w %d3,[%a5]32
+ 103              	 .loc 1 68 51
+ 104 0060 8FC30020 	 sh %d2,%d3,12
+ 105              	 .loc 1 68 20
+ 106 0064 A642     	 or %d2,%d4
+ 107              	.LVL14:
+  69:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** 
+  70:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     if (channelConfig->srcMemType == IfxPpucStu_Memory_private)
+ 108              	 .loc 1 70 5 is_stmt 1
+ 109              	 .loc 1 70 8 is_stmt 0
+ 110 0066 DF140000 	 jeq %d4,1,.L5
+ 111              	.L2:
+  71:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     {
+  72:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         tempStuCtrlReg |= (channelConfig->srcLaneId) << IFXPPUCSTU_SRC_LANDEID_OFFSET;
+  73:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         tempStuCtrlReg |= (channelConfig->srcLaneWidth) << IFXPPUCSTU_SRC_LANEWIDTH_OFFSET;
+  74:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     }
+  75:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** 
+  76:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     if (channelConfig->dstMemType == IfxPpucStu_Memory_private)
+ 112              	 .loc 1 76 5 is_stmt 1
+ 113              	 .loc 1 76 8 is_stmt 0
+ 114 006a DF130000 	 jeq %d3,1,.L6
+ 115              	.L3:
+  77:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     {
+  78:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         tempStuCtrlReg |= (channelConfig->dstLaneId) << IFXPPUCSTU_DST_LANDEID_OFFSET;
+  79:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         tempStuCtrlReg |= (channelConfig->dstLaneWidth) << IFXPPUCSTU_DST_LANEWIDTH_OFFSET;
+  80:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     }
+  81:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** 
+  82:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     tempStuCtrlReg |= (channelConfig->addressingMode) << IFXPPUCSTU_ADDR_MODE_OFFSET;
+ 116              	 .loc 1 82 5 is_stmt 1
+ 117              	 .loc 1 82 37 is_stmt 0
+ 118 006e 19541400 	 ld.w %d4,[%a5]20
+ 119              	 .loc 1 82 55
+ 120 0072 8F940130 	 sh %d3,%d4,25
+ 121              	 .loc 1 82 20
+ 122 0076 A632     	 or %d2,%d3
+ 123              	.LVL15:
+  83:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** 
+  84:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     if ((channelConfig->addressingMode) == IfxPpucStu_AddressingMode_block)
+ 124              	 .loc 1 84 5 is_stmt 1
+ 125              	 .loc 1 84 8 is_stmt 0
+ 126 0078 DF140000 	 jeq %d4,1,.L7
+ 127              	.L4:
+  85:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     {
+  86:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         *stuWidth  = ((channelConfig->srcWidth - 1) | ((channelConfig->dstWidth - 1) << IFXPPUCSTU_
+  87:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         *stuStride = ((channelConfig->srcStride - 1) | ((channelConfig->dstStride - 1) << IFXPPUCST
+  88:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     }
+  89:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** 
+  90:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     tempStuCtrlReg |= (channelConfig->signalType) << IFXPPUCSTU_SIGNALTYPE_OFFSET;
+ 128              	 .loc 1 90 5 is_stmt 1
+ 129              	 .loc 1 90 37 is_stmt 0
+ 130 007c 19531800 	 ld.w %d3,[%a5]24
+ 131              	 .loc 1 90 51
+ 132 0080 8F830130 	 sh %d3,%d3,24
+ 133              	 .loc 1 90 20
+ 134 0084 A632     	 or %d2,%d3
+ 135              	.LVL16:
+  91:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** 
+  92:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     *stuCtrlReg     = tempStuCtrlReg;
+ 136              	 .loc 1 92 5 is_stmt 1
+ 137              	 .loc 1 92 21 is_stmt 0
+ 138 0086 7462     	 st.w [%a6]0,%d2
+  93:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** 
+  94:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     *stuSizeReg     = (channelConfig->transferSize) - 1U;
+ 139              	 .loc 1 94 5 is_stmt 1
+ 140              	 .loc 1 94 53 is_stmt 0
+ 141 0088 19520800 	 ld.w %d2,[%a5]8
+ 142              	.LVL17:
+ 143 008c C2F2     	 add %d2,-1
+ 144              	 .loc 1 94 21
+ 145 008e 7442     	 st.w [%a4]0,%d2
+ 146              	.LVL18:
+  95:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** 
+  96:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     *stuSrcReg      = (channelConfig->sourceAddress);
+ 147              	 .loc 1 96 5 is_stmt 1
+ 148              	 .loc 1 96 21 is_stmt 0
+ 149 0090 5452     	 ld.w %d2,[%a5]0
+ 150 0092 7432     	 st.w [%a3]0,%d2
+  97:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** 
+  98:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     *stuDstReg      = (channelConfig->destinationAddress);
+ 151              	 .loc 1 98 5 is_stmt 1
+ 152              	 .loc 1 98 37 is_stmt 0
+ 153 0094 19520400 	 ld.w %d2,[%a5]4
+ 154              	 .loc 1 98 21
+ 155 0098 7422     	 st.w [%a2]0,%d2
+  99:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** }
+ 156              	 .loc 1 99 1
+ 157 009a 0090     	 ret 
+ 158              	.LVL19:
+ 159              	.L5:
+  72:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         tempStuCtrlReg |= (channelConfig->srcLaneWidth) << IFXPPUCSTU_SRC_LANEWIDTH_OFFSET;
+ 160              	 .loc 1 72 9 is_stmt 1
+  72:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         tempStuCtrlReg |= (channelConfig->srcLaneWidth) << IFXPPUCSTU_SRC_LANEWIDTH_OFFSET;
+ 161              	 .loc 1 72 41 is_stmt 0
+ 162 009c 19542400 	 ld.w %d4,[%a5]36
+  72:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         tempStuCtrlReg |= (channelConfig->srcLaneWidth) << IFXPPUCSTU_SRC_LANEWIDTH_OFFSET;
+ 163              	 .loc 1 72 54
+ 164 00a0 0644     	 sh %d4,4
+  72:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         tempStuCtrlReg |= (channelConfig->srcLaneWidth) << IFXPPUCSTU_SRC_LANEWIDTH_OFFSET;
+ 165              	 .loc 1 72 24
+ 166 00a2 A642     	 or %d2,%d4
+ 167              	.LVL20:
+  73:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     }
+ 168              	 .loc 1 73 9 is_stmt 1
+  73:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     }
+ 169              	 .loc 1 73 41 is_stmt 0
+ 170 00a4 19542C00 	 ld.w %d4,[%a5]44
+  73:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     }
+ 171              	 .loc 1 73 57
+ 172 00a8 0614     	 sh %d4,1
+  73:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     }
+ 173              	 .loc 1 73 24
+ 174 00aa A642     	 or %d2,%d4
+ 175              	.LVL21:
+ 176 00ac 1D000000 	 j .L2
+ 177              	.L6:
+  78:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         tempStuCtrlReg |= (channelConfig->dstLaneWidth) << IFXPPUCSTU_DST_LANEWIDTH_OFFSET;
+ 178              	 .loc 1 78 9 is_stmt 1
+  78:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         tempStuCtrlReg |= (channelConfig->dstLaneWidth) << IFXPPUCSTU_DST_LANEWIDTH_OFFSET;
+ 179              	 .loc 1 78 41 is_stmt 0
+ 180 00b0 19532800 	 ld.w %d3,[%a5]40
+  78:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         tempStuCtrlReg |= (channelConfig->dstLaneWidth) << IFXPPUCSTU_DST_LANEWIDTH_OFFSET;
+ 181              	 .loc 1 78 54
+ 182 00b4 8F030130 	 sh %d3,%d3,16
+  78:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         tempStuCtrlReg |= (channelConfig->dstLaneWidth) << IFXPPUCSTU_DST_LANEWIDTH_OFFSET;
+ 183              	 .loc 1 78 24
+ 184 00b8 A632     	 or %d2,%d3
+ 185              	.LVL22:
+  79:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     }
+ 186              	 .loc 1 79 9 is_stmt 1
+  79:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     }
+ 187              	 .loc 1 79 41 is_stmt 0
+ 188 00ba 19533000 	 ld.w %d3,[%a5]48
+  79:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     }
+ 189              	 .loc 1 79 57
+ 190 00be 8FD30030 	 sh %d3,%d3,13
+  79:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     }
+ 191              	 .loc 1 79 24
+ 192 00c2 A632     	 or %d2,%d3
+ 193              	.LVL23:
+ 194 00c4 1D000000 	 j .L3
+ 195              	.L7:
+  86:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         *stuStride = ((channelConfig->srcStride - 1) | ((channelConfig->dstStride - 1) << IFXPPUCST
+ 196              	 .loc 1 86 9 is_stmt 1
+  86:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         *stuStride = ((channelConfig->srcStride - 1) | ((channelConfig->dstStride - 1) << IFXPPUCST
+ 197              	 .loc 1 86 37 is_stmt 0
+ 198 00c8 B9540C00 	 ld.hu %d4,[%a5]12
+  86:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         *stuStride = ((channelConfig->srcStride - 1) | ((channelConfig->dstStride - 1) << IFXPPUCST
+ 199              	 .loc 1 86 48
+ 200 00cc C2F4     	 add %d4,-1
+  86:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         *stuStride = ((channelConfig->srcStride - 1) | ((channelConfig->dstStride - 1) << IFXPPUCST
+ 201              	 .loc 1 86 70
+ 202 00ce B9530E00 	 ld.hu %d3,[%a5]14
+  86:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         *stuStride = ((channelConfig->srcStride - 1) | ((channelConfig->dstStride - 1) << IFXPPUCST
+ 203              	 .loc 1 86 81
+ 204 00d2 C2F3     	 add %d3,-1
+  86:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         *stuStride = ((channelConfig->srcStride - 1) | ((channelConfig->dstStride - 1) << IFXPPUCST
+ 205              	 .loc 1 86 86
+ 206 00d4 8F030130 	 sh %d3,%d3,16
+  86:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         *stuStride = ((channelConfig->srcStride - 1) | ((channelConfig->dstStride - 1) << IFXPPUCST
+ 207              	 .loc 1 86 53
+ 208 00d8 A643     	 or %d3,%d4
+  86:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         *stuStride = ((channelConfig->srcStride - 1) | ((channelConfig->dstStride - 1) << IFXPPUCST
+ 209              	 .loc 1 86 20
+ 210 00da 74C3     	 st.w [%a12]0,%d3
+  87:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     }
+ 211              	 .loc 1 87 9 is_stmt 1
+  87:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     }
+ 212              	 .loc 1 87 37 is_stmt 0
+ 213 00dc B9541000 	 ld.hu %d4,[%a5]16
+  87:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     }
+ 214              	 .loc 1 87 49
+ 215 00e0 C2F4     	 add %d4,-1
+  87:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     }
+ 216              	 .loc 1 87 71
+ 217 00e2 B9531200 	 ld.hu %d3,[%a5]18
+  87:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     }
+ 218              	 .loc 1 87 83
+ 219 00e6 C2F3     	 add %d3,-1
+  87:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     }
+ 220              	 .loc 1 87 88
+ 221 00e8 8F030130 	 sh %d3,%d3,16
+  87:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     }
+ 222              	 .loc 1 87 54
+ 223 00ec A643     	 or %d3,%d4
+  87:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     }
+ 224              	 .loc 1 87 20
+ 225 00ee 7473     	 st.w [%a7]0,%d3
+ 226 00f0 1D000000 	 j .L4
+ 227              	.LFE199:
+ 229              	 .global IfxPpucStu_initChannel_end
+ 230              	IfxPpucStu_initChannel_end:
+ 231              	 .section .text.IfxPpucStu_initChannelConfig,"ax",@progbits
+ 232              	 .align 1
+ 233              	 .global IfxPpucStu_initChannelConfig
+ 235              	IfxPpucStu_initChannelConfig:
+ 236              	.LFB200:
+ 100:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** 
+ 101:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** 
+ 102:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** void IfxPpucStu_initChannelConfig(IfxPpucStu_channelConfig *channelConfig)
+ 103:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** {
+ 237              	 .loc 1 103 1 is_stmt 1
+ 238              	.LVL24:
+ 239 0000 40AE     	 mov.aa %a14,%SP
+ 240              	.LCFI1:
+ 241 0002 404C     	 mov.aa %a12,%a4
+ 104:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     const IfxPpucStu_channelConfig defaultConfig = {
+ 242              	 .loc 1 104 5
+ 105:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         .sourceAddress      = 0x0U,
+ 106:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         .destinationAddress = 0x0U,
+ 107:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         .transferSize       = 0x0U,
+ 108:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         .signalType         = IfxPpucStu_SignalType_event,
+ 109:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         .srcMemType         = IfxPpucStu_Memory_system,
+ 110:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         .dstMemType         = IfxPpucStu_Memory_system,
+ 111:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         .srcLaneId          = IfxPpucStu_LaneId_0,
+ 112:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         .dstLaneId          = IfxPpucStu_LaneId_0,
+ 113:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         .srcLaneWidth       = IfxPpucStu_LandeWidth_16,
+ 114:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         .dstLaneWidth       = IfxPpucStu_LandeWidth_16,
+ 115:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         .srcWidth           = 1U,
+ 116:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         .dstWidth           = 1U,
+ 117:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         .srcStride          = 1U,
+ 118:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****         .dstStride          = 1U
+ 119:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     };
+ 120:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     *channelConfig = defaultConfig;
+ 243              	 .loc 1 120 5
+ 244              	 .loc 1 120 20 is_stmt 0
+ 245 0004 3B400350 	 mov %d5,52
+ 246 0008 8204     	 mov %d4,0
+ 247 000a 6D000000 	 call memset
+ 248              	.LVL25:
+ 249 000e 8212     	 mov %d2,1
+ 250 0010 F9C20C00 	 st.h [%a12]12,%d2
+ 251 0014 F9C20E00 	 st.h [%a12]14,%d2
+ 252 0018 F9C21000 	 st.h [%a12]16,%d2
+ 253 001c F9C21200 	 st.h [%a12]18,%d2
+ 121:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** }
+ 254              	 .loc 1 121 1
+ 255 0020 0090     	 ret 
+ 256              	.LFE200:
+ 258              	 .global IfxPpucStu_initChannelConfig_end
+ 259              	IfxPpucStu_initChannelConfig_end:
+ 260              	 .section .text.IfxPpucStu_configureAccessToPpucStuDmi,"ax",@progbits
+ 261              	 .align 1
+ 262              	 .global IfxPpucStu_configureAccessToPpucStuDmi
+ 264              	IfxPpucStu_configureAccessToPpucStuDmi:
+ 265              	.LFB201:
+ 122:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** 
+ 123:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** 
+ 124:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** void IfxPpucStu_configureAccessToPpucStuDmi(IfxApApu_ApuConfig *apConfig)
+ 125:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** {
+ 266              	 .loc 1 125 1 is_stmt 1
+ 267              	.LVL26:
+ 268 0000 40AE     	 mov.aa %a14,%SP
+ 269              	.LCFI2:
+ 126:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c ****     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_PPU_APU.AP.ACCEN.STUDMI, apConfig);
+ 270              	 .loc 1 126 5
+ 271 0002 4045     	 mov.aa %a5,%a4
+ 272 0004 9140984F 	 movh.a %a4,63876
+ 273              	.LVL27:
+ 274 0008 D9440010 	 lea %a4,[%a4]64
+ 275 000c 6D000000 	 call IfxApApu_init
+ 276              	.LVL28:
+ 127:../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.c **** }
+ 277              	 .loc 1 127 1 is_stmt 0
+ 278 0010 0090     	 ret 
+ 279              	.LFE201:
+ 281              	 .global IfxPpucStu_configureAccessToPpucStuDmi_end
+ 282              	IfxPpucStu_configureAccessToPpucStuDmi_end:
+ 335              	.Letext0:
+ 336              	 .file 3 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 337              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 338              	 .file 5 "../Libraries/Infra/Sfr/TC4Dx/IfxPpu_regdef.h"
+ 339              	 .file 6 "../Libraries/iLLD/TC4xx/CpuGeneric/Ap/IfxAccen_regdef.h"
+ 340              	 .file 7 "../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h"
+ 341              	 .file 8 "<built-in>"
+ 9633 0000 00000000 	 .word IfxPpucStu_initChannel
+ 9634 0004 00000000 	 .word IfxPpucStu_initChannel_end
+ 9635 0008 3C00FC74 	 .word 0x74fc003c
+ 9636 000c 30003000 	 .word 0x00300030
+ 9637 0010 00000000 	 .word 0x00000000
+ 9638 0014 C0000000 	 .word 0x000000c0
+ 9639 0018 00000000 	 .word IfxPpucStu_initChannelConfig
+ 9640 001c 00000000 	 .word IfxPpucStu_initChannelConfig_end
+ 9641 0020 34001454 	 .word 0x54140034
+ 9642 0024 00001000 	 .word 0x00100000
+ 9643 0028 00000000 	 .word 0x00000000
+ 9644 002c 40000200 	 .word 0x00020040
+ 9645 0030 00000000 	 .word IfxPpucStu_configureAccessToPpucStuDmi
+ 9646 0034 00000000 	 .word IfxPpucStu_configureAccessToPpucStuDmi_end
+ 9647 0038 00003044 	 .word 0x44300000
+ 9648 003c 00001000 	 .word 0x00100000
+ 9649 0040 00000000 	 .word 0x00000000
+ 9650 0044 40000200 	 .word 0x00020040
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxPpucStu.c
+                            *ABS*:00000000 IfxPpucStu.c
+    {standard input}:10     .text.IfxPpucStu_initChannel:00000000 IfxPpucStu_initChannel
+    {standard input}:230    .text.IfxPpucStu_initChannel:000000f4 IfxPpucStu_initChannel_end
+    {standard input}:235    .text.IfxPpucStu_initChannelConfig:00000000 IfxPpucStu_initChannelConfig
+    {standard input}:259    .text.IfxPpucStu_initChannelConfig:00000022 IfxPpucStu_initChannelConfig_end
+    {standard input}:264    .text.IfxPpucStu_configureAccessToPpucStuDmi:00000000 IfxPpucStu_configureAccessToPpucStuDmi
+    {standard input}:282    .text.IfxPpucStu_configureAccessToPpucStuDmi:00000012 IfxPpucStu_configureAccessToPpucStuDmi_end
+
+UNDEFINED SYMBOLS
+memset
+IfxApApu_init

@@ -1,0 +1,1784 @@
+   1              	
+   2              	 .file "IfxEgtm_Atom.c"
+   3              	 .file "IfxEgtm_Atom.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.IfxEgtm_Atom_Agc_buildFeature,"ax",@progbits
+   7              	 .align 1
+   8              	 .global IfxEgtm_Atom_Agc_buildFeature
+  10              	IfxEgtm_Atom_Agc_buildFeature:
+  11              	.LFB397:
+  12              	 .file 1 "../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c"
+   1:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** /**
+   2:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****  * \file IfxEgtm_Atom.c
+   3:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****  * \brief EGTM  basic functionality
+   4:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****  *
+   5:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****  *
+   8:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****  *
+   9:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****  *
+  10:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****  *                                 IMPORTANT NOTICE
+  11:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****  *
+  12:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****  * this file except in compliance with IFASLL.
+  15:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****  *
+  16:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****  *
+  26:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****  *
+  27:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****  */
+  28:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** 
+  29:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** /******************************************************************************/
+  30:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** /*----------------------------------Includes----------------------------------*/
+  31:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** /******************************************************************************/
+  32:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** 
+  33:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** #include "Ifx_Cfg.h"
+  34:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** #if defined (__TASKING__)
+  35:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** #pragma warning 508 /* To suppress empty file warning */
+  36:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** #endif
+  37:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** #if defined (__ghs__)
+  38:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** #pragma diag_suppress 96 /* To suppress empty file warning */
+  39:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** #endif
+  40:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** 
+  41:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** #if !defined(DEVICE_TC45X)
+  42:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** #include "IfxEgtm_Atom.h"
+  43:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** 
+  44:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** /******************************************************************************/
+  45:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** /*-------------------------Function Implementations---------------------------*/
+  46:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** /******************************************************************************/
+  47:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** 
+  48:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** uint32 IfxEgtm_Atom_Agc_buildFeature(uint16 enableMask, uint16 disableMask, uint8 bitfieldOffset)
+  49:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** {
+  13              	 .loc 1 49 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  50:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     uint8  i;
+  17              	 .loc 1 50 5
+  51:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     uint32 reg  = 0u;
+  18              	 .loc 1 51 5
+  19              	.LVL1:
+  52:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     uint32 mask = (uint32)((uint32)enableMask | ((uint32)disableMask << 16u));
+  20              	 .loc 1 52 5
+  21              	 .loc 1 52 70 is_stmt 0
+  22 0002 8F050150 	 sh %d5,%d5,16
+  23              	.LVL2:
+  24              	 .loc 1 52 12
+  25 0006 A654     	 or %d4,%d5
+  26              	.LVL3:
+  53:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** 
+  54:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     for (i = 0u; i < IFXEGTM_ATOM_NUM_AGC_CHANNELS; i++)
+  27              	 .loc 1 54 5 is_stmt 1
+  51:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     uint32 mask = (uint32)((uint32)enableMask | ((uint32)disableMask << 16u));
+  28              	 .loc 1 51 12 is_stmt 0
+  29 0008 8202     	 mov %d2,0
+  30              	 .loc 1 54 12
+  31 000a 8203     	 mov %d3,0
+  32              	 .loc 1 54 5
+  33 000c 1D000000 	 j .L2
+  34              	.LVL4:
+  35              	.L4:
+  36              	.LBB8:
+  55:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     {
+  56:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         /* Bitfield length is 2 bits */
+  57:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         uint8 shift = (i << 1u) + bitfieldOffset;
+  58:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** 
+  59:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         if ((mask & 0x1u) == 0x1u)
+  60:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         {
+  61:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****             reg |= (uint32)IfxEgtm_FeatureControl_enable << shift;
+  62:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         }
+  63:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** 
+  64:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         if ((mask & 0x10000u) == 0x10000u)
+  65:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         {
+  66:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****             reg |= (uint32)IfxEgtm_FeatureControl_disable << shift;
+  67:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         }
+  68:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** 
+  69:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         mask = mask >> 1;
+  37              	 .loc 1 69 9 is_stmt 1 discriminator 2
+  38              	 .loc 1 69 14 is_stmt 0 discriminator 2
+  39 0010 06F4     	 sh %d4,-1
+  40              	.LVL5:
+  41              	.LBE8:
+  54:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     {
+  42              	 .loc 1 54 54 is_stmt 1 discriminator 2
+  43 0012 C213     	 add %d3,1
+  44              	.LVL6:
+  45 0014 8FF30F31 	 and %d3,%d3,255
+  46              	.LVL7:
+  47              	.L2:
+  54:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     {
+  48              	 .loc 1 54 20 discriminator 1
+  49 0018 FF830080 	 jge.u %d3,8,.L6
+  50              	.LBB9:
+  57:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** 
+  51              	 .loc 1 57 9
+  57:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** 
+  52              	 .loc 1 57 26 is_stmt 0
+  53 001c 8F130050 	 sh %d5,%d3,1
+  54 0020 8FF50F51 	 and %d5,%d5,255
+  57:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** 
+  55              	 .loc 1 57 15
+  56 0024 4265     	 add %d5,%d6
+  57 0026 8FF50F51 	 and %d5,%d5,255
+  58              	.LVL8:
+  59:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         {
+  59              	 .loc 1 59 9 is_stmt 1
+  59:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         {
+  60              	 .loc 1 59 12 is_stmt 0
+  61 002a 6F040000 	 jz.t %d4,0,.L3
+  61:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         }
+  62              	 .loc 1 61 13 is_stmt 1
+  61:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         }
+  63              	 .loc 1 61 58 is_stmt 0
+  64 002e 8227     	 mov %d7,2
+  65 0030 0F570070 	 sh %d7,%d7,%d5
+  61:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         }
+  66              	 .loc 1 61 17
+  67 0034 A672     	 or %d2,%d7
+  68              	.LVL9:
+  69              	.L3:
+  64:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         {
+  70              	 .loc 1 64 9 is_stmt 1
+  64:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         {
+  71              	 .loc 1 64 12 is_stmt 0
+  72 0036 EF040000 	 jz.t %d4,16,.L4
+  66:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         }
+  73              	 .loc 1 66 13 is_stmt 1
+  66:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         }
+  74              	 .loc 1 66 59 is_stmt 0
+  75 003a 8217     	 mov %d7,1
+  76 003c 0F570070 	 sh %d7,%d7,%d5
+  66:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         }
+  77              	 .loc 1 66 17
+  78 0040 A672     	 or %d2,%d7
+  79              	.LVL10:
+  80 0042 1D000000 	 j .L4
+  81              	.LVL11:
+  82              	.L6:
+  83              	.LBE9:
+  70:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     }
+  71:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** 
+  72:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     return reg;
+  84              	 .loc 1 72 5 is_stmt 1
+  73:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** }
+  85              	 .loc 1 73 1 is_stmt 0
+  86 0046 0090     	 ret 
+  87              	.LFE397:
+  89              	 .global IfxEgtm_Atom_Agc_buildFeature_end
+  90              	IfxEgtm_Atom_Agc_buildFeature_end:
+  91              	 .section .text.IfxEgtm_Atom_Agc_buildFeatureForChannel,"ax",@progbits
+  92              	 .align 1
+  93              	 .global IfxEgtm_Atom_Agc_buildFeatureForChannel
+  95              	IfxEgtm_Atom_Agc_buildFeatureForChannel:
+  96              	.LFB398:
+  74:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** 
+  75:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** 
+  76:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** uint32 IfxEgtm_Atom_Agc_buildFeatureForChannel(IfxEgtm_Atom_Ch channel, boolean enabled, uint8 bitf
+  77:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** {
+  97              	 .loc 1 77 1 is_stmt 1
+  98              	.LVL12:
+  99 0000 40AE     	 mov.aa %a14,%SP
+ 100              	.LCFI1:
+  78:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     uint32 reg = 0u;
+ 101              	 .loc 1 78 5
+ 102              	.LVL13:
+  79:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** 
+  80:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     /* Bitfield length is 2 bits */
+  81:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     uint8  shift = (((uint8)channel & 0x7u) << 1u) + bitfieldOffset;
+ 103              	 .loc 1 81 5
+ 104              	 .loc 1 81 22 is_stmt 0
+ 105 0002 8FF40F41 	 and %d4,%d4,255
+ 106              	.LVL14:
+ 107              	 .loc 1 81 45
+ 108 0006 0614     	 sh %d4,1
+ 109 0008 8FE40021 	 and %d2,%d4,14
+ 110              	 .loc 1 81 12
+ 111 000c 4262     	 add %d2,%d6
+ 112 000e 8FF20F61 	 and %d6,%d2,255
+ 113              	.LVL15:
+  82:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** 
+  83:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     if (enabled == 1u)
+ 114              	 .loc 1 83 5 is_stmt 1
+ 115              	 .loc 1 83 8 is_stmt 0
+ 116 0012 DF150000 	 jeq %d5,1,.L10
+  84:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     {
+  85:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         reg = (uint32)IfxEgtm_FeatureControl_enable << shift;
+  86:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     }
+  87:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     else
+  88:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     {
+  89:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         reg = (uint32)IfxEgtm_FeatureControl_disable << shift;
+ 117              	 .loc 1 89 9 is_stmt 1
+ 118              	 .loc 1 89 13 is_stmt 0
+ 119 0016 8212     	 mov %d2,1
+ 120 0018 0F620020 	 sh %d2,%d2,%d6
+ 121              	.LVL16:
+  90:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     }
+  91:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** 
+  92:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     return reg;
+ 122              	 .loc 1 92 5 is_stmt 1
+  93:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** }
+ 123              	 .loc 1 93 1 is_stmt 0
+ 124 001c 0090     	 ret 
+ 125              	.LVL17:
+ 126              	.L10:
+  85:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     }
+ 127              	 .loc 1 85 9 is_stmt 1
+  85:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     }
+ 128              	 .loc 1 85 13 is_stmt 0
+ 129 001e 8222     	 mov %d2,2
+ 130 0020 0F620020 	 sh %d2,%d2,%d6
+ 131              	.LVL18:
+ 132 0024 0090     	 ret 
+ 133              	.LFE398:
+ 135              	 .global IfxEgtm_Atom_Agc_buildFeatureForChannel_end
+ 136              	IfxEgtm_Atom_Agc_buildFeatureForChannel_end:
+ 137              	 .section .text.IfxEgtm_Atom_Ch_getFrequency,"ax",@progbits
+ 138              	 .align 1
+ 139              	 .global IfxEgtm_Atom_Ch_getFrequency
+ 141              	IfxEgtm_Atom_Ch_getFrequency:
+ 142              	.LFB399:
+  94:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** 
+  95:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** 
+  96:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** float32 IfxEgtm_Atom_Ch_getFrequency(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch channel)
+  97:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** {
+ 143              	 .loc 1 97 1 is_stmt 1
+ 144              	.LVL19:
+ 145 0000 40AE     	 mov.aa %a14,%SP
+ 146              	.LCFI2:
+ 147 0002 8049     	 mov.d %d9,%a4
+ 148 0004 0248     	 mov %d8,%d4
+  98:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     float32                    frequency         = 0.0f, sourceFrequency;
+ 149              	 .loc 1 98 5
+ 150              	.LVL20:
+  99:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     uint32                     periodTicks       = 0u;
+ 151              	 .loc 1 99 5
+ 100:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     IfxEgtm_Atom_Ch_ResetEvent counterResetEvent = (IfxEgtm_Atom_Ch_ResetEvent)atom->CH[channel].CT
+ 152              	 .loc 1 100 5
+ 153              	 .loc 1 100 104 is_stmt 0
+ 154 0006 8F740020 	 sh %d2,%d4,7
+ 155 000a 01420026 	 addsc.a %a2,%a4,%d2,0
+ 156 000e 19220400 	 ld.w %d2,[%a2]4
+ 157 0012 3702612A 	 extr.u %d2,%d2,20,1
+ 158              	.LVL21:
+ 101:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** 
+ 102:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     while ((counterResetEvent != IfxEgtm_Atom_Ch_ResetEvent_onCm0) &&
+ 159              	 .loc 1 102 5 is_stmt 1
+ 160              	 .loc 1 102 11 is_stmt 0
+ 161 0016 1D000000 	 j .L12
+ 162              	.LVL22:
+ 163              	.L13:
+ 103:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****            (channel > IfxEgtm_Atom_Ch_0))       /* Counter is reset from previous channel */
+ 104:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     {
+ 105:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         channel           = (IfxEgtm_Atom_Ch)((uint8)channel - 1u);
+ 164              	 .loc 1 105 9 is_stmt 1
+ 165 001a 8FF80F81 	 and %d8,%d8,255
+ 166              	.LVL23:
+ 167              	 .loc 1 105 27 is_stmt 0
+ 168 001e C2F8     	 add %d8,-1
+ 169              	.LVL24:
+ 106:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         counterResetEvent = (IfxEgtm_Atom_Ch_ResetEvent)atom->CH[channel].CTRL.B.RST_CCU0;
+ 170              	 .loc 1 106 9 is_stmt 1
+ 171              	 .loc 1 106 81 is_stmt 0
+ 172 0020 8F780020 	 sh %d2,%d8,7
+ 173              	.LVL25:
+ 174 0024 6092     	 mov.a %a2,%d9
+ 175 0026 01220026 	 addsc.a %a2,%a2,%d2,0
+ 176 002a 19220400 	 ld.w %d2,[%a2]4
+ 177 002e 3702612A 	 extr.u %d2,%d2,20,1
+ 178              	.LVL26:
+ 179              	.L12:
+ 102:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****            (channel > IfxEgtm_Atom_Ch_0))       /* Counter is reset from previous channel */
+ 180              	 .loc 1 102 68 is_stmt 1
+ 103:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****            (channel > IfxEgtm_Atom_Ch_0))       /* Counter is reset from previous channel */
+ 181              	 .loc 1 103 21 is_stmt 0
+ 182 0032 8B082032 	 ne %d3,%d8,0
+ 102:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****            (channel > IfxEgtm_Atom_Ch_0))       /* Counter is reset from previous channel */
+ 183              	 .loc 1 102 68
+ 184 0036 2623     	 and %d3,%d2
+ 185 0038 DF030080 	 jnz %d3,.L13
+ 107:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     }
+ 108:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** 
+ 109:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     if (counterResetEvent == IfxEgtm_Atom_Ch_ResetEvent_onCm0)
+ 186              	 .loc 1 109 5 is_stmt 1
+ 187              	 .loc 1 109 8 is_stmt 0
+ 188 003c DF020080 	 jnz %d2,.L18
+ 110:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     {
+ 111:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         /* 1. Gets channel input frequency */
+ 112:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         sourceFrequency = IfxEgtm_Atom_Ch_getClockFrequency(&MODULE_EGTM, atom, channel);
+ 189              	 .loc 1 112 9 is_stmt 1
+ 190              	.LVL27:
+ 191              	.LBB10:
+ 192              	.LBB11:
+ 193              	 .file 2 "../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h"
+   1:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /**
+   2:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \file IfxEgtm_Atom.h
+   3:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \brief EGTM  basic functionality
+   4:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \ingroup IfxLld_Egtm
+   5:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+   6:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \version iLLD-TC4-v2.7.0
+   7:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   8:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+   9:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+  10:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+  11:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                                 IMPORTANT NOTICE
+  12:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+  13:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  14:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  15:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * this file except in compliance with IFASLL.
+  16:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+  17:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  18:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * Unless required by applicable law or agreed to in writing, software distributed
+  19:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  20:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  21:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * whether express, implied, statutory or otherwise, including but not limited to
+  22:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  23:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * defects in the licensed items, or non-infringement of third parties'
+  24:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * intellectual property rights. See the full license text for the specific
+  25:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * language governing permissions and limitations under IFASLL.
+  26:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+  27:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+  28:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+  29:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+  30:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \defgroup IfxLld_Egtm_Std_Atom Atom Basic Functionality
+  31:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \ingroup IfxLld_Egtm_Std
+  32:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \defgroup IfxLld_Egtm_Std_Atom_Enumerations ATOM Enumerations
+  33:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \ingroup IfxLld_Egtm_Std_Atom
+  34:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \defgroup IfxLld_Egtm_Std_Atom_Channel_Functions ATOM Channel Functions
+  35:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \ingroup IfxLld_Egtm_Std_Atom
+  36:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \defgroup IfxLld_Egtm_Std_Atom_AGC_Functions ATOM AGC Functions
+  37:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \ingroup IfxLld_Egtm_Std_Atom
+  38:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \defgroup IfxLld_Egtm_Std_Atom_Module_Functions ATOM Module Functions
+  39:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \ingroup IfxLld_Egtm_Std_Atom
+  40:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+  41:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+  42:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** #ifndef IFXEGTM_ATOM_H
+  43:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** #define IFXEGTM_ATOM_H 1
+  44:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+  45:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /******************************************************************************/
+  46:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /*----------------------------------Includes----------------------------------*/
+  47:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /******************************************************************************/
+  48:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+  49:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** #include "_Impl/IfxEgtm_cfg.h"
+  50:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** #include "IfxEgtm.h"
+  51:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** #include "IfxEgtm_Tbu.h"
+  52:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** #include "Src/Std/IfxSrc.h"
+  53:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** #include "IfxEgtm_Cmu.h"
+  54:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** #include "stddef.h"
+  55:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+  56:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /******************************************************************************/
+  57:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /*-----------------------------------Macros-----------------------------------*/
+  58:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /******************************************************************************/
+  59:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+  60:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Number of channels per ATOM AGC
+  61:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+  62:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** #define IFXEGTM_ATOM_NUM_AGC_CHANNELS (8)
+  63:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+  64:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Macro to calculate shift for each channel
+  65:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * Each channel occupies two bits hence left shift by 1 and then add offset
+  66:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+  67:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** #define IFXEGTM_ATOM_AGC_CHANNEL_SHIFT(channel, offset) ((((uint32)((uint32)channel & 0x7u)) << 1u)
+  68:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+  69:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Macro to mask one channel bitfield in AGC registers
+  70:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+  71:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** #define IFXEGTM_ATOM_AGC_CHANNEL_MASK (3u)
+  72:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+  73:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Macro to calculate channel bitfield value in AGC registers depending on whether it is en
+  74:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+  75:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** #define IFXEGTM_ATOM_AGC_CHANNEL_VALUE(enabled)         ((enabled == TRUE) ? IfxEgtm_FeatureControl
+  76:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+  77:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /******************************************************************************/
+  78:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /*--------------------------------Enumerations--------------------------------*/
+  79:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /******************************************************************************/
+  80:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+  81:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \addtogroup IfxLld_Egtm_Std_Atom_Enumerations
+  82:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \{ */
+  83:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Clock source for the ATOM channels
+  84:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * Definition in Ifx_EGTM_CLS_ATOM_CH_CTRL.B.CLK_SRC
+  85:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+  86:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** typedef enum
+  87:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** {
+  88:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     IfxEgtm_Atom_Ch_ClkSrc_cmuclk0  = 0,   /**< \brief cmu clock0 */
+  89:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     IfxEgtm_Atom_Ch_ClkSrc_cmuclk1  = 1,   /**< \brief cmu clock1 */
+  90:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     IfxEgtm_Atom_Ch_ClkSrc_cmuclk2  = 2,   /**< \brief cmu clock2 */
+  91:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     IfxEgtm_Atom_Ch_ClkSrc_cmuclk3  = 3,   /**< \brief cmu clock3 */
+  92:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     IfxEgtm_Atom_Ch_ClkSrc_cmuclk4  = 4,   /**< \brief cmu clock4 */
+  93:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     IfxEgtm_Atom_Ch_ClkSrc_cmuclk5  = 5,   /**< \brief cmu clock5 */
+  94:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     IfxEgtm_Atom_Ch_ClkSrc_cmuclk6  = 6,   /**< \brief cmu clock6 */
+  95:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     IfxEgtm_Atom_Ch_ClkSrc_cmuclk7  = 7,   /**< \brief cmu clock7 */
+  96:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     IfxEgtm_Atom_Ch_ClkSrc_noClock  = 8,   /**< \brief no clock */
+  97:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     IfxEgtm_Atom_Ch_ClkSrc_prevTrig = 13,  /**< \brief TRIG[x-1] trigger from previous channel */
+  98:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     IfxEgtm_Atom_Ch_ClkSrc_extTrig  = 14   /**< \brief TIM_EXT_CAPTURE */
+  99:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** } IfxEgtm_Atom_Ch_ClkSrc;
+ 100:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 101:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Reset source for channel counter CN0
+ 102:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * Definition in Ifx_EGTM_CLS_ATOM_CH_CTRL.B.TRIGOUT
+ 103:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 104:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** typedef enum
+ 105:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** {
+ 106:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     IfxEgtm_Atom_Ch_OutputTrigger_forward  = 0, /**< \brief Forward the trigger from the previous c
+ 107:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     IfxEgtm_Atom_Ch_OutputTrigger_generate = 1  /**< \brief Generate the trigger from the current c
+ 108:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** } IfxEgtm_Atom_Ch_OutputTrigger;
+ 109:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 110:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Reset event for channel counter CN0
+ 111:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * Definition in Ifx_EGTM_CLS_ATOM_CH_CTRL.B.RST_CCU0
+ 112:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 113:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** typedef enum
+ 114:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** {
+ 115:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     IfxEgtm_Atom_Ch_ResetEvent_onCm0     = 0,
+ 116:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     IfxEgtm_Atom_Ch_ResetEvent_onTrigger = 1
+ 117:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** } IfxEgtm_Atom_Ch_ResetEvent;
+ 118:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 119:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Enum for ATOM mode
+ 120:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * Definition in Ifx_EGTM_CLS_ATOM_CH_CTRL.B.MODE
+ 121:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 122:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** typedef enum
+ 123:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** {
+ 124:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     IfxEgtm_Atom_Mode_outputImmediate,       /**< \brief ATOM Signal Output Mode Immediate (SOMI) *
+ 125:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     IfxEgtm_Atom_Mode_outputCompare,         /**< \brief ATOM Signal Output Mode Compare (SOMC) */
+ 126:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     IfxEgtm_Atom_Mode_outputPwm,             /**< \brief ATOM Signal Output Mode PWM (SOMP) */
+ 127:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     IfxEgtm_Atom_Mode_outputSerial,          /**< \brief ATOM Signal Output Mode Serial (SOMS) */
+ 128:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     IfxEgtm_Atom_Mode_outputBufferedControl  /**< \brief ATOM Signal Output Mode Buffered Compare (
+ 129:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** } IfxEgtm_Atom_Mode;
+ 130:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 131:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Match Compare control modes
+ 132:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * Definition in Ifx_EGTM_CLS_ATOM_CH_CTRL_SOMC.B.ACB42
+ 133:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 134:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** typedef enum
+ 135:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** {
+ 136:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     IfxEgtm_Atom_SomcControl_compareBoth     = 0,  /**< \brief compare CCU0 and CCU1 in parallel */
+ 137:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     IfxEgtm_Atom_SomcControl_compareBoth1    = 1,  /**< \brief compare CCU0 and CCU1 in parallel */
+ 138:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     IfxEgtm_Atom_SomcControl_ccu0Ts0         = 2,  /**< \brief compare CCU0 against TS0 */
+ 139:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     IfxEgtm_Atom_SomcControl_ccu1Ts12        = 3,  /**< \brief compare only CCU1 against TS1 or TS2
+ 140:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     IfxEgtm_Atom_SomcControl_ccu0ccu1Ts0     = 4,  /**< \brief compare CCU0 then CCU1, use TS0 */
+ 141:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     IfxEgtm_Atom_SomcControl_ccu0ccu1Ts12    = 5,  /**< \brief compare CCU0 then CCU1. Use TS1 or T
+ 142:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     IfxEgtm_Atom_SomcControl_ccu0Ts0ccu1Ts12 = 6,  /**< \brief compare CCU0 with TS0 then CCU1 with
+ 143:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     IfxEgtm_Atom_SomcControl_cancelCompare   = 7   /**< \brief Cancel pending compare events */
+ 144:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** } IfxEgtm_Atom_SomcControl;
+ 145:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 146:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief SOMC signal level Control
+ 147:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * Definition in Ifx_EGTM_CLS_ATOM_CH_CTRL_SOMC.B.ACB10
+ 148:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 149:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** typedef enum
+ 150:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** {
+ 151:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     IfxEgtm_Atom_SomcSignalLevelControl_noChange = 0,  /**< \brief no signal level change at output
+ 152:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     IfxEgtm_Atom_SomcSignalLevelControl_sl0out1  = 1,  /**< \brief SL= 0 -> Out=1; SL=1->Out=0 */
+ 153:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     IfxEgtm_Atom_SomcSignalLevelControl_sl0out0  = 2,  /**< \brief SL=0->Out=0; SL=1->Out=1 */
+ 154:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     IfxEgtm_Atom_SomcSignalLevelControl_toggle   = 3   /**< \brief toggle the output signal level *
+ 155:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** } IfxEgtm_Atom_SomcSignalLevelControl;
+ 156:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 157:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \} */
+ 158:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 159:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \addtogroup IfxLld_Egtm_Std_Atom_Channel_Functions
+ 160:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \{ */
+ 161:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 162:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /******************************************************************************/
+ 163:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /*-------------------------Inline Function Prototypes-------------------------*/
+ 164:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /******************************************************************************/
+ 165:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 166:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Clears IR notification for CCU1 events
+ 167:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 168:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] atom    Pointer to the ATOM object
+ 169:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    channel Channel index
+ 170:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                       Range: \ref: IfxEgtm_Atom_Ch
+ 171:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 172:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 173:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 174:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Ch_clearOneNotification(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch chann
+ 175:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 176:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Clears IR notification for CCU0 events
+ 177:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 178:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] atom    Pointer to the ATOM object
+ 179:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    channel Channel index
+ 180:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                       Range: \ref: IfxEgtm_Atom_Ch
+ 181:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 182:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 183:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 184:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Ch_clearZeroNotification(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch chan
+ 185:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 186:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Configure the PWM mode for a specific channel in an EGTM atom
+ 187:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 188:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] atom        Pointer to the ATOM object
+ 189:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    channel     Channel index
+ 190:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                           Range: \ref: IfxEgtm_Atom_Ch
+ 191:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    clk Clock   Source
+ 192:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                           Range: \ref: IfxEgtm_Atom_Ch_ClkSrc
+ 193:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    activeState Active State
+ 194:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                           Range: \ref: Ifx_ActiveState
+ 195:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    resetEvent  Channel reset event
+ 196:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                           Range: \ref: IfxEgtm_Atom_Ch_ResetEvent
+ 197:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    trigger     Channel trigger output mode
+ 198:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                           Range: \ref: IfxEgtm_Atom_Ch_OutputTrigger
+ 199:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 200:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 201:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 202:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Ch_configurePwmMode(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch channel, 
+ 203:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 204:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Returns the base addredd of selected Atom channel
+ 205:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 206:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] atom    Pointer to the ATOM object
+ 207:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] channel Channel index
+ 208:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                    Range: \ref: IfxEgtm_Atom_Ch
+ 209:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 210:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval Pointer to channel base address
+ 211:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 212:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE volatile Ifx_EGTM_CLS_ATOM_CH *IfxEgtm_Atom_Ch_getChannelPointer(Ifx_EGTM_CLS_ATOM *atom
+ 213:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 214:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Returns the ATOM channel input clock frequency in Hz
+ 215:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 216:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] egtm    Pointer to EGTM module
+ 217:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] atom    Pointer to the ATOM object
+ 218:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] channel Channel index
+ 219:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                    Range: \ref: IfxEgtm_Atom_Ch
+ 220:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 221:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval ATOM channel input clock frequency in Hz
+ 222:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 223:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE float32 IfxEgtm_Atom_Ch_getClockFrequency(Ifx_EGTM *egtm, Ifx_EGTM_CLS_ATOM *atom, IfxEg
+ 224:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 225:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Returns the channel clock source
+ 226:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 227:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] atom    Pointer to the ATOM object
+ 228:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] channel Channel index
+ 229:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                    Range: \ref: IfxEgtm_Atom_Ch
+ 230:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 231:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval The clock source
+ 232:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * Range: \ref: IfxEgtm_Atom_Ch_ClkSrc
+ 233:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 234:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE IfxEgtm_Atom_Ch_ClkSrc IfxEgtm_Atom_Ch_getClockSource(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_A
+ 235:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 236:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Returns the compare one value
+ 237:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 238:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] atom    Pointer to the ATOM object
+ 239:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] channel Channel index
+ 240:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                    Range: \ref: IfxEgtm_Atom_Ch
+ 241:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 242:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval compare one value
+ 243:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * Range: 0 to 0x00FFFFFF
+ 244:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 245:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE uint32 IfxEgtm_Atom_Ch_getCompareOne(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch channel);
+ 246:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 247:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Returns the compare zero shadow value
+ 248:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 249:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] atom    Pointer to the ATOM object
+ 250:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] channel Channel index
+ 251:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                    Range: \ref: IfxEgtm_Atom_Ch
+ 252:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 253:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval compare zero shadow value
+ 254:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * Range: 0 to 0x00FFFFFF
+ 255:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 256:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE uint32 IfxEgtm_Atom_Ch_getCompareOneShadow(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch chan
+ 257:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 258:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Returns the compare one pointer
+ 259:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 260:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] atom    Pointer to the ATOM object
+ 261:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] channel Channel index
+ 262:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                    Range: \ref: IfxEgtm_Atom_Ch
+ 263:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 264:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval compare one pointer
+ 265:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 266:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE volatile uint32 *IfxEgtm_Atom_Ch_getCompareOnePointer(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_A
+ 267:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 268:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Returns the compare zero value
+ 269:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 270:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] atom    Pointer to the ATOM object
+ 271:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] channel Channel index
+ 272:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                    Range: \ref: IfxEgtm_Atom_Ch
+ 273:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 274:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval compare zero value
+ 275:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * Range: 0 to 0x00FFFFFF
+ 276:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 277:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE uint32 IfxEgtm_Atom_Ch_getCompareZero(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch channel);
+ 278:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 279:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Returns the compare zero shadow value
+ 280:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 281:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] atom    Pointer to the ATOM object
+ 282:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] channel Channel index
+ 283:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                    Range: \ref: IfxEgtm_Atom_Ch
+ 284:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 285:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval compare zero shadow value
+ 286:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * Range: 0 to 0x00FFFFFF
+ 287:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 288:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE uint32 IfxEgtm_Atom_Ch_getCompareZeroShadow(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch cha
+ 289:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 290:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Returns the compare zero pointer
+ 291:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 292:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] atom    Pointer to the ATOM object
+ 293:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] channel Channel index
+ 294:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                    Range: \ref: IfxEgtm_Atom_Ch
+ 295:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 296:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval compare zero pointer
+ 297:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 298:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE volatile uint32 *IfxEgtm_Atom_Ch_getCompareZeroPointer(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_
+ 299:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 300:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Gets the ATOM output level
+ 301:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 302:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] atom    Pointer to the ATOM object
+ 303:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] channel Channel index
+ 304:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                    Range: \ref: IfxEgtm_Atom_Ch
+ 305:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 306:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval TRUE the output is high, FALSE the output is low
+ 307:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 308:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE boolean IfxEgtm_Atom_Ch_getOutputLevel(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch channel)
+ 309:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 310:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Returns a pointer to the ATOM channel SRC
+ 311:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 312:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] egtm    Pointer to EGTM module
+ 313:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] cluster Specifies the cluster
+ 314:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                    Range: \ref: IfxEgtm_Cluster
+ 315:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] channel Channel index
+ 316:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                    Range: \ref: IfxEgtm_Atom_Ch
+ 317:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 318:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval Pointer to the TOM channel SRC
+ 319:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 320:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE volatile Ifx_SRC_SRCR *IfxEgtm_Atom_Ch_getSrcPointer(Ifx_EGTM *egtm, IfxEgtm_Cluster clu
+ 321:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 322:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Returns the Timer pointer
+ 323:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 324:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]  atom    Pointer to the ATOM object
+ 325:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] channel  Channel index
+ 326:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                     Range: \ref: IfxEgtm_Atom_Ch
+ 327:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 328:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval Timer pointer
+ 329:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 330:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE volatile uint32 *IfxEgtm_Atom_Ch_getTimerPointer(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_C
+ 331:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 332:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Returns the status of channel One notification
+ 333:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 334:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] atom    Pointer to the ATOM object
+ 335:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] channel Channel index
+ 336:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                    Range: \ref: IfxEgtm_Atom_Ch
+ 337:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 338:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval Status of channel One notification
+ 339:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * Range: TRUE: Interrupt triggered by software or by the compare event in CCU1 unit was raised
+ 340:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *        FALSE: No Interrupt triggered by software or by the compare event in CCU1 unit was raised
+ 341:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 342:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE boolean IfxEgtm_Atom_Ch_isOneNotification(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch chann
+ 343:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 344:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Returns the status of channel Zero notification
+ 345:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 346:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] atom    Pointer to the ATOM object
+ 347:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] channel Channel index
+ 348:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                    Range: \ref: IfxEgtm_Atom_Ch
+ 349:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 350:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval Status of channel Zero notification
+ 351:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * Range: TRUE: Interrupt triggered by software or by the compare event in CCU1 unit was raised
+ 352:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *        FALSE: No Interrupt triggered by software or by the compare event in CCU1 unit was raised
+ 353:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 354:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE boolean IfxEgtm_Atom_Ch_isZeroNotification(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch chan
+ 355:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 356:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Raises the interrupt for Compare 1
+ 357:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 358:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] atom   Pointer to the ATOM object
+ 359:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]   channel Channel index
+ 360:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                      Range: \ref: IfxEgtm_Atom_Ch
+ 361:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 362:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 363:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 364:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Ch_raiseInterruptOne(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch channel)
+ 365:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 366:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Raises the interrupt for Compare 0
+ 367:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 368:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] atom    Pointer to the ATOM object
+ 369:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    channel Channel index
+ 370:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                       Range: \ref: IfxEgtm_Atom_Ch
+ 371:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 372:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 373:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 374:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Ch_raiseInterruptZero(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch channel
+ 375:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 376:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Sets the channel clock source
+ 377:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 378:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] atom    Pointer to the ATOM object
+ 379:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    channel Channel index
+ 380:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                       Range: \ref: IfxEgtm_Atom_Ch
+ 381:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    clk     Channel clock source
+ 382:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                       Range: \ref: IfxEgtm_Atom_Ch_ClkSrc
+ 383:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 384:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 385:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 386:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Ch_setClockSource(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch channel, If
+ 387:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 388:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Sets the compare 0 and 1 values
+ 389:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 390:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] atom        Pointer to the ATOM object
+ 391:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    channel     Channel index
+ 392:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                           Range: \ref: IfxEgtm_Atom_Ch
+ 393:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    compareZero Compare zero value
+ 394:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                           Range: 0 to 0x00FFFFFF
+ 395:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    compareOne  Compare one value
+ 396:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                           Range: 0 to 0x00FFFFFF
+ 397:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 398:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 399:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 400:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Ch_setCompare(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch channel, uint32
+ 401:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 402:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Sets the compare 1 value
+ 403:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 404:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] atom       Pointer to the ATOM object
+ 405:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    channel    Channel index
+ 406:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                          Range: \ref: IfxEgtm_Atom_Ch
+ 407:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    compareOne Compare one value
+ 408:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                          Range: 0 to 0x00FFFFFF
+ 409:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 410:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 411:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 412:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Ch_setCompareOne(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch channel, uin
+ 413:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 414:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Sets the compare 1 shadow value
+ 415:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 416:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] atom      Pointer to the ATOM object
+ 417:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    channel   Channel index
+ 418:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                         Range: \ref: IfxEgtm_Atom_Ch
+ 419:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    shadowOne Compare one shadow value
+ 420:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                         Range: 0 to 0x00FFFFFF
+ 421:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 422:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 423:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 424:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Ch_setCompareOneShadow(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch channe
+ 425:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 426:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Sets the compare 0 and 1 shadow values
+ 427:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 428:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] atom       Pointer to the ATOM object
+ 429:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    channel    Channel index
+ 430:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                          Range: \ref: IfxEgtm_Atom_Ch
+ 431:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    shadowZero Compare zero shadow value
+ 432:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                          Range: 0 to 0x00FFFFFF
+ 433:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    shadowOne  Compare one shadow value
+ 434:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                          Range: 0 to 0x00FFFFFF
+ 435:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 436:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 437:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 438:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Ch_setCompareShadow(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch channel, 
+ 439:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 440:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Sets the compare 0 value
+ 441:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 442:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] atom        Pointer to the ATOM object
+ 443:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    channel     Channel index
+ 444:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                           Range: \ref: IfxEgtm_Atom_Ch
+ 445:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    compareZero Compare zero value
+ 446:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                           Range: 0 to 0x00FFFFFF
+ 447:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 448:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 449:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 450:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Ch_setCompareZero(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch channel, ui
+ 451:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 452:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Sets the compare 0 shadow value
+ 453:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 454:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] atom       Pointer to the ATOM object
+ 455:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    channel    Channel index
+ 456:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                          Range: \ref: IfxEgtm_Atom_Ch
+ 457:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    shadowZero Compare zero shadow value
+ 458:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                          Range: 0 to 0x00FFFFFF
+ 459:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 460:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 461:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 462:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Ch_setCompareZeroShadow(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch chann
+ 463:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 464:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Sets the counter value
+ 465:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 466:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] atom    Pointer to the ATOM object
+ 467:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    channel Channel index
+ 468:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                       Range: \ref: IfxEgtm_Atom_Ch
+ 469:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    value   Counter value
+ 470:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                       Range: 0 to 0x00FFFFFF
+ 471:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 472:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 473:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 474:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Ch_setCounterValue(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch channel, u
+ 475:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 476:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief set the Atom operating mode
+ 477:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 478:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] atom      Pointer to the ATOM object
+ 479:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    channel   Channel index
+ 480:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                         Range: \ref: IfxEgtm_Atom_Ch
+ 481:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    mode      Atom Operating mode
+ 482:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                         Range: \ref: IfxEgtm_Atom_Mode
+ 483:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 484:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 485:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 486:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Ch_setMode(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch channel, IfxEgtm_A
+ 487:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 488:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Sets the channel notification
+ 489:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 490:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] atom                   Pointer to the ATOM object
+ 491:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    channel                Channel index
+ 492:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                                      Range: \ref: IfxEgtm_Atom_Ch
+ 493:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    mode                   Interrupt mode
+ 494:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                                      Range: \ref: IfxEgtm_IrqMode
+ 495:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    interruptOnCompareZero If TRUE, an interrupt is generated on compare 0, else no in
+ 496:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    interruptOnCompareOne  If TRUE, an interrupt is generated on compare 1, else no in
+ 497:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 498:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 499:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 500:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Ch_setNotification(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch channel, I
+ 501:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 502:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Enable/disable the one shot mode
+ 503:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 504:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] atom    Pointer to the ATOM object
+ 505:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    channel Channel index
+ 506:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                       Range: \ref: IfxEgtm_Atom_Ch
+ 507:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    enabled If TRUE, the feature is enabled, else disabled
+ 508:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 509:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 510:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 511:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Ch_setOneShotMode(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch channel, bo
+ 512:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 513:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Sets the channel clock source either from local or from previous channel
+ 514:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 515:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] atom    Pointer to the ATOM object
+ 516:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    channel Channel index
+ 517:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                       Range: \ref: IfxEgtm_Atom_Ch
+ 518:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    event   Channel reset event
+ 519:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                       Range: \ref: IfxEgtm_Atom_Ch_ResetEvent
+ 520:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 521:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 522:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 523:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Ch_setResetSource(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch channel, If
+ 524:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 525:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Sets the signal level
+ 526:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 527:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] atom        Pointer to the ATOM object
+ 528:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    channel     Channel index
+ 529:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                           Range: \ref: IfxEgtm_Atom_Ch
+ 530:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    activeState Signal level active state. In case the channel is reset, the output is
+ 531:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                           Range: \ref: Ifx_ActiveState
+ 532:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 533:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 534:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 535:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Ch_setSignalLevel(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch channel, If
+ 536:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 537:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Sets the channel trigger output
+ 538:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 539:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] atom    Pointer to the ATOM object
+ 540:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    channel Channel index
+ 541:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                       Range: \ref: IfxEgtm_Atom_Ch
+ 542:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    trigger Channel trigger output mode
+ 543:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                       Range: \ref: IfxEgtm_Atom_Ch_OutputTrigger
+ 544:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 545:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 546:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 547:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Ch_setTriggerOutput(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch channel, 
+ 548:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 549:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Get the counter value
+ 550:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 551:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] atom    Pointer to the ATOM instance
+ 552:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] channel Channel index of the ATOM
+ 553:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                    Range: \ref: IfxEgtm_Atom_Ch
+ 554:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 555:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval counter value
+ 556:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * Range: 0 to 0x00FFFFFF
+ 557:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 558:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE uint32 IfxEgtm_Atom_Ch_getCounterValue(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch channel)
+ 559:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 560:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief sets the SOMC control bits for the specified ATOM channel
+ 561:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 562:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] atom    Pointer to ATOM instance
+ 563:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    channel ATOM channel index
+ 564:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                       Range: \ref: IfxEgtm_Atom_Ch
+ 565:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    control SOMC control mode enum
+ 566:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                       Range: \ref: IfxEgtm_Atom_SomcControl
+ 567:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 568:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 569:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 570:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Ch_setSomcControl(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch channel, If
+ 571:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 572:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief sets the SL control for SOMC mode.
+ 573:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 574:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] atom    Pointer to the ATOM instance
+ 575:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    channel Index of ATOM channel
+ 576:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                       Range: \ref: IfxEgtm_Atom_Ch
+ 577:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    ctrl    Signal level control
+ 578:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                       Range: \ref: IfxEgtm_Atom_SomcSignalLevelControl
+ 579:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 580:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 581:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 582:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Ch_setSomcSignalLevelControl(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch 
+ 583:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 584:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief set the High resolution support for ATOM channel
+ 585:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 586:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] atom    Pointer to ATOM instance
+ 587:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    channel ATOM channel index
+ 588:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                       Range: \ref: IfxEgtm_Atom_Ch
+ 589:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    enabled RAnge: TRUE: Enable HRES suport
+ 590:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                              FALSE: Disable HRES suport
+ 591:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 592:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 593:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 594:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Ch_setHresEn(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch channel, boolean
+ 595:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 596:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /******************************************************************************/
+ 597:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /*-------------------------Global Function Prototypes-------------------------*/
+ 598:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /******************************************************************************/
+ 599:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 600:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Get configured frequency of PWM channel
+ 601:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * Note: This API does not work if channel 0 counter is reset by external trigger. API will cause a
+ 602:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 603:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] atom    Pointer to ATOM subcluster SFR
+ 604:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] channel ATOM channel number
+ 605:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                    Range: \ref: IfxEgtm_Atom_Ch
+ 606:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 607:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval Channel frequency in Hz
+ 608:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 609:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_EXTERN float32 IfxEgtm_Atom_Ch_getFrequency(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch channel);
+ 610:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 611:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Get configured duty of PWM channel
+ 612:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * Note: This API does not work if channel 0 counter is reset by external trigger. API will cause a
+ 613:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 614:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] atom    Pointer to ATOM subcluster SFR
+ 615:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] channel ATOM channel number
+ 616:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                    Range: \ref: IfxEgtm_Atom_Ch
+ 617:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 618:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval Channel duty in percentage [0-100%]
+ 619:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 620:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_EXTERN float32 IfxEgtm_Atom_Ch_getDuty(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch channel);
+ 621:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 622:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \} */
+ 623:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 624:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \addtogroup IfxLld_Egtm_Std_Atom_AGC_Functions
+ 625:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \{ */
+ 626:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 627:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /******************************************************************************/
+ 628:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /*-------------------------Inline Function Prototypes-------------------------*/
+ 629:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /******************************************************************************/
+ 630:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 631:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Enable/disable one channel (ENDIS)
+ 632:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 633:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] agc       Pointer to the AGC object
+ 634:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    channel   Channel index
+ 635:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                         Range: \ref: IfxEgtm_Atom_Ch
+ 636:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    enabled   Enable/ Disable choice of the feature
+ 637:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    immediate If TRUE, the action is done immediately else, the action is done on AGC 
+ 638:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 639:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 640:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 641:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Agc_enableChannel(Ifx_EGTM_CLS_ATOM_AGC *agc, IfxEgtm_Atom_Ch channel,
+ 642:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 643:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Enable/disable one channel output (OUTEN)
+ 644:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 645:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] agc       Pointer to the AGC object
+ 646:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    channel   Channel index
+ 647:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                         Range: \ref: IfxEgtm_Atom_Ch
+ 648:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    enabled   Enable/ Disable choice of the feature
+ 649:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    immediate If TRUE, the action is done immediately else, the action is done on TGC 
+ 650:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 651:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 652:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 653:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Agc_enableChannelOutput(Ifx_EGTM_CLS_ATOM_AGC *agc, IfxEgtm_Atom_Ch ch
+ 654:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 655:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Enable/disable one channel for update (UPEN)
+ 656:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 657:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] agc  Pointer to the AGC object
+ 658:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] channel Channel index
+ 659:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                    Range: \ref: IfxEgtm_Atom_Ch
+ 660:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] enabled Enable/ Disable choice of the feature
+ 661:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 662:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 663:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 664:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Agc_enableChannelUpdate(Ifx_EGTM_CLS_ATOM_AGC *agc, IfxEgtm_Atom_Ch ch
+ 665:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 666:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Enable/disable one or more channels (ENDIS)
+ 667:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 668:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] agc         Pointer to the AGC object
+ 669:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    enableMask  Mask for the channel feature enable (bit 0: Channel 0, bit 1: channel 
+ 670:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                           Range: 0 to 0xFF
+ 671:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    disableMask Mask for the channel feature disable (bit 0: Channel 0, bit 1: channel
+ 672:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                           Range: 0 to 0xFF
+ 673:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    immediate   If TRUE, the action is done immediately else, the action is done on TG
+ 674:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 675:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 676:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 677:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Agc_enableChannels(Ifx_EGTM_CLS_ATOM_AGC *agc, uint16 enableMask, uint
+ 678:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 679:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Enable/disable one or more channels output (OUTEN)
+ 680:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 681:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] agc         Pointer to the TGC object
+ 682:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    enableMask  Mask for the channel feature enable (bit 0: Channel 0, bit 1: channel 
+ 683:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                           Range: 0 to 0xFF
+ 684:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    disableMask Mask for the channel feature disable (bit 0: Channel 0, bit 1: channel
+ 685:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                           Range: 0 to 0xFF
+ 686:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    immediate   If TRUE, the action is done immediately else, the action is done on TG
+ 687:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 688:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 689:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Agc_enableChannelsOutput(Ifx_EGTM_CLS_ATOM_AGC *agc, uint16 enableMask
+ 690:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 691:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Enable/disable the TGC channels trigger
+ 692:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] agc Pointer to the AGC object
+ 693:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] enableMask Mask for the channel feature enable (bit 0: Channel 0, bit 1: channel 1, .
+ 694:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] disableMask Mask for the channel feature disable (bit 0: Channel 0, bit 1: channel 1,
+ 695:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 696:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 697:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Agc_enableChannelsTrigger(Ifx_EGTM_CLS_ATOM_AGC *agc, uint16 enableMas
+ 698:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 699:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Enable/disable one or more channels for update (UPEN)
+ 700:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 701:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] agc         Pointer to the AGC object
+ 702:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    enableMask  Mask for the channel feature enable (bit 0: Channel 0, bit 1: channel 
+ 703:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                           Range: 0 to 0xFF
+ 704:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    disableMask Mask for the channel feature disable (bit 0: Channel 0, bit 1: channel
+ 705:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                           Range: 0 to 0xFF
+ 706:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 707:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 708:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 709:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Agc_enableChannelsUpdate(Ifx_EGTM_CLS_ATOM_AGC *agc, uint16 enableMask
+ 710:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 711:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Enable/disable the time base trigger
+ 712:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 713:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] agc     Pointer to the AGC object
+ 714:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    enabled If TRUE, the trigger is enabled else disabled
+ 715:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 716:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 717:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 718:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Agc_enableTimeTrigger(Ifx_EGTM_CLS_ATOM_AGC *agc, boolean enabled);
+ 719:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 720:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Reset one or more channels
+ 721:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 722:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] agc       Pointer to the AGC object
+ 723:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    resetMask Mask for the channel reset (bit 0: Channel 0, bit 1: channel 1, ...)
+ 724:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                         Range: 0 to 0xFF
+ 725:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 726:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 727:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 728:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Agc_resetChannels(Ifx_EGTM_CLS_ATOM_AGC *agc, uint32 resetMask);
+ 729:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 730:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Enable/disable one channel for update (FUPD)
+ 731:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 732:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] agc          Pointer to the AGC object
+ 733:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    channel      Channel index
+ 734:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                            Range: \ref: IfxEgtm_Atom_Ch
+ 735:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    enabled      Enable/ Disable choice of the feature
+ 736:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    resetEnabled Enable/ Disable reset choice of the feature
+ 737:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 738:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 739:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 740:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Agc_setChannelForceUpdate(Ifx_EGTM_CLS_ATOM_AGC *agc, IfxEgtm_Atom_Ch 
+ 741:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 742:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Enable/disable one or more channels for the force update feature (FUPD)
+ 743:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 744:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] agc              Pointer to the AGC object
+ 745:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    enableMask       Mask for the channel feature enable (bit 0: Channel 0, bit 1: cha
+ 746:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                                Range: 0 to 0xFF
+ 747:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    disableMask      Mask for the channel feature disable (bit 0: Channel 0, bit 1: ch
+ 748:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                                Range: 0 to 0xFF
+ 749:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    resetEnableMask  Mask for the enabled channels counter reset on force update (bit 
+ 750:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                                Range: 0 to 0xFF
+ 751:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    resetDisableMask Mask for the disabled channels with no counter reset on force upd
+ 752:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                                Range: 0 to 0xFF
+ 753:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 754:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 755:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 756:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Agc_setChannelsForceUpdate(Ifx_EGTM_CLS_ATOM_AGC *agc, uint16 enableMa
+ 757:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 758:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Sets the trigger time base and time base value
+ 759:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 760:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] agc   Pointer to the AGC object
+ 761:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    base  Time base used for comparison
+ 762:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                     Range: \ref: IfxEgtm_Tbu_Ts
+ 763:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    value Compare value that raise the trigger
+ 764:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                     Range: 0 to 0x00FFFFFF
+ 765:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 766:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 767:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 768:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Agc_setTimeTrigger(Ifx_EGTM_CLS_ATOM_AGC *agc, IfxEgtm_Tbu_Ts base, ui
+ 769:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 770:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Raise the trigger for the channel enable/disable settings,  output enable settings, and 
+ 771:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 772:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] agc Pointer to the AGC object
+ 773:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 774:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 775:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 776:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Agc_trigger(Ifx_EGTM_CLS_ATOM_AGC *agc);
+ 777:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 778:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Sets the channels for update (UPEN)
+ 779:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 780:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] agc   Pointer to the AGC object
+ 781:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    value value for the channel enable (bit 0: Channel 0, bit 1: channel 1, ...)
+ 782:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                     Range: 0 to 0xFFFFFF01
+ 783:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 784:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 785:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 786:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Agc_setChannelsUpdate(Ifx_EGTM_CLS_ATOM_AGC *agc, uint32 value);
+ 787:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 788:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /******************************************************************************/
+ 789:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /*-------------------------Global Function Prototypes-------------------------*/
+ 790:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /******************************************************************************/
+ 791:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 792:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Builds the register value for the feature enable/disable
+ 793:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 794:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] enableMask     Mask for the channel feature enable (bit 0: Channel 0, bit 1: channel 
+ 795:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                           Range: 0 to 0xFFFF
+ 796:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] disableMask    Mask for the channel feature disable (bit 0: Channel 0, bit 1: channel
+ 797:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                           Range: 0 to 0xFFFF
+ 798:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] bitfieldOffset Offset of the channel 0 bitfield in the register
+ 799:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                           Range: 0 to 0xFF
+ 800:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 801:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval The register value
+ 802:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 803:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_EXTERN uint32 IfxEgtm_Atom_Agc_buildFeature(uint16 enableMask, uint16 disableMask, uint8 bitfie
+ 804:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 805:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Builds the register value for the feature enable/disable for a single channel
+ 806:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 807:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] channel        Channel index
+ 808:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                           Range: \ref: IfxEgtm_Atom_Ch
+ 809:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] enabled        Enable/ Disable choice of the feature
+ 810:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] bitfieldOffset Offset of the channel 0 bitfield in the register
+ 811:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                           Range: 0 to 0xFF
+ 812:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 813:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval The register value
+ 814:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 815:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_EXTERN uint32 IfxEgtm_Atom_Agc_buildFeatureForChannel(IfxEgtm_Atom_Ch channel, boolean enabled,
+ 816:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 817:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \} */
+ 818:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 819:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \addtogroup IfxLld_Egtm_Std_Atom_Module_Functions
+ 820:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \{ */
+ 821:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 822:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /******************************************************************************/
+ 823:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /*-------------------------Inline Function Prototypes-------------------------*/
+ 824:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /******************************************************************************/
+ 825:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 826:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Configures the tout selection
+ 827:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 828:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] toutNum TOUT number
+ 829:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                    Range: 0 to 0xFFFF FFFF
+ 830:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] toutSel TOUTselection
+ 831:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                    Range: 0 to 0xFFFF FFFF
+ 832:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 833:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 834:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 835:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_setTout(uint32 toutNum, uint32 toutSel);
+ 836:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 837:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** #if IFXEGTM_PWM_IS_HIGH_RES_AVAILABLE
+ 838:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief map the Atom channel to the HRPWM channel
+ 839:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 840:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] cluster     Specifies the cluster
+ 841:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                        Range: \ref: IfxEgtm_Cluster
+ 842:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] atomChannel ATOM channel index
+ 843:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                        Range: \ref: IfxEgtm_Atom_Ch
+ 844:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in] hrChannel   HRPWM Channel index
+ 845:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                        Range: \ref: IfxEgtm_Hrpwm_Ch
+ 846:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 847:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 848:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 849:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_connectHrpwmChannel(IfxEgtm_Cluster cluster, IfxEgtm_Atom_Ch atomChann
+ 850:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** #endif
+ 851:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 852:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \} */
+ 853:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 854:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /******************************************************************************/
+ 855:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /*-------------------------Inline Function Prototypes-------------------------*/
+ 856:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /******************************************************************************/
+ 857:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 858:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /** \brief Enable/disable the AGC channel trigger
+ 859:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 860:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[inout] agc     Pointer to the AGC object
+ 861:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    channel Channel index
+ 862:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *                       Range: \ref: IfxEgtm_Atom_Ch
+ 863:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \param[in]    enabled Enable/ Disable choice of the feature
+ 864:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  *
+ 865:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  * \retval None
+ 866:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****  */
+ 867:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Agc_setInternalTrigger(Ifx_EGTM_CLS_ATOM_AGC *agc, IfxEgtm_Atom_Ch cha
+ 868:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 869:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /******************************************************************************/
+ 870:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /*---------------------Inline Function Implementations------------------------*/
+ 871:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** /******************************************************************************/
+ 872:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 873:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Agc_enableChannel(Ifx_EGTM_CLS_ATOM_AGC *agc, IfxEgtm_Atom_Ch channel,
+ 874:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** {
+ 875:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     uint32 shift = IFXEGTM_ATOM_AGC_CHANNEL_SHIFT(channel, IFX_EGTM_CLS_ATOM_AGC_ENDIS_CTRL_ENDIS_C
+ 876:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     uint32 value = (uint32)IFXEGTM_ATOM_AGC_CHANNEL_VALUE(enabled) << shift;
+ 877:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     uint32 mask  = (uint32)IFXEGTM_ATOM_AGC_CHANNEL_MASK << shift;
+ 878:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 879:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     Ifx__ldmst(&(agc->ENDIS_CTRL.U), mask, value);
+ 880:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 881:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     if (immediate == TRUE)
+ 882:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     {
+ 883:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****         Ifx__ldmst(&(agc->ENDIS_STAT.U), mask, value);
+ 884:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     }
+ 885:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** }
+ 886:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 887:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 888:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Agc_enableChannelOutput(Ifx_EGTM_CLS_ATOM_AGC *agc, IfxEgtm_Atom_Ch ch
+ 889:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** {
+ 890:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     uint32 shift = IFXEGTM_ATOM_AGC_CHANNEL_SHIFT(channel, IFX_EGTM_CLS_ATOM_AGC_OUTEN_CTRL_OUTEN_C
+ 891:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     uint32 value = (uint32)IFXEGTM_ATOM_AGC_CHANNEL_VALUE(enabled) << shift;
+ 892:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     uint32 mask  = (uint32)IFXEGTM_ATOM_AGC_CHANNEL_MASK << shift;
+ 893:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 894:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     Ifx__ldmst(&(agc->OUTEN_CTRL.U), mask, value);
+ 895:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 896:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     if (immediate == TRUE)
+ 897:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     {
+ 898:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****         Ifx__ldmst(&(agc->OUTEN_STAT.U), mask, value);
+ 899:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     }
+ 900:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** }
+ 901:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 902:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 903:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Agc_enableChannelUpdate(Ifx_EGTM_CLS_ATOM_AGC *agc, IfxEgtm_Atom_Ch ch
+ 904:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** {
+ 905:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     uint32 shift = IFXEGTM_ATOM_AGC_CHANNEL_SHIFT(channel, IFX_EGTM_CLS_ATOM_AGC_GLB_CTRL_UPEN_CTRL
+ 906:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     uint32 value = (uint32)IFXEGTM_ATOM_AGC_CHANNEL_VALUE(enabled) << shift;
+ 907:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     uint32 mask  = (uint32)IFXEGTM_ATOM_AGC_CHANNEL_MASK << shift;
+ 908:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 909:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     Ifx__ldmst(&(agc->GLB_CTRL.U), mask, value);
+ 910:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** }
+ 911:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 912:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 913:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Agc_enableChannels(Ifx_EGTM_CLS_ATOM_AGC *agc, uint16 enableMask, uint
+ 914:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** {
+ 915:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     uint32 value;
+ 916:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 917:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     value             = IfxEgtm_Atom_Agc_buildFeature(enableMask, disableMask, IFX_EGTM_CLS_ATOM_AG
+ 918:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 919:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     agc->ENDIS_CTRL.U = value;
+ 920:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 921:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     if (immediate == TRUE)
+ 922:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     {
+ 923:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****         agc->ENDIS_STAT.U = value;
+ 924:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     }
+ 925:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** }
+ 926:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 927:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 928:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Agc_enableChannelsOutput(Ifx_EGTM_CLS_ATOM_AGC *agc, uint16 enableMask
+ 929:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** {
+ 930:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     uint32 value;
+ 931:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 932:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     value             = IfxEgtm_Atom_Agc_buildFeature(enableMask, disableMask, IFX_EGTM_CLS_ATOM_AG
+ 933:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 934:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     agc->OUTEN_CTRL.U = value;
+ 935:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 936:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     if (immediate == TRUE)
+ 937:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     {
+ 938:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****         agc->OUTEN_STAT.U = value;
+ 939:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     }
+ 940:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** }
+ 941:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 942:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 943:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Agc_enableChannelsTrigger(Ifx_EGTM_CLS_ATOM_AGC *agc, uint16 enableMas
+ 944:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** {
+ 945:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     agc->INT_TRIG.U = IfxEgtm_Atom_Agc_buildFeature(enableMask, disableMask, IFX_EGTM_CLS_ATOM_AGC_
+ 946:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** }
+ 947:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 948:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 949:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Agc_enableChannelsUpdate(Ifx_EGTM_CLS_ATOM_AGC *agc, uint16 enableMask
+ 950:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** {
+ 951:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     agc->GLB_CTRL.U = IfxEgtm_Atom_Agc_buildFeature(enableMask, disableMask, IFX_EGTM_CLS_ATOM_AGC_
+ 952:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** }
+ 953:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 954:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 955:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Agc_enableTimeTrigger(Ifx_EGTM_CLS_ATOM_AGC *agc, boolean enabled)
+ 956:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** {
+ 957:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     agc->ACT_TB.B.TB_TRIG = (enabled == TRUE) ? (uint8)1u : (uint8)0u;
+ 958:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** }
+ 959:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 960:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 961:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Agc_resetChannels(Ifx_EGTM_CLS_ATOM_AGC *agc, uint32 resetMask)
+ 962:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** {
+ 963:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     uint8  i;
+ 964:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     uint32 reg = 0u;
+ 965:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 966:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     for (i = 0u; i < IFXEGTM_ATOM_NUM_AGC_CHANNELS; i++)
+ 967:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     {
+ 968:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****         if ((resetMask & 0x1u) == 0x1u)
+ 969:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****         {
+ 970:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****             reg |= (uint32)((uint32)1u << i);
+ 971:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****         }
+ 972:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 973:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****         resetMask = resetMask >> 1;
+ 974:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     }
+ 975:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 976:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     agc->GLB_CTRL.U = reg << IFX_EGTM_CLS_ATOM_AGC_GLB_CTRL_RST_CH0_OFF;
+ 977:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** }
+ 978:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 979:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 980:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Agc_setChannelForceUpdate(Ifx_EGTM_CLS_ATOM_AGC *agc, IfxEgtm_Atom_Ch 
+ 981:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** {
+ 982:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     uint32 shift = IFXEGTM_ATOM_AGC_CHANNEL_SHIFT(channel, IFX_EGTM_CLS_ATOM_AGC_FUPD_CTRL_FUPD_CTR
+ 983:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     uint32 value = (uint32)IFXEGTM_ATOM_AGC_CHANNEL_VALUE(enabled) << shift;
+ 984:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     uint32 mask  = (uint32)IFXEGTM_ATOM_AGC_CHANNEL_MASK << shift;
+ 985:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 986:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     shift = (uint32)IFXEGTM_ATOM_AGC_CHANNEL_SHIFT(channel, IFX_EGTM_CLS_ATOM_AGC_FUPD_CTRL_RSTCN0_
+ 987:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     value = (uint32)value | (uint32)((uint32)IFXEGTM_ATOM_AGC_CHANNEL_VALUE(resetEnabled) << shift)
+ 988:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     mask  = mask | (uint32)((uint32)IFXEGTM_ATOM_AGC_CHANNEL_MASK << shift);
+ 989:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 990:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     Ifx__ldmst(&(agc->FUPD_CTRL.U), mask, value);
+ 991:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** }
+ 992:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 993:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 994:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Agc_setChannelsForceUpdate(Ifx_EGTM_CLS_ATOM_AGC *agc, uint16 enableMa
+ 995:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** {
+ 996:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     uint32 regEnable, regReset;
+ 997:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 998:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     regEnable        = IfxEgtm_Atom_Agc_buildFeature(enableMask, disableMask, IFX_EGTM_CLS_ATOM_AGC
+ 999:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     regReset         = IfxEgtm_Atom_Agc_buildFeature(resetEnableMask, resetDisableMask, IFX_EGTM_CL
+1000:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     agc->FUPD_CTRL.U = regEnable | regReset;
+1001:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** }
+1002:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+1003:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+1004:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Agc_setTimeTrigger(Ifx_EGTM_CLS_ATOM_AGC *agc, IfxEgtm_Tbu_Ts base, ui
+1005:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** {
+1006:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     Ifx_EGTM_CLS_ATOM_AGC_ACT_TB act_tb;
+1007:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+1008:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     act_tb.U         = agc->ACT_TB.U;
+1009:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     act_tb.B.TBU_SEL = (uint8)base;
+1010:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     act_tb.B.ACT_TB  = value;
+1011:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     agc->ACT_TB.U    = act_tb.U;
+1012:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** }
+1013:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+1014:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+1015:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Agc_trigger(Ifx_EGTM_CLS_ATOM_AGC *agc)
+1016:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** {
+1017:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     agc->GLB_CTRL.B.HOST_TRIG = 1u;
+1018:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** }
+1019:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+1020:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+1021:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Ch_clearOneNotification(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch chann
+1022:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** {
+1023:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     atom->CH[channel].IRQ_NOTIFY.B.CCU1TC = 1u;
+1024:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** }
+1025:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+1026:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+1027:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Ch_clearZeroNotification(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch chan
+1028:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** {
+1029:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     atom->CH[channel].IRQ_NOTIFY.B.CCU0TC = 1u;
+1030:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** }
+1031:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+1032:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+1033:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE void IfxEgtm_Atom_Ch_configurePwmMode(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch channel, 
+1034:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** {
+1035:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     volatile Ifx_EGTM_CLS_ATOM_CH *atomCh = IfxEgtm_Atom_Ch_getChannelPointer(atom, channel);
+1036:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     Ifx_EGTM_CLS_ATOM_CH_CTRL      ctrl;
+1037:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+1038:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     ctrl.U            = 0u;
+1039:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     ctrl.B.MODE       = (uint8)IfxEgtm_Atom_Mode_outputPwm;
+1040:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     ctrl.B.CLK_SRC    = (uint8)clk;
+1041:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     ctrl.B.RST_CCU0   = (uint8)resetEvent;
+1042:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     ctrl.B.SL         = (activeState == Ifx_ActiveState_high ? (uint8)1u : (uint8)0u);
+1043:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     ctrl.B.TRIGOUT    = (uint8)trigger;
+1044:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+1045:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     atomCh->CTRL.U    = ctrl.U;
+1046:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     atomCh->CTRL_SR.U = ctrl.U & (0xF800U);
+1047:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** }
+1048:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+1049:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+1050:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE volatile Ifx_EGTM_CLS_ATOM_CH *IfxEgtm_Atom_Ch_getChannelPointer(Ifx_EGTM_CLS_ATOM *atom
+1051:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** {
+1052:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     return (volatile Ifx_EGTM_CLS_ATOM_CH *)(&atom->CH[channel]);
+1053:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** }
+1054:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+1055:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+1056:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE float32 IfxEgtm_Atom_Ch_getClockFrequency(Ifx_EGTM *egtm, Ifx_EGTM_CLS_ATOM *atom, IfxEg
+1057:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** {
+1058:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     IfxEgtm_Atom_Ch_ClkSrc clk;
+ 194              	 .loc 2 1058 5
+1059:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     float32                result = 0.0f;
+ 195              	 .loc 2 1059 5
+1060:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+1061:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     clk = IfxEgtm_Atom_Ch_getClockSource(atom, channel);
+ 196              	 .loc 2 1061 5
+ 197              	.LBB12:
+ 198              	.LBB13:
+1062:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+1063:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     if (clk <= IfxEgtm_Atom_Ch_ClkSrc_cmuclk7)
+1064:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     {
+1065:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****         result = IfxEgtm_Cmu_getClkFrequency(egtm, (IfxEgtm_Cmu_Clk)clk, TRUE);
+1066:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     }
+1067:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+1068:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     return result;
+1069:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** }
+1070:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+1071:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+1072:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** IFX_INLINE IfxEgtm_Atom_Ch_ClkSrc IfxEgtm_Atom_Ch_getClockSource(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_A
+1073:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** {
+1074:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     return (IfxEgtm_Atom_Ch_ClkSrc)(atom->CH[channel].CTRL.B.CLK_SRC);
+ 199              	 .loc 2 1074 5
+ 200              	 .loc 2 1074 61 is_stmt 0
+ 201 0040 8F780020 	 sh %d2,%d8,7
+ 202              	.LVL28:
+ 203 0044 6092     	 mov.a %a2,%d9
+ 204 0046 01220026 	 addsc.a %a2,%a2,%d2,0
+ 205 004a 19240400 	 ld.w %d4,[%a2]4
+ 206 004e 37046446 	 extr.u %d4,%d4,12,4
+ 207              	.LVL29:
+ 208              	.LBE13:
+ 209              	.LBE12:
+1063:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     {
+ 210              	 .loc 2 1063 5 is_stmt 1
+1063:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     {
+ 211              	 .loc 2 1063 8 is_stmt 0
+ 212 0052 BF840080 	 jlt.u %d4,8,.L20
+1059:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** 
+ 213              	 .loc 2 1059 28
+ 214 0056 8202     	 mov %d2,0
+ 215              	.LVL30:
+ 216              	.L15:
+1068:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h **** }
+ 217              	 .loc 2 1068 5 is_stmt 1
+ 218              	.LBE11:
+ 219              	.LBE10:
+ 113:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** #if IFXEGTM_PWM_IS_HIGH_RES_AVAILABLE		
+ 114:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         sourceFrequency = (atom->CH[channel].CTRL2.B.HRES == 1u) ? (sourceFrequency * 32.0f) : sour
+ 115:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** #endif /* #if IFXEGTM_PWM_IS_HIGH_RES_AVAILABLE */
+ 116:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** 
+ 117:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         /* 2. Calculates Period Ticks */
+ 118:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         if (atom->CH[channel].CTRL.B.UDMODE == 0u)  /* Channel counter running in continuous counti
+ 220              	 .loc 1 118 9
+ 221              	 .loc 1 118 37 is_stmt 0
+ 222 0058 8F780030 	 sh %d3,%d8,7
+ 223 005c 6092     	 mov.a %a2,%d9
+ 224 005e 01230026 	 addsc.a %a2,%a2,%d3,0
+ 225 0062 19230400 	 ld.w %d3,[%a2]4
+ 226 0066 37036239 	 extr.u %d3,%d3,18,2
+ 227              	 .loc 1 118 12
+ 228 006a DF030080 	 jnz %d3,.L16
+ 119:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         {
+ 120:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****             periodTicks = atom->CH[channel].CM0.U;
+ 229              	 .loc 1 120 13 is_stmt 1
+ 230              	 .loc 1 120 25 is_stmt 0
+ 231 006e 0678     	 sh %d8,7
+ 232              	.LVL31:
+ 233 0070 6092     	 mov.a %a2,%d9
+ 234 0072 01280026 	 addsc.a %a2,%a2,%d8,0
+ 235 0076 19231000 	 ld.w %d3,[%a2]16
+ 236              	.LVL32:
+ 237              	.L17:
+ 121:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         }
+ 122:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         else /* Channel counter running in continuous counting up and down mode. Therefore, multipl
+ 123:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         {
+ 124:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****             periodTicks = (atom->CH[channel].CM0.U - 1u) << 1u;
+ 125:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         }
+ 126:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** 
+ 127:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         /* 3. Calculates PWM frequency */
+ 128:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         frequency = sourceFrequency / (float32)periodTicks;
+ 238              	 .loc 1 128 9 is_stmt 1
+ 239              	 .loc 1 128 39 is_stmt 0
+ 240 007a 4B036131 	 utof %d3,%d3
+ 241              	.LVL33:
+ 242              	 .loc 1 128 19
+ 243 007e 4B325120 	 div.f %d2,%d2,%d3
+ 244              	.LVL34:
+ 245 0082 0090     	 ret 
+ 246              	.LVL35:
+ 247              	.L20:
+ 248              	.LBB15:
+ 249              	.LBB14:
+1065:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     }
+ 250              	 .loc 2 1065 9 is_stmt 1
+1065:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.h ****     }
+ 251              	 .loc 2 1065 18 is_stmt 0
+ 252 0084 8215     	 mov %d5,1
+ 253 0086 9180904F 	 movh.a %a4,63752
+ 254 008a 6D000000 	 call IfxEgtm_Cmu_getClkFrequency
+ 255              	.LVL36:
+ 256 008e 1D000000 	 j .L15
+ 257              	.LVL37:
+ 258              	.L16:
+ 259              	.LBE14:
+ 260              	.LBE15:
+ 124:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         }
+ 261              	 .loc 1 124 13 is_stmt 1
+ 124:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         }
+ 262              	 .loc 1 124 49 is_stmt 0
+ 263 0092 0678     	 sh %d8,7
+ 264              	.LVL38:
+ 265 0094 6092     	 mov.a %a2,%d9
+ 266 0096 01280026 	 addsc.a %a2,%a2,%d8,0
+ 267 009a 19231000 	 ld.w %d3,[%a2]16
+ 124:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         }
+ 268              	 .loc 1 124 52
+ 269 009e C2F3     	 add %d3,-1
+ 124:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         }
+ 270              	 .loc 1 124 25
+ 271 00a0 0613     	 sh %d3,1
+ 272              	.LVL39:
+ 273 00a2 1D000000 	 j .L17
+ 274              	.LVL40:
+ 275              	.L18:
+  98:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     uint32                     periodTicks       = 0u;
+ 276              	 .loc 1 98 32
+ 277 00a6 8202     	 mov %d2,0
+ 278              	.LVL41:
+ 129:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     }
+ 130:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** 
+ 131:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     return frequency;
+ 279              	 .loc 1 131 5 is_stmt 1
+ 132:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** }
+ 280              	 .loc 1 132 1 is_stmt 0
+ 281 00a8 0090     	 ret 
+ 282              	.LFE399:
+ 284              	 .global IfxEgtm_Atom_Ch_getFrequency_end
+ 285              	IfxEgtm_Atom_Ch_getFrequency_end:
+ 286              	 .section .text.IfxEgtm_Atom_Ch_getDuty,"ax",@progbits
+ 287              	 .align 1
+ 288              	 .global IfxEgtm_Atom_Ch_getDuty
+ 290              	IfxEgtm_Atom_Ch_getDuty:
+ 291              	.LFB400:
+ 133:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** 
+ 134:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** 
+ 135:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** float32 IfxEgtm_Atom_Ch_getDuty(Ifx_EGTM_CLS_ATOM *atom, IfxEgtm_Atom_Ch channel)
+ 136:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** {
+ 292              	 .loc 1 136 1 is_stmt 1
+ 293              	.LVL42:
+ 294 0000 40AE     	 mov.aa %a14,%SP
+ 295              	.LCFI3:
+ 137:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     float32                    duty = 0.0f;
+ 296              	 .loc 1 137 5
+ 297              	.LVL43:
+ 138:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     uint32                     cm0Reg, cm1Reg, periodReg;
+ 298              	 .loc 1 138 5
+ 139:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     IfxEgtm_Atom_Ch_ResetEvent counterResetEvent;
+ 299              	 .loc 1 139 5
+ 140:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** 
+ 141:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     /* 1. Reads counter reset event */
+ 142:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     counterResetEvent = (IfxEgtm_Atom_Ch_ResetEvent)atom->CH[channel].CTRL.B.RST_CCU0;
+ 300              	 .loc 1 142 5
+ 301              	 .loc 1 142 77 is_stmt 0
+ 302 0002 8F740020 	 sh %d2,%d4,7
+ 303 0006 01420026 	 addsc.a %a2,%a4,%d2,0
+ 304 000a 19220400 	 ld.w %d2,[%a2]4
+ 305 000e 3702616A 	 extr.u %d6,%d2,20,1
+ 306              	.LVL44:
+ 143:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** 
+ 144:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     /* 2. Reads register content */
+ 145:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     cm0Reg = atom->CH[channel].CM0.U;
+ 307              	 .loc 1 145 5 is_stmt 1
+ 308              	 .loc 1 145 12 is_stmt 0
+ 309 0012 19271000 	 ld.w %d7,[%a2]16
+ 310              	.LVL45:
+ 146:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     cm1Reg = atom->CH[channel].CM1.U;
+ 311              	 .loc 1 146 5 is_stmt 1
+ 312              	 .loc 1 146 12 is_stmt 0
+ 313 0016 19251400 	 ld.w %d5,[%a2]20
+ 314              	.LVL46:
+ 147:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** 
+ 148:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     /* 3. Find out the period register value */
+ 149:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     if (counterResetEvent == IfxEgtm_Atom_Ch_ResetEvent_onCm0)  /* Period is determined by own chan
+ 315              	 .loc 1 149 5 is_stmt 1
+ 316              	 .loc 1 149 8 is_stmt 0
+ 317 001a EF420000 	 jz.t %d2,20,.L30
+ 318              	.LBB16:
+ 150:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     {
+ 151:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         periodReg = cm0Reg;
+ 152:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     }
+ 153:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     else    /* Period is determined by some previous channel */
+ 154:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     {
+ 155:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         uint8 tempChannel = (uint8)channel - 1u;
+ 319              	 .loc 1 155 9 is_stmt 1
+ 320              	 .loc 1 155 29 is_stmt 0
+ 321 001e 8FF40F21 	 and %d2,%d4,255
+ 322              	 .loc 1 155 15
+ 323 0022 C2F2     	 add %d2,-1
+ 324 0024 8FF20F21 	 and %d2,%d2,255
+ 325              	.LVL47:
+ 156:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** 
+ 157:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         while ((tempChannel > 0) &&
+ 326              	 .loc 1 157 9 is_stmt 1
+ 327              	 .loc 1 157 15 is_stmt 0
+ 328 0028 1D000000 	 j .L23
+ 329              	.L25:
+ 158:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****                (atom->CH[tempChannel].CTRL.B.RST_CCU0 != (uint8)IfxEgtm_Atom_Ch_ResetEvent_onCm0))
+ 159:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         {
+ 160:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****             tempChannel--;
+ 330              	 .loc 1 160 13 is_stmt 1
+ 331              	 .loc 1 160 24 is_stmt 0
+ 332 002c C2F2     	 add %d2,-1
+ 333              	.LVL48:
+ 334 002e 8FF20F21 	 and %d2,%d2,255
+ 335              	.LVL49:
+ 336              	.L23:
+ 157:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****                (atom->CH[tempChannel].CTRL.B.RST_CCU0 != (uint8)IfxEgtm_Atom_Ch_ResetEvent_onCm0))
+ 337              	 .loc 1 157 34 is_stmt 1
+ 338 0032 DF020000 	 jz %d2,.L24
+ 158:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****                (atom->CH[tempChannel].CTRL.B.RST_CCU0 != (uint8)IfxEgtm_Atom_Ch_ResetEvent_onCm0))
+ 339              	 .loc 1 158 45 is_stmt 0 discriminator 1
+ 340 0036 8F720030 	 sh %d3,%d2,7
+ 341 003a 01430026 	 addsc.a %a2,%a4,%d3,0
+ 342 003e 19230400 	 ld.w %d3,[%a2]4
+ 157:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****                (atom->CH[tempChannel].CTRL.B.RST_CCU0 != (uint8)IfxEgtm_Atom_Ch_ResetEvent_onCm0))
+ 343              	 .loc 1 157 34 discriminator 1
+ 344 0042 EF430080 	 jnz.t %d3,20,.L25
+ 345              	.L24:
+ 161:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         }
+ 162:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** 
+ 163:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         periodReg = atom->CH[tempChannel].CM0.U;
+ 346              	 .loc 1 163 9 is_stmt 1
+ 347              	 .loc 1 163 19 is_stmt 0
+ 348 0046 0672     	 sh %d2,7
+ 349              	.LVL50:
+ 350 0048 01420026 	 addsc.a %a2,%a4,%d2,0
+ 351 004c 19231000 	 ld.w %d3,[%a2]16
+ 352              	.LVL51:
+ 353              	.L22:
+ 354              	.LBE16:
+ 164:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     }
+ 165:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** 
+ 166:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     /* 4. Calculates Duty percentage */
+ 167:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     if (atom->CH[channel].CTRL.B.UDMODE == 0u)                     /* Channel counter running in co
+ 355              	 .loc 1 167 5 is_stmt 1
+ 356              	 .loc 1 167 33 is_stmt 0
+ 357 0050 0674     	 sh %d4,7
+ 358              	.LVL52:
+ 359 0052 01440046 	 addsc.a %a4,%a4,%d4,0
+ 360              	.LVL53:
+ 361 0056 19420400 	 ld.w %d2,[%a4]4
+ 362 005a 37026229 	 extr.u %d2,%d2,18,2
+ 363              	 .loc 1 167 8
+ 364 005e DF020080 	 jnz %d2,.L26
+ 168:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     {
+ 169:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         if (counterResetEvent == IfxEgtm_Atom_Ch_ResetEvent_onCm0) /* Duty exists during CN0 = [0, 
+ 365              	 .loc 1 169 9 is_stmt 1
+ 366              	 .loc 1 169 12 is_stmt 0
+ 367 0062 DF060080 	 jnz %d6,.L27
+ 170:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         {
+ 171:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****             duty = ((float32)cm1Reg / (float32)periodReg) * 100.0f;
+ 368              	 .loc 1 171 13 is_stmt 1
+ 369              	 .loc 1 171 21 is_stmt 0
+ 370 0066 4B056151 	 utof %d5,%d5
+ 371              	.LVL54:
+ 372              	 .loc 1 171 39
+ 373 006a 4B036121 	 utof %d2,%d3
+ 374              	 .loc 1 171 37
+ 375 006e 4B255120 	 div.f %d2,%d5,%d2
+ 376              	 .loc 1 171 18
+ 377 0072 7B802C34 	 movh %d3,17096
+ 378              	.LVL55:
+ 379 0076 4B324120 	 mul.f %d2,%d2,%d3
+ 380              	.LVL56:
+ 381 007a 0090     	 ret 
+ 382              	.LVL57:
+ 383              	.L30:
+ 151:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     }
+ 384              	 .loc 1 151 19
+ 385 007c 0273     	 mov %d3,%d7
+ 386 007e 1D000000 	 j .L22
+ 387              	.LVL58:
+ 388              	.L27:
+ 172:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         }
+ 173:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         else    /* Duty exists during CN0 = [CM0, CM1] */
+ 174:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         {
+ 175:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****             if (cm1Reg > cm0Reg)
+ 389              	 .loc 1 175 13 is_stmt 1
+ 390              	 .loc 1 175 16 is_stmt 0
+ 391 0082 7F570080 	 jge.u %d7,%d5,.L29
+ 176:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****             {
+ 177:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****                 duty = ((float32)(cm1Reg - cm0Reg) / (float32)periodReg) * 100.0f;
+ 392              	 .loc 1 177 17 is_stmt 1
+ 393              	 .loc 1 177 42 is_stmt 0
+ 394 0086 0B758040 	 sub %d4,%d5,%d7
+ 395              	 .loc 1 177 25
+ 396 008a 4B046141 	 utof %d4,%d4
+ 397              	 .loc 1 177 54
+ 398 008e 4B036121 	 utof %d2,%d3
+ 399              	 .loc 1 177 52
+ 400 0092 4B245120 	 div.f %d2,%d4,%d2
+ 401              	 .loc 1 177 22
+ 402 0096 7B802C34 	 movh %d3,17096
+ 403              	.LVL59:
+ 404 009a 4B324120 	 mul.f %d2,%d2,%d3
+ 405              	.LVL60:
+ 406 009e 0090     	 ret 
+ 407              	.LVL61:
+ 408              	.L29:
+ 178:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****             }
+ 179:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****             else
+ 180:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****             {
+ 181:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****                 duty = ((float32)(cm0Reg - cm1Reg) / (float32)periodReg) * 100.0f;
+ 409              	 .loc 1 181 17 is_stmt 1
+ 410              	 .loc 1 181 42 is_stmt 0
+ 411 00a0 0B578040 	 sub %d4,%d7,%d5
+ 412              	 .loc 1 181 25
+ 413 00a4 4B046141 	 utof %d4,%d4
+ 414              	 .loc 1 181 54
+ 415 00a8 4B036121 	 utof %d2,%d3
+ 416              	 .loc 1 181 52
+ 417 00ac 4B245120 	 div.f %d2,%d4,%d2
+ 418              	 .loc 1 181 22
+ 419 00b0 7B802C34 	 movh %d3,17096
+ 420              	.LVL62:
+ 421 00b4 4B324120 	 mul.f %d2,%d2,%d3
+ 422              	.LVL63:
+ 423 00b8 0090     	 ret 
+ 424              	.LVL64:
+ 425              	.L26:
+ 182:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****             }
+ 183:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         }
+ 184:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     }
+ 185:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     else  /* Channel counter running in continuous counting up and down mode */
+ 186:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     {
+ 187:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         /* Duty exists during CN0 = [CM1, CM0] */
+ 188:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****         duty = ((float32)(periodReg - cm1Reg) / (float32)periodReg) * 100.0f;
+ 426              	 .loc 1 188 9 is_stmt 1
+ 427              	 .loc 1 188 37 is_stmt 0
+ 428 00ba 0B538040 	 sub %d4,%d3,%d5
+ 429              	 .loc 1 188 17
+ 430 00be 4B046141 	 utof %d4,%d4
+ 431              	 .loc 1 188 49
+ 432 00c2 4B036121 	 utof %d2,%d3
+ 433              	 .loc 1 188 47
+ 434 00c6 4B245120 	 div.f %d2,%d4,%d2
+ 435              	 .loc 1 188 14
+ 436 00ca 7B802C34 	 movh %d3,17096
+ 437              	.LVL65:
+ 438 00ce 4B324120 	 mul.f %d2,%d2,%d3
+ 439              	.LVL66:
+ 189:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     }
+ 190:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** 
+ 191:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c ****     return duty;
+ 440              	 .loc 1 191 5 is_stmt 1
+ 192:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Atom.c **** }
+ 441              	 .loc 1 192 1 is_stmt 0
+ 442 00d2 0090     	 ret 
+ 443              	.LFE400:
+ 445              	 .global IfxEgtm_Atom_Ch_getDuty_end
+ 446              	IfxEgtm_Atom_Ch_getDuty_end:
+ 511              	.Letext0:
+ 512              	 .file 3 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 513              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 514              	 .file 5 "../Libraries/Infra/Sfr/TC4Dx/IfxEgtm_regdef.h"
+ 515              	 .file 6 "../Libraries/iLLD/TC4xx/CpuGeneric/_Impl/TC4Dx/IfxEgtm_cfg_TC4Dx.h"
+ 516              	 .file 7 "../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Cmu.h"
+ 33631 0000 00000000 	 .word IfxEgtm_Atom_Agc_buildFeature
+ 33632 0004 00000000 	 .word IfxEgtm_Atom_Agc_buildFeature_end
+ 33633 0008 FC000044 	 .word 0x440000fc
+ 33634 000c 70000000 	 .word 0x00000070
+ 33635 0010 04000000 	 .word 0x00000004
+ 33636 0014 C0000000 	 .word 0x000000c0
+ 33637 0018 00000000 	 .word IfxEgtm_Atom_Agc_buildFeatureForChannel
+ 33638 001c 00000000 	 .word IfxEgtm_Atom_Agc_buildFeatureForChannel_end
+ 33639 0020 74000044 	 .word 0x44000074
+ 33640 0024 70000000 	 .word 0x00000070
+ 33641 0028 04000000 	 .word 0x00000004
+ 33642 002c C0000000 	 .word 0x000000c0
+ 33643 0030 00000000 	 .word IfxEgtm_Atom_Ch_getFrequency
+ 33644 0034 00000000 	 .word IfxEgtm_Atom_Ch_getFrequency_end
+ 33645 0038 3C031444 	 .word 0x4414033c
+ 33646 003c 10001000 	 .word 0x00100010
+ 33647 0040 04000000 	 .word 0x00000004
+ 33648 0044 40000200 	 .word 0x00020040
+ 33649 0048 00000000 	 .word IfxEgtm_Atom_Ch_getDuty
+ 33650 004c 00000000 	 .word IfxEgtm_Atom_Ch_getDuty_end
+ 33651 0050 FC001C44 	 .word 0x441c00fc
+ 33652 0054 10001000 	 .word 0x00100010
+ 33653 0058 04000000 	 .word 0x00000004
+ 33654 005c C0000000 	 .word 0x000000c0
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxEgtm_Atom.c
+                            *ABS*:00000000 IfxEgtm_Atom.c
+    {standard input}:10     .text.IfxEgtm_Atom_Agc_buildFeature:00000000 IfxEgtm_Atom_Agc_buildFeature
+    {standard input}:90     .text.IfxEgtm_Atom_Agc_buildFeature:00000048 IfxEgtm_Atom_Agc_buildFeature_end
+    {standard input}:95     .text.IfxEgtm_Atom_Agc_buildFeatureForChannel:00000000 IfxEgtm_Atom_Agc_buildFeatureForChannel
+    {standard input}:136    .text.IfxEgtm_Atom_Agc_buildFeatureForChannel:00000026 IfxEgtm_Atom_Agc_buildFeatureForChannel_end
+    {standard input}:141    .text.IfxEgtm_Atom_Ch_getFrequency:00000000 IfxEgtm_Atom_Ch_getFrequency
+    {standard input}:285    .text.IfxEgtm_Atom_Ch_getFrequency:000000aa IfxEgtm_Atom_Ch_getFrequency_end
+    {standard input}:290    .text.IfxEgtm_Atom_Ch_getDuty:00000000 IfxEgtm_Atom_Ch_getDuty
+    {standard input}:446    .text.IfxEgtm_Atom_Ch_getDuty:000000d4 IfxEgtm_Atom_Ch_getDuty_end
+
+UNDEFINED SYMBOLS
+IfxEgtm_Cmu_getClkFrequency

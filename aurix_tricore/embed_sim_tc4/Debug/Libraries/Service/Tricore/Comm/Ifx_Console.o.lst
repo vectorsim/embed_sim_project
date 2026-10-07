@@ -1,0 +1,941 @@
+   1              	
+   2              	 .file "Ifx_Console.c"
+   3              	 .file "Ifx_Console.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.Ifx_Console_init,"ax",@progbits
+   7              	 .align 1
+   8              	 .global Ifx_Console_init
+  10              	Ifx_Console_init:
+  11              	.LFB544:
+  12              	 .file 1 "../Libraries/Service/Tricore/Comm/Ifx_Console.c"
+   1:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** /**
+   2:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  * \file Ifx_Console.c
+   3:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  * \brief Main Ifx_Console module implementation file
+   4:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  *
+   5:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  *
+   8:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  *
+   9:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****   *                                 IMPORTANT NOTICE
+  10:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  *
+  11:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  *
+  12:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  * this file except in compliance with IFASLL.
+  15:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  *
+  16:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  *
+  26:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  */
+  27:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** 
+  28:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** #include <string.h>
+  29:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** #include <stdio.h>
+  30:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** #include <stdarg.h>
+  31:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** 
+  32:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** #include "Ifx_Console.h"
+  33:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** #include "_Utilities/Ifx_Assert.h"
+  34:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** #if defined(IFX_ILLD_PPU_USAGE)
+  35:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** #include "Cpu/Std/IfxPpu_Intrinsics.h"
+  36:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** #else
+  37:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** #include "Cpu/Std/IfxCpu_Intrinsics.h"
+  38:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** #endif
+  39:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** 
+  40:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** Ifx_Console Ifx_g_console;
+  41:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** 
+  42:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** /**
+  43:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  * \brief Initialize the \ref Ifx_g_console object.
+  44:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  * \param standardIo Pointer to the IfxStdIf_DPipe object used by the \ref Ifx_g_console.
+  45:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  */
+  46:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** void Ifx_Console_init(IfxStdIf_DPipe *standardIo)
+  47:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** {
+  13              	 .loc 1 47 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  48:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****     Ifx_g_console.standardIo = standardIo;
+  17              	 .loc 1 48 5
+  18              	 .loc 1 48 30 is_stmt 0
+  19 0002 91000020 	 movh.a %a2,hi:Ifx_g_console
+  20 0006 D9230000 	 lea %a3,[%a2]lo:Ifx_g_console
+  21 000a B5240000 	 st.a [%a2]lo:Ifx_g_console,%a4
+  49:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****     Ifx_g_console.align      = 0;
+  22              	 .loc 1 49 5 is_stmt 1
+  23              	 .loc 1 49 30 is_stmt 0
+  24 000e 8202     	 mov %d2,0
+  25 0010 F9320400 	 st.h [%a3]4,%d2
+  50:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** }
+  26              	 .loc 1 50 1
+  27 0014 0090     	 ret 
+  28              	.LFE544:
+  30              	 .global Ifx_Console_init_end
+  31              	Ifx_Console_init_end:
+  32              	 .section .text.Ifx_Console_print,"ax",@progbits
+  33              	 .align 1
+  34              	 .global Ifx_Console_print
+  36              	Ifx_Console_print:
+  37              	.LFB545:
+  51:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** 
+  52:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** 
+  53:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** /**
+  54:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  * \brief Print formatted string into \ref Ifx_g_console.
+  55:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  * \param format printf-compatible formatted string.
+  56:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  * \retval TRUE if the string is printed successfully
+  57:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  * \retval FALSE if the function failed.
+  58:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  */
+  59:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** boolean Ifx_Console_print(pchar format, ...)
+  60:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** {
+  38              	 .loc 1 60 1 is_stmt 1
+  39              	.LVL1:
+  40 0000 40AE     	 mov.aa %a14,%SP
+  41              	.LCFI1:
+  42 0002 D9AAF8BF 	 lea %SP,[%SP]-264
+  61:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****     if (!Ifx_g_console.standardIo->txDisabled)
+  43              	 .loc 1 61 5
+  44              	 .loc 1 61 23 is_stmt 0
+  45 0006 91000020 	 movh.a %a2,hi:Ifx_g_console
+  46 000a 99220000 	 ld.a %a2,[%a2]lo:Ifx_g_console
+  47              	 .loc 1 61 34
+  48 000e 39220400 	 ld.bu %d2,[%a2]4
+  49              	 .loc 1 61 8
+  50 0012 DF020000 	 jz %d2,.L5
+  62:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****     {
+  63:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         char      message[STDIF_DPIPE_MAX_PRINT_SIZE + 1];
+  64:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         Ifx_SizeT count;
+  65:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         va_list   args;
+  66:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         va_start(args, format);
+  67:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         vsprintf((char *)message, format, args);
+  68:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         va_end(args);
+  69:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         count = (Ifx_SizeT)strlen(message);
+  70:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, count < STDIF_DPIPE_MAX_PRINT_SIZE);
+  71:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** 
+  72:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         return IfxStdIf_DPipe_write(Ifx_g_console.standardIo, (void *)message, &count, TIME_INFINIT
+  73:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****     }
+  74:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****     else
+  75:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****     {
+  76:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         return TRUE;
+  51              	 .loc 1 76 16
+  52 0016 8212     	 mov %d2,1
+  77:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****     }
+  78:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** }
+  53              	 .loc 1 78 1
+  54 0018 0090     	 ret 
+  55              	.L5:
+  56              	.LBB13:
+  63:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         Ifx_SizeT count;
+  57              	 .loc 1 63 9 is_stmt 1
+  64:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         va_list   args;
+  58              	 .loc 1 64 9
+  65:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         va_start(args, format);
+  59              	 .loc 1 65 9
+  66:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         vsprintf((char *)message, format, args);
+  60              	 .loc 1 66 9
+  61              	.LVL2:
+  67:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         va_end(args);
+  62              	 .loc 1 67 9
+  63 001a 40E6     	 mov.aa %a6,%a14
+  64              	.LVL3:
+  65 001c 4045     	 mov.aa %a5,%a4
+  66 001e D9E4C0CF 	 lea %a4,[%a14]-256
+  67              	.LVL4:
+  68 0022 6D000000 	 call vsprintf
+  69              	.LVL5:
+  68:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         count = (Ifx_SizeT)strlen(message);
+  70              	 .loc 1 68 9
+  69:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, count < STDIF_DPIPE_MAX_PRINT_SIZE);
+  71              	 .loc 1 69 9
+  69:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, count < STDIF_DPIPE_MAX_PRINT_SIZE);
+  72              	 .loc 1 69 28 is_stmt 0
+  73 0026 D9E4C0CF 	 lea %a4,[%a14]-256
+  74 002a 6D000000 	 call strlen
+  75              	.LVL6:
+  69:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, count < STDIF_DPIPE_MAX_PRINT_SIZE);
+  76              	 .loc 1 69 15
+  77 002e F9E2FEBF 	 st.h [%a14]-258,%d2
+  70:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** 
+  78              	 .loc 1 70 9 is_stmt 1
+  72:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****     }
+  79              	 .loc 1 72 9
+  72:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****     }
+  80              	 .loc 1 72 16 is_stmt 0
+  81 0032 91000020 	 movh.a %a2,hi:Ifx_g_console
+  82 0036 99220000 	 ld.a %a2,[%a2]lo:Ifx_g_console
+  83              	.LVL7:
+  84              	.LBB14:
+  85              	.LBB15:
+  86              	 .file 2 "../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h"
+   1:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /**
+   2:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \file IfxStdIf_DPipe.h
+   3:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \brief Standard interface: Data Pipe
+   4:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \ingroup IfxStdIf
+   5:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+   6:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \version iLLD-TC4-v2.7.0
+   7:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   8:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+   9:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  10:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****   *                                 IMPORTANT NOTICE
+  11:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  12:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  13:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  14:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  15:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * this file except in compliance with IFASLL.
+  16:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  17:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  18:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * Unless required by applicable law or agreed to in writing, software distributed
+  19:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  20:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  21:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * whether express, implied, statutory or otherwise, including but not limited to
+  22:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  23:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * defects in the licensed items, or non-infringement of third parties'
+  24:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * intellectual property rights. See the full license text for the specific
+  25:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * language governing permissions and limitations under IFASLL.
+  26:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  27:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  28:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \defgroup library_srvsw_stdif_dpipe Standard interface: Data Pipe
+  29:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \ingroup library_srvsw_stdif
+  30:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  31:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * The standard interafce data pipe (DPipe) abstract the hardware used for data transfer. It provid
+  32:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * and read data to/from as communciation channel.
+  33:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  34:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \par Porting StandardIo to DPipe
+  35:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * replace all
+  36:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *  - StandardIo type with IfxStdIf_DPipe
+  37:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *  - StandardIo_print with IfxStdIf_DPipe_print
+  38:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * delete StandardIo.c and StandardIo.h
+  39:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * Include "StdIf/IfxStdIf_DPipe.h" instead of "SysSe/Bsp/StandardIo.h"
+  40:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  41:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * The following files are already ported: Ifx_Console, Ifx_Shell
+  42:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  43:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+  44:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** #ifndef IFXSTDIF_DPIPE_H
+  45:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** #define IFXSTDIF_DPIPE_H 1
+  46:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+  47:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** #include "IfxStdIf.h"
+  48:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** #include "Asclin/Asc/IfxAsclin_Asc.h"
+  49:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** //----------------------------------------------------------------------------------------
+  50:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** #ifndef ENDL
+  51:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** #    define ENDL       "\r\n"
+  52:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** #endif
+  53:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+  54:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Forward declaration */
+  55:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef struct IfxStdIf_DPipe_ IfxStdIf_DPipe;
+  56:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+  57:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef volatile boolean      *IfxStdIf_DPipe_WriteEvent;
+  58:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef volatile boolean      *IfxStdIf_DPipe_ReadEvent;
+  59:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+  60:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Size of the buffer allocated on the stack for the print function */
+  61:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** #define STDIF_DPIPE_MAX_PRINT_SIZE (255)
+  62:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+  63:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Write binary data into the \ref IfxStdIf_DPipe.
+  64:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  65:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * Initially the parameter 'count' specifies count of data to write.
+  66:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * After execution the data pointed by 'count' specifies the data actually written
+  67:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  68:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+  69:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param data Pointer to the start of data
+  70:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param count Pointer to the count of data (in bytes).
+  71:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param timeout in system timer ticks
+  72:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  73:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \retval TRUE Returns TRUE if all items could be written
+  74:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \retval FALSE Returns FALSE if not all the items could be written
+  75:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+  76:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef boolean (*IfxStdIf_DPipe_Write)(IfxStdIf_InterfaceDriver stdif, void *data, Ifx_SizeT *coun
+  77:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+  78:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Read data from the \ref IfxStdIf_DPipe object
+  79:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  80:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * Initially the parameter 'count' specifies count of data to read.
+  81:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * After execution the data pointed by 'count' specifies the data actually read.
+  82:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  83:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+  84:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param data Pointer to the start of data
+  85:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param count Pointer to the count of data (in bytes).
+  86:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param timeout in system timer ticks
+  87:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  88:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \retval TRUE Returns TRUE if all items could be read
+  89:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \retval FALSE Returns FALSE if not all the items could be read
+  90:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+  91:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef boolean (*IfxStdIf_DPipe_Read)(IfxStdIf_InterfaceDriver stdif, void *data, Ifx_SizeT *count
+  92:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+  93:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Returns the number of bytes in the rx buffer
+  94:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  95:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+  96:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  97:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \return Returns the number of bytes in the rx buffer
+  98:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+  99:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef sint32 (*IfxStdIf_DPipe_GetReadCount)(IfxStdIf_InterfaceDriver stdif);
+ 100:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 101:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Returns read event object
+ 102:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 103:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+ 104:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 105:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \return Returns read event object
+ 106:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 107:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef IfxStdIf_DPipe_ReadEvent (*IfxStdIf_DPipe_GetReadEvent)(IfxStdIf_InterfaceDriver stdif);
+ 108:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 109:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Returns number of ISR hits
+ 110:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 111:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+ 112:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 113:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \return Returns number of ISR hits
+ 114:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 115:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef uint32 (*IfxStdIf_DPipe_GetIsrCount)(IfxStdIf_InterfaceDriver stdif);
+ 116:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 117:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Returns number of bytes send
+ 118:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 119:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+ 120:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 121:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \return Returns number of bytes send
+ 122:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 123:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef uint32 (*IfxStdIf_DPipe_GetSendCount)(IfxStdIf_InterfaceDriver stdif);
+ 124:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 125:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Returns the time stamp of the last transmit data
+ 126:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 127:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+ 128:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 129:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \return Returns the time stamp of the last transmit data
+ 130:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 131:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef Ifx_TickTime (*IfxStdIf_DPipe_GetTxTimeStamp)(IfxStdIf_InterfaceDriver stdif);
+ 132:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 133:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Returns the number of free bytes (free space) in the tx buffer
+ 134:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 135:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+ 136:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 137:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \return Returns the number of free bytes in the tx buffer
+ 138:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 139:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef sint32 (*IfxStdIf_DPipe_GetWriteCount)(IfxStdIf_InterfaceDriver stdif);
+ 140:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 141:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Returns write event object
+ 142:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 143:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+ 144:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 145:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \return Returns write event object
+ 146:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 147:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef IfxStdIf_DPipe_WriteEvent (*IfxStdIf_DPipe_GetWriteEvent)(IfxStdIf_InterfaceDriver stdif);
+ 148:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 149:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Indicates if the required number of bytes are available for read in the buffer
+ 150:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 151:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+ 152:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param count Pointer to the count of data (in bytes).
+ 153:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param timeout in system timer ticks
+ 154:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 155:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \return Returns TRUE if at least count bytes are available for read in the rx buffer,
+ 156:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * if not the Event is armed to be set when the buffer count is bigger or equal to the requested co
+ 157:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 158:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef boolean (*IfxStdIf_DPipe_CanReadCount)(IfxStdIf_InterfaceDriver stdif, Ifx_SizeT count, Ifx
+ 159:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 160:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief  Indicates if there is enough free space to write the data in the buffer
+ 161:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 162:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+ 163:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param count Pointer to the count of data (in bytes).
+ 164:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param timeout in system timer ticks
+ 165:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 166:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \return Returns TRUE if at least count bytes can be written to the tx buffer,
+ 167:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *  if not the Event is armed to be set when the buffer free count is bigger or equal to the reques
+ 168:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 169:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef boolean (*IfxStdIf_DPipe_CanWriteCount)(IfxStdIf_InterfaceDriver stdif, Ifx_SizeT count, If
+ 170:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 171:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Flush the transmit buffer by transmitting all data
+ 172:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 173:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+ 174:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param timeout timeout for the flush operation
+ 175:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 176:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \return Returns TRUE if the FIFO is empty
+ 177:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 178:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef boolean (*IfxStdIf_DPipe_FlushTx)(IfxStdIf_InterfaceDriver stdif, Ifx_TickTime timeout);
+ 179:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 180:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Clears the RX buffer by removing all data
+ 181:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 182:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+ 183:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \return void
+ 184:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 185:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef void (*IfxStdIf_DPipe_ClearRx)(IfxStdIf_InterfaceDriver stdif);
+ 186:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 187:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Clears the TX buffer by removing all data
+ 188:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 189:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+ 190:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \return void
+ 191:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 192:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef void (*IfxStdIf_DPipe_ClearTx)(IfxStdIf_InterfaceDriver stdif);
+ 193:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 194:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief handler called on reveive event
+ 195:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 196:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+ 197:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 198:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \return none
+ 199:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 200:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef void (*IfxStdIf_DPipe_OnReceive)(IfxStdIf_InterfaceDriver stdif);
+ 201:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 202:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief handler called on transmit event
+ 203:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 204:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+ 205:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 206:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \return none
+ 207:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 208:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef void (*IfxStdIf_DPipe_OnTransmit)(IfxStdIf_InterfaceDriver stdif);
+ 209:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 210:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief handler called on error event
+ 211:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 212:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+ 213:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 214:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \return none
+ 215:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 216:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef void (*IfxStdIf_DPipe_OnError)(IfxStdIf_InterfaceDriver stdif);
+ 217:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 218:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Reset the ISR counter
+ 219:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 220:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+ 221:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 222:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \return none
+ 223:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 224:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef void (*IfxStdIf_DPipe_ResetIsrCount)(IfxStdIf_InterfaceDriver stdif);
+ 225:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 226:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Reset the sendCount counter
+ 227:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 228:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+ 229:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 230:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \return none
+ 231:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 232:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef void (*IfxStdIf_DPipe_ResetSendCount)(IfxStdIf_InterfaceDriver stdif);
+ 233:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 234:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Standard interface object
+ 235:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 236:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** struct IfxStdIf_DPipe_
+ 237:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** {
+ 238:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_InterfaceDriver driver;              /**< \brief Pointer to the specific driver object
+ 239:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     boolean                  txDisabled;          /**< \brief If disabled is set to TRUE, the outpu
+ 240:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 241:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     /* Standard interface APIs */
+ 242:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_DPipe_Write          write;          /**< \brief \see IfxStdIf_DPipe_Write */
+ 243:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_DPipe_Read           read;           /**< \brief \see IfxStdIf_DPipe_Read */
+ 244:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_DPipe_GetReadCount   getReadCount;   /**< \brief \see IfxStdIf_DPipe_GetReadCount */
+ 245:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_DPipe_GetReadEvent   getReadEvent;   /**< \brief \see IfxStdIf_DPipe_GetReadEvent */
+ 246:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_DPipe_GetWriteCount  getWriteCount;  /**< \brief \see IfxStdIf_DPipe_GetWriteCount */
+ 247:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_DPipe_GetWriteEvent  getWriteEvent;  /**< \brief \see IfxStdIf_DPipe_GetWriteEvent */
+ 248:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_DPipe_CanReadCount   canReadCount;   /**< \brief \see IfxStdIf_DPipe_CanReadCount */
+ 249:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_DPipe_CanWriteCount  canWriteCount;  /**< \brief \see IfxStdIf_DPipe_CanWriteCount */
+ 250:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_DPipe_FlushTx        flushTx;        /**< \brief \see IfxStdIf_DPipe_FlushTx */
+ 251:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_DPipe_ClearTx        clearTx;        /**< \brief \see IfxStdIf_DPipe_ClearTx */
+ 252:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_DPipe_ClearRx        clearRx;        /**< \brief \see IfxStdIf_DPipe_ClearRx */
+ 253:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_DPipe_OnReceive      onReceive;      /**< \brief \see IfxStdIf_DPipe_OnReceive  */
+ 254:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_DPipe_OnTransmit     onTransmit;     /**< \brief \see IfxStdIf_DPipe_OnTransmit */
+ 255:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_DPipe_OnError        onError;        /**< \brief \see IfxStdIf_DPipe_OnError    */
+ 256:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_DPipe_GetIsrCount    getIsrCount;   /**< \brief \see IfxStdIf_DPipe_GetIsrCount    */
+ 257:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 	IfxStdIf_DPipe_GetSendCount   getSendCount;   /**< \brief \see IfxStdIf_DPipe_GetSendCount    */
+ 258:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_DPipe_GetTxTimeStamp getTxTimeStamp; /**< \brief \see IfxStdIf_DPipe_GetTxTimeStamp   
+ 259:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_DPipe_ResetIsrCount  resetIsrCount;  /**< \brief \see IfxStdIf_DPipe_ResetIsrCount    
+ 260:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 	IfxStdIf_DPipe_ResetSendCount resetSendCount; /**< \brief \see IfxStdIf_DPipe_ResetSendCount    */
+ 261:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** };
+ 262:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \addtogroup library_srvsw_stdif_dpipe
+ 263:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \{ */
+ 264:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \copydoc IfxStdIf_DPipe_Write
+ 265:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 266:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** IFX_INLINE boolean IfxStdIf_DPipe_write(IfxStdIf_DPipe *stdif, void *data, Ifx_SizeT *count, Ifx_Ti
+ 267:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** {
+ 268:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     return stdif->write(stdif->driver, data, count, timeout);
+  87              	 .loc 2 268 5 is_stmt 1
+  88              	 .loc 2 268 17 is_stmt 0
+  89 003a 99230800 	 ld.a %a3,[%a2]8
+  90              	 .loc 2 268 12
+  91 003e 82F4     	 mov %d4,-1
+  92 0040 82F5     	 mov %d5,-1
+  93 0042 06F5     	 sh %d5,-1
+  94 0044 D9E6FEBF 	 lea %a6,[%a14]-258
+  95              	.LVL8:
+  96 0048 D9E5C0CF 	 lea %a5,[%a14]-256
+  97              	.LVL9:
+  98 004c D424     	 ld.a %a4,[%a2]0
+  99 004e DC13     	 calli %a3
+ 100              	.LVL10:
+ 101 0050 0090     	 ret 
+ 102              	.LBE15:
+ 103              	.LBE14:
+ 104              	.LBE13:
+ 105              	.LFE545:
+ 107              	 .global Ifx_Console_print_end
+ 108              	Ifx_Console_print_end:
+ 109              	.section .rodata,"a",@progbits
+ 110              	.LC0:
+ 111 0000 20202020 	 .string "                "
+ 111      20202020 
+ 111      20202020 
+ 111      20202020 
+ 111      00
+ 112              	 .section .text.Ifx_Console_printAlign,"ax",@progbits
+ 113              	 .align 1
+ 114              	 .global Ifx_Console_printAlign
+ 116              	Ifx_Console_printAlign:
+ 117              	.LFB546:
+  79:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** 
+  80:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** 
+  81:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** /**
+  82:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  * \brief Print formatted string into \ref Ifx_g_console.
+  83:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  * Indented with a number of spaces.
+  84:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  * \param format printf-compatible formatted string.
+  85:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  * \retval TRUE if the string is printed successfully
+  86:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  * \retval FALSE if the function failed.
+  87:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****  */
+  88:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** boolean Ifx_Console_printAlign(pchar format, ...)
+  89:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** {
+ 118              	 .loc 1 89 1 is_stmt 1
+ 119              	.LVL11:
+ 120 0000 40AE     	 mov.aa %a14,%SP
+ 121              	.LCFI2:
+ 122 0002 D9AAE8BF 	 lea %SP,[%SP]-280
+ 123 0006 4045     	 mov.aa %a5,%a4
+  90:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****     if (!Ifx_g_console.standardIo->txDisabled)
+ 124              	 .loc 1 90 5
+ 125              	 .loc 1 90 23 is_stmt 0
+ 126 0008 91000020 	 movh.a %a2,hi:Ifx_g_console
+ 127 000c 99220000 	 ld.a %a2,[%a2]lo:Ifx_g_console
+ 128              	 .loc 1 90 34
+ 129 0010 39220400 	 ld.bu %d2,[%a2]4
+ 130              	 .loc 1 90 8
+ 131 0014 DF020000 	 jz %d2,.L11
+  91:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****     {
+  92:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         char      message[STDIF_DPIPE_MAX_PRINT_SIZE + 1];
+  93:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         Ifx_SizeT align, count;
+  94:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         char      spaces[17] = "                ";
+  95:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         va_list   args;
+  96:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         va_start(args, format);
+  97:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         vsprintf((char *)message, format, args);
+  98:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         va_end(args);
+  99:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         count = (Ifx_SizeT)strlen(message);
+ 100:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, count < STDIF_DPIPE_MAX_PRINT_SIZE);
+ 101:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         align = Ifx_g_console.align;
+ 102:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** 
+ 103:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         while (align > 0)
+ 104:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         {
+ 105:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****             Ifx_SizeT scount;
+ 106:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****             scount = __min(align, 10);
+ 107:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****             IfxStdIf_DPipe_write(Ifx_g_console.standardIo, (void *)spaces, &scount, TIME_INFINITE);
+ 108:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****             align  = align - scount;
+ 109:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         }
+ 110:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** 
+ 111:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         return IfxStdIf_DPipe_write(Ifx_g_console.standardIo, (void *)message, &count, TIME_INFINIT
+ 112:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****     }
+ 113:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****     else
+ 114:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****     {
+ 115:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         return TRUE;
+ 132              	 .loc 1 115 16
+ 133 0018 8212     	 mov %d2,1
+ 116:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****     }
+ 117:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** }
+ 134              	 .loc 1 117 1
+ 135 001a 0090     	 ret 
+ 136              	.L11:
+ 137              	.LBB16:
+  92:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         Ifx_SizeT align, count;
+ 138              	 .loc 1 92 9 is_stmt 1
+  93:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         char      spaces[17] = "                ";
+ 139              	 .loc 1 93 9
+  94:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         va_list   args;
+ 140              	 .loc 1 94 9
+  94:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         va_list   args;
+ 141              	 .loc 1 94 19 is_stmt 0
+ 142 001c 91000020 	 movh.a %a2,hi:.LC0
+ 143 0020 D9220000 	 lea %a2,[%a2]lo:.LC0
+ 144 0024 D9E3EFBF 	 lea %a3,[%a14]-273
+ 145              	 
+ 146 0028 0422     	 ld.bu %d2,[%a2+]1
+ 147 002a 2432     	 st.b [%a3+]1,%d2
+ 148 002c 0422     	 ld.bu %d2,[%a2+]1
+ 149 002e 2432     	 st.b [%a3+]1,%d2
+ 150 0030 0422     	 ld.bu %d2,[%a2+]1
+ 151 0032 2432     	 st.b [%a3+]1,%d2
+ 152 0034 0422     	 ld.bu %d2,[%a2+]1
+ 153 0036 2432     	 st.b [%a3+]1,%d2
+ 154 0038 0422     	 ld.bu %d2,[%a2+]1
+ 155 003a 2432     	 st.b [%a3+]1,%d2
+ 156 003c 0422     	 ld.bu %d2,[%a2+]1
+ 157 003e 2432     	 st.b [%a3+]1,%d2
+ 158 0040 0422     	 ld.bu %d2,[%a2+]1
+ 159 0042 2432     	 st.b [%a3+]1,%d2
+ 160 0044 0422     	 ld.bu %d2,[%a2+]1
+ 161 0046 2432     	 st.b [%a3+]1,%d2
+ 162 0048 0422     	 ld.bu %d2,[%a2+]1
+ 163 004a 2432     	 st.b [%a3+]1,%d2
+ 164 004c 0422     	 ld.bu %d2,[%a2+]1
+ 165 004e 2432     	 st.b [%a3+]1,%d2
+ 166 0050 0422     	 ld.bu %d2,[%a2+]1
+ 167 0052 2432     	 st.b [%a3+]1,%d2
+ 168 0054 0422     	 ld.bu %d2,[%a2+]1
+ 169 0056 2432     	 st.b [%a3+]1,%d2
+ 170 0058 0422     	 ld.bu %d2,[%a2+]1
+ 171 005a 2432     	 st.b [%a3+]1,%d2
+ 172 005c 0422     	 ld.bu %d2,[%a2+]1
+ 173 005e 2432     	 st.b [%a3+]1,%d2
+ 174 0060 0422     	 ld.bu %d2,[%a2+]1
+ 175 0062 2432     	 st.b [%a3+]1,%d2
+ 176 0064 0422     	 ld.bu %d2,[%a2+]1
+ 177 0066 2432     	 st.b [%a3+]1,%d2
+ 178 0068 0422     	 ld.bu %d2,[%a2+]1
+ 179 006a 2432     	 st.b [%a3+]1,%d2
+ 180              	.LVL12:
+  95:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         va_start(args, format);
+ 181              	 .loc 1 95 9 is_stmt 1
+  96:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         vsprintf((char *)message, format, args);
+ 182              	 .loc 1 96 9
+  97:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         va_end(args);
+ 183              	 .loc 1 97 9
+ 184 006c 40E6     	 mov.aa %a6,%a14
+ 185              	.LVL13:
+ 186 006e D9E4C0CF 	 lea %a4,[%a14]-256
+ 187 0072 6D000000 	 call vsprintf
+ 188              	.LVL14:
+  98:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         count = (Ifx_SizeT)strlen(message);
+ 189              	 .loc 1 98 9
+  99:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, count < STDIF_DPIPE_MAX_PRINT_SIZE);
+ 190              	 .loc 1 99 9
+  99:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, count < STDIF_DPIPE_MAX_PRINT_SIZE);
+ 191              	 .loc 1 99 28 is_stmt 0
+ 192 0076 D9E4C0CF 	 lea %a4,[%a14]-256
+ 193 007a 6D000000 	 call strlen
+ 194              	.LVL15:
+  99:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, count < STDIF_DPIPE_MAX_PRINT_SIZE);
+ 195              	 .loc 1 99 15
+ 196 007e F9E2EABF 	 st.h [%a14]-278,%d2
+ 100:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         align = Ifx_g_console.align;
+ 197              	 .loc 1 100 9 is_stmt 1
+ 101:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** 
+ 198              	 .loc 1 101 9
+ 101:../Libraries/Service/Tricore/Comm/Ifx_Console.c **** 
+ 199              	 .loc 1 101 15 is_stmt 0
+ 200 0082 91000020 	 movh.a %a2,hi:Ifx_g_console
+ 201 0086 D9220000 	 lea %a2,[%a2]lo:Ifx_g_console
+ 202 008a C9280400 	 ld.h %d8,[%a2]4
+ 203              	.LVL16:
+ 103:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         {
+ 204              	 .loc 1 103 9 is_stmt 1
+ 103:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         {
+ 205              	 .loc 1 103 15 is_stmt 0
+ 206 008e 1D000000 	 j .L8
+ 207              	.L9:
+ 208              	.LBB17:
+ 105:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****             scount = __min(align, 10);
+ 209              	 .loc 1 105 13 is_stmt 1
+ 106:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****             IfxStdIf_DPipe_write(Ifx_g_console.standardIo, (void *)spaces, &scount, TIME_INFINITE);
+ 210              	 .loc 1 106 13
+ 211              	.LVL17:
+ 212              	.LBB18:
+ 213              	.LBB19:
+ 214              	 .file 3 "../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h"
+   1:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**
+   2:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \file IfxCpu_IntrinsicsGnuc.h
+   3:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  *
+   4:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \version iLLD-TC4-v2.7.0
+   5:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   6:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  *
+   7:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  *
+   8:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  *
+   9:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  *                                 IMPORTANT NOTICE
+  10:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  *
+  11:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  *
+  12:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * this file except in compliance with IFASLL.
+  15:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  *
+  16:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  *
+  26:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \defgroup IfxLld_Cpu_Intrinsics_Gnuc Intrinsics for GNU compiler
+  27:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \ingroup IfxLld_Cpu_Intrinsics
+  28:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  *
+  29:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+  30:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+  31:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #ifndef IFXCPU_INTRINSICSGCC_H
+  32:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define IFXCPU_INTRINSICSGCC_H 1
+  33:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+  34:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /* old style intrinsics handling for AGENtiX environment */
+  35:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #if defined(SCTB_EMBEDDED)
+  36:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** # define IFXCPU_INTRINSICSGNUC_USE_MACHINE_INTRINSICS 0
+  37:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #else
+  38:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** # define IFXCPU_INTRINSICSGNUC_USE_MACHINE_INTRINSICS 1
+  39:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #endif
+  40:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+  41:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /******************************************************************************/
+  42:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #include "Ifx_Types.h"
+  43:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+  44:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #if IFXCPU_INTRINSICSGNUC_USE_MACHINE_INTRINSICS
+  45:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #include "machine/intrinsics.h"
+  46:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #endif
+  47:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+  48:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /******************************************************************************/
+  49:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /* *INDENT-OFF* */
+  50:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define STRINGIFY(x)    #x
+  51:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+  52:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /* Endian Swap for CRC32 Calculation*/
+  53:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define CPU_CRC_ENDIAN_SWAP 0  /* No Swap by default*/
+  54:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+  55:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Function call without return
+  56:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+  57:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__non_return_call(fun)	__asm__ volatile ("ji %0"::"a"(fun))
+  58:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+  59:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Jump and link
+  60:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+  61:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE void Ifx__jump_and_link(void (*fun)(void))
+  62:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+  63:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 	__asm__ volatile ("jli %0"::"a"(fun));
+  64:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+  65:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+  66:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE void Ifx__moveToDataParam0(unsigned int var)
+  67:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+  68:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 	__asm__ volatile ("mov\t %%d4, %0"::"d"(var));
+  69:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+  70:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+  71:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE void Ifx__moveToDataParamRet(unsigned int var)
+  72:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+  73:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 	__asm__ volatile ("mov\t %%d2, %0"::"d"(var));
+  74:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+  75:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+  76:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE unsigned int Ifx__getDataParamRet(void)
+  77:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+  78:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 	unsigned int var;
+  79:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 	__asm__ volatile (" mov\t %0, %%d2":"=d"(var));
+  80:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 	return var;
+  81:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+  82:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+  83:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE void Ifx__moveToAddrParam0(const void *var)
+  84:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+  85:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 	__asm__ volatile ("mov.aa\t %%a4, %0"::"a"(var));
+  86:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+  87:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+  88:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE void Ifx__jumpToFunction(const void *fun)
+  89:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+  90:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 	Ifx__non_return_call(fun);
+  91:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+  92:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+  93:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE void Ifx__jumpToFunctionWithLink(const void *fun)
+  94:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+  95:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 	Ifx__jump_and_link((void (*)(void))fun);
+  96:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+  97:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+  98:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE void Ifx__jumpBackToLink(void)
+  99:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 100:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 	__asm__ volatile ("ji %a11");
+ 101:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 102:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 103:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Function to copy 128 bit data from source to destination
+ 104:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * Addresses must be 128 bit aligned.
+ 105:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 106:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE void Ifx__copyDoubleDouble(volatile uint32 *src, volatile uint32 *dst)
+ 107:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 108:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ ("\t ld.d %%e0, [%0] 0 \n"
+ 109:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****              "\t st.d [%1] 0, %%e0 \n"
+ 110:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****              "\t ld.d %%e0, [%0] 8 \n"
+ 111:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****              "\t st.d [%1] 8, %%e0 \n"
+ 112:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****              ::"a" (src), "a" (dst):);
+ 113:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 114:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 115:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** \defgroup IfxLld_Cpu_Intrinsics_Gnuc_any_type Cross type arithmetic operation
+ 116:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  *
+ 117:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * Macro compatible with float, fix point, signed integer and unsigned integer
+ 118:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  *
+ 119:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \ingroup IfxLld_Cpu_Intrinsics_Gnuc
+ 120:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \{
+ 121:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 122:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__minX(X,Y)                     ( ((X) < (Y)) ? (X) : (Y) )
+ 123:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__maxX(X,Y)                     ( ((X) > (Y)) ? (X) : (Y) )
+ 124:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__saturateX(X,Min,Max)          ( Ifx__minX(Ifx__maxX(X, Min), Max) )
+ 125:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__checkrangeX(X,Min,Max)        (((X) >= (Min)) && ((X) <= (Max)))
+ 126:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** \} */
+ 127:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 128:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** \defgroup IfxLld_Cpu_Intrinsics_Gnuc_singed_integer Signed integer operation
+ 129:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \ingroup IfxLld_Cpu_Intrinsics_Gnuc
+ 130:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \{
+ 131:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 132:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__saturate(X,Min,Max)           ( Ifx__min(Ifx__max(X, Min), Max) )
+ 133:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** \} */
+ 134:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 135:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** \defgroup IfxLld_Cpu_Intrinsics_Gnuc_unsinged_integer Unsigned integer operation
+ 136:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \ingroup IfxLld_Cpu_Intrinsics_Gnuc
+ 137:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \{
+ 138:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 139:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__saturateu(X,Min,Max)           ( Ifx__minu(Ifx__maxu(X, Min), Max) )
+ 140:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** \} */
+ 141:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 142:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** \defgroup IfxLld_Cpu_Intrinsics_Gnucmin_max Minimum and Maximum of (sint16) Integers
+ 143:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  These intrinsic functions return the minimum or maximum of a sint16, uint16 or sint16
+ 144:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \ingroup IfxLld_Cpu_Intrinsics_Gnuc
+ 145:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \{
+ 146:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 147:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 148:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Return maximum of two integers
+ 149:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 150:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint32 Ifx__max(sint32 a, sint32 b)
+ 151:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 152:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint32 res;
+ 153:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("max %0, %1, %2": "=d" (res) : "d" (a), "d" (b));
+ 154:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 155:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 156:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 157:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Return maximum of two sint16
+ 158:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 159:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint32 Ifx__maxs(sint16 a, sint16 b)
+ 160:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 161:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint32 res;
+ 162:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("max.h %0, %1, %2": "=d" (res) : "d" (a), "d" (b));
+ 163:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 164:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 165:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Return maximum of two unsigned integers
+ 166:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 167:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE uint32 Ifx__maxu(uint32 a, uint32 b)
+ 168:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 169:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     uint32 res;
+ 170:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("max.u %0, %1, %2": "=d" (res) : "d" (a), "d" (b));
+ 171:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 172:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 173:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 174:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Return minimum of two integers
+ 175:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 176:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint32 Ifx__min(sint32 a, sint32 b)
+ 177:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 178:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint32 res;
+ 215              	 .loc 3 178 5
+ 179:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("min %0, %1, %2": "=d" (res) : "d" (a), "d" (b));
+ 216              	 .loc 3 179 5
+ 217 0092 3BA00020 	 mov %d2,10
+ 218              	
+ 219              	 
+ 220 0096 0B288021 	 min %d2,%d8,%d2
+ 221              	 
+ 222              	.LVL18:
+ 180:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 223              	 .loc 3 180 5
+ 224              	
+ 225              	.LBE19:
+ 226              	.LBE18:
+ 106:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****             IfxStdIf_DPipe_write(Ifx_g_console.standardIo, (void *)spaces, &scount, TIME_INFINITE);
+ 227              	 .loc 1 106 20 is_stmt 0
+ 228 009a F9E2ECBF 	 st.h [%a14]-276,%d2
+ 107:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****             align  = align - scount;
+ 229              	 .loc 1 107 13 is_stmt 1
+ 230 009e 91000020 	 movh.a %a2,hi:Ifx_g_console
+ 231 00a2 99220000 	 ld.a %a2,[%a2]lo:Ifx_g_console
+ 232              	.LVL19:
+ 233              	.LBB20:
+ 234              	.LBB21:
+ 235              	 .loc 2 268 5
+ 236              	 .loc 2 268 17 is_stmt 0
+ 237 00a6 99230800 	 ld.a %a3,[%a2]8
+ 238              	 .loc 2 268 12
+ 239 00aa 82F4     	 mov %d4,-1
+ 240 00ac 82F5     	 mov %d5,-1
+ 241 00ae 06F5     	 sh %d5,-1
+ 242 00b0 D9E6ECBF 	 lea %a6,[%a14]-276
+ 243              	.LVL20:
+ 244 00b4 D9E5EFBF 	 lea %a5,[%a14]-273
+ 245              	.LVL21:
+ 246 00b8 D424     	 ld.a %a4,[%a2]0
+ 247 00ba DC13     	 calli %a3
+ 248              	.LVL22:
+ 249              	.LBE21:
+ 250              	.LBE20:
+ 108:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         }
+ 251              	 .loc 1 108 13 is_stmt 1
+ 108:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         }
+ 252              	 .loc 1 108 28 is_stmt 0
+ 253 00bc C9E2ECBF 	 ld.h %d2,[%a14]-276
+ 254 00c0 A228     	 sub %d8,%d2
+ 255              	.LVL23:
+ 108:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         }
+ 256              	 .loc 1 108 20
+ 257 00c2 37085080 	 extr %d8,%d8,0,16
+ 258              	.LVL24:
+ 259              	.L8:
+ 260              	.LBE17:
+ 103:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****         {
+ 261              	 .loc 1 103 22 is_stmt 1
+ 262 00c6 FF180000 	 jgtz %d8,.L9
+ 111:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****     }
+ 263              	 .loc 1 111 9
+ 111:../Libraries/Service/Tricore/Comm/Ifx_Console.c ****     }
+ 264              	 .loc 1 111 16 is_stmt 0
+ 265 00ca 91000020 	 movh.a %a2,hi:Ifx_g_console
+ 266 00ce 99220000 	 ld.a %a2,[%a2]lo:Ifx_g_console
+ 267              	.LVL25:
+ 268              	.LBB22:
+ 269              	.LBB23:
+ 270              	 .loc 2 268 5 is_stmt 1
+ 271              	 .loc 2 268 17 is_stmt 0
+ 272 00d2 99230800 	 ld.a %a3,[%a2]8
+ 273              	 .loc 2 268 12
+ 274 00d6 82F4     	 mov %d4,-1
+ 275 00d8 82F5     	 mov %d5,-1
+ 276 00da 06F5     	 sh %d5,-1
+ 277 00dc D9E6EABF 	 lea %a6,[%a14]-278
+ 278              	.LVL26:
+ 279 00e0 D9E5C0CF 	 lea %a5,[%a14]-256
+ 280              	.LVL27:
+ 281 00e4 D424     	 ld.a %a4,[%a2]0
+ 282 00e6 DC13     	 calli %a3
+ 283              	.LVL28:
+ 284 00e8 0090     	 ret 
+ 285              	.LBE23:
+ 286              	.LBE22:
+ 287              	.LBE16:
+ 288              	.LFE546:
+ 290              	 .global Ifx_Console_printAlign_end
+ 291              	Ifx_Console_printAlign_end:
+ 292              	 .global Ifx_g_console
+ 293              	 .section .bss.Ifx_g_console,"aw",@nobits
+ 294              	 .align 2
+ 297              	Ifx_g_console:
+ 298 0000 00000000 	 .zero 8
+ 298      00000000 
+ 351              	.Letext0:
+ 352              	 .file 4 "c:\\infineon\\aurix-configuration-studio-1.0.24\\eclipse\\tricore-gcc11\\lib\\gcc\\tricore-elf\\11.3.1\\include\\stddef.h"
+ 353              	 .file 5 "c:\\infineon\\aurix-configuration-studio-1.0.24\\eclipse\\tricore-gcc11\\lib\\gcc\\tricore-elf\\11.3.1\\include\\stdarg.h"
+ 354              	 .file 6 "c:\\infineon\\aurix-configuration-studio-1.0.24\\eclipse\\tricore-gcc11\\tricore-elf\\include\\stdio.h"
+ 355              	 .file 7 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 356              	 .file 8 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+ 357              	 .file 9 "../Libraries/Service/CpuGeneric/StdIf/IfxStdIf.h"
+ 358              	 .file 10 "../Libraries/iLLD/TC4xx/Tricore/_Impl/TC4Dx/IfxCpu_cfg_TC4Dx.h"
+ 359              	 .file 11 "../Libraries/iLLD/TC4xx/CpuGeneric/Clock/Std/IfxClock.h"
+ 360              	 .file 12 "../Libraries/Service/Tricore/Comm/Ifx_Console.h"
+ 361              	 .file 13 "c:\\infineon\\aurix-configuration-studio-1.0.24\\eclipse\\tricore-gcc11\\tricore-elf\\include\\string.h"
+ 2581 0000 00000000 	 .word Ifx_Console_init
+ 2582 0004 00000000 	 .word Ifx_Console_init_end
+ 2583 0008 04001C44 	 .word 0x441c0004
+ 2584 000c 00001000 	 .word 0x00100000
+ 2585 0010 00000000 	 .word 0x00000000
+ 2586 0014 C0000000 	 .word 0x000000c0
+ 2587 0018 00000000 	 .word Ifx_Console_print
+ 2588 001c 00000000 	 .word Ifx_Console_print_end
+ 2589 0020 34007C44 	 .word 0x447c0034
+ 2590 0024 00001000 	 .word 0x00100000
+ 2591 0028 04000000 	 .word 0x00000004
+ 2592 002c 40801200 	 .word 0x00128040
+ 2593 0030 00000000 	 .word Ifx_Console_printAlign
+ 2594 0034 00000000 	 .word Ifx_Console_printAlign_end
+ 2595 0038 34017C44 	 .word 0x447c0134
+ 2596 003c 00001000 	 .word 0x00100000
+ 2597 0040 04000000 	 .word 0x00000004
+ 2598 0044 40811200 	 .word 0x00128140
+DEFINED SYMBOLS
+                            *ABS*:00000000 Ifx_Console.c
+                            *ABS*:00000000 Ifx_Console.c
+    {standard input}:10     .text.Ifx_Console_init:00000000 Ifx_Console_init
+    {standard input}:297    .bss.Ifx_g_console:00000000 Ifx_g_console
+    {standard input}:31     .text.Ifx_Console_init:00000016 Ifx_Console_init_end
+    {standard input}:36     .text.Ifx_Console_print:00000000 Ifx_Console_print
+    {standard input}:108    .text.Ifx_Console_print:00000052 Ifx_Console_print_end
+    {standard input}:116    .text.Ifx_Console_printAlign:00000000 Ifx_Console_printAlign
+    {standard input}:291    .text.Ifx_Console_printAlign:000000ea Ifx_Console_printAlign_end
+
+UNDEFINED SYMBOLS
+vsprintf
+strlen

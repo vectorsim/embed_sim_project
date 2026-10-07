@@ -1,0 +1,676 @@
+   1              	
+   2              	 .file "Ifx_CircularBuffer.c"
+   3              	 .file "Ifx_CircularBuffer.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.Ifx_CircularBuffer_get32,"ax",@progbits
+   7              	 .align 1
+   8              	 .global Ifx_CircularBuffer_get32
+  10              	Ifx_CircularBuffer_get32:
+  11              	.LFB165:
+  12              	 .file 1 "../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c"
+   1:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** /**
+   2:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****  * \file Ifx_CircularBuffer.c
+   3:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****  * \brief Circular buffer functions in C language.
+   4:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****  *
+   5:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****  *
+   8:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****  *
+   9:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****   *                                 IMPORTANT NOTICE
+  10:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****  *
+  11:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****  *
+  12:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****  * this file except in compliance with IFASLL.
+  15:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****  *
+  16:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****  *
+  26:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****  */
+  27:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+  28:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** #include "Ifx_CircularBuffer.h"
+  29:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+  30:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** #if (IFX_CFG_CIRCULARBUFFER_C)
+  31:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+  32:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** uint32 Ifx_CircularBuffer_get32(Ifx_CircularBuffer *buffer)
+  33:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** {
+  13              	 .loc 1 33 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  34:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     uint32 data = ((uint32 *)buffer->base)[buffer->index];
+  17              	 .loc 1 34 5
+  18              	 .loc 1 34 50 is_stmt 0
+  19 0002 B9430400 	 ld.hu %d3,[%a4]4
+  20              	 .loc 1 34 43
+  21 0006 8F230020 	 sh %d2,%d3,2
+  22 000a D442     	 ld.a %a2,[%a4]0
+  23 000c 01220026 	 addsc.a %a2,%a2,%d2,0
+  24              	 .loc 1 34 12
+  25 0010 5422     	 ld.w %d2,[%a2]0
+  26              	.LVL1:
+  35:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+  36:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     buffer->index += 4;
+  27              	 .loc 1 36 5 is_stmt 1
+  28              	 .loc 1 36 19 is_stmt 0
+  29 0012 C243     	 add %d3,4
+  30 0014 37037030 	 extr.u %d3,%d3,0,16
+  31 0018 F9430400 	 st.h [%a4]4,%d3
+  37:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+  38:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     if (buffer->index >= buffer->length)
+  32              	 .loc 1 38 5 is_stmt 1
+  33              	 .loc 1 38 32 is_stmt 0
+  34 001c B9440600 	 ld.hu %d4,[%a4]6
+  35              	 .loc 1 38 8
+  36 0020 3F430080 	 jlt.u %d3,%d4,.L1
+  39:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     {
+  40:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         buffer->index = 0;
+  37              	 .loc 1 40 9 is_stmt 1
+  38              	 .loc 1 40 23 is_stmt 0
+  39 0024 8203     	 mov %d3,0
+  40 0026 F9430400 	 st.h [%a4]4,%d3
+  41:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     }
+  42:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+  43:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     return data;
+  41              	 .loc 1 43 5 is_stmt 1
+  42              	.L1:
+  44:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** }
+  43              	 .loc 1 44 1 is_stmt 0
+  44 002a 0090     	 ret 
+  45              	.LFE165:
+  47              	 .global Ifx_CircularBuffer_get32_end
+  48              	Ifx_CircularBuffer_get32_end:
+  49              	 .section .text.Ifx_CircularBuffer_get16,"ax",@progbits
+  50              	 .align 1
+  51              	 .global Ifx_CircularBuffer_get16
+  53              	Ifx_CircularBuffer_get16:
+  54              	.LFB166:
+  45:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+  46:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+  47:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** uint16 Ifx_CircularBuffer_get16(Ifx_CircularBuffer *buffer)
+  48:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** {
+  55              	 .loc 1 48 1 is_stmt 1
+  56              	.LVL2:
+  57 0000 40AE     	 mov.aa %a14,%SP
+  58              	.LCFI1:
+  49:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     uint16 data = ((uint16 *)buffer->base)[buffer->index];
+  59              	 .loc 1 49 5
+  60              	 .loc 1 49 50 is_stmt 0
+  61 0002 B9430400 	 ld.hu %d3,[%a4]4
+  62              	 .loc 1 49 43
+  63 0006 8F130020 	 sh %d2,%d3,1
+  64 000a D442     	 ld.a %a2,[%a4]0
+  65 000c 01220026 	 addsc.a %a2,%a2,%d2,0
+  66              	 .loc 1 49 12
+  67 0010 B9220000 	 ld.hu %d2,[%a2]0
+  68              	.LVL3:
+  50:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+  51:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     buffer->index += 2;
+  69              	 .loc 1 51 5 is_stmt 1
+  70              	 .loc 1 51 19 is_stmt 0
+  71 0014 C223     	 add %d3,2
+  72 0016 37037030 	 extr.u %d3,%d3,0,16
+  73 001a F9430400 	 st.h [%a4]4,%d3
+  52:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+  53:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     if (buffer->index >= buffer->length)
+  74              	 .loc 1 53 5 is_stmt 1
+  75              	 .loc 1 53 32 is_stmt 0
+  76 001e B9440600 	 ld.hu %d4,[%a4]6
+  77              	 .loc 1 53 8
+  78 0022 3F430080 	 jlt.u %d3,%d4,.L4
+  54:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     {
+  55:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         buffer->index = 0;
+  79              	 .loc 1 55 9 is_stmt 1
+  80              	 .loc 1 55 23 is_stmt 0
+  81 0026 8203     	 mov %d3,0
+  82 0028 F9430400 	 st.h [%a4]4,%d3
+  83              	.L4:
+  56:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     }
+  57:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+  58:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     return data;
+  84              	 .loc 1 58 5 is_stmt 1
+  59:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** }
+  85              	 .loc 1 59 1 is_stmt 0
+  86 002c 0090     	 ret 
+  87              	.LFE166:
+  89              	 .global Ifx_CircularBuffer_get16_end
+  90              	Ifx_CircularBuffer_get16_end:
+  91              	 .section .text.Ifx_CircularBuffer_addDataIncr,"ax",@progbits
+  92              	 .align 1
+  93              	 .global Ifx_CircularBuffer_addDataIncr
+  95              	Ifx_CircularBuffer_addDataIncr:
+  96              	.LFB167:
+  60:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+  61:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+  62:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** /** \brief Add a 32 bit value to the circular buffer, and post-increment the circular buffer pointe
+  63:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****  *
+  64:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****  * \param buffer Specifies circular buffer.
+  65:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****  * \param data Specifies value to be added to the buffer.
+  66:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****  *
+  67:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****  * \return None.
+  68:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****  */
+  69:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** void Ifx_CircularBuffer_addDataIncr(Ifx_CircularBuffer *buffer, uint32 data)
+  70:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** {
+  97              	 .loc 1 70 1 is_stmt 1
+  98              	.LVL4:
+  99 0000 40AE     	 mov.aa %a14,%SP
+ 100              	.LCFI2:
+  71:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     ((uint32 *)buffer->base)[buffer->index] = data;
+ 101              	 .loc 1 71 5
+ 102              	 .loc 1 71 36 is_stmt 0
+ 103 0002 B9420400 	 ld.hu %d2,[%a4]4
+ 104              	 .loc 1 71 29
+ 105 0006 0622     	 sh %d2,2
+ 106 0008 D442     	 ld.a %a2,[%a4]0
+ 107 000a 01220026 	 addsc.a %a2,%a2,%d2,0
+ 108              	 .loc 1 71 45
+ 109 000e 7424     	 st.w [%a2]0,%d4
+  72:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     buffer->index                          += 4;
+ 110              	 .loc 1 72 5 is_stmt 1
+ 111              	 .loc 1 72 44 is_stmt 0
+ 112 0010 C9420400 	 ld.h %d2,[%a4]4
+ 113 0014 C242     	 add %d2,4
+ 114 0016 37027020 	 extr.u %d2,%d2,0,16
+ 115 001a F9420400 	 st.h [%a4]4,%d2
+  73:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+  74:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     if (buffer->index >= buffer->length)
+ 116              	 .loc 1 74 5 is_stmt 1
+ 117              	 .loc 1 74 32 is_stmt 0
+ 118 001e B9430600 	 ld.hu %d3,[%a4]6
+ 119              	 .loc 1 74 8
+ 120 0022 3F320080 	 jlt.u %d2,%d3,.L5
+  75:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     {
+  76:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         buffer->index = 0;
+ 121              	 .loc 1 76 9 is_stmt 1
+ 122              	 .loc 1 76 23 is_stmt 0
+ 123 0026 8202     	 mov %d2,0
+ 124 0028 F9420400 	 st.h [%a4]4,%d2
+ 125              	.L5:
+  77:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     }
+  78:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** }
+ 126              	 .loc 1 78 1
+ 127 002c 0090     	 ret 
+ 128              	.LFE167:
+ 130              	 .global Ifx_CircularBuffer_addDataIncr_end
+ 131              	Ifx_CircularBuffer_addDataIncr_end:
+ 132              	 .section .text.Ifx_CircularBuffer_read8,"ax",@progbits
+ 133              	 .align 1
+ 134              	 .global Ifx_CircularBuffer_read8
+ 136              	Ifx_CircularBuffer_read8:
+ 137              	.LFB168:
+  79:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+  80:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+  81:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** void *Ifx_CircularBuffer_read8(Ifx_CircularBuffer *buffer, void *data, Ifx_SizeT count)
+  82:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** {
+ 138              	 .loc 1 82 1 is_stmt 1
+ 139              	.LVL5:
+ 140 0000 40AE     	 mov.aa %a14,%SP
+ 141              	.LCFI3:
+ 142 0002 4052     	 mov.aa %a2,%a5
+  83:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     uint8 *Dest = (uint8 *)data;
+ 143              	 .loc 1 83 5
+ 144              	.LVL6:
+ 145 0004 1D000000 	 j .L9
+ 146              	.LVL7:
+ 147              	.L11:
+  84:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+  85:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     do
+  86:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     {
+  87:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         count--;
+  88:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         *Dest = ((uint8 *)buffer->base)[buffer->index];
+  89:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         Dest  = &Dest[1];
+  90:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         buffer->index++;
+  91:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+  92:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         if (buffer->index >= buffer->length)
+  93:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         {
+  94:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****             buffer->index = 0;
+ 148              	 .loc 1 94 13
+ 149              	 .loc 1 94 27 is_stmt 0
+ 150 0008 8202     	 mov %d2,0
+ 151 000a F9420400 	 st.h [%a4]4,%d2
+ 152              	.L8:
+  95:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         }
+  96:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     } while (count > 0);
+ 153              	 .loc 1 96 20 is_stmt 1
+ 154 000e BF140000 	 jlez %d4,.L10
+ 155              	.L9:
+  85:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     {
+ 156              	 .loc 1 85 5
+  87:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         *Dest = ((uint8 *)buffer->base)[buffer->index];
+ 157              	 .loc 1 87 9
+  87:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         *Dest = ((uint8 *)buffer->base)[buffer->index];
+ 158              	 .loc 1 87 14 is_stmt 0
+ 159 0012 C2F4     	 add %d4,-1
+ 160              	.LVL8:
+ 161 0014 37045040 	 extr %d4,%d4,0,16
+ 162              	.LVL9:
+  88:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         Dest  = &Dest[1];
+ 163              	 .loc 1 88 9 is_stmt 1
+  88:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         Dest  = &Dest[1];
+ 164              	 .loc 1 88 47 is_stmt 0
+ 165 0018 B9420400 	 ld.hu %d2,[%a4]4
+  88:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         Dest  = &Dest[1];
+ 166              	 .loc 1 88 40
+ 167 001c D443     	 ld.a %a3,[%a4]0
+ 168 001e 01320036 	 addsc.a %a3,%a3,%d2,0
+ 169 0022 1432     	 ld.bu %d2,[%a3]0
+  88:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         Dest  = &Dest[1];
+ 170              	 .loc 1 88 15
+ 171 0024 2422     	 st.b [%a2+]1,%d2
+ 172              	.LVL10:
+  89:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         buffer->index++;
+ 173              	 .loc 1 89 9 is_stmt 1
+  90:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+ 174              	 .loc 1 90 9
+  90:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+ 175              	 .loc 1 90 15 is_stmt 0
+ 176 0026 B9420400 	 ld.hu %d2,[%a4]4
+  90:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+ 177              	 .loc 1 90 22
+ 178 002a C212     	 add %d2,1
+ 179 002c 37027020 	 extr.u %d2,%d2,0,16
+ 180 0030 F9420400 	 st.h [%a4]4,%d2
+  92:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         {
+ 181              	 .loc 1 92 9 is_stmt 1
+  92:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         {
+ 182              	 .loc 1 92 36 is_stmt 0
+ 183 0034 B9430600 	 ld.hu %d3,[%a4]6
+  92:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         {
+ 184              	 .loc 1 92 12
+ 185 0038 3F320080 	 jlt.u %d2,%d3,.L8
+ 186 003c 1D000000 	 j .L11
+ 187              	.L10:
+  97:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+  98:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     return Dest;
+ 188              	 .loc 1 98 5 is_stmt 1
+  99:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** }
+ 189              	 .loc 1 99 1 is_stmt 0
+ 190 0040 0090     	 ret 
+ 191              	.LFE168:
+ 193              	 .global Ifx_CircularBuffer_read8_end
+ 194              	Ifx_CircularBuffer_read8_end:
+ 195              	 .section .text.Ifx_CircularBuffer_read32,"ax",@progbits
+ 196              	 .align 1
+ 197              	 .global Ifx_CircularBuffer_read32
+ 199              	Ifx_CircularBuffer_read32:
+ 200              	.LFB169:
+ 100:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+ 101:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+ 102:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** void *Ifx_CircularBuffer_read32(Ifx_CircularBuffer *buffer, void *data, Ifx_SizeT count)
+ 103:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** {
+ 201              	 .loc 1 103 1 is_stmt 1
+ 202              	.LVL11:
+ 203 0000 40AE     	 mov.aa %a14,%SP
+ 204              	.LCFI4:
+ 205 0002 4052     	 mov.aa %a2,%a5
+ 104:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     uint32 *Dest = (uint32 *)data;
+ 206              	 .loc 1 104 5
+ 207              	.LVL12:
+ 105:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     uint8  *base = buffer->base;
+ 208              	 .loc 1 105 5
+ 209              	 .loc 1 105 13 is_stmt 0
+ 210 0004 5445     	 ld.w %d5,[%a4]0
+ 211              	.LVL13:
+ 212 0006 1D000000 	 j .L14
+ 213              	.LVL14:
+ 214              	.L16:
+ 106:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+ 107:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     do
+ 108:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     {
+ 109:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         *Dest         = *((uint32 *)(&base[buffer->index]));
+ 110:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         Dest          = &Dest[1];
+ 111:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         buffer->index = buffer->index + 4;
+ 112:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+ 113:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         if (buffer->index >= buffer->length)
+ 114:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         {
+ 115:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****             buffer->index = 0;
+ 215              	 .loc 1 115 13 is_stmt 1
+ 216              	 .loc 1 115 27 is_stmt 0
+ 217 000a 8202     	 mov %d2,0
+ 218 000c F9420400 	 st.h [%a4]4,%d2
+ 219              	.L13:
+ 116:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         }
+ 117:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+ 118:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         count--;
+ 220              	 .loc 1 118 9 is_stmt 1
+ 221              	 .loc 1 118 14 is_stmt 0
+ 222 0010 C2F4     	 add %d4,-1
+ 223              	.LVL15:
+ 224 0012 37045040 	 extr %d4,%d4,0,16
+ 225              	.LVL16:
+ 119:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     } while (count > 0);
+ 226              	 .loc 1 119 20 is_stmt 1
+ 227 0016 BF140000 	 jlez %d4,.L15
+ 228              	.L14:
+ 107:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     {
+ 229              	 .loc 1 107 5
+ 109:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         Dest          = &Dest[1];
+ 230              	 .loc 1 109 9
+ 109:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         Dest          = &Dest[1];
+ 231              	 .loc 1 109 50 is_stmt 0
+ 232 001a B9420400 	 ld.hu %d2,[%a4]4
+ 109:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         Dest          = &Dest[1];
+ 233              	 .loc 1 109 38
+ 234 001e 6053     	 mov.a %a3,%d5
+ 235 0020 01320036 	 addsc.a %a3,%a3,%d2,0
+ 109:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         Dest          = &Dest[1];
+ 236              	 .loc 1 109 25
+ 237 0024 5432     	 ld.w %d2,[%a3]0
+ 109:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         Dest          = &Dest[1];
+ 238              	 .loc 1 109 23
+ 239 0026 4023     	 mov.aa %a3,%a2
+ 240 0028 B042     	 add.a %a2,4
+ 241              	.LVL17:
+ 242 002a 7432     	 st.w [%a3]0,%d2
+ 110:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         buffer->index = buffer->index + 4;
+ 243              	 .loc 1 110 9 is_stmt 1
+ 244              	.LVL18:
+ 111:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+ 245              	 .loc 1 111 9
+ 111:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+ 246              	 .loc 1 111 31 is_stmt 0
+ 247 002c B9420400 	 ld.hu %d2,[%a4]4
+ 111:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+ 248              	 .loc 1 111 39
+ 249 0030 C242     	 add %d2,4
+ 250 0032 37027020 	 extr.u %d2,%d2,0,16
+ 111:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+ 251              	 .loc 1 111 23
+ 252 0036 F9420400 	 st.h [%a4]4,%d2
+ 113:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         {
+ 253              	 .loc 1 113 9 is_stmt 1
+ 113:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         {
+ 254              	 .loc 1 113 36 is_stmt 0
+ 255 003a B9430600 	 ld.hu %d3,[%a4]6
+ 113:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         {
+ 256              	 .loc 1 113 12
+ 257 003e 3F320080 	 jlt.u %d2,%d3,.L13
+ 258 0042 1D000000 	 j .L16
+ 259              	.L15:
+ 120:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+ 121:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     return Dest;
+ 260              	 .loc 1 121 5 is_stmt 1
+ 122:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** }
+ 261              	 .loc 1 122 1 is_stmt 0
+ 262 0046 0090     	 ret 
+ 263              	.LFE169:
+ 265              	 .global Ifx_CircularBuffer_read32_end
+ 266              	Ifx_CircularBuffer_read32_end:
+ 267              	 .section .text.Ifx_CircularBuffer_write8,"ax",@progbits
+ 268              	 .align 1
+ 269              	 .global Ifx_CircularBuffer_write8
+ 271              	Ifx_CircularBuffer_write8:
+ 272              	.LFB170:
+ 123:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+ 124:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+ 125:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** const void *Ifx_CircularBuffer_write8(Ifx_CircularBuffer *buffer, const void *data, Ifx_SizeT count
+ 126:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** {
+ 273              	 .loc 1 126 1 is_stmt 1
+ 274              	.LVL19:
+ 275 0000 40AE     	 mov.aa %a14,%SP
+ 276              	.LCFI5:
+ 277 0002 4052     	 mov.aa %a2,%a5
+ 127:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     const uint8 *source = (const uint8 *)data;
+ 278              	 .loc 1 127 5
+ 279              	.LVL20:
+ 280 0004 1D000000 	 j .L19
+ 281              	.LVL21:
+ 282              	.L21:
+ 128:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+ 129:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     do
+ 130:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     {
+ 131:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         count--;
+ 132:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         ((uint8 *)buffer->base)[buffer->index] = *source;
+ 133:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         source                                 = &source[1];
+ 134:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         buffer->index++;
+ 135:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+ 136:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         if (buffer->index >= buffer->length)
+ 137:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         {
+ 138:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****             buffer->index = 0;
+ 283              	 .loc 1 138 13
+ 284              	 .loc 1 138 27 is_stmt 0
+ 285 0008 8202     	 mov %d2,0
+ 286 000a F9420400 	 st.h [%a4]4,%d2
+ 287              	.L18:
+ 139:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         }
+ 140:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     } while (count > 0);
+ 288              	 .loc 1 140 20 is_stmt 1
+ 289 000e BF140000 	 jlez %d4,.L20
+ 290              	.L19:
+ 129:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     {
+ 291              	 .loc 1 129 5
+ 131:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         ((uint8 *)buffer->base)[buffer->index] = *source;
+ 292              	 .loc 1 131 9
+ 131:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         ((uint8 *)buffer->base)[buffer->index] = *source;
+ 293              	 .loc 1 131 14 is_stmt 0
+ 294 0012 C2F4     	 add %d4,-1
+ 295              	.LVL22:
+ 296 0014 37045040 	 extr %d4,%d4,0,16
+ 297              	.LVL23:
+ 132:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         source                                 = &source[1];
+ 298              	 .loc 1 132 9 is_stmt 1
+ 132:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         source                                 = &source[1];
+ 299              	 .loc 1 132 39 is_stmt 0
+ 300 0018 B9420400 	 ld.hu %d2,[%a4]4
+ 132:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         source                                 = &source[1];
+ 301              	 .loc 1 132 32
+ 302 001c D443     	 ld.a %a3,[%a4]0
+ 303 001e 01320036 	 addsc.a %a3,%a3,%d2,0
+ 132:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         source                                 = &source[1];
+ 304              	 .loc 1 132 50
+ 305 0022 0422     	 ld.bu %d2,[%a2+]1
+ 306              	.LVL24:
+ 132:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         source                                 = &source[1];
+ 307              	 .loc 1 132 48
+ 308 0024 3432     	 st.b [%a3]0,%d2
+ 133:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         buffer->index++;
+ 309              	 .loc 1 133 9 is_stmt 1
+ 310              	.LVL25:
+ 134:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+ 311              	 .loc 1 134 9
+ 134:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+ 312              	 .loc 1 134 15 is_stmt 0
+ 313 0026 B9420400 	 ld.hu %d2,[%a4]4
+ 134:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+ 314              	 .loc 1 134 22
+ 315 002a C212     	 add %d2,1
+ 316 002c 37027020 	 extr.u %d2,%d2,0,16
+ 317 0030 F9420400 	 st.h [%a4]4,%d2
+ 136:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         {
+ 318              	 .loc 1 136 9 is_stmt 1
+ 136:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         {
+ 319              	 .loc 1 136 36 is_stmt 0
+ 320 0034 B9430600 	 ld.hu %d3,[%a4]6
+ 136:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         {
+ 321              	 .loc 1 136 12
+ 322 0038 3F320080 	 jlt.u %d2,%d3,.L18
+ 323 003c 1D000000 	 j .L21
+ 324              	.L20:
+ 141:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+ 142:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     return source;
+ 325              	 .loc 1 142 5 is_stmt 1
+ 143:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** }
+ 326              	 .loc 1 143 1 is_stmt 0
+ 327 0040 0090     	 ret 
+ 328              	.LFE170:
+ 330              	 .global Ifx_CircularBuffer_write8_end
+ 331              	Ifx_CircularBuffer_write8_end:
+ 332              	 .section .text.Ifx_CircularBuffer_write32,"ax",@progbits
+ 333              	 .align 1
+ 334              	 .global Ifx_CircularBuffer_write32
+ 336              	Ifx_CircularBuffer_write32:
+ 337              	.LFB171:
+ 144:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+ 145:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+ 146:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** const void *Ifx_CircularBuffer_write32(Ifx_CircularBuffer *buffer, const void *data, Ifx_SizeT coun
+ 147:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** {
+ 338              	 .loc 1 147 1 is_stmt 1
+ 339              	.LVL26:
+ 340 0000 40AE     	 mov.aa %a14,%SP
+ 341              	.LCFI6:
+ 342 0002 4052     	 mov.aa %a2,%a5
+ 148:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     const uint32 *source = (const uint32 *)data;
+ 343              	 .loc 1 148 5
+ 344              	.LVL27:
+ 149:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     uint8        *base   = buffer->base;
+ 345              	 .loc 1 149 5
+ 346              	 .loc 1 149 19 is_stmt 0
+ 347 0004 5445     	 ld.w %d5,[%a4]0
+ 348              	.LVL28:
+ 349 0006 1D000000 	 j .L24
+ 350              	.LVL29:
+ 351              	.L26:
+ 150:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+ 151:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     do
+ 152:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     {
+ 153:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         *((uint32 *)(&base[buffer->index])) = *source;
+ 154:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         source                              = &source[1];
+ 155:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         buffer->index                       = buffer->index + 4;
+ 156:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+ 157:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         if (buffer->index >= buffer->length)
+ 158:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         {
+ 159:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****             buffer->index = 0;
+ 352              	 .loc 1 159 13 is_stmt 1
+ 353              	 .loc 1 159 27 is_stmt 0
+ 354 000a 8202     	 mov %d2,0
+ 355 000c F9420400 	 st.h [%a4]4,%d2
+ 356              	.L23:
+ 160:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         }
+ 161:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+ 162:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         count--;
+ 357              	 .loc 1 162 9 is_stmt 1
+ 358              	 .loc 1 162 14 is_stmt 0
+ 359 0010 C2F4     	 add %d4,-1
+ 360              	.LVL30:
+ 361 0012 37045040 	 extr %d4,%d4,0,16
+ 362              	.LVL31:
+ 163:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     } while (count > 0);
+ 363              	 .loc 1 163 20 is_stmt 1
+ 364 0016 BF140000 	 jlez %d4,.L25
+ 365              	.L24:
+ 151:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     {
+ 366              	 .loc 1 151 5
+ 153:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         source                              = &source[1];
+ 367              	 .loc 1 153 9
+ 153:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         source                              = &source[1];
+ 368              	 .loc 1 153 34 is_stmt 0
+ 369 001a B9420400 	 ld.hu %d2,[%a4]4
+ 153:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         source                              = &source[1];
+ 370              	 .loc 1 153 22
+ 371 001e 6053     	 mov.a %a3,%d5
+ 372 0020 01320036 	 addsc.a %a3,%a3,%d2,0
+ 153:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         source                              = &source[1];
+ 373              	 .loc 1 153 47
+ 374 0024 4025     	 mov.aa %a5,%a2
+ 375 0026 B042     	 add.a %a2,4
+ 376              	.LVL32:
+ 377 0028 5452     	 ld.w %d2,[%a5]0
+ 153:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         source                              = &source[1];
+ 378              	 .loc 1 153 45
+ 379 002a 7432     	 st.w [%a3]0,%d2
+ 154:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         buffer->index                       = buffer->index + 4;
+ 380              	 .loc 1 154 9 is_stmt 1
+ 381              	.LVL33:
+ 155:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+ 382              	 .loc 1 155 9
+ 155:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+ 383              	 .loc 1 155 53 is_stmt 0
+ 384 002c B9420400 	 ld.hu %d2,[%a4]4
+ 155:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+ 385              	 .loc 1 155 61
+ 386 0030 C242     	 add %d2,4
+ 387 0032 37027020 	 extr.u %d2,%d2,0,16
+ 155:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+ 388              	 .loc 1 155 45
+ 389 0036 F9420400 	 st.h [%a4]4,%d2
+ 157:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         {
+ 390              	 .loc 1 157 9 is_stmt 1
+ 157:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         {
+ 391              	 .loc 1 157 36 is_stmt 0
+ 392 003a B9430600 	 ld.hu %d3,[%a4]6
+ 157:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****         {
+ 393              	 .loc 1 157 12
+ 394 003e 3F320080 	 jlt.u %d2,%d3,.L23
+ 395 0042 1D000000 	 j .L26
+ 396              	.L25:
+ 164:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** 
+ 165:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c ****     return source;
+ 397              	 .loc 1 165 5 is_stmt 1
+ 166:../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_CircularBuffer.c **** }
+ 398              	 .loc 1 166 1 is_stmt 0
+ 399 0046 0090     	 ret 
+ 400              	.LFE171:
+ 402              	 .global Ifx_CircularBuffer_write32_end
+ 403              	Ifx_CircularBuffer_write32_end:
+ 504              	.Letext0:
+ 505              	 .file 2 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 506              	 .file 3 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+ 1501 0000 00000000 	 .word Ifx_CircularBuffer_get32
+ 1502 0004 00000000 	 .word Ifx_CircularBuffer_get32_end
+ 1503 0008 1C001444 	 .word 0x4414001c
+ 1504 000c 00001000 	 .word 0x00100000
+ 1505 0010 04000000 	 .word 0x00000004
+ 1506 0014 C0000000 	 .word 0x000000c0
+ 1507 0018 00000000 	 .word Ifx_CircularBuffer_get16
+ 1508 001c 00000000 	 .word Ifx_CircularBuffer_get16_end
+ 1509 0020 1C001444 	 .word 0x4414001c
+ 1510 0024 00001000 	 .word 0x00100000
+ 1511 0028 04000000 	 .word 0x00000004
+ 1512 002c C0000000 	 .word 0x000000c0
+ 1513 0030 00000000 	 .word Ifx_CircularBuffer_addDataIncr
+ 1514 0034 00000000 	 .word Ifx_CircularBuffer_addDataIncr_end
+ 1515 0038 1C001444 	 .word 0x4414001c
+ 1516 003c 10001000 	 .word 0x00100010
+ 1517 0040 00000000 	 .word 0x00000000
+ 1518 0044 C0000000 	 .word 0x000000c0
+ 1519 0048 00000000 	 .word Ifx_CircularBuffer_read8
+ 1520 004c 00000000 	 .word Ifx_CircularBuffer_read8_end
+ 1521 0050 1C003C44 	 .word 0x443c001c
+ 1522 0054 10003000 	 .word 0x00300010
+ 1523 0058 00000400 	 .word 0x00040000
+ 1524 005c C0000000 	 .word 0x000000c0
+ 1525 0060 00000000 	 .word Ifx_CircularBuffer_read32
+ 1526 0064 00000000 	 .word Ifx_CircularBuffer_read32_end
+ 1527 0068 3C003C44 	 .word 0x443c003c
+ 1528 006c 10003000 	 .word 0x00300010
+ 1529 0070 00000400 	 .word 0x00040000
+ 1530 0074 C0000000 	 .word 0x000000c0
+ 1531 0078 00000000 	 .word Ifx_CircularBuffer_write8
+ 1532 007c 00000000 	 .word Ifx_CircularBuffer_write8_end
+ 1533 0080 1C003C44 	 .word 0x443c001c
+ 1534 0084 10003000 	 .word 0x00300010
+ 1535 0088 00000400 	 .word 0x00040000
+ 1536 008c C0000000 	 .word 0x000000c0
+ 1537 0090 00000000 	 .word Ifx_CircularBuffer_write32
+ 1538 0094 00000000 	 .word Ifx_CircularBuffer_write32_end
+ 1539 0098 3C003C44 	 .word 0x443c003c
+ 1540 009c 10003000 	 .word 0x00300010
+ 1541 00a0 00000400 	 .word 0x00040000
+ 1542 00a4 C0000000 	 .word 0x000000c0
+DEFINED SYMBOLS
+                            *ABS*:00000000 Ifx_CircularBuffer.c
+                            *ABS*:00000000 Ifx_CircularBuffer.c
+    {standard input}:10     .text.Ifx_CircularBuffer_get32:00000000 Ifx_CircularBuffer_get32
+    {standard input}:48     .text.Ifx_CircularBuffer_get32:0000002c Ifx_CircularBuffer_get32_end
+    {standard input}:53     .text.Ifx_CircularBuffer_get16:00000000 Ifx_CircularBuffer_get16
+    {standard input}:90     .text.Ifx_CircularBuffer_get16:0000002e Ifx_CircularBuffer_get16_end
+    {standard input}:95     .text.Ifx_CircularBuffer_addDataIncr:00000000 Ifx_CircularBuffer_addDataIncr
+    {standard input}:131    .text.Ifx_CircularBuffer_addDataIncr:0000002e Ifx_CircularBuffer_addDataIncr_end
+    {standard input}:136    .text.Ifx_CircularBuffer_read8:00000000 Ifx_CircularBuffer_read8
+    {standard input}:194    .text.Ifx_CircularBuffer_read8:00000042 Ifx_CircularBuffer_read8_end
+    {standard input}:199    .text.Ifx_CircularBuffer_read32:00000000 Ifx_CircularBuffer_read32
+    {standard input}:266    .text.Ifx_CircularBuffer_read32:00000048 Ifx_CircularBuffer_read32_end
+    {standard input}:271    .text.Ifx_CircularBuffer_write8:00000000 Ifx_CircularBuffer_write8
+    {standard input}:331    .text.Ifx_CircularBuffer_write8:00000042 Ifx_CircularBuffer_write8_end
+    {standard input}:336    .text.Ifx_CircularBuffer_write32:00000000 Ifx_CircularBuffer_write32
+    {standard input}:403    .text.Ifx_CircularBuffer_write32:00000048 Ifx_CircularBuffer_write32_end
+
+NO UNDEFINED SYMBOLS

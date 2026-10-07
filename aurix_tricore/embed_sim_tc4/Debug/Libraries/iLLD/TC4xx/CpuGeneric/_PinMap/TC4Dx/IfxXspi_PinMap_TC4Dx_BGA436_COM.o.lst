@@ -1,0 +1,309 @@
+   1              	
+   2              	 .file "IfxXspi_PinMap_TC4Dx_BGA436_COM.c"
+   3              	 .file "IfxXspi_PinMap_TC4Dx_BGA436_COM.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .global IfxXspi_Txd7_InOut_pinTable
+   7              	 .section .data.IfxXspi_Txd7_InOut_pinTable,"aw"
+   8              	 .align 2
+  11              	IfxXspi_Txd7_InOut_pinTable:
+  12 0000 00000000 	 .word IfxXspi0_TXD7_P16_12_INOUT
+  13              	 .global IfxXspi_Txd6_InOut_pinTable
+  14              	 .section .data.IfxXspi_Txd6_InOut_pinTable,"aw"
+  15              	 .align 2
+  18              	IfxXspi_Txd6_InOut_pinTable:
+  19 0000 00000000 	 .word IfxXspi0_TXD6_P16_10_INOUT
+  20              	 .global IfxXspi_Txd5_InOut_pinTable
+  21              	 .section .data.IfxXspi_Txd5_InOut_pinTable,"aw"
+  22              	 .align 2
+  25              	IfxXspi_Txd5_InOut_pinTable:
+  26 0000 00000000 	 .word IfxXspi0_TXD5_P16_9_INOUT
+  27              	 .global IfxXspi_Txd4_InOut_pinTable
+  28              	 .section .data.IfxXspi_Txd4_InOut_pinTable,"aw"
+  29              	 .align 2
+  32              	IfxXspi_Txd4_InOut_pinTable:
+  33 0000 00000000 	 .word IfxXspi0_TXD4_P16_8_INOUT
+  34              	 .global IfxXspi_Txd3_InOut_pinTable
+  35              	 .section .data.IfxXspi_Txd3_InOut_pinTable,"aw"
+  36              	 .align 2
+  39              	IfxXspi_Txd3_InOut_pinTable:
+  40 0000 00000000 	 .word IfxXspi0_TXD3_P15_2_INOUT
+  41 0004 00000000 	 .word IfxXspi0_TXD3_P16_6_INOUT
+  42              	 .global IfxXspi_Txd2_InOut_pinTable
+  43              	 .section .data.IfxXspi_Txd2_InOut_pinTable,"aw"
+  44              	 .align 2
+  47              	IfxXspi_Txd2_InOut_pinTable:
+  48 0000 00000000 	 .word IfxXspi0_TXD2_P16_5_INOUT
+  49 0004 00000000 	 .word IfxXspi0_TXD2_P20_9_INOUT
+  50              	 .global IfxXspi_Txd1_InOut_pinTable
+  51              	 .section .data.IfxXspi_Txd1_InOut_pinTable,"aw"
+  52              	 .align 2
+  55              	IfxXspi_Txd1_InOut_pinTable:
+  56 0000 00000000 	 .word IfxXspi0_TXD1_P16_3_INOUT
+  57 0004 00000000 	 .word IfxXspi0_TXD1_P20_6_INOUT
+  58              	 .global IfxXspi_Txd0_InOut_pinTable
+  59              	 .section .data.IfxXspi_Txd0_InOut_pinTable,"aw"
+  60              	 .align 2
+  63              	IfxXspi_Txd0_InOut_pinTable:
+  64 0000 00000000 	 .word IfxXspi0_TXD0_P16_7_INOUT
+  65 0004 00000000 	 .word IfxXspi0_TXD0_P20_3_INOUT
+  66              	 .global IfxXspi_Dm_InOut_pinTable
+  67              	 .section .data.IfxXspi_Dm_InOut_pinTable,"aw"
+  68              	 .align 2
+  71              	IfxXspi_Dm_InOut_pinTable:
+  72 0000 00000000 	 .word IfxXspi0_DM_P16_2_INOUT
+  73              	 .global IfxXspi_Cs_Out_pinTable
+  74              	 .section .data.IfxXspi_Cs_Out_pinTable,"aw"
+  75              	 .align 2
+  78              	IfxXspi_Cs_Out_pinTable:
+  79 0000 00000000 	 .word IfxXspi0_CS_P16_4_OUT
+  80 0004 00000000 	 .word IfxXspi0_CS_P16_13_OUT
+  81 0008 00000000 	 .word IfxXspi0_CS_P20_0_OUT
+  82 000c 00000000 	 .word IfxXspi0_CS_P20_14_OUT
+  83              	 .global IfxXspi_Clk_Out_pinTable
+  84              	 .section .data.IfxXspi_Clk_Out_pinTable,"aw"
+  85              	 .align 2
+  88              	IfxXspi_Clk_Out_pinTable:
+  89 0000 00000000 	 .word IfxXspi0_CLK_P16_0_OUT
+  90 0004 00000000 	 .word IfxXspi0_CLK_P16_1_OUT
+  91 0008 00000000 	 .word IfxXspi0_CLK_P20_13_OUT
+  92              	 .global IfxXspi0_TXD7_P16_12_INOUT
+  93              	 .section .rodata.IfxXspi0_TXD7_P16_12_INOUT,"a"
+  94              	 .align 2
+  97              	IfxXspi0_TXD7_P16_12_INOUT:
+  98 0000 000004F9 	 .word -117178368
+  99 0004 00E003F0 	 .word -268181504
+ 100 0008 0C       	 .byte 12
+ 101 0009 000000   	 .zero 3
+ 102 000c 00000000 	 .word 0
+ 103 0010 01000000 	 .word 1
+ 104              	 .global IfxXspi0_TXD6_P16_10_INOUT
+ 105              	 .section .rodata.IfxXspi0_TXD6_P16_10_INOUT,"a"
+ 106              	 .align 2
+ 109              	IfxXspi0_TXD6_P16_10_INOUT:
+ 110 0000 000004F9 	 .word -117178368
+ 111 0004 00E003F0 	 .word -268181504
+ 112 0008 0A       	 .byte 10
+ 113 0009 000000   	 .zero 3
+ 114 000c 00000000 	 .word 0
+ 115 0010 01000000 	 .word 1
+ 116              	 .global IfxXspi0_TXD5_P16_9_INOUT
+ 117              	 .section .rodata.IfxXspi0_TXD5_P16_9_INOUT,"a"
+ 118              	 .align 2
+ 121              	IfxXspi0_TXD5_P16_9_INOUT:
+ 122 0000 000004F9 	 .word -117178368
+ 123 0004 00E003F0 	 .word -268181504
+ 124 0008 09       	 .byte 9
+ 125 0009 000000   	 .zero 3
+ 126 000c 00000000 	 .word 0
+ 127 0010 01000000 	 .word 1
+ 128              	 .global IfxXspi0_TXD4_P16_8_INOUT
+ 129              	 .section .rodata.IfxXspi0_TXD4_P16_8_INOUT,"a"
+ 130              	 .align 2
+ 133              	IfxXspi0_TXD4_P16_8_INOUT:
+ 134 0000 000004F9 	 .word -117178368
+ 135 0004 00E003F0 	 .word -268181504
+ 136 0008 08       	 .byte 8
+ 137 0009 000000   	 .zero 3
+ 138 000c 00000000 	 .word 0
+ 139 0010 01000000 	 .word 1
+ 140              	 .global IfxXspi0_TXD3_P16_6_INOUT
+ 141              	 .section .rodata.IfxXspi0_TXD3_P16_6_INOUT,"a"
+ 142              	 .align 2
+ 145              	IfxXspi0_TXD3_P16_6_INOUT:
+ 146 0000 000004F9 	 .word -117178368
+ 147 0004 00E003F0 	 .word -268181504
+ 148 0008 06       	 .byte 6
+ 149 0009 000000   	 .zero 3
+ 150 000c 00000000 	 .word 0
+ 151 0010 01000000 	 .word 1
+ 152              	 .global IfxXspi0_TXD3_P15_2_INOUT
+ 153              	 .section .rodata.IfxXspi0_TXD3_P15_2_INOUT,"a"
+ 154              	 .align 2
+ 157              	IfxXspi0_TXD3_P15_2_INOUT:
+ 158 0000 000004F9 	 .word -117178368
+ 159 0004 00DC03F0 	 .word -268182528
+ 160 0008 02       	 .byte 2
+ 161 0009 000000   	 .zero 3
+ 162 000c 00000000 	 .word 0
+ 163 0010 01000000 	 .word 1
+ 164              	 .global IfxXspi0_TXD2_P20_9_INOUT
+ 165              	 .section .rodata.IfxXspi0_TXD2_P20_9_INOUT,"a"
+ 166              	 .align 2
+ 169              	IfxXspi0_TXD2_P20_9_INOUT:
+ 170 0000 000004F9 	 .word -117178368
+ 171 0004 00F003F0 	 .word -268177408
+ 172 0008 09       	 .byte 9
+ 173 0009 000000   	 .zero 3
+ 174 000c 00000000 	 .word 0
+ 175 0010 01000000 	 .word 1
+ 176              	 .global IfxXspi0_TXD2_P16_5_INOUT
+ 177              	 .section .rodata.IfxXspi0_TXD2_P16_5_INOUT,"a"
+ 178              	 .align 2
+ 181              	IfxXspi0_TXD2_P16_5_INOUT:
+ 182 0000 000004F9 	 .word -117178368
+ 183 0004 00E003F0 	 .word -268181504
+ 184 0008 05       	 .byte 5
+ 185 0009 000000   	 .zero 3
+ 186 000c 00000000 	 .word 0
+ 187 0010 01000000 	 .word 1
+ 188              	 .global IfxXspi0_TXD1_P20_6_INOUT
+ 189              	 .section .rodata.IfxXspi0_TXD1_P20_6_INOUT,"a"
+ 190              	 .align 2
+ 193              	IfxXspi0_TXD1_P20_6_INOUT:
+ 194 0000 000004F9 	 .word -117178368
+ 195 0004 00F003F0 	 .word -268177408
+ 196 0008 06       	 .byte 6
+ 197 0009 000000   	 .zero 3
+ 198 000c 00000000 	 .word 0
+ 199 0010 01000000 	 .word 1
+ 200              	 .global IfxXspi0_TXD1_P16_3_INOUT
+ 201              	 .section .rodata.IfxXspi0_TXD1_P16_3_INOUT,"a"
+ 202              	 .align 2
+ 205              	IfxXspi0_TXD1_P16_3_INOUT:
+ 206 0000 000004F9 	 .word -117178368
+ 207 0004 00E003F0 	 .word -268181504
+ 208 0008 03       	 .byte 3
+ 209 0009 000000   	 .zero 3
+ 210 000c 00000000 	 .word 0
+ 211 0010 01000000 	 .word 1
+ 212              	 .global IfxXspi0_TXD0_P20_3_INOUT
+ 213              	 .section .rodata.IfxXspi0_TXD0_P20_3_INOUT,"a"
+ 214              	 .align 2
+ 217              	IfxXspi0_TXD0_P20_3_INOUT:
+ 218 0000 000004F9 	 .word -117178368
+ 219 0004 00F003F0 	 .word -268177408
+ 220 0008 03       	 .byte 3
+ 221 0009 000000   	 .zero 3
+ 222 000c 00000000 	 .word 0
+ 223 0010 01000000 	 .word 1
+ 224              	 .global IfxXspi0_TXD0_P16_7_INOUT
+ 225              	 .section .rodata.IfxXspi0_TXD0_P16_7_INOUT,"a"
+ 226              	 .align 2
+ 229              	IfxXspi0_TXD0_P16_7_INOUT:
+ 230 0000 000004F9 	 .word -117178368
+ 231 0004 00E003F0 	 .word -268181504
+ 232 0008 07       	 .byte 7
+ 233 0009 000000   	 .zero 3
+ 234 000c 00000000 	 .word 0
+ 235 0010 01000000 	 .word 1
+ 236              	 .global IfxXspi0_DM_P16_2_INOUT
+ 237              	 .section .rodata.IfxXspi0_DM_P16_2_INOUT,"a"
+ 238              	 .align 2
+ 241              	IfxXspi0_DM_P16_2_INOUT:
+ 242 0000 000004F9 	 .word -117178368
+ 243 0004 00E003F0 	 .word -268181504
+ 244 0008 02       	 .byte 2
+ 245 0009 000000   	 .zero 3
+ 246 000c 00000000 	 .word 0
+ 247 0010 01000000 	 .word 1
+ 248              	 .global IfxXspi0_CS_P20_14_OUT
+ 249              	 .section .rodata.IfxXspi0_CS_P20_14_OUT,"a"
+ 250              	 .align 2
+ 253              	IfxXspi0_CS_P20_14_OUT:
+ 254 0000 000004F9 	 .word -117178368
+ 255 0004 00F003F0 	 .word -268177408
+ 256 0008 0E       	 .byte 14
+ 257 0009 000000   	 .zero 3
+ 258 000c F1000000 	 .word 241
+ 259              	 .global IfxXspi0_CS_P20_0_OUT
+ 260              	 .section .rodata.IfxXspi0_CS_P20_0_OUT,"a"
+ 261              	 .align 2
+ 264              	IfxXspi0_CS_P20_0_OUT:
+ 265 0000 000004F9 	 .word -117178368
+ 266 0004 00F003F0 	 .word -268177408
+ 267 0008 00       	 .byte 0
+ 268 0009 000000   	 .zero 3
+ 269 000c F1000000 	 .word 241
+ 270              	 .global IfxXspi0_CS_P16_4_OUT
+ 271              	 .section .rodata.IfxXspi0_CS_P16_4_OUT,"a"
+ 272              	 .align 2
+ 275              	IfxXspi0_CS_P16_4_OUT:
+ 276 0000 000004F9 	 .word -117178368
+ 277 0004 00E003F0 	 .word -268181504
+ 278 0008 04       	 .byte 4
+ 279 0009 000000   	 .zero 3
+ 280 000c 01000000 	 .word 1
+ 281              	 .global IfxXspi0_CS_P16_13_OUT
+ 282              	 .section .rodata.IfxXspi0_CS_P16_13_OUT,"a"
+ 283              	 .align 2
+ 286              	IfxXspi0_CS_P16_13_OUT:
+ 287 0000 000004F9 	 .word -117178368
+ 288 0004 00E003F0 	 .word -268181504
+ 289 0008 0D       	 .byte 13
+ 290 0009 000000   	 .zero 3
+ 291 000c 01000000 	 .word 1
+ 292              	 .global IfxXspi0_CLK_P20_13_OUT
+ 293              	 .section .rodata.IfxXspi0_CLK_P20_13_OUT,"a"
+ 294              	 .align 2
+ 297              	IfxXspi0_CLK_P20_13_OUT:
+ 298 0000 000004F9 	 .word -117178368
+ 299 0004 00F003F0 	 .word -268177408
+ 300 0008 0D       	 .byte 13
+ 301 0009 000000   	 .zero 3
+ 302 000c F1000000 	 .word 241
+ 303              	 .global IfxXspi0_CLK_P16_1_OUT
+ 304              	 .section .rodata.IfxXspi0_CLK_P16_1_OUT,"a"
+ 305              	 .align 2
+ 308              	IfxXspi0_CLK_P16_1_OUT:
+ 309 0000 000004F9 	 .word -117178368
+ 310 0004 00E003F0 	 .word -268181504
+ 311 0008 01       	 .byte 1
+ 312 0009 000000   	 .zero 3
+ 313 000c 01000000 	 .word 1
+ 314              	 .global IfxXspi0_CLK_P16_0_OUT
+ 315              	 .section .rodata.IfxXspi0_CLK_P16_0_OUT,"a"
+ 316              	 .align 2
+ 319              	IfxXspi0_CLK_P16_0_OUT:
+ 320 0000 000004F9 	 .word -117178368
+ 321 0004 00E003F0 	 .word -268181504
+ 322 0008 00       	 .byte 0
+ 323 0009 000000   	 .zero 3
+ 324 000c 01000000 	 .word 1
+ 325              	.section .text,"ax",@progbits
+ 326              	.Letext0:
+ 327              	 .file 1 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 328              	 .file 2 "../Libraries/Infra/Sfr/TC4Dx/IfxXspi_regdef.h"
+ 329              	 .file 3 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 330              	 .file 4 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+ 331              	 .file 5 "../Libraries/Infra/Sfr/TC4Dx/IfxPort_regdef.h"
+ 332              	 .file 6 "../Libraries/iLLD/TC4xx/CpuGeneric/Port/Std/IfxPort.h"
+ 333              	 .file 7 "../Libraries/iLLD/TC4xx/CpuGeneric/_PinMap/IfxXspi_PinMap.h"
+ 334              	 .file 8 "../Libraries/iLLD/TC4xx/CpuGeneric/_PinMap/TC4Dx/IfxXspi_PinMap_TC4Dx_BGA436_COM.h"
+ 335              	 .file 9 "../Libraries/iLLD/TC4xx/CpuGeneric/_PinMap/TC4Dx/IfxXspi_PinMap_TC4Dx_BGA436_COM.c"
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxXspi_PinMap_TC4Dx_BGA436_COM.c
+                            *ABS*:00000000 IfxXspi_PinMap_TC4Dx_BGA436_COM.c
+    {standard input}:11     .data.IfxXspi_Txd7_InOut_pinTable:00000000 IfxXspi_Txd7_InOut_pinTable
+    {standard input}:97     .rodata.IfxXspi0_TXD7_P16_12_INOUT:00000000 IfxXspi0_TXD7_P16_12_INOUT
+    {standard input}:18     .data.IfxXspi_Txd6_InOut_pinTable:00000000 IfxXspi_Txd6_InOut_pinTable
+    {standard input}:109    .rodata.IfxXspi0_TXD6_P16_10_INOUT:00000000 IfxXspi0_TXD6_P16_10_INOUT
+    {standard input}:25     .data.IfxXspi_Txd5_InOut_pinTable:00000000 IfxXspi_Txd5_InOut_pinTable
+    {standard input}:121    .rodata.IfxXspi0_TXD5_P16_9_INOUT:00000000 IfxXspi0_TXD5_P16_9_INOUT
+    {standard input}:32     .data.IfxXspi_Txd4_InOut_pinTable:00000000 IfxXspi_Txd4_InOut_pinTable
+    {standard input}:133    .rodata.IfxXspi0_TXD4_P16_8_INOUT:00000000 IfxXspi0_TXD4_P16_8_INOUT
+    {standard input}:39     .data.IfxXspi_Txd3_InOut_pinTable:00000000 IfxXspi_Txd3_InOut_pinTable
+    {standard input}:157    .rodata.IfxXspi0_TXD3_P15_2_INOUT:00000000 IfxXspi0_TXD3_P15_2_INOUT
+    {standard input}:145    .rodata.IfxXspi0_TXD3_P16_6_INOUT:00000000 IfxXspi0_TXD3_P16_6_INOUT
+    {standard input}:47     .data.IfxXspi_Txd2_InOut_pinTable:00000000 IfxXspi_Txd2_InOut_pinTable
+    {standard input}:181    .rodata.IfxXspi0_TXD2_P16_5_INOUT:00000000 IfxXspi0_TXD2_P16_5_INOUT
+    {standard input}:169    .rodata.IfxXspi0_TXD2_P20_9_INOUT:00000000 IfxXspi0_TXD2_P20_9_INOUT
+    {standard input}:55     .data.IfxXspi_Txd1_InOut_pinTable:00000000 IfxXspi_Txd1_InOut_pinTable
+    {standard input}:205    .rodata.IfxXspi0_TXD1_P16_3_INOUT:00000000 IfxXspi0_TXD1_P16_3_INOUT
+    {standard input}:193    .rodata.IfxXspi0_TXD1_P20_6_INOUT:00000000 IfxXspi0_TXD1_P20_6_INOUT
+    {standard input}:63     .data.IfxXspi_Txd0_InOut_pinTable:00000000 IfxXspi_Txd0_InOut_pinTable
+    {standard input}:229    .rodata.IfxXspi0_TXD0_P16_7_INOUT:00000000 IfxXspi0_TXD0_P16_7_INOUT
+    {standard input}:217    .rodata.IfxXspi0_TXD0_P20_3_INOUT:00000000 IfxXspi0_TXD0_P20_3_INOUT
+    {standard input}:71     .data.IfxXspi_Dm_InOut_pinTable:00000000 IfxXspi_Dm_InOut_pinTable
+    {standard input}:241    .rodata.IfxXspi0_DM_P16_2_INOUT:00000000 IfxXspi0_DM_P16_2_INOUT
+    {standard input}:78     .data.IfxXspi_Cs_Out_pinTable:00000000 IfxXspi_Cs_Out_pinTable
+    {standard input}:275    .rodata.IfxXspi0_CS_P16_4_OUT:00000000 IfxXspi0_CS_P16_4_OUT
+    {standard input}:286    .rodata.IfxXspi0_CS_P16_13_OUT:00000000 IfxXspi0_CS_P16_13_OUT
+    {standard input}:264    .rodata.IfxXspi0_CS_P20_0_OUT:00000000 IfxXspi0_CS_P20_0_OUT
+    {standard input}:253    .rodata.IfxXspi0_CS_P20_14_OUT:00000000 IfxXspi0_CS_P20_14_OUT
+    {standard input}:88     .data.IfxXspi_Clk_Out_pinTable:00000000 IfxXspi_Clk_Out_pinTable
+    {standard input}:319    .rodata.IfxXspi0_CLK_P16_0_OUT:00000000 IfxXspi0_CLK_P16_0_OUT
+    {standard input}:308    .rodata.IfxXspi0_CLK_P16_1_OUT:00000000 IfxXspi0_CLK_P16_1_OUT
+    {standard input}:297    .rodata.IfxXspi0_CLK_P20_13_OUT:00000000 IfxXspi0_CLK_P20_13_OUT
+
+NO UNDEFINED SYMBOLS

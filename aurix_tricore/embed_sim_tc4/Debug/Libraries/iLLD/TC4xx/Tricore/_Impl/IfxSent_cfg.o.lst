@@ -1,0 +1,27 @@
+   1              	
+   2              	 .file "IfxSent_cfg.c"
+   3              	 .file "IfxSent_cfg.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .global IfxSent_cfg_indexMap
+   7              	 .section .rodata.IfxSent_cfg_indexMap,"a"
+   8              	 .align 2
+  11              	IfxSent_cfg_indexMap:
+  12 0000 003040F4 	 .word -197120000
+  13 0004 00000000 	 .word 0
+  14 0008 004040F4 	 .word -197115904
+  15 000c 01000000 	 .word 1
+  16              	.section .text,"ax",@progbits
+  17              	.Letext0:
+  18              	 .file 1 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+  19              	 .file 2 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+  20              	 .file 3 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+  21              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/IfxSent_regdef.h"
+  22              	 .file 5 "../Libraries/iLLD/TC4xx/Tricore/_Impl/TC4Dx/IfxSent_cfg_TC4Dx.h"
+  23              	 .file 6 "../Libraries/iLLD/TC4xx/Tricore/_Impl/IfxSent_cfg.c"
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxSent_cfg.c
+                            *ABS*:00000000 IfxSent_cfg.c
+    {standard input}:11     .rodata.IfxSent_cfg_indexMap:00000000 IfxSent_cfg_indexMap
+
+NO UNDEFINED SYMBOLS

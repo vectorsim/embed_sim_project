@@ -1,0 +1,135 @@
+   1              	
+   2              	 .file "IfxSmu_PinMap_TC4Dx_BGA436_COM.c"
+   3              	 .file "IfxSmu_PinMap_TC4Dx_BGA436_COM.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .global IfxSmu_Fspin_In_pinTable
+   7              	 .section .data.IfxSmu_Fspin_In_pinTable,"aw"
+   8              	 .align 2
+  11              	IfxSmu_Fspin_In_pinTable:
+  12 0000 00000000 	 .word IfxSmu_FSPIN2_P32_2_IN
+  13 0004 00000000 	 .word IfxSmu_FSPIN3_P32_5_IN
+  14 0008 00000000 	 .word IfxSmu_FSPIN0_P33_8_IN
+  15 000c 00000000 	 .word IfxSmu_FSPIN1_P33_12_IN
+  16              	 .global IfxSmu_Fsp_Out_pinTable
+  17              	 .section .data.IfxSmu_Fsp_Out_pinTable,"aw"
+  18              	 .align 2
+  21              	IfxSmu_Fsp_Out_pinTable:
+  22 0000 00000000 	 .word IfxSmu_FSP2_P32_2_OUT
+  23 0004 00000000 	 .word IfxSmu_FSP3_P32_5_OUT
+  24 0008 00000000 	 .word IfxSmu_FSP0_P33_8_OUT
+  25 000c 00000000 	 .word IfxSmu_FSP1_P33_12_OUT
+  26              	 .global IfxSmu_Ext_emergencystop_req_In_pinTable
+  27              	 .section .data.IfxSmu_Ext_emergencystop_req_In_pinTable,"aw"
+  28              	 .align 2
+  31              	IfxSmu_Ext_emergencystop_req_In_pinTable:
+  32 0000 00000000 	 .word IfxSmu_EXT_EMERGENCYSTOP_REQ_P21_2_IN
+  33              	 .global IfxSmu_FSPIN3_P32_5_IN
+  34              	 .section .rodata.IfxSmu_FSPIN3_P32_5_IN,"a"
+  35              	 .align 2
+  38              	IfxSmu_FSPIN3_P32_5_IN:
+  39 0000 008002F0 	 .word -268271616
+  40 0004 002004F0 	 .word -268165120
+  41 0008 05       	 .byte 5
+  42 0009 000000   	 .zero 3
+  43 000c 00000000 	 .word 0
+  44              	 .global IfxSmu_FSPIN2_P32_2_IN
+  45              	 .section .rodata.IfxSmu_FSPIN2_P32_2_IN,"a"
+  46              	 .align 2
+  49              	IfxSmu_FSPIN2_P32_2_IN:
+  50 0000 008002F0 	 .word -268271616
+  51 0004 002004F0 	 .word -268165120
+  52 0008 02       	 .byte 2
+  53 0009 000000   	 .zero 3
+  54 000c 00000000 	 .word 0
+  55              	 .global IfxSmu_FSPIN1_P33_12_IN
+  56              	 .section .rodata.IfxSmu_FSPIN1_P33_12_IN,"a"
+  57              	 .align 2
+  60              	IfxSmu_FSPIN1_P33_12_IN:
+  61 0000 008002F0 	 .word -268271616
+  62 0004 002404F0 	 .word -268164096
+  63 0008 0C       	 .byte 12
+  64 0009 000000   	 .zero 3
+  65 000c 00000000 	 .word 0
+  66              	 .global IfxSmu_FSPIN0_P33_8_IN
+  67              	 .section .rodata.IfxSmu_FSPIN0_P33_8_IN,"a"
+  68              	 .align 2
+  71              	IfxSmu_FSPIN0_P33_8_IN:
+  72 0000 008002F0 	 .word -268271616
+  73 0004 002404F0 	 .word -268164096
+  74 0008 08       	 .byte 8
+  75 0009 000000   	 .zero 3
+  76 000c 00000000 	 .word 0
+  77              	 .global IfxSmu_FSP3_P32_5_OUT
+  78              	 .section .rodata.IfxSmu_FSP3_P32_5_OUT,"a"
+  79              	 .align 2
+  82              	IfxSmu_FSP3_P32_5_OUT:
+  83 0000 008002F0 	 .word -268271616
+  84 0004 002004F0 	 .word -268165120
+  85 0008 05       	 .byte 5
+  86 0009 000000   	 .zero 3
+  87 000c 01000000 	 .word 1
+  88              	 .global IfxSmu_FSP2_P32_2_OUT
+  89              	 .section .rodata.IfxSmu_FSP2_P32_2_OUT,"a"
+  90              	 .align 2
+  93              	IfxSmu_FSP2_P32_2_OUT:
+  94 0000 008002F0 	 .word -268271616
+  95 0004 002004F0 	 .word -268165120
+  96 0008 02       	 .byte 2
+  97 0009 000000   	 .zero 3
+  98 000c 01000000 	 .word 1
+  99              	 .global IfxSmu_FSP1_P33_12_OUT
+ 100              	 .section .rodata.IfxSmu_FSP1_P33_12_OUT,"a"
+ 101              	 .align 2
+ 104              	IfxSmu_FSP1_P33_12_OUT:
+ 105 0000 008002F0 	 .word -268271616
+ 106 0004 002404F0 	 .word -268164096
+ 107 0008 0C       	 .byte 12
+ 108 0009 000000   	 .zero 3
+ 109 000c 01000000 	 .word 1
+ 110              	 .global IfxSmu_FSP0_P33_8_OUT
+ 111              	 .section .rodata.IfxSmu_FSP0_P33_8_OUT,"a"
+ 112              	 .align 2
+ 115              	IfxSmu_FSP0_P33_8_OUT:
+ 116 0000 008002F0 	 .word -268271616
+ 117 0004 002404F0 	 .word -268164096
+ 118 0008 08       	 .byte 8
+ 119 0009 000000   	 .zero 3
+ 120 000c 01000000 	 .word 1
+ 121              	 .global IfxSmu_EXT_EMERGENCYSTOP_REQ_P21_2_IN
+ 122              	 .section .rodata.IfxSmu_EXT_EMERGENCYSTOP_REQ_P21_2_IN,"a"
+ 123              	 .align 2
+ 126              	IfxSmu_EXT_EMERGENCYSTOP_REQ_P21_2_IN:
+ 127 0000 008002F0 	 .word -268271616
+ 128 0004 00F403F0 	 .word -268176384
+ 129 0008 02       	 .byte 2
+ 130 0009 000000   	 .zero 3
+ 131 000c 00000000 	 .word 0
+ 132              	.section .text,"ax",@progbits
+ 133              	.Letext0:
+ 134              	 .file 1 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 135              	 .file 2 "../Libraries/Infra/Sfr/TC4Dx/IfxSmu_regdef.h"
+ 136              	 .file 3 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 137              	 .file 4 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+ 138              	 .file 5 "../Libraries/Infra/Sfr/TC4Dx/IfxPort_regdef.h"
+ 139              	 .file 6 "../Libraries/iLLD/TC4xx/CpuGeneric/Port/Std/IfxPort.h"
+ 140              	 .file 7 "../Libraries/iLLD/TC4xx/Tricore/_PinMap/IfxSmu_PinMap.h"
+ 141              	 .file 8 "../Libraries/iLLD/TC4xx/Tricore/_PinMap/TC4Dx/IfxSmu_PinMap_TC4Dx_BGA436_COM.h"
+ 142              	 .file 9 "../Libraries/iLLD/TC4xx/Tricore/_PinMap/TC4Dx/IfxSmu_PinMap_TC4Dx_BGA436_COM.c"
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxSmu_PinMap_TC4Dx_BGA436_COM.c
+                            *ABS*:00000000 IfxSmu_PinMap_TC4Dx_BGA436_COM.c
+    {standard input}:11     .data.IfxSmu_Fspin_In_pinTable:00000000 IfxSmu_Fspin_In_pinTable
+    {standard input}:49     .rodata.IfxSmu_FSPIN2_P32_2_IN:00000000 IfxSmu_FSPIN2_P32_2_IN
+    {standard input}:38     .rodata.IfxSmu_FSPIN3_P32_5_IN:00000000 IfxSmu_FSPIN3_P32_5_IN
+    {standard input}:71     .rodata.IfxSmu_FSPIN0_P33_8_IN:00000000 IfxSmu_FSPIN0_P33_8_IN
+    {standard input}:60     .rodata.IfxSmu_FSPIN1_P33_12_IN:00000000 IfxSmu_FSPIN1_P33_12_IN
+    {standard input}:21     .data.IfxSmu_Fsp_Out_pinTable:00000000 IfxSmu_Fsp_Out_pinTable
+    {standard input}:93     .rodata.IfxSmu_FSP2_P32_2_OUT:00000000 IfxSmu_FSP2_P32_2_OUT
+    {standard input}:82     .rodata.IfxSmu_FSP3_P32_5_OUT:00000000 IfxSmu_FSP3_P32_5_OUT
+    {standard input}:115    .rodata.IfxSmu_FSP0_P33_8_OUT:00000000 IfxSmu_FSP0_P33_8_OUT
+    {standard input}:104    .rodata.IfxSmu_FSP1_P33_12_OUT:00000000 IfxSmu_FSP1_P33_12_OUT
+    {standard input}:31     .data.IfxSmu_Ext_emergencystop_req_In_pinTable:00000000 IfxSmu_Ext_emergencystop_req_In_pinTable
+    {standard input}:126    .rodata.IfxSmu_EXT_EMERGENCYSTOP_REQ_P21_2_IN:00000000 IfxSmu_EXT_EMERGENCYSTOP_REQ_P21_2_IN
+
+NO UNDEFINED SYMBOLS

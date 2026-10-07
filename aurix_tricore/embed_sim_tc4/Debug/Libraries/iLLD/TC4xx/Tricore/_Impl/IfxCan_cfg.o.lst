@@ -1,0 +1,43 @@
+   1              	
+   2              	 .file "IfxCan_cfg.c"
+   3              	 .file "IfxCan_cfg.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .global IfxCan_ramAddress
+   7              	 .section .data.IfxCan_ramAddress,"aw"
+   8              	 .align 2
+  11              	IfxCan_ramAddress:
+  12 0000 000070F4 	 .word -193986560
+  13 0004 000072F4 	 .word -193855488
+  14 0008 000074F4 	 .word -193724416
+  15 000c 000076F4 	 .word -193593344
+  16 0010 000078F4 	 .word -193462272
+  17              	 .global IfxCan_cfg_indexMap
+  18              	 .section .rodata.IfxCan_cfg_indexMap,"a"
+  19              	 .align 2
+  22              	IfxCan_cfg_indexMap:
+  23 0000 000071F4 	 .word -193921024
+  24 0004 00000000 	 .word 0
+  25 0008 000073F4 	 .word -193789952
+  26 000c 01000000 	 .word 1
+  27 0010 000075F4 	 .word -193658880
+  28 0014 02000000 	 .word 2
+  29 0018 000077F4 	 .word -193527808
+  30 001c 03000000 	 .word 3
+  31 0020 000079F4 	 .word -193396736
+  32 0024 04000000 	 .word 4
+  33              	.section .text,"ax",@progbits
+  34              	.Letext0:
+  35              	 .file 1 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+  36              	 .file 2 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+  37              	 .file 3 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+  38              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/IfxCan_regdef.h"
+  39              	 .file 5 "../Libraries/iLLD/TC4xx/Tricore/_Impl/TC4Dx/IfxCan_cfg_TC4Dx.h"
+  40              	 .file 6 "../Libraries/iLLD/TC4xx/Tricore/_Impl/IfxCan_cfg.c"
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxCan_cfg.c
+                            *ABS*:00000000 IfxCan_cfg.c
+    {standard input}:11     .data.IfxCan_ramAddress:00000000 IfxCan_ramAddress
+    {standard input}:22     .rodata.IfxCan_cfg_indexMap:00000000 IfxCan_cfg_indexMap
+
+NO UNDEFINED SYMBOLS

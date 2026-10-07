@@ -1,0 +1,1527 @@
+   1              	
+   2              	 .file "IfxSent.c"
+   3              	 .file "IfxSent.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.IfxSent_resetModule,"ax",@progbits
+   7              	 .align 1
+   8              	 .global IfxSent_resetModule
+  10              	IfxSent_resetModule:
+  11              	.LFB357:
+  12              	 .file 1 "../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c"
+   1:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** /**
+   2:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****  * \file IfxSent.c
+   3:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****  * \brief SENT  basic functionality
+   4:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****  *
+   5:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****  *
+   8:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****  *
+   9:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****  *
+  10:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****  *                                 IMPORTANT NOTICE
+  11:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****  *
+  12:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****  * this file except in compliance with IFASLL.
+  15:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****  *
+  16:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****  *
+  26:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****  *
+  27:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****  */
+  28:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+  29:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** /******************************************************************************/
+  30:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** /*----------------------------------Includes----------------------------------*/
+  31:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** /******************************************************************************/
+  32:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+  33:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** #include "Ifx_Cfg.h"
+  34:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** #if defined (__TASKING__)
+  35:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** #pragma warning 508		/* To suppress empty file warning */
+  36:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** #endif
+  37:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** #if defined (__ghs__)
+  38:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** #pragma diag_suppress 96		/* To suppress empty file warning */
+  39:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** #endif
+  40:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+  41:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** #if !defined(DEVICE_TC45X)
+  42:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** #include "IfxSent.h"
+  43:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+  44:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** /******************************************************************************/
+  45:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** /*-------------------------Function Implementations---------------------------*/
+  46:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** /******************************************************************************/
+  47:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+  48:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** void IfxSent_resetModule(Ifx_SENT *sent)
+  49:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** {
+  13              	 .loc 1 49 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  50:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** #if (IFX_PROT_ENABLED == 1U)
+  51:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&sent->PROTE, IfxApProt_State_config);
+  52:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** #endif
+  53:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     sent->RST.CTRLB.B.KRST = 1;        /* Only if both Kernel reset bits are set a reset is execute
+  17              	 .loc 1 53 5
+  18              	 .loc 1 53 28 is_stmt 0
+  19 0002 D9421000 	 lea %a2,[%a4]16
+  20 0006 19421000 	 ld.w %d2,[%a4]16
+  21 000a B7120120 	 insert %d2,%d2,1,0,1
+  22 000e 7422     	 st.w [%a2]0,%d2
+  54:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     sent->RST.CTRLA.B.KRST = 1;
+  23              	 .loc 1 54 5 is_stmt 1
+  24              	 .loc 1 54 28 is_stmt 0
+  25 0010 D9420C00 	 lea %a2,[%a4]12
+  26 0014 19420C00 	 ld.w %d2,[%a4]12
+  27 0018 B7120120 	 insert %d2,%d2,1,0,1
+  28 001c 7422     	 st.w [%a2]0,%d2
+  55:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+  56:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     while (0 == sent->RST.STAT.B.KRST) /* Wait until reset is executed */
+  29              	 .loc 1 56 5 is_stmt 1
+  30              	.L2:
+  57:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+  58:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     {}
+  31              	 .loc 1 58 6 discriminator 1
+  56:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+  32              	 .loc 1 56 14 discriminator 1
+  56:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+  33              	 .loc 1 56 33 is_stmt 0 discriminator 1
+  34 001e 19421400 	 ld.w %d2,[%a4]20
+  56:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+  35              	 .loc 1 56 14 discriminator 1
+  36 0022 6F020000 	 jz.t %d2,0,.L2
+  59:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+  60:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     sent->RST.CTRLB.B.STATCLR = 1;     /* Clear Kernel reset status bit */
+  37              	 .loc 1 60 5 is_stmt 1
+  38              	 .loc 1 60 31 is_stmt 0
+  39 0026 D9421000 	 lea %a2,[%a4]16
+  40 002a 19421000 	 ld.w %d2,[%a4]16
+  41 002e B712812F 	 insert %d2,%d2,1,31,1
+  42 0032 7422     	 st.w [%a2]0,%d2
+  61:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+  62:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     while (sent->RST.STAT.B.KRST == 1) /* Wait until KRST is cleared, only after this reset sequenc
+  43              	 .loc 1 62 5 is_stmt 1
+  44              	.L3:
+  63:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     {}
+  45              	 .loc 1 63 6 discriminator 1
+  62:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     {}
+  46              	 .loc 1 62 34 discriminator 1
+  62:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     {}
+  47              	 .loc 1 62 28 is_stmt 0 discriminator 1
+  48 0034 19421400 	 ld.w %d2,[%a4]20
+  62:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     {}
+  49              	 .loc 1 62 34 discriminator 1
+  50 0038 6F020080 	 jnz.t %d2,0,.L3
+  64:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+  65:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** #if (IFX_PROT_ENABLED == 1U)
+  66:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&sent->PROTE, IfxApProt_State_run);
+  67:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** #endif
+  68:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** }
+  51              	 .loc 1 68 1
+  52 003c 0090     	 ret 
+  53              	.LFE357:
+  55              	 .global IfxSent_resetModule_end
+  56              	IfxSent_resetModule_end:
+  57              	 .section .text.IfxSent_getModuleClock,"ax",@progbits
+  58              	 .align 1
+  59              	 .global IfxSent_getModuleClock
+  61              	IfxSent_getModuleClock:
+  62              	.LFB358:
+  69:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+  70:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+  71:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** float32 IfxSent_getModuleClock(Ifx_SENT *sent)
+  72:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** {
+  63              	 .loc 1 72 1 is_stmt 1
+  64              	.LVL1:
+  65 0000 40AE     	 mov.aa %a14,%SP
+  66              	.LCFI1:
+  67 0002 404C     	 mov.aa %a12,%a4
+  73:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     uint32       fsys = IfxClock_getSpbFrequency();
+  68              	 .loc 1 73 5
+  69              	 .loc 1 73 25 is_stmt 0
+  70 0004 6D000000 	 call IfxClock_getSpbFrequency
+  71              	.LVL2:
+  72 0008 0226     	 mov %d6,%d2
+  73              	.LVL3:
+  74:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+  75:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     Ifx_SENT_FDR fdr;
+  74              	 .loc 1 75 5 is_stmt 1
+  76:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     fdr.U = sent->FDR.U;
+  75              	 .loc 1 76 5
+  76              	 .loc 1 76 22 is_stmt 0
+  77 000a 19C30010 	 ld.w %d3,[%a12]64
+  78              	.LVL4:
+  77:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+  78:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     float32      kernelFreq = 0.0f;
+  79              	 .loc 1 78 5 is_stmt 1
+  79:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+  80:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     if (fdr.B.DM == 1)
+  80              	 .loc 1 80 5
+  81              	 .loc 1 80 18 is_stmt 0
+  82 000e BB00004C 	 mov.u %d4,49152
+  83 0012 2634     	 and %d4,%d3
+  84              	 .loc 1 80 8
+  85 0014 3B000054 	 mov %d5,16384
+  86 0018 5F540000 	 jeq %d4,%d5,.L8
+  81:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     {
+  82:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****         kernelFreq = (float32)fsys / (1024 - fdr.B.STEP);
+  83:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     }
+  84:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     else if (fdr.B.DM == 2)
+  87              	 .loc 1 84 10 is_stmt 1
+  88              	 .loc 1 84 13 is_stmt 0
+  89 001c BB000028 	 mov.u %d2,32768
+  90              	.LVL5:
+  91 0020 5F240000 	 jeq %d4,%d2,.L9
+  78:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+  92              	 .loc 1 78 18
+  93 0024 8202     	 mov %d2,0
+  85:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     {
+  86:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****         kernelFreq = ((float32)fsys * fdr.B.STEP) / 1024;
+  87:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     }
+  88:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+  89:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     return kernelFreq;
+  94              	 .loc 1 89 5 is_stmt 1
+  90:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** }
+  95              	 .loc 1 90 1 is_stmt 0
+  96 0026 0090     	 ret 
+  97              	.LVL6:
+  98              	.L8:
+  82:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     }
+  99              	 .loc 1 82 9 is_stmt 1
+  82:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     }
+ 100              	 .loc 1 82 22 is_stmt 0
+ 101 0028 4B026161 	 utof %d6,%d2
+  82:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     }
+ 102              	 .loc 1 82 51
+ 103 002c B7031625 	 insert %d2,%d3,0,10,22
+ 104              	.LVL7:
+  82:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     }
+ 105              	 .loc 1 82 44
+ 106 0030 3B004030 	 mov %d3,1024
+ 107              	.LVL8:
+ 108 0034 0B238020 	 sub %d2,%d3,%d2
+  82:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     }
+ 109              	 .loc 1 82 36
+ 110 0038 4B024121 	 itof %d2,%d2
+  82:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     }
+ 111              	 .loc 1 82 20
+ 112 003c 4B265120 	 div.f %d2,%d6,%d2
+ 113              	.LVL9:
+ 114 0040 0090     	 ret 
+ 115              	.LVL10:
+ 116              	.L9:
+  86:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     }
+ 117              	 .loc 1 86 9 is_stmt 1
+  86:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     }
+ 118              	 .loc 1 86 23 is_stmt 0
+ 119 0042 4B066121 	 utof %d2,%d6
+  86:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     }
+ 120              	 .loc 1 86 44
+ 121 0046 B7031635 	 insert %d3,%d3,0,10,22
+ 122              	.LVL11:
+  86:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     }
+ 123              	 .loc 1 86 37
+ 124 004a 4B034131 	 itof %d3,%d3
+ 125 004e 4B234120 	 mul.f %d2,%d3,%d2
+  86:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     }
+ 126              	 .loc 1 86 20
+ 127 0052 7B00A833 	 movh %d3,14976
+ 128 0056 4B324120 	 mul.f %d2,%d2,%d3
+ 129              	.LVL12:
+ 130 005a 0090     	 ret 
+ 131              	.LFE358:
+ 133              	 .global IfxSent_getModuleClock_end
+ 134              	IfxSent_getModuleClock_end:
+ 135              	 .section .text.IfxSent_initializeChannelUnitTime,"ax",@progbits
+ 136              	 .align 1
+ 137              	 .global IfxSent_initializeChannelUnitTime
+ 139              	IfxSent_initializeChannelUnitTime:
+ 140              	.LFB359:
+  91:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+  92:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+  93:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** void IfxSent_initializeChannelUnitTime(Ifx_SENT *sent, IfxSent_ChannelId channelId, float32 tUnit)
+  94:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** {
+ 141              	 .loc 1 94 1 is_stmt 1
+ 142              	.LVL13:
+ 143 0000 40AE     	 mov.aa %a14,%SP
+ 144              	.LCFI2:
+ 145 0002 804A     	 mov.d %d10,%a4
+ 146 0004 0248     	 mov %d8,%d4
+ 147 0006 0259     	 mov %d9,%d5
+  95:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     float32      fFracDiv = IfxSent_getModuleClock(sent);
+ 148              	 .loc 1 95 5
+ 149              	 .loc 1 95 29 is_stmt 0
+ 150 0008 6D000000 	 call IfxSent_getModuleClock
+ 151              	.LVL14:
+  96:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+  97:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     /* const uint32 divMin   = 560; */
+  98:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     const uint32 divMax = 3276;
+ 152              	 .loc 1 98 5 is_stmt 1
+  99:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+ 100:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     uint32       pDiv;
+ 153              	 .loc 1 100 5
+ 101:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     uint32       fDiv;
+ 154              	 .loc 1 101 5
+ 102:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+ 103:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     float32      tResult;
+ 155              	 .loc 1 103 5
+ 104:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     tResult = fFracDiv * 56 * tUnit;
+ 156              	 .loc 1 104 5
+ 157              	 .loc 1 104 24 is_stmt 0
+ 158 000c 7B002634 	 movh %d3,16992
+ 159 0010 4B324120 	 mul.f %d2,%d2,%d3
+ 160              	.LVL15:
+ 161              	 .loc 1 104 13
+ 162 0014 4B924190 	 mul.f %d9,%d2,%d9
+ 163              	.LVL16:
+ 105:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     pDiv    = tResult / divMax;
+ 164              	 .loc 1 105 5 is_stmt 1
+ 165              	 .loc 1 105 23 is_stmt 0
+ 166 0018 7BD05424 	 movh %d2,17741
+ 167 001c 1B02002C 	 addi %d2,%d2,-16384
+ 168 0020 4B295120 	 div.f %d2,%d9,%d2
+ 169              	 .loc 1 105 13
+ 170 0024 4B027131 	 ftouz %d3,%d2
+ 171              	.LVL17:
+ 106:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     fDiv    = tResult / pDiv;
+ 172              	 .loc 1 106 5 is_stmt 1
+ 173              	 .loc 1 106 23 is_stmt 0
+ 174 0028 4B036121 	 utof %d2,%d3
+ 175 002c 4B295120 	 div.f %d2,%d9,%d2
+ 176              	 .loc 1 106 13
+ 177 0030 4B027161 	 ftouz %d6,%d2
+ 178              	.LVL18:
+ 107:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+ 108:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     if (fDiv > divMax)
+ 179              	 .loc 1 108 5 is_stmt 1
+ 180              	 .loc 1 108 8 is_stmt 0
+ 181 0034 3BD0CC20 	 mov %d2,3277
+ 182 0038 3F260080 	 jlt.u %d6,%d2,.L11
+ 109:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     {
+ 110:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****         pDiv = pDiv + 1;
+ 183              	 .loc 1 110 9 is_stmt 1
+ 184              	 .loc 1 110 14 is_stmt 0
+ 185 003c C213     	 add %d3,1
+ 186              	.LVL19:
+ 111:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****         fDiv = tResult / pDiv;
+ 187              	 .loc 1 111 9 is_stmt 1
+ 188              	 .loc 1 111 24 is_stmt 0
+ 189 003e 4B036121 	 utof %d2,%d3
+ 190 0042 4B295120 	 div.f %d2,%d9,%d2
+ 191              	 .loc 1 111 14
+ 192 0046 4B027161 	 ftouz %d6,%d2
+ 193              	.LVL20:
+ 194              	.L11:
+ 112:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     }
+ 113:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+ 114:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     if ((pDiv > 1024) || (pDiv < 1))
+ 195              	 .loc 1 114 5 is_stmt 1
+ 196              	 .loc 1 114 23 is_stmt 0
+ 197 004a 1BF3FF4F 	 addi %d4,%d3,-1
+ 198              	 .loc 1 114 8
+ 199 004e 3B004020 	 mov %d2,1024
+ 200 0052 3F240080 	 jlt.u %d4,%d2,.L12
+ 115:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     {
+ 116:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****         pDiv = 1025;
+ 201              	 .loc 1 116 9 is_stmt 1
+ 202              	.LVL21:
+ 117:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****         fDiv = tResult / 1024;
+ 203              	 .loc 1 117 9
+ 204              	 .loc 1 117 24 is_stmt 0
+ 205 0056 7B00A823 	 movh %d2,14976
+ 206 005a 4B294120 	 mul.f %d2,%d9,%d2
+ 207              	 .loc 1 117 14
+ 208 005e 4B027161 	 ftouz %d6,%d2
+ 209              	.LVL22:
+ 116:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****         fDiv = tResult / 1024;
+ 210              	 .loc 1 116 14
+ 211 0062 3B104030 	 mov %d3,1025
+ 212              	.LVL23:
+ 213              	.L12:
+ 118:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     }
+ 119:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+ 120:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     IfxSent_setChannelPreDivider(sent, channelId, (uint16)pDiv - 1);
+ 214              	 .loc 1 120 5 is_stmt 1
+ 215              	 .loc 1 120 51 is_stmt 0
+ 216 0066 37037030 	 extr.u %d3,%d3,0,16
+ 217              	.LVL24:
+ 218              	 .loc 1 120 64
+ 219 006a C2F3     	 add %d3,-1
+ 220              	.LVL25:
+ 221              	.LBB6:
+ 222              	.LBB7:
+ 223              	 .file 2 "../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h"
+   1:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /**
+   2:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \file IfxSent.h
+   3:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \brief SENT  basic functionality
+   4:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \ingroup IfxLld_Sent
+   5:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  *
+   6:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \version iLLD-TC4-v2.7.0
+   7:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   8:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  *
+   9:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  *
+  10:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  *
+  11:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  *                                 IMPORTANT NOTICE
+  12:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  *
+  13:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  14:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  15:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * this file except in compliance with IFASLL.
+  16:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  *
+  17:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  18:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * Unless required by applicable law or agreed to in writing, software distributed
+  19:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  20:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  21:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * whether express, implied, statutory or otherwise, including but not limited to
+  22:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  23:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * defects in the licensed items, or non-infringement of third parties'
+  24:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * intellectual property rights. See the full license text for the specific
+  25:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * language governing permissions and limitations under IFASLL.
+  26:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  *
+  27:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  *
+  28:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \defgroup IfxLld_Sent_Std_Enumerations Enumerations
+  29:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \ingroup IfxLld_Sent_Std
+  30:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \defgroup IfxLld_Sent_Std_Configuration Configuration Functions
+  31:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \ingroup IfxLld_Sent_Std
+  32:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \defgroup IfxLld_Sent_Std_Interrupts Interrupts
+  33:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \ingroup IfxLld_Sent_Std
+  34:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \defgroup IfxLld_Sent_Std_Operative Operative Functions
+  35:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \ingroup IfxLld_Sent_Std
+  36:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \defgroup IfxLld_Sent_Std_Baudrate Baudrate Configuration
+  37:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \ingroup IfxLld_Sent_Std
+  38:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \defgroup IfxLld_Sent_Std_IO IO Pin Configuration Functions
+  39:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \ingroup IfxLld_Sent_Std
+  40:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+  41:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+  42:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** #ifndef IFXSENT_H
+  43:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** #define IFXSENT_H 1
+  44:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+  45:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /******************************************************************************/
+  46:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /*----------------------------------Includes----------------------------------*/
+  47:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /******************************************************************************/
+  48:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+  49:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** #include "_Impl/IfxSent_cfg.h"
+  50:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** #include "_PinMap/IfxSent_PinMap.h"
+  51:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** #include "Cpu/Std/IfxCpu_Intrinsics.h"
+  52:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** #include "IfxSent_bf.h"
+  53:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** #include "Src/Std/IfxSrc.h"
+  54:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** #include "Clock/Std/IfxClock.h"
+  55:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** #include "Ap/Std/IfxApProt.h"
+  56:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** #include "Ap/Std/IfxApApu.h"
+  57:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+  58:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /******************************************************************************/
+  59:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /*-----------------------------------Macros-----------------------------------*/
+  60:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /******************************************************************************/
+  61:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+  62:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** #define IFXSENT_INTERRUPT_STATUS_ERROR_FLAGS (0x000037f4)
+  63:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+  64:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /******************************************************************************/
+  65:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /*--------------------------------Enumerations--------------------------------*/
+  66:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /******************************************************************************/
+  67:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+  68:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \addtogroup IfxLld_Sent_Std_Enumerations
+  69:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \{ */
+  70:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief SENT.CH[channelId].IOCR.ALTI, Specifies alternate input for channel
+  71:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+  72:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** typedef enum
+  73:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** {
+  74:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_AlternateInput_0 = 0,  /**< \brief Specifies alternate input 0 */
+  75:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_AlternateInput_1,      /**< \brief Specifies alternate input 1 */
+  76:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_AlternateInput_2,      /**< \brief Specifies alternate input 2 */
+  77:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_AlternateInput_3       /**< \brief Specifies alternate input 3 */
+  78:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** } IfxSent_AlternateInput;
+  79:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+  80:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \} */
+  81:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+  82:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief SENT.CH[channelId].RSR.CST, Specifies the current channel status
+  83:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+  84:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** typedef enum
+  85:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** {
+  86:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_ChannelStatus_stop        = 0, /**< \brief Specifies the channel is stopped */
+  87:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_ChannelStatus_initialize  = 1, /**< \brief Specifies the channel is initialized */
+  88:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_ChannelStatus_running     = 2, /**< \brief Specifies the channel is running */
+  89:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_ChannelStatus_synchronize = 3  /**< \brief Specifies the channel is synchronized */
+  90:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** } IfxSent_ChannelStatus;
+  91:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+  92:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief SENT.FDR.DM, Specifies clock divider mode
+  93:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+  94:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** typedef enum
+  95:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** {
+  96:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_ClockDividerMode_off        = 0, /**< \brief Specifies clock divider mode off */
+  97:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_ClockDividerMode_normal     = 1, /**< \brief Specifies clock normal divider mode */
+  98:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_ClockDividerMode_fractional = 2  /**< \brief Specifies clock fractional divider mode */
+  99:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** } IfxSent_ClockDividerMode;
+ 100:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 101:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief SENT.CH[channelId].SDS.CON, Specifies received configuration bit value
+ 102:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 103:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** typedef enum
+ 104:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** {
+ 105:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_ConfigBit_0 = 0,  /**< \brief Specifies received configuration bit value 0 */
+ 106:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_ConfigBit_1       /**< \brief Specifies received configuration bit value 1 */
+ 107:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** } IfxSent_ConfigBit;
+ 108:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 109:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief SENT.CH[channelId].IOCR.DEPTH, Specifies number of port input samples
+ 110:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 111:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** typedef enum
+ 112:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** {
+ 113:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_DigitalGlitchesLength_off = 0,  /**< \brief Specifies port input samples off */
+ 114:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_DigitalGlitchesLength_1   = 1,  /**< \brief Specifies 1 port input samples */
+ 115:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_DigitalGlitchesLength_2,        /**< \brief Specifies 2 port input samples */
+ 116:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_DigitalGlitchesLength_3,        /**< \brief Specifies 3 port input samples */
+ 117:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_DigitalGlitchesLength_4,        /**< \brief Specifies 4 port input samples */
+ 118:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_DigitalGlitchesLength_5,        /**< \brief Specifies 5 port input samples */
+ 119:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_DigitalGlitchesLength_6,        /**< \brief Specifies 6 port input samples */
+ 120:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_DigitalGlitchesLength_7,        /**< \brief Specifies 7 port input samples */
+ 121:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_DigitalGlitchesLength_8,        /**< \brief Specifies 8 port input samples */
+ 122:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_DigitalGlitchesLength_9,        /**< \brief Specifies 9 port input samples */
+ 123:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_DigitalGlitchesLength_10,       /**< \brief Specifies 10 port input samples */
+ 124:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_DigitalGlitchesLength_11,       /**< \brief Specifies 11 port input samples */
+ 125:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_DigitalGlitchesLength_12,       /**< \brief Specifies 12 port input samples */
+ 126:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_DigitalGlitchesLength_13,       /**< \brief Specifies 13 port input samples */
+ 127:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_DigitalGlitchesLength_14,       /**< \brief Specifies 14 port input samples */
+ 128:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_DigitalGlitchesLength_15        /**< \brief Specifies 15 port input samples */
+ 129:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** } IfxSent_DigitalGlitchesLength;
+ 130:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 131:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief SENT.CH[channelId].RCR.ESF, Specifies the serial frame structure
+ 132:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 133:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** typedef enum
+ 134:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** {
+ 135:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_ExtendedSerialFrameMode_standard = 0,  /**< \brief Specifies the standard serial frame 
+ 136:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_ExtendedSerialFrameMode_extended = 1   /**< \brief Specifies the extended serial frame 
+ 137:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** } IfxSent_ExtendedSerialFrameMode;
+ 138:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 139:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief SENT.CH[channelId].IOCR.ETS, Specifies the external (GTM/eGTM) trigger line
+ 140:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 141:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** typedef enum
+ 142:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** {
+ 143:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_ExternalTrigger_0 = 0,  /**< \brief Specifies the external trigger line 0 */
+ 144:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_ExternalTrigger_1,      /**< \brief Specifies the external trigger line 1 */
+ 145:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_ExternalTrigger_2,      /**< \brief Specifies the external trigger line 2 */
+ 146:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_ExternalTrigger_3,      /**< \brief Specifies the external trigger line 3 */
+ 147:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_ExternalTrigger_4,      /**< \brief Specifies the external trigger line 4 */
+ 148:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_ExternalTrigger_5,      /**< \brief Specifies the external trigger line 5 */
+ 149:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_ExternalTrigger_6,      /**< \brief Specifies the external trigger line 6 */
+ 150:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_ExternalTrigger_7,      /**< \brief Specifies the external trigger line 7 */
+ 151:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_ExternalTrigger_8,      /**< \brief Specifies the external trigger line 8 */
+ 152:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_ExternalTrigger_9,      /**< \brief Specifies the external trigger line 9 */
+ 153:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_ExternalTrigger_10,     /**< \brief Specifies the external trigger line 10 */
+ 154:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_ExternalTrigger_11,     /**< \brief Specifies the external trigger line 11 */
+ 155:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_ExternalTrigger_12,     /**< \brief Specifies the external trigger line 12 */
+ 156:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_ExternalTrigger_13,     /**< \brief Specifies the external trigger line 13 */
+ 157:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_ExternalTrigger_14,     /**< \brief Specifies the external trigger line 14 */
+ 158:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_ExternalTrigger_15      /**< \brief Specifies the external trigger line 15 */
+ 159:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** } IfxSent_ExternalTrigger;
+ 160:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 161:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief SENT.CH[channelId].RCR.CFC, Specifies received frame check mode
+ 162:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 163:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** typedef enum
+ 164:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** {
+ 165:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_FrameCheckMode_pastSyncPulse   = 0, /**< \brief Specifies frame check mode against past
+ 166:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_FrameCheckMode_futureSuncPulse = 1  /**< \brief Specifies frame check mode against futu
+ 167:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** } IfxSent_FrameCheckMode;
+ 168:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 169:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief SENT.CH[channelId].INP.X(X= RSI,RDI,RBI,TDI,TBI,ERRI,SDI,WDI),Specifies interrupt reques
+ 170:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 171:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** typedef enum
+ 172:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** {
+ 173:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_InterruptNodePointer_trigo0 = 0,  /**< \brief Specifies interrupt requested node TRIGO 
+ 174:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_InterruptNodePointer_trigo1,      /**< \brief Specifies interrupt requested node TRIGO 
+ 175:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_InterruptNodePointer_trigo2,      /**< \brief Specifies interrupt requested node TRIGO 
+ 176:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_InterruptNodePointer_trigo3,      /**< \brief Specifies interrupt requested node TRIGO 
+ 177:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_InterruptNodePointer_trigo4,      /**< \brief Specifies interrupt requested node TRIGO 
+ 178:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_InterruptNodePointer_trigo5,      /**< \brief Specifies interrupt requested node TRIGO 
+ 179:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_InterruptNodePointer_trigo6,      /**< \brief Specifies interrupt requested node TRIGO 
+ 180:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_InterruptNodePointer_trigo7,      /**< \brief Specifies interrupt requested node TRIGO 
+ 181:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_InterruptNodePointer_trigo8,      /**< \brief Specifies interrupt requested node TRIGO 
+ 182:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_InterruptNodePointer_trigo9       /**< \brief Specifies interrupt requested node TRIGO 
+ 183:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** } IfxSent_InterruptNodePointer;
+ 184:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 185:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Sent Interrupt Source
+ 186:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 187:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** typedef enum
+ 188:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** {
+ 189:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_InterruptSource_rsi  = 0,   /**< \brief Enable Interrupt Request RSI */
+ 190:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_InterruptSource_rdi  = 1,   /**< \brief Enable Interrupt Request RDI */
+ 191:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_InterruptSource_rbi  = 2,   /**< \brief Enable Interrupt Request RBI */
+ 192:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_InterruptSource_tdi  = 3,   /**< \brief Enable Interrupt Request TDI */
+ 193:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_InterruptSource_tbi  = 4,   /**< \brief Enable Interrupt Request TBI */
+ 194:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_InterruptSource_fri  = 5,   /**< \brief Enable Interrupt Request FRI */
+ 195:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_InterruptSource_fdi  = 6,   /**< \brief Enable Interrupt Request FDI */
+ 196:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_InterruptSource_nni  = 7,   /**< \brief Enable Interrupt Request NNI */
+ 197:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_InterruptSource_nvi  = 8,   /**< \brief Enable Interrupt Request NVI */
+ 198:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_InterruptSource_crci = 9,   /**< \brief Enable Interrupt Request crci */
+ 199:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_InterruptSource_wsi  = 10,  /**< \brief Enable Interrupt Request wsi */
+ 200:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_InterruptSource_sdi  = 11,  /**< \brief Enable Interrupt Request sdi */
+ 201:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_InterruptSource_scri = 12,  /**< \brief Enable Interrupt Request scri */
+ 202:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_InterruptSource_wdi  = 13   /**< \brief Enable Interrupt Request wdi */
+ 203:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** } IfxSent_InterruptSource;
+ 204:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 205:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief SENT.CH[channelId].VIEW.RDNPy( y=0,1,..7 ).Specifies receive data target nibble pointer
+ 206:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 207:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** typedef enum
+ 208:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** {
+ 209:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_Nibble_0 = 0,  /**< \brief Specifies receive data target nibble pointer to nibble 0 */
+ 210:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_Nibble_1,      /**< \brief Specifies receive data target nibble pointer to nibble 1 */
+ 211:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_Nibble_2,      /**< \brief Specifies receive data target nibble pointer to nibble 2 */
+ 212:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_Nibble_3,      /**< \brief Specifies receive data target nibble pointer to nibble 3 */
+ 213:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_Nibble_4,      /**< \brief Specifies receive data target nibble pointer to nibble 4 */
+ 214:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_Nibble_5,      /**< \brief Specifies receive data target nibble pointer to nibble 5 */
+ 215:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_Nibble_6,      /**< \brief Specifies receive data target nibble pointer to nibble 6 */
+ 216:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_Nibble_7       /**< \brief Specifies receive data target nibble pointer to nibble 7 */
+ 217:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** } IfxSent_Nibble;
+ 218:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 219:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Enable/disable the sensitivity of the module to sleep signal\n
+ 220:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * Definition in Ifx_SENT.CLC.B.EDIS
+ 221:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 222:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** typedef enum
+ 223:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** {
+ 224:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_SleepMode_enable  = 0, /**< \brief enables sleep mode */
+ 225:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_SleepMode_disable = 1  /**< \brief disables sleep mode */
+ 226:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** } IfxSent_SleepMode;
+ 227:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 228:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief OCDS Suspend Control (OCDS.SUS)
+ 229:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 230:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** typedef enum
+ 231:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** {
+ 232:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_SuspendMode_none = 0,  /**< \brief No suspend */
+ 233:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_SuspendMode_hard = 1,  /**< \brief Hard Suspend */
+ 234:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_SuspendMode_soft = 2   /**< \brief Soft Suspend */
+ 235:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** } IfxSent_SuspendMode;
+ 236:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 237:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief SENT.CH[channelId].SCR.BASE, Specifies selection of pulse based on time
+ 238:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 239:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** typedef enum
+ 240:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** {
+ 241:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_TimeBase_measuredFrequency = 0,  /**< \brief Specifies selection of pulse based on meas
+ 242:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_TimeBase_nominalFrequency  = 1   /**< \brief Specifies selection of pulse based on nomi
+ 243:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** } IfxSent_TimeBase;
+ 244:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 245:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief SENT.CH[channelId].SCR.TRIG, Specifies trigger source for pulse generation
+ 246:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 247:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** typedef enum
+ 248:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** {
+ 249:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_TriggerSource_off             = 0, /**< \brief Specifies no pulse generation */
+ 250:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_TriggerSource_immediate       = 1, /**< \brief Specifies immediate pulse generation */
+ 251:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_TriggerSource_fallingEdge     = 2, /**< \brief Specifies pulse generation at fallingEdg
+ 252:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxSent_TriggerSource_externalTrigger = 3  /**< \brief Specifies pulse generation after each ex
+ 253:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** } IfxSent_TriggerSource;
+ 254:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 255:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /******************************************************************************/
+ 256:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /*-----------------------------Data Structures--------------------------------*/
+ 257:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /******************************************************************************/
+ 258:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 259:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** typedef struct
+ 260:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** {
+ 261:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxApProt_ProtConfig proteConfig;
+ 262:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxApProt_ProtConfig protseConfig;
+ 263:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxApApu_ApuConfig   apuConfig;
+ 264:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** } IfxSent_ApConfig;
+ 265:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 266:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \addtogroup IfxLld_Sent_Std_Configuration
+ 267:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \{ */
+ 268:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 269:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /******************************************************************************/
+ 270:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /*-------------------------Inline Function Prototypes-------------------------*/
+ 271:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /******************************************************************************/
+ 272:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 273:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Sets the operation mode of SENT kernel
+ 274:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sent base address of the SENT register space
+ 275:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param channelId SENT channel number
+ 276:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param alternateInput alternate input/output pin for SENT operation
+ 277:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return None
+ 278:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 279:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE void IfxSent_setAltiInput(Ifx_SENT *sent, IfxSent_ChannelId channelId, IfxSent_Alternate
+ 280:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 281:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \} */
+ 282:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 283:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \addtogroup IfxLld_Sent_Std_Interrupts
+ 284:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \{ */
+ 285:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 286:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /******************************************************************************/
+ 287:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /*-------------------------Inline Function Prototypes-------------------------*/
+ 288:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /******************************************************************************/
+ 289:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 290:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Copies the current interrupt flags into the Ifx_SENT_CH_INTSTAT structure, and clears th
+ 291:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  *
+ 292:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * This function should be used in an ISR to retrieve the events which triggered the interrupt.
+ 293:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sent base address of the SENT register space
+ 294:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param channelId SENT channel number
+ 295:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return Interrupt flags which have been cleared.
+ 296:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 297:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE Ifx_SENT_CH_INTSTAT IfxSent_getAndClearInterruptStatus(Ifx_SENT *sent, IfxSent_ChannelId
+ 298:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 299:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \} */
+ 300:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 301:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \addtogroup IfxLld_Sent_Std_Operative
+ 302:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \{ */
+ 303:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 304:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /******************************************************************************/
+ 305:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /*-------------------------Inline Function Prototypes-------------------------*/
+ 306:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /******************************************************************************/
+ 307:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 308:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Disables a specific channel in the SENT module.
+ 309:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sent base address of the SENT register space
+ 310:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param channelId SENT channel number
+ 311:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return None
+ 312:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 313:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE void IfxSent_disableChannel(Ifx_SENT *sent, IfxSent_ChannelId channelId);
+ 314:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 315:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \} */
+ 316:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 317:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \addtogroup IfxLld_Sent_Std_IO
+ 318:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \{ */
+ 319:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 320:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /******************************************************************************/
+ 321:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /*-------------------------Inline Function Prototypes-------------------------*/
+ 322:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /******************************************************************************/
+ 323:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 324:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Initializes a SENT input pin with the specified input mode and pad driver configuration.
+ 325:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sentIn the SENT Pin which should be configured
+ 326:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param inputMode the pin input mode which should be configured
+ 327:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param padDriver the pad driver mode which should be configured
+ 328:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return None
+ 329:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 330:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE void IfxSent_initSentPin(const IfxSent_Sent_In *sentIn, IfxPort_InputMode inputMode, Ifx
+ 331:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 332:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \} */
+ 333:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 334:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /******************************************************************************/
+ 335:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /*-------------------------Inline Function Prototypes-------------------------*/
+ 336:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /******************************************************************************/
+ 337:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 338:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Set the module time stamp pre-divider
+ 339:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sent base address of the SENT register space
+ 340:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param timeStampPreDivider time stamp pre-divider value
+ 341:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return None
+ 342:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 343:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE void IfxSent_setTimeStampPredivider(Ifx_SENT *sent, uint32 timeStampPreDivider);
+ 344:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 345:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Gets the specified channel interrupt status
+ 346:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sent base address of the SENT register space
+ 347:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param channelId SENT channel number
+ 348:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return current channel interrupt status
+ 349:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 350:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE Ifx_SENT_CH_INTSTAT IfxSent_getChannelInterruptStatus(Ifx_SENT *sent, IfxSent_ChannelId 
+ 351:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 352:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief gets the source for channel interrupt handler
+ 353:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sent base address of the SENT register space
+ 354:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param channelId SENT channel number
+ 355:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return interrupt source
+ 356:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 357:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE volatile Ifx_SRC_SRCR *IfxSent_getChannelSrc(Ifx_SENT *sent, IfxSent_ChannelId channelId
+ 358:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 359:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Disable the SENT module
+ 360:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sent base address of the SENT register space
+ 361:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return None
+ 362:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 363:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE void IfxSent_disableModule(Ifx_SENT *sent);
+ 364:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 365:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Enable the channel with the channel number
+ 366:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sent base address of the SENT register space
+ 367:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param channelId SENT channel number
+ 368:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return None
+ 369:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 370:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE void IfxSent_enableChannel(Ifx_SENT *sent, IfxSent_ChannelId channelId);
+ 371:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 372:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Enable the SENT module
+ 373:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sent base address of the SENT register space
+ 374:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return None
+ 375:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 376:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE void IfxSent_enableModule(Ifx_SENT *sent);
+ 377:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 378:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Returns the module's suspend state.
+ 379:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * TRUE :if module is suspended.
+ 380:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * FALSE:if module is not yet suspended.
+ 381:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sent Pointer to SENT module registers
+ 382:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return Suspend status (TRUE / FALSE)
+ 383:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 384:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE boolean IfxSent_isModuleSuspended(Ifx_SENT *sent);
+ 385:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 386:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Sets the sensitivity of the module to sleep signal
+ 387:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sent pointer to SENT registers
+ 388:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param mode mode selection (enable / disable)
+ 389:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return None
+ 390:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 391:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE void IfxSent_setSleepMode(Ifx_SENT *sent, IfxSent_SleepMode mode);
+ 392:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 393:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Configure the Module to Hard/Soft suspend mode.
+ 394:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * Note: The api works only when the OCDS is enabled and in Supervisor Mode. When OCDS is disabled 
+ 395:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sent Pointer to SENT module registers
+ 396:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param mode Module suspend mode
+ 397:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return None
+ 398:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 399:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE void IfxSent_setSuspendMode(Ifx_SENT *sent, IfxSent_SuspendMode mode);
+ 400:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 401:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Sets the channel fractional baudrate divider
+ 402:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sent base address of the SENT register space
+ 403:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param channelId SENT channel number
+ 404:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param divider channel baudrate fractional divider
+ 405:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return None
+ 406:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 407:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE void IfxSent_setChannelFractionalDivider(Ifx_SENT *sent, IfxSent_ChannelId channelId, ui
+ 408:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 409:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Sets the channel baudrate pre-divider
+ 410:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sent base address of the SENT register space
+ 411:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param channelId SENT channel number
+ 412:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param preDivider channel baudrate pre-divider
+ 413:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return None
+ 414:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 415:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE void IfxSent_setChannelPreDivider(Ifx_SENT *sent, IfxSent_ChannelId channelId, uint16 pr
+ 416:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 417:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Initializes a SPC output
+ 418:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param spcOut the SPC Pin which should be configured
+ 419:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param spcOutMode Port Output Mode
+ 420:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param padDriver the pad driver mode which should be configured
+ 421:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return None
+ 422:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 423:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE void IfxSent_initSpcPin(const IfxSent_Spc_Out *spcOut, IfxPort_OutputMode spcOutMode, If
+ 424:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 425:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Returns the Frame length with pause pulse
+ 426:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sent base address of the SENT register space
+ 427:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param channelId SENT channel number
+ 428:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return The frame length in microseconds. A return value of 0 indicates an error
+ 429:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 430:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE uint16 IfxSent_getFrameLengthWithPausePulse(Ifx_SENT *sent, IfxSent_ChannelId channelId)
+ 431:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 432:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Set the watch dog timer limit value for sent channel.
+ 433:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sent base address of the SENT register space
+ 434:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param channelId SENT channel number
+ 435:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param watchDogTimerLimit Specifies the watch dog timer limit value.
+ 436:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return None
+ 437:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 438:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE void IfxSent_setWatchDogTimerLimit(Ifx_SENT *sent, IfxSent_ChannelId channelId, uint16 w
+ 439:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 440:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Return TRUE if SENT module is enabled
+ 441:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sent base address of the SENT register space
+ 442:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return Status (True/False) whether the clock for sent is enabled or disabled
+ 443:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 444:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE boolean IfxSent_isModuleEnabled(Ifx_SENT *sent);
+ 445:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 446:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Return the Interrupt Status of the SENT channel
+ 447:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sent base address of the SENT register space
+ 448:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param channelId SENT channel number
+ 449:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param source enable the interrupt source of any interrupt of SENT Channel
+ 450:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return The Interrupt Status of SENT channel
+ 451:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 452:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE boolean IfxSent_getInterruptStatus(Ifx_SENT *sent, IfxSent_ChannelId channelId, IfxSent_
+ 453:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 454:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Clears the interrupt status for the specified channel and source.
+ 455:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sent base address of the SENT register space
+ 456:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param channelId SENT channel number
+ 457:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param source enable the interrupt source of any interrupt of SENT Channel
+ 458:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return None
+ 459:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 460:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE void IfxSent_clearInterruptStatus(Ifx_SENT *sent, IfxSent_ChannelId channelId, IfxSent_I
+ 461:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 462:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /**
+ 463:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sent base address of the SENT register space
+ 464:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param channelId SENT channel number
+ 465:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return The Data content of a received Data Frame
+ 466:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 467:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE uint32 IfxSent_readReceivedData(Ifx_SENT *sent, IfxSent_ChannelId channelId);
+ 468:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 469:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Reads and returns value in RSR (Received Status Register).
+ 470:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sent base address of the SENT register space
+ 471:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param channelId SENT channel number
+ 472:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return Returns 32 bit RSR
+ 473:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 474:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE uint32 IfxSent_readReceivedStatus(Ifx_SENT *sent, IfxSent_ChannelId channelId);
+ 475:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 476:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Returns 4 bit CRC value in Receive Status Register
+ 477:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sent base address of the SENT register space
+ 478:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param channelId SENT channel number
+ 479:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return 4 bit CRC
+ 480:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 481:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE uint8 IfxSent_readReceivedCrc(Ifx_SENT *sent, IfxSent_ChannelId channelId);
+ 482:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 483:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Returns 2 bit CST value in Receive Status Register
+ 484:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sent base address of the SENT register space
+ 485:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param channelId SENT channel number
+ 486:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return 2 bit CST
+ 487:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 488:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE uint8 IfxSent_readReceivedChannelStatus(Ifx_SENT *sent, IfxSent_ChannelId channelId);
+ 489:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 490:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Returns 4 bit SCN value in Receive Status Register
+ 491:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sent base address of the SENT register space
+ 492:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param channelId SENT channel number
+ 493:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return 4 bit SCN
+ 494:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 495:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE uint8 IfxSent_readReceivedStatusAndCommunicationNibble(Ifx_SENT *sent, IfxSent_ChannelId
+ 496:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 497:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Returns 32 bit Received Time Stamp Value
+ 498:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sent base address of the SENT register space
+ 499:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param channelId SENT channel number
+ 500:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return 32 bit Time Stamp
+ 501:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 502:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE uint32 IfxSent_readReceivedTimeStamp(Ifx_SENT *sent, IfxSent_ChannelId channelId);
+ 503:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 504:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Returns 6 bit PLEN value in SCR Register
+ 505:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sent base address of the SENT register space
+ 506:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param channelId SENT channel number
+ 507:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return 6 bit PLEN
+ 508:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 509:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE uint8 IfxSent_readSpcPulseLength(Ifx_SENT *sent, IfxSent_ChannelId channelId);
+ 510:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 511:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Returns 6 bit Delay length value in SCR Register
+ 512:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sent base address of the SENT register space
+ 513:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param channelId SENT channel number
+ 514:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return 6 bit DEL
+ 515:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 516:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE uint8 IfxSent_readSpcDelayLength(Ifx_SENT *sent, IfxSent_ChannelId channelId);
+ 517:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 518:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Set External Trigger Select
+ 519:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sent base address of the SENT register space
+ 520:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param channelId SENT channel number
+ 521:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param triggerLine external (GTM/eGTM) trigger line
+ 522:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return None
+ 523:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 524:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE void IfxSent_setExternalTriggerSelect(Ifx_SENT *sent, IfxSent_ChannelId channelId, IfxSe
+ 525:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 526:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /******************************************************************************/
+ 527:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /*-------------------------Global Function Prototypes-------------------------*/
+ 528:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /******************************************************************************/
+ 529:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 530:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Resets the SENT module
+ 531:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sent base address of the SENT register space
+ 532:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return None
+ 533:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 534:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_EXTERN void IfxSent_resetModule(Ifx_SENT *sent);
+ 535:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 536:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Returns the current module frequency in Hertz.
+ 537:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sent base address of the SENT register space
+ 538:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return The current module frequency in Hertz
+ 539:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 540:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_EXTERN float32 IfxSent_getModuleClock(Ifx_SENT *sent);
+ 541:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 542:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Initializes the desired unit time (f_tick) for the external SENT device connected to the
+ 543:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sent base address of the SENT register space
+ 544:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param channelId SENT channel number
+ 545:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param tUnit desired unit time (f_tick), e.g. 3E-6 for 3 uS
+ 546:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return None
+ 547:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 548:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_EXTERN void IfxSent_initializeChannelUnitTime(Ifx_SENT *sent, IfxSent_ChannelId channelId, floa
+ 549:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 550:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Initialize and get the clock for SENT kernel
+ 551:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sent base address of the SENT register space
+ 552:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param dividerMode Divider mode for clock output
+ 553:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param stepValue clock frequency for module fractional divider
+ 554:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return None
+ 555:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 556:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_EXTERN void IfxSent_initializeModuleClock(Ifx_SENT *sent, IfxSent_ClockDividerMode dividerMode,
+ 557:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 558:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Returns the current unit time (f_tick) of the given channel
+ 559:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sent base address of the SENT register space
+ 560:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param channelId SENT channel number
+ 561:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return The current unit time in seconds
+ 562:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 563:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_EXTERN float32 IfxSent_getChannelUnitTime(Ifx_SENT *sent, IfxSent_ChannelId channelId);
+ 564:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 565:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Initialize the PROTs and APUs with default configuration
+ 566:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param config Configuration pointer for the Access Protection
+ 567:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return None
+ 568:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 569:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_EXTERN void IfxSent_initApConfig(IfxSent_ApConfig *config);
+ 570:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 571:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Initialize the PROTs and all 5 APU register set
+ 572:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sent base address of the SENT register space
+ 573:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param config Configuration pointer to the AP configuration structure
+ 574:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return None
+ 575:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 576:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_EXTERN void IfxSent_initAp(Ifx_SENT *sent, IfxSent_ApConfig *config);
+ 577:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 578:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief Configures access to all masters to all the SENTs in the device
+ 579:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param apConfig config pointer to configuration structure.
+ 580:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return None
+ 581:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 582:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_EXTERN void IfxSent_configureAccessToSents(IfxApApu_ApuConfig *apConfig);
+ 583:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 584:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /** \brief get the channel status
+ 585:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param sent base address of the SENT register space
+ 586:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \param channelId SENT channel number
+ 587:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  * \return Channel status
+ 588:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****  */
+ 589:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_EXTERN IfxSent_ChannelStatus IfxSent_getChannelStatus(Ifx_SENT *sent, IfxSent_ChannelId channel
+ 590:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 591:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /******************************************************************************/
+ 592:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /*---------------------Inline Function Implementations------------------------*/
+ 593:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** /******************************************************************************/
+ 594:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 595:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE void IfxSent_setAltiInput(Ifx_SENT *sent, IfxSent_ChannelId channelId, IfxSent_Alternate
+ 596:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** {
+ 597:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     sent->CH[channelId].IOCR.B.ALTI = alternateInput;
+ 598:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** }
+ 599:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 600:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 601:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE void IfxSent_setTimeStampPredivider(Ifx_SENT *sent, uint32 timeStampPreDivider)
+ 602:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** {
+ 603:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     sent->TPD.B.TDIV = timeStampPreDivider;
+ 604:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** }
+ 605:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 606:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 607:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE Ifx_SENT_CH_INTSTAT IfxSent_getAndClearInterruptStatus(Ifx_SENT *sent, IfxSent_ChannelId
+ 608:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** {
+ 609:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     Ifx_SENT_CH_INTSTAT interruptFlags;
+ 610:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     interruptFlags.U             = sent->CH[channelId].INTSTAT.U;
+ 611:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     sent->CH[channelId].INTCLR.U = interruptFlags.U;
+ 612:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     return interruptFlags;
+ 613:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** }
+ 614:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 615:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 616:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE Ifx_SENT_CH_INTSTAT IfxSent_getChannelInterruptStatus(Ifx_SENT *sent, IfxSent_ChannelId 
+ 617:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** {
+ 618:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     Ifx_SENT_CH_INTSTAT interruptFlags;
+ 619:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     interruptFlags.U = sent->CH[channelId].INTSTAT.U;
+ 620:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     return interruptFlags;
+ 621:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** }
+ 622:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 623:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 624:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE volatile Ifx_SRC_SRCR *IfxSent_getChannelSrc(Ifx_SENT *sent, IfxSent_ChannelId channelId
+ 625:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** {
+ 626:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     Ifx_SENT_CH_INP tempINP;
+ 627:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     Ifx_SRC_SRCR   *sentSrc = NULL_PTR;
+ 628:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 629:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     if (sent == &MODULE_SENT0)
+ 630:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     {
+ 631:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****         tempINP.U = MODULE_SENT0.CH[channelId].INP.U;
+ 632:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****         sentSrc   = (Ifx_SRC_SRCR *)&(MODULE_SRC.SENT[0].SR[tempINP.B.RSI]);
+ 633:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     }
+ 634:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 635:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** #if IFXSENT_NUM_MODULES > 1
+ 636:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     else
+ 637:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     {
+ 638:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****         tempINP.U = MODULE_SENT1.CH[channelId].INP.U;
+ 639:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****         sentSrc   = (Ifx_SRC_SRCR *)&(MODULE_SRC.SENT[1].SR[tempINP.B.RSI]);
+ 640:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     }
+ 641:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** #endif
+ 642:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     return sentSrc;
+ 643:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** }
+ 644:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 645:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 646:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE void IfxSent_disableChannel(Ifx_SENT *sent, IfxSent_ChannelId channelId)
+ 647:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** {
+ 648:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     sent->CH[channelId].RCR.B.CEN = 0;
+ 649:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** }
+ 650:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 651:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 652:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE void IfxSent_disableModule(Ifx_SENT *sent)
+ 653:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** {
+ 654:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** #if (IFX_PROT_ENABLED == 1U)
+ 655:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxApProt_setState((Ifx_PROT_PROT *)&sent->PROTE, IfxApProt_State_config);
+ 656:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** #endif
+ 657:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     sent->CLC.B.DISR = 1;
+ 658:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** #if (IFX_PROT_ENABLED == 1U)
+ 659:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxApProt_setState((Ifx_PROT_PROT *)&sent->PROTE, IfxApProt_State_run);
+ 660:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** #endif
+ 661:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** }
+ 662:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 663:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 664:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE void IfxSent_enableChannel(Ifx_SENT *sent, IfxSent_ChannelId channelId)
+ 665:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** {
+ 666:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     sent->CH[channelId].RCR.B.CEN = 1;
+ 667:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** }
+ 668:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 669:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 670:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE void IfxSent_enableModule(Ifx_SENT *sent)
+ 671:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** {
+ 672:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** #if (IFX_PROT_ENABLED == 1U)
+ 673:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxApProt_setState((Ifx_PROT_PROT *)&sent->PROTE, IfxApProt_State_config);
+ 674:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** #endif
+ 675:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     sent->CLC.B.DISR = 0;
+ 676:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** #if (IFX_PROT_ENABLED == 1U)
+ 677:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxApProt_setState((Ifx_PROT_PROT *)&sent->PROTE, IfxApProt_State_run);
+ 678:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** #endif
+ 679:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 680:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     if (sent->CLC.U)
+ 681:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     {}
+ 682:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** }
+ 683:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 684:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 685:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE boolean IfxSent_isModuleSuspended(Ifx_SENT *sent)
+ 686:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** {
+ 687:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     Ifx_SENT_OCS ocs;
+ 688:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 689:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     // read the status
+ 690:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     ocs.U = sent->OCS.U;
+ 691:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 692:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     // return the status
+ 693:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     return ocs.B.SUSSTA;
+ 694:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** }
+ 695:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 696:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 697:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE void IfxSent_setSleepMode(Ifx_SENT *sent, IfxSent_SleepMode mode)
+ 698:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** {
+ 699:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** #if (IFX_PROT_ENABLED == 1U)
+ 700:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxApProt_setState((Ifx_PROT_PROT *)&sent->PROTE, IfxApProt_State_config);
+ 701:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** #endif
+ 702:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     sent->CLC.B.EDIS = mode;
+ 703:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** #if (IFX_PROT_ENABLED == 1U)
+ 704:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     IfxApProt_setState((Ifx_PROT_PROT *)&sent->PROTE, IfxApProt_State_run);
+ 705:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** #endif
+ 706:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** }
+ 707:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 708:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 709:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE void IfxSent_setSuspendMode(Ifx_SENT *sent, IfxSent_SuspendMode mode)
+ 710:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** {
+ 711:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     Ifx_SENT_OCS ocs;
+ 712:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 713:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     // remove protection and configure the suspend mode.
+ 714:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     ocs.B.SUS_P = 1;
+ 715:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     ocs.B.SUS   = mode;
+ 716:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     sent->OCS.U = ocs.U;
+ 717:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** }
+ 718:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 719:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 720:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE void IfxSent_setChannelFractionalDivider(Ifx_SENT *sent, IfxSent_ChannelId channelId, ui
+ 721:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** {
+ 722:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     sent->CH[channelId].CFDR.B.DIV = divider;
+ 723:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** }
+ 724:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 725:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** 
+ 726:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** IFX_INLINE void IfxSent_setChannelPreDivider(Ifx_SENT *sent, IfxSent_ChannelId channelId, uint16 pr
+ 727:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** {
+ 728:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h ****     sent->CH[channelId].CPDR.B.PDIV = preDivider;
+ 224              	 .loc 2 728 5 is_stmt 1
+ 225              	 .loc 2 728 37 is_stmt 0
+ 226 006c 1B480020 	 addi %d2,%d8,4
+ 227 0070 0662     	 sh %d2,6
+ 228 0072 60A2     	 mov.a %a2,%d10
+ 229 0074 01220026 	 addsc.a %a2,%a2,%d2,0
+ 230 0078 5422     	 ld.w %d2,[%a2]0
+ 231 007a 37320C20 	 insert %d2,%d2,%d3,0,12
+ 232 007e 7422     	 st.w [%a2]0,%d2
+ 233              	.LVL26:
+ 234              	.LBE7:
+ 235              	.LBE6:
+ 121:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     IfxSent_setChannelFractionalDivider(sent, channelId, (uint16)fDiv);
+ 236              	 .loc 1 121 5 is_stmt 1
+ 237              	.LBB8:
+ 238              	.LBB9:
+ 722:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** }
+ 239              	 .loc 2 722 5
+ 722:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h **** }
+ 240              	 .loc 2 722 36 is_stmt 0
+ 241 0080 0668     	 sh %d8,6
+ 242              	.LVL27:
+ 243 0082 60A2     	 mov.a %a2,%d10
+ 244 0084 01280046 	 addsc.a %a4,%a2,%d8,0
+ 245 0088 D9420440 	 lea %a2,[%a4]260
+ 246 008c 19420440 	 ld.w %d2,[%a4]260
+ 247 0090 37621020 	 insert %d2,%d2,%d6,0,16
+ 248 0094 7422     	 st.w [%a2]0,%d2
+ 249              	.LVL28:
+ 250              	.LBE9:
+ 251              	.LBE8:
+ 122:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** }
+ 252              	 .loc 1 122 1
+ 253 0096 0090     	 ret 
+ 254              	.LFE359:
+ 256              	 .global IfxSent_initializeChannelUnitTime_end
+ 257              	IfxSent_initializeChannelUnitTime_end:
+ 258              	 .section .text.IfxSent_initializeModuleClock,"ax",@progbits
+ 259              	 .align 1
+ 260              	 .global IfxSent_initializeModuleClock
+ 262              	IfxSent_initializeModuleClock:
+ 263              	.LFB360:
+ 123:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+ 124:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+ 125:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** void IfxSent_initializeModuleClock(Ifx_SENT *sent, IfxSent_ClockDividerMode dividerMode, uint16 ste
+ 126:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** {
+ 264              	 .loc 1 126 1 is_stmt 1
+ 265              	.LVL29:
+ 266 0000 40AE     	 mov.aa %a14,%SP
+ 267              	.LCFI3:
+ 127:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     Ifx_SENT_FDR tempFDR;
+ 268              	 .loc 1 127 5
+ 128:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     tempFDR.U      = 0;
+ 269              	 .loc 1 128 5
+ 270              	 .loc 1 128 20 is_stmt 0
+ 271 0002 8202     	 mov %d2,0
+ 272              	.LVL30:
+ 129:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     tempFDR.B.STEP = stepValue;
+ 273              	 .loc 1 129 5 is_stmt 1
+ 274              	 .loc 1 129 20 is_stmt 0
+ 275 0004 37520A20 	 insert %d2,%d2,%d5,0,10
+ 276              	.LVL31:
+ 130:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     tempFDR.B.DM   = dividerMode;
+ 277              	 .loc 1 130 5 is_stmt 1
+ 278              	 .loc 1 130 20 is_stmt 0
+ 279 0008 37420227 	 insert %d2,%d2,%d4,14,2
+ 131:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     sent->FDR.U    = tempFDR.U;
+ 280              	 .loc 1 131 5 is_stmt 1
+ 281              	 .loc 1 131 20 is_stmt 0
+ 282 000c 59420010 	 st.w [%a4]64,%d2
+ 132:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** }
+ 283              	 .loc 1 132 1
+ 284 0010 0090     	 ret 
+ 285              	.LFE360:
+ 287              	 .global IfxSent_initializeModuleClock_end
+ 288              	IfxSent_initializeModuleClock_end:
+ 289              	 .section .text.IfxSent_getChannelUnitTime,"ax",@progbits
+ 290              	 .align 1
+ 291              	 .global IfxSent_getChannelUnitTime
+ 293              	IfxSent_getChannelUnitTime:
+ 294              	.LFB361:
+ 133:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+ 134:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+ 135:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** float32 IfxSent_getChannelUnitTime(Ifx_SENT *sent, IfxSent_ChannelId channelId)
+ 136:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** {
+ 295              	 .loc 1 136 1 is_stmt 1
+ 296              	.LVL32:
+ 297 0000 40AE     	 mov.aa %a14,%SP
+ 298              	.LCFI4:
+ 299 0002 8049     	 mov.d %d9,%a4
+ 300 0004 0248     	 mov %d8,%d4
+ 137:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     float32 fFracDiv = IfxSent_getModuleClock(sent);
+ 301              	 .loc 1 137 5
+ 302              	 .loc 1 137 24 is_stmt 0
+ 303 0006 6D000000 	 call IfxSent_getModuleClock
+ 304              	.LVL33:
+ 138:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     float32 fPdiv    = fFracDiv / (float32)(sent->CH[channelId].CPDR.B.PDIV + 1);
+ 305              	 .loc 1 138 5 is_stmt 1
+ 306              	 .loc 1 138 71 is_stmt 0
+ 307 000a 1B480030 	 addi %d3,%d8,4
+ 308 000e 0663     	 sh %d3,6
+ 309 0010 6092     	 mov.a %a2,%d9
+ 310 0012 01230026 	 addsc.a %a2,%a2,%d3,0
+ 311 0016 5423     	 ld.w %d3,[%a2]0
+ 312 0018 B7031436 	 insert %d3,%d3,0,12,20
+ 313              	 .loc 1 138 77
+ 314 001c C213     	 add %d3,1
+ 315              	 .loc 1 138 35
+ 316 001e 4B034131 	 itof %d3,%d3
+ 317              	 .loc 1 138 13
+ 318 0022 4B325120 	 div.f %d2,%d2,%d3
+ 319              	.LVL34:
+ 139:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+ 140:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     uint32  div      = sent->CH[channelId].CFDR.B.DIV;
+ 320              	 .loc 1 140 5 is_stmt 1
+ 321              	 .loc 1 140 50 is_stmt 0
+ 322 0026 0668     	 sh %d8,6
+ 323              	.LVL35:
+ 324 0028 6092     	 mov.a %a2,%d9
+ 325 002a 01280046 	 addsc.a %a4,%a2,%d8,0
+ 326 002e 19430440 	 ld.w %d3,[%a4]260
+ 327 0032 37037030 	 extr.u %d3,%d3,0,16
+ 328              	.LVL36:
+ 141:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+ 142:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     if (div > 0)
+ 329              	 .loc 1 142 5 is_stmt 1
+ 330              	 .loc 1 142 8 is_stmt 0
+ 331 0036 DF030000 	 jz %d3,.L16
+ 332              	.LBB10:
+ 143:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     {
+ 144:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****         float32 fTick = (fPdiv * 56) / div;
+ 333              	 .loc 1 144 9 is_stmt 1
+ 334              	 .loc 1 144 32 is_stmt 0
+ 335 003a 7B002644 	 movh %d4,16992
+ 336 003e 4B424140 	 mul.f %d4,%d2,%d4
+ 337              	 .loc 1 144 38
+ 338 0042 4B036121 	 utof %d2,%d3
+ 339              	.LVL37:
+ 340              	 .loc 1 144 17
+ 341 0046 4B245120 	 div.f %d2,%d4,%d2
+ 342              	.LVL38:
+ 145:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****         return 1 / fTick;
+ 343              	 .loc 1 145 9 is_stmt 1
+ 344              	 .loc 1 145 18 is_stmt 0
+ 345 004a 7B00F833 	 movh %d3,16256
+ 346              	.LVL39:
+ 347 004e 4B235120 	 div.f %d2,%d3,%d2
+ 348              	.LVL40:
+ 349 0052 0090     	 ret 
+ 350              	.LVL41:
+ 351              	.L16:
+ 352              	.LBE10:
+ 146:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     }
+ 147:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     else
+ 148:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     {
+ 149:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****         return 0.0f;
+ 353              	 .loc 1 149 16
+ 354 0054 8202     	 mov %d2,0
+ 355              	.LVL42:
+ 150:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     }
+ 151:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** }
+ 356              	 .loc 1 151 1
+ 357 0056 0090     	 ret 
+ 358              	.LFE361:
+ 360              	 .global IfxSent_getChannelUnitTime_end
+ 361              	IfxSent_getChannelUnitTime_end:
+ 362              	 .section .text.IfxSent_initApConfig,"ax",@progbits
+ 363              	 .align 1
+ 364              	 .global IfxSent_initApConfig
+ 366              	IfxSent_initApConfig:
+ 367              	.LFB362:
+ 152:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+ 153:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+ 154:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** void IfxSent_initApConfig(IfxSent_ApConfig *config)
+ 155:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** {
+ 368              	 .loc 1 155 1 is_stmt 1
+ 369              	.LVL43:
+ 370 0000 40AE     	 mov.aa %a14,%SP
+ 371              	.LCFI5:
+ 372 0002 404C     	 mov.aa %a12,%a4
+ 156:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     IfxApProt_initConfig(&config->proteConfig);
+ 373              	 .loc 1 156 5
+ 374 0004 6D000000 	 call IfxApProt_initConfig
+ 375              	.LVL44:
+ 157:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     IfxApProt_initConfig(&config->protseConfig);
+ 376              	 .loc 1 157 5
+ 377 0008 D9C41400 	 lea %a4,[%a12]20
+ 378 000c 6D000000 	 call IfxApProt_initConfig
+ 379              	.LVL45:
+ 158:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     IfxApApu_initConfig(&config->apuConfig);
+ 380              	 .loc 1 158 5
+ 381 0010 D9C42800 	 lea %a4,[%a12]40
+ 382 0014 6D000000 	 call IfxApApu_initConfig
+ 383              	.LVL46:
+ 159:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** }
+ 384              	 .loc 1 159 1 is_stmt 0
+ 385 0018 0090     	 ret 
+ 386              	.LFE362:
+ 388              	 .global IfxSent_initApConfig_end
+ 389              	IfxSent_initApConfig_end:
+ 390              	 .section .text.IfxSent_initAp,"ax",@progbits
+ 391              	 .align 1
+ 392              	 .global IfxSent_initAp
+ 394              	IfxSent_initAp:
+ 395              	.LFB363:
+ 160:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+ 161:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+ 162:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** void IfxSent_initAp(Ifx_SENT *sent, IfxSent_ApConfig *config)
+ 163:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** {
+ 396              	 .loc 1 163 1 is_stmt 1
+ 397              	.LVL47:
+ 398 0000 40AE     	 mov.aa %a14,%SP
+ 399              	.LCFI6:
+ 400 0002 404C     	 mov.aa %a12,%a4
+ 401 0004 405D     	 mov.aa %a13,%a5
+ 164:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     /* Initialize the PROTs */
+ 165:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     IfxApProt_init((Ifx_PROT_PROT *)&sent->PROTE, &config->proteConfig);
+ 402              	 .loc 1 165 5
+ 403 0006 D9441800 	 lea %a4,[%a4]24
+ 404              	.LVL48:
+ 405 000a 6D000000 	 call IfxApProt_init
+ 406              	.LVL49:
+ 166:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     IfxApProt_init((Ifx_PROT_PROT *)&sent->PROTSE, &config->protseConfig);
+ 407              	 .loc 1 166 5
+ 408              	 .loc 1 166 37 is_stmt 0
+ 409 000e 80C2     	 mov.d %d2,%a12
+ 410 0010 1BC20180 	 addi %d8,%d2,28
+ 411              	 .loc 1 166 5
+ 412 0014 D9D51400 	 lea %a5,[%a13]20
+ 413 0018 6084     	 mov.a %a4,%d8
+ 414 001a 6D000000 	 call IfxApProt_init
+ 415              	.LVL50:
+ 167:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+ 168:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     /* Change the state to CONFIG, Configure APU and set PROT state back to RUN */
+ 169:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     /* Initialize the APU */
+ 170:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&sent->PROTSE, IfxApProt_State_config);
+ 416              	 .loc 1 170 5 is_stmt 1
+ 417 001e 8214     	 mov %d4,1
+ 418 0020 6084     	 mov.a %a4,%d8
+ 419 0022 6D000000 	 call IfxApProt_setState
+ 420              	.LVL51:
+ 171:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     IfxApApu_init((Ifx_ACCEN_ACCEN *)&sent->ACCEN, &config->apuConfig);
+ 421              	 .loc 1 171 5
+ 422 0026 D9D52800 	 lea %a5,[%a13]40
+ 423 002a D9C42000 	 lea %a4,[%a12]32
+ 424 002e 6D000000 	 call IfxApApu_init
+ 425              	.LVL52:
+ 172:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&sent->PROTSE, IfxApProt_State_run);
+ 426              	 .loc 1 172 5
+ 427 0032 8244     	 mov %d4,4
+ 428 0034 6084     	 mov.a %a4,%d8
+ 429 0036 6D000000 	 call IfxApProt_setState
+ 430              	.LVL53:
+ 173:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** }
+ 431              	 .loc 1 173 1 is_stmt 0
+ 432 003a 0090     	 ret 
+ 433              	.LFE363:
+ 435              	 .global IfxSent_initAp_end
+ 436              	IfxSent_initAp_end:
+ 437              	 .section .text.IfxSent_configureAccessToSents,"ax",@progbits
+ 438              	 .align 1
+ 439              	 .global IfxSent_configureAccessToSents
+ 441              	IfxSent_configureAccessToSents:
+ 442              	.LFB364:
+ 174:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+ 175:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+ 176:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** void IfxSent_configureAccessToSents(IfxApApu_ApuConfig *apConfig)
+ 177:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** {
+ 443              	 .loc 1 177 1 is_stmt 1
+ 444              	.LVL54:
+ 445 0000 40AE     	 mov.aa %a14,%SP
+ 446              	.LCFI7:
+ 447 0002 8049     	 mov.d %d9,%a4
+ 178:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     uint8 index;
+ 448              	 .loc 1 178 5
+ 179:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+ 180:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     for (index = 0; index < 2; index++)
+ 449              	 .loc 1 180 5
+ 450              	.LVL55:
+ 451              	 .loc 1 180 16 is_stmt 0
+ 452 0004 8208     	 mov %d8,0
+ 453              	 .loc 1 180 5
+ 454 0006 1D000000 	 j .L20
+ 455              	.LVL56:
+ 456              	.L21:
+ 457              	.LBB11:
+ 181:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     {
+ 182:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****         Ifx_SENT *sent = (Ifx_SENT *)(((uint32)&MODULE_SENT0) + index * ((uint32)&MODULE_SENT1 - (u
+ 458              	 .loc 1 182 9 is_stmt 1 discriminator 3
+ 459              	 .loc 1 182 63 is_stmt 0 discriminator 3
+ 460 000a 7BF00020 	 movh %d2,15
+ 461 000e 1B324024 	 addi %d2,%d2,17411
+ 462 0012 4282     	 add %d2,%d8
+ 463 0014 8FC20020 	 sh %d2,%d2,12
+ 464              	.LVL57:
+ 183:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****         IfxApApu_init((Ifx_ACCEN_ACCEN *)&sent->ACCEN, apConfig);
+ 465              	 .loc 1 183 9 is_stmt 1 discriminator 3
+ 466 0018 6095     	 mov.a %a5,%d9
+ 467 001a 6022     	 mov.a %a2,%d2
+ 468 001c D9242000 	 lea %a4,[%a2]32
+ 469 0020 6D000000 	 call IfxApApu_init
+ 470              	.LVL58:
+ 471              	.LBE11:
+ 180:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     {
+ 472              	 .loc 1 180 37 discriminator 3
+ 473 0024 C218     	 add %d8,1
+ 474              	.LVL59:
+ 475 0026 8FF80F81 	 and %d8,%d8,255
+ 476              	.LVL60:
+ 477              	.L20:
+ 180:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     {
+ 478              	 .loc 1 180 27 discriminator 1
+ 479 002a BF280080 	 jlt.u %d8,2,.L21
+ 184:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     }
+ 185:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** }
+ 480              	 .loc 1 185 1 is_stmt 0
+ 481 002e 0090     	 ret 
+ 482              	.LFE364:
+ 484              	 .global IfxSent_configureAccessToSents_end
+ 485              	IfxSent_configureAccessToSents_end:
+ 486              	 .section .text.IfxSent_getChannelStatus,"ax",@progbits
+ 487              	 .align 1
+ 488              	 .global IfxSent_getChannelStatus
+ 490              	IfxSent_getChannelStatus:
+ 491              	.LFB365:
+ 186:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+ 187:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** 
+ 188:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** IfxSent_ChannelStatus IfxSent_getChannelStatus(Ifx_SENT *sent, IfxSent_ChannelId channelId)
+ 189:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** {
+ 492              	 .loc 1 189 1 is_stmt 1
+ 493              	.LVL61:
+ 494 0000 40AE     	 mov.aa %a14,%SP
+ 495              	.LCFI8:
+ 190:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c ****     return (IfxSent_ChannelStatus)(sent->CH[channelId].RSR.B.CST);
+ 496              	 .loc 1 190 5
+ 497              	 .loc 1 190 61 is_stmt 0
+ 498 0002 0664     	 sh %d4,6
+ 499              	.LVL62:
+ 500 0004 01440046 	 addsc.a %a4,%a4,%d4,0
+ 501              	.LVL63:
+ 502 0008 19420C40 	 ld.w %d2,[%a4]268
+ 191:../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.c **** }
+ 503              	 .loc 1 191 1
+ 504 000c 37026222 	 extr.u %d2,%d2,4,2
+ 505 0010 0090     	 ret 
+ 506              	.LFE365:
+ 508              	 .global IfxSent_getChannelStatus_end
+ 509              	IfxSent_getChannelStatus_end:
+ 634              	.Letext0:
+ 635              	 .file 3 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 636              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 637              	 .file 5 "../Libraries/Infra/Sfr/TC4Dx/IfxSent_regdef.h"
+ 638              	 .file 6 "../Libraries/iLLD/TC4xx/Tricore/_Impl/TC4Dx/IfxSent_cfg_TC4Dx.h"
+ 639              	 .file 7 "../Libraries/iLLD/TC4xx/CpuGeneric/_Impl/TC4Dx/IfxAp_cfg_TC4Dx.h"
+ 640              	 .file 8 "../Libraries/iLLD/TC4xx/CpuGeneric/Ap/IfxProt_regdef.h"
+ 641              	 .file 9 "../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h"
+ 642              	 .file 10 "../Libraries/iLLD/TC4xx/CpuGeneric/Ap/IfxAccen_regdef.h"
+ 643              	 .file 11 "../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h"
+ 644              	 .file 12 "../Libraries/iLLD/TC4xx/CpuGeneric/Clock/Std/IfxClock.h"
+ 11640 0000 00000000 	 .word IfxSent_resetModule
+ 11641 0004 00000000 	 .word IfxSent_resetModule_end
+ 11642 0008 04001444 	 .word 0x44140004
+ 11643 000c 00001000 	 .word 0x00100000
+ 11644 0010 00000000 	 .word 0x00000000
+ 11645 0014 C0000000 	 .word 0x000000c0
+ 11646 0018 00000000 	 .word IfxSent_getModuleClock
+ 11647 001c 00000000 	 .word IfxSent_getModuleClock_end
+ 11648 0020 7C001454 	 .word 0x5414007c
+ 11649 0024 00001000 	 .word 0x00100000
+ 11650 0028 04000000 	 .word 0x00000004
+ 11651 002c 40000200 	 .word 0x00020040
+ 11652 0030 00000000 	 .word IfxSent_initializeChannelUnitTime
+ 11653 0034 00000000 	 .word IfxSent_initializeChannelUnitTime_end
+ 11654 0038 7C071444 	 .word 0x4414077c
+ 11655 003c 30001000 	 .word 0x00100030
+ 11656 0040 00000000 	 .word 0x00000000
+ 11657 0044 40000200 	 .word 0x00020040
+ 11658 0048 00000000 	 .word IfxSent_initializeModuleClock
+ 11659 004c 00000000 	 .word IfxSent_initializeModuleClock_end
+ 11660 0050 34001444 	 .word 0x44140034
+ 11661 0054 30001000 	 .word 0x00100030
+ 11662 0058 00000000 	 .word 0x00000000
+ 11663 005c C0000000 	 .word 0x000000c0
+ 11664 0060 00000000 	 .word IfxSent_getChannelUnitTime
+ 11665 0064 00000000 	 .word IfxSent_getChannelUnitTime_end
+ 11666 0068 1C031444 	 .word 0x4414031c
+ 11667 006c 10001000 	 .word 0x00100010
+ 11668 0070 04000000 	 .word 0x00000004
+ 11669 0074 40000200 	 .word 0x00020040
+ 11670 0078 00000000 	 .word IfxSent_initApConfig
+ 11671 007c 00000000 	 .word IfxSent_initApConfig_end
+ 11672 0080 00001054 	 .word 0x54100000
+ 11673 0084 00001000 	 .word 0x00100000
+ 11674 0088 00000000 	 .word 0x00000000
+ 11675 008c 40000200 	 .word 0x00020040
+ 11676 0090 00000000 	 .word IfxSent_initAp
+ 11677 0094 00000000 	 .word IfxSent_initAp_end
+ 11678 0098 14013074 	 .word 0x74300114
+ 11679 009c 00003000 	 .word 0x00300000
+ 11680 00a0 00000000 	 .word 0x00000000
+ 11681 00a4 40000200 	 .word 0x00020040
+ 11682 00a8 00000000 	 .word IfxSent_configureAccessToSents
+ 11683 00ac 00000000 	 .word IfxSent_configureAccessToSents_end
+ 11684 00b0 04033444 	 .word 0x44340304
+ 11685 00b4 00001000 	 .word 0x00100000
+ 11686 00b8 00000000 	 .word 0x00000000
+ 11687 00bc 40000200 	 .word 0x00020040
+ 11688 00c0 00000000 	 .word IfxSent_getChannelStatus
+ 11689 00c4 00000000 	 .word IfxSent_getChannelStatus_end
+ 11690 00c8 14001444 	 .word 0x44140014
+ 11691 00cc 10001000 	 .word 0x00100010
+ 11692 00d0 04000000 	 .word 0x00000004
+ 11693 00d4 C0000000 	 .word 0x000000c0
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxSent.c
+                            *ABS*:00000000 IfxSent.c
+    {standard input}:10     .text.IfxSent_resetModule:00000000 IfxSent_resetModule
+    {standard input}:56     .text.IfxSent_resetModule:0000003e IfxSent_resetModule_end
+    {standard input}:61     .text.IfxSent_getModuleClock:00000000 IfxSent_getModuleClock
+    {standard input}:134    .text.IfxSent_getModuleClock:0000005c IfxSent_getModuleClock_end
+    {standard input}:139    .text.IfxSent_initializeChannelUnitTime:00000000 IfxSent_initializeChannelUnitTime
+    {standard input}:257    .text.IfxSent_initializeChannelUnitTime:00000098 IfxSent_initializeChannelUnitTime_end
+    {standard input}:262    .text.IfxSent_initializeModuleClock:00000000 IfxSent_initializeModuleClock
+    {standard input}:288    .text.IfxSent_initializeModuleClock:00000012 IfxSent_initializeModuleClock_end
+    {standard input}:293    .text.IfxSent_getChannelUnitTime:00000000 IfxSent_getChannelUnitTime
+    {standard input}:361    .text.IfxSent_getChannelUnitTime:00000058 IfxSent_getChannelUnitTime_end
+    {standard input}:366    .text.IfxSent_initApConfig:00000000 IfxSent_initApConfig
+    {standard input}:389    .text.IfxSent_initApConfig:0000001a IfxSent_initApConfig_end
+    {standard input}:394    .text.IfxSent_initAp:00000000 IfxSent_initAp
+    {standard input}:436    .text.IfxSent_initAp:0000003c IfxSent_initAp_end
+    {standard input}:441    .text.IfxSent_configureAccessToSents:00000000 IfxSent_configureAccessToSents
+    {standard input}:485    .text.IfxSent_configureAccessToSents:00000030 IfxSent_configureAccessToSents_end
+    {standard input}:490    .text.IfxSent_getChannelStatus:00000000 IfxSent_getChannelStatus
+    {standard input}:509    .text.IfxSent_getChannelStatus:00000012 IfxSent_getChannelStatus_end
+
+UNDEFINED SYMBOLS
+IfxClock_getSpbFrequency
+IfxApProt_initConfig
+IfxApApu_initConfig
+IfxApProt_init
+IfxApProt_setState
+IfxApApu_init

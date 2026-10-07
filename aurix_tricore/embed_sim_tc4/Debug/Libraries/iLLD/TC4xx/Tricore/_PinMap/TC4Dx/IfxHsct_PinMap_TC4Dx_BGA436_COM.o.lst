@@ -1,0 +1,146 @@
+   1              	
+   2              	 .file "IfxHsct_PinMap_TC4Dx_BGA436_COM.c"
+   3              	 .file "IfxHsct_PinMap_TC4Dx_BGA436_COM.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .global IfxHsct_Txdp_Out_pinTable
+   7              	 .section .data.IfxHsct_Txdp_Out_pinTable,"aw"
+   8              	 .align 2
+  11              	IfxHsct_Txdp_Out_pinTable:
+  12 0000 00000000 	 .word IfxHsct_TXDP_P21_5_OUT
+  13 0004 00000000 	 .word IfxHsct_TXDP_P22_3_OUT
+  14              	 .global IfxHsct_Txdn_Out_pinTable
+  15              	 .section .data.IfxHsct_Txdn_Out_pinTable,"aw"
+  16              	 .align 2
+  19              	IfxHsct_Txdn_Out_pinTable:
+  20 0000 00000000 	 .word IfxHsct_TXDN_P21_4_OUT
+  21 0004 00000000 	 .word IfxHsct_TXDN_P22_2_OUT
+  22              	 .global IfxHsct_Sysclk_Out_pinTable
+  23              	 .section .data.IfxHsct_Sysclk_Out_pinTable,"aw"
+  24              	 .align 2
+  27              	IfxHsct_Sysclk_Out_pinTable:
+  28 0000 00000000 	 .word IfxHsct_SYSCLK_OUT_P20_0_OUT
+  29 0004 00000000 	 .word 0
+  30              	 .global IfxHsct_Rxdp_In_pinTable
+  31              	 .section .data.IfxHsct_Rxdp_In_pinTable,"aw"
+  32              	 .align 2
+  35              	IfxHsct_Rxdp_In_pinTable:
+  36 0000 00000000 	 .word IfxHsct_RXDP_P21_3_IN
+  37 0004 00000000 	 .word IfxHsct_RXDP_P21_1_IN
+  38              	 .global IfxHsct_Rxdn_In_pinTable
+  39              	 .section .data.IfxHsct_Rxdn_In_pinTable,"aw"
+  40              	 .align 2
+  43              	IfxHsct_Rxdn_In_pinTable:
+  44 0000 00000000 	 .word IfxHsct_RXDN_P21_2_IN
+  45 0004 00000000 	 .word IfxHsct_RXDN_P21_0_IN
+  46              	 .global IfxHsct_TXDP_P22_3_OUT
+  47              	 .section .rodata.IfxHsct_TXDP_P22_3_OUT,"a"
+  48              	 .align 2
+  51              	IfxHsct_TXDP_P22_3_OUT:
+  52 0000 00004BF4 	 .word -196411392
+  53 0004 00F803F0 	 .word -268175360
+  54 0008 03       	 .byte 3
+  55 0009 000000   	 .zero 3
+  56 000c 01000000 	 .word 1
+  57              	 .global IfxHsct_TXDP_P21_5_OUT
+  58              	 .section .rodata.IfxHsct_TXDP_P21_5_OUT,"a"
+  59              	 .align 2
+  62              	IfxHsct_TXDP_P21_5_OUT:
+  63 0000 000049F4 	 .word -196542464
+  64 0004 00F403F0 	 .word -268176384
+  65 0008 05       	 .byte 5
+  66 0009 000000   	 .zero 3
+  67 000c 01000000 	 .word 1
+  68              	 .global IfxHsct_TXDN_P22_2_OUT
+  69              	 .section .rodata.IfxHsct_TXDN_P22_2_OUT,"a"
+  70              	 .align 2
+  73              	IfxHsct_TXDN_P22_2_OUT:
+  74 0000 00004BF4 	 .word -196411392
+  75 0004 00F803F0 	 .word -268175360
+  76 0008 02       	 .byte 2
+  77 0009 000000   	 .zero 3
+  78 000c 01000000 	 .word 1
+  79              	 .global IfxHsct_TXDN_P21_4_OUT
+  80              	 .section .rodata.IfxHsct_TXDN_P21_4_OUT,"a"
+  81              	 .align 2
+  84              	IfxHsct_TXDN_P21_4_OUT:
+  85 0000 000049F4 	 .word -196542464
+  86 0004 00F403F0 	 .word -268176384
+  87 0008 04       	 .byte 4
+  88 0009 000000   	 .zero 3
+  89 000c 01000000 	 .word 1
+  90              	 .global IfxHsct_SYSCLK_OUT_P20_0_OUT
+  91              	 .section .rodata.IfxHsct_SYSCLK_OUT_P20_0_OUT,"a"
+  92              	 .align 2
+  95              	IfxHsct_SYSCLK_OUT_P20_0_OUT:
+  96 0000 000049F4 	 .word -196542464
+  97 0004 00F003F0 	 .word -268177408
+  98 0008 00       	 .byte 0
+  99 0009 000000   	 .zero 3
+ 100 000c 01000000 	 .word 1
+ 101              	 .global IfxHsct_RXDP_P21_3_IN
+ 102              	 .section .rodata.IfxHsct_RXDP_P21_3_IN,"a"
+ 103              	 .align 2
+ 106              	IfxHsct_RXDP_P21_3_IN:
+ 107 0000 000049F4 	 .word -196542464
+ 108 0004 00F403F0 	 .word -268176384
+ 109 0008 03       	 .byte 3
+ 110 0009 000000   	 .zero 3
+ 111 000c 00000000 	 .word 0
+ 112              	 .global IfxHsct_RXDP_P21_1_IN
+ 113              	 .section .rodata.IfxHsct_RXDP_P21_1_IN,"a"
+ 114              	 .align 2
+ 117              	IfxHsct_RXDP_P21_1_IN:
+ 118 0000 00004BF4 	 .word -196411392
+ 119 0004 00F403F0 	 .word -268176384
+ 120 0008 01       	 .byte 1
+ 121 0009 000000   	 .zero 3
+ 122 000c 00000000 	 .word 0
+ 123              	 .global IfxHsct_RXDN_P21_2_IN
+ 124              	 .section .rodata.IfxHsct_RXDN_P21_2_IN,"a"
+ 125              	 .align 2
+ 128              	IfxHsct_RXDN_P21_2_IN:
+ 129 0000 000049F4 	 .word -196542464
+ 130 0004 00F403F0 	 .word -268176384
+ 131 0008 02       	 .byte 2
+ 132 0009 000000   	 .zero 3
+ 133 000c 00000000 	 .word 0
+ 134              	 .global IfxHsct_RXDN_P21_0_IN
+ 135              	 .section .rodata.IfxHsct_RXDN_P21_0_IN,"a"
+ 136              	 .align 2
+ 139              	IfxHsct_RXDN_P21_0_IN:
+ 140 0000 00004BF4 	 .word -196411392
+ 141 0004 00F403F0 	 .word -268176384
+ 142 0008 00       	 .byte 0
+ 143 0009 000000   	 .zero 3
+ 144 000c 00000000 	 .word 0
+ 145              	.section .text,"ax",@progbits
+ 146              	.Letext0:
+ 147              	 .file 1 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 148              	 .file 2 "../Libraries/Infra/Sfr/TC4Dx/IfxHsct_regdef.h"
+ 149              	 .file 3 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 150              	 .file 4 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+ 151              	 .file 5 "../Libraries/Infra/Sfr/TC4Dx/IfxPort_regdef.h"
+ 152              	 .file 6 "../Libraries/iLLD/TC4xx/CpuGeneric/Port/Std/IfxPort.h"
+ 153              	 .file 7 "../Libraries/iLLD/TC4xx/Tricore/_PinMap/IfxHsct_PinMap.h"
+ 154              	 .file 8 "../Libraries/iLLD/TC4xx/Tricore/_PinMap/TC4Dx/IfxHsct_PinMap_TC4Dx_BGA436_COM.h"
+ 155              	 .file 9 "../Libraries/iLLD/TC4xx/Tricore/_PinMap/TC4Dx/IfxHsct_PinMap_TC4Dx_BGA436_COM.c"
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxHsct_PinMap_TC4Dx_BGA436_COM.c
+                            *ABS*:00000000 IfxHsct_PinMap_TC4Dx_BGA436_COM.c
+    {standard input}:11     .data.IfxHsct_Txdp_Out_pinTable:00000000 IfxHsct_Txdp_Out_pinTable
+    {standard input}:62     .rodata.IfxHsct_TXDP_P21_5_OUT:00000000 IfxHsct_TXDP_P21_5_OUT
+    {standard input}:51     .rodata.IfxHsct_TXDP_P22_3_OUT:00000000 IfxHsct_TXDP_P22_3_OUT
+    {standard input}:19     .data.IfxHsct_Txdn_Out_pinTable:00000000 IfxHsct_Txdn_Out_pinTable
+    {standard input}:84     .rodata.IfxHsct_TXDN_P21_4_OUT:00000000 IfxHsct_TXDN_P21_4_OUT
+    {standard input}:73     .rodata.IfxHsct_TXDN_P22_2_OUT:00000000 IfxHsct_TXDN_P22_2_OUT
+    {standard input}:27     .data.IfxHsct_Sysclk_Out_pinTable:00000000 IfxHsct_Sysclk_Out_pinTable
+    {standard input}:95     .rodata.IfxHsct_SYSCLK_OUT_P20_0_OUT:00000000 IfxHsct_SYSCLK_OUT_P20_0_OUT
+    {standard input}:35     .data.IfxHsct_Rxdp_In_pinTable:00000000 IfxHsct_Rxdp_In_pinTable
+    {standard input}:106    .rodata.IfxHsct_RXDP_P21_3_IN:00000000 IfxHsct_RXDP_P21_3_IN
+    {standard input}:117    .rodata.IfxHsct_RXDP_P21_1_IN:00000000 IfxHsct_RXDP_P21_1_IN
+    {standard input}:43     .data.IfxHsct_Rxdn_In_pinTable:00000000 IfxHsct_Rxdn_In_pinTable
+    {standard input}:128    .rodata.IfxHsct_RXDN_P21_2_IN:00000000 IfxHsct_RXDN_P21_2_IN
+    {standard input}:139    .rodata.IfxHsct_RXDN_P21_0_IN:00000000 IfxHsct_RXDN_P21_0_IN
+
+NO UNDEFINED SYMBOLS

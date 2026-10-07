@@ -1,0 +1,230 @@
+   1              	
+   2              	 .file "SpiIf.c"
+   3              	 .file "SpiIf.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.SpiIf_initConfig,"ax",@progbits
+   7              	 .align 1
+   8              	 .global SpiIf_initConfig
+  10              	SpiIf_initConfig:
+  11              	.LFB309:
+  12              	 .file 1 "../Libraries/Service/CpuGeneric/If/SpiIf.c"
+   1:../Libraries/Service/CpuGeneric/If/SpiIf.c **** /**
+   2:../Libraries/Service/CpuGeneric/If/SpiIf.c ****  * \file SpiIf.c
+   3:../Libraries/Service/CpuGeneric/If/SpiIf.c ****  * \brief SPI interface
+   4:../Libraries/Service/CpuGeneric/If/SpiIf.c ****  *
+   5:../Libraries/Service/CpuGeneric/If/SpiIf.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/Service/CpuGeneric/If/SpiIf.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/Service/CpuGeneric/If/SpiIf.c ****  *
+   8:../Libraries/Service/CpuGeneric/If/SpiIf.c ****  *
+   9:../Libraries/Service/CpuGeneric/If/SpiIf.c ****   *                                 IMPORTANT NOTICE
+  10:../Libraries/Service/CpuGeneric/If/SpiIf.c ****  *
+  11:../Libraries/Service/CpuGeneric/If/SpiIf.c ****  *
+  12:../Libraries/Service/CpuGeneric/If/SpiIf.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/Service/CpuGeneric/If/SpiIf.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/Service/CpuGeneric/If/SpiIf.c ****  * this file except in compliance with IFASLL.
+  15:../Libraries/Service/CpuGeneric/If/SpiIf.c ****  *
+  16:../Libraries/Service/CpuGeneric/If/SpiIf.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/Service/CpuGeneric/If/SpiIf.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/Service/CpuGeneric/If/SpiIf.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/Service/CpuGeneric/If/SpiIf.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/Service/CpuGeneric/If/SpiIf.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/Service/CpuGeneric/If/SpiIf.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/Service/CpuGeneric/If/SpiIf.c ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/Service/CpuGeneric/If/SpiIf.c ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/Service/CpuGeneric/If/SpiIf.c ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/Service/CpuGeneric/If/SpiIf.c ****  *
+  26:../Libraries/Service/CpuGeneric/If/SpiIf.c ****  */
+  27:../Libraries/Service/CpuGeneric/If/SpiIf.c **** 
+  28:../Libraries/Service/CpuGeneric/If/SpiIf.c **** #include "SpiIf.h"
+  29:../Libraries/Service/CpuGeneric/If/SpiIf.c **** 
+  30:../Libraries/Service/CpuGeneric/If/SpiIf.c **** void SpiIf_initConfig(SpiIf_Config *config)
+  31:../Libraries/Service/CpuGeneric/If/SpiIf.c **** {
+  13              	 .loc 1 31 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  32:../Libraries/Service/CpuGeneric/If/SpiIf.c ****     config->mode            = SpiIf_Mode_master;
+  17              	 .loc 1 32 5
+  18              	 .loc 1 32 29 is_stmt 0
+  19 0002 8202     	 mov %d2,0
+  20 0004 7442     	 st.w [%a4]0,%d2
+  33:../Libraries/Service/CpuGeneric/If/SpiIf.c ****     config->rxPriority      = 0;
+  21              	 .loc 1 33 5 is_stmt 1
+  22              	 .loc 1 33 29 is_stmt 0
+  23 0006 F9420400 	 st.h [%a4]4,%d2
+  34:../Libraries/Service/CpuGeneric/If/SpiIf.c ****     config->txPriority      = 0;
+  24              	 .loc 1 34 5 is_stmt 1
+  25              	 .loc 1 34 29 is_stmt 0
+  26 000a F9420600 	 st.h [%a4]6,%d2
+  35:../Libraries/Service/CpuGeneric/If/SpiIf.c ****     config->erPriority      = 0;
+  27              	 .loc 1 35 5 is_stmt 1
+  28              	 .loc 1 35 29 is_stmt 0
+  29 000e F9420800 	 st.h [%a4]8,%d2
+  36:../Libraries/Service/CpuGeneric/If/SpiIf.c ****     config->isrProvider     = IfxSrc_Tos_cpu0;
+  30              	 .loc 1 36 5 is_stmt 1
+  31              	 .loc 1 36 29 is_stmt 0
+  32 0012 59420C00 	 st.w [%a4]12,%d2
+  37:../Libraries/Service/CpuGeneric/If/SpiIf.c ****     config->bufferSize      = 0;
+  33              	 .loc 1 37 5 is_stmt 1
+  34              	 .loc 1 37 29 is_stmt 0
+  35 0016 F9421400 	 st.h [%a4]20,%d2
+  38:../Libraries/Service/CpuGeneric/If/SpiIf.c ****     config->buffer          = NULL_PTR;
+  36              	 .loc 1 38 5 is_stmt 1
+  37              	 .loc 1 38 29 is_stmt 0
+  38 001a 59421800 	 st.w [%a4]24,%d2
+  39:../Libraries/Service/CpuGeneric/If/SpiIf.c ****     config->maximumBaudrate = 0;
+  39              	 .loc 1 39 5 is_stmt 1
+  40              	 .loc 1 39 29 is_stmt 0
+  41 001e 8203     	 mov %d3,0
+  42 0020 59431C00 	 st.w [%a4]28,%d3
+  40:../Libraries/Service/CpuGeneric/If/SpiIf.c ****     config->vmId            = IfxSrc_VmId_0;
+  43              	 .loc 1 40 5 is_stmt 1
+  44              	 .loc 1 40 29 is_stmt 0
+  45 0024 59421000 	 st.w [%a4]16,%d2
+  41:../Libraries/Service/CpuGeneric/If/SpiIf.c **** }
+  46              	 .loc 1 41 1
+  47 0028 0090     	 ret 
+  48              	.LFE309:
+  50              	 .global SpiIf_initConfig_end
+  51              	SpiIf_initConfig_end:
+  52              	 .section .text.SpiIf_initChannelConfig,"ax",@progbits
+  53              	 .align 1
+  54              	 .global SpiIf_initChannelConfig
+  56              	SpiIf_initChannelConfig:
+  57              	.LFB310:
+  42:../Libraries/Service/CpuGeneric/If/SpiIf.c **** 
+  43:../Libraries/Service/CpuGeneric/If/SpiIf.c **** 
+  44:../Libraries/Service/CpuGeneric/If/SpiIf.c **** void SpiIf_initChannelConfig(SpiIf_ChConfig *config, SpiIf *driver)
+  45:../Libraries/Service/CpuGeneric/If/SpiIf.c **** {
+  58              	 .loc 1 45 1 is_stmt 1
+  59              	.LVL1:
+  60 0000 40AE     	 mov.aa %a14,%SP
+  61              	.LCFI1:
+  46:../Libraries/Service/CpuGeneric/If/SpiIf.c ****     config->driver               = driver;
+  62              	 .loc 1 46 5
+  63              	 .loc 1 46 34 is_stmt 0
+  64 0002 F445     	 st.a [%a4]0,%a5
+  47:../Libraries/Service/CpuGeneric/If/SpiIf.c ****     config->baudrate             = 0;
+  65              	 .loc 1 47 5 is_stmt 1
+  66              	 .loc 1 47 34 is_stmt 0
+  67 0004 8202     	 mov %d2,0
+  68 0006 59420400 	 st.w [%a4]4,%d2
+  48:../Libraries/Service/CpuGeneric/If/SpiIf.c ****     config->mode.enabled         = 1;
+  69              	 .loc 1 48 5 is_stmt 1
+  70              	 .loc 1 48 34 is_stmt 0
+  71 000a C9420800 	 ld.h %d2,[%a4]8
+  72 000e B7120120 	 insert %d2,%d2,1,0,1
+  73 0012 F9420800 	 st.h [%a4]8,%d2
+  49:../Libraries/Service/CpuGeneric/If/SpiIf.c ****     config->mode.autoCS          = 1;
+  74              	 .loc 1 49 5 is_stmt 1
+  75              	 .loc 1 49 34 is_stmt 0
+  76 0016 B7128120 	 insert %d2,%d2,1,1,1
+  77 001a F9420800 	 st.h [%a4]8,%d2
+  50:../Libraries/Service/CpuGeneric/If/SpiIf.c ****     config->mode.loopback        = 0;
+  78              	 .loc 1 50 5 is_stmt 1
+  79              	 .loc 1 50 34 is_stmt 0
+  80 001e 8F42C021 	 andn %d2,%d2,~(-5)
+  81 0022 F9420800 	 st.h [%a4]8,%d2
+  51:../Libraries/Service/CpuGeneric/If/SpiIf.c ****     config->mode.clockPolarity   = SpiIf_ClockPolarity_idleLow;
+  82              	 .loc 1 51 5 is_stmt 1
+  83              	 .loc 1 51 34 is_stmt 0
+  84 0026 8F82C021 	 andn %d2,%d2,~(-9)
+  85 002a F9420800 	 st.h [%a4]8,%d2
+  52:../Libraries/Service/CpuGeneric/If/SpiIf.c ****     config->mode.shiftClock      = SpiIf_ShiftClock_shiftTransmitDataOnLeadingEdge;
+  86              	 .loc 1 52 5 is_stmt 1
+  87              	 .loc 1 52 34 is_stmt 0
+  88 002e 8F02C121 	 andn %d2,%d2,~(-17)
+  89 0032 F9420800 	 st.h [%a4]8,%d2
+  53:../Libraries/Service/CpuGeneric/If/SpiIf.c ****     config->mode.dataHeading     = SpiIf_DataHeading_msbFirst;
+  90              	 .loc 1 53 5 is_stmt 1
+  91              	 .loc 1 53 34 is_stmt 0
+  92 0036 B7128122 	 insert %d2,%d2,1,5,1
+  93 003a F9420800 	 st.h [%a4]8,%d2
+  54:../Libraries/Service/CpuGeneric/If/SpiIf.c ****     config->mode.dataWidth       = 8;
+  94              	 .loc 1 54 5 is_stmt 1
+  95              	 .loc 1 54 34 is_stmt 0
+  96 003e B7820623 	 insert %d2,%d2,8,6,6
+  97 0042 F9420800 	 st.h [%a4]8,%d2
+  55:../Libraries/Service/CpuGeneric/If/SpiIf.c ****     config->mode.csActiveLevel   = Ifx_ActiveState_low;
+  98              	 .loc 1 55 5 is_stmt 1
+  99              	 .loc 1 55 34 is_stmt 0
+ 100 0046 B7020126 	 insert %d2,%d2,0,12,1
+ 101 004a F9420800 	 st.h [%a4]8,%d2
+  56:../Libraries/Service/CpuGeneric/If/SpiIf.c ****     config->mode.csLeadDelay     = SpiIf_SlsoTiming_0;
+ 102              	 .loc 1 56 5 is_stmt 1
+ 103              	 .loc 1 56 34 is_stmt 0
+ 104 004e 8203     	 mov %d3,0
+ 105 0050 59431000 	 st.w [%a4]16,%d3
+  57:../Libraries/Service/CpuGeneric/If/SpiIf.c ****     config->mode.csTrailDelay    = SpiIf_SlsoTiming_0;
+ 106              	 .loc 1 57 5 is_stmt 1
+ 107              	 .loc 1 57 34 is_stmt 0
+ 108 0054 59431400 	 st.w [%a4]20,%d3
+  58:../Libraries/Service/CpuGeneric/If/SpiIf.c ****     config->mode.csInactiveDelay = SpiIf_SlsoTiming_0;
+ 109              	 .loc 1 58 5 is_stmt 1
+ 110              	 .loc 1 58 34 is_stmt 0
+ 111 0058 59430C00 	 st.w [%a4]12,%d3
+  59:../Libraries/Service/CpuGeneric/If/SpiIf.c ****     config->mode.parityCheck     = 0;
+ 112              	 .loc 1 59 5 is_stmt 1
+ 113              	 .loc 1 59 34 is_stmt 0
+ 114 005c B7028126 	 insert %d2,%d2,0,13,1
+ 115 0060 F9420800 	 st.h [%a4]8,%d2
+  60:../Libraries/Service/CpuGeneric/If/SpiIf.c ****     config->mode.parityMode      = Ifx_ParityMode_even;
+ 116              	 .loc 1 60 5 is_stmt 1
+ 117              	 .loc 1 60 34 is_stmt 0
+ 118 0064 B7020127 	 insert %d2,%d2,0,14,1
+ 119 0068 F9420800 	 st.h [%a4]8,%d2
+  61:../Libraries/Service/CpuGeneric/If/SpiIf.c ****     config->errorChecks.baudrate = 0;
+ 120              	 .loc 1 61 5 is_stmt 1
+ 121              	 .loc 1 61 34 is_stmt 0
+ 122 006c D9421800 	 lea %a2,[%a4]24
+ 123 0070 19421800 	 ld.w %d2,[%a4]24
+ 124 0074 8F12C021 	 andn %d2,%d2,~(-2)
+ 125 0078 7422     	 st.w [%a2]0,%d2
+  62:../Libraries/Service/CpuGeneric/If/SpiIf.c ****     config->errorChecks.phase    = 0;
+ 126              	 .loc 1 62 5 is_stmt 1
+ 127              	 .loc 1 62 34 is_stmt 0
+ 128 007a 8F22C031 	 andn %d3,%d2,~(-3)
+ 129 007e 7423     	 st.w [%a2]0,%d3
+  63:../Libraries/Service/CpuGeneric/If/SpiIf.c ****     config->errorChecks.receive  = 0;
+ 130              	 .loc 1 63 5 is_stmt 1
+ 131              	 .loc 1 63 34 is_stmt 0
+ 132 0080 8F62C031 	 andn %d3,%d2,~(-7)
+ 133 0084 7423     	 st.w [%a2]0,%d3
+  64:../Libraries/Service/CpuGeneric/If/SpiIf.c ****     config->errorChecks.transmit = 0;
+ 134              	 .loc 1 64 5 is_stmt 1
+ 135              	 .loc 1 64 34 is_stmt 0
+ 136 0086 8FE2C021 	 andn %d2,%d2,~(-15)
+ 137 008a 7422     	 st.w [%a2]0,%d2
+  65:../Libraries/Service/CpuGeneric/If/SpiIf.c **** }
+ 138              	 .loc 1 65 1
+ 139 008c 0090     	 ret 
+ 140              	.LFE310:
+ 142              	 .global SpiIf_initChannelConfig_end
+ 143              	SpiIf_initChannelConfig_end:
+ 184              	.Letext0:
+ 185              	 .file 2 "../Libraries/iLLD/TC4xx/CpuGeneric/_Impl/TC4Dx/IfxSrc_cfg_TC4Dx.h"
+ 186              	 .file 3 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 187              	 .file 4 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+ 188              	 .file 5 "../Libraries/Service/CpuGeneric/If/SpiIf.h"
+ 1761 0000 00000000 	 .word SpiIf_initConfig
+ 1762 0004 00000000 	 .word SpiIf_initConfig_end
+ 1763 0008 0C001444 	 .word 0x4414000c
+ 1764 000c 00001000 	 .word 0x00100000
+ 1765 0010 00000000 	 .word 0x00000000
+ 1766 0014 C0000000 	 .word 0x000000c0
+ 1767 0018 00000000 	 .word SpiIf_initChannelConfig
+ 1768 001c 00000000 	 .word SpiIf_initChannelConfig_end
+ 1769 0020 0C003444 	 .word 0x4434000c
+ 1770 0024 00003000 	 .word 0x00300000
+ 1771 0028 00000000 	 .word 0x00000000
+ 1772 002c C0000000 	 .word 0x000000c0
+DEFINED SYMBOLS
+                            *ABS*:00000000 SpiIf.c
+                            *ABS*:00000000 SpiIf.c
+    {standard input}:10     .text.SpiIf_initConfig:00000000 SpiIf_initConfig
+    {standard input}:51     .text.SpiIf_initConfig:0000002a SpiIf_initConfig_end
+    {standard input}:56     .text.SpiIf_initChannelConfig:00000000 SpiIf_initChannelConfig
+    {standard input}:143    .text.SpiIf_initChannelConfig:0000008e SpiIf_initChannelConfig_end
+
+NO UNDEFINED SYMBOLS

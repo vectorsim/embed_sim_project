@@ -1,0 +1,2308 @@
+   1              	
+   2              	 .file "IfxAdc_PinMap_TC4Dx_BGA436_COM.c"
+   3              	 .file "IfxAdc_PinMap_TC4Dx_BGA436_COM.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .global IfxAdc_Trig_In_pinTable
+   7              	 .section .data.IfxAdc_Trig_In_pinTable,"aw"
+   8              	 .align 2
+  11              	IfxAdc_Trig_In_pinTable:
+  12 0000 00000000 	 .word IfxAdc_TRIG56_P02_0_IN
+  13 0004 00000000 	 .word IfxAdc_TRIG57_P02_1_IN
+  14 0008 00000000 	 .word IfxAdc_TRIG58_P02_7_IN
+  15 000c 00000000 	 .word IfxAdc_TRIG59_P02_8_IN
+  16 0010 00000000 	 .word IfxAdc_TRIG62_P20_9_IN
+  17 0014 00000000 	 .word IfxAdc_TRIG61_P23_1_IN
+  18 0018 00000000 	 .word IfxAdc_TRIG60_P33_7_IN
+  19              	 .global IfxAdc_TmadcCh_In_pinTable
+  20              	 .section .data.IfxAdc_TmadcCh_In_pinTable,"aw"
+  21              	 .align 2
+  24              	IfxAdc_TmadcCh_In_pinTable:
+  25 0000 00000000 	 .word IfxAdc_Tmadc_TMADC0CH0_AN0_IN
+  26 0004 00000000 	 .word IfxAdc_Tmadc_TMADC0CH1_AN1_IN
+  27 0008 00000000 	 .word IfxAdc_Tmadc_TMADC0CH2_AN2_IN
+  28 000c 00000000 	 .word IfxAdc_Tmadc_TMADC0CH3_AN3_IN
+  29 0010 00000000 	 .word IfxAdc_Tmadc_TMADC0CH4_AN4_IN
+  30 0014 00000000 	 .word IfxAdc_Tmadc_TMADC0CH5_AN5_IN
+  31 0018 00000000 	 .word IfxAdc_Tmadc_TMADC0CH6_AN6_IN
+  32 001c 00000000 	 .word IfxAdc_Tmadc_TMADC0CH7_AN7_IN
+  33 0020 00000000 	 .word IfxAdc_Tmadc_TMADC0CH8_AN8_IN
+  34 0024 00000000 	 .word IfxAdc_Tmadc_TMADC0CH9_AN9_IN
+  35 0028 00000000 	 .word IfxAdc_Tmadc_TMADC0CH10_AN10_IN
+  36 002c 00000000 	 .word IfxAdc_Tmadc_TMADC0CH11_AN11_IN
+  37 0030 00000000 	 .word IfxAdc_Tmadc_TMADC0CH12_AN12_IN
+  38 0034 00000000 	 .word IfxAdc_Tmadc_TMADC0CH13_AN13_IN
+  39 0038 00000000 	 .word IfxAdc_Tmadc_TMADC0CH14_AN14_IN
+  40 003c 00000000 	 .word IfxAdc_Tmadc_TMADC0CH15_AN15_IN
+  41 0040 00000000 	 .word IfxAdc_Tmadc_TMADC1CH0_AN4_IN
+  42 0044 00000000 	 .word IfxAdc_Tmadc_TMADC1CH1_AN5_IN
+  43 0048 00000000 	 .word IfxAdc_Tmadc_TMADC1CH2_AN6_IN
+  44 004c 00000000 	 .word IfxAdc_Tmadc_TMADC1CH3_AN7_IN
+  45 0050 00000000 	 .word IfxAdc_Tmadc_TMADC1CH4_AN16_IN
+  46 0054 00000000 	 .word IfxAdc_Tmadc_TMADC1CH5_P40_10_IN
+  47 0058 00000000 	 .word IfxAdc_Tmadc_TMADC1CH6_P40_11_IN
+  48 005c 00000000 	 .word IfxAdc_Tmadc_TMADC1CH7_P40_12_IN
+  49 0060 00000000 	 .word IfxAdc_Tmadc_TMADC1CH8_AN20_IN
+  50 0064 00000000 	 .word IfxAdc_Tmadc_TMADC1CH9_AN21_IN
+  51 0068 00000000 	 .word IfxAdc_Tmadc_TMADC1CH10_AN22_IN
+  52 006c 00000000 	 .word IfxAdc_Tmadc_TMADC1CH11_AN23_IN
+  53 0070 00000000 	 .word IfxAdc_Tmadc_TMADC1CH12_P40_0_IN
+  54 0074 00000000 	 .word IfxAdc_Tmadc_TMADC1CH13_P40_1_IN
+  55 0078 00000000 	 .word IfxAdc_Tmadc_TMADC1CH14_P40_2_IN
+  56 007c 00000000 	 .word IfxAdc_Tmadc_TMADC1CH15_P40_3_IN
+  57 0080 00000000 	 .word IfxAdc_Tmadc_TMADC2CH0_P00_12_IN
+  58 0084 00000000 	 .word IfxAdc_Tmadc_TMADC2CH1_P00_11_IN
+  59 0088 00000000 	 .word IfxAdc_Tmadc_TMADC2CH2_P00_10_IN
+  60 008c 00000000 	 .word IfxAdc_Tmadc_TMADC2CH3_P00_9_IN
+  61 0090 00000000 	 .word IfxAdc_Tmadc_TMADC2CH4_P00_8_IN
+  62 0094 00000000 	 .word IfxAdc_Tmadc_TMADC2CH5_P00_7_IN
+  63 0098 00000000 	 .word IfxAdc_Tmadc_TMADC2CH6_P00_6_IN
+  64 009c 00000000 	 .word IfxAdc_Tmadc_TMADC2CH7_P00_5_IN
+  65 00a0 00000000 	 .word IfxAdc_Tmadc_TMADC2CH8_P00_4_IN
+  66 00a4 00000000 	 .word IfxAdc_Tmadc_TMADC2CH9_P00_3_IN
+  67 00a8 00000000 	 .word IfxAdc_Tmadc_TMADC2CH10_P00_2_IN
+  68 00ac 00000000 	 .word IfxAdc_Tmadc_TMADC2CH11_P00_1_IN
+  69 00b0 00000000 	 .word IfxAdc_Tmadc_TMADC2CH12_P01_5_IN
+  70 00b4 00000000 	 .word IfxAdc_Tmadc_TMADC2CH13_P01_4_IN
+  71 00b8 00000000 	 .word IfxAdc_Tmadc_TMADC2CH14_P01_3_IN
+  72 00bc 00000000 	 .word IfxAdc_Tmadc_TMADC2CH15_P02_11_IN
+  73 00c0 00000000 	 .word IfxAdc_Tmadc_TMADC3CH0_P40_13_IN
+  74 00c4 00000000 	 .word IfxAdc_Tmadc_TMADC3CH1_P40_14_IN
+  75 00c8 00000000 	 .word IfxAdc_Tmadc_TMADC3CH2_AN30_IN
+  76 00cc 00000000 	 .word IfxAdc_Tmadc_TMADC3CH3_AN31_IN
+  77 00d0 00000000 	 .word IfxAdc_Tmadc_TMADC3CH4_P40_4_IN
+  78 00d4 00000000 	 .word IfxAdc_Tmadc_TMADC3CH5_P40_5_IN
+  79 00d8 00000000 	 .word IfxAdc_Tmadc_TMADC3CH6_AN34_IN
+  80 00dc 00000000 	 .word IfxAdc_Tmadc_TMADC3CH7_AN35_IN
+  81 00e0 00000000 	 .word IfxAdc_Tmadc_TMADC3CH8_P40_6_IN
+  82 00e4 00000000 	 .word IfxAdc_Tmadc_TMADC3CH9_P40_7_IN
+  83 00e8 00000000 	 .word IfxAdc_Tmadc_TMADC3CH10_P40_8_IN
+  84 00ec 00000000 	 .word IfxAdc_Tmadc_TMADC3CH11_P40_9_IN
+  85 00f0 00000000 	 .word IfxAdc_Tmadc_TMADC3CH12_AN40_IN
+  86 00f4 00000000 	 .word IfxAdc_Tmadc_TMADC3CH13_AN41_IN
+  87 00f8 00000000 	 .word IfxAdc_Tmadc_TMADC3CH14_AN42_IN
+  88 00fc 00000000 	 .word IfxAdc_Tmadc_TMADC3CH15_AN43_IN
+  89              	 .global IfxAdc_Sign_In_pinTable
+  90              	 .section .data.IfxAdc_Sign_In_pinTable,"aw"
+  91              	 .align 2
+  94              	IfxAdc_Sign_In_pinTable:
+  95 0000 00000000 	 .word IfxAdc_SIGN0_P32_7_IN
+  96 0004 00000000 	 .word IfxAdc_SIGN1_P33_13_IN
+  97              	 .global IfxAdc_Pwm_Out_pinTable
+  98              	 .section .data.IfxAdc_Pwm_Out_pinTable,"aw"
+  99              	 .align 2
+ 102              	IfxAdc_Pwm_Out_pinTable:
+ 103 0000 00000000 	 .word IfxAdc_PWM1_P00_5_OUT
+ 104 0004 00000000 	 .word IfxAdc_PWM0_P00_6_OUT
+ 105 0008 00000000 	 .word IfxAdc_PWM1_P02_0_OUT
+ 106 000c 00000000 	 .word IfxAdc_PWM0_P02_1_OUT
+ 107 0010 00000000 	 .word IfxAdc_PWM1_P33_11_OUT
+ 108 0014 00000000 	 .word IfxAdc_PWM0_P33_12_OUT
+ 109              	 .global IfxAdc_Fcc_In_pinTable
+ 110              	 .section .data.IfxAdc_Fcc_In_pinTable,"aw"
+ 111              	 .align 2
+ 114              	IfxAdc_Fcc_In_pinTable:
+ 115 0000 00000000 	 .word IfxAdc_Fcc_FCC5_P00_2_IN
+ 116 0004 00000000 	 .word IfxAdc_Fcc_FCC4_P00_8_IN
+ 117 0008 00000000 	 .word IfxAdc_Fcc_FCC3_AN0_IN
+ 118 000c 00000000 	 .word IfxAdc_Fcc_FCC0_AN2_IN
+ 119 0010 00000000 	 .word IfxAdc_Fcc_FCC8_AN12_IN
+ 120 0014 00000000 	 .word IfxAdc_Fcc_FCC9_AN14_IN
+ 121 0018 00000000 	 .word IfxAdc_Fcc_FCC2_AN20_IN
+ 122 001c 00000000 	 .word IfxAdc_Fcc_FCC6_P40_6_IN
+ 123 0020 00000000 	 .word IfxAdc_Fcc_FCC1_P40_10_IN
+ 124 0024 00000000 	 .word IfxAdc_Fcc_FCC7_P40_11_IN
+ 125              	 .global IfxAdc_Emuxctrl_Out_pinTable
+ 126              	 .section .data.IfxAdc_Emuxctrl_Out_pinTable,"aw"
+ 127              	 .align 2
+ 130              	IfxAdc_Emuxctrl_Out_pinTable:
+ 131 0000 00000000 	 .word IfxAdc_EMUXCTRL10_P00_6_OUT
+ 132 0004 00000000 	 .word IfxAdc_EMUXCTRL11_P00_7_OUT
+ 133 0008 00000000 	 .word IfxAdc_EMUXCTRL12_P00_8_OUT
+ 134 000c 00000000 	 .word IfxAdc_EMUXCTRL13_P00_9_OUT
+ 135 0010 00000000 	 .word IfxAdc_EMUXCTRL00_P02_6_OUT
+ 136 0014 00000000 	 .word IfxAdc_EMUXCTRL01_P02_7_OUT
+ 137 0018 00000000 	 .word IfxAdc_EMUXCTRL02_P02_8_OUT
+ 138 001c 00000000 	 .word IfxAdc_EMUXCTRL03_P02_9_OUT
+ 139 0020 00000000 	 .word IfxAdc_EMUXCTRL03_P33_0_OUT
+ 140 0024 00000000 	 .word IfxAdc_EMUXCTRL02_P33_1_OUT
+ 141 0028 00000000 	 .word IfxAdc_EMUXCTRL01_P33_2_OUT
+ 142 002c 00000000 	 .word IfxAdc_EMUXCTRL00_P33_3_OUT
+ 143 0030 00000000 	 .word IfxAdc_EMUXCTRL12_P33_4_OUT
+ 144 0034 00000000 	 .word IfxAdc_EMUXCTRL11_P33_5_OUT
+ 145 0038 00000000 	 .word IfxAdc_EMUXCTRL10_P33_6_OUT
+ 146 003c 00000000 	 .word IfxAdc_EMUXCTRL13_P33_7_OUT
+ 147              	 .global IfxAdc_Dsadcp_In_pinTable
+ 148              	 .section .data.IfxAdc_Dsadcp_In_pinTable,"aw"
+ 149              	 .align 2
+ 152              	IfxAdc_Dsadcp_In_pinTable:
+ 153 0000 00000000 	 .word IfxAdc_DSADCPA_P00_2_IN
+ 154 0004 00000000 	 .word IfxAdc_DSADCPA_P00_8_IN
+ 155 0008 00000000 	 .word IfxAdc_DSADCPA_AN0_IN
+ 156 000c 00000000 	 .word IfxAdc_DSADCPA_AN2_IN
+ 157 0010 00000000 	 .word IfxAdc_DSADCPA_AN20_IN
+ 158 0014 00000000 	 .word IfxAdc_DSADCPA_P40_6_IN
+ 159 0018 00000000 	 .word IfxAdc_DSADCPB_P00_4_IN
+ 160 001c 00000000 	 .word IfxAdc_DSADCPB_P00_10_IN
+ 161 0020 00000000 	 .word IfxAdc_DSADCPB_AN12_IN
+ 162 0024 00000000 	 .word IfxAdc_DSADCPB_AN14_IN
+ 163 0028 00000000 	 .word IfxAdc_DSADCPB_P40_0_IN
+ 164 002c 00000000 	 .word IfxAdc_DSADCPB_P40_8_IN
+ 165 0030 00000000 	 .word IfxAdc_DSADCPC_AN16_IN
+ 166 0034 00000000 	 .word IfxAdc_DSADCPC_P40_11_IN
+ 167 0038 00000000 	 .word IfxAdc_DSADCPD_AN34_IN
+ 168              	 .global IfxAdc_Dsadcn_In_pinTable
+ 169              	 .section .data.IfxAdc_Dsadcn_In_pinTable,"aw"
+ 170              	 .align 2
+ 173              	IfxAdc_Dsadcn_In_pinTable:
+ 174 0000 00000000 	 .word IfxAdc_DSADCNA_P00_1_IN
+ 175 0004 00000000 	 .word IfxAdc_DSADCNA_P00_7_IN
+ 176 0008 00000000 	 .word IfxAdc_DSADCNA_AN1_IN
+ 177 000c 00000000 	 .word IfxAdc_DSADCNA_AN3_IN
+ 178 0010 00000000 	 .word IfxAdc_DSADCNA_AN21_IN
+ 179 0014 00000000 	 .word IfxAdc_DSADCNA_P40_7_IN
+ 180 0018 00000000 	 .word IfxAdc_DSADCNB_P00_3_IN
+ 181 001c 00000000 	 .word IfxAdc_DSADCNB_P00_9_IN
+ 182 0020 00000000 	 .word IfxAdc_DSADCNB_AN13_IN
+ 183 0024 00000000 	 .word IfxAdc_DSADCNB_AN15_IN
+ 184 0028 00000000 	 .word IfxAdc_DSADCNB_P40_1_IN
+ 185 002c 00000000 	 .word IfxAdc_DSADCNB_P40_9_IN
+ 186 0030 00000000 	 .word IfxAdc_DSADCNC_P40_10_IN
+ 187 0034 00000000 	 .word IfxAdc_DSADCNC_P40_12_IN
+ 188 0038 00000000 	 .word IfxAdc_DSADCND_AN35_IN
+ 189              	 .global IfxAdc_Data_In_pinTable
+ 190              	 .section .data.IfxAdc_Data_In_pinTable,"aw"
+ 191              	 .align 2
+ 194              	IfxAdc_Data_In_pinTable:
+ 195 0000 00000000 	 .word IfxAdc_DATA5_P02_4_IN
+ 196 0004 00000000 	 .word IfxAdc_DATA4_P02_6_IN
+ 197 0008 00000000 	 .word IfxAdc_DATA3_P02_8_IN
+ 198 000c 00000000 	 .word IfxAdc_DATA6_P02_12_IN
+ 199 0010 00000000 	 .word IfxAdc_DATA7_P02_14_IN
+ 200 0014 00000000 	 .word IfxAdc_DATA2_P33_2_IN
+ 201 0018 00000000 	 .word IfxAdc_DATA1_P33_4_IN
+ 202 001c 00000000 	 .word IfxAdc_DATA0_P33_6_IN
+ 203              	 .global IfxAdc_Clkout_Out_pinTable
+ 204              	 .section .data.IfxAdc_Clkout_Out_pinTable,"aw"
+ 205              	 .align 2
+ 208              	IfxAdc_Clkout_Out_pinTable:
+ 209 0000 00000000 	 .word IfxAdc_CLKOUT0_P00_11_OUT
+ 210 0004 00000000 	 .word IfxAdc_CLKOUT1_P02_1_OUT
+ 211 0008 00000000 	 .word IfxAdc_CLKOUT2_P02_3_OUT
+ 212 000c 00000000 	 .word IfxAdc_CLKOUT3_P02_13_OUT
+ 213 0010 00000000 	 .word IfxAdc_CLKOUT0_P02_15_OUT
+ 214 0014 00000000 	 .word IfxAdc_CLKOUT0_P04_2_OUT
+ 215 0018 00000000 	 .word IfxAdc_CLKOUT0_P10_0_OUT
+ 216 001c 00000000 	 .word IfxAdc_CLKOUT1_P33_1_OUT
+ 217 0020 00000000 	 .word IfxAdc_CLKOUT2_P33_3_OUT
+ 218 0024 00000000 	 .word IfxAdc_CLKOUT3_P33_5_OUT
+ 219              	 .global IfxAdc_Clkin_In_pinTable
+ 220              	 .section .data.IfxAdc_Clkin_In_pinTable,"aw"
+ 221              	 .align 2
+ 224              	IfxAdc_Clkin_In_pinTable:
+ 225 0000 00000000 	 .word IfxAdc_CLKIN4_P02_1_IN
+ 226 0004 00000000 	 .word IfxAdc_CLKIN5_P02_3_IN
+ 227 0008 00000000 	 .word IfxAdc_CLKIN6_P02_13_IN
+ 228 000c 00000000 	 .word IfxAdc_CLKIN7_P02_15_IN
+ 229 0010 00000000 	 .word IfxAdc_CLKIN3_P10_0_IN
+ 230 0014 00000000 	 .word IfxAdc_CLKIN2_P33_1_IN
+ 231 0018 00000000 	 .word IfxAdc_CLKIN1_P33_3_IN
+ 232 001c 00000000 	 .word IfxAdc_CLKIN0_P33_5_IN
+ 233              	 .global IfxAdc_Bfl_Out_pinTable
+ 234              	 .section .data.IfxAdc_Bfl_Out_pinTable,"aw"
+ 235              	 .align 2
+ 238              	IfxAdc_Bfl_Out_pinTable:
+ 239 0000 00000000 	 .word IfxAdc_BFL0_P00_5_OUT
+ 240 0004 00000000 	 .word IfxAdc_BFL4_P01_8_OUT
+ 241 0008 00000000 	 .word IfxAdc_BFL5_P01_9_OUT
+ 242 000c 00000000 	 .word IfxAdc_BFL6_P01_10_OUT
+ 243 0010 00000000 	 .word IfxAdc_BFL7_P01_11_OUT
+ 244 0014 00000000 	 .word IfxAdc_BFL4_P04_6_OUT
+ 245 0018 00000000 	 .word IfxAdc_BFL5_P04_7_OUT
+ 246 001c 00000000 	 .word IfxAdc_BFL7_P04_8_OUT
+ 247 0020 00000000 	 .word IfxAdc_BFL6_P04_9_OUT
+ 248 0024 00000000 	 .word IfxAdc_BFL1_P10_1_OUT
+ 249 0028 00000000 	 .word IfxAdc_BFL3_P10_2_OUT
+ 250 002c 00000000 	 .word IfxAdc_BFL8_P10_3_OUT
+ 251 0030 00000000 	 .word IfxAdc_BFL9_P10_4_OUT
+ 252 0034 00000000 	 .word IfxAdc_BFL2_P33_0_OUT
+ 253 0038 00000000 	 .word IfxAdc_BFL4_P33_1_OUT
+ 254 003c 00000000 	 .word IfxAdc_BFL3_P33_2_OUT
+ 255 0040 00000000 	 .word IfxAdc_BFL5_P33_3_OUT
+ 256 0044 00000000 	 .word IfxAdc_BFL0_P33_4_OUT
+ 257 0048 00000000 	 .word IfxAdc_BFL2_P33_5_OUT
+ 258 004c 00000000 	 .word IfxAdc_BFL1_P33_6_OUT
+ 259 0050 00000000 	 .word IfxAdc_BFL8_P33_9_OUT
+ 260 0054 00000000 	 .word IfxAdc_BFL9_P33_11_OUT
+ 261 0058 00000000 	 .word IfxAdc_BFL6_P34_4_OUT
+ 262 005c 00000000 	 .word IfxAdc_BFL7_P34_5_OUT
+ 263              	 .global IfxAdc_Tmadc_TMADC3CH9_P40_7_IN
+ 264              	 .section .rodata.IfxAdc_Tmadc_TMADC3CH9_P40_7_IN,"a"
+ 265              	 .align 2
+ 268              	IfxAdc_Tmadc_TMADC3CH9_P40_7_IN:
+ 269 0000 000000F5 	 .word -184549376
+ 270 0004 03       	 .byte 3
+ 271 0005 09       	 .byte 9
+ 272 0006 0000     	 .zero 2
+ 273 0008 004004F0 	 .word -268156928
+ 274 000c 07       	 .byte 7
+ 275 000d 000000   	 .zero 3
+ 276 0010 00000000 	 .word 0
+ 277              	 .global IfxAdc_Tmadc_TMADC3CH8_P40_6_IN
+ 278              	 .section .rodata.IfxAdc_Tmadc_TMADC3CH8_P40_6_IN,"a"
+ 279              	 .align 2
+ 282              	IfxAdc_Tmadc_TMADC3CH8_P40_6_IN:
+ 283 0000 000000F5 	 .word -184549376
+ 284 0004 03       	 .byte 3
+ 285 0005 08       	 .byte 8
+ 286 0006 0000     	 .zero 2
+ 287 0008 004004F0 	 .word -268156928
+ 288 000c 06       	 .byte 6
+ 289 000d 000000   	 .zero 3
+ 290 0010 00000000 	 .word 0
+ 291              	 .global IfxAdc_Tmadc_TMADC3CH7_AN35_IN
+ 292              	 .section .rodata.IfxAdc_Tmadc_TMADC3CH7_AN35_IN,"a"
+ 293              	 .align 2
+ 296              	IfxAdc_Tmadc_TMADC3CH7_AN35_IN:
+ 297 0000 000000F5 	 .word -184549376
+ 298 0004 03       	 .byte 3
+ 299 0005 07       	 .byte 7
+ 300 0006 0000     	 .zero 2
+ 301 0008 00000000 	 .word 0
+ 302 000c 23       	 .byte 35
+ 303 000d 000000   	 .zero 3
+ 304 0010 00000000 	 .word 0
+ 305              	 .global IfxAdc_Tmadc_TMADC3CH6_AN34_IN
+ 306              	 .section .rodata.IfxAdc_Tmadc_TMADC3CH6_AN34_IN,"a"
+ 307              	 .align 2
+ 310              	IfxAdc_Tmadc_TMADC3CH6_AN34_IN:
+ 311 0000 000000F5 	 .word -184549376
+ 312 0004 03       	 .byte 3
+ 313 0005 06       	 .byte 6
+ 314 0006 0000     	 .zero 2
+ 315 0008 00000000 	 .word 0
+ 316 000c 22       	 .byte 34
+ 317 000d 000000   	 .zero 3
+ 318 0010 00000000 	 .word 0
+ 319              	 .global IfxAdc_Tmadc_TMADC3CH5_P40_5_IN
+ 320              	 .section .rodata.IfxAdc_Tmadc_TMADC3CH5_P40_5_IN,"a"
+ 321              	 .align 2
+ 324              	IfxAdc_Tmadc_TMADC3CH5_P40_5_IN:
+ 325 0000 000000F5 	 .word -184549376
+ 326 0004 03       	 .byte 3
+ 327 0005 05       	 .byte 5
+ 328 0006 0000     	 .zero 2
+ 329 0008 004004F0 	 .word -268156928
+ 330 000c 05       	 .byte 5
+ 331 000d 000000   	 .zero 3
+ 332 0010 00000000 	 .word 0
+ 333              	 .global IfxAdc_Tmadc_TMADC3CH4_P40_4_IN
+ 334              	 .section .rodata.IfxAdc_Tmadc_TMADC3CH4_P40_4_IN,"a"
+ 335              	 .align 2
+ 338              	IfxAdc_Tmadc_TMADC3CH4_P40_4_IN:
+ 339 0000 000000F5 	 .word -184549376
+ 340 0004 03       	 .byte 3
+ 341 0005 04       	 .byte 4
+ 342 0006 0000     	 .zero 2
+ 343 0008 004004F0 	 .word -268156928
+ 344 000c 04       	 .byte 4
+ 345 000d 000000   	 .zero 3
+ 346 0010 00000000 	 .word 0
+ 347              	 .global IfxAdc_Tmadc_TMADC3CH3_AN31_IN
+ 348              	 .section .rodata.IfxAdc_Tmadc_TMADC3CH3_AN31_IN,"a"
+ 349              	 .align 2
+ 352              	IfxAdc_Tmadc_TMADC3CH3_AN31_IN:
+ 353 0000 000000F5 	 .word -184549376
+ 354 0004 03       	 .byte 3
+ 355 0005 03       	 .byte 3
+ 356 0006 0000     	 .zero 2
+ 357 0008 00000000 	 .word 0
+ 358 000c 1F       	 .byte 31
+ 359 000d 000000   	 .zero 3
+ 360 0010 00000000 	 .word 0
+ 361              	 .global IfxAdc_Tmadc_TMADC3CH2_AN30_IN
+ 362              	 .section .rodata.IfxAdc_Tmadc_TMADC3CH2_AN30_IN,"a"
+ 363              	 .align 2
+ 366              	IfxAdc_Tmadc_TMADC3CH2_AN30_IN:
+ 367 0000 000000F5 	 .word -184549376
+ 368 0004 03       	 .byte 3
+ 369 0005 02       	 .byte 2
+ 370 0006 0000     	 .zero 2
+ 371 0008 00000000 	 .word 0
+ 372 000c 1E       	 .byte 30
+ 373 000d 000000   	 .zero 3
+ 374 0010 00000000 	 .word 0
+ 375              	 .global IfxAdc_Tmadc_TMADC3CH1_P40_14_IN
+ 376              	 .section .rodata.IfxAdc_Tmadc_TMADC3CH1_P40_14_IN,"a"
+ 377              	 .align 2
+ 380              	IfxAdc_Tmadc_TMADC3CH1_P40_14_IN:
+ 381 0000 000000F5 	 .word -184549376
+ 382 0004 03       	 .byte 3
+ 383 0005 01       	 .byte 1
+ 384 0006 0000     	 .zero 2
+ 385 0008 004004F0 	 .word -268156928
+ 386 000c 0E       	 .byte 14
+ 387 000d 000000   	 .zero 3
+ 388 0010 00000000 	 .word 0
+ 389              	 .global IfxAdc_Tmadc_TMADC3CH15_AN43_IN
+ 390              	 .section .rodata.IfxAdc_Tmadc_TMADC3CH15_AN43_IN,"a"
+ 391              	 .align 2
+ 394              	IfxAdc_Tmadc_TMADC3CH15_AN43_IN:
+ 395 0000 000000F5 	 .word -184549376
+ 396 0004 03       	 .byte 3
+ 397 0005 0F       	 .byte 15
+ 398 0006 0000     	 .zero 2
+ 399 0008 00000000 	 .word 0
+ 400 000c 2B       	 .byte 43
+ 401 000d 000000   	 .zero 3
+ 402 0010 00000000 	 .word 0
+ 403              	 .global IfxAdc_Tmadc_TMADC3CH14_AN42_IN
+ 404              	 .section .rodata.IfxAdc_Tmadc_TMADC3CH14_AN42_IN,"a"
+ 405              	 .align 2
+ 408              	IfxAdc_Tmadc_TMADC3CH14_AN42_IN:
+ 409 0000 000000F5 	 .word -184549376
+ 410 0004 03       	 .byte 3
+ 411 0005 0E       	 .byte 14
+ 412 0006 0000     	 .zero 2
+ 413 0008 00000000 	 .word 0
+ 414 000c 2A       	 .byte 42
+ 415 000d 000000   	 .zero 3
+ 416 0010 00000000 	 .word 0
+ 417              	 .global IfxAdc_Tmadc_TMADC3CH13_AN41_IN
+ 418              	 .section .rodata.IfxAdc_Tmadc_TMADC3CH13_AN41_IN,"a"
+ 419              	 .align 2
+ 422              	IfxAdc_Tmadc_TMADC3CH13_AN41_IN:
+ 423 0000 000000F5 	 .word -184549376
+ 424 0004 03       	 .byte 3
+ 425 0005 0D       	 .byte 13
+ 426 0006 0000     	 .zero 2
+ 427 0008 00000000 	 .word 0
+ 428 000c 29       	 .byte 41
+ 429 000d 000000   	 .zero 3
+ 430 0010 00000000 	 .word 0
+ 431              	 .global IfxAdc_Tmadc_TMADC3CH12_AN40_IN
+ 432              	 .section .rodata.IfxAdc_Tmadc_TMADC3CH12_AN40_IN,"a"
+ 433              	 .align 2
+ 436              	IfxAdc_Tmadc_TMADC3CH12_AN40_IN:
+ 437 0000 000000F5 	 .word -184549376
+ 438 0004 03       	 .byte 3
+ 439 0005 0C       	 .byte 12
+ 440 0006 0000     	 .zero 2
+ 441 0008 00000000 	 .word 0
+ 442 000c 28       	 .byte 40
+ 443 000d 000000   	 .zero 3
+ 444 0010 00000000 	 .word 0
+ 445              	 .global IfxAdc_Tmadc_TMADC3CH11_P40_9_IN
+ 446              	 .section .rodata.IfxAdc_Tmadc_TMADC3CH11_P40_9_IN,"a"
+ 447              	 .align 2
+ 450              	IfxAdc_Tmadc_TMADC3CH11_P40_9_IN:
+ 451 0000 000000F5 	 .word -184549376
+ 452 0004 03       	 .byte 3
+ 453 0005 0B       	 .byte 11
+ 454 0006 0000     	 .zero 2
+ 455 0008 004004F0 	 .word -268156928
+ 456 000c 09       	 .byte 9
+ 457 000d 000000   	 .zero 3
+ 458 0010 00000000 	 .word 0
+ 459              	 .global IfxAdc_Tmadc_TMADC3CH10_P40_8_IN
+ 460              	 .section .rodata.IfxAdc_Tmadc_TMADC3CH10_P40_8_IN,"a"
+ 461              	 .align 2
+ 464              	IfxAdc_Tmadc_TMADC3CH10_P40_8_IN:
+ 465 0000 000000F5 	 .word -184549376
+ 466 0004 03       	 .byte 3
+ 467 0005 0A       	 .byte 10
+ 468 0006 0000     	 .zero 2
+ 469 0008 004004F0 	 .word -268156928
+ 470 000c 08       	 .byte 8
+ 471 000d 000000   	 .zero 3
+ 472 0010 00000000 	 .word 0
+ 473              	 .global IfxAdc_Tmadc_TMADC3CH0_P40_13_IN
+ 474              	 .section .rodata.IfxAdc_Tmadc_TMADC3CH0_P40_13_IN,"a"
+ 475              	 .align 2
+ 478              	IfxAdc_Tmadc_TMADC3CH0_P40_13_IN:
+ 479 0000 000000F5 	 .word -184549376
+ 480 0004 03       	 .byte 3
+ 481 0005 00       	 .byte 0
+ 482 0006 0000     	 .zero 2
+ 483 0008 004004F0 	 .word -268156928
+ 484 000c 0D       	 .byte 13
+ 485 000d 000000   	 .zero 3
+ 486 0010 00000000 	 .word 0
+ 487              	 .global IfxAdc_Tmadc_TMADC2CH9_P00_3_IN
+ 488              	 .section .rodata.IfxAdc_Tmadc_TMADC2CH9_P00_3_IN,"a"
+ 489              	 .align 2
+ 492              	IfxAdc_Tmadc_TMADC2CH9_P00_3_IN:
+ 493 0000 000000F5 	 .word -184549376
+ 494 0004 02       	 .byte 2
+ 495 0005 09       	 .byte 9
+ 496 0006 0000     	 .zero 2
+ 497 0008 00A003F0 	 .word -268197888
+ 498 000c 03       	 .byte 3
+ 499 000d 000000   	 .zero 3
+ 500 0010 00000000 	 .word 0
+ 501              	 .global IfxAdc_Tmadc_TMADC2CH8_P00_4_IN
+ 502              	 .section .rodata.IfxAdc_Tmadc_TMADC2CH8_P00_4_IN,"a"
+ 503              	 .align 2
+ 506              	IfxAdc_Tmadc_TMADC2CH8_P00_4_IN:
+ 507 0000 000000F5 	 .word -184549376
+ 508 0004 02       	 .byte 2
+ 509 0005 08       	 .byte 8
+ 510 0006 0000     	 .zero 2
+ 511 0008 00A003F0 	 .word -268197888
+ 512 000c 04       	 .byte 4
+ 513 000d 000000   	 .zero 3
+ 514 0010 00000000 	 .word 0
+ 515              	 .global IfxAdc_Tmadc_TMADC2CH7_P00_5_IN
+ 516              	 .section .rodata.IfxAdc_Tmadc_TMADC2CH7_P00_5_IN,"a"
+ 517              	 .align 2
+ 520              	IfxAdc_Tmadc_TMADC2CH7_P00_5_IN:
+ 521 0000 000000F5 	 .word -184549376
+ 522 0004 02       	 .byte 2
+ 523 0005 07       	 .byte 7
+ 524 0006 0000     	 .zero 2
+ 525 0008 00A003F0 	 .word -268197888
+ 526 000c 05       	 .byte 5
+ 527 000d 000000   	 .zero 3
+ 528 0010 00000000 	 .word 0
+ 529              	 .global IfxAdc_Tmadc_TMADC2CH6_P00_6_IN
+ 530              	 .section .rodata.IfxAdc_Tmadc_TMADC2CH6_P00_6_IN,"a"
+ 531              	 .align 2
+ 534              	IfxAdc_Tmadc_TMADC2CH6_P00_6_IN:
+ 535 0000 000000F5 	 .word -184549376
+ 536 0004 02       	 .byte 2
+ 537 0005 06       	 .byte 6
+ 538 0006 0000     	 .zero 2
+ 539 0008 00A003F0 	 .word -268197888
+ 540 000c 06       	 .byte 6
+ 541 000d 000000   	 .zero 3
+ 542 0010 00000000 	 .word 0
+ 543              	 .global IfxAdc_Tmadc_TMADC2CH5_P00_7_IN
+ 544              	 .section .rodata.IfxAdc_Tmadc_TMADC2CH5_P00_7_IN,"a"
+ 545              	 .align 2
+ 548              	IfxAdc_Tmadc_TMADC2CH5_P00_7_IN:
+ 549 0000 000000F5 	 .word -184549376
+ 550 0004 02       	 .byte 2
+ 551 0005 05       	 .byte 5
+ 552 0006 0000     	 .zero 2
+ 553 0008 00A003F0 	 .word -268197888
+ 554 000c 07       	 .byte 7
+ 555 000d 000000   	 .zero 3
+ 556 0010 00000000 	 .word 0
+ 557              	 .global IfxAdc_Tmadc_TMADC2CH4_P00_8_IN
+ 558              	 .section .rodata.IfxAdc_Tmadc_TMADC2CH4_P00_8_IN,"a"
+ 559              	 .align 2
+ 562              	IfxAdc_Tmadc_TMADC2CH4_P00_8_IN:
+ 563 0000 000000F5 	 .word -184549376
+ 564 0004 02       	 .byte 2
+ 565 0005 04       	 .byte 4
+ 566 0006 0000     	 .zero 2
+ 567 0008 00A003F0 	 .word -268197888
+ 568 000c 08       	 .byte 8
+ 569 000d 000000   	 .zero 3
+ 570 0010 00000000 	 .word 0
+ 571              	 .global IfxAdc_Tmadc_TMADC2CH3_P00_9_IN
+ 572              	 .section .rodata.IfxAdc_Tmadc_TMADC2CH3_P00_9_IN,"a"
+ 573              	 .align 2
+ 576              	IfxAdc_Tmadc_TMADC2CH3_P00_9_IN:
+ 577 0000 000000F5 	 .word -184549376
+ 578 0004 02       	 .byte 2
+ 579 0005 03       	 .byte 3
+ 580 0006 0000     	 .zero 2
+ 581 0008 00A003F0 	 .word -268197888
+ 582 000c 09       	 .byte 9
+ 583 000d 000000   	 .zero 3
+ 584 0010 00000000 	 .word 0
+ 585              	 .global IfxAdc_Tmadc_TMADC2CH2_P00_10_IN
+ 586              	 .section .rodata.IfxAdc_Tmadc_TMADC2CH2_P00_10_IN,"a"
+ 587              	 .align 2
+ 590              	IfxAdc_Tmadc_TMADC2CH2_P00_10_IN:
+ 591 0000 000000F5 	 .word -184549376
+ 592 0004 02       	 .byte 2
+ 593 0005 02       	 .byte 2
+ 594 0006 0000     	 .zero 2
+ 595 0008 00A003F0 	 .word -268197888
+ 596 000c 0A       	 .byte 10
+ 597 000d 000000   	 .zero 3
+ 598 0010 00000000 	 .word 0
+ 599              	 .global IfxAdc_Tmadc_TMADC2CH1_P00_11_IN
+ 600              	 .section .rodata.IfxAdc_Tmadc_TMADC2CH1_P00_11_IN,"a"
+ 601              	 .align 2
+ 604              	IfxAdc_Tmadc_TMADC2CH1_P00_11_IN:
+ 605 0000 000000F5 	 .word -184549376
+ 606 0004 02       	 .byte 2
+ 607 0005 01       	 .byte 1
+ 608 0006 0000     	 .zero 2
+ 609 0008 00A003F0 	 .word -268197888
+ 610 000c 0B       	 .byte 11
+ 611 000d 000000   	 .zero 3
+ 612 0010 00000000 	 .word 0
+ 613              	 .global IfxAdc_Tmadc_TMADC2CH15_P02_11_IN
+ 614              	 .section .rodata.IfxAdc_Tmadc_TMADC2CH15_P02_11_IN,"a"
+ 615              	 .align 2
+ 618              	IfxAdc_Tmadc_TMADC2CH15_P02_11_IN:
+ 619 0000 000000F5 	 .word -184549376
+ 620 0004 02       	 .byte 2
+ 621 0005 0F       	 .byte 15
+ 622 0006 0000     	 .zero 2
+ 623 0008 00A803F0 	 .word -268195840
+ 624 000c 0B       	 .byte 11
+ 625 000d 000000   	 .zero 3
+ 626 0010 00000000 	 .word 0
+ 627              	 .global IfxAdc_Tmadc_TMADC2CH14_P01_3_IN
+ 628              	 .section .rodata.IfxAdc_Tmadc_TMADC2CH14_P01_3_IN,"a"
+ 629              	 .align 2
+ 632              	IfxAdc_Tmadc_TMADC2CH14_P01_3_IN:
+ 633 0000 000000F5 	 .word -184549376
+ 634 0004 02       	 .byte 2
+ 635 0005 0E       	 .byte 14
+ 636 0006 0000     	 .zero 2
+ 637 0008 00A403F0 	 .word -268196864
+ 638 000c 03       	 .byte 3
+ 639 000d 000000   	 .zero 3
+ 640 0010 00000000 	 .word 0
+ 641              	 .global IfxAdc_Tmadc_TMADC2CH13_P01_4_IN
+ 642              	 .section .rodata.IfxAdc_Tmadc_TMADC2CH13_P01_4_IN,"a"
+ 643              	 .align 2
+ 646              	IfxAdc_Tmadc_TMADC2CH13_P01_4_IN:
+ 647 0000 000000F5 	 .word -184549376
+ 648 0004 02       	 .byte 2
+ 649 0005 0D       	 .byte 13
+ 650 0006 0000     	 .zero 2
+ 651 0008 00A403F0 	 .word -268196864
+ 652 000c 04       	 .byte 4
+ 653 000d 000000   	 .zero 3
+ 654 0010 00000000 	 .word 0
+ 655              	 .global IfxAdc_Tmadc_TMADC2CH12_P01_5_IN
+ 656              	 .section .rodata.IfxAdc_Tmadc_TMADC2CH12_P01_5_IN,"a"
+ 657              	 .align 2
+ 660              	IfxAdc_Tmadc_TMADC2CH12_P01_5_IN:
+ 661 0000 000000F5 	 .word -184549376
+ 662 0004 02       	 .byte 2
+ 663 0005 0C       	 .byte 12
+ 664 0006 0000     	 .zero 2
+ 665 0008 00A403F0 	 .word -268196864
+ 666 000c 05       	 .byte 5
+ 667 000d 000000   	 .zero 3
+ 668 0010 00000000 	 .word 0
+ 669              	 .global IfxAdc_Tmadc_TMADC2CH11_P00_1_IN
+ 670              	 .section .rodata.IfxAdc_Tmadc_TMADC2CH11_P00_1_IN,"a"
+ 671              	 .align 2
+ 674              	IfxAdc_Tmadc_TMADC2CH11_P00_1_IN:
+ 675 0000 000000F5 	 .word -184549376
+ 676 0004 02       	 .byte 2
+ 677 0005 0B       	 .byte 11
+ 678 0006 0000     	 .zero 2
+ 679 0008 00A003F0 	 .word -268197888
+ 680 000c 01       	 .byte 1
+ 681 000d 000000   	 .zero 3
+ 682 0010 00000000 	 .word 0
+ 683              	 .global IfxAdc_Tmadc_TMADC2CH10_P00_2_IN
+ 684              	 .section .rodata.IfxAdc_Tmadc_TMADC2CH10_P00_2_IN,"a"
+ 685              	 .align 2
+ 688              	IfxAdc_Tmadc_TMADC2CH10_P00_2_IN:
+ 689 0000 000000F5 	 .word -184549376
+ 690 0004 02       	 .byte 2
+ 691 0005 0A       	 .byte 10
+ 692 0006 0000     	 .zero 2
+ 693 0008 00A003F0 	 .word -268197888
+ 694 000c 02       	 .byte 2
+ 695 000d 000000   	 .zero 3
+ 696 0010 00000000 	 .word 0
+ 697              	 .global IfxAdc_Tmadc_TMADC2CH0_P00_12_IN
+ 698              	 .section .rodata.IfxAdc_Tmadc_TMADC2CH0_P00_12_IN,"a"
+ 699              	 .align 2
+ 702              	IfxAdc_Tmadc_TMADC2CH0_P00_12_IN:
+ 703 0000 000000F5 	 .word -184549376
+ 704 0004 02       	 .byte 2
+ 705 0005 00       	 .byte 0
+ 706 0006 0000     	 .zero 2
+ 707 0008 00A003F0 	 .word -268197888
+ 708 000c 0C       	 .byte 12
+ 709 000d 000000   	 .zero 3
+ 710 0010 00000000 	 .word 0
+ 711              	 .global IfxAdc_Tmadc_TMADC1CH9_AN21_IN
+ 712              	 .section .rodata.IfxAdc_Tmadc_TMADC1CH9_AN21_IN,"a"
+ 713              	 .align 2
+ 716              	IfxAdc_Tmadc_TMADC1CH9_AN21_IN:
+ 717 0000 000000F5 	 .word -184549376
+ 718 0004 01       	 .byte 1
+ 719 0005 09       	 .byte 9
+ 720 0006 0000     	 .zero 2
+ 721 0008 00000000 	 .word 0
+ 722 000c 15       	 .byte 21
+ 723 000d 000000   	 .zero 3
+ 724 0010 00000000 	 .word 0
+ 725              	 .global IfxAdc_Tmadc_TMADC1CH8_AN20_IN
+ 726              	 .section .rodata.IfxAdc_Tmadc_TMADC1CH8_AN20_IN,"a"
+ 727              	 .align 2
+ 730              	IfxAdc_Tmadc_TMADC1CH8_AN20_IN:
+ 731 0000 000000F5 	 .word -184549376
+ 732 0004 01       	 .byte 1
+ 733 0005 08       	 .byte 8
+ 734 0006 0000     	 .zero 2
+ 735 0008 00000000 	 .word 0
+ 736 000c 14       	 .byte 20
+ 737 000d 000000   	 .zero 3
+ 738 0010 00000000 	 .word 0
+ 739              	 .global IfxAdc_Tmadc_TMADC1CH7_P40_12_IN
+ 740              	 .section .rodata.IfxAdc_Tmadc_TMADC1CH7_P40_12_IN,"a"
+ 741              	 .align 2
+ 744              	IfxAdc_Tmadc_TMADC1CH7_P40_12_IN:
+ 745 0000 000000F5 	 .word -184549376
+ 746 0004 01       	 .byte 1
+ 747 0005 07       	 .byte 7
+ 748 0006 0000     	 .zero 2
+ 749 0008 004004F0 	 .word -268156928
+ 750 000c 0C       	 .byte 12
+ 751 000d 000000   	 .zero 3
+ 752 0010 00000000 	 .word 0
+ 753              	 .global IfxAdc_Tmadc_TMADC1CH6_P40_11_IN
+ 754              	 .section .rodata.IfxAdc_Tmadc_TMADC1CH6_P40_11_IN,"a"
+ 755              	 .align 2
+ 758              	IfxAdc_Tmadc_TMADC1CH6_P40_11_IN:
+ 759 0000 000000F5 	 .word -184549376
+ 760 0004 01       	 .byte 1
+ 761 0005 06       	 .byte 6
+ 762 0006 0000     	 .zero 2
+ 763 0008 004004F0 	 .word -268156928
+ 764 000c 0B       	 .byte 11
+ 765 000d 000000   	 .zero 3
+ 766 0010 00000000 	 .word 0
+ 767              	 .global IfxAdc_Tmadc_TMADC1CH5_P40_10_IN
+ 768              	 .section .rodata.IfxAdc_Tmadc_TMADC1CH5_P40_10_IN,"a"
+ 769              	 .align 2
+ 772              	IfxAdc_Tmadc_TMADC1CH5_P40_10_IN:
+ 773 0000 000000F5 	 .word -184549376
+ 774 0004 01       	 .byte 1
+ 775 0005 05       	 .byte 5
+ 776 0006 0000     	 .zero 2
+ 777 0008 004004F0 	 .word -268156928
+ 778 000c 0A       	 .byte 10
+ 779 000d 000000   	 .zero 3
+ 780 0010 00000000 	 .word 0
+ 781              	 .global IfxAdc_Tmadc_TMADC1CH4_AN16_IN
+ 782              	 .section .rodata.IfxAdc_Tmadc_TMADC1CH4_AN16_IN,"a"
+ 783              	 .align 2
+ 786              	IfxAdc_Tmadc_TMADC1CH4_AN16_IN:
+ 787 0000 000000F5 	 .word -184549376
+ 788 0004 01       	 .byte 1
+ 789 0005 04       	 .byte 4
+ 790 0006 0000     	 .zero 2
+ 791 0008 00000000 	 .word 0
+ 792 000c 10       	 .byte 16
+ 793 000d 000000   	 .zero 3
+ 794 0010 00000000 	 .word 0
+ 795              	 .global IfxAdc_Tmadc_TMADC1CH3_AN7_IN
+ 796              	 .section .rodata.IfxAdc_Tmadc_TMADC1CH3_AN7_IN,"a"
+ 797              	 .align 2
+ 800              	IfxAdc_Tmadc_TMADC1CH3_AN7_IN:
+ 801 0000 000000F5 	 .word -184549376
+ 802 0004 01       	 .byte 1
+ 803 0005 03       	 .byte 3
+ 804 0006 0000     	 .zero 2
+ 805 0008 00000000 	 .word 0
+ 806 000c 07       	 .byte 7
+ 807 000d 000000   	 .zero 3
+ 808 0010 00000000 	 .word 0
+ 809              	 .global IfxAdc_Tmadc_TMADC1CH2_AN6_IN
+ 810              	 .section .rodata.IfxAdc_Tmadc_TMADC1CH2_AN6_IN,"a"
+ 811              	 .align 2
+ 814              	IfxAdc_Tmadc_TMADC1CH2_AN6_IN:
+ 815 0000 000000F5 	 .word -184549376
+ 816 0004 01       	 .byte 1
+ 817 0005 02       	 .byte 2
+ 818 0006 0000     	 .zero 2
+ 819 0008 00000000 	 .word 0
+ 820 000c 06       	 .byte 6
+ 821 000d 000000   	 .zero 3
+ 822 0010 00000000 	 .word 0
+ 823              	 .global IfxAdc_Tmadc_TMADC1CH1_AN5_IN
+ 824              	 .section .rodata.IfxAdc_Tmadc_TMADC1CH1_AN5_IN,"a"
+ 825              	 .align 2
+ 828              	IfxAdc_Tmadc_TMADC1CH1_AN5_IN:
+ 829 0000 000000F5 	 .word -184549376
+ 830 0004 01       	 .byte 1
+ 831 0005 01       	 .byte 1
+ 832 0006 0000     	 .zero 2
+ 833 0008 00000000 	 .word 0
+ 834 000c 05       	 .byte 5
+ 835 000d 000000   	 .zero 3
+ 836 0010 00000000 	 .word 0
+ 837              	 .global IfxAdc_Tmadc_TMADC1CH15_P40_3_IN
+ 838              	 .section .rodata.IfxAdc_Tmadc_TMADC1CH15_P40_3_IN,"a"
+ 839              	 .align 2
+ 842              	IfxAdc_Tmadc_TMADC1CH15_P40_3_IN:
+ 843 0000 000000F5 	 .word -184549376
+ 844 0004 01       	 .byte 1
+ 845 0005 0F       	 .byte 15
+ 846 0006 0000     	 .zero 2
+ 847 0008 004004F0 	 .word -268156928
+ 848 000c 03       	 .byte 3
+ 849 000d 000000   	 .zero 3
+ 850 0010 00000000 	 .word 0
+ 851              	 .global IfxAdc_Tmadc_TMADC1CH14_P40_2_IN
+ 852              	 .section .rodata.IfxAdc_Tmadc_TMADC1CH14_P40_2_IN,"a"
+ 853              	 .align 2
+ 856              	IfxAdc_Tmadc_TMADC1CH14_P40_2_IN:
+ 857 0000 000000F5 	 .word -184549376
+ 858 0004 01       	 .byte 1
+ 859 0005 0E       	 .byte 14
+ 860 0006 0000     	 .zero 2
+ 861 0008 004004F0 	 .word -268156928
+ 862 000c 02       	 .byte 2
+ 863 000d 000000   	 .zero 3
+ 864 0010 00000000 	 .word 0
+ 865              	 .global IfxAdc_Tmadc_TMADC1CH13_P40_1_IN
+ 866              	 .section .rodata.IfxAdc_Tmadc_TMADC1CH13_P40_1_IN,"a"
+ 867              	 .align 2
+ 870              	IfxAdc_Tmadc_TMADC1CH13_P40_1_IN:
+ 871 0000 000000F5 	 .word -184549376
+ 872 0004 01       	 .byte 1
+ 873 0005 0D       	 .byte 13
+ 874 0006 0000     	 .zero 2
+ 875 0008 004004F0 	 .word -268156928
+ 876 000c 01       	 .byte 1
+ 877 000d 000000   	 .zero 3
+ 878 0010 00000000 	 .word 0
+ 879              	 .global IfxAdc_Tmadc_TMADC1CH12_P40_0_IN
+ 880              	 .section .rodata.IfxAdc_Tmadc_TMADC1CH12_P40_0_IN,"a"
+ 881              	 .align 2
+ 884              	IfxAdc_Tmadc_TMADC1CH12_P40_0_IN:
+ 885 0000 000000F5 	 .word -184549376
+ 886 0004 01       	 .byte 1
+ 887 0005 0C       	 .byte 12
+ 888 0006 0000     	 .zero 2
+ 889 0008 004004F0 	 .word -268156928
+ 890 000c 00       	 .byte 0
+ 891 000d 000000   	 .zero 3
+ 892 0010 00000000 	 .word 0
+ 893              	 .global IfxAdc_Tmadc_TMADC1CH11_AN23_IN
+ 894              	 .section .rodata.IfxAdc_Tmadc_TMADC1CH11_AN23_IN,"a"
+ 895              	 .align 2
+ 898              	IfxAdc_Tmadc_TMADC1CH11_AN23_IN:
+ 899 0000 000000F5 	 .word -184549376
+ 900 0004 01       	 .byte 1
+ 901 0005 0B       	 .byte 11
+ 902 0006 0000     	 .zero 2
+ 903 0008 00000000 	 .word 0
+ 904 000c 17       	 .byte 23
+ 905 000d 000000   	 .zero 3
+ 906 0010 00000000 	 .word 0
+ 907              	 .global IfxAdc_Tmadc_TMADC1CH10_AN22_IN
+ 908              	 .section .rodata.IfxAdc_Tmadc_TMADC1CH10_AN22_IN,"a"
+ 909              	 .align 2
+ 912              	IfxAdc_Tmadc_TMADC1CH10_AN22_IN:
+ 913 0000 000000F5 	 .word -184549376
+ 914 0004 01       	 .byte 1
+ 915 0005 0A       	 .byte 10
+ 916 0006 0000     	 .zero 2
+ 917 0008 00000000 	 .word 0
+ 918 000c 16       	 .byte 22
+ 919 000d 000000   	 .zero 3
+ 920 0010 00000000 	 .word 0
+ 921              	 .global IfxAdc_Tmadc_TMADC1CH0_AN4_IN
+ 922              	 .section .rodata.IfxAdc_Tmadc_TMADC1CH0_AN4_IN,"a"
+ 923              	 .align 2
+ 926              	IfxAdc_Tmadc_TMADC1CH0_AN4_IN:
+ 927 0000 000000F5 	 .word -184549376
+ 928 0004 01       	 .byte 1
+ 929 0005 00       	 .byte 0
+ 930 0006 0000     	 .zero 2
+ 931 0008 00000000 	 .word 0
+ 932 000c 04       	 .byte 4
+ 933 000d 000000   	 .zero 3
+ 934 0010 00000000 	 .word 0
+ 935              	 .global IfxAdc_Tmadc_TMADC0CH9_AN9_IN
+ 936              	 .section .rodata.IfxAdc_Tmadc_TMADC0CH9_AN9_IN,"a"
+ 937              	 .align 2
+ 940              	IfxAdc_Tmadc_TMADC0CH9_AN9_IN:
+ 941 0000 000000F5 	 .word -184549376
+ 942 0004 00       	 .byte 0
+ 943 0005 09       	 .byte 9
+ 944 0006 0000     	 .zero 2
+ 945 0008 00000000 	 .word 0
+ 946 000c 09       	 .byte 9
+ 947 000d 000000   	 .zero 3
+ 948 0010 00000000 	 .word 0
+ 949              	 .global IfxAdc_Tmadc_TMADC0CH8_AN8_IN
+ 950              	 .section .rodata.IfxAdc_Tmadc_TMADC0CH8_AN8_IN,"a"
+ 951              	 .align 2
+ 954              	IfxAdc_Tmadc_TMADC0CH8_AN8_IN:
+ 955 0000 000000F5 	 .word -184549376
+ 956 0004 00       	 .byte 0
+ 957 0005 08       	 .byte 8
+ 958 0006 0000     	 .zero 2
+ 959 0008 00000000 	 .word 0
+ 960 000c 08       	 .byte 8
+ 961 000d 000000   	 .zero 3
+ 962 0010 00000000 	 .word 0
+ 963              	 .global IfxAdc_Tmadc_TMADC0CH7_AN7_IN
+ 964              	 .section .rodata.IfxAdc_Tmadc_TMADC0CH7_AN7_IN,"a"
+ 965              	 .align 2
+ 968              	IfxAdc_Tmadc_TMADC0CH7_AN7_IN:
+ 969 0000 000000F5 	 .word -184549376
+ 970 0004 00       	 .byte 0
+ 971 0005 07       	 .byte 7
+ 972 0006 0000     	 .zero 2
+ 973 0008 00000000 	 .word 0
+ 974 000c 07       	 .byte 7
+ 975 000d 000000   	 .zero 3
+ 976 0010 00000000 	 .word 0
+ 977              	 .global IfxAdc_Tmadc_TMADC0CH6_AN6_IN
+ 978              	 .section .rodata.IfxAdc_Tmadc_TMADC0CH6_AN6_IN,"a"
+ 979              	 .align 2
+ 982              	IfxAdc_Tmadc_TMADC0CH6_AN6_IN:
+ 983 0000 000000F5 	 .word -184549376
+ 984 0004 00       	 .byte 0
+ 985 0005 06       	 .byte 6
+ 986 0006 0000     	 .zero 2
+ 987 0008 00000000 	 .word 0
+ 988 000c 06       	 .byte 6
+ 989 000d 000000   	 .zero 3
+ 990 0010 00000000 	 .word 0
+ 991              	 .global IfxAdc_Tmadc_TMADC0CH5_AN5_IN
+ 992              	 .section .rodata.IfxAdc_Tmadc_TMADC0CH5_AN5_IN,"a"
+ 993              	 .align 2
+ 996              	IfxAdc_Tmadc_TMADC0CH5_AN5_IN:
+ 997 0000 000000F5 	 .word -184549376
+ 998 0004 00       	 .byte 0
+ 999 0005 05       	 .byte 5
+ 1000 0006 0000     	 .zero 2
+ 1001 0008 00000000 	 .word 0
+ 1002 000c 05       	 .byte 5
+ 1003 000d 000000   	 .zero 3
+ 1004 0010 00000000 	 .word 0
+ 1005              	 .global IfxAdc_Tmadc_TMADC0CH4_AN4_IN
+ 1006              	 .section .rodata.IfxAdc_Tmadc_TMADC0CH4_AN4_IN,"a"
+ 1007              	 .align 2
+ 1010              	IfxAdc_Tmadc_TMADC0CH4_AN4_IN:
+ 1011 0000 000000F5 	 .word -184549376
+ 1012 0004 00       	 .byte 0
+ 1013 0005 04       	 .byte 4
+ 1014 0006 0000     	 .zero 2
+ 1015 0008 00000000 	 .word 0
+ 1016 000c 04       	 .byte 4
+ 1017 000d 000000   	 .zero 3
+ 1018 0010 00000000 	 .word 0
+ 1019              	 .global IfxAdc_Tmadc_TMADC0CH3_AN3_IN
+ 1020              	 .section .rodata.IfxAdc_Tmadc_TMADC0CH3_AN3_IN,"a"
+ 1021              	 .align 2
+ 1024              	IfxAdc_Tmadc_TMADC0CH3_AN3_IN:
+ 1025 0000 000000F5 	 .word -184549376
+ 1026 0004 00       	 .byte 0
+ 1027 0005 03       	 .byte 3
+ 1028 0006 0000     	 .zero 2
+ 1029 0008 00000000 	 .word 0
+ 1030 000c 03       	 .byte 3
+ 1031 000d 000000   	 .zero 3
+ 1032 0010 00000000 	 .word 0
+ 1033              	 .global IfxAdc_Tmadc_TMADC0CH2_AN2_IN
+ 1034              	 .section .rodata.IfxAdc_Tmadc_TMADC0CH2_AN2_IN,"a"
+ 1035              	 .align 2
+ 1038              	IfxAdc_Tmadc_TMADC0CH2_AN2_IN:
+ 1039 0000 000000F5 	 .word -184549376
+ 1040 0004 00       	 .byte 0
+ 1041 0005 02       	 .byte 2
+ 1042 0006 0000     	 .zero 2
+ 1043 0008 00000000 	 .word 0
+ 1044 000c 02       	 .byte 2
+ 1045 000d 000000   	 .zero 3
+ 1046 0010 00000000 	 .word 0
+ 1047              	 .global IfxAdc_Tmadc_TMADC0CH1_AN1_IN
+ 1048              	 .section .rodata.IfxAdc_Tmadc_TMADC0CH1_AN1_IN,"a"
+ 1049              	 .align 2
+ 1052              	IfxAdc_Tmadc_TMADC0CH1_AN1_IN:
+ 1053 0000 000000F5 	 .word -184549376
+ 1054 0004 00       	 .byte 0
+ 1055 0005 01       	 .byte 1
+ 1056 0006 0000     	 .zero 2
+ 1057 0008 00000000 	 .word 0
+ 1058 000c 01       	 .byte 1
+ 1059 000d 000000   	 .zero 3
+ 1060 0010 00000000 	 .word 0
+ 1061              	 .global IfxAdc_Tmadc_TMADC0CH15_AN15_IN
+ 1062              	 .section .rodata.IfxAdc_Tmadc_TMADC0CH15_AN15_IN,"a"
+ 1063              	 .align 2
+ 1066              	IfxAdc_Tmadc_TMADC0CH15_AN15_IN:
+ 1067 0000 000000F5 	 .word -184549376
+ 1068 0004 00       	 .byte 0
+ 1069 0005 0F       	 .byte 15
+ 1070 0006 0000     	 .zero 2
+ 1071 0008 00000000 	 .word 0
+ 1072 000c 0F       	 .byte 15
+ 1073 000d 000000   	 .zero 3
+ 1074 0010 00000000 	 .word 0
+ 1075              	 .global IfxAdc_Tmadc_TMADC0CH14_AN14_IN
+ 1076              	 .section .rodata.IfxAdc_Tmadc_TMADC0CH14_AN14_IN,"a"
+ 1077              	 .align 2
+ 1080              	IfxAdc_Tmadc_TMADC0CH14_AN14_IN:
+ 1081 0000 000000F5 	 .word -184549376
+ 1082 0004 00       	 .byte 0
+ 1083 0005 0E       	 .byte 14
+ 1084 0006 0000     	 .zero 2
+ 1085 0008 00000000 	 .word 0
+ 1086 000c 0E       	 .byte 14
+ 1087 000d 000000   	 .zero 3
+ 1088 0010 00000000 	 .word 0
+ 1089              	 .global IfxAdc_Tmadc_TMADC0CH13_AN13_IN
+ 1090              	 .section .rodata.IfxAdc_Tmadc_TMADC0CH13_AN13_IN,"a"
+ 1091              	 .align 2
+ 1094              	IfxAdc_Tmadc_TMADC0CH13_AN13_IN:
+ 1095 0000 000000F5 	 .word -184549376
+ 1096 0004 00       	 .byte 0
+ 1097 0005 0D       	 .byte 13
+ 1098 0006 0000     	 .zero 2
+ 1099 0008 00000000 	 .word 0
+ 1100 000c 0D       	 .byte 13
+ 1101 000d 000000   	 .zero 3
+ 1102 0010 00000000 	 .word 0
+ 1103              	 .global IfxAdc_Tmadc_TMADC0CH12_AN12_IN
+ 1104              	 .section .rodata.IfxAdc_Tmadc_TMADC0CH12_AN12_IN,"a"
+ 1105              	 .align 2
+ 1108              	IfxAdc_Tmadc_TMADC0CH12_AN12_IN:
+ 1109 0000 000000F5 	 .word -184549376
+ 1110 0004 00       	 .byte 0
+ 1111 0005 0C       	 .byte 12
+ 1112 0006 0000     	 .zero 2
+ 1113 0008 00000000 	 .word 0
+ 1114 000c 0C       	 .byte 12
+ 1115 000d 000000   	 .zero 3
+ 1116 0010 00000000 	 .word 0
+ 1117              	 .global IfxAdc_Tmadc_TMADC0CH11_AN11_IN
+ 1118              	 .section .rodata.IfxAdc_Tmadc_TMADC0CH11_AN11_IN,"a"
+ 1119              	 .align 2
+ 1122              	IfxAdc_Tmadc_TMADC0CH11_AN11_IN:
+ 1123 0000 000000F5 	 .word -184549376
+ 1124 0004 00       	 .byte 0
+ 1125 0005 0B       	 .byte 11
+ 1126 0006 0000     	 .zero 2
+ 1127 0008 00000000 	 .word 0
+ 1128 000c 0B       	 .byte 11
+ 1129 000d 000000   	 .zero 3
+ 1130 0010 00000000 	 .word 0
+ 1131              	 .global IfxAdc_Tmadc_TMADC0CH10_AN10_IN
+ 1132              	 .section .rodata.IfxAdc_Tmadc_TMADC0CH10_AN10_IN,"a"
+ 1133              	 .align 2
+ 1136              	IfxAdc_Tmadc_TMADC0CH10_AN10_IN:
+ 1137 0000 000000F5 	 .word -184549376
+ 1138 0004 00       	 .byte 0
+ 1139 0005 0A       	 .byte 10
+ 1140 0006 0000     	 .zero 2
+ 1141 0008 00000000 	 .word 0
+ 1142 000c 0A       	 .byte 10
+ 1143 000d 000000   	 .zero 3
+ 1144 0010 00000000 	 .word 0
+ 1145              	 .global IfxAdc_Tmadc_TMADC0CH0_AN0_IN
+ 1146              	 .section .rodata.IfxAdc_Tmadc_TMADC0CH0_AN0_IN,"a"
+ 1147              	 .align 2
+ 1150              	IfxAdc_Tmadc_TMADC0CH0_AN0_IN:
+ 1151 0000 000000F5 	 .word -184549376
+ 1152 0004 00       	 .byte 0
+ 1153 0005 00       	 .byte 0
+ 1154 0006 0000     	 .zero 2
+ 1155 0008 00000000 	 .word 0
+ 1156 000c 00       	 .byte 0
+ 1157 000d 000000   	 .zero 3
+ 1158 0010 00000000 	 .word 0
+ 1159              	 .global IfxAdc_TRIG62_P20_9_IN
+ 1160              	 .section .rodata.IfxAdc_TRIG62_P20_9_IN,"a"
+ 1161              	 .align 2
+ 1164              	IfxAdc_TRIG62_P20_9_IN:
+ 1165 0000 000000F5 	 .word -184549376
+ 1166 0004 00F003F0 	 .word -268177408
+ 1167 0008 09       	 .byte 9
+ 1168 0009 000000   	 .zero 3
+ 1169 000c 00000000 	 .word 0
+ 1170              	 .global IfxAdc_TRIG61_P23_1_IN
+ 1171              	 .section .rodata.IfxAdc_TRIG61_P23_1_IN,"a"
+ 1172              	 .align 2
+ 1175              	IfxAdc_TRIG61_P23_1_IN:
+ 1176 0000 000000F5 	 .word -184549376
+ 1177 0004 00FC03F0 	 .word -268174336
+ 1178 0008 01       	 .byte 1
+ 1179 0009 000000   	 .zero 3
+ 1180 000c 00000000 	 .word 0
+ 1181              	 .global IfxAdc_TRIG60_P33_7_IN
+ 1182              	 .section .rodata.IfxAdc_TRIG60_P33_7_IN,"a"
+ 1183              	 .align 2
+ 1186              	IfxAdc_TRIG60_P33_7_IN:
+ 1187 0000 000000F5 	 .word -184549376
+ 1188 0004 002404F0 	 .word -268164096
+ 1189 0008 07       	 .byte 7
+ 1190 0009 000000   	 .zero 3
+ 1191 000c 00000000 	 .word 0
+ 1192              	 .global IfxAdc_TRIG59_P02_8_IN
+ 1193              	 .section .rodata.IfxAdc_TRIG59_P02_8_IN,"a"
+ 1194              	 .align 2
+ 1197              	IfxAdc_TRIG59_P02_8_IN:
+ 1198 0000 000000F5 	 .word -184549376
+ 1199 0004 00A803F0 	 .word -268195840
+ 1200 0008 08       	 .byte 8
+ 1201 0009 000000   	 .zero 3
+ 1202 000c 00000000 	 .word 0
+ 1203              	 .global IfxAdc_TRIG58_P02_7_IN
+ 1204              	 .section .rodata.IfxAdc_TRIG58_P02_7_IN,"a"
+ 1205              	 .align 2
+ 1208              	IfxAdc_TRIG58_P02_7_IN:
+ 1209 0000 000000F5 	 .word -184549376
+ 1210 0004 00A803F0 	 .word -268195840
+ 1211 0008 07       	 .byte 7
+ 1212 0009 000000   	 .zero 3
+ 1213 000c 00000000 	 .word 0
+ 1214              	 .global IfxAdc_TRIG57_P02_1_IN
+ 1215              	 .section .rodata.IfxAdc_TRIG57_P02_1_IN,"a"
+ 1216              	 .align 2
+ 1219              	IfxAdc_TRIG57_P02_1_IN:
+ 1220 0000 000000F5 	 .word -184549376
+ 1221 0004 00A803F0 	 .word -268195840
+ 1222 0008 01       	 .byte 1
+ 1223 0009 000000   	 .zero 3
+ 1224 000c 00000000 	 .word 0
+ 1225              	 .global IfxAdc_TRIG56_P02_0_IN
+ 1226              	 .section .rodata.IfxAdc_TRIG56_P02_0_IN,"a"
+ 1227              	 .align 2
+ 1230              	IfxAdc_TRIG56_P02_0_IN:
+ 1231 0000 000000F5 	 .word -184549376
+ 1232 0004 00A803F0 	 .word -268195840
+ 1233 0008 00       	 .byte 0
+ 1234 0009 000000   	 .zero 3
+ 1235 000c 00000000 	 .word 0
+ 1236              	 .global IfxAdc_SIGN1_P33_13_IN
+ 1237              	 .section .rodata.IfxAdc_SIGN1_P33_13_IN,"a"
+ 1238              	 .align 2
+ 1241              	IfxAdc_SIGN1_P33_13_IN:
+ 1242 0000 000000F5 	 .word -184549376
+ 1243 0004 002404F0 	 .word -268164096
+ 1244 0008 0D       	 .byte 13
+ 1245 0009 000000   	 .zero 3
+ 1246 000c 00000000 	 .word 0
+ 1247              	 .global IfxAdc_SIGN0_P32_7_IN
+ 1248              	 .section .rodata.IfxAdc_SIGN0_P32_7_IN,"a"
+ 1249              	 .align 2
+ 1252              	IfxAdc_SIGN0_P32_7_IN:
+ 1253 0000 000000F5 	 .word -184549376
+ 1254 0004 002004F0 	 .word -268165120
+ 1255 0008 07       	 .byte 7
+ 1256 0009 000000   	 .zero 3
+ 1257 000c 00000000 	 .word 0
+ 1258              	 .global IfxAdc_PWM1_P33_11_OUT
+ 1259              	 .section .rodata.IfxAdc_PWM1_P33_11_OUT,"a"
+ 1260              	 .align 2
+ 1263              	IfxAdc_PWM1_P33_11_OUT:
+ 1264 0000 000000F5 	 .word -184549376
+ 1265 0004 002404F0 	 .word -268164096
+ 1266 0008 0B       	 .byte 11
+ 1267 0009 000000   	 .zero 3
+ 1268 000c 61000000 	 .word 97
+ 1269              	 .global IfxAdc_PWM1_P02_0_OUT
+ 1270              	 .section .rodata.IfxAdc_PWM1_P02_0_OUT,"a"
+ 1271              	 .align 2
+ 1274              	IfxAdc_PWM1_P02_0_OUT:
+ 1275 0000 000000F5 	 .word -184549376
+ 1276 0004 00A803F0 	 .word -268195840
+ 1277 0008 00       	 .byte 0
+ 1278 0009 000000   	 .zero 3
+ 1279 000c 41000000 	 .word 65
+ 1280              	 .global IfxAdc_PWM1_P00_5_OUT
+ 1281              	 .section .rodata.IfxAdc_PWM1_P00_5_OUT,"a"
+ 1282              	 .align 2
+ 1285              	IfxAdc_PWM1_P00_5_OUT:
+ 1286 0000 000000F5 	 .word -184549376
+ 1287 0004 00A003F0 	 .word -268197888
+ 1288 0008 05       	 .byte 5
+ 1289 0009 000000   	 .zero 3
+ 1290 000c 21000000 	 .word 33
+ 1291              	 .global IfxAdc_PWM0_P33_12_OUT
+ 1292              	 .section .rodata.IfxAdc_PWM0_P33_12_OUT,"a"
+ 1293              	 .align 2
+ 1296              	IfxAdc_PWM0_P33_12_OUT:
+ 1297 0000 000000F5 	 .word -184549376
+ 1298 0004 002404F0 	 .word -268164096
+ 1299 0008 0C       	 .byte 12
+ 1300 0009 000000   	 .zero 3
+ 1301 000c 61000000 	 .word 97
+ 1302              	 .global IfxAdc_PWM0_P02_1_OUT
+ 1303              	 .section .rodata.IfxAdc_PWM0_P02_1_OUT,"a"
+ 1304              	 .align 2
+ 1307              	IfxAdc_PWM0_P02_1_OUT:
+ 1308 0000 000000F5 	 .word -184549376
+ 1309 0004 00A803F0 	 .word -268195840
+ 1310 0008 01       	 .byte 1
+ 1311 0009 000000   	 .zero 3
+ 1312 000c 41000000 	 .word 65
+ 1313              	 .global IfxAdc_PWM0_P00_6_OUT
+ 1314              	 .section .rodata.IfxAdc_PWM0_P00_6_OUT,"a"
+ 1315              	 .align 2
+ 1318              	IfxAdc_PWM0_P00_6_OUT:
+ 1319 0000 000000F5 	 .word -184549376
+ 1320 0004 00A003F0 	 .word -268197888
+ 1321 0008 06       	 .byte 6
+ 1322 0009 000000   	 .zero 3
+ 1323 000c 21000000 	 .word 33
+ 1324              	 .global IfxAdc_Fcc_FCC9_AN14_IN
+ 1325              	 .section .rodata.IfxAdc_Fcc_FCC9_AN14_IN,"a"
+ 1326              	 .align 2
+ 1329              	IfxAdc_Fcc_FCC9_AN14_IN:
+ 1330 0000 000000F5 	 .word -184549376
+ 1331 0004 00000000 	 .word 0
+ 1332 0008 0E       	 .byte 14
+ 1333 0009 000000   	 .zero 3
+ 1334 000c 00000000 	 .word 0
+ 1335              	 .global IfxAdc_Fcc_FCC8_AN12_IN
+ 1336              	 .section .rodata.IfxAdc_Fcc_FCC8_AN12_IN,"a"
+ 1337              	 .align 2
+ 1340              	IfxAdc_Fcc_FCC8_AN12_IN:
+ 1341 0000 000000F5 	 .word -184549376
+ 1342 0004 00000000 	 .word 0
+ 1343 0008 0C       	 .byte 12
+ 1344 0009 000000   	 .zero 3
+ 1345 000c 00000000 	 .word 0
+ 1346              	 .global IfxAdc_Fcc_FCC7_P40_11_IN
+ 1347              	 .section .rodata.IfxAdc_Fcc_FCC7_P40_11_IN,"a"
+ 1348              	 .align 2
+ 1351              	IfxAdc_Fcc_FCC7_P40_11_IN:
+ 1352 0000 000000F5 	 .word -184549376
+ 1353 0004 004004F0 	 .word -268156928
+ 1354 0008 0B       	 .byte 11
+ 1355 0009 000000   	 .zero 3
+ 1356 000c 00000000 	 .word 0
+ 1357              	 .global IfxAdc_Fcc_FCC6_P40_6_IN
+ 1358              	 .section .rodata.IfxAdc_Fcc_FCC6_P40_6_IN,"a"
+ 1359              	 .align 2
+ 1362              	IfxAdc_Fcc_FCC6_P40_6_IN:
+ 1363 0000 000000F5 	 .word -184549376
+ 1364 0004 004004F0 	 .word -268156928
+ 1365 0008 06       	 .byte 6
+ 1366 0009 000000   	 .zero 3
+ 1367 000c 00000000 	 .word 0
+ 1368              	 .global IfxAdc_Fcc_FCC5_P00_2_IN
+ 1369              	 .section .rodata.IfxAdc_Fcc_FCC5_P00_2_IN,"a"
+ 1370              	 .align 2
+ 1373              	IfxAdc_Fcc_FCC5_P00_2_IN:
+ 1374 0000 000000F5 	 .word -184549376
+ 1375 0004 00A003F0 	 .word -268197888
+ 1376 0008 02       	 .byte 2
+ 1377 0009 000000   	 .zero 3
+ 1378 000c 00000000 	 .word 0
+ 1379              	 .global IfxAdc_Fcc_FCC4_P00_8_IN
+ 1380              	 .section .rodata.IfxAdc_Fcc_FCC4_P00_8_IN,"a"
+ 1381              	 .align 2
+ 1384              	IfxAdc_Fcc_FCC4_P00_8_IN:
+ 1385 0000 000000F5 	 .word -184549376
+ 1386 0004 00A003F0 	 .word -268197888
+ 1387 0008 08       	 .byte 8
+ 1388 0009 000000   	 .zero 3
+ 1389 000c 00000000 	 .word 0
+ 1390              	 .global IfxAdc_Fcc_FCC3_AN0_IN
+ 1391              	 .section .rodata.IfxAdc_Fcc_FCC3_AN0_IN,"a"
+ 1392              	 .align 2
+ 1395              	IfxAdc_Fcc_FCC3_AN0_IN:
+ 1396 0000 000000F5 	 .word -184549376
+ 1397 0004 00000000 	 .word 0
+ 1398 0008 00       	 .byte 0
+ 1399 0009 000000   	 .zero 3
+ 1400 000c 00000000 	 .word 0
+ 1401              	 .global IfxAdc_Fcc_FCC2_AN20_IN
+ 1402              	 .section .rodata.IfxAdc_Fcc_FCC2_AN20_IN,"a"
+ 1403              	 .align 2
+ 1406              	IfxAdc_Fcc_FCC2_AN20_IN:
+ 1407 0000 000000F5 	 .word -184549376
+ 1408 0004 00000000 	 .word 0
+ 1409 0008 14       	 .byte 20
+ 1410 0009 000000   	 .zero 3
+ 1411 000c 00000000 	 .word 0
+ 1412              	 .global IfxAdc_Fcc_FCC1_P40_10_IN
+ 1413              	 .section .rodata.IfxAdc_Fcc_FCC1_P40_10_IN,"a"
+ 1414              	 .align 2
+ 1417              	IfxAdc_Fcc_FCC1_P40_10_IN:
+ 1418 0000 000000F5 	 .word -184549376
+ 1419 0004 004004F0 	 .word -268156928
+ 1420 0008 0A       	 .byte 10
+ 1421 0009 000000   	 .zero 3
+ 1422 000c 00000000 	 .word 0
+ 1423              	 .global IfxAdc_Fcc_FCC0_AN2_IN
+ 1424              	 .section .rodata.IfxAdc_Fcc_FCC0_AN2_IN,"a"
+ 1425              	 .align 2
+ 1428              	IfxAdc_Fcc_FCC0_AN2_IN:
+ 1429 0000 000000F5 	 .word -184549376
+ 1430 0004 00000000 	 .word 0
+ 1431 0008 02       	 .byte 2
+ 1432 0009 000000   	 .zero 3
+ 1433 000c 00000000 	 .word 0
+ 1434              	 .global IfxAdc_EMUXCTRL13_P33_7_OUT
+ 1435              	 .section .rodata.IfxAdc_EMUXCTRL13_P33_7_OUT,"a"
+ 1436              	 .align 2
+ 1439              	IfxAdc_EMUXCTRL13_P33_7_OUT:
+ 1440 0000 000000F5 	 .word -184549376
+ 1441 0004 002404F0 	 .word -268164096
+ 1442 0008 07       	 .byte 7
+ 1443 0009 000000   	 .zero 3
+ 1444 000c 51000000 	 .word 81
+ 1445              	 .global IfxAdc_EMUXCTRL13_P00_9_OUT
+ 1446              	 .section .rodata.IfxAdc_EMUXCTRL13_P00_9_OUT,"a"
+ 1447              	 .align 2
+ 1450              	IfxAdc_EMUXCTRL13_P00_9_OUT:
+ 1451 0000 000000F5 	 .word -184549376
+ 1452 0004 00A003F0 	 .word -268197888
+ 1453 0008 09       	 .byte 9
+ 1454 0009 000000   	 .zero 3
+ 1455 000c 41000000 	 .word 65
+ 1456              	 .global IfxAdc_EMUXCTRL12_P33_4_OUT
+ 1457              	 .section .rodata.IfxAdc_EMUXCTRL12_P33_4_OUT,"a"
+ 1458              	 .align 2
+ 1461              	IfxAdc_EMUXCTRL12_P33_4_OUT:
+ 1462 0000 000000F5 	 .word -184549376
+ 1463 0004 002404F0 	 .word -268164096
+ 1464 0008 04       	 .byte 4
+ 1465 0009 000000   	 .zero 3
+ 1466 000c 51000000 	 .word 81
+ 1467              	 .global IfxAdc_EMUXCTRL12_P00_8_OUT
+ 1468              	 .section .rodata.IfxAdc_EMUXCTRL12_P00_8_OUT,"a"
+ 1469              	 .align 2
+ 1472              	IfxAdc_EMUXCTRL12_P00_8_OUT:
+ 1473 0000 000000F5 	 .word -184549376
+ 1474 0004 00A003F0 	 .word -268197888
+ 1475 0008 08       	 .byte 8
+ 1476 0009 000000   	 .zero 3
+ 1477 000c 51000000 	 .word 81
+ 1478              	 .global IfxAdc_EMUXCTRL11_P33_5_OUT
+ 1479              	 .section .rodata.IfxAdc_EMUXCTRL11_P33_5_OUT,"a"
+ 1480              	 .align 2
+ 1483              	IfxAdc_EMUXCTRL11_P33_5_OUT:
+ 1484 0000 000000F5 	 .word -184549376
+ 1485 0004 002404F0 	 .word -268164096
+ 1486 0008 05       	 .byte 5
+ 1487 0009 000000   	 .zero 3
+ 1488 000c 51000000 	 .word 81
+ 1489              	 .global IfxAdc_EMUXCTRL11_P00_7_OUT
+ 1490              	 .section .rodata.IfxAdc_EMUXCTRL11_P00_7_OUT,"a"
+ 1491              	 .align 2
+ 1494              	IfxAdc_EMUXCTRL11_P00_7_OUT:
+ 1495 0000 000000F5 	 .word -184549376
+ 1496 0004 00A003F0 	 .word -268197888
+ 1497 0008 07       	 .byte 7
+ 1498 0009 000000   	 .zero 3
+ 1499 000c 51000000 	 .word 81
+ 1500              	 .global IfxAdc_EMUXCTRL10_P33_6_OUT
+ 1501              	 .section .rodata.IfxAdc_EMUXCTRL10_P33_6_OUT,"a"
+ 1502              	 .align 2
+ 1505              	IfxAdc_EMUXCTRL10_P33_6_OUT:
+ 1506 0000 000000F5 	 .word -184549376
+ 1507 0004 002404F0 	 .word -268164096
+ 1508 0008 06       	 .byte 6
+ 1509 0009 000000   	 .zero 3
+ 1510 000c 51000000 	 .word 81
+ 1511              	 .global IfxAdc_EMUXCTRL10_P00_6_OUT
+ 1512              	 .section .rodata.IfxAdc_EMUXCTRL10_P00_6_OUT,"a"
+ 1513              	 .align 2
+ 1516              	IfxAdc_EMUXCTRL10_P00_6_OUT:
+ 1517 0000 000000F5 	 .word -184549376
+ 1518 0004 00A003F0 	 .word -268197888
+ 1519 0008 06       	 .byte 6
+ 1520 0009 000000   	 .zero 3
+ 1521 000c 51000000 	 .word 81
+ 1522              	 .global IfxAdc_EMUXCTRL03_P33_0_OUT
+ 1523              	 .section .rodata.IfxAdc_EMUXCTRL03_P33_0_OUT,"a"
+ 1524              	 .align 2
+ 1527              	IfxAdc_EMUXCTRL03_P33_0_OUT:
+ 1528 0000 000000F5 	 .word -184549376
+ 1529 0004 002404F0 	 .word -268164096
+ 1530 0008 00       	 .byte 0
+ 1531 0009 000000   	 .zero 3
+ 1532 000c 51000000 	 .word 81
+ 1533              	 .global IfxAdc_EMUXCTRL03_P02_9_OUT
+ 1534              	 .section .rodata.IfxAdc_EMUXCTRL03_P02_9_OUT,"a"
+ 1535              	 .align 2
+ 1538              	IfxAdc_EMUXCTRL03_P02_9_OUT:
+ 1539 0000 000000F5 	 .word -184549376
+ 1540 0004 00A803F0 	 .word -268195840
+ 1541 0008 09       	 .byte 9
+ 1542 0009 000000   	 .zero 3
+ 1543 000c 71000000 	 .word 113
+ 1544              	 .global IfxAdc_EMUXCTRL02_P33_1_OUT
+ 1545              	 .section .rodata.IfxAdc_EMUXCTRL02_P33_1_OUT,"a"
+ 1546              	 .align 2
+ 1549              	IfxAdc_EMUXCTRL02_P33_1_OUT:
+ 1550 0000 000000F5 	 .word -184549376
+ 1551 0004 002404F0 	 .word -268164096
+ 1552 0008 01       	 .byte 1
+ 1553 0009 000000   	 .zero 3
+ 1554 000c 51000000 	 .word 81
+ 1555              	 .global IfxAdc_EMUXCTRL02_P02_8_OUT
+ 1556              	 .section .rodata.IfxAdc_EMUXCTRL02_P02_8_OUT,"a"
+ 1557              	 .align 2
+ 1560              	IfxAdc_EMUXCTRL02_P02_8_OUT:
+ 1561 0000 000000F5 	 .word -184549376
+ 1562 0004 00A803F0 	 .word -268195840
+ 1563 0008 08       	 .byte 8
+ 1564 0009 000000   	 .zero 3
+ 1565 000c 51000000 	 .word 81
+ 1566              	 .global IfxAdc_EMUXCTRL01_P33_2_OUT
+ 1567              	 .section .rodata.IfxAdc_EMUXCTRL01_P33_2_OUT,"a"
+ 1568              	 .align 2
+ 1571              	IfxAdc_EMUXCTRL01_P33_2_OUT:
+ 1572 0000 000000F5 	 .word -184549376
+ 1573 0004 002404F0 	 .word -268164096
+ 1574 0008 02       	 .byte 2
+ 1575 0009 000000   	 .zero 3
+ 1576 000c 51000000 	 .word 81
+ 1577              	 .global IfxAdc_EMUXCTRL01_P02_7_OUT
+ 1578              	 .section .rodata.IfxAdc_EMUXCTRL01_P02_7_OUT,"a"
+ 1579              	 .align 2
+ 1582              	IfxAdc_EMUXCTRL01_P02_7_OUT:
+ 1583 0000 000000F5 	 .word -184549376
+ 1584 0004 00A803F0 	 .word -268195840
+ 1585 0008 07       	 .byte 7
+ 1586 0009 000000   	 .zero 3
+ 1587 000c 51000000 	 .word 81
+ 1588              	 .global IfxAdc_EMUXCTRL00_P33_3_OUT
+ 1589              	 .section .rodata.IfxAdc_EMUXCTRL00_P33_3_OUT,"a"
+ 1590              	 .align 2
+ 1593              	IfxAdc_EMUXCTRL00_P33_3_OUT:
+ 1594 0000 000000F5 	 .word -184549376
+ 1595 0004 002404F0 	 .word -268164096
+ 1596 0008 03       	 .byte 3
+ 1597 0009 000000   	 .zero 3
+ 1598 000c 51000000 	 .word 81
+ 1599              	 .global IfxAdc_EMUXCTRL00_P02_6_OUT
+ 1600              	 .section .rodata.IfxAdc_EMUXCTRL00_P02_6_OUT,"a"
+ 1601              	 .align 2
+ 1604              	IfxAdc_EMUXCTRL00_P02_6_OUT:
+ 1605 0000 000000F5 	 .word -184549376
+ 1606 0004 00A803F0 	 .word -268195840
+ 1607 0008 06       	 .byte 6
+ 1608 0009 000000   	 .zero 3
+ 1609 000c 51000000 	 .word 81
+ 1610              	 .global IfxAdc_DSADCPD_AN34_IN
+ 1611              	 .section .rodata.IfxAdc_DSADCPD_AN34_IN,"a"
+ 1612              	 .align 2
+ 1615              	IfxAdc_DSADCPD_AN34_IN:
+ 1616 0000 000000F5 	 .word -184549376
+ 1617 0004 00000000 	 .word 0
+ 1618 0008 22       	 .byte 34
+ 1619 0009 000000   	 .zero 3
+ 1620 000c 03000000 	 .word 3
+ 1621              	 .global IfxAdc_DSADCPC_P40_11_IN
+ 1622              	 .section .rodata.IfxAdc_DSADCPC_P40_11_IN,"a"
+ 1623              	 .align 2
+ 1626              	IfxAdc_DSADCPC_P40_11_IN:
+ 1627 0000 000000F5 	 .word -184549376
+ 1628 0004 004004F0 	 .word -268156928
+ 1629 0008 0B       	 .byte 11
+ 1630 0009 000000   	 .zero 3
+ 1631 000c 02000000 	 .word 2
+ 1632              	 .global IfxAdc_DSADCPC_AN16_IN
+ 1633              	 .section .rodata.IfxAdc_DSADCPC_AN16_IN,"a"
+ 1634              	 .align 2
+ 1637              	IfxAdc_DSADCPC_AN16_IN:
+ 1638 0000 000000F5 	 .word -184549376
+ 1639 0004 00000000 	 .word 0
+ 1640 0008 10       	 .byte 16
+ 1641 0009 000000   	 .zero 3
+ 1642 000c 02000000 	 .word 2
+ 1643              	 .global IfxAdc_DSADCPB_P40_8_IN
+ 1644              	 .section .rodata.IfxAdc_DSADCPB_P40_8_IN,"a"
+ 1645              	 .align 2
+ 1648              	IfxAdc_DSADCPB_P40_8_IN:
+ 1649 0000 000000F5 	 .word -184549376
+ 1650 0004 004004F0 	 .word -268156928
+ 1651 0008 08       	 .byte 8
+ 1652 0009 000000   	 .zero 3
+ 1653 000c 01000000 	 .word 1
+ 1654              	 .global IfxAdc_DSADCPB_P40_0_IN
+ 1655              	 .section .rodata.IfxAdc_DSADCPB_P40_0_IN,"a"
+ 1656              	 .align 2
+ 1659              	IfxAdc_DSADCPB_P40_0_IN:
+ 1660 0000 000000F5 	 .word -184549376
+ 1661 0004 004004F0 	 .word -268156928
+ 1662 0008 00       	 .byte 0
+ 1663 0009 000000   	 .zero 3
+ 1664 000c 01000000 	 .word 1
+ 1665              	 .global IfxAdc_DSADCPB_P00_4_IN
+ 1666              	 .section .rodata.IfxAdc_DSADCPB_P00_4_IN,"a"
+ 1667              	 .align 2
+ 1670              	IfxAdc_DSADCPB_P00_4_IN:
+ 1671 0000 000000F5 	 .word -184549376
+ 1672 0004 00A003F0 	 .word -268197888
+ 1673 0008 04       	 .byte 4
+ 1674 0009 000000   	 .zero 3
+ 1675 000c 01000000 	 .word 1
+ 1676              	 .global IfxAdc_DSADCPB_P00_10_IN
+ 1677              	 .section .rodata.IfxAdc_DSADCPB_P00_10_IN,"a"
+ 1678              	 .align 2
+ 1681              	IfxAdc_DSADCPB_P00_10_IN:
+ 1682 0000 000000F5 	 .word -184549376
+ 1683 0004 00A003F0 	 .word -268197888
+ 1684 0008 0A       	 .byte 10
+ 1685 0009 000000   	 .zero 3
+ 1686 000c 01000000 	 .word 1
+ 1687              	 .global IfxAdc_DSADCPB_AN14_IN
+ 1688              	 .section .rodata.IfxAdc_DSADCPB_AN14_IN,"a"
+ 1689              	 .align 2
+ 1692              	IfxAdc_DSADCPB_AN14_IN:
+ 1693 0000 000000F5 	 .word -184549376
+ 1694 0004 00000000 	 .word 0
+ 1695 0008 0E       	 .byte 14
+ 1696 0009 000000   	 .zero 3
+ 1697 000c 01000000 	 .word 1
+ 1698              	 .global IfxAdc_DSADCPB_AN12_IN
+ 1699              	 .section .rodata.IfxAdc_DSADCPB_AN12_IN,"a"
+ 1700              	 .align 2
+ 1703              	IfxAdc_DSADCPB_AN12_IN:
+ 1704 0000 000000F5 	 .word -184549376
+ 1705 0004 00000000 	 .word 0
+ 1706 0008 0C       	 .byte 12
+ 1707 0009 000000   	 .zero 3
+ 1708 000c 01000000 	 .word 1
+ 1709              	 .global IfxAdc_DSADCPA_P40_6_IN
+ 1710              	 .section .rodata.IfxAdc_DSADCPA_P40_6_IN,"a"
+ 1711              	 .align 2
+ 1714              	IfxAdc_DSADCPA_P40_6_IN:
+ 1715 0000 000000F5 	 .word -184549376
+ 1716 0004 004004F0 	 .word -268156928
+ 1717 0008 06       	 .byte 6
+ 1718 0009 000000   	 .zero 3
+ 1719 000c 00000000 	 .word 0
+ 1720              	 .global IfxAdc_DSADCPA_P00_8_IN
+ 1721              	 .section .rodata.IfxAdc_DSADCPA_P00_8_IN,"a"
+ 1722              	 .align 2
+ 1725              	IfxAdc_DSADCPA_P00_8_IN:
+ 1726 0000 000000F5 	 .word -184549376
+ 1727 0004 00A003F0 	 .word -268197888
+ 1728 0008 08       	 .byte 8
+ 1729 0009 000000   	 .zero 3
+ 1730 000c 00000000 	 .word 0
+ 1731              	 .global IfxAdc_DSADCPA_P00_2_IN
+ 1732              	 .section .rodata.IfxAdc_DSADCPA_P00_2_IN,"a"
+ 1733              	 .align 2
+ 1736              	IfxAdc_DSADCPA_P00_2_IN:
+ 1737 0000 000000F5 	 .word -184549376
+ 1738 0004 00A003F0 	 .word -268197888
+ 1739 0008 02       	 .byte 2
+ 1740 0009 000000   	 .zero 3
+ 1741 000c 00000000 	 .word 0
+ 1742              	 .global IfxAdc_DSADCPA_AN2_IN
+ 1743              	 .section .rodata.IfxAdc_DSADCPA_AN2_IN,"a"
+ 1744              	 .align 2
+ 1747              	IfxAdc_DSADCPA_AN2_IN:
+ 1748 0000 000000F5 	 .word -184549376
+ 1749 0004 00000000 	 .word 0
+ 1750 0008 02       	 .byte 2
+ 1751 0009 000000   	 .zero 3
+ 1752 000c 00000000 	 .word 0
+ 1753              	 .global IfxAdc_DSADCPA_AN20_IN
+ 1754              	 .section .rodata.IfxAdc_DSADCPA_AN20_IN,"a"
+ 1755              	 .align 2
+ 1758              	IfxAdc_DSADCPA_AN20_IN:
+ 1759 0000 000000F5 	 .word -184549376
+ 1760 0004 00000000 	 .word 0
+ 1761 0008 14       	 .byte 20
+ 1762 0009 000000   	 .zero 3
+ 1763 000c 00000000 	 .word 0
+ 1764              	 .global IfxAdc_DSADCPA_AN0_IN
+ 1765              	 .section .rodata.IfxAdc_DSADCPA_AN0_IN,"a"
+ 1766              	 .align 2
+ 1769              	IfxAdc_DSADCPA_AN0_IN:
+ 1770 0000 000000F5 	 .word -184549376
+ 1771 0004 00000000 	 .word 0
+ 1772 0008 00       	 .byte 0
+ 1773 0009 000000   	 .zero 3
+ 1774 000c 00000000 	 .word 0
+ 1775              	 .global IfxAdc_DSADCND_AN35_IN
+ 1776              	 .section .rodata.IfxAdc_DSADCND_AN35_IN,"a"
+ 1777              	 .align 2
+ 1780              	IfxAdc_DSADCND_AN35_IN:
+ 1781 0000 000000F5 	 .word -184549376
+ 1782 0004 00000000 	 .word 0
+ 1783 0008 23       	 .byte 35
+ 1784 0009 000000   	 .zero 3
+ 1785 000c 03000000 	 .word 3
+ 1786              	 .global IfxAdc_DSADCNC_P40_12_IN
+ 1787              	 .section .rodata.IfxAdc_DSADCNC_P40_12_IN,"a"
+ 1788              	 .align 2
+ 1791              	IfxAdc_DSADCNC_P40_12_IN:
+ 1792 0000 000000F5 	 .word -184549376
+ 1793 0004 004004F0 	 .word -268156928
+ 1794 0008 0C       	 .byte 12
+ 1795 0009 000000   	 .zero 3
+ 1796 000c 02000000 	 .word 2
+ 1797              	 .global IfxAdc_DSADCNC_P40_10_IN
+ 1798              	 .section .rodata.IfxAdc_DSADCNC_P40_10_IN,"a"
+ 1799              	 .align 2
+ 1802              	IfxAdc_DSADCNC_P40_10_IN:
+ 1803 0000 000000F5 	 .word -184549376
+ 1804 0004 004004F0 	 .word -268156928
+ 1805 0008 0A       	 .byte 10
+ 1806 0009 000000   	 .zero 3
+ 1807 000c 02000000 	 .word 2
+ 1808              	 .global IfxAdc_DSADCNB_P40_9_IN
+ 1809              	 .section .rodata.IfxAdc_DSADCNB_P40_9_IN,"a"
+ 1810              	 .align 2
+ 1813              	IfxAdc_DSADCNB_P40_9_IN:
+ 1814 0000 000000F5 	 .word -184549376
+ 1815 0004 004004F0 	 .word -268156928
+ 1816 0008 09       	 .byte 9
+ 1817 0009 000000   	 .zero 3
+ 1818 000c 01000000 	 .word 1
+ 1819              	 .global IfxAdc_DSADCNB_P40_1_IN
+ 1820              	 .section .rodata.IfxAdc_DSADCNB_P40_1_IN,"a"
+ 1821              	 .align 2
+ 1824              	IfxAdc_DSADCNB_P40_1_IN:
+ 1825 0000 000000F5 	 .word -184549376
+ 1826 0004 004004F0 	 .word -268156928
+ 1827 0008 01       	 .byte 1
+ 1828 0009 000000   	 .zero 3
+ 1829 000c 01000000 	 .word 1
+ 1830              	 .global IfxAdc_DSADCNB_P00_9_IN
+ 1831              	 .section .rodata.IfxAdc_DSADCNB_P00_9_IN,"a"
+ 1832              	 .align 2
+ 1835              	IfxAdc_DSADCNB_P00_9_IN:
+ 1836 0000 000000F5 	 .word -184549376
+ 1837 0004 00A003F0 	 .word -268197888
+ 1838 0008 09       	 .byte 9
+ 1839 0009 000000   	 .zero 3
+ 1840 000c 01000000 	 .word 1
+ 1841              	 .global IfxAdc_DSADCNB_P00_3_IN
+ 1842              	 .section .rodata.IfxAdc_DSADCNB_P00_3_IN,"a"
+ 1843              	 .align 2
+ 1846              	IfxAdc_DSADCNB_P00_3_IN:
+ 1847 0000 000000F5 	 .word -184549376
+ 1848 0004 00A003F0 	 .word -268197888
+ 1849 0008 03       	 .byte 3
+ 1850 0009 000000   	 .zero 3
+ 1851 000c 01000000 	 .word 1
+ 1852              	 .global IfxAdc_DSADCNB_AN15_IN
+ 1853              	 .section .rodata.IfxAdc_DSADCNB_AN15_IN,"a"
+ 1854              	 .align 2
+ 1857              	IfxAdc_DSADCNB_AN15_IN:
+ 1858 0000 000000F5 	 .word -184549376
+ 1859 0004 00000000 	 .word 0
+ 1860 0008 0F       	 .byte 15
+ 1861 0009 000000   	 .zero 3
+ 1862 000c 01000000 	 .word 1
+ 1863              	 .global IfxAdc_DSADCNB_AN13_IN
+ 1864              	 .section .rodata.IfxAdc_DSADCNB_AN13_IN,"a"
+ 1865              	 .align 2
+ 1868              	IfxAdc_DSADCNB_AN13_IN:
+ 1869 0000 000000F5 	 .word -184549376
+ 1870 0004 00000000 	 .word 0
+ 1871 0008 0D       	 .byte 13
+ 1872 0009 000000   	 .zero 3
+ 1873 000c 01000000 	 .word 1
+ 1874              	 .global IfxAdc_DSADCNA_P40_7_IN
+ 1875              	 .section .rodata.IfxAdc_DSADCNA_P40_7_IN,"a"
+ 1876              	 .align 2
+ 1879              	IfxAdc_DSADCNA_P40_7_IN:
+ 1880 0000 000000F5 	 .word -184549376
+ 1881 0004 004004F0 	 .word -268156928
+ 1882 0008 07       	 .byte 7
+ 1883 0009 000000   	 .zero 3
+ 1884 000c 00000000 	 .word 0
+ 1885              	 .global IfxAdc_DSADCNA_P00_7_IN
+ 1886              	 .section .rodata.IfxAdc_DSADCNA_P00_7_IN,"a"
+ 1887              	 .align 2
+ 1890              	IfxAdc_DSADCNA_P00_7_IN:
+ 1891 0000 000000F5 	 .word -184549376
+ 1892 0004 00A003F0 	 .word -268197888
+ 1893 0008 07       	 .byte 7
+ 1894 0009 000000   	 .zero 3
+ 1895 000c 00000000 	 .word 0
+ 1896              	 .global IfxAdc_DSADCNA_P00_1_IN
+ 1897              	 .section .rodata.IfxAdc_DSADCNA_P00_1_IN,"a"
+ 1898              	 .align 2
+ 1901              	IfxAdc_DSADCNA_P00_1_IN:
+ 1902 0000 000000F5 	 .word -184549376
+ 1903 0004 00A003F0 	 .word -268197888
+ 1904 0008 01       	 .byte 1
+ 1905 0009 000000   	 .zero 3
+ 1906 000c 00000000 	 .word 0
+ 1907              	 .global IfxAdc_DSADCNA_AN3_IN
+ 1908              	 .section .rodata.IfxAdc_DSADCNA_AN3_IN,"a"
+ 1909              	 .align 2
+ 1912              	IfxAdc_DSADCNA_AN3_IN:
+ 1913 0000 000000F5 	 .word -184549376
+ 1914 0004 00000000 	 .word 0
+ 1915 0008 03       	 .byte 3
+ 1916 0009 000000   	 .zero 3
+ 1917 000c 00000000 	 .word 0
+ 1918              	 .global IfxAdc_DSADCNA_AN21_IN
+ 1919              	 .section .rodata.IfxAdc_DSADCNA_AN21_IN,"a"
+ 1920              	 .align 2
+ 1923              	IfxAdc_DSADCNA_AN21_IN:
+ 1924 0000 000000F5 	 .word -184549376
+ 1925 0004 00000000 	 .word 0
+ 1926 0008 15       	 .byte 21
+ 1927 0009 000000   	 .zero 3
+ 1928 000c 00000000 	 .word 0
+ 1929              	 .global IfxAdc_DSADCNA_AN1_IN
+ 1930              	 .section .rodata.IfxAdc_DSADCNA_AN1_IN,"a"
+ 1931              	 .align 2
+ 1934              	IfxAdc_DSADCNA_AN1_IN:
+ 1935 0000 000000F5 	 .word -184549376
+ 1936 0004 00000000 	 .word 0
+ 1937 0008 01       	 .byte 1
+ 1938 0009 000000   	 .zero 3
+ 1939 000c 00000000 	 .word 0
+ 1940              	 .global IfxAdc_DATA7_P02_14_IN
+ 1941              	 .section .rodata.IfxAdc_DATA7_P02_14_IN,"a"
+ 1942              	 .align 2
+ 1945              	IfxAdc_DATA7_P02_14_IN:
+ 1946 0000 000000F5 	 .word -184549376
+ 1947 0004 00A803F0 	 .word -268195840
+ 1948 0008 0E       	 .byte 14
+ 1949 0009 000000   	 .zero 3
+ 1950 000c 00000000 	 .word 0
+ 1951              	 .global IfxAdc_DATA6_P02_12_IN
+ 1952              	 .section .rodata.IfxAdc_DATA6_P02_12_IN,"a"
+ 1953              	 .align 2
+ 1956              	IfxAdc_DATA6_P02_12_IN:
+ 1957 0000 000000F5 	 .word -184549376
+ 1958 0004 00A803F0 	 .word -268195840
+ 1959 0008 0C       	 .byte 12
+ 1960 0009 000000   	 .zero 3
+ 1961 000c 00000000 	 .word 0
+ 1962              	 .global IfxAdc_DATA5_P02_4_IN
+ 1963              	 .section .rodata.IfxAdc_DATA5_P02_4_IN,"a"
+ 1964              	 .align 2
+ 1967              	IfxAdc_DATA5_P02_4_IN:
+ 1968 0000 000000F5 	 .word -184549376
+ 1969 0004 00A803F0 	 .word -268195840
+ 1970 0008 04       	 .byte 4
+ 1971 0009 000000   	 .zero 3
+ 1972 000c 00000000 	 .word 0
+ 1973              	 .global IfxAdc_DATA4_P02_6_IN
+ 1974              	 .section .rodata.IfxAdc_DATA4_P02_6_IN,"a"
+ 1975              	 .align 2
+ 1978              	IfxAdc_DATA4_P02_6_IN:
+ 1979 0000 000000F5 	 .word -184549376
+ 1980 0004 00A803F0 	 .word -268195840
+ 1981 0008 06       	 .byte 6
+ 1982 0009 000000   	 .zero 3
+ 1983 000c 00000000 	 .word 0
+ 1984              	 .global IfxAdc_DATA3_P02_8_IN
+ 1985              	 .section .rodata.IfxAdc_DATA3_P02_8_IN,"a"
+ 1986              	 .align 2
+ 1989              	IfxAdc_DATA3_P02_8_IN:
+ 1990 0000 000000F5 	 .word -184549376
+ 1991 0004 00A803F0 	 .word -268195840
+ 1992 0008 08       	 .byte 8
+ 1993 0009 000000   	 .zero 3
+ 1994 000c 00000000 	 .word 0
+ 1995              	 .global IfxAdc_DATA2_P33_2_IN
+ 1996              	 .section .rodata.IfxAdc_DATA2_P33_2_IN,"a"
+ 1997              	 .align 2
+ 2000              	IfxAdc_DATA2_P33_2_IN:
+ 2001 0000 000000F5 	 .word -184549376
+ 2002 0004 002404F0 	 .word -268164096
+ 2003 0008 02       	 .byte 2
+ 2004 0009 000000   	 .zero 3
+ 2005 000c 00000000 	 .word 0
+ 2006              	 .global IfxAdc_DATA1_P33_4_IN
+ 2007              	 .section .rodata.IfxAdc_DATA1_P33_4_IN,"a"
+ 2008              	 .align 2
+ 2011              	IfxAdc_DATA1_P33_4_IN:
+ 2012 0000 000000F5 	 .word -184549376
+ 2013 0004 002404F0 	 .word -268164096
+ 2014 0008 04       	 .byte 4
+ 2015 0009 000000   	 .zero 3
+ 2016 000c 00000000 	 .word 0
+ 2017              	 .global IfxAdc_DATA0_P33_6_IN
+ 2018              	 .section .rodata.IfxAdc_DATA0_P33_6_IN,"a"
+ 2019              	 .align 2
+ 2022              	IfxAdc_DATA0_P33_6_IN:
+ 2023 0000 000000F5 	 .word -184549376
+ 2024 0004 002404F0 	 .word -268164096
+ 2025 0008 06       	 .byte 6
+ 2026 0009 000000   	 .zero 3
+ 2027 000c 00000000 	 .word 0
+ 2028              	 .global IfxAdc_CLKOUT3_P33_5_OUT
+ 2029              	 .section .rodata.IfxAdc_CLKOUT3_P33_5_OUT,"a"
+ 2030              	 .align 2
+ 2033              	IfxAdc_CLKOUT3_P33_5_OUT:
+ 2034 0000 000000F5 	 .word -184549376
+ 2035 0004 002404F0 	 .word -268164096
+ 2036 0008 05       	 .byte 5
+ 2037 0009 000000   	 .zero 3
+ 2038 000c 41000000 	 .word 65
+ 2039              	 .global IfxAdc_CLKOUT3_P02_13_OUT
+ 2040              	 .section .rodata.IfxAdc_CLKOUT3_P02_13_OUT,"a"
+ 2041              	 .align 2
+ 2044              	IfxAdc_CLKOUT3_P02_13_OUT:
+ 2045 0000 000000F5 	 .word -184549376
+ 2046 0004 00A803F0 	 .word -268195840
+ 2047 0008 0D       	 .byte 13
+ 2048 0009 000000   	 .zero 3
+ 2049 000c 71000000 	 .word 113
+ 2050              	 .global IfxAdc_CLKOUT2_P33_3_OUT
+ 2051              	 .section .rodata.IfxAdc_CLKOUT2_P33_3_OUT,"a"
+ 2052              	 .align 2
+ 2055              	IfxAdc_CLKOUT2_P33_3_OUT:
+ 2056 0000 000000F5 	 .word -184549376
+ 2057 0004 002404F0 	 .word -268164096
+ 2058 0008 03       	 .byte 3
+ 2059 0009 000000   	 .zero 3
+ 2060 000c 41000000 	 .word 65
+ 2061              	 .global IfxAdc_CLKOUT2_P02_3_OUT
+ 2062              	 .section .rodata.IfxAdc_CLKOUT2_P02_3_OUT,"a"
+ 2063              	 .align 2
+ 2066              	IfxAdc_CLKOUT2_P02_3_OUT:
+ 2067 0000 000000F5 	 .word -184549376
+ 2068 0004 00A803F0 	 .word -268195840
+ 2069 0008 03       	 .byte 3
+ 2070 0009 000000   	 .zero 3
+ 2071 000c 41000000 	 .word 65
+ 2072              	 .global IfxAdc_CLKOUT1_P33_1_OUT
+ 2073              	 .section .rodata.IfxAdc_CLKOUT1_P33_1_OUT,"a"
+ 2074              	 .align 2
+ 2077              	IfxAdc_CLKOUT1_P33_1_OUT:
+ 2078 0000 000000F5 	 .word -184549376
+ 2079 0004 002404F0 	 .word -268164096
+ 2080 0008 01       	 .byte 1
+ 2081 0009 000000   	 .zero 3
+ 2082 000c 41000000 	 .word 65
+ 2083              	 .global IfxAdc_CLKOUT1_P02_1_OUT
+ 2084              	 .section .rodata.IfxAdc_CLKOUT1_P02_1_OUT,"a"
+ 2085              	 .align 2
+ 2088              	IfxAdc_CLKOUT1_P02_1_OUT:
+ 2089 0000 000000F5 	 .word -184549376
+ 2090 0004 00A803F0 	 .word -268195840
+ 2091 0008 01       	 .byte 1
+ 2092 0009 000000   	 .zero 3
+ 2093 000c 61000000 	 .word 97
+ 2094              	 .global IfxAdc_CLKOUT0_P10_0_OUT
+ 2095              	 .section .rodata.IfxAdc_CLKOUT0_P10_0_OUT,"a"
+ 2096              	 .align 2
+ 2099              	IfxAdc_CLKOUT0_P10_0_OUT:
+ 2100 0000 000000F5 	 .word -184549376
+ 2101 0004 00C803F0 	 .word -268187648
+ 2102 0008 00       	 .byte 0
+ 2103 0009 000000   	 .zero 3
+ 2104 000c 51000000 	 .word 81
+ 2105              	 .global IfxAdc_CLKOUT0_P04_2_OUT
+ 2106              	 .section .rodata.IfxAdc_CLKOUT0_P04_2_OUT,"a"
+ 2107              	 .align 2
+ 2110              	IfxAdc_CLKOUT0_P04_2_OUT:
+ 2111 0000 000000F5 	 .word -184549376
+ 2112 0004 00B003F0 	 .word -268193792
+ 2113 0008 02       	 .byte 2
+ 2114 0009 000000   	 .zero 3
+ 2115 000c 71000000 	 .word 113
+ 2116              	 .global IfxAdc_CLKOUT0_P02_15_OUT
+ 2117              	 .section .rodata.IfxAdc_CLKOUT0_P02_15_OUT,"a"
+ 2118              	 .align 2
+ 2121              	IfxAdc_CLKOUT0_P02_15_OUT:
+ 2122 0000 000000F5 	 .word -184549376
+ 2123 0004 00A803F0 	 .word -268195840
+ 2124 0008 0F       	 .byte 15
+ 2125 0009 000000   	 .zero 3
+ 2126 000c 71000000 	 .word 113
+ 2127              	 .global IfxAdc_CLKOUT0_P00_11_OUT
+ 2128              	 .section .rodata.IfxAdc_CLKOUT0_P00_11_OUT,"a"
+ 2129              	 .align 2
+ 2132              	IfxAdc_CLKOUT0_P00_11_OUT:
+ 2133 0000 000000F5 	 .word -184549376
+ 2134 0004 00A003F0 	 .word -268197888
+ 2135 0008 0B       	 .byte 11
+ 2136 0009 000000   	 .zero 3
+ 2137 000c 41000000 	 .word 65
+ 2138              	 .global IfxAdc_CLKIN7_P02_15_IN
+ 2139              	 .section .rodata.IfxAdc_CLKIN7_P02_15_IN,"a"
+ 2140              	 .align 2
+ 2143              	IfxAdc_CLKIN7_P02_15_IN:
+ 2144 0000 000000F5 	 .word -184549376
+ 2145 0004 00A803F0 	 .word -268195840
+ 2146 0008 0F       	 .byte 15
+ 2147 0009 000000   	 .zero 3
+ 2148 000c 00000000 	 .word 0
+ 2149              	 .global IfxAdc_CLKIN6_P02_13_IN
+ 2150              	 .section .rodata.IfxAdc_CLKIN6_P02_13_IN,"a"
+ 2151              	 .align 2
+ 2154              	IfxAdc_CLKIN6_P02_13_IN:
+ 2155 0000 000000F5 	 .word -184549376
+ 2156 0004 00A803F0 	 .word -268195840
+ 2157 0008 0D       	 .byte 13
+ 2158 0009 000000   	 .zero 3
+ 2159 000c 00000000 	 .word 0
+ 2160              	 .global IfxAdc_CLKIN5_P02_3_IN
+ 2161              	 .section .rodata.IfxAdc_CLKIN5_P02_3_IN,"a"
+ 2162              	 .align 2
+ 2165              	IfxAdc_CLKIN5_P02_3_IN:
+ 2166 0000 000000F5 	 .word -184549376
+ 2167 0004 00A803F0 	 .word -268195840
+ 2168 0008 03       	 .byte 3
+ 2169 0009 000000   	 .zero 3
+ 2170 000c 00000000 	 .word 0
+ 2171              	 .global IfxAdc_CLKIN4_P02_1_IN
+ 2172              	 .section .rodata.IfxAdc_CLKIN4_P02_1_IN,"a"
+ 2173              	 .align 2
+ 2176              	IfxAdc_CLKIN4_P02_1_IN:
+ 2177 0000 000000F5 	 .word -184549376
+ 2178 0004 00A803F0 	 .word -268195840
+ 2179 0008 01       	 .byte 1
+ 2180 0009 000000   	 .zero 3
+ 2181 000c 00000000 	 .word 0
+ 2182              	 .global IfxAdc_CLKIN3_P10_0_IN
+ 2183              	 .section .rodata.IfxAdc_CLKIN3_P10_0_IN,"a"
+ 2184              	 .align 2
+ 2187              	IfxAdc_CLKIN3_P10_0_IN:
+ 2188 0000 000000F5 	 .word -184549376
+ 2189 0004 00C803F0 	 .word -268187648
+ 2190 0008 00       	 .byte 0
+ 2191 0009 000000   	 .zero 3
+ 2192 000c 00000000 	 .word 0
+ 2193              	 .global IfxAdc_CLKIN2_P33_1_IN
+ 2194              	 .section .rodata.IfxAdc_CLKIN2_P33_1_IN,"a"
+ 2195              	 .align 2
+ 2198              	IfxAdc_CLKIN2_P33_1_IN:
+ 2199 0000 000000F5 	 .word -184549376
+ 2200 0004 002404F0 	 .word -268164096
+ 2201 0008 01       	 .byte 1
+ 2202 0009 000000   	 .zero 3
+ 2203 000c 00000000 	 .word 0
+ 2204              	 .global IfxAdc_CLKIN1_P33_3_IN
+ 2205              	 .section .rodata.IfxAdc_CLKIN1_P33_3_IN,"a"
+ 2206              	 .align 2
+ 2209              	IfxAdc_CLKIN1_P33_3_IN:
+ 2210 0000 000000F5 	 .word -184549376
+ 2211 0004 002404F0 	 .word -268164096
+ 2212 0008 03       	 .byte 3
+ 2213 0009 000000   	 .zero 3
+ 2214 000c 00000000 	 .word 0
+ 2215              	 .global IfxAdc_CLKIN0_P33_5_IN
+ 2216              	 .section .rodata.IfxAdc_CLKIN0_P33_5_IN,"a"
+ 2217              	 .align 2
+ 2220              	IfxAdc_CLKIN0_P33_5_IN:
+ 2221 0000 000000F5 	 .word -184549376
+ 2222 0004 002404F0 	 .word -268164096
+ 2223 0008 05       	 .byte 5
+ 2224 0009 000000   	 .zero 3
+ 2225 000c 00000000 	 .word 0
+ 2226              	 .global IfxAdc_BFL9_P33_11_OUT
+ 2227              	 .section .rodata.IfxAdc_BFL9_P33_11_OUT,"a"
+ 2228              	 .align 2
+ 2231              	IfxAdc_BFL9_P33_11_OUT:
+ 2232 0000 000000F5 	 .word -184549376
+ 2233 0004 002404F0 	 .word -268164096
+ 2234 0008 0B       	 .byte 11
+ 2235 0009 000000   	 .zero 3
+ 2236 000c B1000000 	 .word 177
+ 2237              	 .global IfxAdc_BFL9_P10_4_OUT
+ 2238              	 .section .rodata.IfxAdc_BFL9_P10_4_OUT,"a"
+ 2239              	 .align 2
+ 2242              	IfxAdc_BFL9_P10_4_OUT:
+ 2243 0000 000000F5 	 .word -184549376
+ 2244 0004 00C803F0 	 .word -268187648
+ 2245 0008 04       	 .byte 4
+ 2246 0009 000000   	 .zero 3
+ 2247 000c 61000000 	 .word 97
+ 2248              	 .global IfxAdc_BFL8_P33_9_OUT
+ 2249              	 .section .rodata.IfxAdc_BFL8_P33_9_OUT,"a"
+ 2250              	 .align 2
+ 2253              	IfxAdc_BFL8_P33_9_OUT:
+ 2254 0000 000000F5 	 .word -184549376
+ 2255 0004 002404F0 	 .word -268164096
+ 2256 0008 09       	 .byte 9
+ 2257 0009 000000   	 .zero 3
+ 2258 000c B1000000 	 .word 177
+ 2259              	 .global IfxAdc_BFL8_P10_3_OUT
+ 2260              	 .section .rodata.IfxAdc_BFL8_P10_3_OUT,"a"
+ 2261              	 .align 2
+ 2264              	IfxAdc_BFL8_P10_3_OUT:
+ 2265 0000 000000F5 	 .word -184549376
+ 2266 0004 00C803F0 	 .word -268187648
+ 2267 0008 03       	 .byte 3
+ 2268 0009 000000   	 .zero 3
+ 2269 000c 51000000 	 .word 81
+ 2270              	 .global IfxAdc_BFL7_P34_5_OUT
+ 2271              	 .section .rodata.IfxAdc_BFL7_P34_5_OUT,"a"
+ 2272              	 .align 2
+ 2275              	IfxAdc_BFL7_P34_5_OUT:
+ 2276 0000 000000F5 	 .word -184549376
+ 2277 0004 002804F0 	 .word -268163072
+ 2278 0008 05       	 .byte 5
+ 2279 0009 000000   	 .zero 3
+ 2280 000c 61000000 	 .word 97
+ 2281              	 .global IfxAdc_BFL7_P04_8_OUT
+ 2282              	 .section .rodata.IfxAdc_BFL7_P04_8_OUT,"a"
+ 2283              	 .align 2
+ 2286              	IfxAdc_BFL7_P04_8_OUT:
+ 2287 0000 000000F5 	 .word -184549376
+ 2288 0004 00B003F0 	 .word -268193792
+ 2289 0008 08       	 .byte 8
+ 2290 0009 000000   	 .zero 3
+ 2291 000c 71000000 	 .word 113
+ 2292              	 .global IfxAdc_BFL7_P01_11_OUT
+ 2293              	 .section .rodata.IfxAdc_BFL7_P01_11_OUT,"a"
+ 2294              	 .align 2
+ 2297              	IfxAdc_BFL7_P01_11_OUT:
+ 2298 0000 000000F5 	 .word -184549376
+ 2299 0004 00A403F0 	 .word -268196864
+ 2300 0008 0B       	 .byte 11
+ 2301 0009 000000   	 .zero 3
+ 2302 000c 71000000 	 .word 113
+ 2303              	 .global IfxAdc_BFL6_P34_4_OUT
+ 2304              	 .section .rodata.IfxAdc_BFL6_P34_4_OUT,"a"
+ 2305              	 .align 2
+ 2308              	IfxAdc_BFL6_P34_4_OUT:
+ 2309 0000 000000F5 	 .word -184549376
+ 2310 0004 002804F0 	 .word -268163072
+ 2311 0008 04       	 .byte 4
+ 2312 0009 000000   	 .zero 3
+ 2313 000c 61000000 	 .word 97
+ 2314              	 .global IfxAdc_BFL6_P04_9_OUT
+ 2315              	 .section .rodata.IfxAdc_BFL6_P04_9_OUT,"a"
+ 2316              	 .align 2
+ 2319              	IfxAdc_BFL6_P04_9_OUT:
+ 2320 0000 000000F5 	 .word -184549376
+ 2321 0004 00B003F0 	 .word -268193792
+ 2322 0008 09       	 .byte 9
+ 2323 0009 000000   	 .zero 3
+ 2324 000c 71000000 	 .word 113
+ 2325              	 .global IfxAdc_BFL6_P01_10_OUT
+ 2326              	 .section .rodata.IfxAdc_BFL6_P01_10_OUT,"a"
+ 2327              	 .align 2
+ 2330              	IfxAdc_BFL6_P01_10_OUT:
+ 2331 0000 000000F5 	 .word -184549376
+ 2332 0004 00A403F0 	 .word -268196864
+ 2333 0008 0A       	 .byte 10
+ 2334 0009 000000   	 .zero 3
+ 2335 000c 71000000 	 .word 113
+ 2336              	 .global IfxAdc_BFL5_P33_3_OUT
+ 2337              	 .section .rodata.IfxAdc_BFL5_P33_3_OUT,"a"
+ 2338              	 .align 2
+ 2341              	IfxAdc_BFL5_P33_3_OUT:
+ 2342 0000 000000F5 	 .word -184549376
+ 2343 0004 002404F0 	 .word -268164096
+ 2344 0008 03       	 .byte 3
+ 2345 0009 000000   	 .zero 3
+ 2346 000c 61000000 	 .word 97
+ 2347              	 .global IfxAdc_BFL5_P04_7_OUT
+ 2348              	 .section .rodata.IfxAdc_BFL5_P04_7_OUT,"a"
+ 2349              	 .align 2
+ 2352              	IfxAdc_BFL5_P04_7_OUT:
+ 2353 0000 000000F5 	 .word -184549376
+ 2354 0004 00B003F0 	 .word -268193792
+ 2355 0008 07       	 .byte 7
+ 2356 0009 000000   	 .zero 3
+ 2357 000c 71000000 	 .word 113
+ 2358              	 .global IfxAdc_BFL5_P01_9_OUT
+ 2359              	 .section .rodata.IfxAdc_BFL5_P01_9_OUT,"a"
+ 2360              	 .align 2
+ 2363              	IfxAdc_BFL5_P01_9_OUT:
+ 2364 0000 000000F5 	 .word -184549376
+ 2365 0004 00A403F0 	 .word -268196864
+ 2366 0008 09       	 .byte 9
+ 2367 0009 000000   	 .zero 3
+ 2368 000c 71000000 	 .word 113
+ 2369              	 .global IfxAdc_BFL4_P33_1_OUT
+ 2370              	 .section .rodata.IfxAdc_BFL4_P33_1_OUT,"a"
+ 2371              	 .align 2
+ 2374              	IfxAdc_BFL4_P33_1_OUT:
+ 2375 0000 000000F5 	 .word -184549376
+ 2376 0004 002404F0 	 .word -268164096
+ 2377 0008 01       	 .byte 1
+ 2378 0009 000000   	 .zero 3
+ 2379 000c 61000000 	 .word 97
+ 2380              	 .global IfxAdc_BFL4_P04_6_OUT
+ 2381              	 .section .rodata.IfxAdc_BFL4_P04_6_OUT,"a"
+ 2382              	 .align 2
+ 2385              	IfxAdc_BFL4_P04_6_OUT:
+ 2386 0000 000000F5 	 .word -184549376
+ 2387 0004 00B003F0 	 .word -268193792
+ 2388 0008 06       	 .byte 6
+ 2389 0009 000000   	 .zero 3
+ 2390 000c 71000000 	 .word 113
+ 2391              	 .global IfxAdc_BFL4_P01_8_OUT
+ 2392              	 .section .rodata.IfxAdc_BFL4_P01_8_OUT,"a"
+ 2393              	 .align 2
+ 2396              	IfxAdc_BFL4_P01_8_OUT:
+ 2397 0000 000000F5 	 .word -184549376
+ 2398 0004 00A403F0 	 .word -268196864
+ 2399 0008 08       	 .byte 8
+ 2400 0009 000000   	 .zero 3
+ 2401 000c 71000000 	 .word 113
+ 2402              	 .global IfxAdc_BFL3_P33_2_OUT
+ 2403              	 .section .rodata.IfxAdc_BFL3_P33_2_OUT,"a"
+ 2404              	 .align 2
+ 2407              	IfxAdc_BFL3_P33_2_OUT:
+ 2408 0000 000000F5 	 .word -184549376
+ 2409 0004 002404F0 	 .word -268164096
+ 2410 0008 02       	 .byte 2
+ 2411 0009 000000   	 .zero 3
+ 2412 000c 61000000 	 .word 97
+ 2413              	 .global IfxAdc_BFL3_P10_2_OUT
+ 2414              	 .section .rodata.IfxAdc_BFL3_P10_2_OUT,"a"
+ 2415              	 .align 2
+ 2418              	IfxAdc_BFL3_P10_2_OUT:
+ 2419 0000 000000F5 	 .word -184549376
+ 2420 0004 00C803F0 	 .word -268187648
+ 2421 0008 02       	 .byte 2
+ 2422 0009 000000   	 .zero 3
+ 2423 000c 51000000 	 .word 81
+ 2424              	 .global IfxAdc_BFL2_P33_5_OUT
+ 2425              	 .section .rodata.IfxAdc_BFL2_P33_5_OUT,"a"
+ 2426              	 .align 2
+ 2429              	IfxAdc_BFL2_P33_5_OUT:
+ 2430 0000 000000F5 	 .word -184549376
+ 2431 0004 002404F0 	 .word -268164096
+ 2432 0008 05       	 .byte 5
+ 2433 0009 000000   	 .zero 3
+ 2434 000c 61000000 	 .word 97
+ 2435              	 .global IfxAdc_BFL2_P33_0_OUT
+ 2436              	 .section .rodata.IfxAdc_BFL2_P33_0_OUT,"a"
+ 2437              	 .align 2
+ 2440              	IfxAdc_BFL2_P33_0_OUT:
+ 2441 0000 000000F5 	 .word -184549376
+ 2442 0004 002404F0 	 .word -268164096
+ 2443 0008 00       	 .byte 0
+ 2444 0009 000000   	 .zero 3
+ 2445 000c 61000000 	 .word 97
+ 2446              	 .global IfxAdc_BFL1_P33_6_OUT
+ 2447              	 .section .rodata.IfxAdc_BFL1_P33_6_OUT,"a"
+ 2448              	 .align 2
+ 2451              	IfxAdc_BFL1_P33_6_OUT:
+ 2452 0000 000000F5 	 .word -184549376
+ 2453 0004 002404F0 	 .word -268164096
+ 2454 0008 06       	 .byte 6
+ 2455 0009 000000   	 .zero 3
+ 2456 000c 61000000 	 .word 97
+ 2457              	 .global IfxAdc_BFL1_P10_1_OUT
+ 2458              	 .section .rodata.IfxAdc_BFL1_P10_1_OUT,"a"
+ 2459              	 .align 2
+ 2462              	IfxAdc_BFL1_P10_1_OUT:
+ 2463 0000 000000F5 	 .word -184549376
+ 2464 0004 00C803F0 	 .word -268187648
+ 2465 0008 01       	 .byte 1
+ 2466 0009 000000   	 .zero 3
+ 2467 000c 51000000 	 .word 81
+ 2468              	 .global IfxAdc_BFL0_P33_4_OUT
+ 2469              	 .section .rodata.IfxAdc_BFL0_P33_4_OUT,"a"
+ 2470              	 .align 2
+ 2473              	IfxAdc_BFL0_P33_4_OUT:
+ 2474 0000 000000F5 	 .word -184549376
+ 2475 0004 002404F0 	 .word -268164096
+ 2476 0008 04       	 .byte 4
+ 2477 0009 000000   	 .zero 3
+ 2478 000c 61000000 	 .word 97
+ 2479              	 .global IfxAdc_BFL0_P00_5_OUT
+ 2480              	 .section .rodata.IfxAdc_BFL0_P00_5_OUT,"a"
+ 2481              	 .align 2
+ 2484              	IfxAdc_BFL0_P00_5_OUT:
+ 2485 0000 000000F5 	 .word -184549376
+ 2486 0004 00A003F0 	 .word -268197888
+ 2487 0008 05       	 .byte 5
+ 2488 0009 000000   	 .zero 3
+ 2489 000c 51000000 	 .word 81
+ 2490              	.section .text,"ax",@progbits
+ 2491              	.Letext0:
+ 2492              	 .file 1 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 2493              	 .file 2 "../Libraries/Infra/Sfr/TC4Dx/IfxAdc_regdef.h"
+ 2494              	 .file 3 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 2495              	 .file 4 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+ 2496              	 .file 5 "../Libraries/Infra/Sfr/TC4Dx/IfxPort_regdef.h"
+ 2497              	 .file 6 "../Libraries/iLLD/TC4xx/CpuGeneric/Port/Std/IfxPort.h"
+ 2498              	 .file 7 "../Libraries/iLLD/TC4xx/CpuGeneric/_PinMap/IfxAdc_PinMap.h"
+ 2499              	 .file 8 "../Libraries/iLLD/TC4xx/CpuGeneric/_PinMap/TC4Dx/IfxAdc_PinMap_TC4Dx_BGA436_COM.h"
+ 2500              	 .file 9 "../Libraries/iLLD/TC4xx/CpuGeneric/_PinMap/TC4Dx/IfxAdc_PinMap_TC4Dx_BGA436_COM.c"
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxAdc_PinMap_TC4Dx_BGA436_COM.c
+                            *ABS*:00000000 IfxAdc_PinMap_TC4Dx_BGA436_COM.c
+    {standard input}:11     .data.IfxAdc_Trig_In_pinTable:00000000 IfxAdc_Trig_In_pinTable
+    {standard input}:1230   .rodata.IfxAdc_TRIG56_P02_0_IN:00000000 IfxAdc_TRIG56_P02_0_IN
+    {standard input}:1219   .rodata.IfxAdc_TRIG57_P02_1_IN:00000000 IfxAdc_TRIG57_P02_1_IN
+    {standard input}:1208   .rodata.IfxAdc_TRIG58_P02_7_IN:00000000 IfxAdc_TRIG58_P02_7_IN
+    {standard input}:1197   .rodata.IfxAdc_TRIG59_P02_8_IN:00000000 IfxAdc_TRIG59_P02_8_IN
+    {standard input}:1164   .rodata.IfxAdc_TRIG62_P20_9_IN:00000000 IfxAdc_TRIG62_P20_9_IN
+    {standard input}:1175   .rodata.IfxAdc_TRIG61_P23_1_IN:00000000 IfxAdc_TRIG61_P23_1_IN
+    {standard input}:1186   .rodata.IfxAdc_TRIG60_P33_7_IN:00000000 IfxAdc_TRIG60_P33_7_IN
+    {standard input}:24     .data.IfxAdc_TmadcCh_In_pinTable:00000000 IfxAdc_TmadcCh_In_pinTable
+    {standard input}:1150   .rodata.IfxAdc_Tmadc_TMADC0CH0_AN0_IN:00000000 IfxAdc_Tmadc_TMADC0CH0_AN0_IN
+    {standard input}:1052   .rodata.IfxAdc_Tmadc_TMADC0CH1_AN1_IN:00000000 IfxAdc_Tmadc_TMADC0CH1_AN1_IN
+    {standard input}:1038   .rodata.IfxAdc_Tmadc_TMADC0CH2_AN2_IN:00000000 IfxAdc_Tmadc_TMADC0CH2_AN2_IN
+    {standard input}:1024   .rodata.IfxAdc_Tmadc_TMADC0CH3_AN3_IN:00000000 IfxAdc_Tmadc_TMADC0CH3_AN3_IN
+    {standard input}:1010   .rodata.IfxAdc_Tmadc_TMADC0CH4_AN4_IN:00000000 IfxAdc_Tmadc_TMADC0CH4_AN4_IN
+    {standard input}:996    .rodata.IfxAdc_Tmadc_TMADC0CH5_AN5_IN:00000000 IfxAdc_Tmadc_TMADC0CH5_AN5_IN
+    {standard input}:982    .rodata.IfxAdc_Tmadc_TMADC0CH6_AN6_IN:00000000 IfxAdc_Tmadc_TMADC0CH6_AN6_IN
+    {standard input}:968    .rodata.IfxAdc_Tmadc_TMADC0CH7_AN7_IN:00000000 IfxAdc_Tmadc_TMADC0CH7_AN7_IN
+    {standard input}:954    .rodata.IfxAdc_Tmadc_TMADC0CH8_AN8_IN:00000000 IfxAdc_Tmadc_TMADC0CH8_AN8_IN
+    {standard input}:940    .rodata.IfxAdc_Tmadc_TMADC0CH9_AN9_IN:00000000 IfxAdc_Tmadc_TMADC0CH9_AN9_IN
+    {standard input}:1136   .rodata.IfxAdc_Tmadc_TMADC0CH10_AN10_IN:00000000 IfxAdc_Tmadc_TMADC0CH10_AN10_IN
+    {standard input}:1122   .rodata.IfxAdc_Tmadc_TMADC0CH11_AN11_IN:00000000 IfxAdc_Tmadc_TMADC0CH11_AN11_IN
+    {standard input}:1108   .rodata.IfxAdc_Tmadc_TMADC0CH12_AN12_IN:00000000 IfxAdc_Tmadc_TMADC0CH12_AN12_IN
+    {standard input}:1094   .rodata.IfxAdc_Tmadc_TMADC0CH13_AN13_IN:00000000 IfxAdc_Tmadc_TMADC0CH13_AN13_IN
+    {standard input}:1080   .rodata.IfxAdc_Tmadc_TMADC0CH14_AN14_IN:00000000 IfxAdc_Tmadc_TMADC0CH14_AN14_IN
+    {standard input}:1066   .rodata.IfxAdc_Tmadc_TMADC0CH15_AN15_IN:00000000 IfxAdc_Tmadc_TMADC0CH15_AN15_IN
+    {standard input}:926    .rodata.IfxAdc_Tmadc_TMADC1CH0_AN4_IN:00000000 IfxAdc_Tmadc_TMADC1CH0_AN4_IN
+    {standard input}:828    .rodata.IfxAdc_Tmadc_TMADC1CH1_AN5_IN:00000000 IfxAdc_Tmadc_TMADC1CH1_AN5_IN
+    {standard input}:814    .rodata.IfxAdc_Tmadc_TMADC1CH2_AN6_IN:00000000 IfxAdc_Tmadc_TMADC1CH2_AN6_IN
+    {standard input}:800    .rodata.IfxAdc_Tmadc_TMADC1CH3_AN7_IN:00000000 IfxAdc_Tmadc_TMADC1CH3_AN7_IN
+    {standard input}:786    .rodata.IfxAdc_Tmadc_TMADC1CH4_AN16_IN:00000000 IfxAdc_Tmadc_TMADC1CH4_AN16_IN
+    {standard input}:772    .rodata.IfxAdc_Tmadc_TMADC1CH5_P40_10_IN:00000000 IfxAdc_Tmadc_TMADC1CH5_P40_10_IN
+    {standard input}:758    .rodata.IfxAdc_Tmadc_TMADC1CH6_P40_11_IN:00000000 IfxAdc_Tmadc_TMADC1CH6_P40_11_IN
+    {standard input}:744    .rodata.IfxAdc_Tmadc_TMADC1CH7_P40_12_IN:00000000 IfxAdc_Tmadc_TMADC1CH7_P40_12_IN
+    {standard input}:730    .rodata.IfxAdc_Tmadc_TMADC1CH8_AN20_IN:00000000 IfxAdc_Tmadc_TMADC1CH8_AN20_IN
+    {standard input}:716    .rodata.IfxAdc_Tmadc_TMADC1CH9_AN21_IN:00000000 IfxAdc_Tmadc_TMADC1CH9_AN21_IN
+    {standard input}:912    .rodata.IfxAdc_Tmadc_TMADC1CH10_AN22_IN:00000000 IfxAdc_Tmadc_TMADC1CH10_AN22_IN
+    {standard input}:898    .rodata.IfxAdc_Tmadc_TMADC1CH11_AN23_IN:00000000 IfxAdc_Tmadc_TMADC1CH11_AN23_IN
+    {standard input}:884    .rodata.IfxAdc_Tmadc_TMADC1CH12_P40_0_IN:00000000 IfxAdc_Tmadc_TMADC1CH12_P40_0_IN
+    {standard input}:870    .rodata.IfxAdc_Tmadc_TMADC1CH13_P40_1_IN:00000000 IfxAdc_Tmadc_TMADC1CH13_P40_1_IN
+    {standard input}:856    .rodata.IfxAdc_Tmadc_TMADC1CH14_P40_2_IN:00000000 IfxAdc_Tmadc_TMADC1CH14_P40_2_IN
+    {standard input}:842    .rodata.IfxAdc_Tmadc_TMADC1CH15_P40_3_IN:00000000 IfxAdc_Tmadc_TMADC1CH15_P40_3_IN
+    {standard input}:702    .rodata.IfxAdc_Tmadc_TMADC2CH0_P00_12_IN:00000000 IfxAdc_Tmadc_TMADC2CH0_P00_12_IN
+    {standard input}:604    .rodata.IfxAdc_Tmadc_TMADC2CH1_P00_11_IN:00000000 IfxAdc_Tmadc_TMADC2CH1_P00_11_IN
+    {standard input}:590    .rodata.IfxAdc_Tmadc_TMADC2CH2_P00_10_IN:00000000 IfxAdc_Tmadc_TMADC2CH2_P00_10_IN
+    {standard input}:576    .rodata.IfxAdc_Tmadc_TMADC2CH3_P00_9_IN:00000000 IfxAdc_Tmadc_TMADC2CH3_P00_9_IN
+    {standard input}:562    .rodata.IfxAdc_Tmadc_TMADC2CH4_P00_8_IN:00000000 IfxAdc_Tmadc_TMADC2CH4_P00_8_IN
+    {standard input}:548    .rodata.IfxAdc_Tmadc_TMADC2CH5_P00_7_IN:00000000 IfxAdc_Tmadc_TMADC2CH5_P00_7_IN
+    {standard input}:534    .rodata.IfxAdc_Tmadc_TMADC2CH6_P00_6_IN:00000000 IfxAdc_Tmadc_TMADC2CH6_P00_6_IN
+    {standard input}:520    .rodata.IfxAdc_Tmadc_TMADC2CH7_P00_5_IN:00000000 IfxAdc_Tmadc_TMADC2CH7_P00_5_IN
+    {standard input}:506    .rodata.IfxAdc_Tmadc_TMADC2CH8_P00_4_IN:00000000 IfxAdc_Tmadc_TMADC2CH8_P00_4_IN
+    {standard input}:492    .rodata.IfxAdc_Tmadc_TMADC2CH9_P00_3_IN:00000000 IfxAdc_Tmadc_TMADC2CH9_P00_3_IN
+    {standard input}:688    .rodata.IfxAdc_Tmadc_TMADC2CH10_P00_2_IN:00000000 IfxAdc_Tmadc_TMADC2CH10_P00_2_IN
+    {standard input}:674    .rodata.IfxAdc_Tmadc_TMADC2CH11_P00_1_IN:00000000 IfxAdc_Tmadc_TMADC2CH11_P00_1_IN
+    {standard input}:660    .rodata.IfxAdc_Tmadc_TMADC2CH12_P01_5_IN:00000000 IfxAdc_Tmadc_TMADC2CH12_P01_5_IN
+    {standard input}:646    .rodata.IfxAdc_Tmadc_TMADC2CH13_P01_4_IN:00000000 IfxAdc_Tmadc_TMADC2CH13_P01_4_IN
+    {standard input}:632    .rodata.IfxAdc_Tmadc_TMADC2CH14_P01_3_IN:00000000 IfxAdc_Tmadc_TMADC2CH14_P01_3_IN
+    {standard input}:618    .rodata.IfxAdc_Tmadc_TMADC2CH15_P02_11_IN:00000000 IfxAdc_Tmadc_TMADC2CH15_P02_11_IN
+    {standard input}:478    .rodata.IfxAdc_Tmadc_TMADC3CH0_P40_13_IN:00000000 IfxAdc_Tmadc_TMADC3CH0_P40_13_IN
+    {standard input}:380    .rodata.IfxAdc_Tmadc_TMADC3CH1_P40_14_IN:00000000 IfxAdc_Tmadc_TMADC3CH1_P40_14_IN
+    {standard input}:366    .rodata.IfxAdc_Tmadc_TMADC3CH2_AN30_IN:00000000 IfxAdc_Tmadc_TMADC3CH2_AN30_IN
+    {standard input}:352    .rodata.IfxAdc_Tmadc_TMADC3CH3_AN31_IN:00000000 IfxAdc_Tmadc_TMADC3CH3_AN31_IN
+    {standard input}:338    .rodata.IfxAdc_Tmadc_TMADC3CH4_P40_4_IN:00000000 IfxAdc_Tmadc_TMADC3CH4_P40_4_IN
+    {standard input}:324    .rodata.IfxAdc_Tmadc_TMADC3CH5_P40_5_IN:00000000 IfxAdc_Tmadc_TMADC3CH5_P40_5_IN
+    {standard input}:310    .rodata.IfxAdc_Tmadc_TMADC3CH6_AN34_IN:00000000 IfxAdc_Tmadc_TMADC3CH6_AN34_IN
+    {standard input}:296    .rodata.IfxAdc_Tmadc_TMADC3CH7_AN35_IN:00000000 IfxAdc_Tmadc_TMADC3CH7_AN35_IN
+    {standard input}:282    .rodata.IfxAdc_Tmadc_TMADC3CH8_P40_6_IN:00000000 IfxAdc_Tmadc_TMADC3CH8_P40_6_IN
+    {standard input}:268    .rodata.IfxAdc_Tmadc_TMADC3CH9_P40_7_IN:00000000 IfxAdc_Tmadc_TMADC3CH9_P40_7_IN
+    {standard input}:464    .rodata.IfxAdc_Tmadc_TMADC3CH10_P40_8_IN:00000000 IfxAdc_Tmadc_TMADC3CH10_P40_8_IN
+    {standard input}:450    .rodata.IfxAdc_Tmadc_TMADC3CH11_P40_9_IN:00000000 IfxAdc_Tmadc_TMADC3CH11_P40_9_IN
+    {standard input}:436    .rodata.IfxAdc_Tmadc_TMADC3CH12_AN40_IN:00000000 IfxAdc_Tmadc_TMADC3CH12_AN40_IN
+    {standard input}:422    .rodata.IfxAdc_Tmadc_TMADC3CH13_AN41_IN:00000000 IfxAdc_Tmadc_TMADC3CH13_AN41_IN
+    {standard input}:408    .rodata.IfxAdc_Tmadc_TMADC3CH14_AN42_IN:00000000 IfxAdc_Tmadc_TMADC3CH14_AN42_IN
+    {standard input}:394    .rodata.IfxAdc_Tmadc_TMADC3CH15_AN43_IN:00000000 IfxAdc_Tmadc_TMADC3CH15_AN43_IN
+    {standard input}:94     .data.IfxAdc_Sign_In_pinTable:00000000 IfxAdc_Sign_In_pinTable
+    {standard input}:1252   .rodata.IfxAdc_SIGN0_P32_7_IN:00000000 IfxAdc_SIGN0_P32_7_IN
+    {standard input}:1241   .rodata.IfxAdc_SIGN1_P33_13_IN:00000000 IfxAdc_SIGN1_P33_13_IN
+    {standard input}:102    .data.IfxAdc_Pwm_Out_pinTable:00000000 IfxAdc_Pwm_Out_pinTable
+    {standard input}:1285   .rodata.IfxAdc_PWM1_P00_5_OUT:00000000 IfxAdc_PWM1_P00_5_OUT
+    {standard input}:1318   .rodata.IfxAdc_PWM0_P00_6_OUT:00000000 IfxAdc_PWM0_P00_6_OUT
+    {standard input}:1274   .rodata.IfxAdc_PWM1_P02_0_OUT:00000000 IfxAdc_PWM1_P02_0_OUT
+    {standard input}:1307   .rodata.IfxAdc_PWM0_P02_1_OUT:00000000 IfxAdc_PWM0_P02_1_OUT
+    {standard input}:1263   .rodata.IfxAdc_PWM1_P33_11_OUT:00000000 IfxAdc_PWM1_P33_11_OUT
+    {standard input}:1296   .rodata.IfxAdc_PWM0_P33_12_OUT:00000000 IfxAdc_PWM0_P33_12_OUT
+    {standard input}:114    .data.IfxAdc_Fcc_In_pinTable:00000000 IfxAdc_Fcc_In_pinTable
+    {standard input}:1373   .rodata.IfxAdc_Fcc_FCC5_P00_2_IN:00000000 IfxAdc_Fcc_FCC5_P00_2_IN
+    {standard input}:1384   .rodata.IfxAdc_Fcc_FCC4_P00_8_IN:00000000 IfxAdc_Fcc_FCC4_P00_8_IN
+    {standard input}:1395   .rodata.IfxAdc_Fcc_FCC3_AN0_IN:00000000 IfxAdc_Fcc_FCC3_AN0_IN
+    {standard input}:1428   .rodata.IfxAdc_Fcc_FCC0_AN2_IN:00000000 IfxAdc_Fcc_FCC0_AN2_IN
+    {standard input}:1340   .rodata.IfxAdc_Fcc_FCC8_AN12_IN:00000000 IfxAdc_Fcc_FCC8_AN12_IN
+    {standard input}:1329   .rodata.IfxAdc_Fcc_FCC9_AN14_IN:00000000 IfxAdc_Fcc_FCC9_AN14_IN
+    {standard input}:1406   .rodata.IfxAdc_Fcc_FCC2_AN20_IN:00000000 IfxAdc_Fcc_FCC2_AN20_IN
+    {standard input}:1362   .rodata.IfxAdc_Fcc_FCC6_P40_6_IN:00000000 IfxAdc_Fcc_FCC6_P40_6_IN
+    {standard input}:1417   .rodata.IfxAdc_Fcc_FCC1_P40_10_IN:00000000 IfxAdc_Fcc_FCC1_P40_10_IN
+    {standard input}:1351   .rodata.IfxAdc_Fcc_FCC7_P40_11_IN:00000000 IfxAdc_Fcc_FCC7_P40_11_IN
+    {standard input}:130    .data.IfxAdc_Emuxctrl_Out_pinTable:00000000 IfxAdc_Emuxctrl_Out_pinTable
+    {standard input}:1516   .rodata.IfxAdc_EMUXCTRL10_P00_6_OUT:00000000 IfxAdc_EMUXCTRL10_P00_6_OUT
+    {standard input}:1494   .rodata.IfxAdc_EMUXCTRL11_P00_7_OUT:00000000 IfxAdc_EMUXCTRL11_P00_7_OUT
+    {standard input}:1472   .rodata.IfxAdc_EMUXCTRL12_P00_8_OUT:00000000 IfxAdc_EMUXCTRL12_P00_8_OUT
+    {standard input}:1450   .rodata.IfxAdc_EMUXCTRL13_P00_9_OUT:00000000 IfxAdc_EMUXCTRL13_P00_9_OUT
+    {standard input}:1604   .rodata.IfxAdc_EMUXCTRL00_P02_6_OUT:00000000 IfxAdc_EMUXCTRL00_P02_6_OUT
+    {standard input}:1582   .rodata.IfxAdc_EMUXCTRL01_P02_7_OUT:00000000 IfxAdc_EMUXCTRL01_P02_7_OUT
+    {standard input}:1560   .rodata.IfxAdc_EMUXCTRL02_P02_8_OUT:00000000 IfxAdc_EMUXCTRL02_P02_8_OUT
+    {standard input}:1538   .rodata.IfxAdc_EMUXCTRL03_P02_9_OUT:00000000 IfxAdc_EMUXCTRL03_P02_9_OUT
+    {standard input}:1527   .rodata.IfxAdc_EMUXCTRL03_P33_0_OUT:00000000 IfxAdc_EMUXCTRL03_P33_0_OUT
+    {standard input}:1549   .rodata.IfxAdc_EMUXCTRL02_P33_1_OUT:00000000 IfxAdc_EMUXCTRL02_P33_1_OUT
+    {standard input}:1571   .rodata.IfxAdc_EMUXCTRL01_P33_2_OUT:00000000 IfxAdc_EMUXCTRL01_P33_2_OUT
+    {standard input}:1593   .rodata.IfxAdc_EMUXCTRL00_P33_3_OUT:00000000 IfxAdc_EMUXCTRL00_P33_3_OUT
+    {standard input}:1461   .rodata.IfxAdc_EMUXCTRL12_P33_4_OUT:00000000 IfxAdc_EMUXCTRL12_P33_4_OUT
+    {standard input}:1483   .rodata.IfxAdc_EMUXCTRL11_P33_5_OUT:00000000 IfxAdc_EMUXCTRL11_P33_5_OUT
+    {standard input}:1505   .rodata.IfxAdc_EMUXCTRL10_P33_6_OUT:00000000 IfxAdc_EMUXCTRL10_P33_6_OUT
+    {standard input}:1439   .rodata.IfxAdc_EMUXCTRL13_P33_7_OUT:00000000 IfxAdc_EMUXCTRL13_P33_7_OUT
+    {standard input}:152    .data.IfxAdc_Dsadcp_In_pinTable:00000000 IfxAdc_Dsadcp_In_pinTable
+    {standard input}:1736   .rodata.IfxAdc_DSADCPA_P00_2_IN:00000000 IfxAdc_DSADCPA_P00_2_IN
+    {standard input}:1725   .rodata.IfxAdc_DSADCPA_P00_8_IN:00000000 IfxAdc_DSADCPA_P00_8_IN
+    {standard input}:1769   .rodata.IfxAdc_DSADCPA_AN0_IN:00000000 IfxAdc_DSADCPA_AN0_IN
+    {standard input}:1747   .rodata.IfxAdc_DSADCPA_AN2_IN:00000000 IfxAdc_DSADCPA_AN2_IN
+    {standard input}:1758   .rodata.IfxAdc_DSADCPA_AN20_IN:00000000 IfxAdc_DSADCPA_AN20_IN
+    {standard input}:1714   .rodata.IfxAdc_DSADCPA_P40_6_IN:00000000 IfxAdc_DSADCPA_P40_6_IN
+    {standard input}:1670   .rodata.IfxAdc_DSADCPB_P00_4_IN:00000000 IfxAdc_DSADCPB_P00_4_IN
+    {standard input}:1681   .rodata.IfxAdc_DSADCPB_P00_10_IN:00000000 IfxAdc_DSADCPB_P00_10_IN
+    {standard input}:1703   .rodata.IfxAdc_DSADCPB_AN12_IN:00000000 IfxAdc_DSADCPB_AN12_IN
+    {standard input}:1692   .rodata.IfxAdc_DSADCPB_AN14_IN:00000000 IfxAdc_DSADCPB_AN14_IN
+    {standard input}:1659   .rodata.IfxAdc_DSADCPB_P40_0_IN:00000000 IfxAdc_DSADCPB_P40_0_IN
+    {standard input}:1648   .rodata.IfxAdc_DSADCPB_P40_8_IN:00000000 IfxAdc_DSADCPB_P40_8_IN
+    {standard input}:1637   .rodata.IfxAdc_DSADCPC_AN16_IN:00000000 IfxAdc_DSADCPC_AN16_IN
+    {standard input}:1626   .rodata.IfxAdc_DSADCPC_P40_11_IN:00000000 IfxAdc_DSADCPC_P40_11_IN
+    {standard input}:1615   .rodata.IfxAdc_DSADCPD_AN34_IN:00000000 IfxAdc_DSADCPD_AN34_IN
+    {standard input}:173    .data.IfxAdc_Dsadcn_In_pinTable:00000000 IfxAdc_Dsadcn_In_pinTable
+    {standard input}:1901   .rodata.IfxAdc_DSADCNA_P00_1_IN:00000000 IfxAdc_DSADCNA_P00_1_IN
+    {standard input}:1890   .rodata.IfxAdc_DSADCNA_P00_7_IN:00000000 IfxAdc_DSADCNA_P00_7_IN
+    {standard input}:1934   .rodata.IfxAdc_DSADCNA_AN1_IN:00000000 IfxAdc_DSADCNA_AN1_IN
+    {standard input}:1912   .rodata.IfxAdc_DSADCNA_AN3_IN:00000000 IfxAdc_DSADCNA_AN3_IN
+    {standard input}:1923   .rodata.IfxAdc_DSADCNA_AN21_IN:00000000 IfxAdc_DSADCNA_AN21_IN
+    {standard input}:1879   .rodata.IfxAdc_DSADCNA_P40_7_IN:00000000 IfxAdc_DSADCNA_P40_7_IN
+    {standard input}:1846   .rodata.IfxAdc_DSADCNB_P00_3_IN:00000000 IfxAdc_DSADCNB_P00_3_IN
+    {standard input}:1835   .rodata.IfxAdc_DSADCNB_P00_9_IN:00000000 IfxAdc_DSADCNB_P00_9_IN
+    {standard input}:1868   .rodata.IfxAdc_DSADCNB_AN13_IN:00000000 IfxAdc_DSADCNB_AN13_IN
+    {standard input}:1857   .rodata.IfxAdc_DSADCNB_AN15_IN:00000000 IfxAdc_DSADCNB_AN15_IN
+    {standard input}:1824   .rodata.IfxAdc_DSADCNB_P40_1_IN:00000000 IfxAdc_DSADCNB_P40_1_IN
+    {standard input}:1813   .rodata.IfxAdc_DSADCNB_P40_9_IN:00000000 IfxAdc_DSADCNB_P40_9_IN
+    {standard input}:1802   .rodata.IfxAdc_DSADCNC_P40_10_IN:00000000 IfxAdc_DSADCNC_P40_10_IN
+    {standard input}:1791   .rodata.IfxAdc_DSADCNC_P40_12_IN:00000000 IfxAdc_DSADCNC_P40_12_IN
+    {standard input}:1780   .rodata.IfxAdc_DSADCND_AN35_IN:00000000 IfxAdc_DSADCND_AN35_IN
+    {standard input}:194    .data.IfxAdc_Data_In_pinTable:00000000 IfxAdc_Data_In_pinTable
+    {standard input}:1967   .rodata.IfxAdc_DATA5_P02_4_IN:00000000 IfxAdc_DATA5_P02_4_IN
+    {standard input}:1978   .rodata.IfxAdc_DATA4_P02_6_IN:00000000 IfxAdc_DATA4_P02_6_IN
+    {standard input}:1989   .rodata.IfxAdc_DATA3_P02_8_IN:00000000 IfxAdc_DATA3_P02_8_IN
+    {standard input}:1956   .rodata.IfxAdc_DATA6_P02_12_IN:00000000 IfxAdc_DATA6_P02_12_IN
+    {standard input}:1945   .rodata.IfxAdc_DATA7_P02_14_IN:00000000 IfxAdc_DATA7_P02_14_IN
+    {standard input}:2000   .rodata.IfxAdc_DATA2_P33_2_IN:00000000 IfxAdc_DATA2_P33_2_IN
+    {standard input}:2011   .rodata.IfxAdc_DATA1_P33_4_IN:00000000 IfxAdc_DATA1_P33_4_IN
+    {standard input}:2022   .rodata.IfxAdc_DATA0_P33_6_IN:00000000 IfxAdc_DATA0_P33_6_IN
+    {standard input}:208    .data.IfxAdc_Clkout_Out_pinTable:00000000 IfxAdc_Clkout_Out_pinTable
+    {standard input}:2132   .rodata.IfxAdc_CLKOUT0_P00_11_OUT:00000000 IfxAdc_CLKOUT0_P00_11_OUT
+    {standard input}:2088   .rodata.IfxAdc_CLKOUT1_P02_1_OUT:00000000 IfxAdc_CLKOUT1_P02_1_OUT
+    {standard input}:2066   .rodata.IfxAdc_CLKOUT2_P02_3_OUT:00000000 IfxAdc_CLKOUT2_P02_3_OUT
+    {standard input}:2044   .rodata.IfxAdc_CLKOUT3_P02_13_OUT:00000000 IfxAdc_CLKOUT3_P02_13_OUT
+    {standard input}:2121   .rodata.IfxAdc_CLKOUT0_P02_15_OUT:00000000 IfxAdc_CLKOUT0_P02_15_OUT
+    {standard input}:2110   .rodata.IfxAdc_CLKOUT0_P04_2_OUT:00000000 IfxAdc_CLKOUT0_P04_2_OUT
+    {standard input}:2099   .rodata.IfxAdc_CLKOUT0_P10_0_OUT:00000000 IfxAdc_CLKOUT0_P10_0_OUT
+    {standard input}:2077   .rodata.IfxAdc_CLKOUT1_P33_1_OUT:00000000 IfxAdc_CLKOUT1_P33_1_OUT
+    {standard input}:2055   .rodata.IfxAdc_CLKOUT2_P33_3_OUT:00000000 IfxAdc_CLKOUT2_P33_3_OUT
+    {standard input}:2033   .rodata.IfxAdc_CLKOUT3_P33_5_OUT:00000000 IfxAdc_CLKOUT3_P33_5_OUT
+    {standard input}:224    .data.IfxAdc_Clkin_In_pinTable:00000000 IfxAdc_Clkin_In_pinTable
+    {standard input}:2176   .rodata.IfxAdc_CLKIN4_P02_1_IN:00000000 IfxAdc_CLKIN4_P02_1_IN
+    {standard input}:2165   .rodata.IfxAdc_CLKIN5_P02_3_IN:00000000 IfxAdc_CLKIN5_P02_3_IN
+    {standard input}:2154   .rodata.IfxAdc_CLKIN6_P02_13_IN:00000000 IfxAdc_CLKIN6_P02_13_IN
+    {standard input}:2143   .rodata.IfxAdc_CLKIN7_P02_15_IN:00000000 IfxAdc_CLKIN7_P02_15_IN
+    {standard input}:2187   .rodata.IfxAdc_CLKIN3_P10_0_IN:00000000 IfxAdc_CLKIN3_P10_0_IN
+    {standard input}:2198   .rodata.IfxAdc_CLKIN2_P33_1_IN:00000000 IfxAdc_CLKIN2_P33_1_IN
+    {standard input}:2209   .rodata.IfxAdc_CLKIN1_P33_3_IN:00000000 IfxAdc_CLKIN1_P33_3_IN
+    {standard input}:2220   .rodata.IfxAdc_CLKIN0_P33_5_IN:00000000 IfxAdc_CLKIN0_P33_5_IN
+    {standard input}:238    .data.IfxAdc_Bfl_Out_pinTable:00000000 IfxAdc_Bfl_Out_pinTable
+    {standard input}:2484   .rodata.IfxAdc_BFL0_P00_5_OUT:00000000 IfxAdc_BFL0_P00_5_OUT
+    {standard input}:2396   .rodata.IfxAdc_BFL4_P01_8_OUT:00000000 IfxAdc_BFL4_P01_8_OUT
+    {standard input}:2363   .rodata.IfxAdc_BFL5_P01_9_OUT:00000000 IfxAdc_BFL5_P01_9_OUT
+    {standard input}:2330   .rodata.IfxAdc_BFL6_P01_10_OUT:00000000 IfxAdc_BFL6_P01_10_OUT
+    {standard input}:2297   .rodata.IfxAdc_BFL7_P01_11_OUT:00000000 IfxAdc_BFL7_P01_11_OUT
+    {standard input}:2385   .rodata.IfxAdc_BFL4_P04_6_OUT:00000000 IfxAdc_BFL4_P04_6_OUT
+    {standard input}:2352   .rodata.IfxAdc_BFL5_P04_7_OUT:00000000 IfxAdc_BFL5_P04_7_OUT
+    {standard input}:2286   .rodata.IfxAdc_BFL7_P04_8_OUT:00000000 IfxAdc_BFL7_P04_8_OUT
+    {standard input}:2319   .rodata.IfxAdc_BFL6_P04_9_OUT:00000000 IfxAdc_BFL6_P04_9_OUT
+    {standard input}:2462   .rodata.IfxAdc_BFL1_P10_1_OUT:00000000 IfxAdc_BFL1_P10_1_OUT
+    {standard input}:2418   .rodata.IfxAdc_BFL3_P10_2_OUT:00000000 IfxAdc_BFL3_P10_2_OUT
+    {standard input}:2264   .rodata.IfxAdc_BFL8_P10_3_OUT:00000000 IfxAdc_BFL8_P10_3_OUT
+    {standard input}:2242   .rodata.IfxAdc_BFL9_P10_4_OUT:00000000 IfxAdc_BFL9_P10_4_OUT
+    {standard input}:2440   .rodata.IfxAdc_BFL2_P33_0_OUT:00000000 IfxAdc_BFL2_P33_0_OUT
+    {standard input}:2374   .rodata.IfxAdc_BFL4_P33_1_OUT:00000000 IfxAdc_BFL4_P33_1_OUT
+    {standard input}:2407   .rodata.IfxAdc_BFL3_P33_2_OUT:00000000 IfxAdc_BFL3_P33_2_OUT
+    {standard input}:2341   .rodata.IfxAdc_BFL5_P33_3_OUT:00000000 IfxAdc_BFL5_P33_3_OUT
+    {standard input}:2473   .rodata.IfxAdc_BFL0_P33_4_OUT:00000000 IfxAdc_BFL0_P33_4_OUT
+    {standard input}:2429   .rodata.IfxAdc_BFL2_P33_5_OUT:00000000 IfxAdc_BFL2_P33_5_OUT
+    {standard input}:2451   .rodata.IfxAdc_BFL1_P33_6_OUT:00000000 IfxAdc_BFL1_P33_6_OUT
+    {standard input}:2253   .rodata.IfxAdc_BFL8_P33_9_OUT:00000000 IfxAdc_BFL8_P33_9_OUT
+    {standard input}:2231   .rodata.IfxAdc_BFL9_P33_11_OUT:00000000 IfxAdc_BFL9_P33_11_OUT
+    {standard input}:2308   .rodata.IfxAdc_BFL6_P34_4_OUT:00000000 IfxAdc_BFL6_P34_4_OUT
+    {standard input}:2275   .rodata.IfxAdc_BFL7_P34_5_OUT:00000000 IfxAdc_BFL7_P34_5_OUT
+
+NO UNDEFINED SYMBOLS

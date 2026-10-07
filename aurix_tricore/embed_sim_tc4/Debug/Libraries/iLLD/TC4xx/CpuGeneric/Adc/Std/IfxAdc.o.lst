@@ -1,0 +1,801 @@
+   1              	
+   2              	 .file "IfxAdc.c"
+   3              	 .file "IfxAdc.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.IfxAdc_suspendTmadcModule,"ax",@progbits
+   7              	 .align 1
+   8              	 .global IfxAdc_suspendTmadcModule
+  10              	IfxAdc_suspendTmadcModule:
+  11              	.LFB414:
+  12              	 .file 1 "../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c"
+   1:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** /**
+   2:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****  * \file IfxAdc.c
+   3:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****  * \brief ADC  basic functionality
+   4:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****  *
+   5:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****  *
+   8:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****  *
+   9:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****  *
+  10:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****  *                                 IMPORTANT NOTICE
+  11:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****  *
+  12:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****  * this file except in compliance with IFASLL.
+  15:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****  *
+  16:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****  *
+  26:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****  *
+  27:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****  */
+  28:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+  29:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** /******************************************************************************/
+  30:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** /*----------------------------------Includes----------------------------------*/
+  31:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** /******************************************************************************/
+  32:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+  33:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** #include "IfxAdc.h"
+  34:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+  35:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** /******************************************************************************/
+  36:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** /*-------------------------Function Implementations---------------------------*/
+  37:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** /******************************************************************************/
+  38:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+  39:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** void IfxAdc_suspendTmadcModule(IfxAdc_TmadcModule moduleId, IfxAdc_TmadcSuspendMode mode)
+  40:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** {
+  13              	 .loc 1 40 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  41:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     Ifx_ADC_OCSTM ocsTmadc;
+  17              	 .loc 1 41 5
+  42:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     ocsTmadc.U         = MODULE_ADC.OCSTM.U;
+  18              	 .loc 1 42 5
+  19              	 .loc 1 42 42 is_stmt 0
+  20 0002 9100502F 	 movh.a %a2,62720
+  21 0006 D923A820 	 lea %a3,[%a2]2216
+  22 000a 1922A820 	 ld.w %d2,[%a2]2216
+  43:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     ocsTmadc.B.SUSM    = mode;
+  23              	 .loc 1 43 5 is_stmt 1
+  24              	 .loc 1 43 24 is_stmt 0
+  25 000e 37520224 	 insert %d2,%d2,%d5,8,2
+  26              	.LVL1:
+  44:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     ocsTmadc.B.SUS     = (1u << moduleId);
+  27              	 .loc 1 44 5 is_stmt 1
+  28              	 .loc 1 44 30 is_stmt 0
+  29 0012 8213     	 mov %d3,1
+  30 0014 0F430030 	 sh %d3,%d3,%d4
+  31              	 .loc 1 44 24
+  32 0018 37320428 	 insert %d2,%d2,%d3,16,4
+  45:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     ocsTmadc.B.SUS_P   = 1u;
+  33              	 .loc 1 45 5 is_stmt 1
+  34              	 .loc 1 45 24 is_stmt 0
+  35 001c B7128127 	 insert %d2,%d2,1,15,1
+  46:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     MODULE_ADC.OCSTM.U = ocsTmadc.U;
+  36              	 .loc 1 46 5 is_stmt 1
+  37              	 .loc 1 46 24 is_stmt 0
+  38 0020 7432     	 st.w [%a3]0,%d2
+  47:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+  48:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     while (MODULE_ADC.OCSTM.B.SUSSTA == 0u)
+  39              	 .loc 1 48 5 is_stmt 1
+  40              	.L2:
+  49:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     {
+  50:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         /* Wait until module is not suspended */
+  51:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     }
+  41              	 .loc 1 51 5 discriminator 1
+  48:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     {
+  42              	 .loc 1 48 38 discriminator 1
+  48:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     {
+  43              	 .loc 1 48 30 is_stmt 0 discriminator 1
+  44 0022 9100502F 	 movh.a %a2,62720
+  45 0026 1922A820 	 ld.w %d2,[%a2]2216
+  46              	.LVL2:
+  47 002a 3702642C 	 extr.u %d2,%d2,24,4
+  48:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     {
+  48              	 .loc 1 48 38 discriminator 1
+  49 002e DF020000 	 jz %d2,.L2
+  52:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** }
+  50              	 .loc 1 52 1
+  51 0032 0090     	 ret 
+  52              	.LFE414:
+  54              	 .global IfxAdc_suspendTmadcModule_end
+  55              	IfxAdc_suspendTmadcModule_end:
+  56              	 .section .text.IfxAdc_getTmadcSrcPointer,"ax",@progbits
+  57              	 .align 1
+  58              	 .global IfxAdc_getTmadcSrcPointer
+  60              	IfxAdc_getTmadcSrcPointer:
+  61              	.LFB415:
+  53:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+  54:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+  55:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** volatile Ifx_SRC_SRCR *IfxAdc_getTmadcSrcPointer(IfxAdc_TmadcModule moduleId, IfxAdc_TmadcServReq n
+  56:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** {
+  62              	 .loc 1 56 1 is_stmt 1
+  63              	.LVL3:
+  64 0000 40AE     	 mov.aa %a14,%SP
+  65              	.LCFI1:
+  57:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     volatile Ifx_SRC_SRCR *srcPtr = NULL_PTR;
+  66              	 .loc 1 57 5
+  67              	.LVL4:
+  58:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+  59:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     switch (node)
+  68              	 .loc 1 59 5
+  69 0002 FF650080 	 jge.u %d5,6,.L12
+  70 0006 91000020 	 movh.a %a2,hi:.L6
+  71 000a D9220000 	 lea %a2,[%a2]lo:.L6
+  72 000e 01250226 	 addsc.a %a2,%a2,%d5,2
+  73 0012 DC02     	 ji %a2
+  74              	 .align 2
+  75              	 .align 2
+  76              	.L6:
+  77              	 .code32
+  78 0014 1D000000 	 j .L11
+  79              	 .code32
+  80 0018 1D000000 	 j .L10
+  81              	 .code32
+  82 001c 1D000000 	 j .L9
+  83              	 .code32
+  84 0020 1D000000 	 j .L8
+  85              	 .code32
+  86 0024 1D000000 	 j .L7
+  87              	 .code32
+  88 0028 1D000000 	 j .L5
+  89              	.L11:
+  60:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     {
+  61:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     case IfxAdc_TmadcServReq_0:
+  62:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         srcPtr = (volatile Ifx_SRC_SRCR *)(&MODULE_SRC.TMADC[moduleId].SR[0]);
+  90              	 .loc 1 62 9
+  91              	 .loc 1 62 16 is_stmt 0
+  92 002c 7B30442F 	 movh %d2,62531
+  93 0030 1B02E122 	 addi %d2,%d2,11792
+  94 0034 13842122 	 madd %d2,%d2,%d4,24
+  95 0038 6022     	 mov.a %a2,%d2
+  96              	.LVL5:
+  63:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+  97              	 .loc 1 63 9 is_stmt 1
+  98 003a 0090     	 ret 
+  99              	.LVL6:
+ 100              	.L10:
+  64:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     case IfxAdc_TmadcServReq_1:
+  65:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         srcPtr = (volatile Ifx_SRC_SRCR *)(&MODULE_SRC.TMADC[moduleId].SR[1]);
+ 101              	 .loc 1 65 9
+ 102              	 .loc 1 65 18 is_stmt 0
+ 103 003c 53842120 	 mul %d2,%d4,24
+ 104 0040 C242     	 add %d2,4
+ 105              	 .loc 1 65 16
+ 106 0042 7B30443F 	 movh %d3,62531
+ 107 0046 1B03E132 	 addi %d3,%d3,11792
+ 108 004a 6032     	 mov.a %a2,%d3
+ 109 004c 01220026 	 addsc.a %a2,%a2,%d2,0
+ 110              	.LVL7:
+  66:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 111              	 .loc 1 66 9 is_stmt 1
+ 112 0050 0090     	 ret 
+ 113              	.LVL8:
+ 114              	.L9:
+  67:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     case IfxAdc_TmadcServReq_2:
+  68:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         srcPtr = (volatile Ifx_SRC_SRCR *)(&MODULE_SRC.TMADC[moduleId].SR[2]);
+ 115              	 .loc 1 68 9
+ 116              	 .loc 1 68 18 is_stmt 0
+ 117 0052 53842120 	 mul %d2,%d4,24
+ 118 0056 1B820020 	 addi %d2,%d2,8
+ 119              	 .loc 1 68 16
+ 120 005a 7B30443F 	 movh %d3,62531
+ 121 005e 1B03E132 	 addi %d3,%d3,11792
+ 122 0062 6032     	 mov.a %a2,%d3
+ 123 0064 01220026 	 addsc.a %a2,%a2,%d2,0
+ 124              	.LVL9:
+  69:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 125              	 .loc 1 69 9 is_stmt 1
+ 126 0068 0090     	 ret 
+ 127              	.LVL10:
+ 128              	.L8:
+  70:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     case IfxAdc_TmadcServReq_3:
+  71:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         srcPtr = (volatile Ifx_SRC_SRCR *)(&MODULE_SRC.TMADC[moduleId].SR[3]);
+ 129              	 .loc 1 71 9
+ 130              	 .loc 1 71 18 is_stmt 0
+ 131 006a 53842120 	 mul %d2,%d4,24
+ 132 006e 1BC20020 	 addi %d2,%d2,12
+ 133              	 .loc 1 71 16
+ 134 0072 7B30443F 	 movh %d3,62531
+ 135 0076 1B03E132 	 addi %d3,%d3,11792
+ 136 007a 6032     	 mov.a %a2,%d3
+ 137 007c 01220026 	 addsc.a %a2,%a2,%d2,0
+ 138              	.LVL11:
+  72:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 139              	 .loc 1 72 9 is_stmt 1
+ 140 0080 0090     	 ret 
+ 141              	.LVL12:
+ 142              	.L7:
+  73:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     case IfxAdc_TmadcServReq_4:
+  74:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         srcPtr = (volatile Ifx_SRC_SRCR *)(&MODULE_SRC.TMADC[moduleId].SR[4]);
+ 143              	 .loc 1 74 9
+ 144              	 .loc 1 74 18 is_stmt 0
+ 145 0082 53842120 	 mul %d2,%d4,24
+ 146 0086 1B020120 	 addi %d2,%d2,16
+ 147              	 .loc 1 74 16
+ 148 008a 7B30443F 	 movh %d3,62531
+ 149 008e 1B03E132 	 addi %d3,%d3,11792
+ 150 0092 6032     	 mov.a %a2,%d3
+ 151 0094 01220026 	 addsc.a %a2,%a2,%d2,0
+ 152              	.LVL13:
+  75:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 153              	 .loc 1 75 9 is_stmt 1
+ 154 0098 0090     	 ret 
+ 155              	.LVL14:
+ 156              	.L5:
+  76:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     case IfxAdc_TmadcServReq_5:
+  77:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         srcPtr = (volatile Ifx_SRC_SRCR *)(&MODULE_SRC.TMADC[moduleId].SR[5]);
+ 157              	 .loc 1 77 9
+ 158              	 .loc 1 77 18 is_stmt 0
+ 159 009a 53842120 	 mul %d2,%d4,24
+ 160 009e 1B420120 	 addi %d2,%d2,20
+ 161              	 .loc 1 77 16
+ 162 00a2 7B30443F 	 movh %d3,62531
+ 163 00a6 1B03E132 	 addi %d3,%d3,11792
+ 164 00aa 6032     	 mov.a %a2,%d3
+ 165 00ac 01220026 	 addsc.a %a2,%a2,%d2,0
+ 166              	.LVL15:
+  78:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 167              	 .loc 1 78 9 is_stmt 1
+ 168 00b0 0090     	 ret 
+ 169              	.LVL16:
+ 170              	.L12:
+  59:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     {
+ 171              	 .loc 1 59 5 is_stmt 0
+ 172 00b2 A002     	 mov.a %a2,0
+  79:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     default:
+  80:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         /* Invalid Module id*/
+  81:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+  82:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     }
+  83:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+  84:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     return srcPtr;
+ 173              	 .loc 1 84 5 is_stmt 1
+  85:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** }
+ 174              	 .loc 1 85 1 is_stmt 0
+ 175 00b4 0090     	 ret 
+ 176              	.LFE415:
+ 178              	 .global IfxAdc_getTmadcSrcPointer_end
+ 179              	IfxAdc_getTmadcSrcPointer_end:
+ 180 00b6 0000     	 .section .text.IfxAdc_suspendCdspCore,"ax",@progbits
+ 181              	 .align 1
+ 182              	 .global IfxAdc_suspendCdspCore
+ 184              	IfxAdc_suspendCdspCore:
+ 185              	.LFB416:
+  86:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+  87:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+  88:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** #if IFXADC_IS_DSADC_AVAILABLE
+  89:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** volatile Ifx_SRC_SRCR *IfxAdc_getDsadcSrcPointer(IfxAdc_DsadcChannel channelId, uint8 node)
+  90:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** {
+  91:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     volatile Ifx_SRC_SRCR *srcPtr = NULL_PTR;
+  92:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+  93:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     switch (node)
+  94:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     {
+  95:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     case 0:
+  96:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         srcPtr = (volatile Ifx_SRC_SRCR *)(&MODULE_SRC.DSADC[channelId].SR[0]);
+  97:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+  98:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     case 1:
+  99:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         srcPtr = (volatile Ifx_SRC_SRCR *)(&MODULE_SRC.DSADC[channelId].SR[1]);
+ 100:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 101:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     case 2:
+ 102:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         srcPtr = (volatile Ifx_SRC_SRCR *)(&MODULE_SRC.DSADC[channelId].SR[2]);
+ 103:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 104:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     case 3:
+ 105:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         srcPtr = (volatile Ifx_SRC_SRCR *)(&MODULE_SRC.DSADC[channelId].SR[3]);
+ 106:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 107:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     default:
+ 108:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         /* Invalid Channel id*/
+ 109:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 110:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     }
+ 111:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+ 112:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     return srcPtr;
+ 113:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** }
+ 114:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+ 115:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+ 116:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** #if IFXADC_IS_EXMOD_AVAILABLE
+ 117:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** volatile Ifx_SRC_SRCR *IfxAdc_getExmodSrcPointer(IfxAdc_Exmod channelId, uint8 node)
+ 118:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** {
+ 119:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     volatile Ifx_SRC_SRCR *srcPtr = NULL_PTR;
+ 120:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+ 121:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     switch (node)
+ 122:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     {
+ 123:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     case 0:
+ 124:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         srcPtr = (volatile Ifx_SRC_SRCR *)(&MODULE_SRC.EXMOD[channelId].SR[0]);
+ 125:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 126:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     case 1:
+ 127:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         srcPtr = (volatile Ifx_SRC_SRCR *)(&MODULE_SRC.EXMOD[channelId].SR[1]);
+ 128:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 129:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     case 2:
+ 130:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         srcPtr = (volatile Ifx_SRC_SRCR *)(&MODULE_SRC.EXMOD[channelId].SR[2]);
+ 131:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 132:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     case 3:
+ 133:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         srcPtr = (volatile Ifx_SRC_SRCR *)(&MODULE_SRC.EXMOD[channelId].SR[3]);
+ 134:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 135:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     default:
+ 136:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         /* Invalid Channel id*/
+ 137:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 138:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     }
+ 139:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+ 140:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     return srcPtr;
+ 141:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** }
+ 142:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** #endif /* #if IFXADC_IS_EXMOD_AVAILABLE */
+ 143:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** #endif /* #if IFXADC_IS_DSADC_AVAILABLE */
+ 144:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+ 145:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+ 146:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** #if IFXADC_IS_CDSP_AVAILABLE
+ 147:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** void IfxAdc_suspendCdspCore(IfxAdc_CdspCore coreId, IfxAdc_CdspSuspendMode mode)
+ 148:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** {
+ 186              	 .loc 1 148 1 is_stmt 1
+ 187              	.LVL17:
+ 188 0000 40AE     	 mov.aa %a14,%SP
+ 189              	.LCFI2:
+ 149:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     Ifx_ADC_CDSP_OCSCDSPA ocsCdspA;
+ 190              	 .loc 1 149 5
+ 150:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** #if IFXADC_NUM_CDSP_CORES > 9U
+ 151:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     Ifx_ADC_CDSP_OCSCDSPB ocsCdspB;
+ 152:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** #endif
+ 153:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+ 154:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** #if IFXADC_NUM_CDSP_CORES > 9U
+ 155:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+ 156:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     if (coreId < IfxAdc_CdspCore_9)
+ 157:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** #endif
+ 158:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     {
+ 159:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         ocsCdspA.U                 = MODULE_ADC.CDSP.OCSCDSPA.U;
+ 191              	 .loc 1 159 9
+ 192              	 .loc 1 159 62 is_stmt 0
+ 193 0002 91C0502F 	 movh.a %a2,62732
+ 194 0006 D922A83F 	 lea %a2,[%a2]-1816
+ 195 000a 5422     	 ld.w %d2,[%a2]0
+ 160:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         ocsCdspA.B.SUSM            = mode;
+ 196              	 .loc 1 160 9 is_stmt 1
+ 197              	 .loc 1 160 36 is_stmt 0
+ 198 000c 37520220 	 insert %d2,%d2,%d5,0,2
+ 199              	.LVL18:
+ 161:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         ocsCdspA.B.SUS             = (1u << coreId);
+ 200              	 .loc 1 161 9 is_stmt 1
+ 201              	 .loc 1 161 42 is_stmt 0
+ 202 0010 8213     	 mov %d3,1
+ 203 0012 0F430030 	 sh %d3,%d3,%d4
+ 204              	 .loc 1 161 36
+ 205 0016 37320221 	 insert %d2,%d2,%d3,2,2
+ 162:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         ocsCdspA.B.SUS_P           = 1u;
+ 206              	 .loc 1 162 9 is_stmt 1
+ 207              	 .loc 1 162 36 is_stmt 0
+ 208 001a B7120128 	 insert %d2,%d2,1,16,1
+ 163:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         MODULE_ADC.CDSP.OCSCDSPA.U = ocsCdspA.U;
+ 209              	 .loc 1 163 9 is_stmt 1
+ 210              	 .loc 1 163 36 is_stmt 0
+ 211 001e 7422     	 st.w [%a2]0,%d2
+ 164:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+ 165:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         while (((MODULE_ADC.CDSP.OCSCDSPA.B.SUSSTA >> coreId) & 0x01) != 1u)
+ 212              	 .loc 1 165 9 is_stmt 1
+ 213              	.L14:
+ 166:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         {
+ 167:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****             /* Wait until module is not suspended */
+ 168:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         }
+ 214              	 .loc 1 168 9 discriminator 1
+ 165:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         {
+ 215              	 .loc 1 165 71 discriminator 1
+ 165:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         {
+ 216              	 .loc 1 165 44 is_stmt 0 discriminator 1
+ 217 0020 91C0502F 	 movh.a %a2,62732
+ 218 0024 D922A83F 	 lea %a2,[%a2]-1816
+ 219 0028 5422     	 ld.w %d2,[%a2]0
+ 220              	.LVL19:
+ 221 002a 3702E228 	 extr.u %d2,%d2,17,2
+ 165:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         {
+ 222              	 .loc 1 165 63 discriminator 1
+ 223 002e 57026124 	 extr.u %d2,%d2,%d4,1
+ 165:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         {
+ 224              	 .loc 1 165 71 discriminator 1
+ 225 0032 DF020000 	 jz %d2,.L14
+ 169:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     }
+ 170:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+ 171:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** #if IFXADC_NUM_CDSP_CORES > 9U
+ 172:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     else
+ 173:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     {
+ 174:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         coreId                     = (IfxAdc_CdspCore)(coreId - IfxAdc_CdspCore_9);
+ 175:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         ocsCdspB.U                 = MODULE_ADC.CDSP.OCSCDSPB.U;
+ 176:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         ocsCdspB.B.SUSM            = mode;
+ 177:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         ocsCdspB.B.SUS             = (1u << coreId);
+ 178:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         ocsCdspB.B.SUS_P           = 1u;
+ 179:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         MODULE_ADC.CDSP.OCSCDSPA.U = ocsCdspB.U;
+ 180:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+ 181:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         while (((MODULE_ADC.CDSP.OCSCDSPB.B.SUSSTA >> coreId) & 0x01) != 1u)
+ 182:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         {
+ 183:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****             /* Wait until module is not suspended */
+ 184:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         }
+ 185:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     }
+ 186:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** #endif
+ 187:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** }
+ 226              	 .loc 1 187 1
+ 227 0036 0090     	 ret 
+ 228              	.LFE416:
+ 230              	 .global IfxAdc_suspendCdspCore_end
+ 231              	IfxAdc_suspendCdspCore_end:
+ 232              	 .section .text.IfxAdc_getCdspSrcPointer,"ax",@progbits
+ 233              	 .align 1
+ 234              	 .global IfxAdc_getCdspSrcPointer
+ 236              	IfxAdc_getCdspSrcPointer:
+ 237              	.LFB417:
+ 188:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+ 189:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+ 190:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** volatile Ifx_SRC_SRCR *IfxAdc_getCdspSrcPointer(IfxAdc_CdspCore coreId, uint8 node)
+ 191:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** {
+ 238              	 .loc 1 191 1 is_stmt 1
+ 239              	.LVL20:
+ 240 0000 40AE     	 mov.aa %a14,%SP
+ 241              	.LCFI3:
+ 192:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     volatile Ifx_SRC_SRCR *srcPtr = NULL_PTR;
+ 242              	 .loc 1 192 5
+ 243              	.LVL21:
+ 193:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+ 194:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     switch (node)
+ 244              	 .loc 1 194 5
+ 245 0002 DF150000 	 jeq %d5,1,.L16
+ 246 0006 DF250000 	 jeq %d5,2,.L17
+ 247 000a DF050000 	 jz %d5,.L20
+ 248 000e A002     	 mov.a %a2,0
+ 195:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     {
+ 196:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     case 0:
+ 197:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         srcPtr = (volatile Ifx_SRC_SRCR *)(&MODULE_SRC.CDSP[coreId].SR[0]);
+ 198:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 199:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     case 1:
+ 200:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         srcPtr = (volatile Ifx_SRC_SRCR *)(&MODULE_SRC.CDSP[coreId].SR[1]);
+ 201:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 202:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     case 2:
+ 203:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         srcPtr = (volatile Ifx_SRC_SRCR *)(&MODULE_SRC.CDSP[coreId].SR[2]);
+ 204:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 205:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     default:
+ 206:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         /* Invalid Node*/
+ 207:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 208:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     }
+ 209:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+ 210:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     return srcPtr;
+ 249              	 .loc 1 210 5
+ 211:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** }
+ 250              	 .loc 1 211 1 is_stmt 0
+ 251 0010 0090     	 ret 
+ 252              	.L20:
+ 197:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 253              	 .loc 1 197 9 is_stmt 1
+ 197:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 254              	 .loc 1 197 16 is_stmt 0
+ 255 0012 7B30442F 	 movh %d2,62531
+ 256 0016 1B020D23 	 addi %d2,%d2,12496
+ 257 001a 13C42022 	 madd %d2,%d2,%d4,12
+ 258 001e 6022     	 mov.a %a2,%d2
+ 259              	.LVL22:
+ 198:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     case 1:
+ 260              	 .loc 1 198 9 is_stmt 1
+ 261 0020 0090     	 ret 
+ 262              	.LVL23:
+ 263              	.L16:
+ 200:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 264              	 .loc 1 200 9
+ 200:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 265              	 .loc 1 200 18 is_stmt 0
+ 266 0022 53C42020 	 mul %d2,%d4,12
+ 267 0026 C242     	 add %d2,4
+ 200:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 268              	 .loc 1 200 16
+ 269 0028 7B30443F 	 movh %d3,62531
+ 270 002c 1B030D33 	 addi %d3,%d3,12496
+ 271 0030 6032     	 mov.a %a2,%d3
+ 272 0032 01220026 	 addsc.a %a2,%a2,%d2,0
+ 273              	.LVL24:
+ 201:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     case 2:
+ 274              	 .loc 1 201 9 is_stmt 1
+ 275 0036 0090     	 ret 
+ 276              	.LVL25:
+ 277              	.L17:
+ 203:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 278              	 .loc 1 203 9
+ 203:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 279              	 .loc 1 203 18 is_stmt 0
+ 280 0038 53C42020 	 mul %d2,%d4,12
+ 281 003c 1B820020 	 addi %d2,%d2,8
+ 203:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 282              	 .loc 1 203 16
+ 283 0040 7B30443F 	 movh %d3,62531
+ 284 0044 1B030D33 	 addi %d3,%d3,12496
+ 285 0048 6032     	 mov.a %a2,%d3
+ 286 004a 01220026 	 addsc.a %a2,%a2,%d2,0
+ 287              	.LVL26:
+ 204:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     default:
+ 288              	 .loc 1 204 9 is_stmt 1
+ 289 004e 0090     	 ret 
+ 290              	.LFE417:
+ 292              	 .global IfxAdc_getCdspSrcPointer_end
+ 293              	IfxAdc_getCdspSrcPointer_end:
+ 294              	 .section .text.IfxAdc_configureAccessToAdc,"ax",@progbits
+ 295              	 .align 1
+ 296              	 .global IfxAdc_configureAccessToAdc
+ 298              	IfxAdc_configureAccessToAdc:
+ 299              	.LFB418:
+ 212:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** #endif /* #if IFXADC_IS_CDSP_AVAILABLE */
+ 213:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+ 214:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+ 215:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** void IfxAdc_configureAccessToAdc(IfxApApu_ApuConfig *apConfig)
+ 216:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** {
+ 300              	 .loc 1 216 1
+ 301              	.LVL27:
+ 302 0000 40AE     	 mov.aa %a14,%SP
+ 303              	.LCFI4:
+ 304 0002 8049     	 mov.d %d9,%a4
+ 217:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     uint8 index = 0u;
+ 305              	 .loc 1 217 5
+ 306              	.LVL28:
+ 218:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+ 219:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     for (index = 0u; index < IFXADC_NUM_APU; index++)
+ 307              	 .loc 1 219 5
+ 308              	 .loc 1 219 16 is_stmt 0
+ 309 0004 8208     	 mov %d8,0
+ 310              	 .loc 1 219 5
+ 311 0006 1D000000 	 j .L22
+ 312              	.LVL29:
+ 313              	.L23:
+ 220:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     {
+ 221:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_ADC.ACCEN[index], apConfig);
+ 314              	 .loc 1 221 9 is_stmt 1 discriminator 3
+ 315 000a 8F580020 	 sh %d2,%d8,5
+ 316 000e 6095     	 mov.a %a5,%d9
+ 317 0010 9100504F 	 movh.a %a4,62720
+ 318 0014 D9440030 	 lea %a4,[%a4]192
+ 319 0018 01420046 	 addsc.a %a4,%a4,%d2,0
+ 320 001c 6D000000 	 call IfxApApu_init
+ 321              	.LVL30:
+ 219:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     {
+ 322              	 .loc 1 219 51 discriminator 3
+ 323 0020 C218     	 add %d8,1
+ 324              	.LVL31:
+ 325 0022 8FF80F81 	 and %d8,%d8,255
+ 326              	.LVL32:
+ 327              	.L22:
+ 219:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     {
+ 328              	 .loc 1 219 28 discriminator 1
+ 329 0026 3BF00020 	 mov %d2,15
+ 330 002a 7F820080 	 jge.u %d2,%d8,.L23
+ 222:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     }
+ 223:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** }
+ 331              	 .loc 1 223 1 is_stmt 0
+ 332 002e 0090     	 ret 
+ 333              	.LFE418:
+ 335              	 .global IfxAdc_configureAccessToAdc_end
+ 336              	IfxAdc_configureAccessToAdc_end:
+ 337              	 .section .text.IfxAdc_configureAccessToAdcModule,"ax",@progbits
+ 338              	 .align 1
+ 339              	 .global IfxAdc_configureAccessToAdcModule
+ 341              	IfxAdc_configureAccessToAdcModule:
+ 342              	.LFB419:
+ 224:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+ 225:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+ 226:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** void IfxAdc_configureAccessToAdcModule(Ifx_ADC *adc, IfxApApu_ApuConfig *apuConfig, IfxAdc_Apu apuI
+ 227:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** {
+ 343              	 .loc 1 227 1 is_stmt 1
+ 344              	.LVL33:
+ 345 0000 40AE     	 mov.aa %a14,%SP
+ 346              	.LCFI5:
+ 228:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     IfxApApu_init((Ifx_ACCEN_ACCEN *)&adc->ACCEN[apuId], apuConfig);
+ 347              	 .loc 1 228 5
+ 348              	 .loc 1 228 38 is_stmt 0
+ 349 0002 1B640020 	 addi %d2,%d4,6
+ 350 0006 0652     	 sh %d2,5
+ 351              	 .loc 1 228 5
+ 352 0008 01420046 	 addsc.a %a4,%a4,%d2,0
+ 353              	.LVL34:
+ 354 000c 6D000000 	 call IfxApApu_init
+ 355              	.LVL35:
+ 229:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** }
+ 356              	 .loc 1 229 1
+ 357 0010 0090     	 ret 
+ 358              	.LFE419:
+ 360              	 .global IfxAdc_configureAccessToAdcModule_end
+ 361              	IfxAdc_configureAccessToAdcModule_end:
+ 362              	 .section .text.IfxAdc_routeBoundaryFlagOutputToEgtm,"ax",@progbits
+ 363              	 .align 1
+ 364              	 .global IfxAdc_routeBoundaryFlagOutputToEgtm
+ 366              	IfxAdc_routeBoundaryFlagOutputToEgtm:
+ 367              	.LFB420:
+ 230:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+ 231:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+ 232:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** #if IFXADC_IS_GTM_AVAILABLE
+ 233:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** void IfxAdc_routeBoundaryFlagOutputToGtm(Ifx_ADC *adc, IfxAdc_BoundaryFlagOutput output, IfxAdc_Sel
+ 234:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** {
+ 235:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     volatile Ifx_ADC_GTBFSEL *regPtr_GTBFSEL = &adc->GTBFSEL[gtmCluster];
+ 236:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+ 237:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     switch (output)
+ 238:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     {
+ 239:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     case IfxAdc_BoundaryFlagOutput_0:
+ 240:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         regPtr_GTBFSEL->B.OUT0SEL = (uint32)moduleBoundaryFlag;
+ 241:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 242:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     case IfxAdc_BoundaryFlagOutput_1:
+ 243:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         regPtr_GTBFSEL->B.OUT1SEL = (uint32)moduleBoundaryFlag;
+ 244:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 245:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     case IfxAdc_BoundaryFlagOutput_2:
+ 246:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         regPtr_GTBFSEL->B.OUT2SEL = (uint32)moduleBoundaryFlag;
+ 247:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 248:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     case IfxAdc_BoundaryFlagOutput_3:
+ 249:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         regPtr_GTBFSEL->B.OUT3SEL = (uint32)moduleBoundaryFlag;
+ 250:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 251:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     default:
+ 252:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         /* Wrong value! do nothing*/
+ 253:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 254:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     }
+ 255:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** }
+ 256:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** #endif /* #if IFXADC_IS_GTM_AVAILABLE */
+ 257:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+ 258:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+ 259:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** #if IFXADC_IS_EGTM_AVAILABLE
+ 260:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** void IfxAdc_routeBoundaryFlagOutputToEgtm(Ifx_ADC *adc, IfxAdc_BoundaryFlagOutput output, IfxAdc_Se
+ 261:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** {
+ 368              	 .loc 1 261 1 is_stmt 1
+ 369              	.LVL36:
+ 370 0000 40AE     	 mov.aa %a14,%SP
+ 371              	.LCFI6:
+ 372 0002 8FF60F61 	 and %d6,%d6,255
+ 262:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     volatile Ifx_ADC_ETBFSEL *regPtr_ETBFSEL = &adc->ETBFSEL[egtmCluster];
+ 373              	 .loc 1 262 5
+ 374              	.LVL37:
+ 263:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** 
+ 264:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     switch (output)
+ 375              	 .loc 1 264 5
+ 376 0006 FF440080 	 jge.u %d4,4,.L25
+ 377 000a 91000020 	 movh.a %a2,hi:.L28
+ 378 000e D9220000 	 lea %a2,[%a2]lo:.L28
+ 379 0012 01240226 	 addsc.a %a2,%a2,%d4,2
+ 380 0016 DC02     	 ji %a2
+ 381              	 .align 2
+ 382              	 .align 2
+ 383              	.L28:
+ 384              	 .code32
+ 385 0018 1D000000 	 j .L31
+ 386              	 .code32
+ 387 001c 1D000000 	 j .L30
+ 388              	 .code32
+ 389 0020 1D000000 	 j .L29
+ 390              	 .code32
+ 391 0024 1D000000 	 j .L27
+ 392              	.L31:
+ 265:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     {
+ 266:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     case IfxAdc_BoundaryFlagOutput_0:
+ 267:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         regPtr_ETBFSEL->B.OUT0SEL = (uint32)moduleBoundaryFlag;
+ 393              	 .loc 1 267 9
+ 394              	 .loc 1 267 35 is_stmt 0
+ 395 0028 1BE62020 	 addi %d2,%d6,526
+ 396 002c 0622     	 sh %d2,2
+ 397 002e 01420026 	 addsc.a %a2,%a4,%d2,0
+ 398 0032 5422     	 ld.w %d2,[%a2]0
+ 399 0034 37520620 	 insert %d2,%d2,%d5,0,6
+ 400 0038 7422     	 st.w [%a2]0,%d2
+ 268:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 401              	 .loc 1 268 9 is_stmt 1
+ 402 003a 0090     	 ret 
+ 403              	.L30:
+ 269:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     case IfxAdc_BoundaryFlagOutput_1:
+ 270:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         regPtr_ETBFSEL->B.OUT1SEL = (uint32)moduleBoundaryFlag;
+ 404              	 .loc 1 270 9
+ 405              	 .loc 1 270 35 is_stmt 0
+ 406 003c 1BE62020 	 addi %d2,%d6,526
+ 407 0040 0622     	 sh %d2,2
+ 408 0042 01420026 	 addsc.a %a2,%a4,%d2,0
+ 409 0046 5422     	 ld.w %d2,[%a2]0
+ 410 0048 37520623 	 insert %d2,%d2,%d5,6,6
+ 411 004c 7422     	 st.w [%a2]0,%d2
+ 271:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 412              	 .loc 1 271 9 is_stmt 1
+ 413 004e 0090     	 ret 
+ 414              	.L29:
+ 272:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     case IfxAdc_BoundaryFlagOutput_2:
+ 273:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         regPtr_ETBFSEL->B.OUT2SEL = (uint32)moduleBoundaryFlag;
+ 415              	 .loc 1 273 9
+ 416              	 .loc 1 273 35 is_stmt 0
+ 417 0050 1BE62020 	 addi %d2,%d6,526
+ 418 0054 0622     	 sh %d2,2
+ 419 0056 01420026 	 addsc.a %a2,%a4,%d2,0
+ 420 005a 5422     	 ld.w %d2,[%a2]0
+ 421 005c 37520628 	 insert %d2,%d2,%d5,16,6
+ 422 0060 7422     	 st.w [%a2]0,%d2
+ 274:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 423              	 .loc 1 274 9 is_stmt 1
+ 424 0062 0090     	 ret 
+ 425              	.L27:
+ 275:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     case IfxAdc_BoundaryFlagOutput_3:
+ 276:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         regPtr_ETBFSEL->B.OUT3SEL = (uint32)moduleBoundaryFlag;
+ 426              	 .loc 1 276 9
+ 427              	 .loc 1 276 35 is_stmt 0
+ 428 0064 1BE62020 	 addi %d2,%d6,526
+ 429 0068 0622     	 sh %d2,2
+ 430 006a 01420026 	 addsc.a %a2,%a4,%d2,0
+ 431 006e 5422     	 ld.w %d2,[%a2]0
+ 432 0070 3752062B 	 insert %d2,%d2,%d5,22,6
+ 433 0074 7422     	 st.w [%a2]0,%d2
+ 277:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 434              	 .loc 1 277 9 is_stmt 1
+ 435              	.L25:
+ 278:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     default:
+ 279:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         /* Wrong value! do nothing*/
+ 280:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****         break;
+ 281:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c ****     }
+ 282:../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.c **** }
+ 436              	 .loc 1 282 1 is_stmt 0
+ 437 0076 0090     	 ret 
+ 438              	.LFE420:
+ 440              	 .global IfxAdc_routeBoundaryFlagOutputToEgtm_end
+ 441              	IfxAdc_routeBoundaryFlagOutputToEgtm_end:
+ 542              	.Letext0:
+ 543              	 .file 2 "../Libraries/iLLD/TC4xx/CpuGeneric/_Impl/TC4Dx/IfxAdc_cfg_TC4Dx.h"
+ 544              	 .file 3 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 545              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/IfxAdc_regdef.h"
+ 546              	 .file 5 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 547              	 .file 6 "../Libraries/iLLD/TC4xx/CpuGeneric/Ap/IfxAccen_regdef.h"
+ 548              	 .file 7 "../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h"
+ 549              	 .file 8 "../Libraries/Infra/Sfr/TC4Dx/IfxSrc_regdef.h"
+ 550              	 .file 9 "../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.h"
+ 18688 0000 00000000 	 .word IfxAdc_suspendTmadcModule
+ 18689 0004 00000000 	 .word IfxAdc_suspendTmadcModule_end
+ 18690 0008 3C000C44 	 .word 0x440c003c
+ 18691 000c 30000000 	 .word 0x00000030
+ 18692 0010 00000000 	 .word 0x00000000
+ 18693 0014 C0000000 	 .word 0x000000c0
+ 18694 0018 00000000 	 .word IfxAdc_getTmadcSrcPointer
+ 18695 001c 00000000 	 .word IfxAdc_getTmadcSrcPointer_end
+ 18696 0020 3C000444 	 .word 0x4404003c
+ 18697 0024 30000000 	 .word 0x00000030
+ 18698 0028 00000400 	 .word 0x00040000
+ 18699 002c C0000000 	 .word 0x000000c0
+ 18700 0030 00000000 	 .word IfxAdc_suspendCdspCore
+ 18701 0034 00000000 	 .word IfxAdc_suspendCdspCore_end
+ 18702 0038 3C000444 	 .word 0x4404003c
+ 18703 003c 30000000 	 .word 0x00000030
+ 18704 0040 00000000 	 .word 0x00000000
+ 18705 0044 C0000000 	 .word 0x000000c0
+ 18706 0048 00000000 	 .word IfxAdc_getCdspSrcPointer
+ 18707 004c 00000000 	 .word IfxAdc_getCdspSrcPointer_end
+ 18708 0050 3C000444 	 .word 0x4404003c
+ 18709 0054 30000000 	 .word 0x00000030
+ 18710 0058 00000400 	 .word 0x00040000
+ 18711 005c C0000000 	 .word 0x000000c0
+ 18712 0060 00000000 	 .word IfxAdc_configureAccessToAdc
+ 18713 0064 00000000 	 .word IfxAdc_configureAccessToAdc_end
+ 18714 0068 04033044 	 .word 0x44300304
+ 18715 006c 00001000 	 .word 0x00100000
+ 18716 0070 00000000 	 .word 0x00000000
+ 18717 0074 40000200 	 .word 0x00020040
+ 18718 0078 00000000 	 .word IfxAdc_configureAccessToAdcModule
+ 18719 007c 00000000 	 .word IfxAdc_configureAccessToAdcModule_end
+ 18720 0080 14003044 	 .word 0x44300014
+ 18721 0084 10003000 	 .word 0x00300010
+ 18722 0088 00000000 	 .word 0x00000000
+ 18723 008c 40000200 	 .word 0x00020040
+ 18724 0090 00000000 	 .word IfxAdc_routeBoundaryFlagOutputToEgtm
+ 18725 0094 00000000 	 .word IfxAdc_routeBoundaryFlagOutputToEgtm_end
+ 18726 0098 7C001444 	 .word 0x4414007c
+ 18727 009c 70001000 	 .word 0x00100070
+ 18728 00a0 00000000 	 .word 0x00000000
+ 18729 00a4 C0000000 	 .word 0x000000c0
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxAdc.c
+                            *ABS*:00000000 IfxAdc.c
+    {standard input}:10     .text.IfxAdc_suspendTmadcModule:00000000 IfxAdc_suspendTmadcModule
+    {standard input}:55     .text.IfxAdc_suspendTmadcModule:00000034 IfxAdc_suspendTmadcModule_end
+    {standard input}:60     .text.IfxAdc_getTmadcSrcPointer:00000000 IfxAdc_getTmadcSrcPointer
+    {standard input}:179    .text.IfxAdc_getTmadcSrcPointer:000000b6 IfxAdc_getTmadcSrcPointer_end
+    {standard input}:184    .text.IfxAdc_suspendCdspCore:00000000 IfxAdc_suspendCdspCore
+    {standard input}:231    .text.IfxAdc_suspendCdspCore:00000038 IfxAdc_suspendCdspCore_end
+    {standard input}:236    .text.IfxAdc_getCdspSrcPointer:00000000 IfxAdc_getCdspSrcPointer
+    {standard input}:293    .text.IfxAdc_getCdspSrcPointer:00000050 IfxAdc_getCdspSrcPointer_end
+    {standard input}:298    .text.IfxAdc_configureAccessToAdc:00000000 IfxAdc_configureAccessToAdc
+    {standard input}:336    .text.IfxAdc_configureAccessToAdc:00000030 IfxAdc_configureAccessToAdc_end
+    {standard input}:341    .text.IfxAdc_configureAccessToAdcModule:00000000 IfxAdc_configureAccessToAdcModule
+    {standard input}:361    .text.IfxAdc_configureAccessToAdcModule:00000012 IfxAdc_configureAccessToAdcModule_end
+    {standard input}:366    .text.IfxAdc_routeBoundaryFlagOutputToEgtm:00000000 IfxAdc_routeBoundaryFlagOutputToEgtm
+    {standard input}:441    .text.IfxAdc_routeBoundaryFlagOutputToEgtm:00000078 IfxAdc_routeBoundaryFlagOutputToEgtm_end
+
+UNDEFINED SYMBOLS
+IfxApApu_init

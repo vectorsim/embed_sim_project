@@ -1,0 +1,1131 @@
+   1              	
+   2              	 .file "Cpu2_Main.c"
+   3              	 .file "Cpu2_Main.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.core2_main,"ax",@progbits
+   7              	 .align 1
+   8              	 .global core2_main
+  10              	core2_main:
+  11              	.LFB327:
+  12              	 .file 1 "../Cpu2_Main.c"
+   1:../Cpu2_Main.c **** /**************************************************************************************************
+   2:../Cpu2_Main.c ****  * \file Cpu2_Main.c
+   3:../Cpu2_Main.c ****  * \copyright Copyright (C) 2026 Infineon Technologies AG. All rights reserved.
+   4:../Cpu2_Main.c ****  *
+   5:../Cpu2_Main.c ****  *
+   6:../Cpu2_Main.c ****  *
+   7:../Cpu2_Main.c ****  *                                 IMPORTANT NOTICE
+   8:../Cpu2_Main.c ****  *
+   9:../Cpu2_Main.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  10:../Cpu2_Main.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  11:../Cpu2_Main.c ****  * this file except in compliance with IFASLL.
+  12:../Cpu2_Main.c ****  *
+  13:../Cpu2_Main.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  14:../Cpu2_Main.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  15:../Cpu2_Main.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  16:../Cpu2_Main.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  17:../Cpu2_Main.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  18:../Cpu2_Main.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  19:../Cpu2_Main.c ****  * defects in the licensed items, or non-infringement of third parties'
+  20:../Cpu2_Main.c ****  * intellectual property rights. See the full license text for the specific
+  21:../Cpu2_Main.c ****  * language governing permissions and limitations under IFASLL.
+  22:../Cpu2_Main.c ****  **************************************************************************************************
+  23:../Cpu2_Main.c **** #include "Ifx_Types.h"
+  24:../Cpu2_Main.c **** #include "Ifx_Cfg.h"
+  25:../Cpu2_Main.c **** #include "IfxCpu.h"
+  26:../Cpu2_Main.c **** #include "IfxWtu.h"
+  27:../Cpu2_Main.c **** #include "IfxStm.h"
+  28:../Cpu2_Main.c **** 
+  29:../Cpu2_Main.c **** volatile uint32 counterCpu2=0U;
+  30:../Cpu2_Main.c **** 
+  31:../Cpu2_Main.c **** void core2_main(void)
+  32:../Cpu2_Main.c **** {
+  13              	 .loc 1 32 1
+  14 0000 40AE     	 mov.aa %a14,%SP
+  15              	.LCFI0:
+  33:../Cpu2_Main.c ****     IfxCpu_enableInterrupts();
+  16              	 .loc 1 33 5
+  17              	.LBB4:
+  18              	.LBB5:
+  19              	 .file 2 "../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h"
+   1:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /**
+   2:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \file IfxCpu.h
+   3:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \brief CPU  basic functionality
+   4:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \ingroup IfxLld_Cpu
+   5:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+   6:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \version iLLD-TC4-v2.7.0
+   7:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   8:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+   9:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+  10:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+  11:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *                                 IMPORTANT NOTICE
+  12:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+  13:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  14:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  15:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * this file except in compliance with IFASLL.
+  16:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+  17:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  18:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * Unless required by applicable law or agreed to in writing, software distributed
+  19:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  20:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  21:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * whether express, implied, statutory or otherwise, including but not limited to
+  22:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  23:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * defects in the licensed items, or non-infringement of third parties'
+  24:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * intellectual property rights. See the full license text for the specific
+  25:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * language governing permissions and limitations under IFASLL.
+  26:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+  27:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+  28:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \defgroup IfxLld_Cpu_Std_Core Cpu Core Functions
+  29:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \ingroup IfxLld_Cpu_Std
+  30:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \defgroup IfxLld_Cpu_Std_Interrupt Interrupt Utility Functions
+  31:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \ingroup IfxLld_Cpu_Std
+  32:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \defgroup IfxLld_Cpu_Std_Cache Cache Management Functions
+  33:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \ingroup IfxLld_Cpu_Std
+  34:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \defgroup IfxLld_Cpu_Std_PerformanceCounter Performance Counter Functions
+  35:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \ingroup IfxLld_Cpu_Std
+  36:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \defgroup IfxLld_Cpu_Std_Synchronization Synchronization Functions
+  37:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \ingroup IfxLld_Cpu_Std
+  38:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \defgroup IfxLld_Cpu_Std_Utility Cpu Utility Functions
+  39:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \ingroup IfxLld_Cpu_Std
+  40:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \defgroup IfxLld_Cpu_Std_Enum Enumerations
+  41:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \ingroup IfxLld_Cpu_Std
+  42:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \defgroup IfxLld_Cpu_Std_DataStructures Data Structures
+  43:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \ingroup IfxLld_Cpu_Std
+  44:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+  45:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+  46:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** #ifndef IFXCPU_H
+  47:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** #define IFXCPU_H 1
+  48:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+  49:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /******************************************************************************/
+  50:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /*----------------------------------Includes----------------------------------*/
+  51:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /******************************************************************************/
+  52:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+  53:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** #include "_Impl/IfxCpu_cfg.h"
+  54:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** #include "Cpu/Std/IfxCpu_Intrinsics.h"
+  55:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** #include "IfxSrc_reg.h"
+  56:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** #include "IfxScu_reg.h"
+  57:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** #include "Clock/Std/IfxClock.h"
+  58:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** #include "_Utilities/Ifx_Assert.h"
+  59:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** #include "IfxSmm_reg.h"
+  60:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** #include "Ap/Std/IfxApProt.h"
+  61:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** #include "Ap/Std/IfxApApu.h"
+  62:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+  63:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /******************************************************************************/
+  64:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /*-----------------------------------Macros-----------------------------------*/
+  65:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /******************************************************************************/
+  66:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+  67:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Overlay Supported Devices     : TC4DX, TC48X, TC49XN, TC46X, TC4ZX, TC44X, TC4EX
+  68:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *  	   Overlay Not Supported Devices : TC45X
+  69:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+  70:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** #if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC4
+  71:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** #define CPU_OVERLAY_SUPPORTED
+  72:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** #endif
+  73:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+  74:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Macro to identify Whether Platform VP 
+  75:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+  76:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** #ifndef ON_AURIX_VP
+  77:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** #define ON_AURIX_VP       0
+  78:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** #endif
+  79:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+  80:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Convert local DSPR address to global DSPR address which can be accessed from the SRI bus
+  81:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * Use this macro to convert a local DSPR address (in segment 0xd00.....) to
+  82:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * a global DSPR address (in segment 0x700....., 0x600....., 0x500..... downwards) depending on
+  83:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * the CPU number.
+  84:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * Example usage:
+  85:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *  \code
+  86:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *     dmaChConfig.sourceAddress      = IFXCPU_GLB_ADDR_DSPR(IfxCpu_getCoreId(), &sourceBuffer[i][0
+  87:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *     dmaChConfig.destinationAddress = IFXCPU_GLB_ADDR_DSPR(IfxCpu_getCoreId(), &destinationBuffer
+  88:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *  \endcode
+  89:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+  90:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** #define IFXCPU_GLB_ADDR_DSPR(cpu, address) ((((((unsigned)(address) & 0xF0000000) == 0xD0000000) ? 
+  91:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+  92:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Convert local PSPR address to global PSPR address which can be accessed from the SRI bus
+  93:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * Use this macro to convert a local PSPR address (in segment 0xc......) to
+  94:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * a global PSPR address (in segment 0x701....., 0x601....., 0x501..... downwards) depending on
+  95:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * the CPU number.
+  96:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+  97:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *   Example usage:
+  98:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *   \code
+  99:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *     dmaChConfig.sourceAddress      = IFXCPU_GLB_ADDR_PSPR(IfxCpu_getCoreId(), &sourceBufferInPsp
+ 100:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *     dmaChConfig.destinationAddress = IFXCPU_GLB_ADDR_PSPR(IfxCpu_getCoreId(), &destinationBuffer
+ 101:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *   \endcode
+ 102:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 103:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** #define IFXCPU_GLB_ADDR_PSPR(cpu, address) ((((unsigned)(address) & 0x000fffff) | 0x70100000) - ((c
+ 104:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 105:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Disable the all interrputs except master
+ 106:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 107:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** #define IFXCPU_DISABLE_INTERRPUTS_OF_CPU(cpunum) \
+ 108:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     {                                            \
+ 109:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****         CPU##cpunum##_HRA_ICR.B.IE = 0;          \
+ 110:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****         while (CPU##cpunum##_HRA_ICR.B.IE)       \
+ 111:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****         {}                                       \
+ 112:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     }
+ 113:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 114:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Enable DCINVAL and CSEL0 to CSEL5 of OVCCON
+ 115:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 116:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** #define IFXCPU_INVALIDATE_DATA_CACHE (0x4003F)
+ 117:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 118:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief CPU address offset (used in overlay implimentation)
+ 119:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 120:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** #define IFXCPU_CPU_ADDR_OFFSET (0x40000)
+ 121:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 122:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /******************************************************************************/
+ 123:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /*------------------------------Type Definitions------------------------------*/
+ 124:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /******************************************************************************/
+ 125:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 126:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Lock type Spin lock
+ 127:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 128:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** typedef unsigned int IfxCpu_spinLock;
+ 129:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 130:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Lock type Mutex lock
+ 131:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 132:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** typedef unsigned int IfxCpu_mutexLock;
+ 133:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 134:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Event used for synchronisation.
+ 135:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 136:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** typedef unsigned int IfxCpu_syncEvent;
+ 137:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 138:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /******************************************************************************/
+ 139:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /*--------------------------------Enumerations--------------------------------*/
+ 140:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /******************************************************************************/
+ 141:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 142:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \addtogroup IfxLld_Cpu_Std_Enum
+ 143:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \{ */
+ 144:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Enumeration for the Cpu mode
+ 145:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 146:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** typedef enum
+ 147:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** {
+ 148:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_CoreMode_halt,
+ 149:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_CoreMode_run,
+ 150:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_CoreMode_idle,
+ 151:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_CoreMode_sleep,
+ 152:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_CoreMode_stby,
+ 153:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_CoreMode_unknown
+ 154:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** } IfxCpu_CoreMode;
+ 155:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 156:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Performance conunter modes
+ 157:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * Definition in Ifx_CPU_CCTRL.B.CM
+ 158:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 159:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** typedef enum
+ 160:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** {
+ 161:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_CounterMode_normal = 0,  /**< \brief Normal counter mode:the counter increments on their
+ 162:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_CounterMode_task   = 1   /**< \brief Normal counter mode:additional gating control from 
+ 163:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** } IfxCpu_CounterMode;
+ 164:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 165:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Overlay Address Mask: determines the overlay block size and the bits used for address co
+ 166:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * Definition in Ifx_CPU.BLK[x].OMASK.U (x = 0 to 7)
+ 167:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 168:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** typedef enum
+ 169:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** {
+ 170:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_OverlayAddressMask_32byte  = 0xFFF,  /**< \brief 32 byte block size Mask */
+ 171:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_OverlayAddressMask_64byte  = 0xFFE,  /**< \brief 64 byte block size Mask */
+ 172:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_OverlayAddressMask_128byte = 0xFFC,  /**< \brief 128 byte block size Mask */
+ 173:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_OverlayAddressMask_256byte = 0xFF8,  /**< \brief 256 byte block size Mask */
+ 174:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_OverlayAddressMask_512byte = 0xFF0,  /**< \brief 512 byte block size Mask */
+ 175:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_OverlayAddressMask_1KB     = 0xFE0,  /**< \brief 1K byte block size Mask */
+ 176:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_OverlayAddressMask_2KB     = 0xFC0,  /**< \brief 2K byte block size Mask */
+ 177:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_OverlayAddressMask_4KB     = 0xF80,  /**< \brief 4K byte block size Mask */
+ 178:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_OverlayAddressMask_8KB     = 0xF00,  /**< \brief 8K byte block size Mask */
+ 179:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_OverlayAddressMask_16KB    = 0xE00,  /**< \brief 16K byte block size Mask */
+ 180:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_OverlayAddressMask_32KB    = 0xC00,  /**< \brief 32K byte block size Mask */
+ 181:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_OverlayAddressMask_64KB    = 0x800,  /**< \brief 64K byte block size Mask */
+ 182:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_OverlayAddressMask_128KB   = 0x0     /**< \brief 128K byte block size Mask */
+ 183:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** } IfxCpu_OverlayAddressMask;
+ 184:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 185:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Selects overlay memory used for redirection
+ 186:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * Definition in Ifx_CPU_BLK_RABRB.OMEM
+ 187:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 188:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** typedef enum
+ 189:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** {
+ 190:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_OverlayMemorySelect_core0DsprPspr = 0,  /**< \brief Redirection to Core 0 DSPR/PSPR memo
+ 191:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_OverlayMemorySelect_core1DsprPspr = 1,  /**< \brief Redirection to Core 1 DSPR/PSPR memo
+ 192:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_OverlayMemorySelect_core2DsprPspr = 2,  /**< \brief Redirection to Core 2 DSPR/PSPR memo
+ 193:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_OverlayMemorySelect_core3DsprPspr = 3,  /**< \brief Redirection to Core 3 DSPR/PSPR memo
+ 194:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_OverlayMemorySelect_core4DsprPspr = 4,  /**< \brief Redirection to Core 4 DSPR/PSPR memo
+ 195:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_OverlayMemorySelect_core5DsprPspr = 5,  /**< \brief Redirection to Core 5 DSPR/PSPR memo
+ 196:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_OverlayMemorySelect_lmu           = 8,  /**< \brief Redirection to LMU memory */
+ 197:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_OverlayMemorySelect_emem          = 9,  /**< \brief Redirection to EMEM memory */
+ 198:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_OverlayMemorySelect_ebu           = 10  /**< \brief Redirection to EBU memory */
+ 199:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** } IfxCpu_OverlayMemorySelect;
+ 200:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 201:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Defines the possible reasons for the last reset of a CPU.
+ 202:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * Definition in Ifx_CPU.KRST0.B.RSTSTAT
+ 203:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 204:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** typedef enum
+ 205:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** {
+ 206:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_ResetStatus_notCpuReset   = 0,  /**< \brief No Kernel Reset was executed */
+ 207:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_ResetStatus_cpuResetBySmu = 1,  /**< \brief Kernel reset was requested by hardware since
+ 208:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_ResetStatus_cpuResetBySw  = 2   /**< \brief Kernel reset was requested by software since
+ 209:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** } IfxCpu_ResetStatus;
+ 210:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 211:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \} */
+ 212:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 213:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Describes if the NMI handling is done by the Hypervisor or the currently running VM
+ 214:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * Definition in VCON0.B.NMI
+ 215:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 216:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** typedef enum
+ 217:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** {
+ 218:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_nmiHandling_hypervisor         = 0, /**< \brief Hypervisor handles the NMI's */
+ 219:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_nmiHandling_currentExecutingVm = 1  /**< \brief Currently executing VM handles the NMI's
+ 220:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** } IfxCpu_nmiHandling;
+ 221:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 222:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /******************************************************************************/
+ 223:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /*-----------------------------Data Structures--------------------------------*/
+ 224:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /******************************************************************************/
+ 225:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 226:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \addtogroup IfxLld_Cpu_Std_DataStructures
+ 227:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \{ */
+ 228:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief counter
+ 229:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 230:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** typedef struct
+ 231:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** {
+ 232:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     uint32  counter;        /**< \brief Counter value. Range: 0 to 0x7FFFFFFF */
+ 233:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     boolean overlfow;       /**< \brief sticky overlfow. Range: TRUE - Set by hardware when count v
+ 234:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** } IfxCpu_Counter;
+ 235:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 236:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \} */
+ 237:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 238:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \addtogroup IfxLld_Cpu_Std_DataStructures
+ 239:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \{ */
+ 240:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Performance counter result
+ 241:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 242:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** typedef struct
+ 243:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** {
+ 244:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_Counter instruction;       /**< \brief Instruction counter */
+ 245:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_Counter clock;             /**< \brief CPU clock counter */
+ 246:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_Counter counter1;          /**< \brief Multi counter 1 */
+ 247:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_Counter counter2;          /**< \brief Multi counter 2 */
+ 248:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     IfxCpu_Counter counter3;          /**< \brief Multi counter 3 */
+ 249:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** } IfxCpu_Perf;
+ 250:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 251:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \} */
+ 252:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 253:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \addtogroup IfxLld_Cpu_Std_Core
+ 254:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \{ */
+ 255:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 256:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /******************************************************************************/
+ 257:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /*-------------------------Inline Function Prototypes-------------------------*/
+ 258:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /******************************************************************************/
+ 259:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 260:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief API to get the address for CPU HW module register memory map.
+ 261:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 262:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] cpu Resource index of the CPU. Range: \ref IfxCpu_ResourceCpu.
+ 263:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 264:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval Ifx_CPU* CPU module register address.
+ 265:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 266:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE Ifx_CPU *IfxCpu_getAddress(IfxCpu_ResourceCpu cpu);
+ 267:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 268:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief API to get core id of the CPU of the caller.
+ 269:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 270:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * Caution: Core id of the cpu's may not be contiguous and shouldn't be used to index cpu.
+ 271:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * Use IfxCpu_getCoreIndex() to get cpu no.
+ 272:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 273:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval IfxCpu_Id Resource index of the CPU. Range: \ref IfxCpu_Id.
+ 274:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 275:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE IfxCpu_Id IfxCpu_getCoreId(void);
+ 276:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 277:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief API to Retrieve the core index of the CPU.
+ 278:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * Note: This api can be used where ever cpu no/index is needed.
+ 279:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 280:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval IfxCpu_ResourceCpu Resource index of the CPU. Range: \ref IfxCpu_ResourceCpu.
+ 281:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 282:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE IfxCpu_ResourceCpu IfxCpu_getCoreIndex(void);
+ 283:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 284:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief API to initialize the context save area of the CPU where this is called.
+ 285:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 286:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * This API can initialize the CSA of the host CPU where this API is called. This API
+ 287:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * shall not be used to initialize the CSA of another CPU.
+ 288:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 289:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[inout] csaBegin Pointer to the beginning address of the CSA region.
+ 290:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in]    csaEnd   Pointer to the ending address of the CSA region.
+ 291:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 292:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval None
+ 293:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 294:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE void IfxCpu_initCSA(uint32 *csaBegin, uint32 *csaEnd);
+ 295:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 296:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Sets the safety task identifier for the CPU.
+ 297:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 298:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] safetyId Value indicating whether the safety task identifier should be set to True (e
+ 299:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 300:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval None
+ 301:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 302:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE void IfxCpu_setSafetyTaskIdentifier(boolean safetyId);
+ 303:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 304:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Triggers a Software Reset.
+ 305:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 306:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval None
+ 307:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 308:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE void IfxCpu_triggerSwReset(void);
+ 309:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 310:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /******************************************************************************/
+ 311:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /*-------------------------Global Function Prototypes-------------------------*/
+ 312:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /******************************************************************************/
+ 313:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 314:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief API to get current mode of CPU.
+ 315:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 316:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] cpu Pointer to the CPU HW module (register memory map).
+ 317:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 318:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval IfxCpu_ResourceCpu Resource index of the CPU. Range: \ref IfxCpu_ResourceCpu.
+ 319:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 320:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_EXTERN IfxCpu_ResourceCpu IfxCpu_getIndex(Ifx_CPU *cpu);
+ 321:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 322:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief API to set the program counter of the specified CPU.
+ 323:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 324:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[inout] cpu            Pointer to the CPU HW module (register memory map).
+ 325:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in]    programCounter Program counter value to be set. Range: 0 to 0xFFFFFFFE.
+ 326:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 327:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \return Success status of the activity (setting program counter value).
+ 328:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 329:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval TRUE:  If the activity successfully be performed.
+ 330:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * 		   FALSE: If the activity can't be performed.
+ 331:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 332:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_EXTERN boolean IfxCpu_setProgramCounter(Ifx_CPU *cpu, uint32 programCounter);
+ 333:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 334:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Start address for the CPU instruction execution.
+ 335:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 336:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[inout] cpu            Pointer to the CPU HW module (register memory map).
+ 337:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in]    programCounter Initial address from which the CPU will start executing instruction
+ 338:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 339:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \return Success status of the activity (setting program counter value).
+ 340:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 341:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval TRUE:  If the activity successfully be performed.
+ 342:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *         FALSE: If the activity can't be performed.
+ 343:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 344:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_EXTERN boolean IfxCpu_startCore(Ifx_CPU *cpu, uint32 programCounter);
+ 345:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 346:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief API to request reset of a particular core, specified by coreId.
+ 347:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 348:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] cpu Resource index of the CPU. Range: \ref IfxCpu_ResourceCpu.
+ 349:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 350:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval None
+ 351:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 352:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_EXTERN void IfxCpu_triggerCpuReset(IfxCpu_ResourceCpu coreIndex);
+ 353:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 354:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Retrieves the current reset status of the specified CPU core.
+ 355:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 356:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] coreIndex The index of the CPU core for which the reset status is to be retrieved. Ra
+ 357:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 358:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval IfxCpu_ResetStatus The reset status of the CPU core. Range: \ref IfxCpu_ResetStatus.
+ 359:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 360:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_EXTERN IfxCpu_ResetStatus IfxCpu_getCpuResetStatus(IfxCpu_ResourceCpu coreIndex);
+ 361:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 362:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \} */
+ 363:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 364:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \addtogroup IfxLld_Cpu_Std_Interrupt
+ 365:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \{ */
+ 366:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 367:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /******************************************************************************/
+ 368:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /*-------------------------Inline Function Prototypes-------------------------*/
+ 369:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /******************************************************************************/
+ 370:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 371:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief API to Check whether global interrupts are enabled on the CPU.
+ 372:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 373:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * This API provides the status of CPU where this API is called.
+ 374:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 375:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \return Status of global interrupt enable bit.
+ 376:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 377:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval TRUE:  Global interrupts enabled.
+ 378:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *		   FALSE: Global interrupts disabled.
+ 379:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 380:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE boolean IfxCpu_areInterruptsEnabled(void);
+ 381:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 382:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief API to disable global interrupt and return the previous status.
+ 383:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 384:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * This API can be used only to disable the global interrupts of caller CPU. It cannot be
+ 385:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * used for this activity towards other CPUs.
+ 386:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 387:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \return Previous status of global interrupt enable bit.
+ 388:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 389:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval TRUE:  Previously, global interrupts enabled.
+ 390:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *		   FALSE: Previously, global interrupts disabled.
+ 391:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 392:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE boolean IfxCpu_disableInterrupts(void);
+ 393:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 394:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief API to enable global interrupt.
+ 395:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * This API simply enables the global interrupt.
+ 396:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 397:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval None
+ 398:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 399:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE void IfxCpu_enableInterrupts(void);
+ 400:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 401:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief API to Disable the Global Interrupts.
+ 402:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 403:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval None
+ 404:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 405:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE void IfxCpu_forceDisableInterrupts(void);
+ 406:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 407:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief API to Restore the state of CPU interrupts.
+ 408:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 409:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * This API can be used only to disable the global interrupts of caller CPU. It cannot be
+ 410:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * used for this activity towards other CPUs.
+ 411:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 412:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] enabled Previous status of the global interrupt enable bit.
+ 413:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 414:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval None
+ 415:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 416:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE void IfxCpu_restoreInterrupts(boolean enabled);
+ 417:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 418:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \} */
+ 419:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 420:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \addtogroup IfxLld_Cpu_Std_Cache
+ 421:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \{ */
+ 422:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 423:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /******************************************************************************/
+ 424:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /*-------------------------Inline Function Prototypes-------------------------*/
+ 425:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /******************************************************************************/
+ 426:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 427:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief API to enable/ disable the data cacheability for selected segments
+ 428:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * With this API cacheability for one or more segment can be enabled/disabled for the CPU core wher
+ 429:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 430:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * Note: This API is to be called only if the PCACHE or DCACHE are not enabled before.
+ 431:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 432:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] segmentNumberMask Mask where bitfield 0 represents segment 0 and bitfield 16 represen
+ 433:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] enable            TRUE: to enable the cacheability for selected segment, FALSE: to di
+ 434:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 435:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval None
+ 436:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 437:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE void IfxCpu_enableSegmentSpecificDataAccessCacheability(uint16 segmentNumberMask, boolea
+ 438:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 439:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief API to enable/ disable the instruction cacheability for selected segments
+ 440:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * With this API cacheability for one or more segment can be enabled/disabled for the CPU core wher
+ 441:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 442:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * Note: This API is to be called only if the PCACHE or DCACHE are not enabled before.
+ 443:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 444:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] segmentNumberMask Mask where bitfield 0 represents segment 0 and bitfield 16 represen
+ 445:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] enable            TRUE: To enable the cacheability for selected segment, FALSE: To di
+ 446:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 447:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval None
+ 448:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 449:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE void IfxCpu_enableSegmentSpecificInstructionAccessCacheability(uint16 segmentNumberMask,
+ 450:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 451:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief API to invalidate the program cache.
+ 452:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 453:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval None
+ 454:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 455:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE void IfxCpu_invalidateProgramCache(void);
+ 456:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 457:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief API to determine if a given memory address is cacheable.
+ 458:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 459:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] address The memory address to check for cacheability.
+ 460:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 461:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval Status TRUE/FALSE.
+ 462:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 463:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE boolean IfxCpu_isAddressCachable(void *address);
+ 464:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 465:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief API to enable or bypass the data cache for the CPU which calls this API.
+ 466:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 467:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * This API can be used only to enable or bypass the data cache of caller CPU. It cannot be
+ 468:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * used for this activity towards other CPUs.
+ 469:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 470:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] Enable Command to enable or bypass the data cache.
+ 471:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *            TRUE: Enable the data cache.
+ 472:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *            FALSE: Bypass the data cache.
+ 473:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 474:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval None
+ 475:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 476:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE void IfxCpu_setDataCache(boolean enable);
+ 477:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 478:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief API to enable or bypass the program cache for the CPU which calls this API.
+ 479:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 480:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * This API can be used only to enable or bypass the program cache of caller CPU. It cannot be
+ 481:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * used for this activity towards other CPUs.
+ 482:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 483:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] Enable Command to enable or bypass the program cache.
+ 484:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *            TRUE: Enable the program cache.
+ 485:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *            FALSE: Bypass the program cache.
+ 486:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 487:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval None
+ 488:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 489:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE void IfxCpu_setProgramCache(boolean enable);
+ 490:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 491:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /******************************************************************************/
+ 492:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /*-------------------------Global Function Prototypes-------------------------*/
+ 493:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /******************************************************************************/
+ 494:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 495:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief API to invalidate the data cache.
+ 496:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 497:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval None
+ 498:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 499:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_EXTERN void IfxCpu_invalidateDataCache(void);
+ 500:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 501:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \} */
+ 502:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 503:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \addtogroup IfxLld_Cpu_Std_PerformanceCounter
+ 504:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \{ */
+ 505:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 506:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /******************************************************************************/
+ 507:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /*-------------------------Inline Function Prototypes-------------------------*/
+ 508:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /******************************************************************************/
+ 509:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 510:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief API to get the current value of the CPU clock counter.
+ 511:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 512:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * This API can be used to read clock counter of only the caller CPU. It cannot be
+ 513:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * used for this activity towards other CPUs.
+ 514:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 515:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval uint32 Counter value. 0 to 0x7FFFFFFF.
+ 516:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 517:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE uint32 IfxCpu_getClockCounter(void);
+ 518:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 519:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief API to Check if the clock counter has a sticky overflow condition.
+ 520:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 521:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * This API can be used to get sticky overflow bit of clock counter of only the caller CPU.
+ 522:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * It cannot be used for this activity towards other CPUs.
+ 523:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * This API also clears the sticky overflow after the read. While reading the sticky bit this API d
+ 524:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * the counter for short time. (otherwise sticky bit cannot be cleared). This API shall be used aft
+ 525:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 526:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \return Status of sticky overflow bit.
+ 527:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 528:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval TRUE:  Sticky overflow bit is set.
+ 529:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval FALSE: Sticky overflow bit is reset.
+ 530:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 531:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE boolean IfxCpu_getClockCounterStickyOverflow(void);
+ 532:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 533:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief API to read the current value of the CPU instruction counter.
+ 534:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 535:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * This API can be used to read instruction counter of only the caller CPU. It cannot be
+ 536:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * used for this activity towards other CPUs.
+ 537:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 538:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval uint32 Counter value. 0 to 0x7FFFFFFF.
+ 539:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 540:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE uint32 IfxCpu_getInstructionCounter(void);
+ 541:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 542:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief API to Check if the instruction counter has a sticky overflow.
+ 543:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 544:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * This API can be used to get sticky overflow bit of Instruction counter of only the caller CPU.
+ 545:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * It cannot be used for this activity towards other CPUs.
+ 546:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * This API also clears the sticky overflow after the read. While reading the sticky bit this API d
+ 547:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * the counter for short time. (otherwise sticky bit cannot be cleared). This API shall be used aft
+ 548:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 549:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \return Status of sticky overflow bit.
+ 550:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 551:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval TRUE:  Sticky overflow bit is set.
+ 552:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *         FALSE: Sticky overflow bit is reset.
+ 553:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 554:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE boolean IfxCpu_getInstructionCounterStickyOverflow(void);
+ 555:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 556:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief API to read the current value of a performance counter.
+ 557:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 558:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] address The address or identifier of the performance counter to be read. Range: 0 to 
+ 559:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 560:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval uint32 Counter value. Range: 0 to 0x7FFFFFFF.
+ 561:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 562:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE uint32 IfxCpu_getPerformanceCounter(uint16 address);
+ 563:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 564:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief API to get sticky overflow bit of performance counter for the CPU, which calls this API.
+ 565:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * This is generic function to get sticky overflow bit of any performance counters.
+ 566:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 567:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] address The address of the performance counter to check. Range: 0 to 0xFFFF
+ 568:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 569:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval Status.
+ 570:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 571:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE boolean IfxCpu_getPerformanceCounterStickyOverflow(uint16 address);
+ 572:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 573:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Reset and starts the instruction, clock and multi counters of the CPU
+ 574:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * Reset and start CCNT, ICNT, M1CNT, M2CNT, M3CNT. the overflow bits are cleared.
+ 575:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 576:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] mode Counter mode. Range: \ref IfxCpu_CounterMode.
+ 577:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 578:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval None
+ 579:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 580:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE void IfxCpu_resetAndStartCounters(IfxCpu_CounterMode mode);
+ 581:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 582:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief API to Enable or disable the CPU performance counters based on the input parameter.
+ 583:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 584:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * This API can be used to enable or disable performance counter of only the caller CPU. It cannot 
+ 585:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * used for this activity towards other CPUs.
+ 586:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 587:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] enable Specifies whether to enable or disable the performance counters.
+ 588:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 589:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * TRUE: Enable the performance counter.
+ 590:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * FALSE: Disable the performance counter.
+ 591:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 592:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval None
+ 593:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 594:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE void IfxCpu_setPerformanceCountersEnableBit(uint32 enable);
+ 595:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 596:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Stops instruction and clock counters, and return their values
+ 597:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 598:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * Stop CCNT, ICNT, M1CNT, M2CNT, M3CNT and return their values;
+ 599:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * Note: The CCTRL is reset to 0, for more accurate measurements and has to be initialized again be
+ 600:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 601:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval IfxCpu_Perf Performance counter result.
+ 602:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 603:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE IfxCpu_Perf IfxCpu_stopCounters(void);
+ 604:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 605:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief API to Update the CPU clock counter with a specified value.
+ 606:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 607:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * This API can be used to update clock counter of only the caller CPU. It cannot be
+ 608:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * used for this activity towards other CPUs.
+ 609:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 610:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] count The new value to be set for the clock counter. 0 to 0x7FFFFFFF.
+ 611:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 612:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval None
+ 613:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 614:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE void IfxCpu_updateClockCounter(uint32 count);
+ 615:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 616:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief API to update the instruction counter with a specified value.
+ 617:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 618:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * This API can be used to update Instruction counter of only the caller CPU. It cannot be
+ 619:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * used for this activity towards other CPUs.
+ 620:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 621:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] count The new value to be set for the instruction counter. 0 to 0x7FFFFFFF.
+ 622:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 623:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval None
+ 624:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 625:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE void IfxCpu_updateInstructionCounter(uint32 count);
+ 626:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 627:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief API to the performance counter at the specified address with the given count value.
+ 628:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * This is generic function to update any of the performance counters.
+ 629:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 630:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] address The memory address of the performance counter to be updated. Range: 0 to 0xFF
+ 631:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] count   Count value to be written to the performance counter. Range: 0 to 0x7FFFFFFF.
+ 632:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 633:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval None
+ 634:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 635:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE void IfxCpu_updatePerformanceCounter(uint32 address, uint32 count);
+ 636:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 637:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \} */
+ 638:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 639:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \addtogroup IfxLld_Cpu_Std_Synchronization
+ 640:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \{ */
+ 641:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 642:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /******************************************************************************/
+ 643:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /*-------------------------Global Function Prototypes-------------------------*/
+ 644:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /******************************************************************************/
+ 645:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 646:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief API to acquire the mutex (binary semaphore).
+ 647:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 648:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * This API can be used to acquire/get the mutex.
+ 649:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 650:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] lock Lock pointer.
+ 651:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 652:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval TRUE : lock acquired successfully. FALSE: Failed to acquire the lock.
+ 653:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 654:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \code
+ 655:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *    IfxCpu_mutexLock resourceLock;
+ 656:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *    boolean flag = IfxCpu_acquireMutex(&resourceLock);
+ 657:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *    if (flag){
+ 658:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *      // critical section
+ 659:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *      IfxCpu_releaseMutex(&resourceLock);
+ 660:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *    }
+ 661:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \endcode
+ 662:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 663:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 664:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_EXTERN boolean IfxCpu_acquireMutex(IfxCpu_mutexLock *lock);
+ 665:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 666:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief API to unlock the mutex.
+ 667:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 668:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * This API can be used to unlock the previously acquired mutex.
+ 669:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 670:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[inout] lock Lock pointer.
+ 671:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 672:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval None
+ 673:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 674:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \code
+ 675:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *    IfxCpu_mutexLock resourceLock;
+ 676:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *    boolean flag = IfxCpu_acquireMutex(&resourceLock);
+ 677:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *    if (flag){
+ 678:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *      // critical section
+ 679:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *      IfxCpu_releaseMutex(&resourceLock);
+ 680:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *    }
+ 681:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \endcode
+ 682:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 683:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 684:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_EXTERN void IfxCpu_releaseMutex(IfxCpu_mutexLock *lock);
+ 685:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 686:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief API to unlock the resource.
+ 687:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 688:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * This API can be used to unlock the previously acquired lock.
+ 689:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 690:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[inout] lock Lock pointer.
+ 691:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 692:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval None
+ 693:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 694:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_EXTERN void IfxCpu_resetSpinLock(IfxCpu_spinLock *lock);
+ 695:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 696:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Attempt to acquire a spinlock with a specified timeout.
+ 697:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 698:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * This API can be used to spin lock for the lock for the given timeout period.
+ 699:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 700:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] lock         Pointer to the spinlock object to be acquired.
+ 701:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] timeoutCount Maximum number of retry attempts before timing out. Range: 0 to 0xFFFFFF
+ 702:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 703:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval TRUE : Lock acquired successfully. FALSE: Failed to acquire the lock.
+ 704:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 705:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \code
+ 706:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *    IfxCpu_spinLock resourceLock;
+ 707:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *    boolean flag = IfxCpu_setSpinLock(&resourceLock, 0xFFFF);
+ 708:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *    if (flag){
+ 709:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *      // critical section
+ 710:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *      IfxCpu_resetSpinLock(&resourceLock);
+ 711:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *    }
+ 712:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \endcode
+ 713:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 714:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 715:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_EXTERN boolean IfxCpu_setSpinLock(IfxCpu_spinLock *lock, uint32 timeoutCount);
+ 716:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 717:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \} */
+ 718:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 719:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \addtogroup IfxLld_Cpu_Std_Utility
+ 720:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \{ */
+ 721:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 722:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /******************************************************************************/
+ 723:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /*-------------------------Global Function Prototypes-------------------------*/
+ 724:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /******************************************************************************/
+ 725:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 726:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /* CPU Overlay is not supported for all TC4XX derivatives.*/
+ 727:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** #if defined(CPU_OVERLAY_SUPPORTED) 
+ 728:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Disables a specific overlay block on the given CPU resource.
+ 729:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 730:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] cpu          Core no of the CPU. Range: 0 to max number of CPU's supported for the va
+ 731:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] overlayBlock The identifier of the overlay block to be disabled. Range: 0 to 31.
+ 732:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 733:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval uint32 Range: Enable successful, 0xdeadbeef: Enable un-successful.
+ 734:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 735:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_EXTERN uint32 IfxCpu_disableOverlayBlock(uint32 cpu, uint32 ovcBlock);
+ 736:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 737:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief This function configures and enables the overlay memory.
+ 738:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * Note:
+ 739:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * The data overlay provides the capability to redirect selected data accesses to the Overlay memor
+ 740:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 741:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * How the overlay Memory works?
+ 742:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * Any data access to segment 8 or segment A is checked against all the activated overlay blocks. F
+ 743:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * The address for redirection is constructed as follows:
+ 744:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * 1. Address bits 31..22 are set according to the overlay memory selection and the cache-ability o
+ 745:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * 2. For address bits 21..5:
+ 746:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * - If the corresponding address mask bit is set, the address bit value is taken from overlay base
+ 747:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * - If the corresponding address mask bit is cleared, the address bit value is taken from the orig
+ 748:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * 3. Address bits 4..0 are always taken directly from the original address.
+ 749:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * If there is no redirection, the original address is used to perform the access.
+ 750:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * Target address ranges for activated overlay blocks should not overlap or an exception may occur.
+ 751:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 752:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] cpu                 Core no of the CPU. Range: 0 to max number of CPU's supported for
+ 753:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] overlayBlock        Overlay Block. Range: 0 to 31.
+ 754:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] overlayMemorySelect Overlay Memory Select. Range. 0 to 0xFFFFFFFF.
+ 755:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] overlayAddressMask  Overlay Address Mask. Range: \ref IfxCpu_OverlayAddressMask.
+ 756:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] targetBaseAddress   Target Base address (i.e Source address to be re-directed). Range
+ 757:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] overlayBaseAddress  Overlay or Re-directed Base address (Bits 21..5 of the base addre
+ 758:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 759:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval uint32 Range: Enable successful, 0xdeadbeef: Enable un-successful.
+ 760:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 761:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_EXTERN uint32 IfxCpu_enableOverlayBlock(uint32 cpu, uint32 ovcBlock, uint32 ovcMemory, uint32 o
+ 762:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 763:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** #endif /* CPU_OVERLAY_SUPPORTED */
+ 764:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 765:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 766:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief API to get random value.
+ 767:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 768:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[inout] seed Pointer to seed value.
+ 769:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 770:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval uint32 random value.
+ 771:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 772:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_EXTERN uint32 IfxCpu_getRandomValue(uint32 *seed);
+ 773:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 774:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Generates a random value within a specified range using the provided seed.
+ 775:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 776:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[inout] seed Pointer to the seed value used for random number generation. The seed is upda
+ 777:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in]    min  The minimum value (inclusive) of the range from which the random number will 
+ 778:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in]    max  The maximum value (exclusive) of the range from which the random number will 
+ 779:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 780:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval uint32 A random value within the range [min, max].
+ 781:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 782:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_EXTERN uint32 IfxCpu_getRandomValueWithinRange(uint32 *seed, uint32 min, uint32 max);
+ 783:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 784:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief This function waits till all the cores have set their corresponding bits in the event. T
+ 785:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * IfxCpu_emitEvent() are used to achieve the synchronisation between the configured cores. 
+ 786:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * The IfxCpu_emitEvent() is to be used in the Main functions of the Cores where the user wants to 
+ 787:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 788:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 789:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * Note: 
+ 790:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * The user has to explicitly set the constant core's mask value to check the synchronisation betwe
+ 791:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * Core id values read from CORE_ID register will be as shown below. 
+ 792:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * The value indicates the position of the bit needs to be set for the core mask parameter expected
+ 793:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * 
+ 794:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * Core 0: 0
+ 795:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * Core 1: 1
+ 796:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * Core 2: 2
+ 797:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * Core 3: 3
+ 798:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * Core 4: 4
+ 799:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * Core 5: 6
+ 800:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  
+ 801:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * e.g:
+ 802:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * 1. Check for synchronisation between core 0 and core 5
+ 803:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * expectedCoreMask = 0x21U
+ 804:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 805:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * 2. Check for synchronisation between core 0 to core 5
+ 806:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * expectedCoreMask = 0x3FU
+ 807:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 808:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * 3. Check for synchronisation between core 2 and core 4
+ 809:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * expectedCoreMask = 0x14U
+ 810:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 811:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * 4. Check for synchronisation between core 2 to core 4
+ 812:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * expectedCoreMask = 0x1CU
+ 813:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 814:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] event           Synchronous Event
+ 815:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] timeoutMilliSec Timeout in millisec. Range: 0 to 0xFFFFFFFF.
+ 816:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] expectedCoreMask Core Mask values. Range: 0 to 0x3F
+ 817:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 818:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval Error condition.
+ 819:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 820:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * The functions IfxCpu_waitEvent and IfxCpu_emitEvent are used to achieve synchronisation between 
+ 821:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 822:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \code
+ 823:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * // Global variable. preferably located in  shared memory.
+ 824:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * IfxCpu_syncEvent event;
+ 825:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * boolean errorVal;
+ 826:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 827:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * // Below code should be repeated in Each core
+ 828:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 829:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * // Upon reaching Synchonisation point
+ 830:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * const uint8 expectedCoreMask = 0x3FU;
+ 831:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * IfxCpu_emitEvent(&event);
+ 832:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * errorVal = IfxCpu_waitEvent(&event, timeoutMilliSec, expectedCoreMask); // timeoutMilliSec is ti
+ 833:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 834:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \endcode
+ 835:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 836:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 837:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_EXTERN boolean IfxCpu_waitEvent(IfxCpu_syncEvent *event, uint32 timeoutMilliSec, const uint8 ex
+ 838:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 839:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief This function sets a bit corresponding to the core in the event.
+ 840:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 841:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] event Synchronous Event.
+ 842:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 843:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval None
+ 844:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 845:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * A coding example can be found in \ref IfxCpu_waitEvent
+ 846:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 847:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 848:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_EXTERN void IfxCpu_emitEvent(IfxCpu_syncEvent *event);
+ 849:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 850:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Configures access to all masters to all the CPUs in the device.
+ 851:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 852:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] apuConfig Config pointer to configuration structure.
+ 853:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 854:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval None
+ 855:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 856:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_EXTERN void IfxCpu_configureAccessToCpus(IfxApApu_ApuConfig *apuConfig);
+ 857:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 858:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \} */
+ 859:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 860:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /******************************************************************************/
+ 861:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /*-------------------------Inline Function Prototypes-------------------------*/
+ 862:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /******************************************************************************/
+ 863:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 864:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** #ifndef DEVICE_TC45X
+ 865:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Disables CPU virtualization support.
+ 866:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 867:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval None
+ 868:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 869:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE void IfxCpu_disableVirtualization(void);
+ 870:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 871:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Checks if CPU virtualization is enabled.
+ 872:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 873:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval Returns if virtualization is enabled or not.
+ 874:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 875:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE boolean IfxCpu_isVirtualizationEnabled(void);
+ 876:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 877:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Configures the handling of Non-Maskable Interrupts (NMI) for the CPU.
+ 878:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 879:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] nmiHandle Parameter which tell if the Hypervisor or the executing VM handles NMIs. Ra
+ 880:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 881:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval None
+ 882:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 883:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE void IfxCpu_setNmiHandling(IfxCpu_nmiHandling nmiHandle);
+ 884:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 885:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Retrieves the current NMI (Non-Maskable Interrupt) handling configuration.
+ 886:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 887:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval IfxCpu_nmiHandling Parameter which tell if the Hypervisor or the executing VM handles NM
+ 888:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 889:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE IfxCpu_nmiHandling IfxCpu_getNmiHandling(void);
+ 890:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 891:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Returns the currently executing virtual machine number.
+ 892:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 893:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval IfxCpu_vmId Virtual Machine Id. Range: \ref IfxCpu_vmId.
+ 894:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 895:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE IfxCpu_vmId IfxCpu_getVirtualMachine(void);
+ 896:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 897:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Set the virtual machine to be executed.
+ 898:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 899:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] vmId Virtual machine number. Range: \ref IfxCpu_vmId.
+ 900:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 901:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval None
+ 902:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 903:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE void IfxCpu_setVirtualMachine(IfxCpu_vmId vmId);
+ 904:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 905:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Set the L2_PRS Value.
+ 906:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 907:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] prsValue L2 PRS value. Range: 0 to 7.
+ 908:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 909:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval None
+ 910:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 911:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE void IfxCpu_setL2Prs(uint8 prsValue);
+ 912:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 913:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Returns the L2_PRS value.
+ 914:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 915:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval uint8 L2_PRS value. Range: 0 to 7.
+ 916:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 917:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE uint8 IfxCpu_getL2Prs(void);
+ 918:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 919:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Sets the interrupt threshold register.
+ 920:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 921:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] vmId           Virtual machine ID. Range: \ref IfxCpu_vmId.
+ 922:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] thresholdValue Interrupt threshold value. Range: 0 to 7.
+ 923:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 924:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval None
+ 925:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 926:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE void IfxCpu_setInterruptThreshold(IfxCpu_vmId vmId, uint8 thresholdValue);
+ 927:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** #endif /* DEVICE_TC45X */
+ 928:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 929:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Retrieves the program integrity error status of the specified CPU.
+ 930:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 931:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] cpu Pointer to the CPU HW module.
+ 932:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 933:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval uint32 Returns the error status of program memory integrity. Range: 0 to 0x0FF1FFFF.
+ 934:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 935:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE uint32 IfxCpu_getProgramIntegrityErrorStatus(Ifx_CPU *cpu);
+ 936:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 937:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief This API provides the address being accessed by the operation that encountered the memor
+ 938:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 939:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] cpu Pointer to the CPU HW module.
+ 940:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 941:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval uint32 Returns The physical address being accessed by operation that encountered program
+ 942:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 943:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE uint32 IfxCpu_getProgramIntegrityErrorAddress(Ifx_CPU *cpu);
+ 944:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 945:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief This API is used to clear the IED (integrity error detection) bit.
+ 946:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 947:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[inout] cpu Pointer to the CPU HW module.
+ 948:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 949:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval None
+ 950:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 951:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE void IfxCpu_clearIntegrityErrorDetection(Ifx_CPU *cpu);
+ 952:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 953:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief this API is used to disable the cpu counters.
+ 954:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 955:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval None
+ 956:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 957:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE void IfxCpu_stopPerfCounters(void);
+ 958:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 959:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /******************************************************************************/
+ 960:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /*-------------------------Global Function Prototypes-------------------------*/
+ 961:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /******************************************************************************/
+ 962:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 963:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Disables interrupts for all CPUs except the Master CPU,index of which is given as the pa
+ 964:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 965:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in] masterCpu Master CPU Index- All except this will have their interrupts disabled. Rang
+ 966:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 967:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval None
+ 968:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 969:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_EXTERN void IfxCpu_disableInterruptsAllExceptMaster(IfxCpu_ResourceCpu masterCpu);
+ 970:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 971:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Initializes the PROT.
+ 972:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 973:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[inout] prot   PROT register pointer.
+ 974:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in]    config PROT config pointer.
+ 975:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 976:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval None
+ 977:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 978:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_EXTERN void IfxCpu_initProt(Ifx_PROT_PROT *prot, IfxApProt_ProtConfig *config);
+ 979:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 980:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /** \brief Initializes the APU.
+ 981:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 982:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[inout] prot     PROT register pointer.
+ 983:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[inout] accen    ACCEN register pointer.
+ 984:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in]    config   APU config pointer.
+ 985:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \param[in]    selValue Select Value to select the respective ACCEN register to be configured. Ra
+ 986:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  *
+ 987:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  * \retval None
+ 988:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****  */
+ 989:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_EXTERN void IfxCpu_initApu(Ifx_PROT_PROT *prot, Ifx_ACCEN_ACCEN *accen, IfxApApu_ApuConfig *con
+ 990:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 991:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /******************************************************************************/
+ 992:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /*---------------------Inline Function Implementations------------------------*/
+ 993:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** /******************************************************************************/
+ 994:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+ 995:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE boolean IfxCpu_areInterruptsEnabled(void)
+ 996:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** {
+ 997:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     Ifx_CPU_ICR reg;
+ 998:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     reg.U = __mfcr(CPU_ICR);
+ 999:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     return reg.B.IE != 0;
+1000:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** }
+1001:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+1002:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+1003:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE boolean IfxCpu_disableInterrupts(void)
+1004:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** {
+1005:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     boolean enabled;
+1006:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     enabled = IfxCpu_areInterruptsEnabled();
+1007:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     __disable();
+1008:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     __nop();
+1009:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     return enabled;
+1010:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** }
+1011:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+1012:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** 
+1013:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** IFX_INLINE void IfxCpu_enableInterrupts(void)
+1014:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h **** {
+1015:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h ****     __enable();
+  20              	 .loc 2 1015 5
+  21              	
+  22              	 
+  23 0002 0D000003 	 enable
+  24              	 
+  25              	
+  26              	.LBE5:
+  27              	.LBE4:
+  34:../Cpu2_Main.c **** 
+  35:../Cpu2_Main.c ****     /* !!WATCHDOG2 IS DISABLED HERE!!
+  36:../Cpu2_Main.c ****      * Enable the watchdog and service it periodically if it is required
+  37:../Cpu2_Main.c ****      */
+  38:../Cpu2_Main.c ****     IfxWtu_disableCpuWatchdog(IfxWtu_getCpuWatchdogPassword());
+  28              	 .loc 1 38 5
+  29              	 .loc 1 38 31 is_stmt 0
+  30 0006 6D000000 	 call IfxWtu_getCpuWatchdogPassword
+  31              	.LVL0:
+  32              	 .loc 1 38 5
+  33 000a 0224     	 mov %d4,%d2
+  34 000c 6D000000 	 call IfxWtu_disableCpuWatchdog
+  35              	.LVL1:
+  36              	.L2:
+  39:../Cpu2_Main.c **** 
+  40:../Cpu2_Main.c ****     while(1)
+  37              	 .loc 1 40 5 is_stmt 1 discriminator 1
+  41:../Cpu2_Main.c ****     {
+  42:../Cpu2_Main.c ****         counterCpu2++;
+  38              	 .loc 1 42 9 discriminator 1
+  39              	 .loc 1 42 20 is_stmt 0 discriminator 1
+  40 0010 91000020 	 movh.a %a2,hi:counterCpu2
+  41 0014 19220000 	 ld.w %d2,[%a2]lo:counterCpu2
+  42 0018 C212     	 add %d2,1
+  43 001a 59220000 	 st.w [%a2]lo:counterCpu2,%d2
+  40:../Cpu2_Main.c ****     {
+  44              	 .loc 1 40 10 is_stmt 1 discriminator 1
+  45 001e 1D000000 	 j .L2
+  46              	.LFE327:
+  48              	 .global core2_main_end
+  49              	core2_main_end:
+  50              	 .global counterCpu2
+  51              	 .section .bss.counterCpu2,"aw",@nobits
+  52              	 .align 2
+  55              	counterCpu2:
+  56 0000 00000000 	 .zero 4
+  85              	.Letext0:
+  86              	 .file 3 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+  87              	 .file 4 "../Libraries/iLLD/TC4xx/Tricore/_Impl/TC4Dx/IfxCpu_cfg_TC4Dx.h"
+  88              	 .file 5 "../Libraries/iLLD/TC4xx/CpuGeneric/Clock/Std/IfxClock.h"
+  89              	 .file 6 "../Libraries/iLLD/TC4xx/Tricore/Wtu/Std/IfxWtu.h"
+ 680 0000 00000000 	 .word core2_main
+ 681 0004 00000000 	 .word core2_main_end
+ 682 0008 14000444 	 .word 0x44040014
+ 683 000c 00000000 	 .word 0x00000000
+ 684 0010 00000000 	 .word 0x00000000
+ 685 0014 40010200 	 .word 0x00020140
+DEFINED SYMBOLS
+                            *ABS*:00000000 Cpu2_Main.c
+                            *ABS*:00000000 Cpu2_Main.c
+    {standard input}:10     .text.core2_main:00000000 core2_main
+    {standard input}:55     .bss.counterCpu2:00000000 counterCpu2
+    {standard input}:49     .text.core2_main:00000022 core2_main_end
+
+UNDEFINED SYMBOLS
+IfxWtu_getCpuWatchdogPassword
+IfxWtu_disableCpuWatchdog

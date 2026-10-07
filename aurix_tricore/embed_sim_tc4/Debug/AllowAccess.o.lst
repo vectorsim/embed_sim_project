@@ -1,0 +1,459 @@
+   1              	
+   2              	 .file "AllowAccess.c"
+   3              	 .file "AllowAccess.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.allowAccess,"ax",@progbits
+   7              	 .align 1
+   8              	 .global allowAccess
+  10              	allowAccess:
+  11              	.LFB1526:
+  12              	 .file 1 "../AllowAccess.c"
+   1:../AllowAccess.c **** /**
+   2:../AllowAccess.c ****  * \file AllowAccess.c
+   3:../AllowAccess.c ****  * \brief This file contains the APIs for providing access to all the masters towards generally use
+   4:../AllowAccess.c ****  *
+   5:../AllowAccess.c ****  * \copyright Copyright (C) Infineon Technologies AG 2026
+   6:../AllowAccess.c ****  *
+   7:../AllowAccess.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+   8:../AllowAccess.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+   9:../AllowAccess.c ****  * this file except in compliance with IFASLL.
+  10:../AllowAccess.c ****  *
+  11:../AllowAccess.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  12:../AllowAccess.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  13:../AllowAccess.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  14:../AllowAccess.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  15:../AllowAccess.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  16:../AllowAccess.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  17:../AllowAccess.c ****  * defects in the licensed items, or non-infringement of third parties'
+  18:../AllowAccess.c ****  * intellectual property rights. See the full license text for the specific
+  19:../AllowAccess.c ****  * language governing permissions and limitations under IFASLL.
+  20:../AllowAccess.c ****  **************************************************************************************************
+  21:../AllowAccess.c **** 
+  22:../AllowAccess.c **** /**************************************************************************************************
+  23:../AllowAccess.c **** /*-----------------------------------------------------Includes------------------------------------
+  24:../AllowAccess.c **** /**************************************************************************************************
+  25:../AllowAccess.c **** #include "Ifx_Types.h"
+  26:../AllowAccess.c **** #include "IfxApApu.h"
+  27:../AllowAccess.c **** #include "IfxCpu_cfg.h"
+  28:../AllowAccess.c **** #include "IfxCpu.h"
+  29:../AllowAccess.c **** #include "IfxCpu_reg.h"
+  30:../AllowAccess.c **** #include "IfxAdc.h"
+  31:../AllowAccess.c **** #include "IfxPpucCore.h"
+  32:../AllowAccess.c **** #include "IfxPpucStu.h"
+  33:../AllowAccess.c **** #include "IfxEgtm.h"
+  34:../AllowAccess.c **** #include "IfxQspi.h"
+  35:../AllowAccess.c **** #include "IfxCan.h"
+  36:../AllowAccess.c **** #include "IfxAsclin.h"
+  37:../AllowAccess.c **** #include "IfxSent.h"
+  38:../AllowAccess.c **** #include "IfxI2c.h"
+  39:../AllowAccess.c **** #include "IfxClock.h"
+  40:../AllowAccess.c **** #include "IfxSrc.h"
+  41:../AllowAccess.c **** #include "IfxPort.h"
+  42:../AllowAccess.c **** #include "IfxGeth.h"
+  43:../AllowAccess.c **** #include "IfxPmsEvr.h"
+  44:../AllowAccess.c **** #include "IfxHsphy.h"
+  45:../AllowAccess.c **** #include "IfxDre.h"
+  46:../AllowAccess.c **** #include "IfxEray.h"
+  47:../AllowAccess.c **** #include "IfxDma.h"
+  48:../AllowAccess.c **** #include "IfxFce.h"
+  49:../AllowAccess.c **** #include "IfxHssl.h"
+  50:../AllowAccess.c **** #include "IfxMsc.h"
+  51:../AllowAccess.c **** #include "IfxPcie.h"
+  52:../AllowAccess.c **** #include "IfxPsi5.h"
+  53:../AllowAccess.c **** #include "IfxPsi5s.h"
+  54:../AllowAccess.c **** #include "IfxSdmmc.h"
+  55:../AllowAccess.c **** #include "IfxSent.h"
+  56:../AllowAccess.c **** #include "IfxSmm.h"
+  57:../AllowAccess.c **** #include "IfxStm.h"
+  58:../AllowAccess.c **** #include "IfxVmt.h"
+  59:../AllowAccess.c **** #include "IfxXspi.h"
+  60:../AllowAccess.c **** 
+  61:../AllowAccess.c **** /**************************************************************************************************
+  62:../AllowAccess.c **** /*-------------------------------------------------Global variables--------------------------------
+  63:../AllowAccess.c **** /**************************************************************************************************
+  64:../AllowAccess.c **** 
+  65:../AllowAccess.c **** typedef struct
+  66:../AllowAccess.c **** {
+  67:../AllowAccess.c ****     void *module;
+  68:../AllowAccess.c ****     void *startAddr;
+  69:../AllowAccess.c ****     void *endAddr;
+  70:../AllowAccess.c **** } AllowAccess_MemoryRegion;
+  71:../AllowAccess.c **** 
+  72:../AllowAccess.c **** 
+  73:../AllowAccess.c **** #define ALLOWACCESS_MASTER_BITS       (0xFFFFFFFFFFFFFFFFULL)
+  74:../AllowAccess.c **** #define ALLOWACCESS_VM_BITS           (uint8)(0xFF)
+  75:../AllowAccess.c **** #define ALLOWACCESS_PRS_BITS          (uint8)(0xFF)
+  76:../AllowAccess.c **** 
+  77:../AllowAccess.c **** /**************************************************************************************************
+  78:../AllowAccess.c **** /*--------------------------------------------Private Variables/Constants--------------------------
+  79:../AllowAccess.c **** /**************************************************************************************************
+  80:../AllowAccess.c **** const IfxApApu_ApuConfig g_apuConfig=
+  81:../AllowAccess.c **** {
+  82:../AllowAccess.c ****    .wraTagId= (uint32)ALLOWACCESS_MASTER_BITS,
+  83:../AllowAccess.c ****    .wrbTagId= (uint32)(ALLOWACCESS_MASTER_BITS >> 32),
+  84:../AllowAccess.c ****    .rdaTagId= (uint32)ALLOWACCESS_MASTER_BITS,
+  85:../AllowAccess.c ****    .rdbTagId= (uint32)(ALLOWACCESS_MASTER_BITS >> 32),
+  86:../AllowAccess.c ****    .vmWrId= ALLOWACCESS_VM_BITS,
+  87:../AllowAccess.c ****    .vmRdId= ALLOWACCESS_VM_BITS,
+  88:../AllowAccess.c ****    .prsWrId= ALLOWACCESS_PRS_BITS,
+  89:../AllowAccess.c ****    .prsRdId= ALLOWACCESS_PRS_BITS
+  90:../AllowAccess.c **** };
+  91:../AllowAccess.c **** 
+  92:../AllowAccess.c **** static boolean accessGranted= FALSE;
+  93:../AllowAccess.c **** 
+  94:../AllowAccess.c **** /**************************************************************************************************
+  95:../AllowAccess.c **** /*------------------------------------------------Function Prototypes------------------------------
+  96:../AllowAccess.c **** /**************************************************************************************************
+  97:../AllowAccess.c **** 
+  98:../AllowAccess.c **** /**************************************************************************************************
+  99:../AllowAccess.c **** /*---------------------------------------------Function Implementations----------------------------
+ 100:../AllowAccess.c **** /**************************************************************************************************
+ 101:../AllowAccess.c **** void allowAccess(void)
+ 102:../AllowAccess.c **** {
+  13              	 .loc 1 102 1
+  14 0000 40AE     	 mov.aa %a14,%SP
+  15              	.LCFI0:
+  16 0002 2010     	 sub.a %SP,16
+ 103:../AllowAccess.c **** 	IfxApApu_ApuMemoryConfig memConfig;
+  17              	 .loc 1 103 2
+ 104:../AllowAccess.c **** 	memConfig.apuConfig= (IfxApApu_ApuConfig *)&g_apuConfig;
+  18              	 .loc 1 104 2
+  19              	 .loc 1 104 21 is_stmt 0
+  20 0004 910000C0 	 movh.a %a12,hi:g_apuConfig
+  21 0008 D9CC0000 	 lea %a12,[%a12]lo:g_apuConfig
+  22 000c B5ECF4FF 	 st.a [%a14]-12,%a12
+ 105:../AllowAccess.c **** 	IfxApApu_configureAccessToLmus(&memConfig);
+  23              	 .loc 1 105 2 is_stmt 1
+  24 0010 D9E4F4FF 	 lea %a4,[%a14]-12
+  25 0014 6D000000 	 call IfxApApu_configureAccessToLmus
+  26              	.LVL0:
+ 106:../AllowAccess.c **** 	IfxApApu_configureAccessToDlmus(&memConfig);
+  27              	 .loc 1 106 2
+  28 0018 D9E4F4FF 	 lea %a4,[%a14]-12
+  29 001c 6D000000 	 call IfxApApu_configureAccessToDlmus
+  30              	.LVL1:
+ 107:../AllowAccess.c **** 	IfxApApu_configureAccessToDsprs(&memConfig);
+  31              	 .loc 1 107 2
+  32 0020 D9E4F4FF 	 lea %a4,[%a14]-12
+  33 0024 6D000000 	 call IfxApApu_configureAccessToDsprs
+  34              	.LVL2:
+ 108:../AllowAccess.c **** 	IfxApApu_configureAccessToPsprs(&memConfig);
+  35              	 .loc 1 108 2
+  36 0028 D9E4F4FF 	 lea %a4,[%a14]-12
+  37 002c 6D000000 	 call IfxApApu_configureAccessToPsprs
+  38              	.LVL3:
+ 109:../AllowAccess.c ****     IfxCpu_configureAccessToCpus((IfxApApu_ApuConfig *)&g_apuConfig);
+  39              	 .loc 1 109 5
+  40 0030 40C4     	 mov.aa %a4,%a12
+  41 0032 6D000000 	 call IfxCpu_configureAccessToCpus
+  42              	.LVL4:
+ 110:../AllowAccess.c **** 	IfxStm_configureAccessToStms((IfxApApu_ApuConfig *)&g_apuConfig);
+  43              	 .loc 1 110 2
+  44 0036 40C4     	 mov.aa %a4,%a12
+  45 0038 6D000000 	 call IfxStm_configureAccessToStms
+  46              	.LVL5:
+ 111:../AllowAccess.c ****     IfxAdc_configureAccessToAdc((IfxApApu_ApuConfig *)&g_apuConfig);
+  47              	 .loc 1 111 5
+  48 003c 40C4     	 mov.aa %a4,%a12
+  49 003e 6D000000 	 call IfxAdc_configureAccessToAdc
+  50              	.LVL6:
+ 112:../AllowAccess.c ****     IfxPpucCore_configureAccessToPpuc((IfxApApu_ApuConfig *)&g_apuConfig);
+  51              	 .loc 1 112 5
+  52 0042 40C4     	 mov.aa %a4,%a12
+  53 0044 6D000000 	 call IfxPpucCore_configureAccessToPpuc
+  54              	.LVL7:
+ 113:../AllowAccess.c ****     IfxPpucCore_configureAccessToPpucCsm((IfxApApu_ApuConfig *)&g_apuConfig);
+  55              	 .loc 1 113 5
+  56 0048 40C4     	 mov.aa %a4,%a12
+  57 004a 6D000000 	 call IfxPpucCore_configureAccessToPpucCsm
+  58              	.LVL8:
+ 114:../AllowAccess.c ****     IfxPpucCore_configureAccessToPpucVccm((IfxApApu_ApuConfig *)&g_apuConfig);
+  59              	 .loc 1 114 5
+  60 004e 40C4     	 mov.aa %a4,%a12
+  61 0050 6D000000 	 call IfxPpucCore_configureAccessToPpucVccm
+  62              	.LVL9:
+ 115:../AllowAccess.c ****     IfxPpucStu_configureAccessToPpucStuDmi((IfxApApu_ApuConfig *)&g_apuConfig);
+  63              	 .loc 1 115 5
+  64 0054 40C4     	 mov.aa %a4,%a12
+  65 0056 6D000000 	 call IfxPpucStu_configureAccessToPpucStuDmi
+  66              	.LVL10:
+ 116:../AllowAccess.c ****     IfxEgtm_configureAccessToEgtms((IfxApApu_ApuConfig *)&g_apuConfig);
+  67              	 .loc 1 116 5
+  68 005a 40C4     	 mov.aa %a4,%a12
+  69 005c 6D000000 	 call IfxEgtm_configureAccessToEgtms
+  70              	.LVL11:
+ 117:../AllowAccess.c ****     IfxQspi_configureAccessToQspis((IfxApApu_ApuConfig *)&g_apuConfig);
+  71              	 .loc 1 117 5
+  72 0060 40C4     	 mov.aa %a4,%a12
+  73 0062 6D000000 	 call IfxQspi_configureAccessToQspis
+  74              	.LVL12:
+ 118:../AllowAccess.c ****     IfxCan_configureAccessToCans((IfxApApu_ApuConfig *)&g_apuConfig);
+  75              	 .loc 1 118 5
+  76 0066 40C4     	 mov.aa %a4,%a12
+  77 0068 6D000000 	 call IfxCan_configureAccessToCans
+  78              	.LVL13:
+ 119:../AllowAccess.c ****     IfxAsclin_configureAccessToAsclins((IfxApApu_ApuConfig *)&g_apuConfig);
+  79              	 .loc 1 119 5
+  80 006c 40C4     	 mov.aa %a4,%a12
+  81 006e 6D000000 	 call IfxAsclin_configureAccessToAsclins
+  82              	.LVL14:
+ 120:../AllowAccess.c ****     IfxSent_configureAccessToSents((IfxApApu_ApuConfig *)&g_apuConfig);
+  83              	 .loc 1 120 5
+  84 0072 40C4     	 mov.aa %a4,%a12
+  85 0074 6D000000 	 call IfxSent_configureAccessToSents
+  86              	.LVL15:
+ 121:../AllowAccess.c ****     IfxI2c_configureAccessToI2cs((IfxApApu_ApuConfig *)&g_apuConfig);
+  87              	 .loc 1 121 5
+  88 0078 40C4     	 mov.aa %a4,%a12
+  89 007a 6D000000 	 call IfxI2c_configureAccessToI2cs
+  90              	.LVL16:
+ 122:../AllowAccess.c ****     IfxClock_configureAccessToClock((IfxApApu_ApuConfig *)&g_apuConfig);
+  91              	 .loc 1 122 5
+  92 007e 40C4     	 mov.aa %a4,%a12
+  93 0080 6D000000 	 call IfxClock_configureAccessToClock
+  94              	.LVL17:
+ 123:../AllowAccess.c ****     IfxSrc_configureAccessToSrcs((IfxApApu_ApuConfig *)&g_apuConfig);
+  95              	 .loc 1 123 5
+  96 0084 40C4     	 mov.aa %a4,%a12
+  97 0086 6D000000 	 call IfxSrc_configureAccessToSrcs
+  98              	.LVL18:
+ 124:../AllowAccess.c ****     IfxPort_configureAccessToPorts((IfxApApu_ApuConfig *)&g_apuConfig);
+  99              	 .loc 1 124 5
+ 100 008a 40C4     	 mov.aa %a4,%a12
+ 101 008c 6D000000 	 call IfxPort_configureAccessToPorts
+ 102              	.LVL19:
+ 125:../AllowAccess.c ****     IfxGeth_configureAccessToGeth((IfxApApu_ApuConfig *)&g_apuConfig);
+ 103              	 .loc 1 125 5
+ 104 0090 40C4     	 mov.aa %a4,%a12
+ 105 0092 6D000000 	 call IfxGeth_configureAccessToGeth
+ 106              	.LVL20:
+ 126:../AllowAccess.c ****     IfxPmsEvr_configureAccessToPms((IfxApApu_ApuConfig *)&g_apuConfig);
+ 107              	 .loc 1 126 5
+ 108 0096 40C4     	 mov.aa %a4,%a12
+ 109 0098 6D000000 	 call IfxPmsEvr_configureAccessToPms
+ 110              	.LVL21:
+ 127:../AllowAccess.c ****     IfxHsphy_configureAccessToHsphy((IfxApApu_ApuConfig *)&g_apuConfig);
+ 111              	 .loc 1 127 5
+ 112 009c 40C4     	 mov.aa %a4,%a12
+ 113 009e 6D000000 	 call IfxHsphy_configureAccessToHsphy
+ 114              	.LVL22:
+ 128:../AllowAccess.c ****     IfxDma_configureAccessToDmas((IfxApApu_ApuConfig *)&g_apuConfig);
+ 115              	 .loc 1 128 5
+ 116 00a2 40C4     	 mov.aa %a4,%a12
+ 117 00a4 6D000000 	 call IfxDma_configureAccessToDmas
+ 118              	.LVL23:
+ 129:../AllowAccess.c ****     IfxFce_configureAccessToFce((IfxApApu_ApuConfig *)&g_apuConfig);
+ 119              	 .loc 1 129 5
+ 120 00a8 40C4     	 mov.aa %a4,%a12
+ 121 00aa 6D000000 	 call IfxFce_configureAccessToFce
+ 122              	.LVL24:
+ 130:../AllowAccess.c ****     IfxDre_configureAccessToDre((IfxApApu_ApuConfig *)&g_apuConfig);
+ 123              	 .loc 1 130 5
+ 124 00ae 40C4     	 mov.aa %a4,%a12
+ 125 00b0 6D000000 	 call IfxDre_configureAccessToDre
+ 126              	.LVL25:
+ 131:../AllowAccess.c ****     IfxEray_configureAccessToErays((IfxApApu_ApuConfig *)&g_apuConfig);
+ 127              	 .loc 1 131 5
+ 128 00b4 40C4     	 mov.aa %a4,%a12
+ 129 00b6 6D000000 	 call IfxEray_configureAccessToErays
+ 130              	.LVL26:
+ 132:../AllowAccess.c ****     IfxHssl_configureAccessToHscts((IfxApApu_ApuConfig *)&g_apuConfig);
+ 131              	 .loc 1 132 5
+ 132 00ba 40C4     	 mov.aa %a4,%a12
+ 133 00bc 6D000000 	 call IfxHssl_configureAccessToHscts
+ 134              	.LVL27:
+ 133:../AllowAccess.c ****     IfxHssl_configureAccessToHssls((IfxApApu_ApuConfig *)&g_apuConfig);
+ 135              	 .loc 1 133 5
+ 136 00c0 40C4     	 mov.aa %a4,%a12
+ 137 00c2 6D000000 	 call IfxHssl_configureAccessToHssls
+ 138              	.LVL28:
+ 134:../AllowAccess.c ****     IfxMsc_configureAccessToMscs((IfxApApu_ApuConfig *)&g_apuConfig);
+ 139              	 .loc 1 134 5
+ 140 00c6 40C4     	 mov.aa %a4,%a12
+ 141 00c8 6D000000 	 call IfxMsc_configureAccessToMscs
+ 142              	.LVL29:
+ 135:../AllowAccess.c ****     IfxPcie_configureAccessToPcies((IfxApApu_ApuConfig *)&g_apuConfig);
+ 143              	 .loc 1 135 5
+ 144 00cc 40C4     	 mov.aa %a4,%a12
+ 145 00ce 6D000000 	 call IfxPcie_configureAccessToPcies
+ 146              	.LVL30:
+ 136:../AllowAccess.c ****     IfxPsi5_configureAccessToPsi5((IfxApApu_ApuConfig *)&g_apuConfig);
+ 147              	 .loc 1 136 5
+ 148 00d2 40C4     	 mov.aa %a4,%a12
+ 149 00d4 6D000000 	 call IfxPsi5_configureAccessToPsi5
+ 150              	.LVL31:
+ 137:../AllowAccess.c ****     IfxPsi5s_configureAccessToAllPsi5s((IfxApApu_ApuConfig *)&g_apuConfig);
+ 151              	 .loc 1 137 5
+ 152 00d8 40C4     	 mov.aa %a4,%a12
+ 153 00da 6D000000 	 call IfxPsi5s_configureAccessToAllPsi5s
+ 154              	.LVL32:
+ 138:../AllowAccess.c ****     IfxSdmmc_configureAccessToSdmmc((IfxApApu_ApuConfig *)&g_apuConfig);
+ 155              	 .loc 1 138 5
+ 156 00de 40C4     	 mov.aa %a4,%a12
+ 157 00e0 6D000000 	 call IfxSdmmc_configureAccessToSdmmc
+ 158              	.LVL33:
+ 139:../AllowAccess.c ****     IfxSmm_configureAccessToSmm((IfxApApu_ApuConfig *)&g_apuConfig);
+ 159              	 .loc 1 139 5
+ 160 00e4 40C4     	 mov.aa %a4,%a12
+ 161 00e6 6D000000 	 call IfxSmm_configureAccessToSmm
+ 162              	.LVL34:
+ 140:../AllowAccess.c ****     IfxStm_configureAccessToStms((IfxApApu_ApuConfig *)&g_apuConfig);
+ 163              	 .loc 1 140 5
+ 164 00ea 40C4     	 mov.aa %a4,%a12
+ 165 00ec 6D000000 	 call IfxStm_configureAccessToStms
+ 166              	.LVL35:
+ 141:../AllowAccess.c ****     IfxVmt_configureAccessToVmts((IfxApApu_ApuConfig *)&g_apuConfig);
+ 167              	 .loc 1 141 5
+ 168 00f0 40C4     	 mov.aa %a4,%a12
+ 169 00f2 6D000000 	 call IfxVmt_configureAccessToVmts
+ 170              	.LVL36:
+ 142:../AllowAccess.c ****     IfxXspi_configureAccessToXspi((IfxApApu_ApuConfig *)&g_apuConfig);
+ 171              	 .loc 1 142 5
+ 172 00f6 40C4     	 mov.aa %a4,%a12
+ 173 00f8 6D000000 	 call IfxXspi_configureAccessToXspi
+ 174              	.LVL37:
+ 143:../AllowAccess.c **** 
+ 144:../AllowAccess.c ****     accessGranted= TRUE;
+ 175              	 .loc 1 144 5
+ 176              	 .loc 1 144 18 is_stmt 0
+ 177 00fc 91000020 	 movh.a %a2,hi:accessGranted
+ 178 0100 8212     	 mov %d2,1
+ 179 0102 E9220000 	 st.b [%a2]lo:accessGranted,%d2
+ 145:../AllowAccess.c **** }
+ 180              	 .loc 1 145 1
+ 181 0106 0090     	 ret 
+ 182              	.LFE1526:
+ 184              	 .global allowAccess_end
+ 185              	allowAccess_end:
+ 186              	 .section .text.isAccessGranted,"ax",@progbits
+ 187              	 .align 1
+ 188              	 .global isAccessGranted
+ 190              	isAccessGranted:
+ 191              	.LFB1527:
+ 146:../AllowAccess.c **** 
+ 147:../AllowAccess.c **** boolean isAccessGranted(void)
+ 148:../AllowAccess.c **** {
+ 192              	 .loc 1 148 1 is_stmt 1
+ 193 0000 40AE     	 mov.aa %a14,%SP
+ 194              	.LCFI1:
+ 149:../AllowAccess.c ****     return accessGranted;
+ 195              	 .loc 1 149 5
+ 150:../AllowAccess.c **** }
+ 196              	 .loc 1 150 1 is_stmt 0
+ 197 0002 91000020 	 movh.a %a2,hi:accessGranted
+ 198 0006 39220000 	 ld.bu %d2,[%a2]lo:accessGranted
+ 199 000a 0090     	 ret 
+ 200              	.LFE1527:
+ 202              	 .global isAccessGranted_end
+ 203              	isAccessGranted_end:
+ 204              	 .section .bss.accessGranted,"aw",@nobits
+ 207              	accessGranted:
+ 208 0000 00       	 .zero 1
+ 209              	 .global g_apuConfig
+ 210              	 .section .rodata.g_apuConfig,"a"
+ 211              	 .align 2
+ 214              	g_apuConfig:
+ 215 0000 FFFFFFFF 	 .word -1
+ 216 0004 FFFFFFFF 	 .word -1
+ 217 0008 FFFFFFFF 	 .word -1
+ 218 000c FFFFFFFF 	 .word -1
+ 219 0010 FF       	 .byte -1
+ 220 0011 FF       	 .byte -1
+ 221 0012 FF       	 .byte -1
+ 222 0013 FF       	 .byte -1
+ 263              	.Letext0:
+ 264              	 .file 2 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 265              	 .file 3 "../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h"
+ 266              	 .file 4 "../Libraries/iLLD/TC4xx/Tricore/_Impl/TC4Dx/IfxCpu_cfg_TC4Dx.h"
+ 267              	 .file 5 "../Libraries/iLLD/TC4xx/CpuGeneric/Clock/Std/IfxClock.h"
+ 268              	 .file 6 "../Libraries/iLLD/TC4xx/CpuGeneric/_Impl/TC4Dx/IfxHsphy_cfg_TC4Dx.h"
+ 269              	 .file 7 "../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Std/IfxHsphy.h"
+ 270              	 .file 8 "../Libraries/iLLD/TC4xx/CpuGeneric/Xspi/Std/IfxXspi.h"
+ 271              	 .file 9 "../Libraries/iLLD/TC4xx/Tricore/Vmt/Std/IfxVmt.h"
+ 272              	 .file 10 "../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.h"
+ 273              	 .file 11 "../Libraries/iLLD/TC4xx/Tricore/Sdmmc/Std/IfxSdmmc.h"
+ 274              	 .file 12 "../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.h"
+ 275              	 .file 13 "../Libraries/iLLD/TC4xx/Tricore/Psi5/Std/IfxPsi5.h"
+ 276              	 .file 14 "../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h"
+ 277              	 .file 15 "../Libraries/iLLD/TC4xx/Tricore/Msc/Std/IfxMsc.h"
+ 278              	 .file 16 "../Libraries/iLLD/TC4xx/Tricore/Hssl/Std/IfxHssl.h"
+ 279              	 .file 17 "../Libraries/iLLD/TC4xx/Tricore/Eray/Std/IfxEray.h"
+ 280              	 .file 18 "../Libraries/iLLD/TC4xx/Tricore/Dre/Std/IfxDre.h"
+ 281              	 .file 19 "../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.h"
+ 282              	 .file 20 "../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.h"
+ 283              	 .file 21 "../Libraries/iLLD/TC4xx/Tricore/Pms/Std/IfxPmsEvr.h"
+ 284              	 .file 22 "../Libraries/iLLD/TC4xx/CpuGeneric/Geth/Std/IfxGeth.h"
+ 285              	 .file 23 "../Libraries/iLLD/TC4xx/CpuGeneric/Port/Std/IfxPort.h"
+ 286              	 .file 24 "../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h"
+ 287              	 .file 25 "../Libraries/iLLD/TC4xx/Tricore/I2c/Std/IfxI2c.h"
+ 288              	 .file 26 "../Libraries/iLLD/TC4xx/Tricore/Sent/Std/IfxSent.h"
+ 289              	 .file 27 "../Libraries/iLLD/TC4xx/CpuGeneric/Asclin/Std/IfxAsclin.h"
+ 290              	 .file 28 "../Libraries/iLLD/TC4xx/Tricore/Can/Std/IfxCan.h"
+ 291              	 .file 29 "../Libraries/iLLD/TC4xx/Tricore/Qspi/Std/IfxQspi.h"
+ 292              	 .file 30 "../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm.h"
+ 293              	 .file 31 "../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucStu.h"
+ 294              	 .file 32 "../Libraries/iLLD/TC4xx/Tricore/Ppuc/Std/IfxPpucCore.h"
+ 295              	 .file 33 "../Libraries/iLLD/TC4xx/CpuGeneric/Adc/Std/IfxAdc.h"
+ 296              	 .file 34 "../Libraries/iLLD/TC4xx/Tricore/Stm/Std/IfxStm.h"
+ 297              	 .file 35 "../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu.h"
+ 2205 0000 00000000 	 .word allowAccess
+ 2206 0004 00000000 	 .word allowAccess_end
+ 2207 0008 04001454 	 .word 0x54140004
+ 2208 000c 00000000 	 .word 0x00000000
+ 2209 0010 00000000 	 .word 0x00000000
+ 2210 0014 40800200 	 .word 0x00028040
+ 2211 0018 00000000 	 .word isAccessGranted
+ 2212 001c 00000000 	 .word isAccessGranted_end
+ 2213 0020 04000444 	 .word 0x44040004
+ 2214 0024 00000000 	 .word 0x00000000
+ 2215 0028 04000000 	 .word 0x00000004
+ 2216 002c C0000000 	 .word 0x000000c0
+DEFINED SYMBOLS
+                            *ABS*:00000000 AllowAccess.c
+                            *ABS*:00000000 AllowAccess.c
+    {standard input}:10     .text.allowAccess:00000000 allowAccess
+    {standard input}:214    .rodata.g_apuConfig:00000000 g_apuConfig
+    {standard input}:207    .bss.accessGranted:00000000 accessGranted
+    {standard input}:185    .text.allowAccess:00000108 allowAccess_end
+    {standard input}:190    .text.isAccessGranted:00000000 isAccessGranted
+    {standard input}:203    .text.isAccessGranted:0000000c isAccessGranted_end
+
+UNDEFINED SYMBOLS
+IfxApApu_configureAccessToLmus
+IfxApApu_configureAccessToDlmus
+IfxApApu_configureAccessToDsprs
+IfxApApu_configureAccessToPsprs
+IfxCpu_configureAccessToCpus
+IfxStm_configureAccessToStms
+IfxAdc_configureAccessToAdc
+IfxPpucCore_configureAccessToPpuc
+IfxPpucCore_configureAccessToPpucCsm
+IfxPpucCore_configureAccessToPpucVccm
+IfxPpucStu_configureAccessToPpucStuDmi
+IfxEgtm_configureAccessToEgtms
+IfxQspi_configureAccessToQspis
+IfxCan_configureAccessToCans
+IfxAsclin_configureAccessToAsclins
+IfxSent_configureAccessToSents
+IfxI2c_configureAccessToI2cs
+IfxClock_configureAccessToClock
+IfxSrc_configureAccessToSrcs
+IfxPort_configureAccessToPorts
+IfxGeth_configureAccessToGeth
+IfxPmsEvr_configureAccessToPms
+IfxHsphy_configureAccessToHsphy
+IfxDma_configureAccessToDmas
+IfxFce_configureAccessToFce
+IfxDre_configureAccessToDre
+IfxEray_configureAccessToErays
+IfxHssl_configureAccessToHscts
+IfxHssl_configureAccessToHssls
+IfxMsc_configureAccessToMscs
+IfxPcie_configureAccessToPcies
+IfxPsi5_configureAccessToPsi5
+IfxPsi5s_configureAccessToAllPsi5s
+IfxSdmmc_configureAccessToSdmmc
+IfxSmm_configureAccessToSmm
+IfxVmt_configureAccessToVmts
+IfxXspi_configureAccessToXspi

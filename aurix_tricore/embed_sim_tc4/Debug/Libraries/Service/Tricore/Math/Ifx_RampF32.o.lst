@@ -1,0 +1,133 @@
+   1              	
+   2              	 .file "Ifx_RampF32.c"
+   3              	 .file "Ifx_RampF32.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.Ifx_RampF32_step,"ax",@progbits
+   7              	 .align 1
+   8              	 .global Ifx_RampF32_step
+  10              	Ifx_RampF32_step:
+  11              	.LFB171:
+  12              	 .file 1 "../Libraries/Service/Tricore/Math/Ifx_RampF32.c"
+   1:../Libraries/Service/Tricore/Math/Ifx_RampF32.c **** /**
+   2:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****  * \file Ifx_RampF32.c
+   3:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****  * \brief Ramp function
+   4:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****  *
+   5:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****  *
+   6:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****  * \version iLLD-TC4-v2.7.0
+   7:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   8:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****  *
+   9:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****  *
+  10:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****   *                                 IMPORTANT NOTICE
+  11:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****  *
+  12:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****  *
+  13:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  14:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  15:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****  * this file except in compliance with IFASLL.
+  16:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****  *
+  17:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  18:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  19:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  20:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  21:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  22:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  23:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****  * defects in the licensed items, or non-infringement of third parties'
+  24:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****  * intellectual property rights. See the full license text for the specific
+  25:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****  * language governing permissions and limitations under IFASLL.
+  26:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****  *
+  27:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****  */
+  28:../Libraries/Service/Tricore/Math/Ifx_RampF32.c **** 
+  29:../Libraries/Service/Tricore/Math/Ifx_RampF32.c **** #include "Ifx_RampF32.h"
+  30:../Libraries/Service/Tricore/Math/Ifx_RampF32.c **** 
+  31:../Libraries/Service/Tricore/Math/Ifx_RampF32.c **** /**
+  32:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****  * \brief Execute the Ramp function
+  33:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****  *
+  34:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****  * NOTE: shall be called every 'period'.
+  35:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****  * The period was defined by Ifx_RampF32_init() or Ifx_RampF32_setSlewRate()
+  36:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****  *
+  37:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****  * \param ramp Pointer to the Ifx_RampF32 object
+  38:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****  * \return Actual value
+  39:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****  */
+  40:../Libraries/Service/Tricore/Math/Ifx_RampF32.c **** float32 Ifx_RampF32_step(Ifx_RampF32 *ramp)
+  41:../Libraries/Service/Tricore/Math/Ifx_RampF32.c **** {
+  13              	 .loc 1 41 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  42:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****     if (ramp->uk < ramp->ik)
+  17              	 .loc 1 42 5
+  18              	 .loc 1 42 13 is_stmt 0
+  19 0002 5443     	 ld.w %d3,[%a4]0
+  20              	 .loc 1 42 24
+  21 0004 19420400 	 ld.w %d2,[%a4]4
+  22              	 .loc 1 42 8
+  23 0008 4B230140 	 cmp.f %d4,%d3,%d2
+  24 000c 6F040000 	 jz.t %d4,0,.L14
+  43:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****     {
+  44:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****         ramp->uk = __minf(ramp->ik, ramp->uk + ramp->delta);
+  25              	 .loc 1 44 9 is_stmt 1
+  26              	 .loc 1 44 20 is_stmt 0
+  27 0010 19440800 	 ld.w %d4,[%a4]8
+  28 0014 6B042133 	 add.f %d3,%d3,%d4
+  29 0018 4B320140 	 cmp.f %d4,%d2,%d3
+  30 001c 6F040000 	 jz.t %d4,0,.L4
+  31 0020 0223     	 mov %d3,%d2
+  32              	.L4:
+  33              	 .loc 1 44 18 discriminator 4
+  34 0022 7443     	 st.w [%a4]0,%d3
+  35              	.L6:
+  45:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****     }
+  46:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****     else if (ramp->uk > ramp->ik)
+  47:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****     {
+  48:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****         ramp->uk = __maxf(ramp->ik, ramp->uk - ramp->delta);
+  49:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****     }
+  50:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****     else
+  51:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****     {}
+  36              	 .loc 1 51 6 is_stmt 1
+  52:../Libraries/Service/Tricore/Math/Ifx_RampF32.c **** 
+  53:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****     return ramp->uk;
+  37              	 .loc 1 53 5
+  54:../Libraries/Service/Tricore/Math/Ifx_RampF32.c **** }
+  38              	 .loc 1 54 1 is_stmt 0
+  39 0024 5442     	 ld.w %d2,[%a4]0
+  40 0026 0090     	 ret 
+  41              	.L14:
+  46:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****     {
+  42              	 .loc 1 46 10 is_stmt 1
+  46:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****     {
+  43              	 .loc 1 46 13 is_stmt 0
+  44 0028 4B230140 	 cmp.f %d4,%d3,%d2
+  45 002c 6F240000 	 jz.t %d4,2,.L6
+  48:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****     }
+  46              	 .loc 1 48 9 is_stmt 1
+  48:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****     }
+  47              	 .loc 1 48 20 is_stmt 0
+  48 0030 19440800 	 ld.w %d4,[%a4]8
+  49 0034 6B043133 	 sub.f %d3,%d3,%d4
+  50 0038 4B320140 	 cmp.f %d4,%d2,%d3
+  51 003c 6F240000 	 jz.t %d4,2,.L8
+  52 0040 0223     	 mov %d3,%d2
+  53              	.L8:
+  48:../Libraries/Service/Tricore/Math/Ifx_RampF32.c ****     }
+  54              	 .loc 1 48 18 discriminator 4
+  55 0042 7443     	 st.w [%a4]0,%d3
+  56 0044 1D000000 	 j .L6
+  57              	.LFE171:
+  59              	 .global Ifx_RampF32_step_end
+  60              	Ifx_RampF32_step_end:
+  89              	.Letext0:
+  90              	 .file 2 "../Libraries/Service/Tricore/Math/Ifx_RampF32.h"
+  91              	 .file 3 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 406 0000 00000000 	 .word Ifx_RampF32_step
+ 407 0004 00000000 	 .word Ifx_RampF32_step_end
+ 408 0008 1C001444 	 .word 0x4414001c
+ 409 000c 00001000 	 .word 0x00100000
+ 410 0010 04000000 	 .word 0x00000004
+ 411 0014 C0000000 	 .word 0x000000c0
+DEFINED SYMBOLS
+                            *ABS*:00000000 Ifx_RampF32.c
+                            *ABS*:00000000 Ifx_RampF32.c
+    {standard input}:10     .text.Ifx_RampF32_step:00000000 Ifx_RampF32_step
+    {standard input}:60     .text.Ifx_RampF32_step:00000048 Ifx_RampF32_step_end
+
+NO UNDEFINED SYMBOLS

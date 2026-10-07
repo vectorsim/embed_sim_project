@@ -1,0 +1,103 @@
+   1              	
+   2              	 .file "IfxClock_PinMap_TC4Dx_BGA436_COM.c"
+   3              	 .file "IfxClock_PinMap_TC4Dx_BGA436_COM.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .global IfxClock_Sysclk_In_pinTable
+   7              	 .section .data.IfxClock_Sysclk_In_pinTable,"aw"
+   8              	 .align 2
+  11              	IfxClock_Sysclk_In_pinTable:
+  12 0000 00000000 	 .word IfxClock_CLKA_SYSCLK_P20_0_IN
+  13              	 .global IfxClock_Extclk_Out_pinTable
+  14              	 .section .data.IfxClock_Extclk_Out_pinTable,"aw"
+  15              	 .align 2
+  18              	IfxClock_Extclk_Out_pinTable:
+  19 0000 00000000 	 .word IfxClock_EXTCLK0_P00_15_OUT
+  20 0004 00000000 	 .word IfxClock_EXTCLK0_P23_1_OUT
+  21 0008 00000000 	 .word 0
+  22 000c 00000000 	 .word IfxClock_EXTCLK1_P00_13_OUT
+  23 0010 00000000 	 .word IfxClock_EXTCLK1_P16_14_OUT
+  24 0014 00000000 	 .word IfxClock_EXTCLK1_P32_4_OUT
+  25              	 .global IfxClock_EXTCLK1_P32_4_OUT
+  26              	 .section .rodata.IfxClock_EXTCLK1_P32_4_OUT,"a"
+  27              	 .align 2
+  30              	IfxClock_EXTCLK1_P32_4_OUT:
+  31 0000 004006F0 	 .word -268025856
+  32 0004 01000000 	 .word 1
+  33 0008 002004F0 	 .word -268165120
+  34 000c 04       	 .byte 4
+  35 000d 000000   	 .zero 3
+  36 0010 61000000 	 .word 97
+  37              	 .global IfxClock_EXTCLK1_P16_14_OUT
+  38              	 .section .rodata.IfxClock_EXTCLK1_P16_14_OUT,"a"
+  39              	 .align 2
+  42              	IfxClock_EXTCLK1_P16_14_OUT:
+  43 0000 004006F0 	 .word -268025856
+  44 0004 01000000 	 .word 1
+  45 0008 00E003F0 	 .word -268181504
+  46 000c 0E       	 .byte 14
+  47 000d 000000   	 .zero 3
+  48 0010 61000000 	 .word 97
+  49              	 .global IfxClock_EXTCLK1_P00_13_OUT
+  50              	 .section .rodata.IfxClock_EXTCLK1_P00_13_OUT,"a"
+  51              	 .align 2
+  54              	IfxClock_EXTCLK1_P00_13_OUT:
+  55 0000 004006F0 	 .word -268025856
+  56 0004 01000000 	 .word 1
+  57 0008 00A003F0 	 .word -268197888
+  58 000c 0D       	 .byte 13
+  59 000d 000000   	 .zero 3
+  60 0010 41000000 	 .word 65
+  61              	 .global IfxClock_EXTCLK0_P23_1_OUT
+  62              	 .section .rodata.IfxClock_EXTCLK0_P23_1_OUT,"a"
+  63              	 .align 2
+  66              	IfxClock_EXTCLK0_P23_1_OUT:
+  67 0000 004006F0 	 .word -268025856
+  68 0004 00000000 	 .word 0
+  69 0008 00FC03F0 	 .word -268174336
+  70 000c 01       	 .byte 1
+  71 000d 000000   	 .zero 3
+  72 0010 61000000 	 .word 97
+  73              	 .global IfxClock_EXTCLK0_P00_15_OUT
+  74              	 .section .rodata.IfxClock_EXTCLK0_P00_15_OUT,"a"
+  75              	 .align 2
+  78              	IfxClock_EXTCLK0_P00_15_OUT:
+  79 0000 004006F0 	 .word -268025856
+  80 0004 00000000 	 .word 0
+  81 0008 00A003F0 	 .word -268197888
+  82 000c 0F       	 .byte 15
+  83 000d 000000   	 .zero 3
+  84 0010 41000000 	 .word 65
+  85              	 .global IfxClock_CLKA_SYSCLK_P20_0_IN
+  86              	 .section .rodata.IfxClock_CLKA_SYSCLK_P20_0_IN,"a"
+  87              	 .align 2
+  90              	IfxClock_CLKA_SYSCLK_P20_0_IN:
+  91 0000 004006F0 	 .word -268025856
+  92 0004 00F003F0 	 .word -268177408
+  93 0008 00       	 .byte 0
+  94 0009 000000   	 .zero 3
+  95 000c 00000000 	 .word 0
+  96              	.section .text,"ax",@progbits
+  97              	.Letext0:
+  98              	 .file 1 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+  99              	 .file 2 "../Libraries/Infra/Sfr/TC4Dx/IfxClock_regdef.h"
+ 100              	 .file 3 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 101              	 .file 4 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+ 102              	 .file 5 "../Libraries/Infra/Sfr/TC4Dx/IfxPort_regdef.h"
+ 103              	 .file 6 "../Libraries/iLLD/TC4xx/CpuGeneric/Port/Std/IfxPort.h"
+ 104              	 .file 7 "../Libraries/iLLD/TC4xx/CpuGeneric/_PinMap/IfxClock_PinMap.h"
+ 105              	 .file 8 "../Libraries/iLLD/TC4xx/CpuGeneric/_PinMap/TC4Dx/IfxClock_PinMap_TC4Dx_BGA436_COM.h"
+ 106              	 .file 9 "../Libraries/iLLD/TC4xx/CpuGeneric/_PinMap/TC4Dx/IfxClock_PinMap_TC4Dx_BGA436_COM.c"
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxClock_PinMap_TC4Dx_BGA436_COM.c
+                            *ABS*:00000000 IfxClock_PinMap_TC4Dx_BGA436_COM.c
+    {standard input}:11     .data.IfxClock_Sysclk_In_pinTable:00000000 IfxClock_Sysclk_In_pinTable
+    {standard input}:90     .rodata.IfxClock_CLKA_SYSCLK_P20_0_IN:00000000 IfxClock_CLKA_SYSCLK_P20_0_IN
+    {standard input}:18     .data.IfxClock_Extclk_Out_pinTable:00000000 IfxClock_Extclk_Out_pinTable
+    {standard input}:78     .rodata.IfxClock_EXTCLK0_P00_15_OUT:00000000 IfxClock_EXTCLK0_P00_15_OUT
+    {standard input}:66     .rodata.IfxClock_EXTCLK0_P23_1_OUT:00000000 IfxClock_EXTCLK0_P23_1_OUT
+    {standard input}:54     .rodata.IfxClock_EXTCLK1_P00_13_OUT:00000000 IfxClock_EXTCLK1_P00_13_OUT
+    {standard input}:42     .rodata.IfxClock_EXTCLK1_P16_14_OUT:00000000 IfxClock_EXTCLK1_P16_14_OUT
+    {standard input}:30     .rodata.IfxClock_EXTCLK1_P32_4_OUT:00000000 IfxClock_EXTCLK1_P32_4_OUT
+
+NO UNDEFINED SYMBOLS

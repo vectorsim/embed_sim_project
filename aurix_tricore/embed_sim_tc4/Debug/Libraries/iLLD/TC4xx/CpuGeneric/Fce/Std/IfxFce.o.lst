@@ -1,0 +1,262 @@
+   1              	
+   2              	 .file "IfxFce.c"
+   3              	 .file "IfxFce.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.IfxFce_reflectCrc32,"ax",@progbits
+   7              	 .align 1
+   8              	 .global IfxFce_reflectCrc32
+  10              	IfxFce_reflectCrc32:
+  11              	.LFB314:
+  12              	 .file 1 "../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c"
+   1:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** /**
+   2:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****  * \file IfxFce.c
+   3:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****  * \brief FCE  basic functionality
+   4:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****  *
+   5:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****  *
+   8:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****  *
+   9:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****  *
+  10:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****  *                                 IMPORTANT NOTICE
+  11:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****  *
+  12:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****  * this file except in compliance with IFASLL.
+  15:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****  *
+  16:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****  *
+  26:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****  *
+  27:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****  */
+  28:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** 
+  29:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** /******************************************************************************/
+  30:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** /*----------------------------------Includes----------------------------------*/
+  31:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** /******************************************************************************/
+  32:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** 
+  33:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** #include "Ifx_Cfg.h"
+  34:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** #if defined (__TASKING__)
+  35:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** #pragma warning 508		/* To suppress empty file warning */
+  36:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** #endif
+  37:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** #if defined (__ghs__)
+  38:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** #pragma diag_suppress 96		/* To suppress empty file warning */
+  39:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** #endif
+  40:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** 
+  41:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** #if !defined(DEVICE_TC48XAA) && !defined(DEVICE_TC48X)
+  42:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** #include "IfxFce.h"
+  43:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** 
+  44:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** /******************************************************************************/
+  45:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** /*-------------------------Function Implementations---------------------------*/
+  46:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** /******************************************************************************/
+  47:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** 
+  48:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** uint32 IfxFce_reflectCrc32(uint32 crcStartValue, uint8 crcLength)
+  49:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** {
+  13              	 .loc 1 49 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  50:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****     uint32 ReversedData = 0x0U;
+  17              	 .loc 1 50 5
+  18              	.LVL1:
+  51:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****     uint8  inputDataCounter;
+  19              	 .loc 1 51 5
+  52:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** 
+  53:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****     for (inputDataCounter = 0; inputDataCounter < crcLength; ++inputDataCounter)
+  20              	 .loc 1 53 5
+  21              	 .loc 1 53 27 is_stmt 0
+  22 0002 8203     	 mov %d3,0
+  50:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****     uint8  inputDataCounter;
+  23              	 .loc 1 50 12
+  24 0004 8202     	 mov %d2,0
+  25              	 .loc 1 53 5
+  26 0006 1D000000 	 j .L2
+  27              	.LVL2:
+  28              	.L3:
+  54:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****     {
+  55:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****         if (crcStartValue & 0x01)
+  56:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****         {
+  57:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****             ReversedData |= (uint32)((uint32)1 << ((crcLength - 1) - inputDataCounter));
+  58:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****         }
+  59:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** 
+  60:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****         crcStartValue = (uint32)((uint32)crcStartValue >> (uint32)1);
+  29              	 .loc 1 60 9 is_stmt 1 discriminator 2
+  30              	 .loc 1 60 23 is_stmt 0 discriminator 2
+  31 000a 06F4     	 sh %d4,-1
+  32              	.LVL3:
+  53:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****     {
+  33              	 .loc 1 53 62 is_stmt 1 discriminator 2
+  34 000c C213     	 add %d3,1
+  35              	.LVL4:
+  36 000e 8FF30F31 	 and %d3,%d3,255
+  37              	.LVL5:
+  38              	.L2:
+  53:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****     {
+  39              	 .loc 1 53 49 discriminator 1
+  40 0012 7F530080 	 jge.u %d3,%d5,.L5
+  55:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****         {
+  41              	 .loc 1 55 9
+  55:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****         {
+  42              	 .loc 1 55 12 is_stmt 0
+  43 0016 6F040000 	 jz.t %d4,0,.L3
+  57:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****         }
+  44              	 .loc 1 57 13 is_stmt 1
+  57:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****         }
+  45              	 .loc 1 57 63 is_stmt 0
+  46 001a 1BF5FF6F 	 addi %d6,%d5,-1
+  57:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****         }
+  47              	 .loc 1 57 68
+  48 001e 0B368070 	 sub %d7,%d6,%d3
+  57:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****         }
+  49              	 .loc 1 57 29
+  50 0022 8216     	 mov %d6,1
+  51 0024 0F760060 	 sh %d6,%d6,%d7
+  57:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****         }
+  52              	 .loc 1 57 26
+  53 0028 A662     	 or %d2,%d6
+  54              	.LVL6:
+  55 002a 1D000000 	 j .L3
+  56              	.L5:
+  61:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****     }
+  62:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** 
+  63:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****     return ReversedData;
+  57              	 .loc 1 63 5 is_stmt 1
+  64:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** }
+  58              	 .loc 1 64 1 is_stmt 0
+  59 002e 0090     	 ret 
+  60              	.LFE314:
+  62              	 .global IfxFce_reflectCrc32_end
+  63              	IfxFce_reflectCrc32_end:
+  64              	 .section .text.IfxFce_resetModule,"ax",@progbits
+  65              	 .align 1
+  66              	 .global IfxFce_resetModule
+  68              	IfxFce_resetModule:
+  69              	.LFB315:
+  65:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** 
+  66:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** 
+  67:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** void IfxFce_resetModule(Ifx_FCE *fce)
+  68:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** {
+  70              	 .loc 1 68 1 is_stmt 1
+  71              	.LVL7:
+  72 0000 40AE     	 mov.aa %a14,%SP
+  73              	.LCFI1:
+  69:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** #if (IFX_PROT_ENABLED == 1U)
+  70:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&fce->PROTE, IfxApProt_State_config);
+  71:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** #endif
+  72:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****     /* Only if both Kernel reset bits are set a reset is executed */
+  73:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****     fce->RST.CTRLA.B.KRST = 1U;
+  74              	 .loc 1 73 5
+  75              	 .loc 1 73 27 is_stmt 0
+  76 0002 D9420C00 	 lea %a2,[%a4]12
+  77 0006 19420C00 	 ld.w %d2,[%a4]12
+  78 000a B7120120 	 insert %d2,%d2,1,0,1
+  79 000e 7422     	 st.w [%a2]0,%d2
+  74:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****     fce->RST.CTRLB.B.KRST = 1U;
+  80              	 .loc 1 74 5 is_stmt 1
+  81              	 .loc 1 74 27 is_stmt 0
+  82 0010 D9421000 	 lea %a2,[%a4]16
+  83 0014 19421000 	 ld.w %d2,[%a4]16
+  84 0018 B7120120 	 insert %d2,%d2,1,0,1
+  85 001c 7422     	 st.w [%a2]0,%d2
+  75:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** 
+  76:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****     /* Waits until reset is executed */
+  77:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****     while (0 == fce->RST.STAT.B.KRST)
+  86              	 .loc 1 77 5 is_stmt 1
+  87              	.L7:
+  78:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****     {}
+  88              	 .loc 1 78 6 discriminator 1
+  77:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****     {}
+  89              	 .loc 1 77 14 discriminator 1
+  77:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****     {}
+  90              	 .loc 1 77 32 is_stmt 0 discriminator 1
+  91 001e 19421400 	 ld.w %d2,[%a4]20
+  77:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****     {}
+  92              	 .loc 1 77 14 discriminator 1
+  93 0022 6F020000 	 jz.t %d2,0,.L7
+  79:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** 
+  80:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****     /* Clears Kernel reset status bit */
+  81:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****     fce->RST.CTRLB.B.STATCLR = 1U;
+  94              	 .loc 1 81 5 is_stmt 1
+  95              	 .loc 1 81 30 is_stmt 0
+  96 0026 D9421000 	 lea %a2,[%a4]16
+  97 002a 19421000 	 ld.w %d2,[%a4]16
+  98 002e B712812F 	 insert %d2,%d2,1,31,1
+  99 0032 7422     	 st.w [%a2]0,%d2
+  82:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** #if (IFX_PROT_ENABLED == 1U)
+  83:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&fce->PROTE, IfxApProt_State_run);
+  84:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** #endif
+  85:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** }
+ 100              	 .loc 1 85 1
+ 101 0034 0090     	 ret 
+ 102              	.LFE315:
+ 104              	 .global IfxFce_resetModule_end
+ 105              	IfxFce_resetModule_end:
+ 106              	 .section .text.IfxFce_configureAccessToFce,"ax",@progbits
+ 107              	 .align 1
+ 108              	 .global IfxFce_configureAccessToFce
+ 110              	IfxFce_configureAccessToFce:
+ 111              	.LFB316:
+  86:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** 
+  87:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** 
+  88:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** void IfxFce_configureAccessToFce(IfxApApu_ApuConfig *apConfig)
+  89:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** {
+ 112              	 .loc 1 89 1 is_stmt 1
+ 113              	.LVL8:
+ 114 0000 40AE     	 mov.aa %a14,%SP
+ 115              	.LCFI2:
+  90:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c ****     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_FCE.ACCEN, apConfig);
+ 116              	 .loc 1 90 5
+ 117 0002 4045     	 mov.aa %a5,%a4
+ 118 0004 9100444F 	 movh.a %a4,62528
+ 119              	.LVL9:
+ 120 0008 D944C492 	 lea %a4,[%a4]11844
+ 121 000c 6D000000 	 call IfxApApu_init
+ 122              	.LVL10:
+  91:../Libraries/iLLD/TC4xx/CpuGeneric/Fce/Std/IfxFce.c **** }
+ 123              	 .loc 1 91 1 is_stmt 0
+ 124 0010 0090     	 ret 
+ 125              	.LFE316:
+ 127              	 .global IfxFce_configureAccessToFce_end
+ 128              	IfxFce_configureAccessToFce_end:
+ 181              	.Letext0:
+ 182              	 .file 2 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 183              	 .file 3 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 184              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/IfxFce_regdef.h"
+ 185              	 .file 5 "../Libraries/iLLD/TC4xx/CpuGeneric/Ap/IfxAccen_regdef.h"
+ 186              	 .file 6 "../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h"
+ 7117 0000 00000000 	 .word IfxFce_reflectCrc32
+ 7118 0004 00000000 	 .word IfxFce_reflectCrc32_end
+ 7119 0008 FC000044 	 .word 0x440000fc
+ 7120 000c 30000000 	 .word 0x00000030
+ 7121 0010 04000000 	 .word 0x00000004
+ 7122 0014 C0000000 	 .word 0x000000c0
+ 7123 0018 00000000 	 .word IfxFce_resetModule
+ 7124 001c 00000000 	 .word IfxFce_resetModule_end
+ 7125 0020 04001444 	 .word 0x44140004
+ 7126 0024 00001000 	 .word 0x00100000
+ 7127 0028 00000000 	 .word 0x00000000
+ 7128 002c C0000000 	 .word 0x000000c0
+ 7129 0030 00000000 	 .word IfxFce_configureAccessToFce
+ 7130 0034 00000000 	 .word IfxFce_configureAccessToFce_end
+ 7131 0038 00003044 	 .word 0x44300000
+ 7132 003c 00001000 	 .word 0x00100000
+ 7133 0040 00000000 	 .word 0x00000000
+ 7134 0044 40000200 	 .word 0x00020040
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxFce.c
+                            *ABS*:00000000 IfxFce.c
+    {standard input}:10     .text.IfxFce_reflectCrc32:00000000 IfxFce_reflectCrc32
+    {standard input}:63     .text.IfxFce_reflectCrc32:00000030 IfxFce_reflectCrc32_end
+    {standard input}:68     .text.IfxFce_resetModule:00000000 IfxFce_resetModule
+    {standard input}:105    .text.IfxFce_resetModule:00000036 IfxFce_resetModule_end
+    {standard input}:110    .text.IfxFce_configureAccessToFce:00000000 IfxFce_configureAccessToFce
+    {standard input}:128    .text.IfxFce_configureAccessToFce:00000012 IfxFce_configureAccessToFce_end
+
+UNDEFINED SYMBOLS
+IfxApApu_init

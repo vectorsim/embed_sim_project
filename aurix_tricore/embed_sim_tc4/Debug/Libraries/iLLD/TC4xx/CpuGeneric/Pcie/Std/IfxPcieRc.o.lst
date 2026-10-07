@@ -1,0 +1,229 @@
+   1              	
+   2              	 .file "IfxPcieRc.c"
+   3              	 .file "IfxPcieRc.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.IfxPcieRc_ComposeExternalConfigAddress,"ax",@progbits
+   7              	 .align 1
+   8              	 .global IfxPcieRc_ComposeExternalConfigAddress
+  10              	IfxPcieRc_ComposeExternalConfigAddress:
+  11              	.LFB354:
+  12              	 .file 1 "../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c"
+   1:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** /**
+   2:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****  * \file IfxPcieRc.c
+   3:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****  * \brief PCIE  basic functionality
+   4:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****  *
+   5:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****  *
+   8:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****  *
+   9:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****  *
+  10:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****  *                                 IMPORTANT NOTICE
+  11:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****  *
+  12:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****  * this file except in compliance with IFASLL.
+  15:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****  *
+  16:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****  *
+  26:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****  *
+  27:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****  */
+  28:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** 
+  29:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** /******************************************************************************/
+  30:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** /*----------------------------------Includes----------------------------------*/
+  31:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** /******************************************************************************/
+  32:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** 
+  33:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** #include "Ifx_Cfg.h"
+  34:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** #if defined (__TASKING__)
+  35:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** #pragma warning 508		/* To suppress empty file warning */
+  36:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** #endif
+  37:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** #if defined (__ghs__)
+  38:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** #pragma diag_suppress 96		/* To suppress empty file warning */
+  39:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** #endif
+  40:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** 
+  41:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** #if defined(DEVICE_TC4DX) || defined(DEVICE_TC45X)
+  42:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** #include "IfxPcieRc.h"
+  43:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** 
+  44:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** /******************************************************************************/
+  45:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** /*-------------------------Function Implementations---------------------------*/
+  46:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** /******************************************************************************/
+  47:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** 
+  48:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** uint32 IfxPcieRc_ComposeExternalConfigAddress(uint8 Bus, uint8 Device, uint8 Function, uint16 Offse
+  49:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** {
+  13              	 .loc 1 49 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  50:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****     uint32 Location = 0;
+  17              	 .loc 1 50 5
+  18              	.LVL1:
+  51:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** 
+  52:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****     Location |= ((((uint32)Bus) << IFXPCIERC_ECAM_BUS_SHIFT) & IFXPCIERC_ECAM_BUS_MASK);
+  19              	 .loc 1 52 5
+  20              	 .loc 1 52 62 is_stmt 0
+  21 0002 8F440140 	 sh %d4,%d4,20
+  22              	.LVL2:
+  53:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** 
+  54:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****     Location |= ((((uint32)Device) << IFXPCIERC_ECAM_DEV_SHIFT) & IFXPCIERC_ECAM_DEV_MASK);
+  23              	 .loc 1 54 5 is_stmt 1
+  24              	 .loc 1 54 36 is_stmt 0
+  25 0006 8FF50050 	 sh %d5,%d5,15
+  26              	.LVL3:
+  27              	 .loc 1 54 65
+  28 000a 7B000120 	 movh %d2,16
+  29 000e 1B020028 	 addi %d2,%d2,-32768
+  30 0012 2625     	 and %d5,%d2
+  31              	 .loc 1 54 14
+  32 0014 A654     	 or %d4,%d5
+  33              	.LVL4:
+  55:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** 
+  56:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****     Location |= ((((uint32)Function) << IFXPCIERC_ECAM_FUN_SHIFT) & IFXPCIERC_ECAM_FUN_MASK);
+  34              	 .loc 1 56 5 is_stmt 1
+  35              	 .loc 1 56 38 is_stmt 0
+  36 0016 8FC60060 	 sh %d6,%d6,12
+  37              	.LVL5:
+  38              	 .loc 1 56 67
+  39 001a 3B000027 	 mov %d2,28672
+  40 001e 2626     	 and %d6,%d2
+  41              	 .loc 1 56 14
+  42 0020 A664     	 or %d4,%d6
+  43              	.LVL6:
+  57:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** 
+  58:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****     Location |= ((((uint32)Offset) << IFXPCIERC_ECAM_REG_SHIFT) & IFXPCIERC_ECAM_REG_MASK);
+  44              	 .loc 1 58 5 is_stmt 1
+  45              	 .loc 1 58 36 is_stmt 0
+  46 0022 0627     	 sh %d7,2
+  47              	.LVL7:
+  48              	 .loc 1 58 65
+  49 0024 3BC0FF20 	 mov %d2,4092
+  50 0028 2672     	 and %d2,%d7
+  51              	.LVL8:
+  59:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** 
+  60:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****     Location &= IFXPCIERC_ECAM_MASK;
+  52              	 .loc 1 60 5 is_stmt 1
+  61:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** 
+  62:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****     return Location;
+  53              	 .loc 1 62 5
+  63:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** }
+  54              	 .loc 1 63 1 is_stmt 0
+  55 002a A642     	 or %d2,%d4
+  56              	.LVL9:
+  57 002c 0090     	 ret 
+  58              	.LFE354:
+  60              	 .global IfxPcieRc_ComposeExternalConfigAddress_end
+  61              	IfxPcieRc_ComposeExternalConfigAddress_end:
+  62              	 .section .text.IfxPcieRc_setNumOfLanes,"ax",@progbits
+  63              	 .align 1
+  64              	 .global IfxPcieRc_setNumOfLanes
+  66              	IfxPcieRc_setNumOfLanes:
+  67              	.LFB355:
+  64:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** 
+  65:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** 
+  66:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** void IfxPcieRc_setNumOfLanes(Ifx_PCIE_DSP *PcieDspReg, IfxPcieRc_LaneWidth laneWidth)
+  67:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** {
+  68              	 .loc 1 67 1 is_stmt 1
+  69              	.LVL10:
+  70 0000 40AE     	 mov.aa %a14,%SP
+  71              	.LCFI1:
+  68:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****     uint32 lnkCtrlReg = 0;
+  72              	 .loc 1 68 5
+  73              	.LVL11:
+  69:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****     /*Read DBI port link register */
+  70:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****     lnkCtrlReg                                 = PcieDspReg->PORTLOGIC.PORT_LINK_CTRL_OFF.U;
+  74              	 .loc 1 70 5
+  75              	 .loc 1 70 48 is_stmt 0
+  76 0002 D94250C4 	 lea %a2,[%a4]18192
+  77 0006 194250C4 	 ld.w %d2,[%a4]18192
+  78              	.LVL12:
+  71:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** 
+  72:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****     lnkCtrlReg                                &= ~(IFX_PCIE_DSP_PORTLOGIC_PORT_LINK_CTRL_OFF_LINK_C
+  79              	 .loc 1 72 5 is_stmt 1
+  80              	 .loc 1 72 47 is_stmt 0
+  81 000a B7020628 	 insert %d2,%d2,0,16,6
+  82              	.LVL13:
+  73:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** 
+  74:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****     lnkCtrlReg                                |= (laneWidth << IFX_PCIE_DSP_PORTLOGIC_PORT_LINK_CTR
+  83              	 .loc 1 74 5 is_stmt 1
+  84              	 .loc 1 74 61 is_stmt 0
+  85 000e 8F040130 	 sh %d3,%d4,16
+  86              	 .loc 1 74 47
+  87 0012 A632     	 or %d2,%d3
+  88              	.LVL14:
+  75:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** 
+  76:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****     PcieDspReg->PORTLOGIC.PORT_LINK_CTRL_OFF.U = lnkCtrlReg;
+  89              	 .loc 1 76 5 is_stmt 1
+  90              	 .loc 1 76 48 is_stmt 0
+  91 0014 7422     	 st.w [%a2]0,%d2
+  77:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** 
+  78:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****     uint32 lnkWidthReg = 0;
+  92              	 .loc 1 78 5 is_stmt 1
+  93              	.LVL15:
+  79:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** 
+  80:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****     /*Read DBI port link register */
+  81:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****     lnkWidthReg                           = PcieDspReg->PORTLOGIC.GEN2_CTRL_OFF.U;
+  94              	 .loc 1 81 5
+  95              	 .loc 1 81 43 is_stmt 0
+  96 0016 D9428C04 	 lea %a2,[%a4]18444
+  97 001a 19428C04 	 ld.w %d2,[%a4]18444
+  98              	.LVL16:
+  82:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** 
+  83:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****     lnkWidthReg                          &= ~(IFX_PCIE_DSP_PORTLOGIC_GEN2_CTRL_OFF_NUM_OF_LANES_MSK
+  99              	 .loc 1 83 5 is_stmt 1
+ 100              	 .loc 1 83 42 is_stmt 0
+ 101 001e B7020524 	 insert %d2,%d2,0,8,5
+ 102              	.LVL17:
+  84:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** 
+  85:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****     lnkWidthReg                          |= (laneWidth << IFX_PCIE_DSP_PORTLOGIC_GEN2_CTRL_OFF_NUM_
+ 103              	 .loc 1 85 5 is_stmt 1
+ 104              	 .loc 1 85 56 is_stmt 0
+ 105 0022 8F840040 	 sh %d4,%d4,8
+ 106              	.LVL18:
+ 107              	 .loc 1 85 42
+ 108 0026 A642     	 or %d2,%d4
+ 109              	.LVL19:
+  86:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** 
+  87:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c ****     PcieDspReg->PORTLOGIC.GEN2_CTRL_OFF.U = lnkWidthReg;
+ 110              	 .loc 1 87 5 is_stmt 1
+ 111              	 .loc 1 87 43 is_stmt 0
+ 112 0028 7422     	 st.w [%a2]0,%d2
+ 113              	.LVL20:
+  88:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.c **** }
+ 114              	 .loc 1 88 1
+ 115 002a 0090     	 ret 
+ 116              	.LFE355:
+ 118              	 .global IfxPcieRc_setNumOfLanes_end
+ 119              	IfxPcieRc_setNumOfLanes_end:
+ 160              	.Letext0:
+ 161              	 .file 2 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 162              	 .file 3 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 163              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/IfxPcie_dsp_regdef.h"
+ 164              	 .file 5 "../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieRc.h"
+ 39148 0000 00000000 	 .word IfxPcieRc_ComposeExternalConfigAddress
+ 39149 0004 00000000 	 .word IfxPcieRc_ComposeExternalConfigAddress_end
+ 39150 0008 F4000044 	 .word 0x440000f4
+ 39151 000c F0000000 	 .word 0x000000f0
+ 39152 0010 04000000 	 .word 0x00000004
+ 39153 0014 C0000000 	 .word 0x000000c0
+ 39154 0018 00000000 	 .word IfxPcieRc_setNumOfLanes
+ 39155 001c 00000000 	 .word IfxPcieRc_setNumOfLanes_end
+ 39156 0020 1C001444 	 .word 0x4414001c
+ 39157 0024 10001000 	 .word 0x00100010
+ 39158 0028 00000000 	 .word 0x00000000
+ 39159 002c C0000000 	 .word 0x000000c0
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxPcieRc.c
+                            *ABS*:00000000 IfxPcieRc.c
+    {standard input}:10     .text.IfxPcieRc_ComposeExternalConfigAddress:00000000 IfxPcieRc_ComposeExternalConfigAddress
+    {standard input}:61     .text.IfxPcieRc_ComposeExternalConfigAddress:0000002e IfxPcieRc_ComposeExternalConfigAddress_end
+    {standard input}:66     .text.IfxPcieRc_setNumOfLanes:00000000 IfxPcieRc_setNumOfLanes
+    {standard input}:119    .text.IfxPcieRc_setNumOfLanes:0000002c IfxPcieRc_setNumOfLanes_end
+
+NO UNDEFINED SYMBOLS

@@ -1,0 +1,2506 @@
+   1              	
+   2              	 .file "Ifx_Crc.c"
+   3              	 .file "Ifx_Crc.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.Ifx_Crc_init,"ax",@progbits
+   7              	 .align 1
+   8              	 .global Ifx_Crc_init
+  10              	Ifx_Crc_init:
+  11              	.LFB0:
+  12              	 .file 1 "../Libraries/Service/Tricore/Math/Ifx_Crc.c"
+   1:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** /**
+   2:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****  * \file Ifx_Crc.c
+   3:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****  * \brief CRC algorithm
+   4:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****  *
+   5:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****  *
+   8:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****  *
+   9:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****   *                                 IMPORTANT NOTICE
+  10:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****  *
+  11:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****  *
+  12:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****  * this file except in compliance with IFASLL.
+  15:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****  *
+  16:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****  *
+  26:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****  */
+  27:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** #include "Ifx_Crc.h"
+  28:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+  29:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** uint32 Ifx_Crc_reflect(uint32 crc, sint32 bitnum);
+  30:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+  31:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** boolean Ifx_Crc_init(Ifc_Crc *driver, const Ifc_Crc_Table *table, sint32 direct, sint32 refout, uin
+  32:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** {
+  13              	 .loc 1 32 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  33:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     sint32 i;
+  17              	 .loc 1 33 5
+  34:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     uint32 bit, crc;
+  18              	 .loc 1 34 5
+  35:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+  36:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     if (crcinit != (crcinit & table->crcmask))
+  19              	 .loc 1 36 5
+  20              	 .loc 1 36 36 is_stmt 0
+  21 0002 19531000 	 ld.w %d3,[%a5]16
+  22              	 .loc 1 36 29
+  23 0006 0F638020 	 and %d2,%d3,%d6
+  24              	 .loc 1 36 8
+  25 000a 5F620080 	 jne %d2,%d6,.L11
+  37:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+  38:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         //IfxStdIf_DPipe_print(io,"ERROR, invalid crcinit."ENDL);
+  39:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         return FALSE;
+  40:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+  41:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+  42:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     if (crcxor != (crcxor & table->crcmask))
+  26              	 .loc 1 42 5 is_stmt 1
+  27              	 .loc 1 42 27 is_stmt 0
+  28 000e 2673     	 and %d3,%d7
+  29              	 .loc 1 42 8
+  30 0010 5F730080 	 jne %d3,%d7,.L12
+  43:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+  44:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         //IfxStdIf_DPipe_print(io,"ERROR, invalid crcxor."ENDL);
+  45:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         return FALSE;
+  46:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+  47:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+  48:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     driver->table  = table;
+  31              	 .loc 1 48 5 is_stmt 1
+  32              	 .loc 1 48 20 is_stmt 0
+  33 0014 B5451000 	 st.a [%a4]16,%a5
+  49:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     driver->crcxor = crcxor;
+  34              	 .loc 1 49 5 is_stmt 1
+  35              	 .loc 1 49 20 is_stmt 0
+  36 0018 7447     	 st.w [%a4]0,%d7
+  50:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     driver->refout = refout;
+  37              	 .loc 1 50 5 is_stmt 1
+  38              	 .loc 1 50 20 is_stmt 0
+  39 001a 59450400 	 st.w [%a4]4,%d5
+  51:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+  52:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     // compute missing initial CRC value
+  53:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+  54:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     if (!direct)
+  40              	 .loc 1 54 5 is_stmt 1
+  41              	 .loc 1 54 8 is_stmt 0
+  42 001e DF040080 	 jnz %d4,.L3
+  55:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+  56:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         driver->crcinit_nondirect = crcinit;
+  43              	 .loc 1 56 9 is_stmt 1
+  44              	 .loc 1 56 35 is_stmt 0
+  45 0022 59460C00 	 st.w [%a4]12,%d6
+  57:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         crc                       = crcinit;
+  46              	 .loc 1 57 9 is_stmt 1
+  47              	.LVL1:
+  58:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+  59:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         for (i = 0; i < table->order; i++)
+  48              	 .loc 1 59 9
+  49 0026 1D000000 	 j .L4
+  50              	.LVL2:
+  51              	.L5:
+  52              	 .loc 1 59 40 discriminator 2
+  53 002a C214     	 add %d4,1
+  54              	.LVL3:
+  55              	.L4:
+  56              	 .loc 1 59 23 discriminator 1
+  57              	 .loc 1 59 30 is_stmt 0 discriminator 1
+  58 002c 5452     	 ld.w %d2,[%a5]0
+  59              	 .loc 1 59 23 discriminator 1
+  60 002e 7F240000 	 jge %d4,%d2,.L13
+  60:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+  61:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             bit   = crc & table->crchighbit;
+  61              	 .loc 1 61 13 is_stmt 1
+  62              	 .loc 1 61 32 is_stmt 0
+  63 0032 19520C00 	 ld.w %d2,[%a5]12
+  64              	 .loc 1 61 19
+  65 0036 2662     	 and %d2,%d6
+  66              	.LVL4:
+  62:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             crc <<= 1;
+  67              	 .loc 1 62 13 is_stmt 1
+  68              	 .loc 1 62 17 is_stmt 0
+  69 0038 0616     	 sh %d6,1
+  70              	.LVL5:
+  63:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+  64:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             if (bit)
+  71              	 .loc 1 64 13 is_stmt 1
+  72              	 .loc 1 64 16 is_stmt 0
+  73 003a DF020000 	 jz %d2,.L5
+  65:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+  66:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crc ^= table->polynom;
+  74              	 .loc 1 66 17 is_stmt 1
+  75              	 .loc 1 66 29 is_stmt 0
+  76 003e 19520400 	 ld.w %d2,[%a5]4
+  77              	.LVL6:
+  78              	 .loc 1 66 21
+  79 0042 C626     	 xor %d6,%d2
+  80              	.LVL7:
+  81 0044 1D000000 	 j .L5
+  82              	.L13:
+  67:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+  68:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         }
+  69:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+  70:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         crc                   &= table->crcmask;
+  83              	 .loc 1 70 9 is_stmt 1
+  84              	 .loc 1 70 39 is_stmt 0
+  85 0048 19521000 	 ld.w %d2,[%a5]16
+  86              	 .loc 1 70 31
+  87 004c 2662     	 and %d2,%d6
+  88              	.LVL8:
+  71:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         driver->crcinit_direct = crc;
+  89              	 .loc 1 71 9 is_stmt 1
+  90              	 .loc 1 71 32 is_stmt 0
+  91 004e 59420800 	 st.w [%a4]8,%d2
+  72:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+  73:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+  74:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     else
+  75:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+  76:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         driver->crcinit_direct = crcinit;
+  77:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         crc                    = crcinit;
+  78:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+  79:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         for (i = 0; i < table->order; i++)
+  80:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+  81:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             bit = crc & 1;
+  82:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+  83:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             if (bit)
+  84:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+  85:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crc ^= table->polynom;
+  86:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+  87:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+  88:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             crc >>= 1;
+  89:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+  90:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             if (bit)
+  91:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+  92:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crc |= table->crchighbit;
+  93:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+  94:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         }
+  95:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+  96:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         driver->crcinit_nondirect = crc;
+  97:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+  98:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+  99:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     return TRUE;
+  92              	 .loc 1 99 12
+  93 0052 8212     	 mov %d2,1
+  94              	.LVL9:
+  95 0054 0090     	 ret 
+  96              	.LVL10:
+  97              	.L3:
+  76:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         crc                    = crcinit;
+  98              	 .loc 1 76 9 is_stmt 1
+  76:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         crc                    = crcinit;
+  99              	 .loc 1 76 32 is_stmt 0
+ 100 0056 59460800 	 st.w [%a4]8,%d6
+  77:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 101              	 .loc 1 77 9 is_stmt 1
+ 102              	.LVL11:
+  79:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 103              	 .loc 1 79 9
+  79:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 104              	 .loc 1 79 16 is_stmt 0
+ 105 005a 8202     	 mov %d2,0
+  79:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 106              	 .loc 1 79 9
+ 107 005c 1D000000 	 j .L7
+ 108              	.LVL12:
+ 109              	.L9:
+  79:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 110              	 .loc 1 79 40 is_stmt 1 discriminator 2
+ 111 0060 C212     	 add %d2,1
+ 112              	.LVL13:
+ 113              	.L7:
+  79:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 114              	 .loc 1 79 23 discriminator 1
+  79:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 115              	 .loc 1 79 30 is_stmt 0 discriminator 1
+ 116 0062 5453     	 ld.w %d3,[%a5]0
+  79:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 117              	 .loc 1 79 23 discriminator 1
+ 118 0064 7F320000 	 jge %d2,%d3,.L14
+  81:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 119              	 .loc 1 81 13 is_stmt 1
+  81:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 120              	 .loc 1 81 17 is_stmt 0
+ 121 0068 8F160031 	 and %d3,%d6,1
+ 122              	.LVL14:
+  83:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 123              	 .loc 1 83 13 is_stmt 1
+  83:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 124              	 .loc 1 83 16 is_stmt 0
+ 125 006c 6F060000 	 jz.t %d6,0,.L8
+  85:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 126              	 .loc 1 85 17 is_stmt 1
+  85:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 127              	 .loc 1 85 29 is_stmt 0
+ 128 0070 19540400 	 ld.w %d4,[%a5]4
+  85:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 129              	 .loc 1 85 21
+ 130 0074 C646     	 xor %d6,%d4
+ 131              	.LVL15:
+ 132              	.L8:
+  88:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 133              	 .loc 1 88 13 is_stmt 1
+  88:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 134              	 .loc 1 88 17 is_stmt 0
+ 135 0076 06F6     	 sh %d6,-1
+ 136              	.LVL16:
+  90:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 137              	 .loc 1 90 13 is_stmt 1
+  90:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 138              	 .loc 1 90 16 is_stmt 0
+ 139 0078 DF030000 	 jz %d3,.L9
+  92:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 140              	 .loc 1 92 17 is_stmt 1
+  92:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 141              	 .loc 1 92 29 is_stmt 0
+ 142 007c 19530C00 	 ld.w %d3,[%a5]12
+ 143              	.LVL17:
+  92:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 144              	 .loc 1 92 21
+ 145 0080 A636     	 or %d6,%d3
+ 146              	.LVL18:
+ 147 0082 1D000000 	 j .L9
+ 148              	.L14:
+  96:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 149              	 .loc 1 96 9 is_stmt 1
+  96:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 150              	 .loc 1 96 35 is_stmt 0
+ 151 0086 59460C00 	 st.w [%a4]12,%d6
+ 152              	 .loc 1 99 12
+ 153 008a 8212     	 mov %d2,1
+ 154              	.LVL19:
+ 155 008c 0090     	 ret 
+ 156              	.LVL20:
+ 157              	.L11:
+  39:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 158              	 .loc 1 39 16
+ 159 008e 8202     	 mov %d2,0
+ 160 0090 0090     	 ret 
+ 161              	.L12:
+  45:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 162              	 .loc 1 45 16
+ 163 0092 8202     	 mov %d2,0
+ 100:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** }
+ 164              	 .loc 1 100 1
+ 165 0094 0090     	 ret 
+ 166              	.LFE0:
+ 168              	 .global Ifx_Crc_init_end
+ 169              	Ifx_Crc_init_end:
+ 170              	 .section .text.Ifx_Crc_reflect,"ax",@progbits
+ 171              	 .align 1
+ 172              	 .global Ifx_Crc_reflect
+ 174              	Ifx_Crc_reflect:
+ 175              	.LFB2:
+ 101:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 102:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 103:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** boolean Ifx_Crc_createTable(Ifc_Crc_Table *table, sint32 order, uint32 polynom, sint32 refin)
+ 104:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** {
+ 105:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     uint32 crcmask;
+ 106:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     // at first, compute constant bit masks for whole CRC and CRC high bit
+ 107:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 108:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     crcmask = ((((uint32)1 << (order - 1)) - 1) << 1) | 1;
+ 109:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 110:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     // check parameters
+ 111:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 112:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     if ((order < 1) || (order > 32))
+ 113:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 114:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         //IfxStdIf_DPipe_print(io,"ERROR, invalid order, it must be between 1..32."ENDL);
+ 115:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         return FALSE;
+ 116:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 117:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 118:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     if (polynom != (polynom & crcmask))
+ 119:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 120:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         //IfxStdIf_DPipe_print(io,"ERROR, invalid polynom."ENDL);
+ 121:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         return FALSE;
+ 122:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 123:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 124:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     table->order      = order;
+ 125:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     table->polynom    = polynom;
+ 126:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     table->refin      = refin;
+ 127:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     table->crchighbit = (uint32)1 << (order - 1);
+ 128:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     table->crcmask    = crcmask;
+ 129:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     // generate lookup table
+ 130:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     // make CRC lookup table used by table algorithms
+ 131:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 132:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         sint32 i, j;
+ 133:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         uint32 bit, crc;
+ 134:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 135:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         for (i = 0; i < 256; i++)
+ 136:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 137:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             crc = (uint32)i;
+ 138:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 139:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             if (refin)
+ 140:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 141:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crc = Ifx_Crc_reflect(crc, 8);
+ 142:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 143:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 144:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             crc <<= order - 8;
+ 145:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 146:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             for (j = 0; j < 8; j++)
+ 147:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 148:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 bit   = crc & table->crchighbit;
+ 149:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crc <<= 1;
+ 150:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 151:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 if (bit)
+ 152:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 {
+ 153:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                     crc ^= polynom;
+ 154:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 }
+ 155:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 156:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 157:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             if (refin)
+ 158:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 159:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crc = Ifx_Crc_reflect(crc, order);
+ 160:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 161:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 162:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             crc &= crcmask;
+ 163:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 164:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             if (order <= 8)
+ 165:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 166:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 uint8 *crctab = (uint8 *)((uint32)table + sizeof(Ifc_Crc_Table));
+ 167:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crctab[i] = (uint8)crc;
+ 168:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 169:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             else if (order <= 16)
+ 170:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 171:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 uint16 *crctab = (uint16 *)((uint32)table + sizeof(Ifc_Crc_Table));
+ 172:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crctab[i] = (uint16)crc;
+ 173:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 174:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             else
+ 175:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 176:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 uint32 *crctab = (uint32 *)((uint32)table + sizeof(Ifc_Crc_Table));
+ 177:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crctab[i] = crc;
+ 178:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 179:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         }
+ 180:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 181:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     return TRUE;
+ 182:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** }
+ 183:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 184:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 185:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** // subroutines
+ 186:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 187:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** uint32 Ifx_Crc_reflect(uint32 crc, sint32 bitnum)
+ 188:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** {
+ 176              	 .loc 1 188 1 is_stmt 1
+ 177              	.LVL21:
+ 178 0000 40AE     	 mov.aa %a14,%SP
+ 179              	.LCFI1:
+ 189:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     // reflects the lower 'bitnum' bits of 'crc'
+ 190:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 191:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     uint32 i, j = 1, crcout = 0;
+ 180              	 .loc 1 191 5
+ 181              	.LVL22:
+ 192:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 193:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     for (i = (uint32)1 << (bitnum - 1); i; i >>= 1)
+ 182              	 .loc 1 193 5
+ 183              	 .loc 1 193 35 is_stmt 0
+ 184 0002 C2F5     	 add %d5,-1
+ 185              	.LVL23:
+ 186              	 .loc 1 193 12
+ 187 0004 8213     	 mov %d3,1
+ 188 0006 0F530030 	 sh %d3,%d3,%d5
+ 189              	.LVL24:
+ 191:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 190              	 .loc 1 191 22
+ 191 000a 8202     	 mov %d2,0
+ 191:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 192              	 .loc 1 191 15
+ 193 000c 8215     	 mov %d5,1
+ 194              	.LVL25:
+ 195              	 .loc 1 193 5
+ 196 000e 1D000000 	 j .L16
+ 197              	.LVL26:
+ 198              	.L17:
+ 194:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 195:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         if (crc & i)
+ 196:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 197:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             crcout |= j;
+ 198:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         }
+ 199:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 200:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         j <<= 1;
+ 199              	 .loc 1 200 9 is_stmt 1 discriminator 2
+ 200              	 .loc 1 200 11 is_stmt 0 discriminator 2
+ 201 0012 0615     	 sh %d5,1
+ 202              	.LVL27:
+ 193:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 203              	 .loc 1 193 46 is_stmt 1 discriminator 2
+ 204 0014 06F3     	 sh %d3,-1
+ 205              	.LVL28:
+ 206              	.L16:
+ 193:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 207              	 .loc 1 193 41 discriminator 1
+ 208 0016 DF030000 	 jz %d3,.L19
+ 195:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 209              	 .loc 1 195 9
+ 195:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 210              	 .loc 1 195 17 is_stmt 0
+ 211 001a 0F438060 	 and %d6,%d3,%d4
+ 195:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 212              	 .loc 1 195 12
+ 213 001e DF060000 	 jz %d6,.L17
+ 197:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         }
+ 214              	 .loc 1 197 13 is_stmt 1
+ 197:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         }
+ 215              	 .loc 1 197 20 is_stmt 0
+ 216 0022 A652     	 or %d2,%d5
+ 217              	.LVL29:
+ 218 0024 1D000000 	 j .L17
+ 219              	.L19:
+ 201:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 202:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 203:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     return crcout;
+ 220              	 .loc 1 203 5 is_stmt 1
+ 204:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** }
+ 221              	 .loc 1 204 1 is_stmt 0
+ 222 0028 0090     	 ret 
+ 223              	.LFE2:
+ 225              	 .global Ifx_Crc_reflect_end
+ 226              	Ifx_Crc_reflect_end:
+ 227              	 .section .text.Ifx_Crc_createTable,"ax",@progbits
+ 228              	 .align 1
+ 229              	 .global Ifx_Crc_createTable
+ 231              	Ifx_Crc_createTable:
+ 232              	.LFB1:
+ 104:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     uint32 crcmask;
+ 233              	 .loc 1 104 1 is_stmt 1
+ 234              	.LVL30:
+ 235 0000 40AE     	 mov.aa %a14,%SP
+ 236              	.LCFI2:
+ 237 0002 404C     	 mov.aa %a12,%a4
+ 238 0004 0249     	 mov %d9,%d4
+ 239 0006 0258     	 mov %d8,%d5
+ 240 0008 026A     	 mov %d10,%d6
+ 105:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     // at first, compute constant bit masks for whole CRC and CRC high bit
+ 241              	 .loc 1 105 5
+ 108:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 242              	 .loc 1 108 5
+ 108:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 243              	 .loc 1 108 38 is_stmt 0
+ 244 000a 1BF4FF2F 	 addi %d2,%d4,-1
+ 108:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 245              	 .loc 1 108 28
+ 246 000e 8213     	 mov %d3,1
+ 247 0010 0F230030 	 sh %d3,%d3,%d2
+ 108:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 248              	 .loc 1 108 44
+ 249 0014 1BF3FF4F 	 addi %d4,%d3,-1
+ 250              	.LVL31:
+ 108:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 251              	 .loc 1 108 13
+ 252 0018 8F1400C0 	 sh %d12,%d4,1
+ 253 001c C21C     	 add %d12,1
+ 254              	.LVL32:
+ 112:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 255              	 .loc 1 112 5 is_stmt 1
+ 112:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 256              	 .loc 1 112 8 is_stmt 0
+ 257 001e 8B02A222 	 ge.u %d2,%d2,32
+ 258 0022 DF020080 	 jnz %d2,.L32
+ 118:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 259              	 .loc 1 118 5 is_stmt 1
+ 118:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 260              	 .loc 1 118 29 is_stmt 0
+ 261 0026 0F5C8020 	 and %d2,%d12,%d5
+ 118:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 262              	 .loc 1 118 8
+ 263 002a 5F520080 	 jne %d2,%d5,.L33
+ 124:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     table->polynom    = polynom;
+ 264              	 .loc 1 124 5 is_stmt 1
+ 124:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     table->polynom    = polynom;
+ 265              	 .loc 1 124 23 is_stmt 0
+ 266 002e 7449     	 st.w [%a4]0,%d9
+ 125:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     table->refin      = refin;
+ 267              	 .loc 1 125 5 is_stmt 1
+ 125:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     table->refin      = refin;
+ 268              	 .loc 1 125 23 is_stmt 0
+ 269 0030 59450400 	 st.w [%a4]4,%d5
+ 126:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     table->crchighbit = (uint32)1 << (order - 1);
+ 270              	 .loc 1 126 5 is_stmt 1
+ 126:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     table->crchighbit = (uint32)1 << (order - 1);
+ 271              	 .loc 1 126 23 is_stmt 0
+ 272 0034 59460800 	 st.w [%a4]8,%d6
+ 127:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     table->crcmask    = crcmask;
+ 273              	 .loc 1 127 5 is_stmt 1
+ 127:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     table->crcmask    = crcmask;
+ 274              	 .loc 1 127 23 is_stmt 0
+ 275 0038 59430C00 	 st.w [%a4]12,%d3
+ 128:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     // generate lookup table
+ 276              	 .loc 1 128 5 is_stmt 1
+ 128:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     // generate lookup table
+ 277              	 .loc 1 128 23 is_stmt 0
+ 278 003c 594C1000 	 st.w [%a4]16,%d12
+ 279              	.LBB2:
+ 132:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         uint32 bit, crc;
+ 280              	 .loc 1 132 9 is_stmt 1
+ 133:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 281              	 .loc 1 133 9
+ 135:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 282              	 .loc 1 135 9
+ 283              	.LVL33:
+ 135:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 284              	 .loc 1 135 16 is_stmt 0
+ 285 0040 820B     	 mov %d11,0
+ 135:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 286              	 .loc 1 135 9
+ 287 0042 1D000000 	 j .L22
+ 288              	.LVL34:
+ 289              	.L38:
+ 141:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 290              	 .loc 1 141 17 is_stmt 1
+ 141:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 291              	 .loc 1 141 23 is_stmt 0
+ 292 0046 3B800050 	 mov %d5,8
+ 293 004a 02B4     	 mov %d4,%d11
+ 294 004c 6D000000 	 call Ifx_Crc_reflect
+ 295              	.LVL35:
+ 296 0050 1D000000 	 j .L23
+ 297              	.LVL36:
+ 298              	.L25:
+ 146:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 299              	 .loc 1 146 33 is_stmt 1 discriminator 2
+ 300 0054 C212     	 add %d2,1
+ 301              	.LVL37:
+ 302              	.L24:
+ 146:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 303              	 .loc 1 146 27 discriminator 1
+ 304 0056 8B824032 	 lt %d3,%d2,8
+ 305 005a DF030000 	 jz %d3,.L35
+ 148:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crc <<= 1;
+ 306              	 .loc 1 148 17
+ 148:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crc <<= 1;
+ 307              	 .loc 1 148 36 is_stmt 0
+ 308 005e 19C30C00 	 ld.w %d3,[%a12]12
+ 148:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crc <<= 1;
+ 309              	 .loc 1 148 23
+ 310 0062 2643     	 and %d3,%d4
+ 311              	.LVL38:
+ 149:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 312              	 .loc 1 149 17 is_stmt 1
+ 149:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 313              	 .loc 1 149 21 is_stmt 0
+ 314 0064 0614     	 sh %d4,1
+ 315              	.LVL39:
+ 151:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 {
+ 316              	 .loc 1 151 17 is_stmt 1
+ 151:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 {
+ 317              	 .loc 1 151 20 is_stmt 0
+ 318 0066 DF030000 	 jz %d3,.L25
+ 153:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 }
+ 319              	 .loc 1 153 21 is_stmt 1
+ 153:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 }
+ 320              	 .loc 1 153 25 is_stmt 0
+ 321 006a C684     	 xor %d4,%d8
+ 322              	.LVL40:
+ 323 006c 1D000000 	 j .L25
+ 324              	.LVL41:
+ 325              	.L35:
+ 157:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 326              	 .loc 1 157 13 is_stmt 1
+ 157:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 327              	 .loc 1 157 16 is_stmt 0
+ 328 0070 DF0A0080 	 jnz %d10,.L36
+ 329              	.LVL42:
+ 330              	.L27:
+ 162:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 331              	 .loc 1 162 13 is_stmt 1
+ 162:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 332              	 .loc 1 162 17 is_stmt 0
+ 333 0074 0FC48020 	 and %d2,%d4,%d12
+ 334              	.LVL43:
+ 164:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 335              	 .loc 1 164 13 is_stmt 1
+ 164:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 336              	 .loc 1 164 16 is_stmt 0
+ 337 0078 8B998032 	 ge %d3,%d9,9
+ 338 007c DF030080 	 jnz %d3,.L28
+ 339              	.LBB3:
+ 166:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crctab[i] = (uint8)crc;
+ 340              	 .loc 1 166 17 is_stmt 1
+ 166:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crctab[i] = (uint8)crc;
+ 341              	 .loc 1 166 57 is_stmt 0
+ 342 0080 80C3     	 mov.d %d3,%a12
+ 343 0082 1B430130 	 addi %d3,%d3,20
+ 344              	.LVL44:
+ 167:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 345              	 .loc 1 167 17 is_stmt 1
+ 167:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 346              	 .loc 1 167 23 is_stmt 0
+ 347 0086 6032     	 mov.a %a2,%d3
+ 348 0088 012D0026 	 addsc.a %a2,%a2,%d13,0
+ 167:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 349              	 .loc 1 167 27
+ 350 008c 3422     	 st.b [%a2]0,%d2
+ 351              	.LVL45:
+ 352              	.L29:
+ 353              	.LBE3:
+ 135:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 354              	 .loc 1 135 31 is_stmt 1 discriminator 2
+ 355 008e C21B     	 add %d11,1
+ 356              	.LVL46:
+ 357              	.L22:
+ 135:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 358              	 .loc 1 135 23 discriminator 1
+ 359 0090 3B001020 	 mov %d2,256
+ 360 0094 7F2B0000 	 jge %d11,%d2,.L37
+ 137:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 361              	 .loc 1 137 13
+ 137:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 362              	 .loc 1 137 17 is_stmt 0
+ 363 0098 02BD     	 mov %d13,%d11
+ 364              	.LVL47:
+ 139:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 365              	 .loc 1 139 13 is_stmt 1
+ 139:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 366              	 .loc 1 139 16 is_stmt 0
+ 367 009a DF0A0080 	 jnz %d10,.L38
+ 137:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 368              	 .loc 1 137 17
+ 369 009e 02B2     	 mov %d2,%d11
+ 370              	.LVL48:
+ 371              	.L23:
+ 144:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 372              	 .loc 1 144 13 is_stmt 1
+ 144:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 373              	 .loc 1 144 27 is_stmt 0
+ 374 00a0 1B89FF4F 	 addi %d4,%d9,-8
+ 144:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 375              	 .loc 1 144 17
+ 376 00a4 0F420040 	 sh %d4,%d2,%d4
+ 377              	.LVL49:
+ 146:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 378              	 .loc 1 146 13 is_stmt 1
+ 146:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 379              	 .loc 1 146 20 is_stmt 0
+ 380 00a8 8202     	 mov %d2,0
+ 146:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 381              	 .loc 1 146 13
+ 382 00aa 1D000000 	 j .L24
+ 383              	.LVL50:
+ 384              	.L36:
+ 159:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 385              	 .loc 1 159 17 is_stmt 1
+ 159:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 386              	 .loc 1 159 23 is_stmt 0
+ 387 00ae 0295     	 mov %d5,%d9
+ 388 00b0 6D000000 	 call Ifx_Crc_reflect
+ 389              	.LVL51:
+ 390 00b4 0224     	 mov %d4,%d2
+ 391              	.LVL52:
+ 392 00b6 1D000000 	 j .L27
+ 393              	.L28:
+ 169:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 394              	 .loc 1 169 18 is_stmt 1
+ 169:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 395              	 .loc 1 169 21 is_stmt 0
+ 396 00ba 8B198132 	 ge %d3,%d9,17
+ 397 00be DF030080 	 jnz %d3,.L30
+ 398              	.LBB4:
+ 171:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crctab[i] = (uint16)crc;
+ 399              	 .loc 1 171 17 is_stmt 1
+ 171:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crctab[i] = (uint16)crc;
+ 400              	 .loc 1 171 59 is_stmt 0
+ 401 00c2 80C3     	 mov.d %d3,%a12
+ 402 00c4 1B430140 	 addi %d4,%d3,20
+ 172:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 403              	 .loc 1 172 17 is_stmt 1
+ 172:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 404              	 .loc 1 172 23 is_stmt 0
+ 405 00c8 8F1D0030 	 sh %d3,%d13,1
+ 406 00cc 6042     	 mov.a %a2,%d4
+ 407 00ce 01230026 	 addsc.a %a2,%a2,%d3,0
+ 172:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 408              	 .loc 1 172 27
+ 409 00d2 B422     	 st.h [%a2]0,%d2
+ 410              	.LBE4:
+ 411 00d4 1D000000 	 j .L29
+ 412              	.L30:
+ 413              	.LBB5:
+ 176:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crctab[i] = crc;
+ 414              	 .loc 1 176 17 is_stmt 1
+ 176:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crctab[i] = crc;
+ 415              	 .loc 1 176 59 is_stmt 0
+ 416 00d8 80C3     	 mov.d %d3,%a12
+ 417 00da 1B430140 	 addi %d4,%d3,20
+ 177:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 418              	 .loc 1 177 17 is_stmt 1
+ 177:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 419              	 .loc 1 177 23 is_stmt 0
+ 420 00de 8F2D0030 	 sh %d3,%d13,2
+ 421 00e2 6042     	 mov.a %a2,%d4
+ 422 00e4 01230026 	 addsc.a %a2,%a2,%d3,0
+ 177:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 423              	 .loc 1 177 27
+ 424 00e8 7422     	 st.w [%a2]0,%d2
+ 425 00ea 1D000000 	 j .L29
+ 426              	.LVL53:
+ 427              	.L37:
+ 428              	.LBE5:
+ 429              	.LBE2:
+ 181:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** }
+ 430              	 .loc 1 181 12
+ 431 00ee 8212     	 mov %d2,1
+ 432              	.LBB6:
+ 433 00f0 0090     	 ret 
+ 434              	.LVL54:
+ 435              	.L32:
+ 436              	.LBE6:
+ 115:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 437              	 .loc 1 115 16
+ 438 00f2 8202     	 mov %d2,0
+ 439 00f4 0090     	 ret 
+ 440              	.L33:
+ 121:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 441              	 .loc 1 121 16
+ 442 00f6 8202     	 mov %d2,0
+ 182:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 443              	 .loc 1 182 1
+ 444 00f8 0090     	 ret 
+ 445              	.LFE1:
+ 447              	 .global Ifx_Crc_createTable_end
+ 448              	Ifx_Crc_createTable_end:
+ 449              	 .section .text.Ifx_Crc_tableFast,"ax",@progbits
+ 450              	 .align 1
+ 451              	 .global Ifx_Crc_tableFast
+ 453              	Ifx_Crc_tableFast:
+ 454              	.LFB3:
+ 205:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 206:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 207:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** uint32 Ifx_Crc_tableFast(Ifc_Crc *driver, uint8 *p, uint32 len)
+ 208:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** {
+ 455              	 .loc 1 208 1 is_stmt 1
+ 456              	.LVL55:
+ 457 0000 40AE     	 mov.aa %a14,%SP
+ 458              	.LCFI3:
+ 459 0002 404C     	 mov.aa %a12,%a4
+ 460 0004 805C     	 mov.d %d12,%a5
+ 461 0006 0248     	 mov %d8,%d4
+ 209:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     // fast lookup table algorithm without augmented zero bytes, e.g. used in pkzip.
+ 210:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     // only usable with polynom orders of 8, 16, 24 or 32.
+ 211:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 212:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     uint32 crc              = driver->crcinit_direct;
+ 462              	 .loc 1 212 5
+ 463              	 .loc 1 212 12 is_stmt 0
+ 464 0008 19440800 	 ld.w %d4,[%a4]8
+ 465              	.LVL56:
+ 213:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     sint32 orderMinusHeight = driver->table->order - 8;
+ 466              	 .loc 1 213 5 is_stmt 1
+ 467              	 .loc 1 213 37 is_stmt 0
+ 468 000c 994D1000 	 ld.a %a13,[%a4]16
+ 469              	 .loc 1 213 44
+ 470 0010 54DB     	 ld.w %d11,[%a13]0
+ 471              	 .loc 1 213 12
+ 472 0012 1B8BFF9F 	 addi %d9,%d11,-8
+ 473              	.LVL57:
+ 214:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 215:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     if (driver->table->refin)
+ 474              	 .loc 1 215 5 is_stmt 1
+ 475              	 .loc 1 215 22 is_stmt 0
+ 476 0016 19DA0800 	 ld.w %d10,[%a13]8
+ 477              	 .loc 1 215 8
+ 478 001a DF0A0080 	 jnz %d10,.L57
+ 479              	.LVL58:
+ 480              	.L40:
+ 216:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 217:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         crc = Ifx_Crc_reflect(crc, driver->table->order);
+ 218:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 219:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 220:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     if (driver->table->order <= 8)
+ 481              	 .loc 1 220 5 is_stmt 1
+ 482              	 .loc 1 220 8 is_stmt 0
+ 483 001e 8B9B8022 	 ge %d2,%d11,9
+ 484 0022 DF020080 	 jnz %d2,.L41
+ 485              	.LBB7:
+ 221:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 222:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         uint8 *crctab = (uint8 *)((uint32)driver->table + sizeof(Ifc_Crc_Table));
+ 486              	 .loc 1 222 9 is_stmt 1
+ 487              	 .loc 1 222 57 is_stmt 0
+ 488 0026 80D2     	 mov.d %d2,%a13
+ 489 0028 1B420150 	 addi %d5,%d2,20
+ 490              	.LVL59:
+ 223:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 224:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         if (!driver->table->refin)
+ 491              	 .loc 1 224 9 is_stmt 1
+ 492              	 .loc 1 224 12 is_stmt 0
+ 493 002c DF0A0000 	 jz %d10,.L42
+ 494 0030 1D000000 	 j .L43
+ 495              	.LVL60:
+ 496              	.L57:
+ 497              	.LBE7:
+ 217:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 498              	 .loc 1 217 9 is_stmt 1
+ 217:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 499              	 .loc 1 217 15 is_stmt 0
+ 500 0034 02B5     	 mov %d5,%d11
+ 501 0036 6D000000 	 call Ifx_Crc_reflect
+ 502              	.LVL61:
+ 503 003a 0224     	 mov %d4,%d2
+ 504              	.LVL62:
+ 505 003c 1D000000 	 j .L40
+ 506              	.LVL63:
+ 507              	.L44:
+ 508              	.LBB8:
+ 225:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 226:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             while (len--)
+ 227:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 228:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crc = (crc << 8) ^ crctab[((crc >> (orderMinusHeight)) & 0xff) ^ *p++];
+ 509              	 .loc 1 228 17 is_stmt 1
+ 510              	 .loc 1 228 28 is_stmt 0
+ 511 0040 8F840020 	 sh %d2,%d4,8
+ 512              	 .loc 1 228 72
+ 513 0044 57046839 	 extr.u %d3,%d4,%d9,8
+ 514              	 .loc 1 228 84
+ 515 0048 60C5     	 mov.a %a5,%d12
+ 516              	.LVL64:
+ 517              	 .loc 1 228 82
+ 518 004a 0454     	 ld.bu %d4,[%a5+]1
+ 519              	.LVL65:
+ 520              	 .loc 1 228 80
+ 521 004c C643     	 xor %d3,%d4
+ 522              	 .loc 1 228 42
+ 523 004e 6052     	 mov.a %a2,%d5
+ 524 0050 01230026 	 addsc.a %a2,%a2,%d3,0
+ 525 0054 1424     	 ld.bu %d4,[%a2]0
+ 526              	 .loc 1 228 21
+ 527 0056 C624     	 xor %d4,%d2
+ 528              	.LVL66:
+ 226:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 529              	 .loc 1 226 23
+ 530 0058 0268     	 mov %d8,%d6
+ 531              	 .loc 1 228 84
+ 532 005a 805C     	 mov.d %d12,%a5
+ 533              	.LVL67:
+ 534              	.L42:
+ 226:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 535              	 .loc 1 226 20 is_stmt 1
+ 226:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 536              	 .loc 1 226 23 is_stmt 0
+ 537 005c 1BF8FF6F 	 addi %d6,%d8,-1
+ 538              	.LVL68:
+ 226:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 539              	 .loc 1 226 20
+ 540 0060 DF080080 	 jnz %d8,.L44
+ 541              	.LVL69:
+ 542              	.L45:
+ 543              	.LBE8:
+ 229:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 230:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         }
+ 231:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         else
+ 232:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 233:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             while (len--)
+ 234:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 235:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crc = (crc >> 8) ^ crctab[(crc & 0xff) ^ *p++];
+ 236:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 237:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         }
+ 238:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 239:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     else if (driver->table->order <= 16)
+ 240:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 241:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         uint16 *crctab = (uint16 *)((uint32)driver->table + sizeof(Ifc_Crc_Table));
+ 242:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 243:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         if (!driver->table->refin)
+ 244:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 245:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             while (len--)
+ 246:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 247:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crc = (crc << 8) ^ crctab[((crc >> (orderMinusHeight)) & 0xff) ^ *p++];
+ 248:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 249:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         }
+ 250:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         else
+ 251:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 252:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             while (len--)
+ 253:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 254:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crc = (crc >> 8) ^ crctab[(crc & 0xff) ^ *p++];
+ 255:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 256:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         }
+ 257:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 258:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     else
+ 259:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 260:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         uint32 *crctab = (uint32 *)((uint32)driver->table + sizeof(Ifc_Crc_Table));
+ 261:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 262:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         if (!driver->table->refin)
+ 263:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 264:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             while (len--)
+ 265:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 266:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crc = (crc << 8) ^ crctab[((crc >> (orderMinusHeight)) & 0xff) ^ *p++];
+ 267:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 268:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         }
+ 269:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         else
+ 270:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 271:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             while (len--)
+ 272:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 273:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crc = (crc >> 8) ^ crctab[(crc & 0xff) ^ *p++];
+ 274:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 275:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         }
+ 276:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 277:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 278:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     if (driver->refout ^ driver->table->refin)
+ 544              	 .loc 1 278 5 is_stmt 1
+ 545              	 .loc 1 278 15 is_stmt 0
+ 546 0064 19C20400 	 ld.w %d2,[%a12]4
+ 547              	 .loc 1 278 8
+ 548 0068 5F2A0080 	 jne %d10,%d2,.L58
+ 549              	.LVL70:
+ 550              	.L56:
+ 279:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 280:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         crc = Ifx_Crc_reflect(crc, driver->table->order);
+ 281:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 282:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 283:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     crc ^= driver->crcxor;
+ 551              	 .loc 1 283 5 is_stmt 1
+ 552              	 .loc 1 283 18 is_stmt 0
+ 553 006c 54C2     	 ld.w %d2,[%a12]0
+ 554              	 .loc 1 283 9
+ 555 006e C642     	 xor %d2,%d4
+ 556              	.LVL71:
+ 284:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     crc &= driver->table->crcmask;
+ 557              	 .loc 1 284 5 is_stmt 1
+ 558              	 .loc 1 284 25 is_stmt 0
+ 559 0070 19D31000 	 ld.w %d3,[%a13]16
+ 560              	.LVL72:
+ 285:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 286:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     return crc;
+ 561              	 .loc 1 286 5 is_stmt 1
+ 287:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** }
+ 562              	 .loc 1 287 1 is_stmt 0
+ 563 0074 2632     	 and %d2,%d3
+ 564              	.LVL73:
+ 565 0076 0090     	 ret 
+ 566              	.LVL74:
+ 567              	.L46:
+ 568              	.LBB9:
+ 235:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 569              	 .loc 1 235 17 is_stmt 1
+ 235:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 570              	 .loc 1 235 28 is_stmt 0
+ 571 0078 8F841F20 	 sh %d2,%d4,-8
+ 235:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 572              	 .loc 1 235 48
+ 573 007c 8FF40F31 	 and %d3,%d4,255
+ 235:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 574              	 .loc 1 235 60
+ 575 0080 60C5     	 mov.a %a5,%d12
+ 576              	.LVL75:
+ 235:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 577              	 .loc 1 235 58
+ 578 0082 0454     	 ld.bu %d4,[%a5+]1
+ 579              	.LVL76:
+ 235:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 580              	 .loc 1 235 56
+ 581 0084 C643     	 xor %d3,%d4
+ 235:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 582              	 .loc 1 235 42
+ 583 0086 6052     	 mov.a %a2,%d5
+ 584 0088 01230026 	 addsc.a %a2,%a2,%d3,0
+ 585 008c 1424     	 ld.bu %d4,[%a2]0
+ 235:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 586              	 .loc 1 235 21
+ 587 008e C624     	 xor %d4,%d2
+ 588              	.LVL77:
+ 233:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 589              	 .loc 1 233 23
+ 590 0090 0268     	 mov %d8,%d6
+ 235:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 591              	 .loc 1 235 60
+ 592 0092 805C     	 mov.d %d12,%a5
+ 593              	.LVL78:
+ 594              	.L43:
+ 233:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 595              	 .loc 1 233 20 is_stmt 1
+ 233:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 596              	 .loc 1 233 23 is_stmt 0
+ 597 0094 1BF8FF6F 	 addi %d6,%d8,-1
+ 598              	.LVL79:
+ 233:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 599              	 .loc 1 233 20
+ 600 0098 DF080080 	 jnz %d8,.L46
+ 601 009c 1D000000 	 j .L45
+ 602              	.LVL80:
+ 603              	.L41:
+ 604              	.LBE9:
+ 239:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 605              	 .loc 1 239 10 is_stmt 1
+ 239:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 606              	 .loc 1 239 13 is_stmt 0
+ 607 00a0 8B1B8122 	 ge %d2,%d11,17
+ 608 00a4 DF020080 	 jnz %d2,.L47
+ 609              	.LBB10:
+ 241:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 610              	 .loc 1 241 9 is_stmt 1
+ 241:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 611              	 .loc 1 241 59 is_stmt 0
+ 612 00a8 80D2     	 mov.d %d2,%a13
+ 613 00aa 1B420150 	 addi %d5,%d2,20
+ 614              	.LVL81:
+ 243:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 615              	 .loc 1 243 9 is_stmt 1
+ 243:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 616              	 .loc 1 243 12 is_stmt 0
+ 617 00ae DF0A0000 	 jz %d10,.L48
+ 618              	.L49:
+ 252:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 619              	 .loc 1 252 20 is_stmt 1
+ 252:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 620              	 .loc 1 252 23 is_stmt 0
+ 621 00b2 1BF8FF6F 	 addi %d6,%d8,-1
+ 622              	.LVL82:
+ 252:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 623              	 .loc 1 252 20
+ 624 00b6 DF080000 	 jz %d8,.L45
+ 254:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 625              	 .loc 1 254 17 is_stmt 1
+ 254:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 626              	 .loc 1 254 28 is_stmt 0
+ 627 00ba 8F841F30 	 sh %d3,%d4,-8
+ 254:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 628              	 .loc 1 254 48
+ 629 00be 8FF40F21 	 and %d2,%d4,255
+ 254:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 630              	 .loc 1 254 60
+ 631 00c2 60C5     	 mov.a %a5,%d12
+ 632              	.LVL83:
+ 254:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 633              	 .loc 1 254 58
+ 634 00c4 0454     	 ld.bu %d4,[%a5+]1
+ 635              	.LVL84:
+ 254:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 636              	 .loc 1 254 56
+ 637 00c6 C642     	 xor %d2,%d4
+ 254:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 638              	 .loc 1 254 42
+ 639 00c8 0612     	 sh %d2,1
+ 640 00ca 6052     	 mov.a %a2,%d5
+ 641 00cc 01220026 	 addsc.a %a2,%a2,%d2,0
+ 642 00d0 B9240000 	 ld.hu %d4,[%a2]0
+ 254:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 643              	 .loc 1 254 21
+ 644 00d4 C634     	 xor %d4,%d3
+ 645              	.LVL85:
+ 252:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 646              	 .loc 1 252 23
+ 647 00d6 0268     	 mov %d8,%d6
+ 254:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 648              	 .loc 1 254 60
+ 649 00d8 805C     	 mov.d %d12,%a5
+ 650 00da 1D000000 	 j .L49
+ 651              	.LVL86:
+ 652              	.L48:
+ 245:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 653              	 .loc 1 245 20 is_stmt 1
+ 245:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 654              	 .loc 1 245 23 is_stmt 0
+ 655 00de 1BF8FF6F 	 addi %d6,%d8,-1
+ 656              	.LVL87:
+ 245:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 657              	 .loc 1 245 20
+ 658 00e2 DF080000 	 jz %d8,.L45
+ 247:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 659              	 .loc 1 247 17 is_stmt 1
+ 247:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 660              	 .loc 1 247 28 is_stmt 0
+ 661 00e6 8F840030 	 sh %d3,%d4,8
+ 247:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 662              	 .loc 1 247 72
+ 663 00ea 57046829 	 extr.u %d2,%d4,%d9,8
+ 247:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 664              	 .loc 1 247 84
+ 665 00ee 60C5     	 mov.a %a5,%d12
+ 666              	.LVL88:
+ 247:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 667              	 .loc 1 247 82
+ 668 00f0 0454     	 ld.bu %d4,[%a5+]1
+ 669              	.LVL89:
+ 247:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 670              	 .loc 1 247 80
+ 671 00f2 C642     	 xor %d2,%d4
+ 247:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 672              	 .loc 1 247 42
+ 673 00f4 0612     	 sh %d2,1
+ 674 00f6 6052     	 mov.a %a2,%d5
+ 675 00f8 01220026 	 addsc.a %a2,%a2,%d2,0
+ 676 00fc B9240000 	 ld.hu %d4,[%a2]0
+ 247:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 677              	 .loc 1 247 21
+ 678 0100 C634     	 xor %d4,%d3
+ 679              	.LVL90:
+ 245:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 680              	 .loc 1 245 23
+ 681 0102 0268     	 mov %d8,%d6
+ 247:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 682              	 .loc 1 247 84
+ 683 0104 805C     	 mov.d %d12,%a5
+ 684 0106 1D000000 	 j .L48
+ 685              	.LVL91:
+ 686              	.L47:
+ 687              	.LBE10:
+ 688              	.LBB11:
+ 260:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 689              	 .loc 1 260 9 is_stmt 1
+ 260:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 690              	 .loc 1 260 59 is_stmt 0
+ 691 010a 80D2     	 mov.d %d2,%a13
+ 692 010c 1B420150 	 addi %d5,%d2,20
+ 693              	.LVL92:
+ 262:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 694              	 .loc 1 262 9 is_stmt 1
+ 262:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 695              	 .loc 1 262 12 is_stmt 0
+ 696 0110 DF0A0000 	 jz %d10,.L52
+ 697              	.L53:
+ 271:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 698              	 .loc 1 271 20 is_stmt 1
+ 271:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 699              	 .loc 1 271 23 is_stmt 0
+ 700 0114 1BF8FF6F 	 addi %d6,%d8,-1
+ 701              	.LVL93:
+ 271:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 702              	 .loc 1 271 20
+ 703 0118 DF080000 	 jz %d8,.L45
+ 273:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 704              	 .loc 1 273 17 is_stmt 1
+ 273:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 705              	 .loc 1 273 28 is_stmt 0
+ 706 011c 8F841F20 	 sh %d2,%d4,-8
+ 273:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 707              	 .loc 1 273 48
+ 708 0120 8FF40F31 	 and %d3,%d4,255
+ 273:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 709              	 .loc 1 273 60
+ 710 0124 60C5     	 mov.a %a5,%d12
+ 711              	.LVL94:
+ 273:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 712              	 .loc 1 273 58
+ 713 0126 0454     	 ld.bu %d4,[%a5+]1
+ 714              	.LVL95:
+ 273:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 715              	 .loc 1 273 56
+ 716 0128 C643     	 xor %d3,%d4
+ 273:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 717              	 .loc 1 273 42
+ 718 012a 0623     	 sh %d3,2
+ 719 012c 6052     	 mov.a %a2,%d5
+ 720 012e 01230026 	 addsc.a %a2,%a2,%d3,0
+ 721 0132 5424     	 ld.w %d4,[%a2]0
+ 273:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 722              	 .loc 1 273 21
+ 723 0134 C624     	 xor %d4,%d2
+ 724              	.LVL96:
+ 271:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 725              	 .loc 1 271 23
+ 726 0136 0268     	 mov %d8,%d6
+ 273:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 727              	 .loc 1 273 60
+ 728 0138 805C     	 mov.d %d12,%a5
+ 729 013a 1D000000 	 j .L53
+ 730              	.LVL97:
+ 731              	.L52:
+ 264:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 732              	 .loc 1 264 20 is_stmt 1
+ 264:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 733              	 .loc 1 264 23 is_stmt 0
+ 734 013e 1BF8FF6F 	 addi %d6,%d8,-1
+ 735              	.LVL98:
+ 264:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 736              	 .loc 1 264 20
+ 737 0142 DF080000 	 jz %d8,.L45
+ 266:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 738              	 .loc 1 266 17 is_stmt 1
+ 266:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 739              	 .loc 1 266 28 is_stmt 0
+ 740 0146 8F840020 	 sh %d2,%d4,8
+ 266:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 741              	 .loc 1 266 72
+ 742 014a 57046839 	 extr.u %d3,%d4,%d9,8
+ 266:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 743              	 .loc 1 266 84
+ 744 014e 60C5     	 mov.a %a5,%d12
+ 745              	.LVL99:
+ 266:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 746              	 .loc 1 266 82
+ 747 0150 0454     	 ld.bu %d4,[%a5+]1
+ 748              	.LVL100:
+ 266:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 749              	 .loc 1 266 80
+ 750 0152 C643     	 xor %d3,%d4
+ 266:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 751              	 .loc 1 266 42
+ 752 0154 0623     	 sh %d3,2
+ 753 0156 6052     	 mov.a %a2,%d5
+ 754 0158 01230026 	 addsc.a %a2,%a2,%d3,0
+ 755 015c 5424     	 ld.w %d4,[%a2]0
+ 266:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 756              	 .loc 1 266 21
+ 757 015e C624     	 xor %d4,%d2
+ 758              	.LVL101:
+ 264:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 759              	 .loc 1 264 23
+ 760 0160 0268     	 mov %d8,%d6
+ 266:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 761              	 .loc 1 266 84
+ 762 0162 805C     	 mov.d %d12,%a5
+ 763 0164 1D000000 	 j .L52
+ 764              	.LVL102:
+ 765              	.L58:
+ 766              	.LBE11:
+ 280:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 767              	 .loc 1 280 9 is_stmt 1
+ 280:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 768              	 .loc 1 280 15 is_stmt 0
+ 769 0168 02B5     	 mov %d5,%d11
+ 770 016a 6D000000 	 call Ifx_Crc_reflect
+ 771              	.LVL103:
+ 772 016e 0224     	 mov %d4,%d2
+ 773              	.LVL104:
+ 774 0170 1D000000 	 j .L56
+ 775              	.LFE3:
+ 777              	 .global Ifx_Crc_tableFast_end
+ 778              	Ifx_Crc_tableFast_end:
+ 779              	 .section .text.Ifx_Crc_table,"ax",@progbits
+ 780              	 .align 1
+ 781              	 .global Ifx_Crc_table
+ 783              	Ifx_Crc_table:
+ 784              	.LFB4:
+ 288:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 289:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 290:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** uint32 Ifx_Crc_table(Ifc_Crc *driver, uint8 *p, uint32 len)
+ 291:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** {
+ 785              	 .loc 1 291 1 is_stmt 1
+ 786              	.LVL105:
+ 787 0000 40AE     	 mov.aa %a14,%SP
+ 788              	.LCFI4:
+ 789 0002 404C     	 mov.aa %a12,%a4
+ 790 0004 805C     	 mov.d %d12,%a5
+ 791 0006 0248     	 mov %d8,%d4
+ 292:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     // normal lookup table algorithm with augmented zero bytes.
+ 293:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     // only usable with polynom orders of 8, 16, 24 or 32.
+ 294:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 295:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     uint32 crc              = driver->crcinit_nondirect;
+ 792              	 .loc 1 295 5
+ 793              	 .loc 1 295 12 is_stmt 0
+ 794 0008 19440C00 	 ld.w %d4,[%a4]12
+ 795              	.LVL106:
+ 296:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     sint32 orderMinusHeight = driver->table->order - 8;
+ 796              	 .loc 1 296 5 is_stmt 1
+ 797              	 .loc 1 296 37 is_stmt 0
+ 798 000c 994D1000 	 ld.a %a13,[%a4]16
+ 799              	 .loc 1 296 44
+ 800 0010 54D9     	 ld.w %d9,[%a13]0
+ 801              	 .loc 1 296 12
+ 802 0012 1B89FFAF 	 addi %d10,%d9,-8
+ 803              	.LVL107:
+ 297:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 298:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     if (driver->table->refin)
+ 804              	 .loc 1 298 5 is_stmt 1
+ 805              	 .loc 1 298 22 is_stmt 0
+ 806 0016 19DB0800 	 ld.w %d11,[%a13]8
+ 807              	 .loc 1 298 8
+ 808 001a DF0B0080 	 jnz %d11,.L92
+ 809              	.LVL108:
+ 810              	.L60:
+ 299:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 300:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         crc = Ifx_Crc_reflect(crc, driver->table->order);
+ 301:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 302:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 303:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     if (driver->table->order <= 8)
+ 811              	 .loc 1 303 5 is_stmt 1
+ 812              	 .loc 1 303 8 is_stmt 0
+ 813 001e 8B998022 	 ge %d2,%d9,9
+ 814 0022 DF020080 	 jnz %d2,.L61
+ 815              	.LBB12:
+ 304:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 305:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         uint8 *crctab = (uint8 *)((uint32)driver->table + sizeof(Ifc_Crc_Table));
+ 816              	 .loc 1 305 9 is_stmt 1
+ 817              	 .loc 1 305 57 is_stmt 0
+ 818 0026 80D2     	 mov.d %d2,%a13
+ 819 0028 1B420150 	 addi %d5,%d2,20
+ 820              	.LVL109:
+ 306:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 307:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         if (!driver->table->refin)
+ 821              	 .loc 1 307 9 is_stmt 1
+ 822              	 .loc 1 307 12 is_stmt 0
+ 823 002c DF0B0000 	 jz %d11,.L62
+ 824 0030 1D000000 	 j .L63
+ 825              	.LVL110:
+ 826              	.L92:
+ 827              	.LBE12:
+ 300:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 828              	 .loc 1 300 9 is_stmt 1
+ 300:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 829              	 .loc 1 300 15 is_stmt 0
+ 830 0034 0295     	 mov %d5,%d9
+ 831 0036 6D000000 	 call Ifx_Crc_reflect
+ 832              	.LVL111:
+ 833 003a 0224     	 mov %d4,%d2
+ 834              	.LVL112:
+ 835 003c 1D000000 	 j .L60
+ 836              	.LVL113:
+ 837              	.L64:
+ 838              	.LBB13:
+ 308:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 309:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             while (--len)
+ 310:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 311:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crc = ((crc << 8) | *p++) ^ crctab[(crc >> (orderMinusHeight)) & 0xff];
+ 839              	 .loc 1 311 17 is_stmt 1
+ 840              	 .loc 1 311 29 is_stmt 0
+ 841 0040 8F840020 	 sh %d2,%d4,8
+ 842              	 .loc 1 311 39
+ 843 0044 60C5     	 mov.a %a5,%d12
+ 844              	.LVL114:
+ 845              	 .loc 1 311 37
+ 846 0046 0453     	 ld.bu %d3,[%a5+]1
+ 847              	.LVL115:
+ 848              	 .loc 1 311 35
+ 849 0048 A632     	 or %d2,%d3
+ 850              	 .loc 1 311 80
+ 851 004a 5704684A 	 extr.u %d4,%d4,%d10,8
+ 852              	.LVL116:
+ 853              	 .loc 1 311 51
+ 854 004e 6052     	 mov.a %a2,%d5
+ 855 0050 01240026 	 addsc.a %a2,%a2,%d4,0
+ 856 0054 1424     	 ld.bu %d4,[%a2]0
+ 857              	 .loc 1 311 21
+ 858 0056 C624     	 xor %d4,%d2
+ 859              	.LVL117:
+ 860              	 .loc 1 311 39
+ 861 0058 805C     	 mov.d %d12,%a5
+ 862              	.LVL118:
+ 863              	.L62:
+ 309:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 864              	 .loc 1 309 20 is_stmt 1
+ 865 005a C2F8     	 add %d8,-1
+ 866              	.LVL119:
+ 867 005c DF080080 	 jnz %d8,.L64
+ 868              	.L65:
+ 312:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 313:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         }
+ 314:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         else
+ 315:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 316:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             while (--len)
+ 317:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 318:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crc = ((crc >> 8) | (*p++ << (orderMinusHeight))) ^ crctab[crc & 0xff];
+ 319:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 320:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         }
+ 321:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 322:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         if (!driver->table->refin)
+ 869              	 .loc 1 322 9
+ 870              	 .loc 1 322 12 is_stmt 0
+ 871 0060 DF0B0000 	 jz %d11,.L67
+ 872 0064 1D000000 	 j .L68
+ 873              	.L66:
+ 318:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 874              	 .loc 1 318 17 is_stmt 1
+ 318:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 875              	 .loc 1 318 29 is_stmt 0
+ 876 0068 8F841F30 	 sh %d3,%d4,-8
+ 318:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 877              	 .loc 1 318 40
+ 878 006c 60C5     	 mov.a %a5,%d12
+ 879              	.LVL120:
+ 318:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 880              	 .loc 1 318 38
+ 881 006e 0452     	 ld.bu %d2,[%a5+]1
+ 882              	.LVL121:
+ 318:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 883              	 .loc 1 318 43
+ 884 0070 0FA20020 	 sh %d2,%d2,%d10
+ 318:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 885              	 .loc 1 318 35
+ 886 0074 A632     	 or %d2,%d3
+ 318:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 887              	 .loc 1 318 80
+ 888 0076 8FF40F41 	 and %d4,%d4,255
+ 889              	.LVL122:
+ 318:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 890              	 .loc 1 318 75
+ 891 007a 6052     	 mov.a %a2,%d5
+ 892 007c 01240026 	 addsc.a %a2,%a2,%d4,0
+ 893 0080 1424     	 ld.bu %d4,[%a2]0
+ 318:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 894              	 .loc 1 318 21
+ 895 0082 C624     	 xor %d4,%d2
+ 896              	.LVL123:
+ 318:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 897              	 .loc 1 318 40
+ 898 0084 805C     	 mov.d %d12,%a5
+ 899              	.LVL124:
+ 900              	.L63:
+ 316:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 901              	 .loc 1 316 20 is_stmt 1
+ 902 0086 C2F8     	 add %d8,-1
+ 903              	.LVL125:
+ 904 0088 DF080080 	 jnz %d8,.L66
+ 905 008c 1D000000 	 j .L65
+ 906              	.L69:
+ 323:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 324:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         	/* The below line provides a warning in TASKING compiler, which can be ignored */
+ 325:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             while (++len < (driver->table->order >> 3))
+ 326:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 327:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crc = (crc << 8) ^ crctab[(crc >> (orderMinusHeight)) & 0xff];
+ 907              	 .loc 1 327 17
+ 908              	 .loc 1 327 28 is_stmt 0
+ 909 0090 8F840020 	 sh %d2,%d4,8
+ 910              	 .loc 1 327 71
+ 911 0094 5704684A 	 extr.u %d4,%d4,%d10,8
+ 912              	.LVL126:
+ 913              	 .loc 1 327 42
+ 914 0098 6052     	 mov.a %a2,%d5
+ 915 009a 01240026 	 addsc.a %a2,%a2,%d4,0
+ 916 009e 1424     	 ld.bu %d4,[%a2]0
+ 917              	 .loc 1 327 21
+ 918 00a0 C624     	 xor %d4,%d2
+ 919              	.LVL127:
+ 920              	.L67:
+ 325:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 921              	 .loc 1 325 26 is_stmt 1
+ 922 00a2 C218     	 add %d8,1
+ 923              	.LVL128:
+ 325:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 924              	 .loc 1 325 50 is_stmt 0
+ 925 00a4 8FD93F20 	 sha %d2,%d9,-3
+ 325:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 926              	 .loc 1 325 26
+ 927 00a8 3F280080 	 jlt.u %d8,%d2,.L69
+ 928              	.LVL129:
+ 929              	.L70:
+ 930              	.LBE13:
+ 328:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 329:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         }
+ 330:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         else
+ 331:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 332:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         	/* The below line provides a warning in TASKING compiler, which can be ignored */
+ 333:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             while (++len < (driver->table->order >> 3))
+ 334:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 335:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crc = (crc >> 8) ^ crctab[crc & 0xff];
+ 336:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 337:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         }
+ 338:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 339:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     else if (driver->table->order <= 16)
+ 340:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 341:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         uint16 *crctab = (uint16 *)((uint32)driver->table + sizeof(Ifc_Crc_Table));
+ 342:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 343:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         if (!driver->table->refin)
+ 344:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 345:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             while (--len)
+ 346:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 347:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crc = ((crc << 8) | *p++) ^ crctab[(crc >> (orderMinusHeight)) & 0xff];
+ 348:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 349:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         }
+ 350:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         else
+ 351:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 352:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             while (--len)
+ 353:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 354:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crc = ((crc >> 8) | (*p++ << (orderMinusHeight))) ^ crctab[crc & 0xff];
+ 355:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 356:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         }
+ 357:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 358:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         if (!driver->table->refin)
+ 359:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 360:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         	/* The below line provides a warning in TASKING compiler, which can be ignored */
+ 361:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             while (++len < (driver->table->order >> 3))
+ 362:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 363:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crc = (crc << 8) ^ crctab[(crc >> (orderMinusHeight)) & 0xff];
+ 364:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 365:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         }
+ 366:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         else
+ 367:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 368:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         	/* The below line provides a warning in TASKING compiler, which can be ignored */
+ 369:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             while (++len < (driver->table->order >> 3))
+ 370:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 371:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crc = (crc >> 8) ^ crctab[crc & 0xff];
+ 372:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 373:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         }
+ 374:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 375:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     else if (driver->table->order <= 32)
+ 376:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 377:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         uint32 *crctab = (uint32 *)((uint32)driver->table + sizeof(Ifc_Crc_Table));
+ 378:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 379:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         if (!driver->table->refin)
+ 380:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 381:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             while (--len)
+ 382:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 383:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crc = ((crc << 8) | *p++) ^ crctab[(crc >> (orderMinusHeight)) & 0xff];
+ 384:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 385:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         }
+ 386:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         else
+ 387:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 388:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             while (--len)
+ 389:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 390:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crc = ((crc >> 8) | (*p++ << (orderMinusHeight))) ^ crctab[crc & 0xff];
+ 391:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 392:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         }
+ 393:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 394:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         if (!driver->table->refin)
+ 395:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 396:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         	/* The below line provides a warning in TASKING compiler, which can be ignored */
+ 397:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             while (++len < (driver->table->order >> 3))
+ 398:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 399:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crc = (crc << 8) ^ crctab[(crc >> (orderMinusHeight)) & 0xff];
+ 400:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 401:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         }
+ 402:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         else
+ 403:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 404:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         	/* The below line provides a warning in TASKING compiler, which can be ignored */
+ 405:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             while (++len < (driver->table->order >> 3))
+ 406:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 407:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crc = (crc >> 8) ^ crctab[crc & 0xff];
+ 408:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 409:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         }
+ 410:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 411:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 412:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     if (driver->refout ^ driver->table->refin)
+ 931              	 .loc 1 412 5 is_stmt 1
+ 932              	 .loc 1 412 15 is_stmt 0
+ 933 00ac 19C20400 	 ld.w %d2,[%a12]4
+ 934              	 .loc 1 412 8
+ 935 00b0 5F2B0080 	 jne %d11,%d2,.L93
+ 936              	.L91:
+ 413:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 414:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         crc = Ifx_Crc_reflect(crc, driver->table->order);
+ 415:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 416:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 417:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     crc ^= driver->crcxor;
+ 937              	 .loc 1 417 5 is_stmt 1
+ 938              	 .loc 1 417 18 is_stmt 0
+ 939 00b4 54C2     	 ld.w %d2,[%a12]0
+ 940              	 .loc 1 417 9
+ 941 00b6 C642     	 xor %d2,%d4
+ 942              	.LVL130:
+ 418:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     crc &= driver->table->crcmask;
+ 943              	 .loc 1 418 5 is_stmt 1
+ 944              	 .loc 1 418 25 is_stmt 0
+ 945 00b8 19D31000 	 ld.w %d3,[%a13]16
+ 946              	.LVL131:
+ 419:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 420:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     return crc;
+ 947              	 .loc 1 420 5 is_stmt 1
+ 421:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** }
+ 948              	 .loc 1 421 1 is_stmt 0
+ 949 00bc 2632     	 and %d2,%d3
+ 950              	.LVL132:
+ 951 00be 0090     	 ret 
+ 952              	.LVL133:
+ 953              	.L71:
+ 954              	.LBB14:
+ 335:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 955              	 .loc 1 335 17 is_stmt 1
+ 335:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 956              	 .loc 1 335 28 is_stmt 0
+ 957 00c0 8F841F20 	 sh %d2,%d4,-8
+ 335:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 958              	 .loc 1 335 47
+ 959 00c4 8FF40F41 	 and %d4,%d4,255
+ 960              	.LVL134:
+ 335:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 961              	 .loc 1 335 42
+ 962 00c8 6052     	 mov.a %a2,%d5
+ 963 00ca 01240026 	 addsc.a %a2,%a2,%d4,0
+ 964 00ce 1424     	 ld.bu %d4,[%a2]0
+ 335:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 965              	 .loc 1 335 21
+ 966 00d0 C624     	 xor %d4,%d2
+ 967              	.LVL135:
+ 968              	.L68:
+ 333:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 969              	 .loc 1 333 26 is_stmt 1
+ 970 00d2 C218     	 add %d8,1
+ 971              	.LVL136:
+ 333:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 972              	 .loc 1 333 50 is_stmt 0
+ 973 00d4 8FD93F20 	 sha %d2,%d9,-3
+ 333:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 974              	 .loc 1 333 26
+ 975 00d8 3F280080 	 jlt.u %d8,%d2,.L71
+ 976 00dc 1D000000 	 j .L70
+ 977              	.LVL137:
+ 978              	.L61:
+ 979              	.LBE14:
+ 339:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 980              	 .loc 1 339 10 is_stmt 1
+ 339:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 981              	 .loc 1 339 13 is_stmt 0
+ 982 00e0 8B198122 	 ge %d2,%d9,17
+ 983 00e4 DF020080 	 jnz %d2,.L72
+ 984              	.LBB15:
+ 341:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 985              	 .loc 1 341 9 is_stmt 1
+ 341:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 986              	 .loc 1 341 59 is_stmt 0
+ 987 00e8 80D2     	 mov.d %d2,%a13
+ 988 00ea 1B420150 	 addi %d5,%d2,20
+ 989              	.LVL138:
+ 343:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 990              	 .loc 1 343 9 is_stmt 1
+ 343:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 991              	 .loc 1 343 12 is_stmt 0
+ 992 00ee DF0B0000 	 jz %d11,.L73
+ 993              	.L74:
+ 352:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 994              	 .loc 1 352 20 is_stmt 1
+ 995 00f2 C2F8     	 add %d8,-1
+ 996              	.LVL139:
+ 997 00f4 DF080000 	 jz %d8,.L76
+ 354:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 998              	 .loc 1 354 17
+ 354:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 999              	 .loc 1 354 29 is_stmt 0
+ 1000 00f8 8F841F30 	 sh %d3,%d4,-8
+ 354:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1001              	 .loc 1 354 40
+ 1002 00fc 60C5     	 mov.a %a5,%d12
+ 1003              	.LVL140:
+ 354:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1004              	 .loc 1 354 38
+ 1005 00fe 0452     	 ld.bu %d2,[%a5+]1
+ 1006              	.LVL141:
+ 354:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1007              	 .loc 1 354 43
+ 1008 0100 0FA20020 	 sh %d2,%d2,%d10
+ 354:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1009              	 .loc 1 354 35
+ 1010 0104 A623     	 or %d3,%d2
+ 354:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1011              	 .loc 1 354 80
+ 1012 0106 8FF40F21 	 and %d2,%d4,255
+ 354:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1013              	 .loc 1 354 75
+ 1014 010a 0612     	 sh %d2,1
+ 1015 010c 6052     	 mov.a %a2,%d5
+ 1016 010e 01220026 	 addsc.a %a2,%a2,%d2,0
+ 1017 0112 B9240000 	 ld.hu %d4,[%a2]0
+ 1018              	.LVL142:
+ 354:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1019              	 .loc 1 354 21
+ 1020 0116 C634     	 xor %d4,%d3
+ 1021              	.LVL143:
+ 354:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1022              	 .loc 1 354 40
+ 1023 0118 805C     	 mov.d %d12,%a5
+ 1024 011a 1D000000 	 j .L74
+ 1025              	.LVL144:
+ 1026              	.L73:
+ 345:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 1027              	 .loc 1 345 20 is_stmt 1
+ 1028 011e C2F8     	 add %d8,-1
+ 1029              	.LVL145:
+ 1030 0120 DF080000 	 jz %d8,.L76
+ 347:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1031              	 .loc 1 347 17
+ 347:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1032              	 .loc 1 347 29 is_stmt 0
+ 1033 0124 8F840020 	 sh %d2,%d4,8
+ 347:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1034              	 .loc 1 347 39
+ 1035 0128 60C5     	 mov.a %a5,%d12
+ 1036              	.LVL146:
+ 347:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1037              	 .loc 1 347 37
+ 1038 012a 0453     	 ld.bu %d3,[%a5+]1
+ 1039              	.LVL147:
+ 347:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1040              	 .loc 1 347 35
+ 1041 012c A623     	 or %d3,%d2
+ 347:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1042              	 .loc 1 347 80
+ 1043 012e 5704682A 	 extr.u %d2,%d4,%d10,8
+ 347:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1044              	 .loc 1 347 51
+ 1045 0132 0612     	 sh %d2,1
+ 1046 0134 6052     	 mov.a %a2,%d5
+ 1047 0136 01220026 	 addsc.a %a2,%a2,%d2,0
+ 1048 013a B9240000 	 ld.hu %d4,[%a2]0
+ 1049              	.LVL148:
+ 347:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1050              	 .loc 1 347 21
+ 1051 013e C634     	 xor %d4,%d3
+ 1052              	.LVL149:
+ 347:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1053              	 .loc 1 347 39
+ 1054 0140 805C     	 mov.d %d12,%a5
+ 1055 0142 1D000000 	 j .L73
+ 1056              	.LVL150:
+ 1057              	.L76:
+ 358:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 1058              	 .loc 1 358 9 is_stmt 1
+ 358:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 1059              	 .loc 1 358 12 is_stmt 0
+ 1060 0146 DF0B0000 	 jz %d11,.L78
+ 1061              	.L79:
+ 369:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 1062              	 .loc 1 369 26 is_stmt 1
+ 1063 014a C218     	 add %d8,1
+ 1064              	.LVL151:
+ 369:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 1065              	 .loc 1 369 50 is_stmt 0
+ 1066 014c 8FD93F20 	 sha %d2,%d9,-3
+ 369:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 1067              	 .loc 1 369 26
+ 1068 0150 7F280080 	 jge.u %d8,%d2,.L70
+ 371:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1069              	 .loc 1 371 17 is_stmt 1
+ 371:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1070              	 .loc 1 371 28 is_stmt 0
+ 1071 0154 8F841F30 	 sh %d3,%d4,-8
+ 371:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1072              	 .loc 1 371 47
+ 1073 0158 8FF40F21 	 and %d2,%d4,255
+ 371:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1074              	 .loc 1 371 42
+ 1075 015c 0612     	 sh %d2,1
+ 1076 015e 6052     	 mov.a %a2,%d5
+ 1077 0160 01220026 	 addsc.a %a2,%a2,%d2,0
+ 1078 0164 B9240000 	 ld.hu %d4,[%a2]0
+ 1079              	.LVL152:
+ 371:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1080              	 .loc 1 371 21
+ 1081 0168 C634     	 xor %d4,%d3
+ 1082              	.LVL153:
+ 1083 016a 1D000000 	 j .L79
+ 1084              	.L78:
+ 361:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 1085              	 .loc 1 361 26 is_stmt 1
+ 1086 016e C218     	 add %d8,1
+ 1087              	.LVL154:
+ 361:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 1088              	 .loc 1 361 50 is_stmt 0
+ 1089 0170 8FD93F20 	 sha %d2,%d9,-3
+ 361:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 1090              	 .loc 1 361 26
+ 1091 0174 7F280080 	 jge.u %d8,%d2,.L70
+ 363:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1092              	 .loc 1 363 17 is_stmt 1
+ 363:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1093              	 .loc 1 363 28 is_stmt 0
+ 1094 0178 8F840030 	 sh %d3,%d4,8
+ 363:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1095              	 .loc 1 363 71
+ 1096 017c 5704682A 	 extr.u %d2,%d4,%d10,8
+ 363:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1097              	 .loc 1 363 42
+ 1098 0180 0612     	 sh %d2,1
+ 1099 0182 6052     	 mov.a %a2,%d5
+ 1100 0184 01220026 	 addsc.a %a2,%a2,%d2,0
+ 1101 0188 B9240000 	 ld.hu %d4,[%a2]0
+ 1102              	.LVL155:
+ 363:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1103              	 .loc 1 363 21
+ 1104 018c C634     	 xor %d4,%d3
+ 1105              	.LVL156:
+ 1106 018e 1D000000 	 j .L78
+ 1107              	.LVL157:
+ 1108              	.L72:
+ 1109              	.LBE15:
+ 375:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 1110              	 .loc 1 375 10 is_stmt 1
+ 375:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 1111              	 .loc 1 375 13 is_stmt 0
+ 1112 0192 8B198222 	 ge %d2,%d9,33
+ 1113 0196 DF020080 	 jnz %d2,.L70
+ 1114              	.LBB16:
+ 377:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 1115              	 .loc 1 377 9 is_stmt 1
+ 377:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 1116              	 .loc 1 377 59 is_stmt 0
+ 1117 019a 80D2     	 mov.d %d2,%a13
+ 1118 019c 1B420150 	 addi %d5,%d2,20
+ 1119              	.LVL158:
+ 379:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 1120              	 .loc 1 379 9 is_stmt 1
+ 379:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 1121              	 .loc 1 379 12 is_stmt 0
+ 1122 01a0 DF0B0000 	 jz %d11,.L82
+ 1123 01a4 1D000000 	 j .L83
+ 1124              	.L84:
+ 383:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1125              	 .loc 1 383 17 is_stmt 1
+ 383:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1126              	 .loc 1 383 29 is_stmt 0
+ 1127 01a8 8F840020 	 sh %d2,%d4,8
+ 383:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1128              	 .loc 1 383 39
+ 1129 01ac 60C5     	 mov.a %a5,%d12
+ 1130              	.LVL159:
+ 383:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1131              	 .loc 1 383 37
+ 1132 01ae 0453     	 ld.bu %d3,[%a5+]1
+ 1133              	.LVL160:
+ 383:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1134              	 .loc 1 383 35
+ 1135 01b0 A632     	 or %d2,%d3
+ 383:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1136              	 .loc 1 383 80
+ 1137 01b2 5704683A 	 extr.u %d3,%d4,%d10,8
+ 383:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1138              	 .loc 1 383 51
+ 1139 01b6 0623     	 sh %d3,2
+ 1140 01b8 6052     	 mov.a %a2,%d5
+ 1141 01ba 01230026 	 addsc.a %a2,%a2,%d3,0
+ 1142 01be 5424     	 ld.w %d4,[%a2]0
+ 1143              	.LVL161:
+ 383:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1144              	 .loc 1 383 21
+ 1145 01c0 C624     	 xor %d4,%d2
+ 1146              	.LVL162:
+ 383:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1147              	 .loc 1 383 39
+ 1148 01c2 805C     	 mov.d %d12,%a5
+ 1149              	.LVL163:
+ 1150              	.L82:
+ 381:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 1151              	 .loc 1 381 20 is_stmt 1
+ 1152 01c4 C2F8     	 add %d8,-1
+ 1153              	.LVL164:
+ 1154 01c6 DF080080 	 jnz %d8,.L84
+ 1155              	.L85:
+ 394:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 1156              	 .loc 1 394 9
+ 394:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 1157              	 .loc 1 394 12 is_stmt 0
+ 1158 01ca DF0B0000 	 jz %d11,.L87
+ 1159 01ce 1D000000 	 j .L88
+ 1160              	.L86:
+ 390:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1161              	 .loc 1 390 17 is_stmt 1
+ 390:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1162              	 .loc 1 390 29 is_stmt 0
+ 1163 01d2 8F841F30 	 sh %d3,%d4,-8
+ 390:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1164              	 .loc 1 390 40
+ 1165 01d6 60C5     	 mov.a %a5,%d12
+ 1166              	.LVL165:
+ 390:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1167              	 .loc 1 390 38
+ 1168 01d8 0452     	 ld.bu %d2,[%a5+]1
+ 1169              	.LVL166:
+ 390:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1170              	 .loc 1 390 43
+ 1171 01da 0FA20020 	 sh %d2,%d2,%d10
+ 390:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1172              	 .loc 1 390 35
+ 1173 01de A632     	 or %d2,%d3
+ 390:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1174              	 .loc 1 390 80
+ 1175 01e0 8FF40F31 	 and %d3,%d4,255
+ 390:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1176              	 .loc 1 390 75
+ 1177 01e4 0623     	 sh %d3,2
+ 1178 01e6 6052     	 mov.a %a2,%d5
+ 1179 01e8 01230026 	 addsc.a %a2,%a2,%d3,0
+ 1180 01ec 5424     	 ld.w %d4,[%a2]0
+ 1181              	.LVL167:
+ 390:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1182              	 .loc 1 390 21
+ 1183 01ee C624     	 xor %d4,%d2
+ 1184              	.LVL168:
+ 390:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1185              	 .loc 1 390 40
+ 1186 01f0 805C     	 mov.d %d12,%a5
+ 1187              	.LVL169:
+ 1188              	.L83:
+ 388:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 1189              	 .loc 1 388 20 is_stmt 1
+ 1190 01f2 C2F8     	 add %d8,-1
+ 1191              	.LVL170:
+ 1192 01f4 DF080080 	 jnz %d8,.L86
+ 1193 01f8 1D000000 	 j .L85
+ 1194              	.L89:
+ 399:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1195              	 .loc 1 399 17
+ 399:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1196              	 .loc 1 399 28 is_stmt 0
+ 1197 01fc 8F840020 	 sh %d2,%d4,8
+ 399:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1198              	 .loc 1 399 71
+ 1199 0200 5704683A 	 extr.u %d3,%d4,%d10,8
+ 399:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1200              	 .loc 1 399 42
+ 1201 0204 0623     	 sh %d3,2
+ 1202 0206 6052     	 mov.a %a2,%d5
+ 1203 0208 01230026 	 addsc.a %a2,%a2,%d3,0
+ 1204 020c 5424     	 ld.w %d4,[%a2]0
+ 1205              	.LVL171:
+ 399:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1206              	 .loc 1 399 21
+ 1207 020e C624     	 xor %d4,%d2
+ 1208              	.LVL172:
+ 1209              	.L87:
+ 397:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 1210              	 .loc 1 397 26 is_stmt 1
+ 1211 0210 C218     	 add %d8,1
+ 1212              	.LVL173:
+ 397:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 1213              	 .loc 1 397 50 is_stmt 0
+ 1214 0212 8FD93F20 	 sha %d2,%d9,-3
+ 397:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 1215              	 .loc 1 397 26
+ 1216 0216 3F280080 	 jlt.u %d8,%d2,.L89
+ 1217 021a 1D000000 	 j .L70
+ 1218              	.L90:
+ 407:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1219              	 .loc 1 407 17 is_stmt 1
+ 407:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1220              	 .loc 1 407 28 is_stmt 0
+ 1221 021e 8F841F20 	 sh %d2,%d4,-8
+ 407:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1222              	 .loc 1 407 47
+ 1223 0222 8FF40F31 	 and %d3,%d4,255
+ 407:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1224              	 .loc 1 407 42
+ 1225 0226 0623     	 sh %d3,2
+ 1226 0228 6052     	 mov.a %a2,%d5
+ 1227 022a 01230026 	 addsc.a %a2,%a2,%d3,0
+ 1228 022e 5424     	 ld.w %d4,[%a2]0
+ 1229              	.LVL174:
+ 407:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 1230              	 .loc 1 407 21
+ 1231 0230 C624     	 xor %d4,%d2
+ 1232              	.LVL175:
+ 1233              	.L88:
+ 405:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 1234              	 .loc 1 405 26 is_stmt 1
+ 1235 0232 C218     	 add %d8,1
+ 1236              	.LVL176:
+ 405:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 1237              	 .loc 1 405 50 is_stmt 0
+ 1238 0234 8FD93F20 	 sha %d2,%d9,-3
+ 405:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 1239              	 .loc 1 405 26
+ 1240 0238 3F280080 	 jlt.u %d8,%d2,.L90
+ 1241 023c 1D000000 	 j .L70
+ 1242              	.LVL177:
+ 1243              	.L93:
+ 1244              	.LBE16:
+ 414:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 1245              	 .loc 1 414 9 is_stmt 1
+ 414:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 1246              	 .loc 1 414 15 is_stmt 0
+ 1247 0240 0295     	 mov %d5,%d9
+ 1248 0242 6D000000 	 call Ifx_Crc_reflect
+ 1249              	.LVL178:
+ 1250 0246 0224     	 mov %d4,%d2
+ 1251              	.LVL179:
+ 1252 0248 1D000000 	 j .L91
+ 1253              	.LFE4:
+ 1255              	 .global Ifx_Crc_table_end
+ 1256              	Ifx_Crc_table_end:
+ 1257              	 .section .text.Ifx_Crc_bitByBit,"ax",@progbits
+ 1258              	 .align 1
+ 1259              	 .global Ifx_Crc_bitByBit
+ 1261              	Ifx_Crc_bitByBit:
+ 1262              	.LFB5:
+ 422:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 423:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 424:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** uint32 Ifx_Crc_bitByBit(Ifc_Crc *driver, uint8 *p, uint32 len)
+ 425:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** {
+ 1263              	 .loc 1 425 1 is_stmt 1
+ 1264              	.LVL180:
+ 1265 0000 40AE     	 mov.aa %a14,%SP
+ 1266              	.LCFI5:
+ 1267 0002 404D     	 mov.aa %a13,%a4
+ 1268 0004 8052     	 mov.d %d2,%a5
+ 1269 0006 024A     	 mov %d10,%d4
+ 426:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     // bit by bit algorithm with augmented zero bytes.
+ 427:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     // does not use lookup table, suited for polynom driver->table->orders between 1...32.
+ 428:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 429:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     uint32 i, j, c, bit;
+ 1270              	 .loc 1 429 5
+ 430:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     uint32 crc = driver->crcinit_nondirect;
+ 1271              	 .loc 1 430 5
+ 1272              	 .loc 1 430 12 is_stmt 0
+ 1273 0008 19480C00 	 ld.w %d8,[%a4]12
+ 1274              	.LVL181:
+ 431:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 432:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     for (i = 0; i < len; i++)
+ 1275              	 .loc 1 432 5 is_stmt 1
+ 1276              	 .loc 1 432 12 is_stmt 0
+ 1277 000c 8209     	 mov %d9,0
+ 1278              	 .loc 1 432 5
+ 1279 000e 1D000000 	 j .L95
+ 1280              	.LVL182:
+ 1281              	.L108:
+ 433:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 434:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         c = (uint32)*p++;
+ 435:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 436:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         if (driver->table->refin)
+ 437:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 438:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             c = Ifx_Crc_reflect(c, 8);
+ 1282              	 .loc 1 438 13 is_stmt 1
+ 1283              	 .loc 1 438 17 is_stmt 0
+ 1284 0012 3B800050 	 mov %d5,8
+ 1285 0016 6D000000 	 call Ifx_Crc_reflect
+ 1286              	.LVL183:
+ 1287 001a 0224     	 mov %d4,%d2
+ 1288              	.LVL184:
+ 1289 001c 1D000000 	 j .L96
+ 1290              	.LVL185:
+ 1291              	.L99:
+ 439:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         }
+ 440:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 441:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         for (j = 0x80; j; j >>= 1)
+ 1292              	 .loc 1 441 29 is_stmt 1 discriminator 2
+ 1293 0020 06F3     	 sh %d3,-1
+ 1294              	.LVL186:
+ 1295              	.L97:
+ 1296              	 .loc 1 441 24 discriminator 1
+ 1297 0022 DF030000 	 jz %d3,.L106
+ 442:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 443:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             bit   = crc & driver->table->crchighbit;
+ 1298              	 .loc 1 443 13
+ 1299              	 .loc 1 443 40 is_stmt 0
+ 1300 0026 19C20C00 	 ld.w %d2,[%a12]12
+ 1301              	 .loc 1 443 19
+ 1302 002a 2682     	 and %d2,%d8
+ 1303              	.LVL187:
+ 444:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             crc <<= 1;
+ 1304              	 .loc 1 444 13 is_stmt 1
+ 1305              	 .loc 1 444 17 is_stmt 0
+ 1306 002c 0618     	 sh %d8,1
+ 1307              	.LVL188:
+ 445:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 446:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             if (c & j)
+ 1308              	 .loc 1 446 13 is_stmt 1
+ 1309              	 .loc 1 446 19 is_stmt 0
+ 1310 002e 0F438060 	 and %d6,%d3,%d4
+ 1311              	 .loc 1 446 16
+ 1312 0032 DF060000 	 jz %d6,.L98
+ 447:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 448:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crc |= 1;
+ 1313              	 .loc 1 448 17 is_stmt 1
+ 1314              	 .loc 1 448 21 is_stmt 0
+ 1315 0036 8F184081 	 or %d8,%d8,1
+ 1316              	.LVL189:
+ 1317              	.L98:
+ 449:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 450:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 451:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             if (bit)
+ 1318              	 .loc 1 451 13 is_stmt 1
+ 1319              	 .loc 1 451 16 is_stmt 0
+ 1320 003a DF020000 	 jz %d2,.L99
+ 452:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 453:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crc ^= driver->table->polynom;
+ 1321              	 .loc 1 453 17 is_stmt 1
+ 1322              	 .loc 1 453 37 is_stmt 0
+ 1323 003e 19C20400 	 ld.w %d2,[%a12]4
+ 1324              	.LVL190:
+ 1325              	 .loc 1 453 21
+ 1326 0042 C628     	 xor %d8,%d2
+ 1327              	.LVL191:
+ 1328 0044 1D000000 	 j .L99
+ 1329              	.L106:
+ 432:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 1330              	 .loc 1 432 27 is_stmt 1 discriminator 2
+ 1331 0048 C219     	 add %d9,1
+ 1332              	.LVL192:
+ 434:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 1333              	 .loc 1 434 23 is_stmt 0 discriminator 2
+ 1334 004a 80F2     	 mov.d %d2,%a15
+ 1335              	.LVL193:
+ 1336              	.L95:
+ 432:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 1337              	 .loc 1 432 19 is_stmt 1 discriminator 1
+ 1338 004c 7FA90080 	 jge.u %d9,%d10,.L107
+ 434:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 1339              	 .loc 1 434 9
+ 434:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 1340              	 .loc 1 434 23 is_stmt 0
+ 1341 0050 602F     	 mov.a %a15,%d2
+ 1342              	.LVL194:
+ 434:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 1343              	 .loc 1 434 21
+ 1344 0052 04F4     	 ld.bu %d4,[%a15+]1
+ 1345              	.LVL195:
+ 436:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 1346              	 .loc 1 436 9 is_stmt 1
+ 436:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 1347              	 .loc 1 436 19 is_stmt 0
+ 1348 0054 99DC1000 	 ld.a %a12,[%a13]16
+ 436:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 1349              	 .loc 1 436 26
+ 1350 0058 19C20800 	 ld.w %d2,[%a12]8
+ 436:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 1351              	 .loc 1 436 12
+ 1352 005c DF020080 	 jnz %d2,.L108
+ 1353              	.L96:
+ 441:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 1354              	 .loc 1 441 9 is_stmt 1
+ 1355              	.LVL196:
+ 441:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 1356              	 .loc 1 441 16 is_stmt 0
+ 1357 0060 3B000830 	 mov %d3,128
+ 441:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 1358              	 .loc 1 441 9
+ 1359 0064 1D000000 	 j .L97
+ 1360              	.LVL197:
+ 1361              	.L107:
+ 454:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 455:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         }
+ 456:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 457:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 458:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     for (i = 0; i < driver->table->order; i++)
+ 1362              	 .loc 1 458 12
+ 1363 0068 8202     	 mov %d2,0
+ 1364              	.LVL198:
+ 1365 006a 1D000000 	 j .L102
+ 1366              	.LVL199:
+ 1367              	.L103:
+ 1368              	 .loc 1 458 44 is_stmt 1 discriminator 2
+ 1369 006e C212     	 add %d2,1
+ 1370              	.LVL200:
+ 1371              	.L102:
+ 1372              	 .loc 1 458 19 discriminator 1
+ 1373              	 .loc 1 458 27 is_stmt 0 discriminator 1
+ 1374 0070 99DC1000 	 ld.a %a12,[%a13]16
+ 1375              	 .loc 1 458 34 discriminator 1
+ 1376 0074 54C5     	 ld.w %d5,[%a12]0
+ 1377              	 .loc 1 458 19 discriminator 1
+ 1378 0076 7F520080 	 jge.u %d2,%d5,.L109
+ 459:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 460:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         bit   = crc & driver->table->crchighbit;
+ 1379              	 .loc 1 460 9 is_stmt 1
+ 1380              	 .loc 1 460 36 is_stmt 0
+ 1381 007a 19C30C00 	 ld.w %d3,[%a12]12
+ 1382              	 .loc 1 460 15
+ 1383 007e 2683     	 and %d3,%d8
+ 1384              	.LVL201:
+ 461:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         crc <<= 1;
+ 1385              	 .loc 1 461 9 is_stmt 1
+ 1386              	 .loc 1 461 13 is_stmt 0
+ 1387 0080 0618     	 sh %d8,1
+ 1388              	.LVL202:
+ 462:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 463:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         if (bit)
+ 1389              	 .loc 1 463 9 is_stmt 1
+ 1390              	 .loc 1 463 12 is_stmt 0
+ 1391 0082 DF030000 	 jz %d3,.L103
+ 464:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 465:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             crc ^= driver->table->polynom;
+ 1392              	 .loc 1 465 13 is_stmt 1
+ 1393              	 .loc 1 465 33 is_stmt 0
+ 1394 0086 19C30400 	 ld.w %d3,[%a12]4
+ 1395              	.LVL203:
+ 1396              	 .loc 1 465 17
+ 1397 008a C638     	 xor %d8,%d3
+ 1398              	.LVL204:
+ 1399 008c 1D000000 	 j .L103
+ 1400              	.L109:
+ 466:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         }
+ 467:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 468:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 469:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     if (driver->refout)
+ 1401              	 .loc 1 469 5 is_stmt 1
+ 1402              	 .loc 1 469 15 is_stmt 0
+ 1403 0090 19D20400 	 ld.w %d2,[%a13]4
+ 1404              	.LVL205:
+ 1405              	 .loc 1 469 8
+ 1406 0094 DF020080 	 jnz %d2,.L110
+ 1407              	.L105:
+ 470:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 471:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         crc = Ifx_Crc_reflect(crc, driver->table->order);
+ 472:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 473:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 474:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     crc ^= driver->crcxor;
+ 1408              	 .loc 1 474 5 is_stmt 1
+ 1409              	 .loc 1 474 18 is_stmt 0
+ 1410 0098 54D2     	 ld.w %d2,[%a13]0
+ 1411              	 .loc 1 474 9
+ 1412 009a C682     	 xor %d2,%d8
+ 1413              	.LVL206:
+ 475:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     crc &= driver->table->crcmask;
+ 1414              	 .loc 1 475 5 is_stmt 1
+ 1415              	 .loc 1 475 25 is_stmt 0
+ 1416 009c 19C31000 	 ld.w %d3,[%a12]16
+ 1417              	.LVL207:
+ 476:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 477:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     return crc;
+ 1418              	 .loc 1 477 5 is_stmt 1
+ 478:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** }
+ 1419              	 .loc 1 478 1 is_stmt 0
+ 1420 00a0 2632     	 and %d2,%d3
+ 1421              	.LVL208:
+ 1422 00a2 0090     	 ret 
+ 1423              	.LVL209:
+ 1424              	.L110:
+ 471:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 1425              	 .loc 1 471 9 is_stmt 1
+ 471:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 1426              	 .loc 1 471 15 is_stmt 0
+ 1427 00a4 0284     	 mov %d4,%d8
+ 1428 00a6 6D000000 	 call Ifx_Crc_reflect
+ 1429              	.LVL210:
+ 1430 00aa 0228     	 mov %d8,%d2
+ 1431              	.LVL211:
+ 1432 00ac 1D000000 	 j .L105
+ 1433              	.LFE5:
+ 1435              	 .global Ifx_Crc_bitByBit_end
+ 1436              	Ifx_Crc_bitByBit_end:
+ 1437              	 .section .text.Ifx_Crc_bitByBitFast,"ax",@progbits
+ 1438              	 .align 1
+ 1439              	 .global Ifx_Crc_bitByBitFast
+ 1441              	Ifx_Crc_bitByBitFast:
+ 1442              	.LFB6:
+ 479:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 480:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 481:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** uint32 Ifx_Crc_bitByBitFast(Ifc_Crc *driver, uint8 *p, uint32 len)
+ 482:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** {
+ 1443              	 .loc 1 482 1 is_stmt 1
+ 1444              	.LVL212:
+ 1445 0000 40AE     	 mov.aa %a14,%SP
+ 1446              	.LCFI6:
+ 1447 0002 404F     	 mov.aa %a15,%a4
+ 1448 0004 8052     	 mov.d %d2,%a5
+ 1449 0006 024A     	 mov %d10,%d4
+ 483:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     // fast bit by bit algorithm without augmented zero bytes.
+ 484:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     // does not use lookup table, suited for polynom driver->table->orders between 1...32.
+ 485:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 486:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     uint32 i, j, c, bit;
+ 1450              	 .loc 1 486 5
+ 487:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     uint32 crc = driver->crcinit_direct;
+ 1451              	 .loc 1 487 5
+ 1452              	 .loc 1 487 12 is_stmt 0
+ 1453 0008 19480800 	 ld.w %d8,[%a4]8
+ 1454              	.LVL213:
+ 488:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 489:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     for (i = 0; i < len; i++)
+ 1455              	 .loc 1 489 5 is_stmt 1
+ 1456              	 .loc 1 489 12 is_stmt 0
+ 1457 000c 8209     	 mov %d9,0
+ 1458              	 .loc 1 489 5
+ 1459 000e 1D000000 	 j .L112
+ 1460              	.LVL214:
+ 1461              	.L122:
+ 490:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 491:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         c = (uint32)*p++;
+ 492:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 493:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         if (driver->table->refin)
+ 494:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 495:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             c = Ifx_Crc_reflect(c, 8);
+ 1462              	 .loc 1 495 13 is_stmt 1
+ 1463              	 .loc 1 495 17 is_stmt 0
+ 1464 0012 3B800050 	 mov %d5,8
+ 1465 0016 6D000000 	 call Ifx_Crc_reflect
+ 1466              	.LVL215:
+ 1467 001a 0224     	 mov %d4,%d2
+ 1468              	.LVL216:
+ 1469 001c 1D000000 	 j .L113
+ 1470              	.LVL217:
+ 1471              	.L116:
+ 496:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         }
+ 497:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 498:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         for (j = 0x80; j; j >>= 1)
+ 1472              	 .loc 1 498 29 is_stmt 1 discriminator 2
+ 1473 0020 06F3     	 sh %d3,-1
+ 1474              	.LVL218:
+ 1475              	.L114:
+ 1476              	 .loc 1 498 24 discriminator 1
+ 1477 0022 DF030000 	 jz %d3,.L120
+ 499:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 500:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             bit   = crc & driver->table->crchighbit;
+ 1478              	 .loc 1 500 13
+ 1479              	 .loc 1 500 40 is_stmt 0
+ 1480 0026 19C70C00 	 ld.w %d7,[%a12]12
+ 1481              	 .loc 1 500 19
+ 1482 002a 0F878050 	 and %d5,%d7,%d8
+ 1483              	.LVL219:
+ 501:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             crc <<= 1;
+ 1484              	 .loc 1 501 13 is_stmt 1
+ 1485              	 .loc 1 501 17 is_stmt 0
+ 1486 002e 0618     	 sh %d8,1
+ 1487              	.LVL220:
+ 502:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 503:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             if (c & j)
+ 1488              	 .loc 1 503 13 is_stmt 1
+ 1489              	 .loc 1 503 19 is_stmt 0
+ 1490 0030 0F438060 	 and %d6,%d3,%d4
+ 1491              	 .loc 1 503 16
+ 1492 0034 DF060000 	 jz %d6,.L115
+ 504:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 505:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 bit ^= driver->table->crchighbit;
+ 1493              	 .loc 1 505 17 is_stmt 1
+ 1494              	 .loc 1 505 21 is_stmt 0
+ 1495 0038 C675     	 xor %d5,%d7
+ 1496              	.LVL221:
+ 1497              	.L115:
+ 506:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 507:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 508:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             if (bit)
+ 1498              	 .loc 1 508 13 is_stmt 1
+ 1499              	 .loc 1 508 16 is_stmt 0
+ 1500 003a DF050000 	 jz %d5,.L116
+ 509:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             {
+ 510:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****                 crc ^= driver->table->polynom;
+ 1501              	 .loc 1 510 17 is_stmt 1
+ 1502              	 .loc 1 510 37 is_stmt 0
+ 1503 003e 19C20400 	 ld.w %d2,[%a12]4
+ 1504              	 .loc 1 510 21
+ 1505 0042 C628     	 xor %d8,%d2
+ 1506              	.LVL222:
+ 1507 0044 1D000000 	 j .L116
+ 1508              	.LVL223:
+ 1509              	.L120:
+ 489:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 1510              	 .loc 1 489 27 is_stmt 1 discriminator 2
+ 1511 0048 C219     	 add %d9,1
+ 1512              	.LVL224:
+ 491:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 1513              	 .loc 1 491 23 is_stmt 0 discriminator 2
+ 1514 004a 80D2     	 mov.d %d2,%a13
+ 1515              	.LVL225:
+ 1516              	.L112:
+ 489:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 1517              	 .loc 1 489 19 is_stmt 1 discriminator 1
+ 1518 004c 7FA90080 	 jge.u %d9,%d10,.L121
+ 491:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 1519              	 .loc 1 491 9
+ 491:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 1520              	 .loc 1 491 23 is_stmt 0
+ 1521 0050 602D     	 mov.a %a13,%d2
+ 1522              	.LVL226:
+ 491:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 1523              	 .loc 1 491 21
+ 1524 0052 04D4     	 ld.bu %d4,[%a13+]1
+ 1525              	.LVL227:
+ 493:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 1526              	 .loc 1 493 9 is_stmt 1
+ 493:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 1527              	 .loc 1 493 19 is_stmt 0
+ 1528 0054 C84C     	 ld.a %a12,[%a15]16
+ 493:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 1529              	 .loc 1 493 26
+ 1530 0056 19C20800 	 ld.w %d2,[%a12]8
+ 493:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 1531              	 .loc 1 493 12
+ 1532 005a DF020080 	 jnz %d2,.L122
+ 1533              	.L113:
+ 498:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 1534              	 .loc 1 498 9 is_stmt 1
+ 1535              	.LVL228:
+ 498:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 1536              	 .loc 1 498 16 is_stmt 0
+ 1537 005e 3B000830 	 mov %d3,128
+ 498:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         {
+ 1538              	 .loc 1 498 9
+ 1539 0062 1D000000 	 j .L114
+ 1540              	.LVL229:
+ 1541              	.L121:
+ 511:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****             }
+ 512:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         }
+ 513:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 514:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 515:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     if (driver->refout)
+ 1542              	 .loc 1 515 5 is_stmt 1
+ 1543              	 .loc 1 515 15 is_stmt 0
+ 1544 0066 4812     	 ld.w %d2,[%a15]4
+ 1545              	.LVL230:
+ 1546              	 .loc 1 515 8
+ 1547 0068 DF020080 	 jnz %d2,.L123
+ 1548              	.L119:
+ 516:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     {
+ 517:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****         crc = Ifx_Crc_reflect(crc, driver->table->order);
+ 518:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 519:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 520:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     crc ^= driver->crcxor;
+ 1549              	 .loc 1 520 5 is_stmt 1
+ 1550              	 .loc 1 520 18 is_stmt 0
+ 1551 006c 4802     	 ld.w %d2,[%a15]0
+ 1552              	 .loc 1 520 9
+ 1553 006e C682     	 xor %d2,%d8
+ 1554              	.LVL231:
+ 521:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     crc &= driver->table->crcmask;
+ 1555              	 .loc 1 521 5 is_stmt 1
+ 1556              	 .loc 1 521 18 is_stmt 0
+ 1557 0070 C842     	 ld.a %a2,[%a15]16
+ 1558              	 .loc 1 521 25
+ 1559 0072 19231000 	 ld.w %d3,[%a2]16
+ 1560              	.LVL232:
+ 522:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** 
+ 523:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     return crc;
+ 1561              	 .loc 1 523 5 is_stmt 1
+ 524:../Libraries/Service/Tricore/Math/Ifx_Crc.c **** }
+ 1562              	 .loc 1 524 1 is_stmt 0
+ 1563 0076 2632     	 and %d2,%d3
+ 1564              	.LVL233:
+ 1565 0078 0090     	 ret 
+ 1566              	.LVL234:
+ 1567              	.L123:
+ 517:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 1568              	 .loc 1 517 9 is_stmt 1
+ 517:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 1569              	 .loc 1 517 42 is_stmt 0
+ 1570 007a C842     	 ld.a %a2,[%a15]16
+ 517:../Libraries/Service/Tricore/Math/Ifx_Crc.c ****     }
+ 1571              	 .loc 1 517 15
+ 1572 007c 5425     	 ld.w %d5,[%a2]0
+ 1573 007e 0284     	 mov %d4,%d8
+ 1574 0080 6D000000 	 call Ifx_Crc_reflect
+ 1575              	.LVL235:
+ 1576 0084 0228     	 mov %d8,%d2
+ 1577              	.LVL236:
+ 1578 0086 1D000000 	 j .L119
+ 1579              	.LFE6:
+ 1581              	 .global Ifx_Crc_bitByBitFast_end
+ 1582              	Ifx_Crc_bitByBitFast_end:
+ 1683              	.Letext0:
+ 1684              	 .file 2 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 1685              	 .file 3 "../Libraries/Service/Tricore/Math/Ifx_Crc.h"
+ 4315 0000 00000000 	 .word Ifx_Crc_init
+ 4316 0004 00000000 	 .word Ifx_Crc_init_end
+ 4317 0008 FC003444 	 .word 0x443400fc
+ 4318 000c F0003000 	 .word 0x003000f0
+ 4319 0010 04000000 	 .word 0x00000004
+ 4320 0014 C0000000 	 .word 0x000000c0
+ 4321 0018 00000000 	 .word Ifx_Crc_reflect
+ 4322 001c 00000000 	 .word Ifx_Crc_reflect_end
+ 4323 0020 7C000044 	 .word 0x4400007c
+ 4324 0024 30000000 	 .word 0x00000030
+ 4325 0028 04000000 	 .word 0x00000004
+ 4326 002c C0000000 	 .word 0x000000c0
+ 4327 0030 00000000 	 .word Ifx_Crc_createTable
+ 4328 0034 00000000 	 .word Ifx_Crc_createTable_end
+ 4329 0038 7C3F1454 	 .word 0x54143f7c
+ 4330 003c 70001000 	 .word 0x00100070
+ 4331 0040 04000000 	 .word 0x00000004
+ 4332 0044 40000200 	 .word 0x00020040
+ 4333 0048 00000000 	 .word Ifx_Crc_tableFast
+ 4334 004c 00000000 	 .word Ifx_Crc_tableFast_end
+ 4335 0050 7C1F3474 	 .word 0x74341f7c
+ 4336 0054 10003000 	 .word 0x00300010
+ 4337 0058 04000000 	 .word 0x00000004
+ 4338 005c 40000200 	 .word 0x00020040
+ 4339 0060 00000000 	 .word Ifx_Crc_table
+ 4340 0064 00000000 	 .word Ifx_Crc_table_end
+ 4341 0068 3C1F3474 	 .word 0x74341f3c
+ 4342 006c 10003000 	 .word 0x00300010
+ 4343 0070 04000000 	 .word 0x00000004
+ 4344 0074 40000200 	 .word 0x00020040
+ 4345 0078 00000000 	 .word Ifx_Crc_bitByBit
+ 4346 007c 00000000 	 .word Ifx_Crc_bitByBit_end
+ 4347 0080 7C0734F4 	 .word 0xf434077c
+ 4348 0084 10003000 	 .word 0x00300010
+ 4349 0088 04000000 	 .word 0x00000004
+ 4350 008c 40000200 	 .word 0x00020040
+ 4351 0090 00000000 	 .word Ifx_Crc_bitByBitFast
+ 4352 0094 00000000 	 .word Ifx_Crc_bitByBitFast_end
+ 4353 0098 FC0734F4 	 .word 0xf43407fc
+ 4354 009c 10003000 	 .word 0x00300010
+ 4355 00a0 04000000 	 .word 0x00000004
+ 4356 00a4 40000200 	 .word 0x00020040
+DEFINED SYMBOLS
+                            *ABS*:00000000 Ifx_Crc.c
+                            *ABS*:00000000 Ifx_Crc.c
+    {standard input}:10     .text.Ifx_Crc_init:00000000 Ifx_Crc_init
+    {standard input}:169    .text.Ifx_Crc_init:00000096 Ifx_Crc_init_end
+    {standard input}:174    .text.Ifx_Crc_reflect:00000000 Ifx_Crc_reflect
+    {standard input}:226    .text.Ifx_Crc_reflect:0000002a Ifx_Crc_reflect_end
+    {standard input}:231    .text.Ifx_Crc_createTable:00000000 Ifx_Crc_createTable
+    {standard input}:448    .text.Ifx_Crc_createTable:000000fa Ifx_Crc_createTable_end
+    {standard input}:453    .text.Ifx_Crc_tableFast:00000000 Ifx_Crc_tableFast
+    {standard input}:778    .text.Ifx_Crc_tableFast:00000174 Ifx_Crc_tableFast_end
+    {standard input}:783    .text.Ifx_Crc_table:00000000 Ifx_Crc_table
+    {standard input}:1256   .text.Ifx_Crc_table:0000024c Ifx_Crc_table_end
+    {standard input}:1261   .text.Ifx_Crc_bitByBit:00000000 Ifx_Crc_bitByBit
+    {standard input}:1436   .text.Ifx_Crc_bitByBit:000000b0 Ifx_Crc_bitByBit_end
+    {standard input}:1441   .text.Ifx_Crc_bitByBitFast:00000000 Ifx_Crc_bitByBitFast
+    {standard input}:1582   .text.Ifx_Crc_bitByBitFast:0000008a Ifx_Crc_bitByBitFast_end
+
+NO UNDEFINED SYMBOLS

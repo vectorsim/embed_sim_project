@@ -1,0 +1,36 @@
+   1              	
+   2              	 .file "IfxPcie_cfg.c"
+   3              	 .file "IfxPcie_cfg.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .global IfxPcie_cfg_pcieIndexMap
+   7              	 .section .rodata.IfxPcie_cfg_pcieIndexMap,"a"
+   8              	 .align 2
+  11              	IfxPcie_cfg_pcieIndexMap:
+  12 0000 00806AF4 	 .word -194347008
+  13 0004 00000000 	 .word 0
+  14 0008 00006AF4 	 .word -194379776
+  15 000c 01000000 	 .word 1
+  16              	 .global IfxPcie_cfg_memoryMap
+  17              	 .section .rodata.IfxPcie_cfg_memoryMap,"a"
+  18              	 .align 2
+  21              	IfxPcie_cfg_memoryMap:
+  22 0000 000000FC 	 .word -67108864
+  23 0004 FFFFFFFF 	 .word -1
+  24 0008 000000EC 	 .word -335544320
+  25 000c FFFFFFEF 	 .word -268435457
+  26              	.section .text,"ax",@progbits
+  27              	.Letext0:
+  28              	 .file 1 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+  29              	 .file 2 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+  30              	 .file 3 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+  31              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/IfxPcie_dsp_regdef.h"
+  32              	 .file 5 "../Libraries/iLLD/TC4xx/CpuGeneric/_Impl/TC4Dx/IfxPcie_cfg_TC4Dx.h"
+  33              	 .file 6 "../Libraries/iLLD/TC4xx/CpuGeneric/_Impl/IfxPcie_cfg.c"
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxPcie_cfg.c
+                            *ABS*:00000000 IfxPcie_cfg.c
+    {standard input}:11     .rodata.IfxPcie_cfg_pcieIndexMap:00000000 IfxPcie_cfg_pcieIndexMap
+    {standard input}:21     .rodata.IfxPcie_cfg_memoryMap:00000000 IfxPcie_cfg_memoryMap
+
+NO UNDEFINED SYMBOLS

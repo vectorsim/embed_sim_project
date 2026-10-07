@@ -1,0 +1,208 @@
+   1              	
+   2              	 .file "Ifx_illdAssert.c"
+   3              	 .file "Ifx_illdAssert.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.Ifx_Assert_doLevel,"ax",@progbits
+   7              	 .align 1
+   8              	 .global Ifx_Assert_doLevel
+  10              	Ifx_Assert_doLevel:
+  11              	.LFB0:
+  12              	 .file 1 "../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c"
+   1:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** /**
+   2:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****  * \file Ifx_illdAssert.c
+   3:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****  * \brief Assert functions.
+   4:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****  *
+   5:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****  *
+   8:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****  *
+   9:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****   *                                 IMPORTANT NOTICE
+  10:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****  *
+  11:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****  *
+  12:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****  * this file except in compliance with IFASLL.
+  15:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****  *
+  16:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****  *
+  26:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****  */
+  27:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** 
+  28:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** #include "Ifx_illdAssert.h"
+  29:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** 
+  30:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** #if IFX_CFG_ASSERT_STDIO == 1
+  31:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** /** Current standard IO used for the IFX_ASSERT and IFX_VALIDATE */
+  32:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** IfxStdIf_DPipe *Assert_io = NULL_PTR;
+  33:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** #endif
+  34:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** 
+  35:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** #if IFX_CFG_ASSERT_VERBOSE_LEVEL_DEFAULT > IFX_VERBOSE_LEVEL_OFF
+  36:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** uint32          Assert_verboseLevel = IFX_CFG_ASSERT_VERBOSE_LEVEL_DEFAULT;
+  37:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** #endif
+  38:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** 
+  39:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** #if IFX_CFG_ASSERT_STDIO == 1
+  40:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** void Ifx_Assert_setStandardIo(IfxStdIf_DPipe *standardIo)
+  41:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** {
+  42:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****     Assert_io = standardIo;
+  43:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** }
+  44:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** 
+  45:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** 
+  46:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** #endif
+  47:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** 
+  48:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** /** \internal
+  49:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****  * Text used to display the king of assertion
+  50:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****  */
+  51:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** const pchar Assert_level[6] = {
+  52:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****     "OFF",
+  53:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****     "FAILURE",
+  54:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****     "ERROR",
+  55:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****     "WARNING",
+  56:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****     "INFO",
+  57:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****     "DEBUG"
+  58:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** };
+  59:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** 
+  60:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** void Ifx_Assert_doLevel(uint8 level, pchar __assertion, pchar __file, unsigned int __line, pchar __
+  61:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** {
+  13              	 .loc 1 61 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  62:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** #if IFX_CFG_ASSERT_USE_BREAKPOINT == 1
+  63:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** 
+  64:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****     if (level <= IFX_VERBOSE_LEVEL_ERROR)
+  65:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****     {
+  66:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****         __debug();
+  67:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****     }
+  68:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** 
+  69:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** #endif
+  70:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** 
+  71:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** #if IFX_CFG_ASSERT_STDIO == 1
+  72:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** 
+  73:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****     if (Assert_io != NULL_PTR)
+  74:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****     {
+  75:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****         IfxStdIf_DPipe_print(Assert_io, "ASSERTION %s '%s' in %s:%u (function '%s()')" ENDL, Assert
+  76:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****             __assertion, __file, __line, __function);
+  77:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****     }
+  78:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** 
+  79:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** #endif
+  80:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** }
+  17              	 .loc 1 80 1
+  18 0002 0090     	 ret 
+  19              	.LFE0:
+  21              	 .global Ifx_Assert_doLevel_end
+  22              	Ifx_Assert_doLevel_end:
+  23              	 .section .text.Ifx_Assert_doValidate,"ax",@progbits
+  24              	 .align 1
+  25              	 .global Ifx_Assert_doValidate
+  27              	Ifx_Assert_doValidate:
+  28              	.LFB1:
+  81:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** 
+  82:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** 
+  83:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** boolean Ifx_Assert_doValidate(boolean expr, uint8 level, pchar __assertion, pchar __file, unsigned 
+  84:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** {
+  29              	 .loc 1 84 1
+  30              	.LVL1:
+  31 0000 40AE     	 mov.aa %a14,%SP
+  32              	.LCFI1:
+  85:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****     if (!((expr) || (level > Assert_verboseLevel)))
+  33              	 .loc 1 85 5
+  86:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****     {
+  87:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** #if IFX_CFG_ASSERT_USE_BREAKPOINT == 1
+  88:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** 
+  89:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****         if (level <= IFX_VERBOSE_LEVEL_ERROR)
+  90:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****         {
+  91:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****             __debug();
+  92:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****         }
+  93:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** 
+  94:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** #endif
+  95:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** 
+  96:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** #if IFX_CFG_ASSERT_STDIO == 1
+  97:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** 
+  98:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****         if (Assert_io != NULL_PTR)
+  99:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****         {
+ 100:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****             IfxStdIf_DPipe_print(Assert_io, "VALIDATION %s '%s' in %s:%u (function '%s()')" ENDL, A
+ 101:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****                 __assertion, __file, __line, __function);
+ 102:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****         }
+ 103:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** 
+ 104:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** #endif
+ 105:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****     }
+ 106:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****     else
+ 107:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****     {}
+  34              	 .loc 1 107 6
+ 108:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** 
+ 109:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c ****     return expr;
+  35              	 .loc 1 109 5
+ 110:../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.c **** }
+  36              	 .loc 1 110 1 is_stmt 0
+  37 0002 8FF40F21 	 and %d2,%d4,255
+  38 0006 0090     	 ret 
+  39              	.LFE1:
+  41              	 .global Ifx_Assert_doValidate_end
+  42              	Ifx_Assert_doValidate_end:
+  43              	 .global Assert_level
+  44              	.section .rodata,"a",@progbits
+  45              	.LC0:
+  46 0000 4F464600 	 .string "OFF"
+  47              	.LC1:
+  48 0004 4641494C 	 .string "FAILURE"
+  48      55524500 
+  49              	.LC2:
+  50 000c 4552524F 	 .string "ERROR"
+  50      5200
+  51              	.LC3:
+  52 0012 5741524E 	 .string "WARNING"
+  52      494E4700 
+  53              	.LC4:
+  54 001a 494E464F 	 .string "INFO"
+  54      00
+  55              	.LC5:
+  56 001f 44454255 	 .string "DEBUG"
+  56      4700
+  57              	 .section .rodata.Assert_level,"a"
+  58              	 .align 2
+  61              	Assert_level:
+  62 0000 00000000 	 .word .LC0
+  63 0004 00000000 	 .word .LC1
+  64 0008 00000000 	 .word .LC2
+  65 000c 00000000 	 .word .LC3
+  66 0010 00000000 	 .word .LC4
+  67 0014 00000000 	 .word .LC5
+  68              	 .global Assert_verboseLevel
+  69              	 .section .data.Assert_verboseLevel,"aw"
+  70              	 .align 2
+  73              	Assert_verboseLevel:
+  74 0000 04000000 	 .word 4
+ 115              	.Letext0:
+ 116              	 .file 2 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 117              	 .file 3 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+ 118              	 .file 4 "../Libraries/Service/CpuGeneric/SysSe/Bsp/Ifx_illdAssert.h"
+ 651 0000 00000000 	 .word Ifx_Assert_doLevel
+ 652 0004 00000000 	 .word Ifx_Assert_doLevel_end
+ 653 0008 00000044 	 .word 0x44000000
+ 654 000c 30007000 	 .word 0x00700030
+ 655 0010 00000000 	 .word 0x00000000
+ 656 0014 C0000000 	 .word 0x000000c0
+ 657 0018 00000000 	 .word Ifx_Assert_doValidate
+ 658 001c 00000000 	 .word Ifx_Assert_doValidate_end
+ 659 0020 14000044 	 .word 0x44000014
+ 660 0024 70007000 	 .word 0x00700070
+ 661 0028 04000000 	 .word 0x00000004
+ 662 002c C0000000 	 .word 0x000000c0
+DEFINED SYMBOLS
+                            *ABS*:00000000 Ifx_illdAssert.c
+                            *ABS*:00000000 Ifx_illdAssert.c
+    {standard input}:10     .text.Ifx_Assert_doLevel:00000000 Ifx_Assert_doLevel
+    {standard input}:22     .text.Ifx_Assert_doLevel:00000004 Ifx_Assert_doLevel_end
+    {standard input}:27     .text.Ifx_Assert_doValidate:00000000 Ifx_Assert_doValidate
+    {standard input}:42     .text.Ifx_Assert_doValidate:00000008 Ifx_Assert_doValidate_end
+    {standard input}:61     .rodata.Assert_level:00000000 Assert_level
+    {standard input}:73     .data.Assert_verboseLevel:00000000 Assert_verboseLevel
+
+NO UNDEFINED SYMBOLS

@@ -1,0 +1,2014 @@
+   1              	
+   2              	 .file "cdd_egtm_app.c"
+   3              	 .file "cdd_egtm_app.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	
+   7              	 .altmacro
+   8              	.macro .int_entry.2 intEntryLabel,name
+  19              	.macro .int_entry.1 prio,cpu,u,name
+  22              	.macro .intr.entry name,cpu,prio
+   1:cdd_egtm_app.c **** 
+  25              	.intr.entry ControlLoop_ISR,0,(20U)
+  26              	.purgem .int_entry.2
+  27              	.purgem .int_entry.1
+  28              	.purgem .intr.entry
+  29              	
+  30              	 .altmacro
+  31              	.macro .int_entry.2 intEntryLabel,name
+  42              	.macro .int_entry.1 prio,cpu,u,name
+  45              	.macro .intr.entry name,cpu,prio
+  48              	.intr.entry TIM0_CH4_ISR,0,(25U)
+  49              	.purgem .int_entry.2
+  50              	.purgem .int_entry.1
+  51              	.purgem .intr.entry
+  52              	
+  53              	
+  54              	 .section .text.CddEgtm_SetInverterFrequency,"ax",@progbits
+  55              	 .align 1
+  57              	CddEgtm_SetInverterFrequency:
+  58              	.LFB592:
+  59              	 .file 1 "../complex_device_driver/cdd_egtm_app.c"
+   1:../complex_device_driver/cdd_egtm_app.c **** /**************************************************************************************************
+   2:../complex_device_driver/cdd_egtm_app.c ****  * \file      cdd_egtm_app.c
+   3:../complex_device_driver/cdd_egtm_app.c ****  * \brief     Public interface for the CddSys low-level system utility module.
+   4:../complex_device_driver/cdd_egtm_app.c ****  *
+   5:../complex_device_driver/cdd_egtm_app.c ****  * \details   Declares the CddSys function API used across the CDD layer for
+   6:../complex_device_driver/cdd_egtm_app.c ****  *            TriCore-specific primitives:
+   7:../complex_device_driver/cdd_egtm_app.c ****  *              - Atomic bit-field load-modify-store (LDMST instruction).
+   8:../complex_device_driver/cdd_egtm_app.c ****  *              - Binary semaphore via compare-and-swap (CMPSWAP.W instruction).
+   9:../complex_device_driver/cdd_egtm_app.c ****  *              - Single and multi-instruction NOP delays.
+  10:../complex_device_driver/cdd_egtm_app.c ****  *              - Interrupt-enable intrinsic.
+  11:../complex_device_driver/cdd_egtm_app.c ****  *
+  12:../complex_device_driver/cdd_egtm_app.c ****  *
+  13:../complex_device_driver/cdd_egtm_app.c ****  * \note      EmbedSim naming convention:
+  14:../complex_device_driver/cdd_egtm_app.c ****  *              - Functions      : Pascal_Snake_Case
+  15:../complex_device_driver/cdd_egtm_app.c ****  *              - Parameters     : PascalCase  (single-letter → Uppercase)
+  16:../complex_device_driver/cdd_egtm_app.c ****  *              - Output pointers: PascalCasePtr
+  17:../complex_device_driver/cdd_egtm_app.c ****  *              - Local variables: lowerPascalCase
+  18:../complex_device_driver/cdd_egtm_app.c ****  *              - Struct members : PascalCase
+  19:../complex_device_driver/cdd_egtm_app.c ****  *              - Macros         : UPPER_SNAKE_CASE
+  20:../complex_device_driver/cdd_egtm_app.c ****  *              - Typedefs       : Pascal_Snake_Case_T
+  21:../complex_device_driver/cdd_egtm_app.c ****  *
+  22:../complex_device_driver/cdd_egtm_app.c ****  * \version   1.0.0
+  23:../complex_device_driver/cdd_egtm_app.c ****  * \date      2026-10-04
+  24:../complex_device_driver/cdd_egtm_app.c ****  * \author    Paul Abraham
+  25:../complex_device_driver/cdd_egtm_app.c ****  *            EmbedSim / EV Light Vehicle Foundation
+  26:../complex_device_driver/cdd_egtm_app.c ****  *
+  27:../complex_device_driver/cdd_egtm_app.c ****  * \copyright Copyright (C) EmbedSim Project / Paul Abraham 2024
+  28:../complex_device_driver/cdd_egtm_app.c ****  *            https://github.com/vectorsim/embed_sim_project
+  29:../complex_device_driver/cdd_egtm_app.c ****  *            SPDX-License-Identifier: MIT
+  30:../complex_device_driver/cdd_egtm_app.c ****  **************************************************************************************************
+  31:../complex_device_driver/cdd_egtm_app.c **** 
+  32:../complex_device_driver/cdd_egtm_app.c **** 
+  33:../complex_device_driver/cdd_egtm_app.c **** /**************************************************************************************************
+  34:../complex_device_driver/cdd_egtm_app.c **** /*-----------------------------------------------------Includes------------------------------------
+  35:../complex_device_driver/cdd_egtm_app.c **** /**************************************************************************************************
+  36:../complex_device_driver/cdd_egtm_app.c **** #include "cdd_egtm_app.h"
+  37:../complex_device_driver/cdd_egtm_app.c **** #include "cdd_sys_util.h"
+  38:../complex_device_driver/cdd_egtm_app.c **** #include "cdd_app.h"
+  39:../complex_device_driver/cdd_egtm_app.c **** #include "IfxEGtm_reg.h"
+  40:../complex_device_driver/cdd_egtm_app.c **** #include "IfxEGtm_regdef.h"
+  41:../complex_device_driver/cdd_egtm_app.c **** #include "cdd_gpio_app.h"
+  42:../complex_device_driver/cdd_egtm_app.c **** 
+  43:../complex_device_driver/cdd_egtm_app.c **** #include "Bsp.h"
+  44:../complex_device_driver/cdd_egtm_app.c **** #include "IfxEGtm_reg.h"
+  45:../complex_device_driver/cdd_egtm_app.c **** #include "IfxEGtm_regdef.h"
+  46:../complex_device_driver/cdd_egtm_app.c **** #include "IfxEGtm_PinMap.h"
+  47:../complex_device_driver/cdd_egtm_app.c **** #include "IfxAdc_reg.h"
+  48:../complex_device_driver/cdd_egtm_app.c **** #include <math.h>
+  49:../complex_device_driver/cdd_egtm_app.c **** #include "IfxScuEru.h"
+  50:../complex_device_driver/cdd_egtm_app.c **** 
+  51:../complex_device_driver/cdd_egtm_app.c **** /**************************************************************************************************
+  52:../complex_device_driver/cdd_egtm_app.c **** /*------------------------------------------------------Macros-------------------------------------
+  53:../complex_device_driver/cdd_egtm_app.c **** /**************************************************************************************************
+  54:../complex_device_driver/cdd_egtm_app.c **** 
+  55:../complex_device_driver/cdd_egtm_app.c **** /**
+  56:../complex_device_driver/cdd_egtm_app.c ****  * \brief   Master ATOM channel output pin (ATOM CH0, P02.0).
+  57:../complex_device_driver/cdd_egtm_app.c ****  *          Not connected to an inverter phase; used only to generate the
+  58:../complex_device_driver/cdd_egtm_app.c ****  *          control-loop timing reference (CCU0 / CCU1 events).
+  59:../complex_device_driver/cdd_egtm_app.c ****  */
+  60:../complex_device_driver/cdd_egtm_app.c **** #define MASTER_CHANNEL            &IfxEgtm_ATOM0_0_TOUT0_P02_0_OUT
+  61:../complex_device_driver/cdd_egtm_app.c **** 
+  62:../complex_device_driver/cdd_egtm_app.c **** /**
+  63:../complex_device_driver/cdd_egtm_app.c ****  * \brief   Phase U high-side gate drive output (ATOM CH5, P02.5).
+  64:../complex_device_driver/cdd_egtm_app.c ****  */
+  65:../complex_device_driver/cdd_egtm_app.c **** #define U_H                       &IfxEgtm_ATOM0_5_TOUT5_P02_5_OUT
+  66:../complex_device_driver/cdd_egtm_app.c **** 
+  67:../complex_device_driver/cdd_egtm_app.c **** /**
+  68:../complex_device_driver/cdd_egtm_app.c ****  * \brief   Phase U low-side gate drive output (ATOM CH5N, P00.2).
+  69:../complex_device_driver/cdd_egtm_app.c ****  */
+  70:../complex_device_driver/cdd_egtm_app.c **** #define U_L                       &IfxEgtm_ATOM0_5N_TOUT11_P00_2_OUT
+  71:../complex_device_driver/cdd_egtm_app.c **** 
+  72:../complex_device_driver/cdd_egtm_app.c **** /**
+  73:../complex_device_driver/cdd_egtm_app.c ****  * \brief   Phase V high-side gate drive output (ATOM CH6, P02.6).
+  74:../complex_device_driver/cdd_egtm_app.c ****  */
+  75:../complex_device_driver/cdd_egtm_app.c **** #define V_H                       &IfxEgtm_ATOM0_6_TOUT6_P02_6_OUT
+  76:../complex_device_driver/cdd_egtm_app.c **** 
+  77:../complex_device_driver/cdd_egtm_app.c **** /**
+  78:../complex_device_driver/cdd_egtm_app.c ****  * \brief   Phase V low-side gate drive output (ATOM CH6N, P00.4).
+  79:../complex_device_driver/cdd_egtm_app.c ****  */
+  80:../complex_device_driver/cdd_egtm_app.c **** #define V_L                       &IfxEgtm_ATOM0_6N_TOUT13_P00_4_OUT
+  81:../complex_device_driver/cdd_egtm_app.c **** 
+  82:../complex_device_driver/cdd_egtm_app.c **** /**
+  83:../complex_device_driver/cdd_egtm_app.c ****  * \brief   Phase W high-side gate drive output (ATOM CH7, P02.7).
+  84:../complex_device_driver/cdd_egtm_app.c ****  */
+  85:../complex_device_driver/cdd_egtm_app.c **** #define W_H                       &IfxEgtm_ATOM0_7_TOUT7_P02_7_OUT
+  86:../complex_device_driver/cdd_egtm_app.c **** 
+  87:../complex_device_driver/cdd_egtm_app.c **** /**
+  88:../complex_device_driver/cdd_egtm_app.c ****  * \brief   Phase W low-side gate drive output (ATOM CH7N, P00.6).
+  89:../complex_device_driver/cdd_egtm_app.c ****  */
+  90:../complex_device_driver/cdd_egtm_app.c **** #define W_L                       &IfxEgtm_ATOM0_7N_TOUT15_P00_6_OUT
+  91:../complex_device_driver/cdd_egtm_app.c **** 
+  92:../complex_device_driver/cdd_egtm_app.c **** /**
+  93:../complex_device_driver/cdd_egtm_app.c ****  * \brief   Compute the shadow register SR0 compare value for a phase.
+  94:../complex_device_driver/cdd_egtm_app.c ****  *
+  95:../complex_device_driver/cdd_egtm_app.c ****  * \details Applies the signed-duty-cycle mapping used by the inverter:
+  96:../complex_device_driver/cdd_egtm_app.c ****  *            SR0 = ((1 + DutyCycle) * PeriodTicks) / 2
+  97:../complex_device_driver/cdd_egtm_app.c ****  *          The result is truncated to uint32.
+  98:../complex_device_driver/cdd_egtm_app.c ****  *
+  99:../complex_device_driver/cdd_egtm_app.c ****  * \param[in] PeriodTicks   PWM period in CMU_CLK0 ticks.
+ 100:../complex_device_driver/cdd_egtm_app.c ****  * \param[in] DutyCycle     Signed duty cycle in [-1.0, +1.0].
+ 101:../complex_device_driver/cdd_egtm_app.c ****  *
+ 102:../complex_device_driver/cdd_egtm_app.c ****  * \return  Compare value for the phase shadow register SR0.
+ 103:../complex_device_driver/cdd_egtm_app.c ****  *
+ 104:../complex_device_driver/cdd_egtm_app.c ****  * \note    The arguments are evaluated more than once.
+ 105:../complex_device_driver/cdd_egtm_app.c ****  */
+ 106:../complex_device_driver/cdd_egtm_app.c **** #define CAL_PHASE_PERIOD(PeriodTicks, DutyCycle)      (uint32)(((1.0F + DutyCycle) * PeriodTicks)/2
+ 107:../complex_device_driver/cdd_egtm_app.c **** 
+ 108:../complex_device_driver/cdd_egtm_app.c **** /**
+ 109:../complex_device_driver/cdd_egtm_app.c ****  * \brief   Compute the shadow register SR1 compare value for a phase.
+ 110:../complex_device_driver/cdd_egtm_app.c ****  *
+ 111:../complex_device_driver/cdd_egtm_app.c ****  * \details Applies the signed-duty-cycle mapping used by the inverter:
+ 112:../complex_device_driver/cdd_egtm_app.c ****  *            SR1 = ((1 - DutyCycle) * PeriodTicks) / 2
+ 113:../complex_device_driver/cdd_egtm_app.c ****  *          The result is truncated to uint32.
+ 114:../complex_device_driver/cdd_egtm_app.c ****  *
+ 115:../complex_device_driver/cdd_egtm_app.c ****  * \param[in] PeriodTicks   PWM period in CMU_CLK0 ticks.
+ 116:../complex_device_driver/cdd_egtm_app.c ****  * \param[in] DutyCycle     Signed duty cycle in [-1.0, +1.0].
+ 117:../complex_device_driver/cdd_egtm_app.c ****  *
+ 118:../complex_device_driver/cdd_egtm_app.c ****  * \return  Compare value for the phase shadow register SR1.
+ 119:../complex_device_driver/cdd_egtm_app.c ****  *
+ 120:../complex_device_driver/cdd_egtm_app.c ****  * \note    The arguments are evaluated more than once.
+ 121:../complex_device_driver/cdd_egtm_app.c ****  */
+ 122:../complex_device_driver/cdd_egtm_app.c **** #define CAL_PHASE_DUTY_CYCLE(PeriodTicks, DutyCycle)  (uint32)(((1.0F - DutyCycle) * PeriodTicks)/2
+ 123:../complex_device_driver/cdd_egtm_app.c **** 
+ 124:../complex_device_driver/cdd_egtm_app.c **** 
+ 125:../complex_device_driver/cdd_egtm_app.c **** /**************************************************************************************************
+ 126:../complex_device_driver/cdd_egtm_app.c **** /*-------------------------------------------------Global variables--------------------------------
+ 127:../complex_device_driver/cdd_egtm_app.c **** /**************************************************************************************************
+ 128:../complex_device_driver/cdd_egtm_app.c **** 
+ 129:../complex_device_driver/cdd_egtm_app.c **** /**************************************************************************************************
+ 130:../complex_device_driver/cdd_egtm_app.c **** /*--------------------------------------------Private Variables/Constants--------------------------
+ 131:../complex_device_driver/cdd_egtm_app.c **** /**************************************************************************************************
+ 132:../complex_device_driver/cdd_egtm_app.c **** 
+ 133:../complex_device_driver/cdd_egtm_app.c **** 
+ 134:../complex_device_driver/cdd_egtm_app.c **** 
+ 135:../complex_device_driver/cdd_egtm_app.c **** /**************************************************************************************************
+ 136:../complex_device_driver/cdd_egtm_app.c **** /*------------------------------------------------Function Prototypes------------------------------
+ 137:../complex_device_driver/cdd_egtm_app.c **** /**************************************************************************************************
+ 138:../complex_device_driver/cdd_egtm_app.c **** static void CddEgtm_InitAtomCls0(void);
+ 139:../complex_device_driver/cdd_egtm_app.c **** static void CddEgtm_InitTim0Ch4(void);
+ 140:../complex_device_driver/cdd_egtm_app.c **** static void CddEgtm_SetInverterFrequency(void);
+ 141:../complex_device_driver/cdd_egtm_app.c **** 
+ 142:../complex_device_driver/cdd_egtm_app.c **** 
+ 143:../complex_device_driver/cdd_egtm_app.c **** /**************************************************************************************************
+ 144:../complex_device_driver/cdd_egtm_app.c **** /*---------------------------------------------Function Implementations----------------------------
+ 145:../complex_device_driver/cdd_egtm_app.c **** /**************************************************************************************************
+ 146:../complex_device_driver/cdd_egtm_app.c **** 
+ 147:../complex_device_driver/cdd_egtm_app.c **** /* Macro to define the Interrupt Service Routine of Control Loop (ATOM_CH0) */
+ 148:../complex_device_driver/cdd_egtm_app.c **** IFX_INTERRUPT(ControlLoop_ISR, 0, CTRL_ISR_PRIORITY);
+ 149:../complex_device_driver/cdd_egtm_app.c **** IFX_INTERRUPT(TIM0_CH4_ISR, 0, TIM0CH4_ISR_PRIORITY);
+ 150:../complex_device_driver/cdd_egtm_app.c **** 
+ 151:../complex_device_driver/cdd_egtm_app.c **** /**
+ 152:../complex_device_driver/cdd_egtm_app.c ****  * \brief   Fast shut-off ISR, triggered by TIM0 channel 4.
+ 153:../complex_device_driver/cdd_egtm_app.c ****  *
+ 154:../complex_device_driver/cdd_egtm_app.c ****  * \details Latches a shut-off request from the TIM input (P00.1, TIM_IN4).
+ 155:../complex_device_driver/cdd_egtm_app.c ****  *          Sets Inv_G.ShutOffState to request that the control loop
+ 156:../complex_device_driver/cdd_egtm_app.c ****  *          de-assert the CDTM shut-off via EGTM_CLS0_CDTM_DTM5_CTRL.
+ 157:../complex_device_driver/cdd_egtm_app.c ****  *          SHUT_OFF_RST on the next CCU0 event. Actual recovery is deferred
+ 158:../complex_device_driver/cdd_egtm_app.c ****  *          to ControlLoop_ISR so that register updates stay synchronous with
+ 159:../complex_device_driver/cdd_egtm_app.c ****  *          the PWM period.
+ 160:../complex_device_driver/cdd_egtm_app.c ****  *
+ 161:../complex_device_driver/cdd_egtm_app.c ****  * \return  void
+ 162:../complex_device_driver/cdd_egtm_app.c ****  *
+ 163:../complex_device_driver/cdd_egtm_app.c ****  * \note    Must remain short — it runs at the highest CDD priority
+ 164:../complex_device_driver/cdd_egtm_app.c ****  *          (TIM0CH4_ISR_PRIORITY) and only sets a flag.
+ 165:../complex_device_driver/cdd_egtm_app.c ****  *
+ 166:../complex_device_driver/cdd_egtm_app.c ****  * \see     ControlLoop_ISR
+ 167:../complex_device_driver/cdd_egtm_app.c ****  */
+ 168:../complex_device_driver/cdd_egtm_app.c **** void TIM0_CH4_ISR(void)
+ 169:../complex_device_driver/cdd_egtm_app.c **** {
+ 170:../complex_device_driver/cdd_egtm_app.c ****     Inv_G.ShutOffState = 0x1U;
+ 171:../complex_device_driver/cdd_egtm_app.c **** }
+ 172:../complex_device_driver/cdd_egtm_app.c **** 
+ 173:../complex_device_driver/cdd_egtm_app.c **** 
+ 174:../complex_device_driver/cdd_egtm_app.c **** /**
+ 175:../complex_device_driver/cdd_egtm_app.c ****  * \brief   Control-loop ISR for the inverter (ATOM channel 0, CCU0 and CCU1).
+ 176:../complex_device_driver/cdd_egtm_app.c ****  *
+ 177:../complex_device_driver/cdd_egtm_app.c ****  * \details Executes once per PWM period on the master channel's CCU0/CCU1
+ 178:../complex_device_driver/cdd_egtm_app.c ****  *          events. Responsibilities:
+ 179:../complex_device_driver/cdd_egtm_app.c ****  *            -# Increment the free-running cycle counter Inv_G.Counter.
+ 180:../complex_device_driver/cdd_egtm_app.c ****  *            -# Recompute Inv_G.PeriodTicks from the selected frequency mode.
+ 181:../complex_device_driver/cdd_egtm_app.c ****  *            -# On CCU0: if a shut-off is latched (ShutOffState == 1) and the
+ 182:../complex_device_driver/cdd_egtm_app.c ****  *               application has requested recovery (ShutOffRstRequest == 1),
+ 183:../complex_device_driver/cdd_egtm_app.c ****  *               release the dead-time module shut-off and clear the flags.
+ 184:../complex_device_driver/cdd_egtm_app.c ****  *            -# On CCU1: recompute the three phase compare values (SR0/SR1)
+ 185:../complex_device_driver/cdd_egtm_app.c ****  *               from Inv_G.PeriodTicks and the three duty cycles.
+ 186:../complex_device_driver/cdd_egtm_app.c ****  *            -# On CCU1, if FrequencyChangeRequest is set, reprogram the
+ 187:../complex_device_driver/cdd_egtm_app.c ****  *               master period, issue a host trigger to latch the shadow
+ 188:../complex_device_driver/cdd_egtm_app.c ****  *               registers, and clear the request.
+ 189:../complex_device_driver/cdd_egtm_app.c ****  *
+ 190:../complex_device_driver/cdd_egtm_app.c ****  * \return  void
+ 191:../complex_device_driver/cdd_egtm_app.c ****  *
+ 192:../complex_device_driver/cdd_egtm_app.c ****  * \note    Both IRQ notification flags are explicitly cleared so that the
+ 193:../complex_device_driver/cdd_egtm_app.c ****  *          service request is de-asserted before returning.
+ 194:../complex_device_driver/cdd_egtm_app.c ****  *
+ 195:../complex_device_driver/cdd_egtm_app.c ****  * \note    Runs at CTRL_ISR_PRIORITY on CTRL_ISR_TOS.
+ 196:../complex_device_driver/cdd_egtm_app.c ****  *
+ 197:../complex_device_driver/cdd_egtm_app.c ****  * \see     CddEgtm_SetInverterFrequency
+ 198:../complex_device_driver/cdd_egtm_app.c ****  * \see     TIM0_CH4_ISR
+ 199:../complex_device_driver/cdd_egtm_app.c ****  */
+ 200:../complex_device_driver/cdd_egtm_app.c **** void ControlLoop_ISR(void)
+ 201:../complex_device_driver/cdd_egtm_app.c **** {
+ 202:../complex_device_driver/cdd_egtm_app.c ****     Inv_G.Counter++;
+ 203:../complex_device_driver/cdd_egtm_app.c ****     CddEgtm_SetInverterFrequency();
+ 204:../complex_device_driver/cdd_egtm_app.c **** 
+ 205:../complex_device_driver/cdd_egtm_app.c ****     if(EGTM_CLS0_ATOM_CH0_IRQ_NOTIFY.B.CCU0TC != 0x0u)
+ 206:../complex_device_driver/cdd_egtm_app.c ****     {
+ 207:../complex_device_driver/cdd_egtm_app.c ****         if((Inv_G.ShutOffState ==  0x1U)  && (Inv_G.ShutOffRstRequest == 0x1U))
+ 208:../complex_device_driver/cdd_egtm_app.c ****         {
+ 209:../complex_device_driver/cdd_egtm_app.c ****             EGTM_CLS0_CDTM_DTM5_CTRL.B.SHUT_OFF_RST = 0x1u;
+ 210:../complex_device_driver/cdd_egtm_app.c ****             Inv_G.ShutOffRstRequest = 0x0U;
+ 211:../complex_device_driver/cdd_egtm_app.c ****             Inv_G.ShutOffState  = 0x0U;
+ 212:../complex_device_driver/cdd_egtm_app.c ****         }
+ 213:../complex_device_driver/cdd_egtm_app.c ****         EGTM_CLS0_ATOM_CH0_IRQ_NOTIFY.B.CCU0TC = 0x1u;   /* clear the notification flag */
+ 214:../complex_device_driver/cdd_egtm_app.c ****     }
+ 215:../complex_device_driver/cdd_egtm_app.c **** 
+ 216:../complex_device_driver/cdd_egtm_app.c ****     if(EGTM_CLS0_ATOM_CH0_IRQ_NOTIFY.B.CCU1TC != 0x0u)
+ 217:../complex_device_driver/cdd_egtm_app.c ****     {
+ 218:../complex_device_driver/cdd_egtm_app.c **** 
+ 219:../complex_device_driver/cdd_egtm_app.c ****         EGTM_CLS0_ATOM_CH5_SR0.B.SR0 = CAL_PHASE_PERIOD(Inv_G.PeriodTicks, Inv_G.DutyCycleU);
+ 220:../complex_device_driver/cdd_egtm_app.c ****         EGTM_CLS0_ATOM_CH5_SR1.B.SR1 = CAL_PHASE_DUTY_CYCLE(Inv_G.PeriodTicks, Inv_G.DutyCycleU);
+ 221:../complex_device_driver/cdd_egtm_app.c ****         EGTM_CLS0_ATOM_CH6_SR0.B.SR0 = CAL_PHASE_PERIOD(Inv_G.PeriodTicks, Inv_G.DutyCycleV);
+ 222:../complex_device_driver/cdd_egtm_app.c ****         EGTM_CLS0_ATOM_CH6_SR1.B.SR1 = CAL_PHASE_DUTY_CYCLE(Inv_G.PeriodTicks, Inv_G.DutyCycleV);
+ 223:../complex_device_driver/cdd_egtm_app.c ****         EGTM_CLS0_ATOM_CH7_SR0.B.SR0 = CAL_PHASE_PERIOD(Inv_G.PeriodTicks, Inv_G.DutyCycleW);
+ 224:../complex_device_driver/cdd_egtm_app.c ****         EGTM_CLS0_ATOM_CH7_SR1.B.SR1 = CAL_PHASE_DUTY_CYCLE(Inv_G.PeriodTicks, Inv_G.DutyCycleW);
+ 225:../complex_device_driver/cdd_egtm_app.c **** 
+ 226:../complex_device_driver/cdd_egtm_app.c ****         if(Inv_G.FrequencyChangeRequest==0x1U)
+ 227:../complex_device_driver/cdd_egtm_app.c ****         {
+ 228:../complex_device_driver/cdd_egtm_app.c ****             EGTM_CLS0_ATOM_CH0_SR0.B.SR0 = Inv_G.PeriodTicks;   /* note: Master is not connected to
+ 229:../complex_device_driver/cdd_egtm_app.c ****             EGTM_CLS0_ATOM_CH0_SR1.B.SR1 = Inv_G.PeriodTicks/2u;
+ 230:../complex_device_driver/cdd_egtm_app.c ****             EGTM_CLS0_ATOM_AGC_GLB_CTRL.B.HOST_TRIG = 0x1u;
+ 231:../complex_device_driver/cdd_egtm_app.c ****             Inv_G.FrequencyChangeRequest = 0x0U;
+ 232:../complex_device_driver/cdd_egtm_app.c ****         }
+ 233:../complex_device_driver/cdd_egtm_app.c **** 
+ 234:../complex_device_driver/cdd_egtm_app.c ****         EGTM_CLS0_ATOM_CH0_IRQ_NOTIFY.B.CCU1TC = 0x1u;   /* clear the notification flag */
+ 235:../complex_device_driver/cdd_egtm_app.c ****     }
+ 236:../complex_device_driver/cdd_egtm_app.c **** 
+ 237:../complex_device_driver/cdd_egtm_app.c **** }
+ 238:../complex_device_driver/cdd_egtm_app.c **** 
+ 239:../complex_device_driver/cdd_egtm_app.c **** 
+ 240:../complex_device_driver/cdd_egtm_app.c **** /**
+ 241:../complex_device_driver/cdd_egtm_app.c ****  * \brief   Initialises the eGTM module for three-phase inverter control.
+ 242:../complex_device_driver/cdd_egtm_app.c ****  *
+ 243:../complex_device_driver/cdd_egtm_app.c ****  * \details Performs the full eGTM bring-up for the inverter:
+ 244:../complex_device_driver/cdd_egtm_app.c ****  *            -# Enables the eGTM clock and CMU0 global clock, and programs the
+ 245:../complex_device_driver/cdd_egtm_app.c ****  *               CMU to the CMU0 target frequency derived from the cluster
+ 246:../complex_device_driver/cdd_egtm_app.c ****  *               clock.
+ 247:../complex_device_driver/cdd_egtm_app.c ****  *            -# Initialises the Inv_G global with default dead time, duty
+ 248:../complex_device_driver/cdd_egtm_app.c ****  *               cycles, shut-off state, frequency mode, and CMU0 frequency.
+ 249:../complex_device_driver/cdd_egtm_app.c ****  *            -# Computes Inv_G.PeriodTicks for the selected frequency mode.
+ 250:../complex_device_driver/cdd_egtm_app.c ****  *            -# Configures the TIM0 channel 4 fast shut-off path.
+ 251:../complex_device_driver/cdd_egtm_app.c ****  *            -# Configures the ATOM CLS0 master channel and the three
+ 252:../complex_device_driver/cdd_egtm_app.c ****  *               complementary PWM phases with dead time.
+ 253:../complex_device_driver/cdd_egtm_app.c ****  *
+ 254:../complex_device_driver/cdd_egtm_app.c ****  * \return  void
+ 255:../complex_device_driver/cdd_egtm_app.c ****  *
+ 256:../complex_device_driver/cdd_egtm_app.c ****  * \post    eGTM is configured but outputs remain inactive until the host
+ 257:../complex_device_driver/cdd_egtm_app.c ****  *          trigger is issued by CddEgtm_Start().
+ 258:../complex_device_driver/cdd_egtm_app.c ****  *
+ 259:../complex_device_driver/cdd_egtm_app.c ****  * \see     CddEgtm_InitTim0Ch4
+ 260:../complex_device_driver/cdd_egtm_app.c ****  * \see     CddEgtm_InitAtomCls0
+ 261:../complex_device_driver/cdd_egtm_app.c ****  * \see     CddEgtm_Start
+ 262:../complex_device_driver/cdd_egtm_app.c ****  */
+ 263:../complex_device_driver/cdd_egtm_app.c **** void CddEgtm_InitModule(void)
+ 264:../complex_device_driver/cdd_egtm_app.c **** {
+ 265:../complex_device_driver/cdd_egtm_app.c ****     real32_T frequency;
+ 266:../complex_device_driver/cdd_egtm_app.c **** 
+ 267:../complex_device_driver/cdd_egtm_app.c ****     frequency = 0.0F;
+ 268:../complex_device_driver/cdd_egtm_app.c **** 
+ 269:../complex_device_driver/cdd_egtm_app.c **** 
+ 270:../complex_device_driver/cdd_egtm_app.c ****     /* Enable EGTM  & Set CMU0 Clk Frequency */
+ 271:../complex_device_driver/cdd_egtm_app.c ****     CddSys_EnableEgtmClock();
+ 272:../complex_device_driver/cdd_egtm_app.c ****     frequency = CddSys_GetEgtmCmuFrequency();
+ 273:../complex_device_driver/cdd_egtm_app.c ****     CddSys_SetEgtmCmuFrequency(frequency);
+ 274:../complex_device_driver/cdd_egtm_app.c ****     CddSys_SetEgtmCmu0Frequency(frequency);
+ 275:../complex_device_driver/cdd_egtm_app.c ****     CddSys_EnableEgtmCmu0Clock();
+ 276:../complex_device_driver/cdd_egtm_app.c **** 
+ 277:../complex_device_driver/cdd_egtm_app.c ****     Inv_G.DeadTimeTicks    = 100;
+ 278:../complex_device_driver/cdd_egtm_app.c ****     Inv_G.DutyCycleU       = 0.8F;
+ 279:../complex_device_driver/cdd_egtm_app.c ****     Inv_G.DutyCycleV       = 0.6F;
+ 280:../complex_device_driver/cdd_egtm_app.c ****     Inv_G.DutyCycleW       = 0.7F;
+ 281:../complex_device_driver/cdd_egtm_app.c ****     Inv_G.ShutOffState     = 0x0U;
+ 282:../complex_device_driver/cdd_egtm_app.c ****     Inv_G.ShutOffRstRequest = 0x0U;
+ 283:../complex_device_driver/cdd_egtm_app.c ****     Inv_G.FrequencyChangeRequest = 0x0U;
+ 284:../complex_device_driver/cdd_egtm_app.c ****     Inv_G.FrequencyMode     = 0x3U;
+ 285:../complex_device_driver/cdd_egtm_app.c ****     Inv_G.CmuClk0Frequency  = CddSys_GetEgtmCmu0Frequency();
+ 286:../complex_device_driver/cdd_egtm_app.c ****     CddEgtm_SetInverterFrequency();
+ 287:../complex_device_driver/cdd_egtm_app.c **** 
+ 288:../complex_device_driver/cdd_egtm_app.c ****     /* Init ShutOff */
+ 289:../complex_device_driver/cdd_egtm_app.c ****     CddEgtm_InitTim0Ch4();
+ 290:../complex_device_driver/cdd_egtm_app.c ****     /* Init Atom for PWM */
+ 291:../complex_device_driver/cdd_egtm_app.c ****     CddEgtm_InitAtomCls0();
+ 292:../complex_device_driver/cdd_egtm_app.c **** 
+ 293:../complex_device_driver/cdd_egtm_app.c **** }
+ 294:../complex_device_driver/cdd_egtm_app.c **** 
+ 295:../complex_device_driver/cdd_egtm_app.c **** 
+ 296:../complex_device_driver/cdd_egtm_app.c **** /**
+ 297:../complex_device_driver/cdd_egtm_app.c ****  * \brief   Initialises eGTM TIM0 channel 4 as the fast shut-off input.
+ 298:../complex_device_driver/cdd_egtm_app.c ****  *
+ 299:../complex_device_driver/cdd_egtm_app.c ****  * \details Configures TIM channel 4 in TIEM mode with no adjacent-channel
+ 300:../complex_device_driver/cdd_egtm_app.c ****  *          pairing and no LUT, routing pin P00.1 (TIM_IN4) as the input.
+ 301:../complex_device_driver/cdd_egtm_app.c ****  *          NEWVAL events are enabled and routed to CPU0 at
+ 302:../complex_device_driver/cdd_egtm_app.c ****  *          TIM0CH4_ISR_PRIORITY with a pulse IRQ mode. The channel is
+ 303:../complex_device_driver/cdd_egtm_app.c ****  *          enabled at the end of the function.
+ 304:../complex_device_driver/cdd_egtm_app.c ****  *
+ 305:../complex_device_driver/cdd_egtm_app.c ****  *          Steps:
+ 306:../complex_device_driver/cdd_egtm_app.c ****  *            -# Read-modify-write the shared and per-channel registers.
+ 307:../complex_device_driver/cdd_egtm_app.c ****  *            -# Route P00.1 to TIM_IN4 via the pin map.
+ 308:../complex_device_driver/cdd_egtm_app.c ****  *            -# Set TIEM mode, no channel pairing, GPR/DSL/ISL selection.
+ 309:../complex_device_driver/cdd_egtm_app.c ****  *            -# Disable the LUT.
+ 310:../complex_device_driver/cdd_egtm_app.c ****  *            -# Enable NEWVAL IRQ with pulse mode.
+ 311:../complex_device_driver/cdd_egtm_app.c ****  *            -# Configure and enable the service request node.
+ 312:../complex_device_driver/cdd_egtm_app.c ****  *            -# Write back and enable the channel.
+ 313:../complex_device_driver/cdd_egtm_app.c ****  *
+ 314:../complex_device_driver/cdd_egtm_app.c ****  * \return  void
+ 315:../complex_device_driver/cdd_egtm_app.c ****  *
+ 316:../complex_device_driver/cdd_egtm_app.c ****  * \note    The TIM_IN_SRC register is shared across all eight TIM channels,
+ 317:../complex_device_driver/cdd_egtm_app.c ****  *          so the read-modify-write of MODE4/VAL4 preserves the settings of
+ 318:../complex_device_driver/cdd_egtm_app.c ****  *          the other channels.
+ 319:../complex_device_driver/cdd_egtm_app.c ****  *
+ 320:../complex_device_driver/cdd_egtm_app.c ****  * \see     TIM0_CH4_ISR
+ 321:../complex_device_driver/cdd_egtm_app.c ****  */
+ 322:../complex_device_driver/cdd_egtm_app.c **** /* This function initializes GTM TIM0_CH4
+ 323:../complex_device_driver/cdd_egtm_app.c ****  * - P00.1 (TIM_IN4) is used as the channel input
+ 324:../complex_device_driver/cdd_egtm_app.c ****  * - no LUT, no channel pairing (CICTRL = 0)
+ 325:../complex_device_driver/cdd_egtm_app.c ****  */
+ 326:../complex_device_driver/cdd_egtm_app.c **** void CddEgtm_InitTim0Ch4(void)
+ 327:../complex_device_driver/cdd_egtm_app.c **** {
+ 328:../complex_device_driver/cdd_egtm_app.c ****     Ifx_EGTM_CLS_TIM_CH_CTRL  timChCtrl;
+ 329:../complex_device_driver/cdd_egtm_app.c ****     Ifx_EGTM_CLS_TIM_CH_ECTRL timChExtCtrl;
+ 330:../complex_device_driver/cdd_egtm_app.c ****     Ifx_EGTM_CLS_TIM_IN_SRC   timInSrc;
+ 331:../complex_device_driver/cdd_egtm_app.c ****     Ifx_SRC_SRCR              srcCfg;
+ 332:../complex_device_driver/cdd_egtm_app.c **** 
+ 333:../complex_device_driver/cdd_egtm_app.c ****     /* 1. Read-modify-write the shared / per-channel registers */
+ 334:../complex_device_driver/cdd_egtm_app.c ****     timChCtrl.U    = EGTM_CLS0_TIM_CH4_CTRL.U;    /* UM P.8944 */
+ 335:../complex_device_driver/cdd_egtm_app.c ****     timChExtCtrl.U = EGTM_CLS0_TIM_CH4_ECTRL.U;   /* UM P.8957 */
+ 336:../complex_device_driver/cdd_egtm_app.c ****     timInSrc.U     = EGTM_CLS0_TIM_IN_SRC.U;      /* UM P.8975 (shared across all 8 TIM channels) *
+ 337:../complex_device_driver/cdd_egtm_app.c ****     srcCfg.U       =  SRC_EGTMTIM0SR4.U;
+ 338:../complex_device_driver/cdd_egtm_app.c **** 
+ 339:../complex_device_driver/cdd_egtm_app.c ****     /* 2. Route P00.1 to TIM_IN4 */
+ 340:../complex_device_driver/cdd_egtm_app.c ****     IfxEgtm_PinMap_setTimTin(&IfxEgtm_TIM0_4_P00_1_IN, IfxPort_InputMode_pullDown);
+ 341:../complex_device_driver/cdd_egtm_app.c **** 
+ 342:../complex_device_driver/cdd_egtm_app.c ****     /* 3. Channel control: TIEM mode, no pairing with adjacent channel */
+ 343:../complex_device_driver/cdd_egtm_app.c ****     timChCtrl.B.TIM_MODE   = 0x2u;   /* TIEM mode                              */
+ 344:../complex_device_driver/cdd_egtm_app.c ****     timChCtrl.B.CICTRL     = 0x0u;   /* do NOT combine with adjacent channel   */
+ 345:../complex_device_driver/cdd_egtm_app.c ****     timChCtrl.B.GPR0_SEL   = 0x3U;
+ 346:../complex_device_driver/cdd_egtm_app.c ****     timChCtrl.B.GPR1_SEL   = 0x3U;
+ 347:../complex_device_driver/cdd_egtm_app.c ****     timChCtrl.B.DSL   = 0x1U;
+ 348:../complex_device_driver/cdd_egtm_app.c ****     timChCtrl.B.ISL   = 0x1U;
+ 349:../complex_device_driver/cdd_egtm_app.c ****                                      /* -> uses TIM_IN(x) = TIM_IN4            */
+ 350:../complex_device_driver/cdd_egtm_app.c ****     timInSrc.B.MODE4       = 0x0u;   /* not forced to constant                 */
+ 351:../complex_device_driver/cdd_egtm_app.c ****     timInSrc.B.VAL4        = 0x0u;   /* not forced to constant                 */
+ 352:../complex_device_driver/cdd_egtm_app.c **** 
+ 353:../complex_device_driver/cdd_egtm_app.c ****     /* 4. Do not use the LUT */
+ 354:../complex_device_driver/cdd_egtm_app.c ****     timChExtCtrl.B.USE_LUT = 0x0u;
+ 355:../complex_device_driver/cdd_egtm_app.c **** 
+ 356:../complex_device_driver/cdd_egtm_app.c ****    // EGTM_CLS0_TIM_CH4_IRQ_NOTIFY.B.NEWVAL = 0x1U;
+ 357:../complex_device_driver/cdd_egtm_app.c ****     EGTM_CLS0_TIM_CH4_IRQ_EN.B.NEWVAL_IRQ_EN = 0x1U,
+ 358:../complex_device_driver/cdd_egtm_app.c ****     EGTM_CLS0_TIM_CH4_IRQ_MODE.B.IRQ_MODE = 0x2u;   /* pulse */
+ 359:../complex_device_driver/cdd_egtm_app.c **** 
+ 360:../complex_device_driver/cdd_egtm_app.c **** 
+ 361:../complex_device_driver/cdd_egtm_app.c ****     srcCfg.B.TOS  = TIM0CH4_ISR_TOS;
+ 362:../complex_device_driver/cdd_egtm_app.c ****     srcCfg.B.SRPN = TIM0CH4_ISR_PRIORITY;
+ 363:../complex_device_driver/cdd_egtm_app.c ****     SRC_EGTMTIM0SR4.U = srcCfg.U;
+ 364:../complex_device_driver/cdd_egtm_app.c ****     SRC_EGTMTIM0SR4.B.SRE = 0x1U;
+ 365:../complex_device_driver/cdd_egtm_app.c **** 
+ 366:../complex_device_driver/cdd_egtm_app.c ****     /* 6. Write back */
+ 367:../complex_device_driver/cdd_egtm_app.c ****     EGTM_CLS0_TIM_CH4_CTRL.U  = timChCtrl.U;
+ 368:../complex_device_driver/cdd_egtm_app.c ****     EGTM_CLS0_TIM_CH4_ECTRL.U = timChExtCtrl.U;
+ 369:../complex_device_driver/cdd_egtm_app.c ****     EGTM_CLS0_TIM_IN_SRC.U    = timInSrc.U;
+ 370:../complex_device_driver/cdd_egtm_app.c **** 
+ 371:../complex_device_driver/cdd_egtm_app.c ****     EGTM_CLS0_TIM_CH4_CTRL.B.TIM_EN = 0x1U;
+ 372:../complex_device_driver/cdd_egtm_app.c **** 
+ 373:../complex_device_driver/cdd_egtm_app.c **** }
+ 374:../complex_device_driver/cdd_egtm_app.c **** 
+ 375:../complex_device_driver/cdd_egtm_app.c **** /**
+ 376:../complex_device_driver/cdd_egtm_app.c ****  * \brief   Computes the ATOM master period from the selected frequency mode.
+ 377:../complex_device_driver/cdd_egtm_app.c ****  *
+ 378:../complex_device_driver/cdd_egtm_app.c ****  * \details Maps Inv_G.FrequencyMode to an ATOM period in ticks:
+ 379:../complex_device_driver/cdd_egtm_app.c ****  *            1U -> 10 kHz, 2U -> 20 kHz, 3U -> 30 kHz, default -> 10 kHz.
+ 380:../complex_device_driver/cdd_egtm_app.c ****  *          The period is derived as CmuClk0Frequency / target_frequency and
+ 381:../complex_device_driver/cdd_egtm_app.c ****  *          stored in Inv_G.PeriodTicks.
+ 382:../complex_device_driver/cdd_egtm_app.c ****  *
+ 383:../complex_device_driver/cdd_egtm_app.c ****  * \return  void
+ 384:../complex_device_driver/cdd_egtm_app.c ****  *
+ 385:../complex_device_driver/cdd_egtm_app.c ****  * \pre     Inv_G.CmuClk0Frequency has been set from
+ 386:../complex_device_driver/cdd_egtm_app.c ****  *          CddSys_GetEgtmCmu0Frequency().
+ 387:../complex_device_driver/cdd_egtm_app.c ****  *
+ 388:../complex_device_driver/cdd_egtm_app.c ****  * \note    Any frequency mode outside {1, 2, 3} silently falls back to
+ 389:../complex_device_driver/cdd_egtm_app.c ****  *          10 kHz; there is no error reporting.
+ 390:../complex_device_driver/cdd_egtm_app.c ****  */
+ 391:../complex_device_driver/cdd_egtm_app.c **** void CddEgtm_SetInverterFrequency(void)
+ 392:../complex_device_driver/cdd_egtm_app.c **** {
+  60              	 .loc 1 392 1
+  61 0000 40AE     	 mov.aa %a14,%SP
+  62              	.LCFI0:
+ 393:../complex_device_driver/cdd_egtm_app.c ****     switch(Inv_G.FrequencyMode)
+  63              	 .loc 1 393 5
+  64              	 .loc 1 393 17 is_stmt 0
+  65 0002 91000020 	 movh.a %a2,hi:Inv_G
+  66 0006 D9220000 	 lea %a2,[%a2]lo:Inv_G
+  67 000a 19222800 	 ld.w %d2,[%a2]40
+  68              	 .loc 1 393 5
+  69 000e DF220000 	 jeq %d2,2,.L2
+  70 0012 DF320000 	 jeq %d2,3,.L3
+  71 0016 DF120000 	 jeq %d2,1,.L6
+ 394:../complex_device_driver/cdd_egtm_app.c ****     {
+ 395:../complex_device_driver/cdd_egtm_app.c ****         case 1U:
+ 396:../complex_device_driver/cdd_egtm_app.c ****             Inv_G.PeriodTicks      = (uint32)(Inv_G.CmuClk0Frequency/  KHZ_10);
+ 397:../complex_device_driver/cdd_egtm_app.c ****             break;
+ 398:../complex_device_driver/cdd_egtm_app.c ****         case 2U:
+ 399:../complex_device_driver/cdd_egtm_app.c ****             Inv_G.PeriodTicks      = (uint32)(Inv_G.CmuClk0Frequency/  KHZ_20);
+ 400:../complex_device_driver/cdd_egtm_app.c ****             break;
+ 401:../complex_device_driver/cdd_egtm_app.c ****         case 3U:
+ 402:../complex_device_driver/cdd_egtm_app.c ****             Inv_G.PeriodTicks      = (uint32)(Inv_G.CmuClk0Frequency/  KHZ_30);
+ 403:../complex_device_driver/cdd_egtm_app.c ****             break;
+ 404:../complex_device_driver/cdd_egtm_app.c ****         default:
+ 405:../complex_device_driver/cdd_egtm_app.c ****             Inv_G.PeriodTicks      = (uint32)(Inv_G.CmuClk0Frequency/  KHZ_10);
+  72              	 .loc 1 405 13 is_stmt 1
+  73              	 .loc 1 405 52 is_stmt 0
+  74 001a 91000020 	 movh.a %a2,hi:Inv_G
+  75 001e D9230000 	 lea %a3,[%a2]lo:Inv_G
+  76 0022 19320800 	 ld.w %d2,[%a3]8
+  77              	 .loc 1 405 69
+  78 0026 7BC06134 	 movh %d3,17948
+  79 002a 1B030034 	 addi %d3,%d3,16384
+  80 002e 4B325120 	 div.f %d2,%d2,%d3
+  81              	 .loc 1 405 38
+  82 0032 4B027121 	 ftouz %d2,%d2
+  83              	 .loc 1 405 36
+  84 0036 59220000 	 st.w [%a2]lo:Inv_G,%d2
+ 406:../complex_device_driver/cdd_egtm_app.c ****             break;
+  85              	 .loc 1 406 13 is_stmt 1
+ 407:../complex_device_driver/cdd_egtm_app.c ****     }
+ 408:../complex_device_driver/cdd_egtm_app.c **** }
+  86              	 .loc 1 408 1 is_stmt 0
+  87 003a 0090     	 ret 
+  88              	.L6:
+ 396:../complex_device_driver/cdd_egtm_app.c ****             break;
+  89              	 .loc 1 396 13 is_stmt 1
+ 396:../complex_device_driver/cdd_egtm_app.c ****             break;
+  90              	 .loc 1 396 52 is_stmt 0
+  91 003c 91000020 	 movh.a %a2,hi:Inv_G
+  92 0040 D9230000 	 lea %a3,[%a2]lo:Inv_G
+  93 0044 19320800 	 ld.w %d2,[%a3]8
+ 396:../complex_device_driver/cdd_egtm_app.c ****             break;
+  94              	 .loc 1 396 69
+  95 0048 7BC06134 	 movh %d3,17948
+  96 004c 1B030034 	 addi %d3,%d3,16384
+  97 0050 4B325120 	 div.f %d2,%d2,%d3
+ 396:../complex_device_driver/cdd_egtm_app.c ****             break;
+  98              	 .loc 1 396 38
+  99 0054 4B027121 	 ftouz %d2,%d2
+ 396:../complex_device_driver/cdd_egtm_app.c ****             break;
+ 100              	 .loc 1 396 36
+ 101 0058 59220000 	 st.w [%a2]lo:Inv_G,%d2
+ 397:../complex_device_driver/cdd_egtm_app.c ****         case 2U:
+ 102              	 .loc 1 397 13 is_stmt 1
+ 103 005c 0090     	 ret 
+ 104              	.L2:
+ 399:../complex_device_driver/cdd_egtm_app.c ****             break;
+ 105              	 .loc 1 399 13
+ 399:../complex_device_driver/cdd_egtm_app.c ****             break;
+ 106              	 .loc 1 399 52 is_stmt 0
+ 107 005e 91000020 	 movh.a %a2,hi:Inv_G
+ 108 0062 D9230000 	 lea %a3,[%a2]lo:Inv_G
+ 109 0066 19320800 	 ld.w %d2,[%a3]8
+ 399:../complex_device_driver/cdd_egtm_app.c ****             break;
+ 110              	 .loc 1 399 69
+ 111 006a 7BC06934 	 movh %d3,18076
+ 112 006e 1B030034 	 addi %d3,%d3,16384
+ 113 0072 4B325120 	 div.f %d2,%d2,%d3
+ 399:../complex_device_driver/cdd_egtm_app.c ****             break;
+ 114              	 .loc 1 399 38
+ 115 0076 4B027121 	 ftouz %d2,%d2
+ 399:../complex_device_driver/cdd_egtm_app.c ****             break;
+ 116              	 .loc 1 399 36
+ 117 007a 59220000 	 st.w [%a2]lo:Inv_G,%d2
+ 400:../complex_device_driver/cdd_egtm_app.c ****         case 3U:
+ 118              	 .loc 1 400 13 is_stmt 1
+ 119 007e 0090     	 ret 
+ 120              	.L3:
+ 402:../complex_device_driver/cdd_egtm_app.c ****             break;
+ 121              	 .loc 1 402 13
+ 402:../complex_device_driver/cdd_egtm_app.c ****             break;
+ 122              	 .loc 1 402 52 is_stmt 0
+ 123 0080 91000020 	 movh.a %a2,hi:Inv_G
+ 124 0084 D9230000 	 lea %a3,[%a2]lo:Inv_G
+ 125 0088 19320800 	 ld.w %d2,[%a3]8
+ 402:../complex_device_driver/cdd_egtm_app.c ****             break;
+ 126              	 .loc 1 402 69
+ 127 008c 7BA06E34 	 movh %d3,18154
+ 128 0090 1B030036 	 addi %d3,%d3,24576
+ 129 0094 4B325120 	 div.f %d2,%d2,%d3
+ 402:../complex_device_driver/cdd_egtm_app.c ****             break;
+ 130              	 .loc 1 402 38
+ 131 0098 4B027121 	 ftouz %d2,%d2
+ 402:../complex_device_driver/cdd_egtm_app.c ****             break;
+ 132              	 .loc 1 402 36
+ 133 009c 59220000 	 st.w [%a2]lo:Inv_G,%d2
+ 403:../complex_device_driver/cdd_egtm_app.c ****         default:
+ 134              	 .loc 1 403 13 is_stmt 1
+ 135 00a0 0090     	 ret 
+ 136              	.LFE592:
+ 138              	 .section .text.CddEgtm_InitTim0Ch4,"ax",@progbits
+ 139              	 .align 1
+ 141              	CddEgtm_InitTim0Ch4:
+ 142              	.LFB591:
+ 327:../complex_device_driver/cdd_egtm_app.c ****     Ifx_EGTM_CLS_TIM_CH_CTRL  timChCtrl;
+ 143              	 .loc 1 327 1
+ 144 0000 40AE     	 mov.aa %a14,%SP
+ 145              	.LCFI1:
+ 328:../complex_device_driver/cdd_egtm_app.c ****     Ifx_EGTM_CLS_TIM_CH_ECTRL timChExtCtrl;
+ 146              	 .loc 1 328 5
+ 329:../complex_device_driver/cdd_egtm_app.c ****     Ifx_EGTM_CLS_TIM_IN_SRC   timInSrc;
+ 147              	 .loc 1 329 5
+ 330:../complex_device_driver/cdd_egtm_app.c ****     Ifx_SRC_SRCR              srcCfg;
+ 148              	 .loc 1 330 5
+ 331:../complex_device_driver/cdd_egtm_app.c **** 
+ 149              	 .loc 1 331 5
+ 334:../complex_device_driver/cdd_egtm_app.c ****     timChExtCtrl.U = EGTM_CLS0_TIM_CH4_ECTRL.U;   /* UM P.8957 */
+ 150              	 .loc 1 334 5
+ 334:../complex_device_driver/cdd_egtm_app.c ****     timChExtCtrl.U = EGTM_CLS0_TIM_CH4_ECTRL.U;   /* UM P.8957 */
+ 151              	 .loc 1 334 44 is_stmt 0
+ 152 0002 918090CF 	 movh.a %a12,63752
+ 153 0006 D9CCA480 	 lea %a12,[%a12]2596
+ 154 000a 54C2     	 ld.w %d2,[%a12]0
+ 334:../complex_device_driver/cdd_egtm_app.c ****     timChExtCtrl.U = EGTM_CLS0_TIM_CH4_ECTRL.U;   /* UM P.8957 */
+ 155              	 .loc 1 334 20
+ 156 000c 0228     	 mov %d8,%d2
+ 157              	.LVL0:
+ 335:../complex_device_driver/cdd_egtm_app.c ****     timInSrc.U     = EGTM_CLS0_TIM_IN_SRC.U;      /* UM P.8975 (shared across all 8 TIM channels) *
+ 158              	 .loc 1 335 5 is_stmt 1
+ 335:../complex_device_driver/cdd_egtm_app.c ****     timInSrc.U     = EGTM_CLS0_TIM_IN_SRC.U;      /* UM P.8975 (shared across all 8 TIM channels) *
+ 159              	 .loc 1 335 45 is_stmt 0
+ 160 000e 7B80909F 	 movh %d9,63752
+ 161 0012 1B89A290 	 addi %d9,%d9,2600
+ 162 0016 6092     	 mov.a %a2,%d9
+ 163 0018 542B     	 ld.w %d11,[%a2]0
+ 336:../complex_device_driver/cdd_egtm_app.c ****     srcCfg.U       =  SRC_EGTMTIM0SR4.U;
+ 164              	 .loc 1 336 5 is_stmt 1
+ 336:../complex_device_driver/cdd_egtm_app.c ****     srcCfg.U       =  SRC_EGTMTIM0SR4.U;
+ 165              	 .loc 1 336 42 is_stmt 0
+ 166 001a 918090FF 	 movh.a %a15,63752
+ 167 001e D9FFC400 	 lea %a15,[%a15]3076
+ 168 0022 480C     	 ld.w %d12,[%a15]0
+ 337:../complex_device_driver/cdd_egtm_app.c **** 
+ 169              	 .loc 1 337 5 is_stmt 1
+ 337:../complex_device_driver/cdd_egtm_app.c **** 
+ 170              	 .loc 1 337 38 is_stmt 0
+ 171 0024 913044DF 	 movh.a %a13,62531
+ 172 0028 D9DDF093 	 lea %a13,[%a13]15984
+ 173 002c 54DA     	 ld.w %d10,[%a13]0
+ 340:../complex_device_driver/cdd_egtm_app.c **** 
+ 174              	 .loc 1 340 5 is_stmt 1
+ 175 002e 3B000140 	 mov %d4,16
+ 176 0032 91000040 	 movh.a %a4,hi:IfxEgtm_TIM0_4_P00_1_IN
+ 177 0036 D9440000 	 lea %a4,[%a4]lo:IfxEgtm_TIM0_4_P00_1_IN
+ 178 003a 6D000000 	 call IfxEgtm_PinMap_setTimTin
+ 179              	.LVL1:
+ 343:../complex_device_driver/cdd_egtm_app.c ****     timChCtrl.B.CICTRL     = 0x0u;   /* do NOT combine with adjacent channel   */
+ 180              	 .loc 1 343 5
+ 343:../complex_device_driver/cdd_egtm_app.c ****     timChCtrl.B.CICTRL     = 0x0u;   /* do NOT combine with adjacent channel   */
+ 181              	 .loc 1 343 28 is_stmt 0
+ 182 003e B7288380 	 insert %d8,%d8,2,1,3
+ 183              	.LVL2:
+ 344:../complex_device_driver/cdd_egtm_app.c ****     timChCtrl.B.GPR0_SEL   = 0x3U;
+ 184              	 .loc 1 344 5 is_stmt 1
+ 344:../complex_device_driver/cdd_egtm_app.c ****     timChCtrl.B.GPR0_SEL   = 0x3U;
+ 185              	 .loc 1 344 28 is_stmt 0
+ 186 0042 8F08C481 	 andn %d8,%d8,~(-65)
+ 187              	.LVL3:
+ 345:../complex_device_driver/cdd_egtm_app.c ****     timChCtrl.B.GPR1_SEL   = 0x3U;
+ 188              	 .loc 1 345 5 is_stmt 1
+ 345:../complex_device_driver/cdd_egtm_app.c ****     timChCtrl.B.GPR1_SEL   = 0x3U;
+ 189              	 .loc 1 345 28 is_stmt 0
+ 190 0046 B7380284 	 insert %d8,%d8,3,8,2
+ 191              	.LVL4:
+ 346:../complex_device_driver/cdd_egtm_app.c ****     timChCtrl.B.DSL   = 0x1U;
+ 192              	 .loc 1 346 5 is_stmt 1
+ 346:../complex_device_driver/cdd_egtm_app.c ****     timChCtrl.B.DSL   = 0x1U;
+ 193              	 .loc 1 346 28 is_stmt 0
+ 194 004a B7380285 	 insert %d8,%d8,3,10,2
+ 347:../complex_device_driver/cdd_egtm_app.c ****     timChCtrl.B.ISL   = 0x1U;
+ 195              	 .loc 1 347 5 is_stmt 1
+ 347:../complex_device_driver/cdd_egtm_app.c ****     timChCtrl.B.ISL   = 0x1U;
+ 196              	 .loc 1 347 23 is_stmt 0
+ 197 004e B7188186 	 insert %d8,%d8,1,13,1
+ 348:../complex_device_driver/cdd_egtm_app.c ****                                      /* -> uses TIM_IN(x) = TIM_IN4            */
+ 198              	 .loc 1 348 5 is_stmt 1
+ 348:../complex_device_driver/cdd_egtm_app.c ****                                      /* -> uses TIM_IN(x) = TIM_IN4            */
+ 199              	 .loc 1 348 23 is_stmt 0
+ 200 0052 B7180187 	 insert %d8,%d8,1,14,1
+ 350:../complex_device_driver/cdd_egtm_app.c ****     timInSrc.B.VAL4        = 0x0u;   /* not forced to constant                 */
+ 201              	 .loc 1 350 5 is_stmt 1
+ 351:../complex_device_driver/cdd_egtm_app.c **** 
+ 202              	 .loc 1 351 5
+ 351:../complex_device_driver/cdd_egtm_app.c **** 
+ 203              	 .loc 1 351 28 is_stmt 0
+ 204 0056 B70C0438 	 insert %d3,%d12,0,16,4
+ 205              	.LVL5:
+ 354:../complex_device_driver/cdd_egtm_app.c **** 
+ 206              	 .loc 1 354 5 is_stmt 1
+ 354:../complex_device_driver/cdd_egtm_app.c **** 
+ 207              	 .loc 1 354 28 is_stmt 0
+ 208 005a B70B024B 	 insert %d4,%d11,0,22,2
+ 209              	.LVL6:
+ 357:../complex_device_driver/cdd_egtm_app.c ****     EGTM_CLS0_TIM_CH4_IRQ_MODE.B.IRQ_MODE = 0x2u;   /* pulse */
+ 210              	 .loc 1 357 5 is_stmt 1
+ 357:../complex_device_driver/cdd_egtm_app.c ****     EGTM_CLS0_TIM_CH4_IRQ_MODE.B.IRQ_MODE = 0x2u;   /* pulse */
+ 211              	 .loc 1 357 46 is_stmt 0
+ 212 005e 9180902F 	 movh.a %a2,63752
+ 213 0062 D922B080 	 lea %a2,[%a2]2608
+ 214 0066 5422     	 ld.w %d2,[%a2]0
+ 215 0068 B7120120 	 insert %d2,%d2,1,0,1
+ 216 006c 7422     	 st.w [%a2]0,%d2
+ 358:../complex_device_driver/cdd_egtm_app.c **** 
+ 217              	 .loc 1 358 43
+ 218 006e 9180902F 	 movh.a %a2,63752
+ 219 0072 D922B880 	 lea %a2,[%a2]2616
+ 220 0076 5422     	 ld.w %d2,[%a2]0
+ 221 0078 B7220220 	 insert %d2,%d2,2,0,2
+ 222 007c 7422     	 st.w [%a2]0,%d2
+ 361:../complex_device_driver/cdd_egtm_app.c ****     srcCfg.B.SRPN = TIM0CH4_ISR_PRIORITY;
+ 223              	 .loc 1 361 5 is_stmt 1
+ 361:../complex_device_driver/cdd_egtm_app.c ****     srcCfg.B.SRPN = TIM0CH4_ISR_PRIORITY;
+ 224              	 .loc 1 361 19 is_stmt 0
+ 225 007e B70A0426 	 insert %d2,%d10,0,12,4
+ 226              	.LVL7:
+ 362:../complex_device_driver/cdd_egtm_app.c ****     SRC_EGTMTIM0SR4.U = srcCfg.U;
+ 227              	 .loc 1 362 5 is_stmt 1
+ 362:../complex_device_driver/cdd_egtm_app.c ****     SRC_EGTMTIM0SR4.U = srcCfg.U;
+ 228              	 .loc 1 362 19 is_stmt 0
+ 229 0082 3B900150 	 mov %d5,25
+ 230 0086 37520820 	 insert %d2,%d2,%d5,0,8
+ 231              	.LVL8:
+ 363:../complex_device_driver/cdd_egtm_app.c ****     SRC_EGTMTIM0SR4.B.SRE = 0x1U;
+ 232              	 .loc 1 363 5 is_stmt 1
+ 363:../complex_device_driver/cdd_egtm_app.c ****     SRC_EGTMTIM0SR4.B.SRE = 0x1U;
+ 233              	 .loc 1 363 23 is_stmt 0
+ 234 008a 74D2     	 st.w [%a13]0,%d2
+ 364:../complex_device_driver/cdd_egtm_app.c **** 
+ 235              	 .loc 1 364 5 is_stmt 1
+ 364:../complex_device_driver/cdd_egtm_app.c **** 
+ 236              	 .loc 1 364 27 is_stmt 0
+ 237 008c 54D2     	 ld.w %d2,[%a13]0
+ 238              	.LVL9:
+ 239 008e B712812B 	 insert %d2,%d2,1,23,1
+ 240 0092 74D2     	 st.w [%a13]0,%d2
+ 367:../complex_device_driver/cdd_egtm_app.c ****     EGTM_CLS0_TIM_CH4_ECTRL.U = timChExtCtrl.U;
+ 241              	 .loc 1 367 5 is_stmt 1
+ 367:../complex_device_driver/cdd_egtm_app.c ****     EGTM_CLS0_TIM_CH4_ECTRL.U = timChExtCtrl.U;
+ 242              	 .loc 1 367 31 is_stmt 0
+ 243 0094 74C8     	 st.w [%a12]0,%d8
+ 368:../complex_device_driver/cdd_egtm_app.c ****     EGTM_CLS0_TIM_IN_SRC.U    = timInSrc.U;
+ 244              	 .loc 1 368 5 is_stmt 1
+ 368:../complex_device_driver/cdd_egtm_app.c ****     EGTM_CLS0_TIM_IN_SRC.U    = timInSrc.U;
+ 245              	 .loc 1 368 31 is_stmt 0
+ 246 0096 6092     	 mov.a %a2,%d9
+ 247              	.LVL10:
+ 248 0098 7424     	 st.w [%a2]0,%d4
+ 369:../complex_device_driver/cdd_egtm_app.c **** 
+ 249              	 .loc 1 369 5 is_stmt 1
+ 250              	.LVL11:
+ 369:../complex_device_driver/cdd_egtm_app.c **** 
+ 251              	 .loc 1 369 31 is_stmt 0
+ 252 009a 6803     	 st.w [%a15]0,%d3
+ 371:../complex_device_driver/cdd_egtm_app.c **** 
+ 253              	 .loc 1 371 5 is_stmt 1
+ 371:../complex_device_driver/cdd_egtm_app.c **** 
+ 254              	 .loc 1 371 37 is_stmt 0
+ 255 009c 54C2     	 ld.w %d2,[%a12]0
+ 256 009e B7120120 	 insert %d2,%d2,1,0,1
+ 257 00a2 74C2     	 st.w [%a12]0,%d2
+ 373:../complex_device_driver/cdd_egtm_app.c **** 
+ 258              	 .loc 1 373 1
+ 259 00a4 0090     	 ret 
+ 260              	.LFE591:
+ 262              	 .section .text.CddEgtm_InitAtomCls0,"ax",@progbits
+ 263              	 .align 1
+ 265              	CddEgtm_InitAtomCls0:
+ 266              	.LFB593:
+ 409:../complex_device_driver/cdd_egtm_app.c **** 
+ 410:../complex_device_driver/cdd_egtm_app.c **** /**
+ 411:../complex_device_driver/cdd_egtm_app.c ****  * \brief   Configures ATOM cluster 0 for three-phase inverter PWM generation.
+ 412:../complex_device_driver/cdd_egtm_app.c ****  *
+ 413:../complex_device_driver/cdd_egtm_app.c ****  * \details Full ATOM channel setup:
+ 414:../complex_device_driver/cdd_egtm_app.c ****  *            -# DTM4/DTM5 clock select, update mode, and shadow-register
+ 415:../complex_device_driver/cdd_egtm_app.c ****  *               update enable.
+ 416:../complex_device_driver/cdd_egtm_app.c ****  *            -# PSU input select and TIM select for the shut-off path.
+ 417:../complex_device_driver/cdd_egtm_app.c ****  *            -# ATOM CH0 as master in SOMP mode: period and half-period in
+ 418:../complex_device_driver/cdd_egtm_app.c ****  *               the shadow registers, CCU0/CCU1 IRQ enabled and routed to
+ 419:../complex_device_driver/cdd_egtm_app.c ****  *               CPU0, output pin enabled.
+ 420:../complex_device_driver/cdd_egtm_app.c ****  *            -# ATOM CH5/CH6/CH7 as phases U/V/W in SOMP mode, each reset by
+ 421:../complex_device_driver/cdd_egtm_app.c ****  *               the master's CCU0 event, with per-phase dead time
+ 422:../complex_device_driver/cdd_egtm_app.c ****  *               (DTV1 / DTV2 / DTV3) and complementary high/low outputs.
+ 423:../complex_device_driver/cdd_egtm_app.c ****  *            -# Shut-off safe levels for each phase
+ 424:../complex_device_driver/cdd_egtm_app.c ****  *               (OC0_x_SR = 1, OC1_x_SR = 1, SL0_x_SR_SR = 0, SL1_x_SR_SR = 0).
+ 425:../complex_device_driver/cdd_egtm_app.c ****  *            -# Global AGC registers enabling shadow update, force update,
+ 426:../complex_device_driver/cdd_egtm_app.c ****  *               channel enable, and output enable for all used channels.
+ 427:../complex_device_driver/cdd_egtm_app.c ****  *
+ 428:../complex_device_driver/cdd_egtm_app.c ****  *          Channel map:
+ 429:../complex_device_driver/cdd_egtm_app.c ****  *            - ATOM CH0  : master timing reference (P02.0), not a gate drive.
+ 430:../complex_device_driver/cdd_egtm_app.c ****  *            - ATOM CH5  : phase U high side (P02.5).
+ 431:../complex_device_driver/cdd_egtm_app.c ****  *            - ATOM CH5N : phase U low  side (P00.2).
+ 432:../complex_device_driver/cdd_egtm_app.c ****  *            - ATOM CH6  : phase V high side (P02.6).
+ 433:../complex_device_driver/cdd_egtm_app.c ****  *            - ATOM CH6N : phase V low  side (P00.4).
+ 434:../complex_device_driver/cdd_egtm_app.c ****  *            - ATOM CH7  : phase W high side (P02.7).
+ 435:../complex_device_driver/cdd_egtm_app.c ****  *            - ATOM CH7N : phase W low  side (P00.6).
+ 436:../complex_device_driver/cdd_egtm_app.c ****  *
+ 437:../complex_device_driver/cdd_egtm_app.c ****  * \return  void
+ 438:../complex_device_driver/cdd_egtm_app.c ****  *
+ 439:../complex_device_driver/cdd_egtm_app.c ****  * \pre     CddSys_EnableEgtmClock(), CMU0 configuration and
+ 440:../complex_device_driver/cdd_egtm_app.c ****  *          Inv_G.PeriodTicks / Inv_G.DeadTimeTicks have been set by
+ 441:../complex_device_driver/cdd_egtm_app.c ****  *          CddEgtm_InitModule().
+ 442:../complex_device_driver/cdd_egtm_app.c ****  * \post    All channels are configured but not running; a host trigger is
+ 443:../complex_device_driver/cdd_egtm_app.c ****  *          required to start them (issued by CddEgtm_Start()).
+ 444:../complex_device_driver/cdd_egtm_app.c ****  *
+ 445:../complex_device_driver/cdd_egtm_app.c ****  * \note    The dead-time control word dtm5ChCtrl2 accumulates the DT0_x/DT1_x
+ 446:../complex_device_driver/cdd_egtm_app.c ****  *          enables for all three phases and is written back once. This
+ 447:../complex_device_driver/cdd_egtm_app.c ****  *          relies on the read at function entry having those bits clear;
+ 448:../complex_device_driver/cdd_egtm_app.c ****  *          call this function only on an unconfigured DTM5.
+ 449:../complex_device_driver/cdd_egtm_app.c ****  *
+ 450:../complex_device_driver/cdd_egtm_app.c ****  * \see     CddEgtm_Start
+ 451:../complex_device_driver/cdd_egtm_app.c ****  */
+ 452:../complex_device_driver/cdd_egtm_app.c ****  /* This function initializes the EGTM_CLS0_ATOM
+ 453:../complex_device_driver/cdd_egtm_app.c ****   * - configures CLS0_ATOM_CH0 (P02.00) as Master Channel and sets-up CCU0 & CCU1 interrupt event t
+ 454:../complex_device_driver/cdd_egtm_app.c ****   * - configures CLS0_ATOM_CH5     (P02.05) as Phase U_H
+ 455:../complex_device_driver/cdd_egtm_app.c ****   * - configures CLS0_ATOM_CH5_N   (P00_02) as Phase U_L
+ 456:../complex_device_driver/cdd_egtm_app.c ****   * - configures CLS0_ATOM_CH6     (P02.06) as Phase V_H
+ 457:../complex_device_driver/cdd_egtm_app.c ****   * - configures CLS0_ATOM_CH6_N   (P00_04) as Phase V_L
+ 458:../complex_device_driver/cdd_egtm_app.c ****   * - configures CLS0_ATOM_CH7     (P02.07) as Phase W_H
+ 459:../complex_device_driver/cdd_egtm_app.c ****   * - configures CLS0_ATOM_CH7_N   (P00_06) as Phase W_L
+ 460:../complex_device_driver/cdd_egtm_app.c **** */
+ 461:../complex_device_driver/cdd_egtm_app.c ****  void CddEgtm_InitAtomCls0(void)
+ 462:../complex_device_driver/cdd_egtm_app.c ****  {
+ 267              	 .loc 1 462 2 is_stmt 1
+ 268 0000 40AE     	 mov.aa %a14,%SP
+ 269              	.LCFI2:
+ 270 0002 2008     	 sub.a %SP,8
+ 463:../complex_device_driver/cdd_egtm_app.c **** 
+ 464:../complex_device_driver/cdd_egtm_app.c ****      Ifx_EGTM_CLS_ATOM_CH_CTRL         chCtrl;
+ 271              	 .loc 1 464 6
+ 465:../complex_device_driver/cdd_egtm_app.c ****      Ifx_EGTM_CLS_CDTM_DTM_CH_CTRL2    dtm4ChCtrl2;
+ 272              	 .loc 1 465 6
+ 466:../complex_device_driver/cdd_egtm_app.c ****      Ifx_EGTM_CLS_CDTM_DTM_CTRL        dtm4Ctrl;
+ 273              	 .loc 1 466 6
+ 467:../complex_device_driver/cdd_egtm_app.c ****      Ifx_EGTM_CLS_CDTM_DTM_CH_CTRL2    dtm5ChCtrl2;
+ 274              	 .loc 1 467 6
+ 468:../complex_device_driver/cdd_egtm_app.c ****      Ifx_EGTM_CLS_CDTM_DTM_CTRL        dtm5Ctrl;
+ 275              	 .loc 1 468 6
+ 469:../complex_device_driver/cdd_egtm_app.c ****      Ifx_EGTM_CLS_CDTM_DTM_CH_DTV      chDTV;
+ 276              	 .loc 1 469 6
+ 470:../complex_device_driver/cdd_egtm_app.c ****      Ifx_EGTM_CLS_CDTM_DTM_CH_CTRL2_SR dtm5ChCtrl2Sr;
+ 277              	 .loc 1 470 6
+ 471:../complex_device_driver/cdd_egtm_app.c ****      Ifx_EGTM_CLS_CDTM_DTM_CH_SR       dtm5CtrlChSr;
+ 278              	 .loc 1 471 6
+ 472:../complex_device_driver/cdd_egtm_app.c ****      Ifx_SRC_SRCR                      srcCfg;
+ 279              	 .loc 1 472 6
+ 473:../complex_device_driver/cdd_egtm_app.c ****      Ifx_EGTM_CLS_ATOM_CH_IRQ_EN       chIrqEn;
+ 280              	 .loc 1 473 6
+ 474:../complex_device_driver/cdd_egtm_app.c ****      Ifx_EGTM_CLS_CDTM_DTM_PS_CTRL     psCtrl;
+ 281              	 .loc 1 474 6
+ 475:../complex_device_driver/cdd_egtm_app.c **** 
+ 476:../complex_device_driver/cdd_egtm_app.c **** 
+ 477:../complex_device_driver/cdd_egtm_app.c ****      /* Copy Control Registers to Interim Structures */
+ 478:../complex_device_driver/cdd_egtm_app.c ****      dtm4Ctrl.U    = EGTM_CLS0_CDTM_DTM4_CTRL.U;
+ 282              	 .loc 1 478 6
+ 283              	 .loc 1 478 46 is_stmt 0
+ 284 0004 9180902F 	 movh.a %a2,63752
+ 285 0008 D9224044 	 lea %a2,[%a2]17664
+ 286 000c 5422     	 ld.w %d2,[%a2]0
+ 287              	 .loc 1 478 20
+ 288 000e 602F     	 mov.a %a15,%d2
+ 289              	.LVL12:
+ 479:../complex_device_driver/cdd_egtm_app.c ****      dtm4ChCtrl2.U = EGTM_CLS0_CDTM_DTM4_CH_CTRL2.U;
+ 290              	 .loc 1 479 6 is_stmt 1
+ 291              	 .loc 1 479 50 is_stmt 0
+ 292 0010 9180902F 	 movh.a %a2,63752
+ 293 0014 D9224844 	 lea %a2,[%a2]17672
+ 294 0018 5423     	 ld.w %d3,[%a2]0
+ 295 001a 59E3FCFF 	 st.w [%a14]-4,%d3
+ 480:../complex_device_driver/cdd_egtm_app.c ****      dtm5Ctrl.U    = EGTM_CLS0_CDTM_DTM5_CTRL.U;
+ 296              	 .loc 1 480 6 is_stmt 1
+ 297              	 .loc 1 480 46 is_stmt 0
+ 298 001e 9180902F 	 movh.a %a2,63752
+ 299 0022 D9224054 	 lea %a2,[%a2]17728
+ 300 0026 5422     	 ld.w %d2,[%a2]0
+ 301              	 .loc 1 480 20
+ 302 0028 022A     	 mov %d10,%d2
+ 303              	.LVL13:
+ 481:../complex_device_driver/cdd_egtm_app.c ****      dtm5ChCtrl2.U = EGTM_CLS0_CDTM_DTM5_CH_CTRL2.U;
+ 304              	 .loc 1 481 6 is_stmt 1
+ 305              	 .loc 1 481 50 is_stmt 0
+ 306 002a 9180902F 	 movh.a %a2,63752
+ 307 002e D9224854 	 lea %a2,[%a2]17736
+ 308 0032 5422     	 ld.w %d2,[%a2]0
+ 309              	 .loc 1 481 20
+ 310 0034 0229     	 mov %d9,%d2
+ 311              	.LVL14:
+ 482:../complex_device_driver/cdd_egtm_app.c ****      dtm5ChCtrl2Sr.U = EGTM_CLS0_CDTM_DTM5_CH_CTRL2_SR.U;
+ 312              	 .loc 1 482 6 is_stmt 1
+ 313              	 .loc 1 482 55 is_stmt 0
+ 314 0036 9180902F 	 movh.a %a2,63752
+ 315 003a D9224C54 	 lea %a2,[%a2]17740
+ 316 003e 5422     	 ld.w %d2,[%a2]0
+ 317              	 .loc 1 482 22
+ 318 0040 0228     	 mov %d8,%d2
+ 319              	.LVL15:
+ 483:../complex_device_driver/cdd_egtm_app.c ****      dtm5CtrlChSr.U  = EGTM_CLS0_CDTM_DTM5_CH_SR.U;
+ 320              	 .loc 1 483 6 is_stmt 1
+ 321              	 .loc 1 483 49 is_stmt 0
+ 322 0042 9180902F 	 movh.a %a2,63752
+ 323 0046 D9226454 	 lea %a2,[%a2]17764
+ 324 004a 542B     	 ld.w %d11,[%a2]0
+ 484:../complex_device_driver/cdd_egtm_app.c ****      psCtrl.U        = EGTM_CLS0_CDTM_DTM5_PS_CTRL.U;
+ 325              	 .loc 1 484 6 is_stmt 1
+ 326              	 .loc 1 484 51 is_stmt 0
+ 327 004c 9180902F 	 movh.a %a2,63752
+ 328 0050 D9225054 	 lea %a2,[%a2]17744
+ 329 0054 5422     	 ld.w %d2,[%a2]0
+ 485:../complex_device_driver/cdd_egtm_app.c **** 
+ 486:../complex_device_driver/cdd_egtm_app.c ****      /* Set Clock for DTM modules */
+ 487:../complex_device_driver/cdd_egtm_app.c ****      /* Configure Overall Dead Time Module CDTM_DTM5 for Phases (U, V, W) */
+ 488:../complex_device_driver/cdd_egtm_app.c ****      dtm4Ctrl.B.CLK_SEL       = 0x1U;   /* select CMU_CLk0                              */
+ 330              	 .loc 1 488 6 is_stmt 1
+ 331              	.LVL16:
+ 332              	 .loc 1 488 31 is_stmt 0
+ 333 0056 80F3     	 mov.d %d3,%a15
+ 334 0058 B7130230 	 insert %d3,%d3,1,0,2
+ 335              	.LVL17:
+ 336 005c 603F     	 mov.a %a15,%d3
+ 489:../complex_device_driver/cdd_egtm_app.c ****      dtm5Ctrl.B.CLK_SEL       = 0x1U;   /* select CMU_CLk0                              */
+ 337              	 .loc 1 489 6 is_stmt 1
+ 338              	 .loc 1 489 31 is_stmt 0
+ 339 005e B71A02A0 	 insert %d10,%d10,1,0,2
+ 340              	.LVL18:
+ 490:../complex_device_driver/cdd_egtm_app.c ****      dtm5Ctrl.B.UPD_MODE      = 0x1U;   /* release shut off by writing the SHUT_OFF_RST */
+ 341              	 .loc 1 490 6 is_stmt 1
+ 342              	 .loc 1 490 31 is_stmt 0
+ 343 0062 B71A03A2 	 insert %d10,%d10,1,4,3
+ 491:../complex_device_driver/cdd_egtm_app.c ****      dtm5Ctrl.B.SR_UPD_EN     = 0x1U;   /* allow shadow register update                 */
+ 344              	 .loc 1 491 6 is_stmt 1
+ 345              	 .loc 1 491 31 is_stmt 0
+ 346 0066 B71A01A4 	 insert %d10,%d10,1,8,1
+ 492:../complex_device_driver/cdd_egtm_app.c ****      /* Configure PSU to send shut-off signal to the phases (U, V, W) */
+ 493:../complex_device_driver/cdd_egtm_app.c ****      psCtrl.B.PSU_IN_SEL     = 0x0U;
+ 347              	 .loc 1 493 6 is_stmt 1
+ 348              	 .loc 1 493 30 is_stmt 0
+ 349 006a B70201C8 	 insert %d12,%d2,0,16,1
+ 350              	.LVL19:
+ 494:../complex_device_driver/cdd_egtm_app.c ****      psCtrl.B.TIM_SEL        = 0x1U;   /* select TIM_CH_IN0 or select TIM_CH_IN1       */
+ 351              	 .loc 1 494 6 is_stmt 1
+ 352              	 .loc 1 494 30 is_stmt 0
+ 353 006e B71C01C9 	 insert %d12,%d12,1,18,1
+ 354              	.LVL20:
+ 495:../complex_device_driver/cdd_egtm_app.c **** 
+ 496:../complex_device_driver/cdd_egtm_app.c **** 
+ 497:../complex_device_driver/cdd_egtm_app.c ****      /* Configure ATOM_CH0 as Master  */
+ 498:../complex_device_driver/cdd_egtm_app.c ****      /* M1. Configure Channel Control */
+ 499:../complex_device_driver/cdd_egtm_app.c ****      chCtrl.U                  = EGTM_CLS0_ATOM_CH0_CTRL.U;
+ 355              	 .loc 1 499 6 is_stmt 1
+ 356              	 .loc 1 499 57 is_stmt 0
+ 357 0072 9180902F 	 movh.a %a2,63752
+ 358 0076 D9228401 	 lea %a2,[%a2]6148
+ 359 007a 5422     	 ld.w %d2,[%a2]0
+ 500:../complex_device_driver/cdd_egtm_app.c ****      chCtrl.B.MODE             = 0x2U;   /* set in SOMP Mode                       */
+ 360              	 .loc 1 500 6 is_stmt 1
+ 361              	 .loc 1 500 32 is_stmt 0
+ 362 007c B7220220 	 insert %d2,%d2,2,0,2
+ 363              	.LVL21:
+ 501:../complex_device_driver/cdd_egtm_app.c ****      chCtrl.B.UDMODE           = 0x0U;   /* enable                                 */
+ 364              	 .loc 1 501 6 is_stmt 1
+ 365              	 .loc 1 501 32 is_stmt 0
+ 366 0080 7B40FFEF 	 movh %d14,65524
+ 367 0084 C2FE     	 add %d14,-1
+ 368 0086 26E2     	 and %d2,%d14
+ 369              	.LVL22:
+ 502:../complex_device_driver/cdd_egtm_app.c ****      chCtrl.B.CLK_SRC          = 0x0U;   /* select CMU_CLK0                        */
+ 370              	 .loc 1 502 6 is_stmt 1
+ 371              	 .loc 1 502 32 is_stmt 0
+ 372 0088 7BF0FFDF 	 movh %d13,65535
+ 373 008c 1BFDFFD0 	 addi %d13,%d13,4095
+ 374              	.LVL23:
+ 375 0090 26D2     	 and %d2,%d13
+ 376              	.LVL24:
+ 503:../complex_device_driver/cdd_egtm_app.c ****      chCtrl.B.TRIGOUT          = 0x1U;   /* expose CCU0 event to slave channels    */
+ 377              	 .loc 1 503 6 is_stmt 1
+ 378              	 .loc 1 503 32 is_stmt 0
+ 379 0092 B712012C 	 insert %d2,%d2,1,24,1
+ 380              	.LVL25:
+ 504:../complex_device_driver/cdd_egtm_app.c ****      chCtrl.B.RST_CCU0         = 0x0U;   /* reset the counter on it own CCU0 event */
+ 381              	 .loc 1 504 6 is_stmt 1
+ 382              	 .loc 1 504 32 is_stmt 0
+ 383 0096 B702012A 	 insert %d2,%d2,0,20,1
+ 384              	.LVL26:
+ 505:../complex_device_driver/cdd_egtm_app.c ****      chCtrl.B.SL               = 0x1U;
+ 385              	 .loc 1 505 6 is_stmt 1
+ 386              	 .loc 1 505 32 is_stmt 0
+ 387 009a B7128125 	 insert %d2,%d2,1,11,1
+ 388              	.LVL27:
+ 506:../complex_device_driver/cdd_egtm_app.c ****      EGTM_CLS0_ATOM_CH0_CTRL.U = chCtrl.U;
+ 389              	 .loc 1 506 6 is_stmt 1
+ 390              	 .loc 1 506 32 is_stmt 0
+ 391 009e 7422     	 st.w [%a2]0,%d2
+ 507:../complex_device_driver/cdd_egtm_app.c **** 
+ 508:../complex_device_driver/cdd_egtm_app.c ****      /* M2. Specify Period and Duty Cycle of PWM Signal (Shadow Register) */
+ 509:../complex_device_driver/cdd_egtm_app.c ****      EGTM_CLS0_ATOM_CH0_SR0.B.SR0 = Inv_G.PeriodTicks;   /* note: Master is not connected to HRPWM 
+ 392              	 .loc 1 509 6 is_stmt 1
+ 393              	 .loc 1 509 42 is_stmt 0
+ 394 00a0 910000C0 	 movh.a %a12,hi:Inv_G
+ 395 00a4 D9CD0000 	 lea %a13,[%a12]lo:Inv_G
+ 396 00a8 19C30000 	 ld.w %d3,[%a12]lo:Inv_G
+ 397              	.LVL28:
+ 398              	 .loc 1 509 35
+ 399 00ac 9180902F 	 movh.a %a2,63752
+ 400 00b0 D9228801 	 lea %a2,[%a2]6152
+ 401 00b4 5422     	 ld.w %d2,[%a2]0
+ 402              	.LVL29:
+ 403 00b6 37321820 	 insert %d2,%d2,%d3,0,24
+ 404 00ba 7422     	 st.w [%a2]0,%d2
+ 510:../complex_device_driver/cdd_egtm_app.c ****      EGTM_CLS0_ATOM_CH0_SR1.B.SR1 = Inv_G.PeriodTicks/2u;
+ 405              	 .loc 1 510 6 is_stmt 1
+ 406              	 .loc 1 510 42 is_stmt 0
+ 407 00bc 19C20000 	 ld.w %d2,[%a12]lo:Inv_G
+ 408              	 .loc 1 510 54
+ 409 00c0 8FF21F30 	 sh %d3,%d2,-1
+ 410              	 .loc 1 510 35
+ 411 00c4 9180902F 	 movh.a %a2,63752
+ 412 00c8 D9228C01 	 lea %a2,[%a2]6156
+ 413 00cc 5422     	 ld.w %d2,[%a2]0
+ 414 00ce 37321820 	 insert %d2,%d2,%d3,0,24
+ 415 00d2 7422     	 st.w [%a2]0,%d2
+ 511:../complex_device_driver/cdd_egtm_app.c **** 
+ 512:../complex_device_driver/cdd_egtm_app.c ****      /* M3. Configure Output */
+ 513:../complex_device_driver/cdd_egtm_app.c ****      CddGpio_ConfigEgtmAtomMasterP02_00();
+ 416              	 .loc 1 513 6 is_stmt 1
+ 417 00d4 6D000000 	 call CddGpio_ConfigEgtmAtomMasterP02_00
+ 418              	.LVL30:
+ 514:../complex_device_driver/cdd_egtm_app.c **** 
+ 515:../complex_device_driver/cdd_egtm_app.c ****      /* M4. Setup Interrupt Service Request to CPU0 */
+ 516:../complex_device_driver/cdd_egtm_app.c ****      chIrqEn.U                              = EGTM_CLS0_ATOM_CH0_IRQ_EN.U;
+ 419              	 .loc 1 516 6
+ 420              	 .loc 1 516 72 is_stmt 0
+ 421 00d8 9180902F 	 movh.a %a2,63752
+ 422 00dc D922A401 	 lea %a2,[%a2]6180
+ 423 00e0 5422     	 ld.w %d2,[%a2]0
+ 517:../complex_device_driver/cdd_egtm_app.c ****      chIrqEn.B.CCU0TC_IRQ_EN                = 0x1U;   /* enable CCU0 Event */
+ 424              	 .loc 1 517 6 is_stmt 1
+ 425              	 .loc 1 517 45 is_stmt 0
+ 426 00e2 B7120120 	 insert %d2,%d2,1,0,1
+ 427              	.LVL31:
+ 518:../complex_device_driver/cdd_egtm_app.c ****      chIrqEn.B.CCU1TC_IRQ_EN                = 0x1U;   /* enable CCU1 Event */
+ 428              	 .loc 1 518 6 is_stmt 1
+ 429              	 .loc 1 518 45 is_stmt 0
+ 430 00e6 B7128120 	 insert %d2,%d2,1,1,1
+ 519:../complex_device_driver/cdd_egtm_app.c ****      EGTM_CLS0_ATOM_CH0_IRQ_EN.U            = chIrqEn.U;
+ 431              	 .loc 1 519 6 is_stmt 1
+ 432              	 .loc 1 519 45 is_stmt 0
+ 433 00ea 7422     	 st.w [%a2]0,%d2
+ 520:../complex_device_driver/cdd_egtm_app.c ****      EGTM_CLS0_ATOM_CH0_IRQ_MODE.B.IRQ_MODE = 0x2U;
+ 434              	 .loc 1 520 6 is_stmt 1
+ 435              	 .loc 1 520 45 is_stmt 0
+ 436 00ec 9180902F 	 movh.a %a2,63752
+ 437 00f0 D922AC01 	 lea %a2,[%a2]6188
+ 438 00f4 5422     	 ld.w %d2,[%a2]0
+ 439              	.LVL32:
+ 440 00f6 B7220220 	 insert %d2,%d2,2,0,2
+ 441 00fa 7422     	 st.w [%a2]0,%d2
+ 521:../complex_device_driver/cdd_egtm_app.c ****      srcCfg.U                               = SRC_EGTMATOM0SR0.U;
+ 442              	 .loc 1 521 6 is_stmt 1
+ 443              	 .loc 1 521 63 is_stmt 0
+ 444 00fc 9130442F 	 movh.a %a2,62531
+ 445 0100 D922E0E3 	 lea %a2,[%a2]16288
+ 446 0104 5422     	 ld.w %d2,[%a2]0
+ 522:../complex_device_driver/cdd_egtm_app.c ****      srcCfg.B.SRPN                          = CTRL_ISR_PRIORITY;   /* assign Service Request Priori
+ 447              	 .loc 1 522 6 is_stmt 1
+ 448              	 .loc 1 522 45 is_stmt 0
+ 449 0106 3B400130 	 mov %d3,20
+ 450 010a 37320820 	 insert %d2,%d2,%d3,0,8
+ 451              	.LVL33:
+ 523:../complex_device_driver/cdd_egtm_app.c ****      srcCfg.B.TOS                           = CTRL_ISR_TOS;
+ 452              	 .loc 1 523 6 is_stmt 1
+ 453              	 .loc 1 523 45 is_stmt 0
+ 454 010e 26D2     	 and %d2,%d13
+ 455              	.LVL34:
+ 524:../complex_device_driver/cdd_egtm_app.c ****      SRC_EGTMATOM0SR0.U                     = srcCfg.U;
+ 456              	 .loc 1 524 6 is_stmt 1
+ 457              	 .loc 1 524 45 is_stmt 0
+ 458 0110 7422     	 st.w [%a2]0,%d2
+ 525:../complex_device_driver/cdd_egtm_app.c ****      SRC_EGTMATOM0SR0.B.SRE                 = 0x1U;                /* enable Service Request       
+ 459              	 .loc 1 525 6 is_stmt 1
+ 460              	 .loc 1 525 45 is_stmt 0
+ 461 0112 5422     	 ld.w %d2,[%a2]0
+ 462              	.LVL35:
+ 463 0114 B712812B 	 insert %d2,%d2,1,23,1
+ 464 0118 7422     	 st.w [%a2]0,%d2
+ 526:../complex_device_driver/cdd_egtm_app.c **** 
+ 527:../complex_device_driver/cdd_egtm_app.c **** 
+ 528:../complex_device_driver/cdd_egtm_app.c ****      /* Configure ATOM_CH5 as Phase U */
+ 529:../complex_device_driver/cdd_egtm_app.c ****      /* U1. Configure Channel Control */
+ 530:../complex_device_driver/cdd_egtm_app.c ****      chCtrl.U                  = EGTM_CLS0_ATOM_CH5_CTRL.U;
+ 465              	 .loc 1 530 6 is_stmt 1
+ 466              	 .loc 1 530 57 is_stmt 0
+ 467 011a 9180902F 	 movh.a %a2,63752
+ 468 011e D92284A1 	 lea %a2,[%a2]6788
+ 469 0122 5422     	 ld.w %d2,[%a2]0
+ 531:../complex_device_driver/cdd_egtm_app.c ****      chCtrl.B.MODE             = 0x2U;   /* set in SOMP Mode                                      *
+ 470              	 .loc 1 531 6 is_stmt 1
+ 471              	 .loc 1 531 32 is_stmt 0
+ 472 0124 B7220220 	 insert %d2,%d2,2,0,2
+ 473              	.LVL36:
+ 532:../complex_device_driver/cdd_egtm_app.c ****      chCtrl.B.UDMODE           = 0x0U;   /* enable Up Count Mode                                  *
+ 474              	 .loc 1 532 6 is_stmt 1
+ 475              	 .loc 1 532 32 is_stmt 0
+ 476 0128 26E2     	 and %d2,%d14
+ 477              	.LVL37:
+ 533:../complex_device_driver/cdd_egtm_app.c ****      chCtrl.B.CLK_SRC          = 0x0U;   /* select CMU_CLK0                                       *
+ 478              	 .loc 1 533 6 is_stmt 1
+ 479              	 .loc 1 533 32 is_stmt 0
+ 480 012a 26D2     	 and %d2,%d13
+ 481              	.LVL38:
+ 534:../complex_device_driver/cdd_egtm_app.c ****      chCtrl.B.TRIGOUT          = 0x0U;   /* disable own counter reset                             *
+ 482              	 .loc 1 534 6 is_stmt 1
+ 483              	 .loc 1 534 32 is_stmt 0
+ 484 012c 7B00F0FF 	 movh %d15,65280
+ 485 0130 C2FF     	 add %d15,-1
+ 486              	.LVL39:
+ 487 0132 26F2     	 and %d2,%d15
+ 488              	.LVL40:
+ 535:../complex_device_driver/cdd_egtm_app.c ****      chCtrl.B.RST_CCU0         = 0x1U;   /* reset the counter on the event CCU0 of Master Channel *
+ 489              	 .loc 1 535 6 is_stmt 1
+ 490              	 .loc 1 535 32 is_stmt 0
+ 491 0134 B712012A 	 insert %d2,%d2,1,20,1
+ 492              	.LVL41:
+ 536:../complex_device_driver/cdd_egtm_app.c ****      EGTM_CLS0_ATOM_CH5_CTRL.U = chCtrl.U;
+ 493              	 .loc 1 536 6 is_stmt 1
+ 494              	 .loc 1 536 32 is_stmt 0
+ 495 0138 7422     	 st.w [%a2]0,%d2
+ 537:../complex_device_driver/cdd_egtm_app.c **** 
+ 538:../complex_device_driver/cdd_egtm_app.c ****      /* U2. Specify Period and Duty Cycle of PWM Signal (Shadow Register) */
+ 539:../complex_device_driver/cdd_egtm_app.c ****      EGTM_CLS0_ATOM_CH5_SR0.B.SR0 = Inv_G.PeriodTicks;
+ 496              	 .loc 1 539 6 is_stmt 1
+ 497              	 .loc 1 539 42 is_stmt 0
+ 498 013a 19C30000 	 ld.w %d3,[%a12]lo:Inv_G
+ 499              	 .loc 1 539 35
+ 500 013e 9180902F 	 movh.a %a2,63752
+ 501 0142 D92288A1 	 lea %a2,[%a2]6792
+ 502 0146 5422     	 ld.w %d2,[%a2]0
+ 503              	.LVL42:
+ 504 0148 37321820 	 insert %d2,%d2,%d3,0,24
+ 505 014c 7422     	 st.w [%a2]0,%d2
+ 540:../complex_device_driver/cdd_egtm_app.c ****      EGTM_CLS0_ATOM_CH5_SR1.B.SR1 = Inv_G.PeriodTicks/2u;
+ 506              	 .loc 1 540 6 is_stmt 1
+ 507              	 .loc 1 540 42 is_stmt 0
+ 508 014e 19C20000 	 ld.w %d2,[%a12]lo:Inv_G
+ 509              	 .loc 1 540 54
+ 510 0152 8FF21F30 	 sh %d3,%d2,-1
+ 511              	 .loc 1 540 35
+ 512 0156 9180902F 	 movh.a %a2,63752
+ 513 015a D9228CA1 	 lea %a2,[%a2]6796
+ 514 015e 5422     	 ld.w %d2,[%a2]0
+ 515 0160 37321820 	 insert %d2,%d2,%d3,0,24
+ 516 0164 7422     	 st.w [%a2]0,%d2
+ 541:../complex_device_driver/cdd_egtm_app.c **** 
+ 542:../complex_device_driver/cdd_egtm_app.c ****      /* U3. Dead Time Configuration */
+ 543:../complex_device_driver/cdd_egtm_app.c ****      chDTV.U         = EGTM_CLS0_CDTM_DTM5_CH_DTV1.U;
+ 517              	 .loc 1 543 6 is_stmt 1
+ 518              	 .loc 1 543 51 is_stmt 0
+ 519 0166 9180902F 	 movh.a %a2,63752
+ 520 016a D9225854 	 lea %a2,[%a2]17752
+ 521 016e 5422     	 ld.w %d2,[%a2]0
+ 544:../complex_device_driver/cdd_egtm_app.c ****      chDTV.B.RELFALL = Inv_G.DeadTimeTicks;    /* set the dead time for falling edge    */
+ 522              	 .loc 1 544 6 is_stmt 1
+ 523              	 .loc 1 544 29 is_stmt 0
+ 524 0170 19D30400 	 ld.w %d3,[%a13]4
+ 525 0174 B7039336 	 insert %d3,%d3,0,13,19
+ 526              	 .loc 1 544 22
+ 527 0178 37320D28 	 insert %d2,%d2,%d3,16,13
+ 528              	.LVL43:
+ 545:../complex_device_driver/cdd_egtm_app.c ****      chDTV.B.RELRISE = Inv_G.DeadTimeTicks;   /* set the dead time for rising  edge    */
+ 529              	 .loc 1 545 6 is_stmt 1
+ 530              	 .loc 1 545 22 is_stmt 0
+ 531 017c 37320D20 	 insert %d2,%d2,%d3,0,13
+ 546:../complex_device_driver/cdd_egtm_app.c ****      EGTM_CLS0_CDTM_DTM5_CH_DTV1.U = chDTV.U;
+ 532              	 .loc 1 546 6 is_stmt 1
+ 533              	 .loc 1 546 36 is_stmt 0
+ 534 0180 7422     	 st.w [%a2]0,%d2
+ 547:../complex_device_driver/cdd_egtm_app.c ****      dtm5ChCtrl2.B.DT0_1 = 0x1U;   /* enable dead time for high-switch */
+ 535              	 .loc 1 547 6 is_stmt 1
+ 536              	 .loc 1 547 26 is_stmt 0
+ 537 0182 B7198195 	 insert %d9,%d9,1,11,1
+ 538              	.LVL44:
+ 548:../complex_device_driver/cdd_egtm_app.c ****      dtm5ChCtrl2.B.DT1_1 = 0x1U;   /* enable dead time for low-switch  */
+ 539              	 .loc 1 548 6 is_stmt 1
+ 540              	 .loc 1 548 26 is_stmt 0
+ 541 0186 B7198197 	 insert %d9,%d9,1,15,1
+ 549:../complex_device_driver/cdd_egtm_app.c **** 
+ 550:../complex_device_driver/cdd_egtm_app.c ****      /* U4. Connect the Channel to Output Pin*/
+ 551:../complex_device_driver/cdd_egtm_app.c ****      CddGpio_ConfigEgtmAtomUhP02_05();
+ 542              	 .loc 1 551 6 is_stmt 1
+ 543 018a 6D000000 	 call CddGpio_ConfigEgtmAtomUhP02_05
+ 544              	.LVL45:
+ 552:../complex_device_driver/cdd_egtm_app.c ****      CddGpio_ConfigEgtmAtomUlP00_02();
+ 545              	 .loc 1 552 6
+ 546 018e 6D000000 	 call CddGpio_ConfigEgtmAtomUlP00_02
+ 547              	.LVL46:
+ 553:../complex_device_driver/cdd_egtm_app.c ****      //IfxEgtm_PinMap_setAtomTout(U_L, IfxPort_Mode_outputPushPullGeneral, IfxPort_PadDriver_cmosAu
+ 554:../complex_device_driver/cdd_egtm_app.c **** 
+ 555:../complex_device_driver/cdd_egtm_app.c ****      /* U5. Configure Signal-Level  during the Shut-off in Shadow Register */
+ 556:../complex_device_driver/cdd_egtm_app.c ****      dtm5ChCtrl2Sr.B.OC0_1_SR   = 0x1U;
+ 548              	 .loc 1 556 6
+ 549              	 .loc 1 556 33 is_stmt 0
+ 550 0192 B7188184 	 insert %d8,%d8,1,9,1
+ 551              	.LVL47:
+ 557:../complex_device_driver/cdd_egtm_app.c ****      dtm5ChCtrl2Sr.B.OC1_1_SR   = 0x1U;
+ 552              	 .loc 1 557 6 is_stmt 1
+ 553              	 .loc 1 557 33 is_stmt 0
+ 554 0196 B7188186 	 insert %d8,%d8,1,13,1
+ 558:../complex_device_driver/cdd_egtm_app.c ****      dtm5CtrlChSr.B.SL0_1_SR_SR = 0x0U;
+ 555              	 .loc 1 558 6 is_stmt 1
+ 559:../complex_device_driver/cdd_egtm_app.c ****      dtm5CtrlChSr.B.SL1_1_SR_SR = 0x0U;
+ 556              	 .loc 1 559 6
+ 560:../complex_device_driver/cdd_egtm_app.c **** 
+ 561:../complex_device_driver/cdd_egtm_app.c ****      /* Configure ATOM_CH6 as Phase V */
+ 562:../complex_device_driver/cdd_egtm_app.c ****      /* V1. Configure Channel Control */
+ 563:../complex_device_driver/cdd_egtm_app.c ****      chCtrl.U                  = EGTM_CLS0_ATOM_CH6_CTRL.U;
+ 557              	 .loc 1 563 6
+ 558              	 .loc 1 563 57 is_stmt 0
+ 559 019a 9180902F 	 movh.a %a2,63752
+ 560 019e D92284C1 	 lea %a2,[%a2]6916
+ 561 01a2 5422     	 ld.w %d2,[%a2]0
+ 564:../complex_device_driver/cdd_egtm_app.c ****      chCtrl.B.MODE             = 0x2U;   /* set in SOMP Mode                                      *
+ 562              	 .loc 1 564 6 is_stmt 1
+ 563              	 .loc 1 564 32 is_stmt 0
+ 564 01a4 B7220220 	 insert %d2,%d2,2,0,2
+ 565              	.LVL48:
+ 565:../complex_device_driver/cdd_egtm_app.c ****      chCtrl.B.UDMODE           = 0x0U;   /* enable Up Count Mode                                  *
+ 566              	 .loc 1 565 6 is_stmt 1
+ 567              	 .loc 1 565 32 is_stmt 0
+ 568 01a8 26E2     	 and %d2,%d14
+ 569              	.LVL49:
+ 566:../complex_device_driver/cdd_egtm_app.c ****      chCtrl.B.CLK_SRC          = 0x0U;   /* select CMU_CLK0                                       *
+ 570              	 .loc 1 566 6 is_stmt 1
+ 571              	 .loc 1 566 32 is_stmt 0
+ 572 01aa 26D2     	 and %d2,%d13
+ 573              	.LVL50:
+ 567:../complex_device_driver/cdd_egtm_app.c ****      chCtrl.B.TRIGOUT          = 0x0U;   /* disable own counter reset                             *
+ 574              	 .loc 1 567 6 is_stmt 1
+ 575              	 .loc 1 567 32 is_stmt 0
+ 576 01ac 26F2     	 and %d2,%d15
+ 577              	.LVL51:
+ 568:../complex_device_driver/cdd_egtm_app.c ****      chCtrl.B.RST_CCU0         = 0x1U;   /* reset the counter on the event CCU0 of Master Channel *
+ 578              	 .loc 1 568 6 is_stmt 1
+ 579              	 .loc 1 568 32 is_stmt 0
+ 580 01ae B712012A 	 insert %d2,%d2,1,20,1
+ 581              	.LVL52:
+ 569:../complex_device_driver/cdd_egtm_app.c ****      EGTM_CLS0_ATOM_CH6_CTRL.U = chCtrl.U;
+ 582              	 .loc 1 569 6 is_stmt 1
+ 583              	 .loc 1 569 32 is_stmt 0
+ 584 01b2 7422     	 st.w [%a2]0,%d2
+ 570:../complex_device_driver/cdd_egtm_app.c **** 
+ 571:../complex_device_driver/cdd_egtm_app.c ****      /* V2. Specify Period and Duty Cycle of PWM Signal (Shadow Register) */
+ 572:../complex_device_driver/cdd_egtm_app.c ****      EGTM_CLS0_ATOM_CH6_SR0.B.SR0 = Inv_G.PeriodTicks;
+ 585              	 .loc 1 572 6 is_stmt 1
+ 586              	 .loc 1 572 42 is_stmt 0
+ 587 01b4 19C30000 	 ld.w %d3,[%a12]lo:Inv_G
+ 588              	 .loc 1 572 35
+ 589 01b8 9180902F 	 movh.a %a2,63752
+ 590 01bc D92288C1 	 lea %a2,[%a2]6920
+ 591 01c0 5422     	 ld.w %d2,[%a2]0
+ 592              	.LVL53:
+ 593 01c2 37321820 	 insert %d2,%d2,%d3,0,24
+ 594 01c6 7422     	 st.w [%a2]0,%d2
+ 573:../complex_device_driver/cdd_egtm_app.c ****      EGTM_CLS0_ATOM_CH6_SR1.B.SR1 = Inv_G.PeriodTicks/2u;
+ 595              	 .loc 1 573 6 is_stmt 1
+ 596              	 .loc 1 573 42 is_stmt 0
+ 597 01c8 19C20000 	 ld.w %d2,[%a12]lo:Inv_G
+ 598              	 .loc 1 573 54
+ 599 01cc 8FF21F30 	 sh %d3,%d2,-1
+ 600              	 .loc 1 573 35
+ 601 01d0 9180902F 	 movh.a %a2,63752
+ 602 01d4 D9228CC1 	 lea %a2,[%a2]6924
+ 603 01d8 5422     	 ld.w %d2,[%a2]0
+ 604 01da 37321820 	 insert %d2,%d2,%d3,0,24
+ 605 01de 7422     	 st.w [%a2]0,%d2
+ 574:../complex_device_driver/cdd_egtm_app.c **** 
+ 575:../complex_device_driver/cdd_egtm_app.c ****      /* V3. Dead Time Configuration */
+ 576:../complex_device_driver/cdd_egtm_app.c ****      chDTV.U         = EGTM_CLS0_CDTM_DTM5_CH_DTV2.U;
+ 606              	 .loc 1 576 6 is_stmt 1
+ 607              	 .loc 1 576 51 is_stmt 0
+ 608 01e0 9180902F 	 movh.a %a2,63752
+ 609 01e4 D9225C54 	 lea %a2,[%a2]17756
+ 610 01e8 5422     	 ld.w %d2,[%a2]0
+ 577:../complex_device_driver/cdd_egtm_app.c ****      chDTV.B.RELFALL = Inv_G.DeadTimeTicks;    /* set the dead time for falling edge    */
+ 611              	 .loc 1 577 6 is_stmt 1
+ 612              	 .loc 1 577 29 is_stmt 0
+ 613 01ea 19D30400 	 ld.w %d3,[%a13]4
+ 614 01ee B7039336 	 insert %d3,%d3,0,13,19
+ 615              	 .loc 1 577 22
+ 616 01f2 37320D28 	 insert %d2,%d2,%d3,16,13
+ 617              	.LVL54:
+ 578:../complex_device_driver/cdd_egtm_app.c ****      chDTV.B.RELRISE = Inv_G.DeadTimeTicks;    /* set the dead time for rising  edge    */
+ 618              	 .loc 1 578 6 is_stmt 1
+ 619              	 .loc 1 578 22 is_stmt 0
+ 620 01f6 37320D20 	 insert %d2,%d2,%d3,0,13
+ 579:../complex_device_driver/cdd_egtm_app.c ****      EGTM_CLS0_CDTM_DTM5_CH_DTV2.U = chDTV.U;
+ 621              	 .loc 1 579 6 is_stmt 1
+ 622              	 .loc 1 579 36 is_stmt 0
+ 623 01fa 7422     	 st.w [%a2]0,%d2
+ 580:../complex_device_driver/cdd_egtm_app.c ****      dtm5ChCtrl2.B.DT0_2 = 0x1U;   /* enable dead time for high-switch */
+ 624              	 .loc 1 580 6 is_stmt 1
+ 625              	 .loc 1 580 26 is_stmt 0
+ 626 01fc B7198199 	 insert %d9,%d9,1,19,1
+ 581:../complex_device_driver/cdd_egtm_app.c ****      dtm5ChCtrl2.B.DT1_2 = 0x1U;   /* enable dead time for low-switch  */
+ 627              	 .loc 1 581 6 is_stmt 1
+ 628              	 .loc 1 581 26 is_stmt 0
+ 629 0200 B719819B 	 insert %d9,%d9,1,23,1
+ 582:../complex_device_driver/cdd_egtm_app.c **** 
+ 583:../complex_device_driver/cdd_egtm_app.c ****      /* V4. Connect the Channel to Output Pin*/
+ 584:../complex_device_driver/cdd_egtm_app.c ****      CddGpio_ConfigEgtmAtomVhP02_06();
+ 630              	 .loc 1 584 6 is_stmt 1
+ 631 0204 6D000000 	 call CddGpio_ConfigEgtmAtomVhP02_06
+ 632              	.LVL55:
+ 585:../complex_device_driver/cdd_egtm_app.c ****      CddGpio_ConfigEgtmAtomVlP00_04();
+ 633              	 .loc 1 585 6
+ 634 0208 6D000000 	 call CddGpio_ConfigEgtmAtomVlP00_04
+ 635              	.LVL56:
+ 586:../complex_device_driver/cdd_egtm_app.c **** 
+ 587:../complex_device_driver/cdd_egtm_app.c ****      /* V5. Configure Signal-Level  during the Shut-off in Shadow Register */
+ 588:../complex_device_driver/cdd_egtm_app.c ****      dtm5ChCtrl2Sr.B.OC0_2_SR   = 0x1U;
+ 636              	 .loc 1 588 6
+ 637              	 .loc 1 588 33 is_stmt 0
+ 638 020c B7188188 	 insert %d8,%d8,1,17,1
+ 589:../complex_device_driver/cdd_egtm_app.c ****      dtm5ChCtrl2Sr.B.OC1_2_SR   = 0x1U;
+ 639              	 .loc 1 589 6 is_stmt 1
+ 640              	 .loc 1 589 33 is_stmt 0
+ 641 0210 B718818A 	 insert %d8,%d8,1,21,1
+ 590:../complex_device_driver/cdd_egtm_app.c ****      dtm5CtrlChSr.B.SL0_2_SR_SR = 0x0U;
+ 642              	 .loc 1 590 6 is_stmt 1
+ 591:../complex_device_driver/cdd_egtm_app.c ****      dtm5CtrlChSr.B.SL1_2_SR_SR = 0x0U;
+ 643              	 .loc 1 591 6
+ 592:../complex_device_driver/cdd_egtm_app.c **** 
+ 593:../complex_device_driver/cdd_egtm_app.c ****      /* Configure ATOM_CH7 as Phase W */
+ 594:../complex_device_driver/cdd_egtm_app.c ****      /* W1. Configure Channel Control */
+ 595:../complex_device_driver/cdd_egtm_app.c ****      chCtrl.U                  = EGTM_CLS0_ATOM_CH7_CTRL.U;
+ 644              	 .loc 1 595 6
+ 645              	 .loc 1 595 57 is_stmt 0
+ 646 0214 9180902F 	 movh.a %a2,63752
+ 647 0218 D92284E1 	 lea %a2,[%a2]7044
+ 648 021c 5422     	 ld.w %d2,[%a2]0
+ 596:../complex_device_driver/cdd_egtm_app.c ****      chCtrl.B.MODE             = 0x2U;   /* set in SOMP Mode                                      *
+ 649              	 .loc 1 596 6 is_stmt 1
+ 650              	 .loc 1 596 32 is_stmt 0
+ 651 021e B7220220 	 insert %d2,%d2,2,0,2
+ 652              	.LVL57:
+ 597:../complex_device_driver/cdd_egtm_app.c ****      chCtrl.B.UDMODE           = 0x0U;   /* enable Up Count Mode                                  *
+ 653              	 .loc 1 597 6 is_stmt 1
+ 654              	 .loc 1 597 32 is_stmt 0
+ 655 0222 26E2     	 and %d2,%d14
+ 656              	.LVL58:
+ 598:../complex_device_driver/cdd_egtm_app.c ****      chCtrl.B.CLK_SRC          = 0x0U;   /* select CMU_CLK0                                       *
+ 657              	 .loc 1 598 6 is_stmt 1
+ 658              	 .loc 1 598 32 is_stmt 0
+ 659 0224 26D2     	 and %d2,%d13
+ 660              	.LVL59:
+ 599:../complex_device_driver/cdd_egtm_app.c ****      chCtrl.B.TRIGOUT          = 0x0U;   /* disable own counter reset                             *
+ 661              	 .loc 1 599 6 is_stmt 1
+ 662              	 .loc 1 599 32 is_stmt 0
+ 663 0226 26F2     	 and %d2,%d15
+ 664              	.LVL60:
+ 600:../complex_device_driver/cdd_egtm_app.c ****      chCtrl.B.RST_CCU0         = 0x1U;   /* reset the counter on the event CCU0 of Master Channel *
+ 665              	 .loc 1 600 6 is_stmt 1
+ 666              	 .loc 1 600 32 is_stmt 0
+ 667 0228 B712012A 	 insert %d2,%d2,1,20,1
+ 668              	.LVL61:
+ 601:../complex_device_driver/cdd_egtm_app.c ****      EGTM_CLS0_ATOM_CH7_CTRL.U = chCtrl.U;
+ 669              	 .loc 1 601 6 is_stmt 1
+ 670              	 .loc 1 601 32 is_stmt 0
+ 671 022c 7422     	 st.w [%a2]0,%d2
+ 602:../complex_device_driver/cdd_egtm_app.c **** 
+ 603:../complex_device_driver/cdd_egtm_app.c ****      /* W2. Specify Period and Duty Cycle of PWM Signal (Shadow Register) */
+ 604:../complex_device_driver/cdd_egtm_app.c ****      EGTM_CLS0_ATOM_CH7_SR0.B.SR0 = Inv_G.PeriodTicks;
+ 672              	 .loc 1 604 6 is_stmt 1
+ 673              	 .loc 1 604 42 is_stmt 0
+ 674 022e 19C30000 	 ld.w %d3,[%a12]lo:Inv_G
+ 675              	 .loc 1 604 35
+ 676 0232 9180902F 	 movh.a %a2,63752
+ 677 0236 D92288E1 	 lea %a2,[%a2]7048
+ 678 023a 5422     	 ld.w %d2,[%a2]0
+ 679              	.LVL62:
+ 680 023c 37321820 	 insert %d2,%d2,%d3,0,24
+ 681 0240 7422     	 st.w [%a2]0,%d2
+ 605:../complex_device_driver/cdd_egtm_app.c ****      EGTM_CLS0_ATOM_CH7_SR1.B.SR1 = Inv_G.PeriodTicks/2u;
+ 682              	 .loc 1 605 6 is_stmt 1
+ 683              	 .loc 1 605 42 is_stmt 0
+ 684 0242 19C30000 	 ld.w %d3,[%a12]lo:Inv_G
+ 685              	 .loc 1 605 54
+ 686 0246 3703F830 	 extr.u %d3,%d3,1,24
+ 687              	 .loc 1 605 35
+ 688 024a 9180902F 	 movh.a %a2,63752
+ 689 024e D9228CE1 	 lea %a2,[%a2]7052
+ 690 0252 5422     	 ld.w %d2,[%a2]0
+ 691 0254 37321820 	 insert %d2,%d2,%d3,0,24
+ 692 0258 7422     	 st.w [%a2]0,%d2
+ 606:../complex_device_driver/cdd_egtm_app.c **** 
+ 607:../complex_device_driver/cdd_egtm_app.c ****      /* W3. Dead Time Configuration */
+ 608:../complex_device_driver/cdd_egtm_app.c ****      chDTV.U         = EGTM_CLS0_CDTM_DTM5_CH_DTV3.U;
+ 693              	 .loc 1 608 6 is_stmt 1
+ 694              	 .loc 1 608 51 is_stmt 0
+ 695 025a 9180902F 	 movh.a %a2,63752
+ 696 025e D9226054 	 lea %a2,[%a2]17760
+ 697 0262 5422     	 ld.w %d2,[%a2]0
+ 609:../complex_device_driver/cdd_egtm_app.c ****      chDTV.B.RELFALL = Inv_G.DeadTimeTicks;    /* set the dead time for falling edge    */
+ 698              	 .loc 1 609 6 is_stmt 1
+ 699              	 .loc 1 609 29 is_stmt 0
+ 700 0264 19D30400 	 ld.w %d3,[%a13]4
+ 701 0268 B7039336 	 insert %d3,%d3,0,13,19
+ 702              	 .loc 1 609 22
+ 703 026c 37320D28 	 insert %d2,%d2,%d3,16,13
+ 704              	.LVL63:
+ 610:../complex_device_driver/cdd_egtm_app.c ****      chDTV.B.RELRISE = Inv_G.DeadTimeTicks;   /* set the dead time for rising  edge    */
+ 705              	 .loc 1 610 6 is_stmt 1
+ 706              	 .loc 1 610 22 is_stmt 0
+ 707 0270 37320D20 	 insert %d2,%d2,%d3,0,13
+ 611:../complex_device_driver/cdd_egtm_app.c ****      EGTM_CLS0_CDTM_DTM5_CH_DTV3.U = chDTV.U;
+ 708              	 .loc 1 611 6 is_stmt 1
+ 709              	 .loc 1 611 36 is_stmt 0
+ 710 0274 7422     	 st.w [%a2]0,%d2
+ 612:../complex_device_driver/cdd_egtm_app.c ****      dtm5ChCtrl2.B.DT0_3 = 0x1U;   /* enable dead time for high-switch */
+ 711              	 .loc 1 612 6 is_stmt 1
+ 712              	 .loc 1 612 26 is_stmt 0
+ 713 0276 B719819D 	 insert %d9,%d9,1,27,1
+ 613:../complex_device_driver/cdd_egtm_app.c ****      dtm5ChCtrl2.B.DT1_3 = 0x1U;   /* enable dead time for low-switch  */
+ 714              	 .loc 1 613 6 is_stmt 1
+ 715              	 .loc 1 613 26 is_stmt 0
+ 716 027a B719819F 	 insert %d9,%d9,1,31,1
+ 614:../complex_device_driver/cdd_egtm_app.c **** 
+ 615:../complex_device_driver/cdd_egtm_app.c ****      /* W4. Connect the Channel to Output Pin*/
+ 616:../complex_device_driver/cdd_egtm_app.c ****      CddGpio_ConfigEgtmAtomWhP02_07();
+ 717              	 .loc 1 616 6 is_stmt 1
+ 718 027e 6D000000 	 call CddGpio_ConfigEgtmAtomWhP02_07
+ 719              	.LVL64:
+ 617:../complex_device_driver/cdd_egtm_app.c ****      CddGpio_ConfigEgtmAtomWlP00_06();
+ 720              	 .loc 1 617 6
+ 721 0282 6D000000 	 call CddGpio_ConfigEgtmAtomWlP00_06
+ 722              	.LVL65:
+ 618:../complex_device_driver/cdd_egtm_app.c **** 
+ 619:../complex_device_driver/cdd_egtm_app.c ****      /* W5. Configure Signal-Level  during the Shut-off in Shadow Register */
+ 620:../complex_device_driver/cdd_egtm_app.c ****      dtm5ChCtrl2Sr.B.OC0_3_SR   = 0x1U;
+ 723              	 .loc 1 620 6
+ 724              	 .loc 1 620 33 is_stmt 0
+ 725 0286 B718818C 	 insert %d8,%d8,1,25,1
+ 621:../complex_device_driver/cdd_egtm_app.c ****      dtm5ChCtrl2Sr.B.OC1_3_SR   = 0x1U;
+ 726              	 .loc 1 621 6 is_stmt 1
+ 727              	 .loc 1 621 33 is_stmt 0
+ 728 028a B718818E 	 insert %d8,%d8,1,29,1
+ 622:../complex_device_driver/cdd_egtm_app.c ****      dtm5CtrlChSr.B.SL0_3_SR_SR = 0x0U;
+ 729              	 .loc 1 622 6 is_stmt 1
+ 623:../complex_device_driver/cdd_egtm_app.c ****      dtm5CtrlChSr.B.SL1_3_SR_SR = 0x0U;
+ 730              	 .loc 1 623 6
+ 731              	 .loc 1 623 33 is_stmt 0
+ 732 028e 8FCBCF21 	 andn %d2,%d11,~(-253)
+ 733              	.LVL66:
+ 624:../complex_device_driver/cdd_egtm_app.c **** 
+ 625:../complex_device_driver/cdd_egtm_app.c ****      /* Write back the Configurations to its corresponding Control Registers */
+ 626:../complex_device_driver/cdd_egtm_app.c ****      EGTM_CLS0_CDTM_DTM5_PS_CTRL.U     = psCtrl.U;
+ 734              	 .loc 1 626 6 is_stmt 1
+ 735              	 .loc 1 626 40 is_stmt 0
+ 736 0292 9180902F 	 movh.a %a2,63752
+ 737 0296 D9225054 	 lea %a2,[%a2]17744
+ 738 029a 742C     	 st.w [%a2]0,%d12
+ 627:../complex_device_driver/cdd_egtm_app.c ****      EGTM_CLS0_CDTM_DTM4_CTRL.U        = dtm4Ctrl.U;
+ 739              	 .loc 1 627 6 is_stmt 1
+ 740              	 .loc 1 627 40 is_stmt 0
+ 741 029c 9180902F 	 movh.a %a2,63752
+ 742 02a0 D9224044 	 lea %a2,[%a2]17664
+ 743              	.LVL67:
+ 744 02a4 EC20     	 st.a [%a2]0,%a15
+ 628:../complex_device_driver/cdd_egtm_app.c ****      EGTM_CLS0_CDTM_DTM4_CH_CTRL2.U    = dtm4ChCtrl2.U;
+ 745              	 .loc 1 628 6 is_stmt 1
+ 746              	 .loc 1 628 40 is_stmt 0
+ 747 02a6 9180902F 	 movh.a %a2,63752
+ 748 02aa D9224844 	 lea %a2,[%a2]17672
+ 749 02ae 19E3FCFF 	 ld.w %d3,[%a14]-4
+ 750 02b2 7423     	 st.w [%a2]0,%d3
+ 629:../complex_device_driver/cdd_egtm_app.c ****      EGTM_CLS0_CDTM_DTM5_CTRL.U        = dtm5Ctrl.U;
+ 751              	 .loc 1 629 6 is_stmt 1
+ 752              	 .loc 1 629 40 is_stmt 0
+ 753 02b4 9180902F 	 movh.a %a2,63752
+ 754 02b8 D9224054 	 lea %a2,[%a2]17728
+ 755 02bc 742A     	 st.w [%a2]0,%d10
+ 630:../complex_device_driver/cdd_egtm_app.c ****      EGTM_CLS0_CDTM_DTM5_CH_CTRL2.U    = dtm5ChCtrl2.U;
+ 756              	 .loc 1 630 6 is_stmt 1
+ 757              	 .loc 1 630 40 is_stmt 0
+ 758 02be 9180902F 	 movh.a %a2,63752
+ 759 02c2 D9224854 	 lea %a2,[%a2]17736
+ 760 02c6 7429     	 st.w [%a2]0,%d9
+ 631:../complex_device_driver/cdd_egtm_app.c ****      EGTM_CLS0_CDTM_DTM5_CH_CTRL2_SR.U = dtm5ChCtrl2Sr.U;
+ 761              	 .loc 1 631 6 is_stmt 1
+ 762              	 .loc 1 631 40 is_stmt 0
+ 763 02c8 9180902F 	 movh.a %a2,63752
+ 764 02cc D9224C54 	 lea %a2,[%a2]17740
+ 765 02d0 7428     	 st.w [%a2]0,%d8
+ 632:../complex_device_driver/cdd_egtm_app.c ****      EGTM_CLS0_CDTM_DTM5_CH_SR.U       = dtm5CtrlChSr.U;
+ 766              	 .loc 1 632 6 is_stmt 1
+ 767              	 .loc 1 632 40 is_stmt 0
+ 768 02d2 9180902F 	 movh.a %a2,63752
+ 769 02d6 D9226454 	 lea %a2,[%a2]17764
+ 770              	.LVL68:
+ 771 02da 7422     	 st.w [%a2]0,%d2
+ 633:../complex_device_driver/cdd_egtm_app.c **** 
+ 634:../complex_device_driver/cdd_egtm_app.c ****      /* Overall Configuration */
+ 635:../complex_device_driver/cdd_egtm_app.c ****      EGTM_CLS0_ATOM_AGC_GLB_CTRL.U   = 0xAAAA0000U;   /* enable update shadow registers of CH0, CH1
+ 772              	 .loc 1 635 6 is_stmt 1
+ 773              	 .loc 1 635 38 is_stmt 0
+ 774 02dc 9180902F 	 movh.a %a2,63752
+ 775 02e0 D922C011 	 lea %a2,[%a2]7232
+ 776 02e4 7BA0AA2A 	 movh %d2,43690
+ 777              	.LVL69:
+ 778 02e8 7422     	 st.w [%a2]0,%d2
+ 636:../complex_device_driver/cdd_egtm_app.c ****      EGTM_CLS0_ATOM_AGC_FUPD_CTRL.U  = 0x0000AAAAU;   /* enable force update on channels CH0, CH1, 
+ 779              	 .loc 1 636 6 is_stmt 1
+ 780              	 .loc 1 636 38 is_stmt 0
+ 781 02ea BBA0AA2A 	 mov.u %d2,43690
+ 782 02ee 9180902F 	 movh.a %a2,63752
+ 783 02f2 D922D811 	 lea %a2,[%a2]7256
+ 784 02f6 7422     	 st.w [%a2]0,%d2
+ 637:../complex_device_driver/cdd_egtm_app.c ****      EGTM_CLS0_ATOM_AGC_ENDIS_CTRL.U = 0x0000AAAAU;   /* enable channels CH0, CH1, CH5, CH6, CH7   
+ 785              	 .loc 1 637 6 is_stmt 1
+ 786              	 .loc 1 637 38 is_stmt 0
+ 787 02f8 9180902F 	 movh.a %a2,63752
+ 788 02fc D922C411 	 lea %a2,[%a2]7236
+ 789 0300 7422     	 st.w [%a2]0,%d2
+ 638:../complex_device_driver/cdd_egtm_app.c ****      EGTM_CLS0_ATOM_AGC_OUTEN_CTRL.U = 0x0000AAAAU;   /* enable output of CH0, CH1, CH5, CH6, CH7  
+ 790              	 .loc 1 638 6 is_stmt 1
+ 791              	 .loc 1 638 38 is_stmt 0
+ 792 0302 9180902F 	 movh.a %a2,63752
+ 793 0306 D922D011 	 lea %a2,[%a2]7248
+ 794 030a 7422     	 st.w [%a2]0,%d2
+ 639:../complex_device_driver/cdd_egtm_app.c **** 
+ 640:../complex_device_driver/cdd_egtm_app.c ****     // EGTM_CLS0_ATOM_AGC_GLB_CTRL.U  = 0xA8090000u;   /* disable update for master channel        
+ 641:../complex_device_driver/cdd_egtm_app.c ****     // EGTM_CLS0_ATOM_AGC_FUPD_CTRL.U = 0x00005405u;
+ 642:../complex_device_driver/cdd_egtm_app.c ****  }
+ 795              	 .loc 1 642 2
+ 796 030c 0090     	 ret 
+ 797              	.LFE593:
+ 799              	 .section .text.TIM0_CH4_ISR,"ax",@progbits
+ 800              	 .align 1
+ 801              	 .global TIM0_CH4_ISR
+ 803              	TIM0_CH4_ISR:
+ 804              	.LFB588:
+ 169:../complex_device_driver/cdd_egtm_app.c ****     Inv_G.ShutOffState = 0x1U;
+ 805              	 .loc 1 169 1 is_stmt 1
+ 806 0000 40AE     	 mov.aa %a14,%SP
+ 807              	.LCFI3:
+ 170:../complex_device_driver/cdd_egtm_app.c **** }
+ 808              	 .loc 1 170 5
+ 170:../complex_device_driver/cdd_egtm_app.c **** }
+ 809              	 .loc 1 170 24 is_stmt 0
+ 810 0002 91000020 	 movh.a %a2,hi:Inv_G
+ 811 0006 D9220000 	 lea %a2,[%a2]lo:Inv_G
+ 812 000a 8212     	 mov %d2,1
+ 813 000c 59222000 	 st.w [%a2]32,%d2
+ 171:../complex_device_driver/cdd_egtm_app.c **** 
+ 814              	 .loc 1 171 1
+ 815 0010 0D004002 	 rslcx
+ 816 0014 0080     	 rfe
+ 817              	.LFE588:
+ 819              	 .global TIM0_CH4_ISR_end
+ 820              	TIM0_CH4_ISR_end:
+ 821              	 .section .text.ControlLoop_ISR,"ax",@progbits
+ 822              	 .align 1
+ 823              	 .global ControlLoop_ISR
+ 825              	ControlLoop_ISR:
+ 826              	.LFB589:
+ 201:../complex_device_driver/cdd_egtm_app.c ****     Inv_G.Counter++;
+ 827              	 .loc 1 201 1 is_stmt 1
+ 828 0000 40AE     	 mov.aa %a14,%SP
+ 829              	.LCFI4:
+ 202:../complex_device_driver/cdd_egtm_app.c ****     CddEgtm_SetInverterFrequency();
+ 830              	 .loc 1 202 5
+ 202:../complex_device_driver/cdd_egtm_app.c ****     CddEgtm_SetInverterFrequency();
+ 831              	 .loc 1 202 10 is_stmt 0
+ 832 0002 91000020 	 movh.a %a2,hi:Inv_G
+ 833 0006 D9220000 	 lea %a2,[%a2]lo:Inv_G
+ 834 000a 19231800 	 ld.w %d3,[%a2]24
+ 835 000e 19221C00 	 ld.w %d2,[%a2]28
+ 202:../complex_device_driver/cdd_egtm_app.c ****     CddEgtm_SetInverterFrequency();
+ 836              	 .loc 1 202 18
+ 837 0012 8B138030 	 addx %d3,%d3,1
+ 838 0016 8B02A020 	 addc %d2,%d2,0
+ 839 001a 59231800 	 st.w [%a2]24,%d3
+ 840 001e 59221C00 	 st.w [%a2]28,%d2
+ 203:../complex_device_driver/cdd_egtm_app.c **** 
+ 841              	 .loc 1 203 5 is_stmt 1
+ 842 0022 6D000000 	 call CddEgtm_SetInverterFrequency
+ 843              	.LVL70:
+ 205:../complex_device_driver/cdd_egtm_app.c ****     {
+ 844              	 .loc 1 205 5
+ 205:../complex_device_driver/cdd_egtm_app.c ****     {
+ 845              	 .loc 1 205 39 is_stmt 0
+ 846 0026 9180902F 	 movh.a %a2,63752
+ 847 002a D922A001 	 lea %a2,[%a2]6176
+ 848 002e 5422     	 ld.w %d2,[%a2]0
+ 205:../complex_device_driver/cdd_egtm_app.c ****     {
+ 849              	 .loc 1 205 7
+ 850 0030 6F020000 	 jz.t %d2,0,.L11
+ 207:../complex_device_driver/cdd_egtm_app.c ****         {
+ 851              	 .loc 1 207 9 is_stmt 1
+ 207:../complex_device_driver/cdd_egtm_app.c ****         {
+ 852              	 .loc 1 207 18 is_stmt 0
+ 853 0034 91000020 	 movh.a %a2,hi:Inv_G
+ 854 0038 D9220000 	 lea %a2,[%a2]lo:Inv_G
+ 855 003c 19222000 	 ld.w %d2,[%a2]32
+ 207:../complex_device_driver/cdd_egtm_app.c ****         {
+ 856              	 .loc 1 207 11
+ 857 0040 DF120000 	 jeq %d2,1,.L15
+ 858              	.L12:
+ 213:../complex_device_driver/cdd_egtm_app.c ****     }
+ 859              	 .loc 1 213 9 is_stmt 1
+ 213:../complex_device_driver/cdd_egtm_app.c ****     }
+ 860              	 .loc 1 213 48 is_stmt 0
+ 861 0044 9180902F 	 movh.a %a2,63752
+ 862 0048 D922A001 	 lea %a2,[%a2]6176
+ 863 004c 5422     	 ld.w %d2,[%a2]0
+ 864 004e B7120120 	 insert %d2,%d2,1,0,1
+ 865 0052 7422     	 st.w [%a2]0,%d2
+ 866              	.L11:
+ 216:../complex_device_driver/cdd_egtm_app.c ****     {
+ 867              	 .loc 1 216 5 is_stmt 1
+ 216:../complex_device_driver/cdd_egtm_app.c ****     {
+ 868              	 .loc 1 216 39 is_stmt 0
+ 869 0054 9180902F 	 movh.a %a2,63752
+ 870 0058 D922A001 	 lea %a2,[%a2]6176
+ 871 005c 5422     	 ld.w %d2,[%a2]0
+ 216:../complex_device_driver/cdd_egtm_app.c ****     {
+ 872              	 .loc 1 216 7
+ 873 005e 6F120000 	 jz.t %d2,1,.L10
+ 219:../complex_device_driver/cdd_egtm_app.c ****         EGTM_CLS0_ATOM_CH5_SR1.B.SR1 = CAL_PHASE_DUTY_CYCLE(Inv_G.PeriodTicks, Inv_G.DutyCycleU);
+ 874              	 .loc 1 219 9 is_stmt 1
+ 219:../complex_device_driver/cdd_egtm_app.c ****         EGTM_CLS0_ATOM_CH5_SR1.B.SR1 = CAL_PHASE_DUTY_CYCLE(Inv_G.PeriodTicks, Inv_G.DutyCycleU);
+ 875              	 .loc 1 219 40 is_stmt 0
+ 876 0062 91000020 	 movh.a %a2,hi:Inv_G
+ 877 0066 D9230000 	 lea %a3,[%a2]lo:Inv_G
+ 878 006a 19360C00 	 ld.w %d6,[%a3]12
+ 879 006e 7B00F833 	 movh %d3,16256
+ 880 0072 6B032126 	 add.f %d2,%d6,%d3
+ 881 0076 19240000 	 ld.w %d4,[%a2]lo:Inv_G
+ 882 007a 4B046141 	 utof %d4,%d4
+ 883 007e 4B244140 	 mul.f %d4,%d4,%d2
+ 884 0082 7B00F023 	 movh %d2,16128
+ 885 0086 4B244140 	 mul.f %d4,%d4,%d2
+ 886 008a 4B047151 	 ftouz %d5,%d4
+ 219:../complex_device_driver/cdd_egtm_app.c ****         EGTM_CLS0_ATOM_CH5_SR1.B.SR1 = CAL_PHASE_DUTY_CYCLE(Inv_G.PeriodTicks, Inv_G.DutyCycleU);
+ 887              	 .loc 1 219 38
+ 888 008e 9180904F 	 movh.a %a4,63752
+ 889 0092 D94488A1 	 lea %a4,[%a4]6792
+ 890 0096 5444     	 ld.w %d4,[%a4]0
+ 891 0098 37541840 	 insert %d4,%d4,%d5,0,24
+ 892 009c 7444     	 st.w [%a4]0,%d4
+ 220:../complex_device_driver/cdd_egtm_app.c ****         EGTM_CLS0_ATOM_CH6_SR0.B.SR0 = CAL_PHASE_PERIOD(Inv_G.PeriodTicks, Inv_G.DutyCycleV);
+ 893              	 .loc 1 220 9 is_stmt 1
+ 220:../complex_device_driver/cdd_egtm_app.c ****         EGTM_CLS0_ATOM_CH6_SR0.B.SR0 = CAL_PHASE_PERIOD(Inv_G.PeriodTicks, Inv_G.DutyCycleV);
+ 894              	 .loc 1 220 40 is_stmt 0
+ 895 009e 6B063143 	 sub.f %d4,%d3,%d6
+ 896 00a2 19250000 	 ld.w %d5,[%a2]lo:Inv_G
+ 897 00a6 4B056151 	 utof %d5,%d5
+ 898 00aa 4B454140 	 mul.f %d4,%d5,%d4
+ 899 00ae 4B244140 	 mul.f %d4,%d4,%d2
+ 900 00b2 4B047151 	 ftouz %d5,%d4
+ 220:../complex_device_driver/cdd_egtm_app.c ****         EGTM_CLS0_ATOM_CH6_SR0.B.SR0 = CAL_PHASE_PERIOD(Inv_G.PeriodTicks, Inv_G.DutyCycleV);
+ 901              	 .loc 1 220 38
+ 902 00b6 9180904F 	 movh.a %a4,63752
+ 903 00ba D9448CA1 	 lea %a4,[%a4]6796
+ 904 00be 5444     	 ld.w %d4,[%a4]0
+ 905 00c0 37541840 	 insert %d4,%d4,%d5,0,24
+ 906 00c4 7444     	 st.w [%a4]0,%d4
+ 221:../complex_device_driver/cdd_egtm_app.c ****         EGTM_CLS0_ATOM_CH6_SR1.B.SR1 = CAL_PHASE_DUTY_CYCLE(Inv_G.PeriodTicks, Inv_G.DutyCycleV);
+ 907              	 .loc 1 221 9 is_stmt 1
+ 221:../complex_device_driver/cdd_egtm_app.c ****         EGTM_CLS0_ATOM_CH6_SR1.B.SR1 = CAL_PHASE_DUTY_CYCLE(Inv_G.PeriodTicks, Inv_G.DutyCycleV);
+ 908              	 .loc 1 221 40 is_stmt 0
+ 909 00c6 19361000 	 ld.w %d6,[%a3]16
+ 910 00ca 6B032146 	 add.f %d4,%d6,%d3
+ 911 00ce 19250000 	 ld.w %d5,[%a2]lo:Inv_G
+ 912 00d2 4B056151 	 utof %d5,%d5
+ 913 00d6 4B454140 	 mul.f %d4,%d5,%d4
+ 914 00da 4B244140 	 mul.f %d4,%d4,%d2
+ 915 00de 4B047151 	 ftouz %d5,%d4
+ 221:../complex_device_driver/cdd_egtm_app.c ****         EGTM_CLS0_ATOM_CH6_SR1.B.SR1 = CAL_PHASE_DUTY_CYCLE(Inv_G.PeriodTicks, Inv_G.DutyCycleV);
+ 916              	 .loc 1 221 38
+ 917 00e2 9180904F 	 movh.a %a4,63752
+ 918 00e6 D94488C1 	 lea %a4,[%a4]6920
+ 919 00ea 5444     	 ld.w %d4,[%a4]0
+ 920 00ec 37541840 	 insert %d4,%d4,%d5,0,24
+ 921 00f0 7444     	 st.w [%a4]0,%d4
+ 222:../complex_device_driver/cdd_egtm_app.c ****         EGTM_CLS0_ATOM_CH7_SR0.B.SR0 = CAL_PHASE_PERIOD(Inv_G.PeriodTicks, Inv_G.DutyCycleW);
+ 922              	 .loc 1 222 9 is_stmt 1
+ 222:../complex_device_driver/cdd_egtm_app.c ****         EGTM_CLS0_ATOM_CH7_SR0.B.SR0 = CAL_PHASE_PERIOD(Inv_G.PeriodTicks, Inv_G.DutyCycleW);
+ 923              	 .loc 1 222 40 is_stmt 0
+ 924 00f2 6B063143 	 sub.f %d4,%d3,%d6
+ 925 00f6 19250000 	 ld.w %d5,[%a2]lo:Inv_G
+ 926 00fa 4B056151 	 utof %d5,%d5
+ 927 00fe 4B454140 	 mul.f %d4,%d5,%d4
+ 928 0102 4B244140 	 mul.f %d4,%d4,%d2
+ 929 0106 4B047151 	 ftouz %d5,%d4
+ 222:../complex_device_driver/cdd_egtm_app.c ****         EGTM_CLS0_ATOM_CH7_SR0.B.SR0 = CAL_PHASE_PERIOD(Inv_G.PeriodTicks, Inv_G.DutyCycleW);
+ 930              	 .loc 1 222 38
+ 931 010a 9180904F 	 movh.a %a4,63752
+ 932 010e D9448CC1 	 lea %a4,[%a4]6924
+ 933 0112 5444     	 ld.w %d4,[%a4]0
+ 934 0114 37541840 	 insert %d4,%d4,%d5,0,24
+ 935 0118 7444     	 st.w [%a4]0,%d4
+ 223:../complex_device_driver/cdd_egtm_app.c ****         EGTM_CLS0_ATOM_CH7_SR1.B.SR1 = CAL_PHASE_DUTY_CYCLE(Inv_G.PeriodTicks, Inv_G.DutyCycleW);
+ 936              	 .loc 1 223 9 is_stmt 1
+ 223:../complex_device_driver/cdd_egtm_app.c ****         EGTM_CLS0_ATOM_CH7_SR1.B.SR1 = CAL_PHASE_DUTY_CYCLE(Inv_G.PeriodTicks, Inv_G.DutyCycleW);
+ 937              	 .loc 1 223 40 is_stmt 0
+ 938 011a 19361400 	 ld.w %d6,[%a3]20
+ 939 011e 6B032146 	 add.f %d4,%d6,%d3
+ 940 0122 19250000 	 ld.w %d5,[%a2]lo:Inv_G
+ 941 0126 4B056151 	 utof %d5,%d5
+ 942 012a 4B454140 	 mul.f %d4,%d5,%d4
+ 943 012e 4B244140 	 mul.f %d4,%d4,%d2
+ 944 0132 4B047151 	 ftouz %d5,%d4
+ 223:../complex_device_driver/cdd_egtm_app.c ****         EGTM_CLS0_ATOM_CH7_SR1.B.SR1 = CAL_PHASE_DUTY_CYCLE(Inv_G.PeriodTicks, Inv_G.DutyCycleW);
+ 945              	 .loc 1 223 38
+ 946 0136 9180904F 	 movh.a %a4,63752
+ 947 013a D94488E1 	 lea %a4,[%a4]7048
+ 948 013e 5444     	 ld.w %d4,[%a4]0
+ 949 0140 37541840 	 insert %d4,%d4,%d5,0,24
+ 950 0144 7444     	 st.w [%a4]0,%d4
+ 224:../complex_device_driver/cdd_egtm_app.c **** 
+ 951              	 .loc 1 224 9 is_stmt 1
+ 224:../complex_device_driver/cdd_egtm_app.c **** 
+ 952              	 .loc 1 224 40 is_stmt 0
+ 953 0146 6B063133 	 sub.f %d3,%d3,%d6
+ 954 014a 19240000 	 ld.w %d4,[%a2]lo:Inv_G
+ 955 014e 4B046141 	 utof %d4,%d4
+ 956 0152 4B344130 	 mul.f %d3,%d4,%d3
+ 957 0156 4B234130 	 mul.f %d3,%d3,%d2
+ 958 015a 4B037131 	 ftouz %d3,%d3
+ 224:../complex_device_driver/cdd_egtm_app.c **** 
+ 959              	 .loc 1 224 38
+ 960 015e 9180902F 	 movh.a %a2,63752
+ 961 0162 D9228CE1 	 lea %a2,[%a2]7052
+ 962 0166 5422     	 ld.w %d2,[%a2]0
+ 963 0168 37321820 	 insert %d2,%d2,%d3,0,24
+ 964 016c 7422     	 st.w [%a2]0,%d2
+ 226:../complex_device_driver/cdd_egtm_app.c ****         {
+ 965              	 .loc 1 226 9 is_stmt 1
+ 226:../complex_device_driver/cdd_egtm_app.c ****         {
+ 966              	 .loc 1 226 17 is_stmt 0
+ 967 016e 19322C00 	 ld.w %d2,[%a3]44
+ 226:../complex_device_driver/cdd_egtm_app.c ****         {
+ 968              	 .loc 1 226 11
+ 969 0172 DF120000 	 jeq %d2,1,.L16
+ 970              	.L14:
+ 234:../complex_device_driver/cdd_egtm_app.c ****     }
+ 971              	 .loc 1 234 9 is_stmt 1
+ 234:../complex_device_driver/cdd_egtm_app.c ****     }
+ 972              	 .loc 1 234 48 is_stmt 0
+ 973 0176 9180902F 	 movh.a %a2,63752
+ 974 017a D922A001 	 lea %a2,[%a2]6176
+ 975 017e 5422     	 ld.w %d2,[%a2]0
+ 976 0180 B7128120 	 insert %d2,%d2,1,1,1
+ 977 0184 7422     	 st.w [%a2]0,%d2
+ 978              	.L10:
+ 237:../complex_device_driver/cdd_egtm_app.c **** 
+ 979              	 .loc 1 237 1
+ 980 0186 0D004002 	 rslcx
+ 981 018a 0080     	 rfe
+ 982              	.L15:
+ 207:../complex_device_driver/cdd_egtm_app.c ****         {
+ 983              	 .loc 1 207 52 discriminator 1
+ 984 018c 91000020 	 movh.a %a2,hi:Inv_G
+ 985 0190 D9220000 	 lea %a2,[%a2]lo:Inv_G
+ 986 0194 19222400 	 ld.w %d2,[%a2]36
+ 207:../complex_device_driver/cdd_egtm_app.c ****         {
+ 987              	 .loc 1 207 43 discriminator 1
+ 988 0198 DF120080 	 jne %d2,1,.L12
+ 209:../complex_device_driver/cdd_egtm_app.c ****             Inv_G.ShutOffRstRequest = 0x0U;
+ 989              	 .loc 1 209 13 is_stmt 1
+ 209:../complex_device_driver/cdd_egtm_app.c ****             Inv_G.ShutOffRstRequest = 0x0U;
+ 990              	 .loc 1 209 53 is_stmt 0
+ 991 019c 9180902F 	 movh.a %a2,63752
+ 992 01a0 D9224054 	 lea %a2,[%a2]17728
+ 993 01a4 5422     	 ld.w %d2,[%a2]0
+ 994 01a6 B7120128 	 insert %d2,%d2,1,16,1
+ 995 01aa 7422     	 st.w [%a2]0,%d2
+ 210:../complex_device_driver/cdd_egtm_app.c ****             Inv_G.ShutOffState  = 0x0U;
+ 996              	 .loc 1 210 13 is_stmt 1
+ 210:../complex_device_driver/cdd_egtm_app.c ****             Inv_G.ShutOffState  = 0x0U;
+ 997              	 .loc 1 210 37 is_stmt 0
+ 998 01ac 91000020 	 movh.a %a2,hi:Inv_G
+ 999 01b0 D9220000 	 lea %a2,[%a2]lo:Inv_G
+ 1000 01b4 8202     	 mov %d2,0
+ 1001 01b6 59222400 	 st.w [%a2]36,%d2
+ 211:../complex_device_driver/cdd_egtm_app.c ****         }
+ 1002              	 .loc 1 211 13 is_stmt 1
+ 211:../complex_device_driver/cdd_egtm_app.c ****         }
+ 1003              	 .loc 1 211 33 is_stmt 0
+ 1004 01ba 59222000 	 st.w [%a2]32,%d2
+ 1005 01be 1D000000 	 j .L12
+ 1006              	.L16:
+ 228:../complex_device_driver/cdd_egtm_app.c ****             EGTM_CLS0_ATOM_CH0_SR1.B.SR1 = Inv_G.PeriodTicks/2u;
+ 1007              	 .loc 1 228 13 is_stmt 1
+ 228:../complex_device_driver/cdd_egtm_app.c ****             EGTM_CLS0_ATOM_CH0_SR1.B.SR1 = Inv_G.PeriodTicks/2u;
+ 1008              	 .loc 1 228 49 is_stmt 0
+ 1009 01c2 91000020 	 movh.a %a2,hi:Inv_G
+ 1010 01c6 4034     	 mov.aa %a4,%a3
+ 1011 01c8 19230000 	 ld.w %d3,[%a2]lo:Inv_G
+ 228:../complex_device_driver/cdd_egtm_app.c ****             EGTM_CLS0_ATOM_CH0_SR1.B.SR1 = Inv_G.PeriodTicks/2u;
+ 1012              	 .loc 1 228 42
+ 1013 01cc 9180903F 	 movh.a %a3,63752
+ 1014 01d0 D9338801 	 lea %a3,[%a3]6152
+ 1015 01d4 5432     	 ld.w %d2,[%a3]0
+ 1016 01d6 37321820 	 insert %d2,%d2,%d3,0,24
+ 1017 01da 7432     	 st.w [%a3]0,%d2
+ 229:../complex_device_driver/cdd_egtm_app.c ****             EGTM_CLS0_ATOM_AGC_GLB_CTRL.B.HOST_TRIG = 0x1u;
+ 1018              	 .loc 1 229 13 is_stmt 1
+ 229:../complex_device_driver/cdd_egtm_app.c ****             EGTM_CLS0_ATOM_AGC_GLB_CTRL.B.HOST_TRIG = 0x1u;
+ 1019              	 .loc 1 229 49 is_stmt 0
+ 1020 01dc 19230000 	 ld.w %d3,[%a2]lo:Inv_G
+ 229:../complex_device_driver/cdd_egtm_app.c ****             EGTM_CLS0_ATOM_AGC_GLB_CTRL.B.HOST_TRIG = 0x1u;
+ 1021              	 .loc 1 229 61
+ 1022 01e0 3703F830 	 extr.u %d3,%d3,1,24
+ 229:../complex_device_driver/cdd_egtm_app.c ****             EGTM_CLS0_ATOM_AGC_GLB_CTRL.B.HOST_TRIG = 0x1u;
+ 1023              	 .loc 1 229 42
+ 1024 01e4 9180902F 	 movh.a %a2,63752
+ 1025 01e8 D9228C01 	 lea %a2,[%a2]6156
+ 1026 01ec 5422     	 ld.w %d2,[%a2]0
+ 1027 01ee 37321820 	 insert %d2,%d2,%d3,0,24
+ 1028 01f2 7422     	 st.w [%a2]0,%d2
+ 230:../complex_device_driver/cdd_egtm_app.c ****             Inv_G.FrequencyChangeRequest = 0x0U;
+ 1029              	 .loc 1 230 13 is_stmt 1
+ 230:../complex_device_driver/cdd_egtm_app.c ****             Inv_G.FrequencyChangeRequest = 0x0U;
+ 1030              	 .loc 1 230 53 is_stmt 0
+ 1031 01f4 9180902F 	 movh.a %a2,63752
+ 1032 01f8 D922C011 	 lea %a2,[%a2]7232
+ 1033 01fc 5422     	 ld.w %d2,[%a2]0
+ 1034 01fe B7120120 	 insert %d2,%d2,1,0,1
+ 1035 0202 7422     	 st.w [%a2]0,%d2
+ 231:../complex_device_driver/cdd_egtm_app.c ****         }
+ 1036              	 .loc 1 231 13 is_stmt 1
+ 231:../complex_device_driver/cdd_egtm_app.c ****         }
+ 1037              	 .loc 1 231 42 is_stmt 0
+ 1038 0204 8202     	 mov %d2,0
+ 1039 0206 59422C00 	 st.w [%a4]44,%d2
+ 1040 020a 1D000000 	 j .L14
+ 1041              	.LFE589:
+ 1043              	 .global ControlLoop_ISR_end
+ 1044              	ControlLoop_ISR_end:
+ 1045              	 .section .text.CddEgtm_InitModule,"ax",@progbits
+ 1046              	 .align 1
+ 1047              	 .global CddEgtm_InitModule
+ 1049              	CddEgtm_InitModule:
+ 1050              	.LFB590:
+ 264:../complex_device_driver/cdd_egtm_app.c ****     real32_T frequency;
+ 1051              	 .loc 1 264 1 is_stmt 1
+ 1052 0000 40AE     	 mov.aa %a14,%SP
+ 1053              	.LCFI5:
+ 265:../complex_device_driver/cdd_egtm_app.c **** 
+ 1054              	 .loc 1 265 5
+ 267:../complex_device_driver/cdd_egtm_app.c **** 
+ 1055              	 .loc 1 267 5
+ 1056              	.LVL71:
+ 271:../complex_device_driver/cdd_egtm_app.c ****     frequency = CddSys_GetEgtmCmuFrequency();
+ 1057              	 .loc 1 271 5
+ 1058 0002 6D000000 	 call CddSys_EnableEgtmClock
+ 1059              	.LVL72:
+ 272:../complex_device_driver/cdd_egtm_app.c ****     CddSys_SetEgtmCmuFrequency(frequency);
+ 1060              	 .loc 1 272 5
+ 272:../complex_device_driver/cdd_egtm_app.c ****     CddSys_SetEgtmCmuFrequency(frequency);
+ 1061              	 .loc 1 272 17 is_stmt 0
+ 1062 0006 6D000000 	 call CddSys_GetEgtmCmuFrequency
+ 1063              	.LVL73:
+ 1064 000a 0228     	 mov %d8,%d2
+ 1065              	.LVL74:
+ 273:../complex_device_driver/cdd_egtm_app.c ****     CddSys_SetEgtmCmu0Frequency(frequency);
+ 1066              	 .loc 1 273 5 is_stmt 1
+ 1067 000c 0224     	 mov %d4,%d2
+ 1068 000e 6D000000 	 call CddSys_SetEgtmCmuFrequency
+ 1069              	.LVL75:
+ 274:../complex_device_driver/cdd_egtm_app.c ****     CddSys_EnableEgtmCmu0Clock();
+ 1070              	 .loc 1 274 5
+ 1071 0012 0284     	 mov %d4,%d8
+ 1072 0014 6D000000 	 call CddSys_SetEgtmCmu0Frequency
+ 1073              	.LVL76:
+ 275:../complex_device_driver/cdd_egtm_app.c **** 
+ 1074              	 .loc 1 275 5
+ 1075 0018 6D000000 	 call CddSys_EnableEgtmCmu0Clock
+ 1076              	.LVL77:
+ 277:../complex_device_driver/cdd_egtm_app.c ****     Inv_G.DutyCycleU       = 0.8F;
+ 1077              	 .loc 1 277 5
+ 277:../complex_device_driver/cdd_egtm_app.c ****     Inv_G.DutyCycleU       = 0.8F;
+ 1078              	 .loc 1 277 28 is_stmt 0
+ 1079 001c 910000C0 	 movh.a %a12,hi:Inv_G
+ 1080 0020 D9CC0000 	 lea %a12,[%a12]lo:Inv_G
+ 1081 0024 3B400620 	 mov %d2,100
+ 1082 0028 59C20400 	 st.w [%a12]4,%d2
+ 278:../complex_device_driver/cdd_egtm_app.c ****     Inv_G.DutyCycleV       = 0.6F;
+ 1083              	 .loc 1 278 5 is_stmt 1
+ 278:../complex_device_driver/cdd_egtm_app.c ****     Inv_G.DutyCycleV       = 0.6F;
+ 1084              	 .loc 1 278 28 is_stmt 0
+ 1085 002c 7BD0F423 	 movh %d2,16205
+ 1086 0030 1BD2CC2C 	 addi %d2,%d2,-13107
+ 1087 0034 59C20C00 	 st.w [%a12]12,%d2
+ 279:../complex_device_driver/cdd_egtm_app.c ****     Inv_G.DutyCycleW       = 0.7F;
+ 1088              	 .loc 1 279 5 is_stmt 1
+ 279:../complex_device_driver/cdd_egtm_app.c ****     Inv_G.DutyCycleW       = 0.7F;
+ 1089              	 .loc 1 279 28 is_stmt 0
+ 1090 0038 7BA0F123 	 movh %d2,16154
+ 1091 003c 1BA29929 	 addi %d2,%d2,-26214
+ 1092 0040 59C21000 	 st.w [%a12]16,%d2
+ 280:../complex_device_driver/cdd_egtm_app.c ****     Inv_G.ShutOffState     = 0x0U;
+ 1093              	 .loc 1 280 5 is_stmt 1
+ 280:../complex_device_driver/cdd_egtm_app.c ****     Inv_G.ShutOffState     = 0x0U;
+ 1094              	 .loc 1 280 28 is_stmt 0
+ 1095 0044 7B30F323 	 movh %d2,16179
+ 1096 0048 1B323323 	 addi %d2,%d2,13107
+ 1097 004c 59C21400 	 st.w [%a12]20,%d2
+ 281:../complex_device_driver/cdd_egtm_app.c ****     Inv_G.ShutOffRstRequest = 0x0U;
+ 1098              	 .loc 1 281 5 is_stmt 1
+ 281:../complex_device_driver/cdd_egtm_app.c ****     Inv_G.ShutOffRstRequest = 0x0U;
+ 1099              	 .loc 1 281 28 is_stmt 0
+ 1100 0050 8202     	 mov %d2,0
+ 1101 0052 59C22000 	 st.w [%a12]32,%d2
+ 282:../complex_device_driver/cdd_egtm_app.c ****     Inv_G.FrequencyChangeRequest = 0x0U;
+ 1102              	 .loc 1 282 5 is_stmt 1
+ 282:../complex_device_driver/cdd_egtm_app.c ****     Inv_G.FrequencyChangeRequest = 0x0U;
+ 1103              	 .loc 1 282 29 is_stmt 0
+ 1104 0056 59C22400 	 st.w [%a12]36,%d2
+ 283:../complex_device_driver/cdd_egtm_app.c ****     Inv_G.FrequencyMode     = 0x3U;
+ 1105              	 .loc 1 283 5 is_stmt 1
+ 283:../complex_device_driver/cdd_egtm_app.c ****     Inv_G.FrequencyMode     = 0x3U;
+ 1106              	 .loc 1 283 34 is_stmt 0
+ 1107 005a 59C22C00 	 st.w [%a12]44,%d2
+ 284:../complex_device_driver/cdd_egtm_app.c ****     Inv_G.CmuClk0Frequency  = CddSys_GetEgtmCmu0Frequency();
+ 1108              	 .loc 1 284 5 is_stmt 1
+ 284:../complex_device_driver/cdd_egtm_app.c ****     Inv_G.CmuClk0Frequency  = CddSys_GetEgtmCmu0Frequency();
+ 1109              	 .loc 1 284 29 is_stmt 0
+ 1110 005e 8232     	 mov %d2,3
+ 1111 0060 59C22800 	 st.w [%a12]40,%d2
+ 285:../complex_device_driver/cdd_egtm_app.c ****     CddEgtm_SetInverterFrequency();
+ 1112              	 .loc 1 285 5 is_stmt 1
+ 285:../complex_device_driver/cdd_egtm_app.c ****     CddEgtm_SetInverterFrequency();
+ 1113              	 .loc 1 285 31 is_stmt 0
+ 1114 0064 6D000000 	 call CddSys_GetEgtmCmu0Frequency
+ 1115              	.LVL78:
+ 285:../complex_device_driver/cdd_egtm_app.c ****     CddEgtm_SetInverterFrequency();
+ 1116              	 .loc 1 285 29
+ 1117 0068 59C20800 	 st.w [%a12]8,%d2
+ 286:../complex_device_driver/cdd_egtm_app.c **** 
+ 1118              	 .loc 1 286 5 is_stmt 1
+ 1119 006c 6D000000 	 call CddEgtm_SetInverterFrequency
+ 1120              	.LVL79:
+ 289:../complex_device_driver/cdd_egtm_app.c ****     /* Init Atom for PWM */
+ 1121              	 .loc 1 289 5
+ 1122 0070 6D000000 	 call CddEgtm_InitTim0Ch4
+ 1123              	.LVL80:
+ 291:../complex_device_driver/cdd_egtm_app.c **** 
+ 1124              	 .loc 1 291 5
+ 1125 0074 6D000000 	 call CddEgtm_InitAtomCls0
+ 1126              	.LVL81:
+ 293:../complex_device_driver/cdd_egtm_app.c **** 
+ 1127              	 .loc 1 293 1 is_stmt 0
+ 1128 0078 0090     	 ret 
+ 1129              	.LFE590:
+ 1131              	 .global CddEgtm_InitModule_end
+ 1132              	CddEgtm_InitModule_end:
+ 1133              	 .section .text.CddEgtm_Start,"ax",@progbits
+ 1134              	 .align 1
+ 1135              	 .global CddEgtm_Start
+ 1137              	CddEgtm_Start:
+ 1138              	.LFB594:
+ 643:../complex_device_driver/cdd_egtm_app.c **** 
+ 644:../complex_device_driver/cdd_egtm_app.c **** 
+ 645:../complex_device_driver/cdd_egtm_app.c **** /**
+ 646:../complex_device_driver/cdd_egtm_app.c ****  * \brief   Starts all enabled eGTM ATOM channels synchronously.
+ 647:../complex_device_driver/cdd_egtm_app.c ****  *
+ 648:../complex_device_driver/cdd_egtm_app.c ****  * \details Sets HOST_TRIG in EGTM_CLS0_ATOM_AGC_GLB_CTRL, which latches the
+ 649:../complex_device_driver/cdd_egtm_app.c ****  *          shadow registers and starts every enabled channel at the same
+ 650:../complex_device_driver/cdd_egtm_app.c ****  *          eGTM clock edge. From this point the master channel drives the
+ 651:../complex_device_driver/cdd_egtm_app.c ****  *          control-loop ISR and the PWM phases drive the gate outputs.
+ 652:../complex_device_driver/cdd_egtm_app.c ****  *
+ 653:../complex_device_driver/cdd_egtm_app.c ****  * \return  void
+ 654:../complex_device_driver/cdd_egtm_app.c ****  *
+ 655:../complex_device_driver/cdd_egtm_app.c ****  * \pre     CddEgtm_InitModule() has completed.
+ 656:../complex_device_driver/cdd_egtm_app.c ****  *
+ 657:../complex_device_driver/cdd_egtm_app.c ****  * \see     CddEgtm_InitModule
+ 658:../complex_device_driver/cdd_egtm_app.c ****  * \see     CddEgtm_InitAtomCls0
+ 659:../complex_device_driver/cdd_egtm_app.c ****  */
+ 660:../complex_device_driver/cdd_egtm_app.c **** void CddEgtm_Start(void)
+ 661:../complex_device_driver/cdd_egtm_app.c **** {
+ 1139              	 .loc 1 661 1 is_stmt 1
+ 1140 0000 40AE     	 mov.aa %a14,%SP
+ 1141              	.LCFI6:
+ 662:../complex_device_driver/cdd_egtm_app.c ****     EGTM_CLS0_ATOM_AGC_GLB_CTRL.B.HOST_TRIG = 0x1u;  /* set the trigger request to start all channe
+ 1142              	 .loc 1 662 5
+ 1143              	 .loc 1 662 45 is_stmt 0
+ 1144 0002 9180902F 	 movh.a %a2,63752
+ 1145 0006 D922C011 	 lea %a2,[%a2]7232
+ 1146 000a 5422     	 ld.w %d2,[%a2]0
+ 1147 000c B7120120 	 insert %d2,%d2,1,0,1
+ 1148 0010 7422     	 st.w [%a2]0,%d2
+ 663:../complex_device_driver/cdd_egtm_app.c **** 
+ 664:../complex_device_driver/cdd_egtm_app.c **** }
+ 1149              	 .loc 1 664 1
+ 1150 0012 0090     	 ret 
+ 1151              	.LFE594:
+ 1153              	 .global CddEgtm_Start_end
+ 1154              	CddEgtm_Start_end:
+ 1255              	.Letext0:
+ 1256              	 .file 2 "../complex_device_driver/embed_sim_sys_types.h"
+ 1257              	 .file 3 "../complex_device_driver/cdd_app.h"
+ 1258              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 1259              	 .file 5 "../Libraries/Infra/Sfr/TC4Dx/IfxEgtm_regdef.h"
+ 1260              	 .file 6 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 1261              	 .file 7 "../Libraries/Infra/Sfr/TC4Dx/IfxPort_regdef.h"
+ 1262              	 .file 8 "../Libraries/iLLD/TC4xx/CpuGeneric/Port/Std/IfxPort.h"
+ 1263              	 .file 9 "../Libraries/Infra/Sfr/TC4Dx/IfxSrc_regdef.h"
+ 1264              	 .file 10 "../Libraries/iLLD/TC4xx/CpuGeneric/_Impl/TC4Dx/IfxEgtm_cfg_TC4Dx.h"
+ 1265              	 .file 11 "../Libraries/iLLD/TC4xx/CpuGeneric/_PinMap/IfxEGtm_PinMap.h"
+ 1266              	 .file 12 "../Libraries/iLLD/TC4xx/CpuGeneric/_PinMap/TC4Dx/IfxEgtm_PinMap_TC4Dx_BGA436_COM.h"
+ 1267              	 .file 13 "../complex_device_driver/cdd_gpio_app.h"
+ 1268              	 .file 14 "../complex_device_driver/cdd_sys_util.h"
+ 13416 0000 00000000 	 .word TIM0_CH4_ISR
+ 13417 0004 00000000 	 .word TIM0_CH4_ISR_end
+ 13418 0008 04000444 	 .word 0x44040004
+ 13419 000c 00000000 	 .word 0x00000000
+ 13420 0010 00000000 	 .word 0x00000000
+ 13421 0014 C0000000 	 .word 0x000000c0
+ 13422 0018 00000000 	 .word ControlLoop_ISR
+ 13423 001c 00000000 	 .word ControlLoop_ISR_end
+ 13424 0020 7C001C44 	 .word 0x441c007c
+ 13425 0024 00000000 	 .word 0x00000000
+ 13426 0028 00000000 	 .word 0x00000000
+ 13427 002c 40000200 	 .word 0x00020040
+ 13428 0030 00000000 	 .word CddEgtm_InitModule
+ 13429 0034 00000000 	 .word CddEgtm_InitModule_end
+ 13430 0038 14010454 	 .word 0x54040114
+ 13431 003c 00000000 	 .word 0x00000000
+ 13432 0040 00000000 	 .word 0x00000000
+ 13433 0044 40000200 	 .word 0x00020040
+ 13434 0048 00000000 	 .word CddEgtm_Start
+ 13435 004c 00000000 	 .word CddEgtm_Start_end
+ 13436 0050 04000444 	 .word 0x44040004
+ 13437 0054 00000000 	 .word 0x00000000
+ 13438 0058 00000000 	 .word 0x00000000
+ 13439 005c C0000000 	 .word 0x000000c0
+DEFINED SYMBOLS
+                            *ABS*:00000000 cdd_egtm_app.c
+                            *ABS*:00000000 cdd_egtm_app.c
+    {standard input}:25     .intvec_tc0_20:00000000 __intvec_tc0_20
+    {standard input}:825    .text.ControlLoop_ISR:00000000 ControlLoop_ISR
+    {standard input}:48     .intvec_tc0_25:00000000 __intvec_tc0_25
+    {standard input}:803    .text.TIM0_CH4_ISR:00000000 TIM0_CH4_ISR
+    {standard input}:57     .text.CddEgtm_SetInverterFrequency:00000000 CddEgtm_SetInverterFrequency
+    {standard input}:141    .text.CddEgtm_InitTim0Ch4:00000000 CddEgtm_InitTim0Ch4
+    {standard input}:265    .text.CddEgtm_InitAtomCls0:00000000 CddEgtm_InitAtomCls0
+    {standard input}:820    .text.TIM0_CH4_ISR:00000016 TIM0_CH4_ISR_end
+    {standard input}:1044   .text.ControlLoop_ISR:0000020e ControlLoop_ISR_end
+    {standard input}:1049   .text.CddEgtm_InitModule:00000000 CddEgtm_InitModule
+    {standard input}:1132   .text.CddEgtm_InitModule:0000007a CddEgtm_InitModule_end
+    {standard input}:1137   .text.CddEgtm_Start:00000000 CddEgtm_Start
+    {standard input}:1154   .text.CddEgtm_Start:00000014 CddEgtm_Start_end
+
+UNDEFINED SYMBOLS
+Inv_G
+IfxEgtm_TIM0_4_P00_1_IN
+IfxEgtm_PinMap_setTimTin
+CddGpio_ConfigEgtmAtomMasterP02_00
+CddGpio_ConfigEgtmAtomUhP02_05
+CddGpio_ConfigEgtmAtomUlP00_02
+CddGpio_ConfigEgtmAtomVhP02_06
+CddGpio_ConfigEgtmAtomVlP00_04
+CddGpio_ConfigEgtmAtomWhP02_07
+CddGpio_ConfigEgtmAtomWlP00_06
+CddSys_EnableEgtmClock
+CddSys_GetEgtmCmuFrequency
+CddSys_SetEgtmCmuFrequency
+CddSys_SetEgtmCmu0Frequency
+CddSys_EnableEgtmCmu0Clock
+CddSys_GetEgtmCmu0Frequency

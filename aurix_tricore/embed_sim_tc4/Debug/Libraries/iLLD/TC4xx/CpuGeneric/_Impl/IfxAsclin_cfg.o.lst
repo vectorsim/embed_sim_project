@@ -1,0 +1,79 @@
+   1              	
+   2              	 .file "IfxAsclin_cfg.c"
+   3              	 .file "IfxAsclin_cfg.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .global IfxAsclin_cfg_indexMap
+   7              	 .section .rodata.IfxAsclin_cfg_indexMap,"a"
+   8              	 .align 2
+  11              	IfxAsclin_cfg_indexMap:
+  12 0000 00006CF4 	 .word -194248704
+  13 0004 00000000 	 .word 0
+  14 0008 00026CF4 	 .word -194248192
+  15 000c 01000000 	 .word 1
+  16 0010 00046CF4 	 .word -194247680
+  17 0014 02000000 	 .word 2
+  18 0018 00066CF4 	 .word -194247168
+  19 001c 03000000 	 .word 3
+  20 0020 00086CF4 	 .word -194246656
+  21 0024 04000000 	 .word 4
+  22 0028 000A6CF4 	 .word -194246144
+  23 002c 05000000 	 .word 5
+  24 0030 000C6CF4 	 .word -194245632
+  25 0034 06000000 	 .word 6
+  26 0038 000E6CF4 	 .word -194245120
+  27 003c 07000000 	 .word 7
+  28 0040 00106CF4 	 .word -194244608
+  29 0044 08000000 	 .word 8
+  30 0048 00126CF4 	 .word -194244096
+  31 004c 09000000 	 .word 9
+  32 0050 00146CF4 	 .word -194243584
+  33 0054 0A000000 	 .word 10
+  34 0058 00166CF4 	 .word -194243072
+  35 005c 0B000000 	 .word 11
+  36 0060 00186CF4 	 .word -194242560
+  37 0064 0C000000 	 .word 12
+  38 0068 001A6CF4 	 .word -194242048
+  39 006c 0D000000 	 .word 13
+  40 0070 001C6CF4 	 .word -194241536
+  41 0074 0E000000 	 .word 14
+  42 0078 001E6CF4 	 .word -194241024
+  43 007c 0F000000 	 .word 15
+  44 0080 00206CF4 	 .word -194240512
+  45 0084 10000000 	 .word 16
+  46 0088 00226CF4 	 .word -194240000
+  47 008c 11000000 	 .word 17
+  48 0090 00246CF4 	 .word -194239488
+  49 0094 12000000 	 .word 18
+  50 0098 00266CF4 	 .word -194238976
+  51 009c 13000000 	 .word 19
+  52 00a0 00286CF4 	 .word -194238464
+  53 00a4 14000000 	 .word 20
+  54 00a8 002A6CF4 	 .word -194237952
+  55 00ac 15000000 	 .word 21
+  56 00b0 002C6CF4 	 .word -194237440
+  57 00b4 16000000 	 .word 22
+  58 00b8 002E6CF4 	 .word -194236928
+  59 00bc 17000000 	 .word 23
+  60 00c0 00306CF4 	 .word -194236416
+  61 00c4 18000000 	 .word 24
+  62 00c8 00326CF4 	 .word -194235904
+  63 00cc 19000000 	 .word 25
+  64 00d0 00346CF4 	 .word -194235392
+  65 00d4 1A000000 	 .word 26
+  66 00d8 00366CF4 	 .word -194234880
+  67 00dc 1B000000 	 .word 27
+  68              	.section .text,"ax",@progbits
+  69              	.Letext0:
+  70              	 .file 1 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+  71              	 .file 2 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+  72              	 .file 3 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+  73              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/IfxAsclin_regdef.h"
+  74              	 .file 5 "../Libraries/iLLD/TC4xx/CpuGeneric/_Impl/TC4Dx/IfxAsclin_cfg_TC4Dx.h"
+  75              	 .file 6 "../Libraries/iLLD/TC4xx/CpuGeneric/_Impl/IfxAsclin_cfg.c"
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxAsclin_cfg.c
+                            *ABS*:00000000 IfxAsclin_cfg.c
+    {standard input}:11     .rodata.IfxAsclin_cfg_indexMap:00000000 IfxAsclin_cfg_indexMap
+
+NO UNDEFINED SYMBOLS

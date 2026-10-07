@@ -1,0 +1,305 @@
+   1              	
+   2              	 .file "Ifx_GlobalResources.c"
+   3              	 .file "Ifx_GlobalResources.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.Ifx_GlobalResources_get,"ax",@progbits
+   7              	 .align 1
+   8              	 .global Ifx_GlobalResources_get
+  10              	Ifx_GlobalResources_get:
+  11              	.LFB0:
+  12              	 .file 1 "../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c"
+   1:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** /**
+   2:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****  * \file Ifx_GlobalResources.h
+   3:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****  * \brief Handling of global resources
+   4:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****  *
+   5:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****  *
+   8:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****  *
+   9:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****   *                                 IMPORTANT NOTICE
+  10:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****  *
+  11:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****  *
+  12:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****  * this file except in compliance with IFASLL.
+  15:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****  *
+  16:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****  *
+  26:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****  */
+  27:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** 
+  28:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** #include "Ifx_GlobalResources.h"
+  29:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** /** \brief Global resource object */
+  30:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** typedef struct
+  31:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** {
+  32:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     const Ifx_GlobalResources_Item *table;  /**< \brief Pointer to the global resource table */
+  33:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     sint32                          size;   /**< \brief Size of the global resource table */
+  34:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** } Ifx_GlobalResources;
+  35:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** 
+  36:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** #if IFX_CFG_GLOBAL_RESOURCES_ENABLED
+  37:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** 
+  38:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** Ifx_GlobalResources ifx_GlobalResource;
+  39:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** #endif
+  40:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** 
+  41:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** void *Ifx_GlobalResources_get(sint32 id)
+  42:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** {
+  13              	 .loc 1 42 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  43:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     void *result;
+  17              	 .loc 1 43 5
+  44:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** 
+  45:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** #if IFX_CFG_GLOBAL_RESOURCES_ENABLED
+  46:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** 
+  47:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     if (id < ifx_GlobalResource.size)
+  48:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     {
+  49:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****         result = ifx_GlobalResource.table[id].resource;
+  50:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     }
+  51:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     else
+  52:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     {
+  53:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****         result = NULL_PTR;
+  54:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     }
+  55:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** 
+  56:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** #else
+  57:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     result = NULL_PTR;
+  18              	 .loc 1 57 5
+  19              	.LVL1:
+  58:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** 
+  59:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** #endif
+  60:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** 
+  61:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     return result;
+  20              	 .loc 1 61 5
+  62:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** }
+  21              	 .loc 1 62 1 is_stmt 0
+  22 0002 A002     	 mov.a %a2,0
+  23 0004 0090     	 ret 
+  24              	.LFE0:
+  26              	 .global Ifx_GlobalResources_get_end
+  27              	Ifx_GlobalResources_get_end:
+  28              	 .section .text.Ifx_GlobalResources_getIndex,"ax",@progbits
+  29              	 .align 1
+  30              	 .global Ifx_GlobalResources_getIndex
+  32              	Ifx_GlobalResources_getIndex:
+  33              	.LFB1:
+  63:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** 
+  64:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** 
+  65:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** sint32 Ifx_GlobalResources_getIndex(void *resource)
+  66:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** {
+  34              	 .loc 1 66 1 is_stmt 1
+  35              	.LVL2:
+  36 0000 40AE     	 mov.aa %a14,%SP
+  37              	.LCFI1:
+  67:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     sint32 id = -1;
+  38              	 .loc 1 67 5
+  39              	.LVL3:
+  68:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** 
+  69:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** #if IFX_CFG_GLOBAL_RESOURCES_ENABLED
+  70:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     int    i;
+  71:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** 
+  72:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     for (i = 0; i < ifx_GlobalResource.size; i++)
+  73:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     {
+  74:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****         if (resource == ifx_GlobalResource.table[i].resource)
+  75:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****         {
+  76:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****             id = i;
+  77:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****         }
+  78:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****         else
+  79:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****         {}
+  80:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     }
+  81:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** 
+  82:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** #else
+  83:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** #endif
+  84:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** 
+  85:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     return id;
+  40              	 .loc 1 85 5
+  86:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** }
+  41              	 .loc 1 86 1 is_stmt 0
+  42 0002 82F2     	 mov %d2,-1
+  43 0004 0090     	 ret 
+  44              	.LFE1:
+  46              	 .global Ifx_GlobalResources_getIndex_end
+  47              	Ifx_GlobalResources_getIndex_end:
+  48              	 .section .text.Ifx_GlobalResources_getItem,"ax",@progbits
+  49              	 .align 1
+  50              	 .global Ifx_GlobalResources_getItem
+  52              	Ifx_GlobalResources_getItem:
+  53              	.LFB2:
+  87:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** 
+  88:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** 
+  89:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** const Ifx_GlobalResources_Item *Ifx_GlobalResources_getItem(sint32 id)
+  90:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** {
+  54              	 .loc 1 90 1 is_stmt 1
+  55              	.LVL4:
+  56 0000 40AE     	 mov.aa %a14,%SP
+  57              	.LCFI2:
+  91:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     const Ifx_GlobalResources_Item *result;
+  58              	 .loc 1 91 5
+  92:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** 
+  93:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** #if IFX_CFG_GLOBAL_RESOURCES_ENABLED
+  94:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** 
+  95:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     if (id < ifx_GlobalResource.size)
+  96:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     {
+  97:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****         result = &ifx_GlobalResource.table[id];
+  98:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     }
+  99:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     else
+ 100:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     {
+ 101:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****         result = NULL_PTR;
+ 102:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     }
+ 103:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** 
+ 104:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** #else
+ 105:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     result = NULL_PTR;
+  59              	 .loc 1 105 5
+  60              	.LVL5:
+ 106:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** 
+ 107:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** #endif
+ 108:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** 
+ 109:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     return result;
+  61              	 .loc 1 109 5
+ 110:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** }
+  62              	 .loc 1 110 1 is_stmt 0
+  63 0002 A002     	 mov.a %a2,0
+  64 0004 0090     	 ret 
+  65              	.LFE2:
+  67              	 .global Ifx_GlobalResources_getItem_end
+  68              	Ifx_GlobalResources_getItem_end:
+  69              	.section .rodata,"a",@progbits
+  70              	.LC0:
+  71 0000 756E6B6E 	 .string "unknown"
+  71      6F776E00 
+  72              	 .section .text.Ifx_GlobalResources_getName,"ax",@progbits
+  73              	 .align 1
+  74              	 .global Ifx_GlobalResources_getName
+  76              	Ifx_GlobalResources_getName:
+  77              	.LFB3:
+ 111:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** 
+ 112:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** 
+ 113:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** pchar Ifx_GlobalResources_getName(sint32 id)
+ 114:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** {
+  78              	 .loc 1 114 1 is_stmt 1
+  79              	.LVL6:
+  80 0000 40AE     	 mov.aa %a14,%SP
+  81              	.LCFI3:
+ 115:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     pchar name;
+  82              	 .loc 1 115 5
+ 116:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** 
+ 117:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** #if IFX_CFG_GLOBAL_RESOURCES_ENABLED
+ 118:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** 
+ 119:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     if (id < ifx_GlobalResource.size)
+ 120:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     {
+ 121:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****         name = ifx_GlobalResource.table[id].name;
+ 122:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     }
+ 123:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     else
+ 124:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     {
+ 125:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****         name = "unknown";
+ 126:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     }
+ 127:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** 
+ 128:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** #else
+ 129:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     name = "unknown";
+  83              	 .loc 1 129 5
+  84              	.LVL7:
+ 130:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** 
+ 131:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** #endif
+ 132:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** 
+ 133:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     return name;
+  85              	 .loc 1 133 5
+ 134:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** }
+  86              	 .loc 1 134 1 is_stmt 0
+  87 0002 91000020 	 movh.a %a2,hi:.LC0
+  88 0006 D9220000 	 lea %a2,[%a2]lo:.LC0
+  89 000a 0090     	 ret 
+  90              	.LFE3:
+  92              	 .global Ifx_GlobalResources_getName_end
+  93              	Ifx_GlobalResources_getName_end:
+  94              	 .section .text.Ifx_GlobalResources_init,"ax",@progbits
+  95              	 .align 1
+  96              	 .global Ifx_GlobalResources_init
+  98              	Ifx_GlobalResources_init:
+  99              	.LFB4:
+ 135:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** 
+ 136:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** 
+ 137:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** boolean Ifx_GlobalResources_init(const Ifx_GlobalResources_Item *table, uint32 size)
+ 138:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** {
+ 100              	 .loc 1 138 1 is_stmt 1
+ 101              	.LVL8:
+ 102 0000 40AE     	 mov.aa %a14,%SP
+ 103              	.LCFI4:
+ 139:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     boolean result;
+ 104              	 .loc 1 139 5
+ 140:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** 
+ 141:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** #if IFX_CFG_GLOBAL_RESOURCES_ENABLED
+ 142:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     ifx_GlobalResource.table = table;
+ 143:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     ifx_GlobalResource.size  = size;
+ 144:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     result                   = TRUE;
+ 145:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** #else
+ 146:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     result                   = FALSE;
+ 105              	 .loc 1 146 5
+ 106              	.LVL9:
+ 147:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** 
+ 148:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** #endif
+ 149:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** 
+ 150:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c ****     return result;
+ 107              	 .loc 1 150 5
+ 151:../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.c **** }
+ 108              	 .loc 1 151 1 is_stmt 0
+ 109 0002 8202     	 mov %d2,0
+ 110 0004 0090     	 ret 
+ 111              	.LFE4:
+ 113              	 .global Ifx_GlobalResources_init_end
+ 114              	Ifx_GlobalResources_init_end:
+ 191              	.Letext0:
+ 192              	 .file 2 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 193              	 .file 3 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+ 194              	 .file 4 "../Libraries/Service/CpuGeneric/SysSe/General/Ifx_GlobalResources.h"
+ 858 0000 00000000 	 .word Ifx_GlobalResources_get
+ 859 0004 00000000 	 .word Ifx_GlobalResources_get_end
+ 860 0008 00000444 	 .word 0x44040000
+ 861 000c 10000000 	 .word 0x00000010
+ 862 0010 00000400 	 .word 0x00040000
+ 863 0014 C0000000 	 .word 0x000000c0
+ 864 0018 00000000 	 .word Ifx_GlobalResources_getIndex
+ 865 001c 00000000 	 .word Ifx_GlobalResources_getIndex_end
+ 866 0020 04000044 	 .word 0x44000004
+ 867 0024 00001000 	 .word 0x00100000
+ 868 0028 04000000 	 .word 0x00000004
+ 869 002c C0000000 	 .word 0x000000c0
+ 870 0030 00000000 	 .word Ifx_GlobalResources_getItem
+ 871 0034 00000000 	 .word Ifx_GlobalResources_getItem_end
+ 872 0038 00000444 	 .word 0x44040000
+ 873 003c 10000000 	 .word 0x00000010
+ 874 0040 00000400 	 .word 0x00040000
+ 875 0044 C0000000 	 .word 0x000000c0
+ 876 0048 00000000 	 .word Ifx_GlobalResources_getName
+ 877 004c 00000000 	 .word Ifx_GlobalResources_getName_end
+ 878 0050 00000444 	 .word 0x44040000
+ 879 0054 10000000 	 .word 0x00000010
+ 880 0058 00000400 	 .word 0x00040000
+ 881 005c C0000000 	 .word 0x000000c0
+ 882 0060 00000000 	 .word Ifx_GlobalResources_init
+ 883 0064 00000000 	 .word Ifx_GlobalResources_init_end
+ 884 0068 04000044 	 .word 0x44000004
+ 885 006c 10001000 	 .word 0x00100010
+ 886 0070 04000000 	 .word 0x00000004
+ 887 0074 C0000000 	 .word 0x000000c0
+DEFINED SYMBOLS
+                            *ABS*:00000000 Ifx_GlobalResources.c
+                            *ABS*:00000000 Ifx_GlobalResources.c
+    {standard input}:10     .text.Ifx_GlobalResources_get:00000000 Ifx_GlobalResources_get
+    {standard input}:27     .text.Ifx_GlobalResources_get:00000006 Ifx_GlobalResources_get_end
+    {standard input}:32     .text.Ifx_GlobalResources_getIndex:00000000 Ifx_GlobalResources_getIndex
+    {standard input}:47     .text.Ifx_GlobalResources_getIndex:00000006 Ifx_GlobalResources_getIndex_end
+    {standard input}:52     .text.Ifx_GlobalResources_getItem:00000000 Ifx_GlobalResources_getItem
+    {standard input}:68     .text.Ifx_GlobalResources_getItem:00000006 Ifx_GlobalResources_getItem_end
+    {standard input}:76     .text.Ifx_GlobalResources_getName:00000000 Ifx_GlobalResources_getName
+    {standard input}:93     .text.Ifx_GlobalResources_getName:0000000c Ifx_GlobalResources_getName_end
+    {standard input}:98     .text.Ifx_GlobalResources_init:00000000 Ifx_GlobalResources_init
+    {standard input}:114    .text.Ifx_GlobalResources_init:00000006 Ifx_GlobalResources_init_end
+
+NO UNDEFINED SYMBOLS

@@ -1,0 +1,2123 @@
+   1              	
+   2              	 .file "IfxHsphy_Hsphy.c"
+   3              	 .file "IfxHsphy_Hsphy.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	.section .data,"aw",@progbits
+   7              	 .align 2
+   8              	.LC1:
+   9 0000 00000000 	 .word 0
+  10 0004 00000000 	 .word 0
+  11 0008 01000000 	 .word 1
+  12 000c 00000000 	 .word 0
+  13 0010 00       	 .byte 0
+  14 0011 000000   	 .zero 3
+  15 0014 04000000 	 .word 4
+  16 0018 00000000 	 .word IfxHsphy_Hsphy_defaultConfig
+  17 001c 01000000 	 .word 1
+  18 0020 01000000 	 .word 1
+  19 0024 00000000 	 .word 0
+  20 0028 01       	 .byte 1
+  21 0029 000000   	 .zero 3
+  22 002c 04000000 	 .word 4
+  23 0030 00000000 	 .word IfxHsphy_Hsphy_defaultConfig+12
+  24 0034 02000000 	 .word 2
+  25 0038 02000000 	 .word 2
+  26 003c 01000000 	 .word 1
+  27 0040 01       	 .byte 1
+  28 0041 000000   	 .zero 3
+  29 0044 06000000 	 .word 6
+  30 0048 00000000 	 .word 0
+  31 004c 00000000 	 .section .text.IfxHsphy_Hsphy_initModuleConfig,"ax",@progbits
+  32              	 .align 1
+  33              	 .global IfxHsphy_Hsphy_initModuleConfig
+  35              	IfxHsphy_Hsphy_initModuleConfig:
+  36              	.LFB332:
+  37              	 .file 1 "../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c"
+   1:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** /**
+   2:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****  * \file IfxHsphy_Hsphy.c
+   3:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****  * \brief HSPHY HSPHY details
+   4:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****  *
+   5:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****  *
+   8:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****  *
+   9:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****  *
+  10:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****  *                                 IMPORTANT NOTICE
+  11:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****  *
+  12:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****  * this file except in compliance with IFASLL.
+  15:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****  *
+  16:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****  *
+  26:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****  *
+  27:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****  */
+  28:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+  29:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** /******************************************************************************/
+  30:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** /*----------------------------------Includes----------------------------------*/
+  31:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** /******************************************************************************/
+  32:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+  33:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #include "Ifx_Cfg.h"
+  34:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #if defined (__TASKING__)
+  35:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #pragma warning 508			/* To suppress empty file warning */
+  36:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #endif
+  37:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #if defined (__ghs__)
+  38:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #pragma diag_suppress 96	/* To suppress empty file warning */
+  39:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #endif
+  40:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+  41:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #if !defined(DEVICE_TC4EX)  && !defined(DEVICE_TC4PX)
+  42:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #include "IfxHsphy_Hsphy.h"
+  43:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+  44:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** /******************************************************************************/
+  45:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** /*-----------------------Exported Variables/Constants-------------------------*/
+  46:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** /******************************************************************************/
+  47:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+  48:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** IFX_CONST IfxHsphy_Hsphy_phyConfig IfxHsphy_Hsphy_configLookUpTbl[] = IFXHSPHY_CONFIG_LOOKUPTBL_VAL
+  49:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+  50:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #if IFXHSPHY_IS_PADINTERFACE_SGBT_AVAILABLE
+  51:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** IFX_CONST IfxHsphy_TpcsParams      IfxHsphy_Hsphy_defaultSgbtConfig[IFXHSPHY_NUM_OF_PHY] = {
+  52:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     {                          },
+  53:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     {IfxHsphy_TpcsIndex_0, IfxHsphy_SgbtRefClk_25Mhz},
+  54:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     {IfxHsphy_TpcsIndex_0, IfxHsphy_SgbtRefClk_20Mhz}
+  55:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** };
+  56:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+  57:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** IFX_CONST IfxHsphy_XpcsParams      IfxHsphy_Hsphy_defaultSgmiiConfig[IFXHSPHY_NUM_OF_PHY] = {
+  58:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     {                    },
+  59:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     {IfxHsphy_XpcsIndex_1, IfxHsphy_XpcsRefClk_100Mhz, IfxHsphy_EthIndex_0},
+  60:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     {                    }
+  61:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** };
+  62:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+  63:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #elif IFXHSPHY_IS_GETH_AVAILABLE
+  64:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** IFX_CONST IfxHsphy_GethXpcsParams  IfxHsphy_Hsphy_defaultConfig[IFXHSPHY_NUM_OF_PHY] = IFXHSPHY_GET
+  65:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+  66:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #else
+  67:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** IFX_CONST IfxHsphy_XpcsParams      IfxHsphy_Hsphy_defaultConfig[IFXHSPHY_NUM_OF_PHY] = {
+  68:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     {                    },
+  69:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     {IfxHsphy_XpcsIndex_1, IfxHsphy_XpcsRefClk_100Mhz, IfxHsphy_EthIndex_0},
+  70:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     {                    }
+  71:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** };
+  72:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #endif /* #if IFXHSPHY_IS_PADINTERFACE_SGBT_AVAILABLE */
+  73:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+  74:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** /******************************************************************************/
+  75:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** /*-------------------------Function Implementations---------------------------*/
+  76:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** /******************************************************************************/
+  77:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+  78:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** IfxHsphy_status IfxHsphy_Hsphy_initModule(IfxHsphy_Hsphy *hsphy, IfxHsphy_Hsphy_Cfg *config)
+  79:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** {
+  80:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     IfxHsphy_status            retval            = IfxHsphy_status_success;
+  81:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     uint8                      index             = 0;
+  82:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #if IFXHSPHY_IS_GETH_AVAILABLE	
+  83:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     const IfxHsphy_GethXpcsParams *xpcsConfig;
+  84:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     IfxHsphy_Geth_RgmiiCfg        *rgmiiConfig;
+  85:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     IfxHsphy_Geth_MiiCfg          *miiConfig;
+  86:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     IfxHsphy_Geth_RmiiCfg         *rmiiConfig;
+  87:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     IfxHsphy_Xspi_XspiCfg         *xspiConfig;
+  88:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #else	
+  89:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     const IfxHsphy_XpcsParams *xpcsConfig;
+  90:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #endif /* #if IFXHSPHY_IS_GETH_AVAILABLE */
+  91:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     uint32                     timeoutCycleCount = IFXHSPHY_MAX_TIMEOUT;
+  92:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     uint8                      timeOutError      = 0U;
+  93:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+  94:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     Ifx_HSPHY                 *hsphySFR          = config->hsphySFR;
+  95:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     hsphy->hsphySFR = hsphySFR;
+  96:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     boolean                    retvalCheck       = FALSE;
+  97:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+  98:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     /* Check the validity of connection for module. Lookup if it is a valid config for chipset */
+  99:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #if defined(DEVICE_TC49XN) || defined(DEVICE_TC49XNAA) || defined(DEVICE_TC46X) || defined(DEVICE_T
+ 100:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     for (index = IFXHSPHY_START_INDEX; index <= IFXHSPHY_END_INDEX; index++)
+ 101:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #elif defined(DEVICE_TC4DX)
+ 102:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     for (index = 0; index < IFXHSPHY_NUM_OF_PHY; index++)
+ 103:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #elif defined(DEVICE_TC4ZX)
+ 104:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     for (index = 0; index < IFXHSPHY_ACTUAL_NUM_OF_PHY; index++)
+ 105:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #else	
+ 106:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     for (index = IFXHSPHY_START_INDEX; index < IFXHSPHY_END_INDEX; index++)
+ 107:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #endif /* #if defined(DEVICE_TC49XN) || defined(DEVICE_TC49XNAA) || defined(DEVICE_TC46X) || define
+ 108:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 	{
+ 109:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     	retval &= IfxHsphy_Hsphy_phyInit(hsphy->hsphyData[index], &config->phyConfig[index]);
+ 110:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 111:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         if (retval == FALSE)
+ 112:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 113:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             return IfxHsphy_status_invalidConfigError;
+ 114:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         }
+ 115:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     }
+ 116:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 117:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     /* Enable module */
+ 118:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     retvalCheck = IfxHsphy_enableModule(hsphySFR);
+ 119:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 120:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     if (retvalCheck == TRUE)
+ 121:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     {
+ 122:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         return IfxHsphy_status_timeOutError;
+ 123:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     }
+ 124:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 125:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     retvalCheck = IfxHsphy_resetModule(hsphySFR);
+ 126:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 127:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     if (retvalCheck == TRUE)
+ 128:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     {
+ 129:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         return IfxHsphy_status_timeOutError;
+ 130:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     }
+ 131:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 132:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC4
+ 133:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #if defined(DEVICE_TC4DX)
+ 134:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     for (index = 0; index < IFXHSPHY_NUM_OF_PHY; index++)
+ 135:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #elif defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X)
+ 136:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     for (index = IFXHSPHY_START_INDEX; index < IFXHSPHY_END_INDEX; index++)
+ 137:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #elif defined(DEVICE_TC4ZX)
+ 138:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     for (index = 0; index < IFXHSPHY_ACTUAL_NUM_OF_PHY; index++)
+ 139:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(
+ 140:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     {
+ 141:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         if ((hsphy->hsphyData[index]->hsphyCfg.padInterface == IfxHsphy_PadNativeInterface_xspiPads
+ 142:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 143:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             /* Init and HSPHY configuration for XSPI */
+ 144:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             xspiConfig  = (IfxHsphy_Xspi_XspiCfg *)hsphy->hsphyData[index]->hsphyCfg.cfgData;
+ 145:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             retvalCheck = IfxHsphy_Xspi_xspiInit(hsphy->hsphySFR, xspiConfig);
+ 146:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 147:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             if (retvalCheck == TRUE)
+ 148:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 149:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****                 return IfxHsphy_status_timeOutError;
+ 150:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             }
+ 151:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 152:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             if (xspiConfig->xspiPins != NULL_PTR)
+ 153:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 154:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****                 IfxHsphy_Xspi_setXspiPins(hsphy->hsphySFR, xspiConfig);
+ 155:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             }
+ 156:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 157:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             return IfxHsphy_status_success;
+ 158:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         }
+ 159:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     }
+ 160:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #endif /* #if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(
+ 161:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 162:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #if defined(DEVICE_TC49XN) || defined(DEVICE_TC49XNAA) || defined(DEVICE_TC46X) || defined(DEVICE_T
+ 163:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     for (index = IFXHSPHY_START_INDEX; index <= IFXHSPHY_END_INDEX; index++)
+ 164:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #elif defined(DEVICE_TC4DX)
+ 165:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     for (index = 0; index < IFXHSPHY_NUM_OF_PHY; index++)
+ 166:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #elif defined(DEVICE_TC4ZX)
+ 167:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     for (index = 0; index < IFXHSPHY_ACTUAL_NUM_OF_PHY; index++)
+ 168:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #else
+ 169:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     for (index = IFXHSPHY_START_INDEX; index < IFXHSPHY_END_INDEX; index++)
+ 170:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #endif /* #if defined(DEVICE_TC49XN) || defined(DEVICE_TC49XNAA) || defined(DEVICE_TC46X) || define
+ 171:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     {
+ 172:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         hsphySFR->PHY[hsphy->hsphyData[index]->hsphyCfg.phyIdx].CTRL1.B.PWRDWN = 0;
+ 173:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         hsphySFR->PHY[hsphy->hsphyData[index]->hsphyCfg.phyIdx].CTRL1.B.RST    = 0;
+ 174:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         retvalCheck                                                            = IfxHsphy_selFuncti
+ 175:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 176:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         if (retvalCheck == FALSE)
+ 177:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 178:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             return IfxHsphy_status_invalidConfigError;
+ 179:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         }
+ 180:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 181:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         retvalCheck = IfxHsphy_setPhyRefClockSel(hsphySFR, hsphy->hsphyData[index]->hsphyCfg.phyIdx
+ 182:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 183:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         if (retvalCheck == FALSE)
+ 184:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 185:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             return IfxHsphy_status_invalidConfigError;
+ 186:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         }
+ 187:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 188:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         if ((hsphy->hsphyData[index]->hsphyCfg.padInterface == IfxHsphy_PadNativeInterface_sgmii) &
+ 189:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 190:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             /* Get the data of XPCS from cfgData */
+ 191:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #if IFXHSPHY_IS_GETH_AVAILABLE			
+ 192:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			xpcsConfig  = (const IfxHsphy_GethXpcsParams *)(hsphy->hsphyData[index]->hsphyCfg.cfgData);
+ 193:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			IfxHsphy_EthIndex ethIndex = xpcsConfig->ethIdx;
+ 194:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #else			
+ 195:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             xpcsConfig  = (const IfxHsphy_XpcsParams *)(hsphy->hsphyData[index]->hsphyCfg.cfgData);
+ 196:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #endif /* #if IFXHSPHY_IS_GETH_AVAILABLE */
+ 197:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 198:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             retvalCheck = IfxHsphy_resetXpcs(hsphy->hsphySFR, xpcsConfig);
+ 199:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 200:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			if (retvalCheck == TRUE)
+ 201:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			{
+ 202:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 				return IfxHsphy_status_timeOutError;
+ 203:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			}
+ 204:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 205:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			while (hsphy->hsphySFR->XPCS[xpcsConfig->xpcsIndex].PCS.VR_XS_DIG_STS.B.PSEQ_STATE != IfxHsphy_X
+ 206:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			{
+ 207:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 				IFXHSPHY_LOOP_TIMEOUT_CHECK(timeoutCycleCount, timeOutError);
+ 208:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			}
+ 209:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 210:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			if (timeOutError == TRUE)
+ 211:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			{
+ 212:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 				return IfxHsphy_status_timeOutError;
+ 213:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			}
+ 214:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 215:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #if IFXHSPHY_IS_GETH_AVAILABLE
+ 216:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			hsphy->hsphySFR->ETH[ethIndex].B.EPR = IfxHsphy_EthCtrlExtPhySel_sgmii;
+ 217:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			IfxHsphy_Geth_SgmiiSpeedConfigStatus retvalCheck_sgmii;
+ 218:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			retvalCheck_sgmii                    = IfxHsphy_Geth_setSgmiiSpeedMode(hsphy->hsphySFR, hsphy->h
+ 219:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #else            
+ 220:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			IfxHsphy_SgmiiSpeedConfigStatus retvalCheck_sgmii;
+ 221:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			retvalCheck_sgmii = IfxHsphy_setSgmiiSpeedMode(hsphy->hsphySFR, hsphy->hsphyData[index]->hsphyCf
+ 222:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #endif /* #if IFXHSPHY_IS_GETH_AVAILABLE */
+ 223:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 224:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #if IFXHSPHY_IS_GETH_AVAILABLE
+ 225:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			if (retvalCheck_sgmii != IfxHsphy_Geth_SgmiiSpeedConfigStatus_success)
+ 226:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			{
+ 227:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 				if (retvalCheck_sgmii == IfxHsphy_Geth_SgmiiSpeedConfigStatus_timeOutError)
+ 228:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 					{
+ 229:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 						return IfxHsphy_status_timeOutError;
+ 230:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 					}
+ 231:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 					else
+ 232:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 					{
+ 233:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 						return IfxHsphy_status_invalidConfigError;
+ 234:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 					}
+ 235:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 				}
+ 236:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #else
+ 237:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 				if (retvalCheck_sgmii != IfxHsphy_SgmiiSpeedConfigStatus_success)
+ 238:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 				{
+ 239:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 					if (retvalCheck_sgmii == IfxHsphy_SgmiiSpeedConfigStatus_timeOutError)
+ 240:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 					{
+ 241:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 						return IfxHsphy_status_timeOutError;
+ 242:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 					}
+ 243:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 					else
+ 244:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 					{
+ 245:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 						return IfxHsphy_status_invalidConfigError;
+ 246:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 					}
+ 247:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 				}
+ 248:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #endif /* #if IFXHSPHY_IS_GETH_AVAILABLE */
+ 249:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			}
+ 250:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #if IFXHSPHY_IS_PADINTERFACE_USXSGMII_AVAILABLE		
+ 251:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         else if ((hsphy->hsphyData[index]->hsphyCfg.padInterface == IfxHsphy_PadNativeInterface_usx
+ 252:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 253:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             /* USXGMII configuration. */
+ 254:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             xpcsConfig  = (const IfxHsphy_GethXpcsParams *)hsphy->hsphyData[index]->hsphyCfg.cfgDat
+ 255:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             IfxHsphy_EthIndex ethIndex = xpcsConfig->ethIdx;
+ 256:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             retvalCheck = IfxHsphy_resetXpcs(hsphy->hsphySFR, xpcsConfig);
+ 257:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 258:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             if (retvalCheck == TRUE)
+ 259:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 260:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****                 return IfxHsphy_status_timeOutError;
+ 261:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             }
+ 262:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 263:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             timeoutCycleCount = IFXHSPHY_MAX_TIMEOUT;
+ 264:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 265:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             while (hsphy->hsphySFR->XPCS[xpcsConfig->xpcsIndex].PCS.VR_XS_DIG_STS.B.PSEQ_STATE != I
+ 266:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 267:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****                 IFXHSPHY_LOOP_TIMEOUT_CHECK(timeoutCycleCount, timeOutError);
+ 268:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             }
+ 269:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 270:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             if (timeOutError == TRUE)
+ 271:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 272:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****                 return IfxHsphy_status_timeOutError;
+ 273:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             }
+ 274:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 275:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             hsphy->hsphySFR->ETH[ethIndex].B.EPR = IfxHsphy_EthCtrlExtPhySel_usxgmii;
+ 276:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             retvalCheck                          = IfxHsphy_Geth_setUsxgmiiSpeedMode(hsphy->hsphySF
+ 277:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 278:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             if (retvalCheck == TRUE)
+ 279:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 280:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****                 return IfxHsphy_status_timeOutError;
+ 281:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             }
+ 282:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         }
+ 283:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #endif /* #if IFXHSPHY_IS_PADINTERFACE_USXSGMII_AVAILABLE */
+ 284:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 285:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #if IFXHSPHY_IS_GETH_AVAILABLE
+ 286:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         else if ((hsphy->hsphyData[index]->hsphyCfg.padInterface == IfxHsphy_PadNativeInterface_rgm
+ 287:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 288:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             /* PAD configuration. */
+ 289:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             rgmiiConfig                          = (IfxHsphy_Geth_RgmiiCfg *)hsphy->hsphyData[index
+ 290:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             IfxHsphy_EthIndex ethIndex = rgmiiConfig->ethIdx;
+ 291:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             hsphy->hsphySFR->ETH[ethIndex].B.EPR = IfxHsphy_EthCtrlExtPhySel_rgmii;
+ 292:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             retvalCheck                          = IfxHsphy_Geth_rgmiiInit(hsphy->hsphySFR, rgmiiCo
+ 293:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 294:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             if (retvalCheck == TRUE)
+ 295:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 296:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****                 return IfxHsphy_status_timeOutError;
+ 297:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             }
+ 298:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 299:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             if (rgmiiConfig->rgmiiPins != NULL_PTR)
+ 300:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 301:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****                 IfxHsphy_Geth_setRgmiiPins(hsphy->hsphySFR, ethIndex, rgmiiConfig);
+ 302:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             }
+ 303:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         }
+ 304:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 305:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         else if ((hsphy->hsphyData[index]->hsphyCfg.padInterface == IfxHsphy_PadNativeInterface_mii
+ 306:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 307:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             /* PAD configuration. */
+ 308:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             miiConfig                            = (IfxHsphy_Geth_MiiCfg *)hsphy->hsphyData[index]-
+ 309:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             IfxHsphy_EthIndex ethIndex = miiConfig->ethIdx;
+ 310:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             hsphy->hsphySFR->ETH[ethIndex].B.EPR = IfxHsphy_EthCtrlExtPhySel_mii;
+ 311:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 312:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             /* TODO: Check do we need any initializations for MII */
+ 313:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             if (miiConfig->miiPins != NULL_PTR)
+ 314:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 315:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****                 IfxHsphy_Geth_setMiiPins(hsphy->hsphySFR, ethIndex, miiConfig);
+ 316:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             }
+ 317:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         }
+ 318:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 319:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         else if ((hsphy->hsphyData[index]->hsphyCfg.padInterface == IfxHsphy_PadNativeInterface_rmi
+ 320:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 321:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             /* PAD configuration. */
+ 322:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             rmiiConfig                           = (IfxHsphy_Geth_RmiiCfg *)hsphy->hsphyData[index]
+ 323:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             IfxHsphy_EthIndex ethIndex = rmiiConfig->ethIdx;
+ 324:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             hsphy->hsphySFR->ETH[ethIndex].B.EPR = IfxHsphy_EthCtrlExtPhySel_rmii;
+ 325:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             hsphy->hsphySFR->CMNCFG.B.FSR        = 1;
+ 326:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             /* TODO: Check do we need any initializations for RMII */
+ 327:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 328:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             if (rmiiConfig->rmiiPins != NULL_PTR)
+ 329:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 330:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****                 IfxHsphy_Geth_setRmiiPins(hsphy->hsphySFR, ethIndex, rmiiConfig);
+ 331:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             }
+ 332:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         }
+ 333:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #endif /* #if IFXHSPHY_IS_GETH_AVAILABLE */
+ 334:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #if IFXHSPHY_IS_PADINTERFACE_PCIE_AVAILABLE
+ 335:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         else if (hsphy->hsphyData[index]->hsphyCfg.padInterface == IfxHsphy_PadNativeInterface_pcie
+ 336:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 337:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             retval = IfxHsphy_status_success;
+ 338:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         }
+ 339:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #endif /* #if IFXHSPHY_IS_PADINTERFACE_PCIE_AVAILABLE */
+ 340:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 341:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #if IFXHSPHY_IS_PADINTERFACE_SGBT_AVAILABLE
+ 342:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         else if (hsphy->hsphyData[index]->hsphyCfg.padInterface == IfxHsphy_PadNativeInterface_sgbt
+ 343:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 344:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             /* Get the data of TPCS from cfgData */
+ 345:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             const IfxHsphy_TpcsParams     *tpcsConfig      = (const IfxHsphy_TpcsParams *)(hsphy->h
+ 346:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 347:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             IfxHsphy_TpcsSpeedConfigStatus tpcsRetValCheck = IfxHsphy_setTpcsSpeedMode(hsphy->hsphy
+ 348:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 349:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             if (tpcsRetValCheck == IfxHsphy_TpcsSpeedConfigStatus_timeOutError)
+ 350:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 351:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****                 return IfxHsphy_status_timeOutError;
+ 352:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             }
+ 353:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             else if (tpcsRetValCheck == IfxHsphy_TpcsSpeedConfigStatus_invalidConfigError)
+ 354:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 355:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****                 return IfxHsphy_status_invalidConfigError;
+ 356:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             }
+ 357:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         }
+ 358:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #endif /* #if IFXHSPHY_IS_PADINTERFACE_SGBT_AVAILABLE */
+ 359:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         else
+ 360:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 361:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             retval = IfxHsphy_status_invalidConfigError;
+ 362:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         }
+ 363:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 364:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #if IFXHSPHY_IS_PADINTERFACE_USXSGMII_AVAILABLE
+ 365:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 		if ((hsphy->hsphyData[index]->hsphyCfg.padInterface == IfxHsphy_PadNativeInterface_sgmii) || (hsp
+ 366:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #else
+ 367:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         if (hsphy->hsphyData[index]->hsphyCfg.padInterface == IfxHsphy_PadNativeInterface_sgmii)
+ 368:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #endif /* #if IFXHSPHY_IS_PADINTERFACE_USXSGMII_AVAILABLE */
+ 369:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 	    {
+ 370:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             retvalCheck = IfxHsphy_Hsphy_initDone(IfxHsphy_getHsphyIndex(hsphy->hsphySFR), hsphy->h
+ 371:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 372:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             if (retvalCheck == FALSE)
+ 373:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 374:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****                 return IfxHsphy_status_failure;
+ 375:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             }
+ 376:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         }
+ 377:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     }     /* End of for loop */
+ 378:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 379:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     return retval;
+ 380:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** }
+ 381:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 382:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 383:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** void IfxHsphy_Hsphy_initModuleConfig(Ifx_HSPHY *hsphy, IfxHsphy_Hsphy_Cfg *config)
+ 384:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** {
+  38              	 .loc 1 384 1
+  39              	.LVL0:
+  40 0000 40AE     	 mov.aa %a14,%SP
+  41              	.LCFI0:
+  42 0002 2050     	 sub.a %SP,80
+ 385:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     IfxHsphy_Hsphy_Cfg defaultConfig = {
+  43              	 .loc 1 385 5
+  44              	 .loc 1 385 24 is_stmt 0
+  45 0004 D9E2F4EF 	 lea %a2,[%a14]-76
+  46 0008 91000030 	 movh.a %a3,hi:.LC1
+  47 000c D9330000 	 lea %a3,[%a3]lo:.LC1
+  48 0010 4026     	 mov.aa %a6,%a2
+  49              	 
+  50 0012 09345002 	 ld.dd %q4,[%a3+]16
+  51 0016 89645002 	 st.dd [%a6+]16,%q4
+  52 001a 09345002 	 ld.dd %q4,[%a3+]16
+  53 001e 89645002 	 st.dd [%a6+]16,%q4
+  54 0022 09345002 	 ld.dd %q4,[%a3+]16
+  55 0026 89645002 	 st.dd [%a6+]16,%q4
+  56 002a 09345002 	 ld.dd %q4,[%a3+]16
+  57 002e 89645002 	 st.dd [%a6+]16,%q4
+  58 0032 09344801 	 ld.d %e4,[%a3+]8
+  59 0036 89644801 	 st.d [%a6+]8,%e4
+  60 003a 4434     	 ld.w %d4,[%a3+]4
+  61 003c 6464     	 st.w [%a6+]4,%d4
+ 386:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #if defined(DEVICE_TC45X)
+ 387:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     	.hsphySFR     = &MODULE_HSPHY,
+ 388:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #else
+ 389:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         .hsphySFR     = NULL_PTR,
+ 390:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #endif /* #if defined(DEVICE_TC45X) */
+ 391:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 		
+ 392:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #if IFXHSPHY_IS_PHY0_AVAILABLE
+ 393:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         /* Config the PHY[0] to use the xspi */
+ 394:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         .phyConfig[0] = {           
+ 395:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             .phyIdx        = IfxHsphy_PhyIndex_0,
+ 396:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             .padInterface  = IfxHsphy_PadNativeInterface_sgmii,
+ 397:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             .trgtDevice    = IfxHsphy_TrgtDevice_xgmac,
+ 398:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             .trgtDeviceIdx = 0,
+ 399:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             .deviceSpeed   = IfxHsphy_TrgtDeviceSpeed_2P5G,
+ 400:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             .cfgData       = &IfxHsphy_Hsphy_defaultConfig[0],
+ 401:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         },	
+ 402:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #else	
+ 403:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         .phyConfig[0] = {
+ 404:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             /* PHY[0] is not supported in TC45x, TC48x and TC44x */
+ 405:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         },		
+ 406:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #endif /* #if IFXHSPHY_IS_PHY0_AVAILABLE */	
+ 407:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         /* config the PHY[1] to use the Geth with 1gbps speed */
+ 408:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         .phyConfig[1] = {           
+ 409:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             .phyIdx        = IfxHsphy_PhyIndex_1,
+ 410:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             .padInterface  = IfxHsphy_PadNativeInterface_sgmii,
+ 411:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #if IFXHSPHY_IS_TRGTDEVICE_XGMAC	    
+ 412:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             .trgtDevice    = IfxHsphy_TrgtDevice_xgmac,
+ 413:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #else	    
+ 414:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             .trgtDevice    = IfxHsphy_TrgtDevice_eth,
+ 415:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #endif /* #if IFXHSPHY_IS_TRGTDEVICE_XGMAC */
+ 416:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             .trgtDeviceIdx = IFXHSPHY_TRGTDEVICE_IDX_VALUE,
+ 417:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #if IFXHSPHY_IS_TRGTDEVICE_SPEED_2P5G
+ 418:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             .deviceSpeed   = IfxHsphy_TrgtDeviceSpeed_2P5G,
+ 419:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #else	    
+ 420:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             .deviceSpeed   = IfxHsphy_TrgtDeviceSpeed_1G,
+ 421:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #endif /* #if IFXHSPHY_IS_TRGTDEVICE_SPEED_2P5G */
+ 422:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #if IFXHSPHY_IS_PADINTERFACE_SGBT_AVAILABLE
+ 423:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			.cfgData       = &IfxHsphy_Hsphy_defaultSgmiiConfig[1],
+ 424:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #else
+ 425:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             .cfgData       = &IfxHsphy_Hsphy_defaultConfig[1],
+ 426:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #endif /* #if IFXHSPHY_IS_PADINTERFACE_SGBT_AVAILABLE */
+ 427:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         },
+ 428:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 		
+ 429:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #if IFXHSPHY_IS_PHY2_AVAILABLE
+ 430:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         /* Config the PHY[2] to use the Pcie */
+ 431:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         .phyConfig[2] = {           
+ 432:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             .phyIdx        = IfxHsphy_PhyIndex_2,
+ 433:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             .padInterface  = IfxHsphy_PadNativeInterface_pcie,
+ 434:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             .trgtDevice    = IfxHsphy_TrgtDevice_pcie,
+ 435:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             .trgtDeviceIdx = IFXHSPHY_TRGTDEVICE_IDX_VALUE,
+ 436:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             .deviceSpeed   = IfxHsphy_TrgtDeviceSpeed_8G,
+ 437:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             .cfgData       = NULL_PTR,
+ 438:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         }	
+ 439:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #else
+ 440:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         /* Config the PHY[2] to use the SGBT/Trace. */
+ 441:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         .phyConfig[2] = {       
+ 442:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 		/* PHY[2] is not supported in TC48x and TC44x, TC46x. */
+ 443:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         }
+ 444:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #endif /* #if IFXHSPHY_IS_PHY2_AVAILABLE */
+ 445:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     };
+ 446:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     /*Default Config*/
+ 447:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     *config          = defaultConfig; 
+  62              	 .loc 1 447 5 is_stmt 1
+  63              	 .loc 1 447 22 is_stmt 0
+  64 003e 4053     	 mov.aa %a3,%a5
+  65              	 
+  66 0040 09245002 	 ld.dd %q4,[%a2+]16
+  67 0044 89345002 	 st.dd [%a3+]16,%q4
+  68 0048 09245002 	 ld.dd %q4,[%a2+]16
+  69 004c 89345002 	 st.dd [%a3+]16,%q4
+  70 0050 09245002 	 ld.dd %q4,[%a2+]16
+  71 0054 89345002 	 st.dd [%a3+]16,%q4
+  72 0058 09245002 	 ld.dd %q4,[%a2+]16
+  73 005c 89345002 	 st.dd [%a3+]16,%q4
+  74 0060 09244801 	 ld.d %e4,[%a2+]8
+  75 0064 89344801 	 st.d [%a3+]8,%e4
+  76 0068 4424     	 ld.w %d4,[%a2+]4
+  77 006a 6434     	 st.w [%a3+]4,%d4
+ 448:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     /*Module Pointer*/
+ 449:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     config->hsphySFR = hsphy;         
+  78              	 .loc 1 449 5 is_stmt 1
+  79              	 .loc 1 449 22 is_stmt 0
+  80 006c F454     	 st.a [%a5]0,%a4
+ 450:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** }
+  81              	 .loc 1 450 1
+  82 006e 0090     	 ret 
+  83              	.LFE332:
+  85              	 .global IfxHsphy_Hsphy_initModuleConfig_end
+  86              	IfxHsphy_Hsphy_initModuleConfig_end:
+  87              	 .section .text.IfxHsphy_Hsphy_initDone,"ax",@progbits
+  88              	 .align 1
+  89              	 .global IfxHsphy_Hsphy_initDone
+  91              	IfxHsphy_Hsphy_initDone:
+  92              	.LFB333:
+ 451:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 452:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 453:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** boolean IfxHsphy_Hsphy_initDone(IfxHsphy_hsphyIndex hsphyIdx, IfxHsphy_PhyIndex phyIndex)
+ 454:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** {
+  93              	 .loc 1 454 1 is_stmt 1
+  94              	.LVL1:
+  95 0000 40AE     	 mov.aa %a14,%SP
+  96              	.LCFI1:
+  97 0002 0259     	 mov %d9,%d5
+ 455:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     boolean    retval            = TRUE;
+  98              	 .loc 1 455 5
+  99              	.LVL2:
+ 456:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     Ifx_HSPHY *HsphySfr          = IfxHsphy_getHsphyAddress(hsphyIdx);
+ 100              	 .loc 1 456 5
+ 101              	 .loc 1 456 36 is_stmt 0
+ 102 0004 6D000000 	 call IfxHsphy_getHsphyAddress
+ 103              	.LVL3:
+ 104 0008 802A     	 mov.d %d10,%a2
+ 105              	.LVL4:
+ 457:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     uint32     timeoutCycleCount = 0U;
+ 106              	 .loc 1 457 5 is_stmt 1
+ 458:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     uint8      timeOutError      = 0U;
+ 107              	 .loc 1 458 5
+ 459:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 460:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     timeoutCycleCount = IFXHSPHY_MAX_TIMEOUT;
+ 108              	 .loc 1 460 5
+ 461:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 462:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     /* Check if the Phy is read and wait till it gets ready */
+ 463:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     while (IfxHsphy_isPhyReady(HsphySfr, phyIndex) != TRUE)
+ 109              	 .loc 1 463 5
+ 460:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 110              	 .loc 1 460 23 is_stmt 0
+ 111 000a 7BF00080 	 movh %d8,15
+ 112 000e 1B082484 	 addi %d8,%d8,16960
+ 113              	.LVL5:
+ 114              	.L3:
+ 464:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     {
+ 465:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         IFXHSPHY_LOOP_TIMEOUT_CHECK(timeoutCycleCount, timeOutError);
+ 115              	 .loc 1 465 9 is_stmt 1 discriminator 2
+ 116              	 .loc 1 465 69 discriminator 2
+ 463:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     {
+ 117              	 .loc 1 463 52 discriminator 2
+ 463:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     {
+ 118              	 .loc 1 463 12 is_stmt 0 discriminator 2
+ 119 0012 0294     	 mov %d4,%d9
+ 120 0014 60A4     	 mov.a %a4,%d10
+ 121 0016 6D000000 	 call IfxHsphy_isPhyReady
+ 122              	.LVL6:
+ 463:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     {
+ 123              	 .loc 1 463 52 discriminator 2
+ 124 001a DF120000 	 jeq %d2,1,.L7
+ 125              	 .loc 1 465 9 is_stmt 1
+ 126 001e C2F8     	 add %d8,-1
+ 127              	.LVL7:
+ 128 0020 DF080080 	 jnz %d8,.L3
+ 129 0024 8218     	 mov %d8,1
+ 130              	.LVL8:
+ 131 0026 1D000000 	 j .L4
+ 132              	.LVL9:
+ 133              	.L7:
+ 458:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 134              	 .loc 1 458 16 is_stmt 0
+ 135 002a 8208     	 mov %d8,0
+ 136              	.LVL10:
+ 137              	.L4:
+ 466:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     }
+ 467:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 468:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     retval &= IfxHsphy_setExtLdDone(HsphySfr, phyIndex);
+ 138              	 .loc 1 468 5 is_stmt 1
+ 139              	 .loc 1 468 15 is_stmt 0
+ 140 002c 0294     	 mov %d4,%d9
+ 141 002e 60A4     	 mov.a %a4,%d10
+ 142 0030 6D000000 	 call IfxHsphy_setExtLdDone
+ 143              	.LVL11:
+ 469:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     return (retval && (boolean)(!(timeOutError)));
+ 144              	 .loc 1 469 5 is_stmt 1
+ 145              	 .loc 1 469 23 is_stmt 0
+ 146 0034 8F188081 	 xor %d8,%d8,1
+ 147              	.LVL12:
+ 470:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** }
+ 148              	 .loc 1 470 1
+ 149 0038 2682     	 and %d2,%d8
+ 150              	.LVL13:
+ 151 003a 0090     	 ret 
+ 152              	.LFE333:
+ 154              	 .global IfxHsphy_Hsphy_initDone_end
+ 155              	IfxHsphy_Hsphy_initDone_end:
+ 156              	 .section .text.IfxHsphy_Hsphy_phyInit,"ax",@progbits
+ 157              	 .align 1
+ 158              	 .global IfxHsphy_Hsphy_phyInit
+ 160              	IfxHsphy_Hsphy_phyInit:
+ 161              	.LFB334:
+ 471:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 472:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 473:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** boolean IfxHsphy_Hsphy_phyInit(IfxHsphy_Hsphy_phyData *hsphyData, IfxHsphy_Hsphy_phyConfig *phyConf
+ 474:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** {
+ 162              	 .loc 1 474 1 is_stmt 1
+ 163              	.LVL14:
+ 164 0000 40AE     	 mov.aa %a14,%SP
+ 165              	.LCFI2:
+ 475:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     /* Check for lookup and get more connection parameters */
+ 476:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 477:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     boolean retval       = FALSE;
+ 166              	 .loc 1 477 5
+ 167              	.LVL15:
+ 478:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     uint8   index        = 0;
+ 168              	 .loc 1 478 5
+ 479:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     uint8   numOfEntries = (sizeof(IfxHsphy_Hsphy_configLookUpTbl) / sizeof(IfxHsphy_Hsphy_phyConfi
+ 169              	 .loc 1 479 5
+ 480:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 481:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     for (index = 0; index < numOfEntries; index++)
+ 170              	 .loc 1 481 5
+ 171              	 .loc 1 481 16 is_stmt 0
+ 172 0002 8202     	 mov %d2,0
+ 173              	 .loc 1 481 5
+ 174 0004 1D000000 	 j .L9
+ 175              	.LVL16:
+ 176              	.L10:
+ 177              	 .loc 1 481 48 is_stmt 1 discriminator 2
+ 178 0008 C212     	 add %d2,1
+ 179              	.LVL17:
+ 180 000a 8FF20F21 	 and %d2,%d2,255
+ 181              	.LVL18:
+ 182              	.L9:
+ 183              	 .loc 1 481 27 discriminator 1
+ 184 000e 3BD00130 	 mov %d3,29
+ 185 0012 3F230080 	 jlt.u %d3,%d2,.L25
+ 482:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     {
+ 483:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         if (
+ 186              	 .loc 1 483 9
+ 484:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             (phyConfig->phyIdx == IfxHsphy_Hsphy_configLookUpTbl[index].phyIdx) &&
+ 187              	 .loc 1 484 23 is_stmt 0
+ 188 0016 5455     	 ld.w %d5,[%a5]0
+ 189              	 .loc 1 484 72
+ 190 0018 91000020 	 movh.a %a2,hi:IfxHsphy_Hsphy_configLookUpTbl
+ 191 001c 8023     	 mov.d %d3,%a2
+ 192 001e 1B030030 	 addi %d3,%d3,lo:IfxHsphy_Hsphy_configLookUpTbl
+ 193 0022 13822133 	 madd %d3,%d3,%d2,24
+ 194 0026 6032     	 mov.a %a2,%d3
+ 195 0028 5423     	 ld.w %d3,[%a2]0
+ 483:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             (phyConfig->phyIdx == IfxHsphy_Hsphy_configLookUpTbl[index].phyIdx) &&
+ 196              	 .loc 1 483 12
+ 197 002a 5F350080 	 jne %d5,%d3,.L10
+ 485:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             (phyConfig->padInterface == IfxHsphy_Hsphy_configLookUpTbl[index].padInterface) &&
+ 198              	 .loc 1 485 23
+ 199 002e 19550400 	 ld.w %d5,[%a5]4
+ 200              	 .loc 1 485 78
+ 201 0032 91000020 	 movh.a %a2,hi:IfxHsphy_Hsphy_configLookUpTbl
+ 202 0036 8023     	 mov.d %d3,%a2
+ 203 0038 1B030030 	 addi %d3,%d3,lo:IfxHsphy_Hsphy_configLookUpTbl
+ 204 003c 13822133 	 madd %d3,%d3,%d2,24
+ 205 0040 6032     	 mov.a %a2,%d3
+ 206 0042 19230400 	 ld.w %d3,[%a2]4
+ 484:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             (phyConfig->phyIdx == IfxHsphy_Hsphy_configLookUpTbl[index].phyIdx) &&
+ 207              	 .loc 1 484 81
+ 208 0046 5F350080 	 jne %d5,%d3,.L10
+ 486:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             (phyConfig->trgtDevice == IfxHsphy_Hsphy_configLookUpTbl[index].trgtDevice) &&
+ 209              	 .loc 1 486 23
+ 210 004a 19550800 	 ld.w %d5,[%a5]8
+ 211              	 .loc 1 486 76
+ 212 004e 91000020 	 movh.a %a2,hi:IfxHsphy_Hsphy_configLookUpTbl
+ 213 0052 8023     	 mov.d %d3,%a2
+ 214 0054 1B030030 	 addi %d3,%d3,lo:IfxHsphy_Hsphy_configLookUpTbl
+ 215 0058 13822133 	 madd %d3,%d3,%d2,24
+ 216 005c 6032     	 mov.a %a2,%d3
+ 217 005e 19230800 	 ld.w %d3,[%a2]8
+ 485:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             (phyConfig->padInterface == IfxHsphy_Hsphy_configLookUpTbl[index].padInterface) &&
+ 218              	 .loc 1 485 93
+ 219 0062 5F350080 	 jne %d5,%d3,.L10
+ 487:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             (phyConfig->trgtDeviceIdx == IfxHsphy_Hsphy_configLookUpTbl[index].trgtDeviceIdx) &&
+ 220              	 .loc 1 487 23
+ 221 0066 39550C00 	 ld.bu %d5,[%a5]12
+ 222              	 .loc 1 487 79
+ 223 006a 91000020 	 movh.a %a2,hi:IfxHsphy_Hsphy_configLookUpTbl
+ 224 006e 8023     	 mov.d %d3,%a2
+ 225 0070 1B030030 	 addi %d3,%d3,lo:IfxHsphy_Hsphy_configLookUpTbl
+ 226 0074 13822133 	 madd %d3,%d3,%d2,24
+ 227 0078 6032     	 mov.a %a2,%d3
+ 228 007a 39230C00 	 ld.bu %d3,[%a2]12
+ 486:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             (phyConfig->trgtDevice == IfxHsphy_Hsphy_configLookUpTbl[index].trgtDevice) &&
+ 229              	 .loc 1 486 89
+ 230 007e 5F350080 	 jne %d5,%d3,.L10
+ 488:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             (phyConfig->deviceSpeed == IfxHsphy_Hsphy_configLookUpTbl[index].deviceSpeed)
+ 231              	 .loc 1 488 23
+ 232 0082 19551000 	 ld.w %d5,[%a5]16
+ 233              	 .loc 1 488 77
+ 234 0086 91000020 	 movh.a %a2,hi:IfxHsphy_Hsphy_configLookUpTbl
+ 235 008a 8023     	 mov.d %d3,%a2
+ 236 008c 1B030030 	 addi %d3,%d3,lo:IfxHsphy_Hsphy_configLookUpTbl
+ 237 0090 13822133 	 madd %d3,%d3,%d2,24
+ 238 0094 6032     	 mov.a %a2,%d3
+ 239 0096 19231000 	 ld.w %d3,[%a2]16
+ 487:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             (phyConfig->trgtDeviceIdx == IfxHsphy_Hsphy_configLookUpTbl[index].trgtDeviceIdx) &&
+ 240              	 .loc 1 487 95
+ 241 009a 5F350080 	 jne %d5,%d3,.L10
+ 489:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             )
+ 490:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 491:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             retval = TRUE;
+ 242              	 .loc 1 491 20
+ 243 009e 8212     	 mov %d2,1
+ 244              	.LVL19:
+ 245 00a0 1D000000 	 j .L11
+ 246              	.LVL20:
+ 247              	.L25:
+ 477:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     uint8   index        = 0;
+ 248              	 .loc 1 477 13
+ 249 00a4 8202     	 mov %d2,0
+ 250              	.LVL21:
+ 251              	.L11:
+ 492:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             break;
+ 493:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         }
+ 494:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     }
+ 495:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 496:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     if (retval != FALSE)
+ 252              	 .loc 1 496 5 is_stmt 1
+ 253              	 .loc 1 496 8 is_stmt 0
+ 254 00a6 DF020000 	 jz %d2,.L13
+ 497:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     {
+ 498:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         /* Index has the value to get more parameters */
+ 499:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         hsphyData->hsphyCfg.phyIdx        = phyConfig->phyIdx;
+ 255              	 .loc 1 499 9 is_stmt 1
+ 256              	 .loc 1 499 43 is_stmt 0
+ 257 00aa 5453     	 ld.w %d3,[%a5]0
+ 258 00ac 7443     	 st.w [%a4]0,%d3
+ 500:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         hsphyData->hsphyCfg.padInterface  = phyConfig->padInterface;
+ 259              	 .loc 1 500 9 is_stmt 1
+ 260              	 .loc 1 500 54 is_stmt 0
+ 261 00ae 19530400 	 ld.w %d3,[%a5]4
+ 262              	 .loc 1 500 43
+ 263 00b2 59430400 	 st.w [%a4]4,%d3
+ 501:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         hsphyData->hsphyCfg.trgtDevice    = phyConfig->trgtDevice;
+ 264              	 .loc 1 501 9 is_stmt 1
+ 265              	 .loc 1 501 43 is_stmt 0
+ 266 00b6 19540800 	 ld.w %d4,[%a5]8
+ 267 00ba 59440800 	 st.w [%a4]8,%d4
+ 502:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         hsphyData->hsphyCfg.trgtDeviceIdx = phyConfig->trgtDeviceIdx;
+ 268              	 .loc 1 502 9 is_stmt 1
+ 269              	 .loc 1 502 54 is_stmt 0
+ 270 00be 39540C00 	 ld.bu %d4,[%a5]12
+ 271              	 .loc 1 502 43
+ 272 00c2 E9440C00 	 st.b [%a4]12,%d4
+ 503:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         hsphyData->hsphyCfg.deviceSpeed   = phyConfig->deviceSpeed;
+ 273              	 .loc 1 503 9 is_stmt 1
+ 274              	 .loc 1 503 43 is_stmt 0
+ 275 00c6 19541000 	 ld.w %d4,[%a5]16
+ 276 00ca 59441000 	 st.w [%a4]16,%d4
+ 504:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 505:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #if IFXHSPHY_IS_GETH_AVAILABLE
+ 506:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         /* Cfg data */
+ 507:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         if (hsphyData->hsphyCfg.padInterface == IfxHsphy_PadNativeInterface_sgmii)
+ 277              	 .loc 1 507 9 is_stmt 1
+ 278              	 .loc 1 507 12 is_stmt 0
+ 279 00ce DF130000 	 jeq %d3,1,.L26
+ 508:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 509:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             hsphyData->hsphyCfg.cfgData = (const IfxHsphy_GethXpcsParams *)phyConfig->cfgData;
+ 510:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         }
+ 511:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #if IFXHSPHY_IS_PADINTERFACE_USXSGMII_AVAILABLE
+ 512:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         else if (hsphyData->hsphyCfg.padInterface == IfxHsphy_PadNativeInterface_usxsgmii)
+ 280              	 .loc 1 512 14 is_stmt 1
+ 281 00d2 FF830080 	 jge.u %d3,8,.L24
+ 282 00d6 91000020 	 movh.a %a2,hi:.L16
+ 283 00da D9220000 	 lea %a2,[%a2]lo:.L16
+ 284 00de 01230226 	 addsc.a %a2,%a2,%d3,2
+ 285 00e2 DC02     	 ji %a2
+ 286              	 .align 2
+ 287              	 .align 2
+ 288              	.L16:
+ 289              	 .code32
+ 290 00e4 1D000000 	 j .L22
+ 291              	 .code32
+ 292 00e8 1D000000 	 j .L24
+ 293              	 .code32
+ 294 00ec 1D000000 	 j .L21
+ 295              	 .code32
+ 296 00f0 1D000000 	 j .L20
+ 297              	 .code32
+ 298 00f4 1D000000 	 j .L19
+ 299              	 .code32
+ 300 00f8 1D000000 	 j .L18
+ 301              	 .code32
+ 302 00fc 1D000000 	 j .L17
+ 303              	 .code32
+ 304 0100 1D000000 	 j .L15
+ 305              	.L26:
+ 509:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         }
+ 306              	 .loc 1 509 13
+ 509:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         }
+ 307              	 .loc 1 509 85 is_stmt 0
+ 308 0104 19531400 	 ld.w %d3,[%a5]20
+ 309 0108 59431400 	 st.w [%a4]20,%d3
+ 310 010c 0090     	 ret 
+ 311              	.L22:
+ 513:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 514:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             hsphyData->hsphyCfg.cfgData = (const IfxHsphy_GethXpcsParams *)phyConfig->cfgData;
+ 312              	 .loc 1 514 13 is_stmt 1
+ 313              	 .loc 1 514 85 is_stmt 0
+ 314 010e 19531400 	 ld.w %d3,[%a5]20
+ 315 0112 59431400 	 st.w [%a4]20,%d3
+ 316 0116 0090     	 ret 
+ 317              	.L21:
+ 515:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         }
+ 516:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #endif /* #if IFXHSPHY_IS_PADINTERFACE_USXSGMII_AVAILABLE */
+ 517:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #if IFXHSPHY_IS_PADINTERFACE_PCIE_AVAILABLE
+ 518:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         else if (hsphyData->hsphyCfg.padInterface == IfxHsphy_PadNativeInterface_pcie)
+ 519:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 520:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             hsphyData->hsphyCfg.cfgData = phyConfig->cfgData;
+ 318              	 .loc 1 520 13 is_stmt 1
+ 319              	 .loc 1 520 52 is_stmt 0
+ 320 0118 19531400 	 ld.w %d3,[%a5]20
+ 321 011c 59431400 	 st.w [%a4]20,%d3
+ 322 0120 0090     	 ret 
+ 323              	.L20:
+ 521:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         }
+ 522:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #endif /* IFXHSPHY_IS_PADINTERFACE_PCIE_AVAILABLE */
+ 523:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         else if (hsphyData->hsphyCfg.padInterface == IfxHsphy_PadNativeInterface_sgbt)
+ 524:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 525:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             hsphyData->hsphyCfg.cfgData = phyConfig->cfgData;
+ 324              	 .loc 1 525 13 is_stmt 1
+ 325              	 .loc 1 525 52 is_stmt 0
+ 326 0122 19531400 	 ld.w %d3,[%a5]20
+ 327 0126 59431400 	 st.w [%a4]20,%d3
+ 328 012a 0090     	 ret 
+ 329              	.L19:
+ 526:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         }
+ 527:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         else if (hsphyData->hsphyCfg.padInterface == IfxHsphy_PadNativeInterface_rgmiiPads)
+ 528:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 529:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             hsphyData->hsphyCfg.cfgData = (IfxHsphy_Geth_RgmiiCfg *)phyConfig->cfgData;
+ 330              	 .loc 1 529 13 is_stmt 1
+ 331              	 .loc 1 529 78 is_stmt 0
+ 332 012c 19531400 	 ld.w %d3,[%a5]20
+ 333 0130 59431400 	 st.w [%a4]20,%d3
+ 334 0134 0090     	 ret 
+ 335              	.L18:
+ 530:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         }
+ 531:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         else if (hsphyData->hsphyCfg.padInterface == IfxHsphy_PadNativeInterface_rmiiPads)
+ 532:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 533:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             hsphyData->hsphyCfg.cfgData = (IfxHsphy_Geth_RmiiCfg *)phyConfig->cfgData;
+ 336              	 .loc 1 533 13 is_stmt 1
+ 337              	 .loc 1 533 77 is_stmt 0
+ 338 0136 19531400 	 ld.w %d3,[%a5]20
+ 339 013a 59431400 	 st.w [%a4]20,%d3
+ 340 013e 0090     	 ret 
+ 341              	.L17:
+ 534:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         }
+ 535:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         else if (hsphyData->hsphyCfg.padInterface == IfxHsphy_PadNativeInterface_miiPads)
+ 536:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 537:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             hsphyData->hsphyCfg.cfgData = (IfxHsphy_Geth_MiiCfg *)phyConfig->cfgData;
+ 342              	 .loc 1 537 13 is_stmt 1
+ 343              	 .loc 1 537 76 is_stmt 0
+ 344 0140 19531400 	 ld.w %d3,[%a5]20
+ 345 0144 59431400 	 st.w [%a4]20,%d3
+ 346 0148 0090     	 ret 
+ 347              	.L15:
+ 538:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         }
+ 539:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         else if (hsphyData->hsphyCfg.padInterface == IfxHsphy_PadNativeInterface_xspiPads)
+ 540:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 541:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             hsphyData->hsphyCfg.cfgData = (IfxHsphy_Xspi_XspiCfg *)phyConfig->cfgData;
+ 348              	 .loc 1 541 13 is_stmt 1
+ 349              	 .loc 1 541 77 is_stmt 0
+ 350 014a 19531400 	 ld.w %d3,[%a5]20
+ 351 014e 59431400 	 st.w [%a4]20,%d3
+ 352 0152 0090     	 ret 
+ 353              	.L24:
+ 507:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 354              	 .loc 1 507 12
+ 355 0154 8202     	 mov %d2,0
+ 356              	.LVL22:
+ 357              	.L13:
+ 542:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         }
+ 543:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         else
+ 544:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 545:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             retval = FALSE;
+ 546:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         }
+ 547:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #else		
+ 548:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         /* Cfg data */
+ 549:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         if (hsphyData->hsphyCfg.padInterface == IfxHsphy_PadNativeInterface_sgmii)
+ 550:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 551:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             hsphyData->hsphyCfg.cfgData = (const IfxHsphy_XpcsParams *)phyConfig->cfgData;
+ 552:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         }
+ 553:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #if IFXHSPHY_IS_PADINTERFACE_PCIE_AVAILABLE
+ 554:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         else if (hsphyData->hsphyCfg.padInterface == IfxHsphy_PadNativeInterface_pcie)
+ 555:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 		{
+ 556:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			hsphyData->hsphyCfg.cfgData = phyConfig->cfgData;
+ 557:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 		}
+ 558:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #endif /* IFXHSPHY_IS_PADINTERFACE_PCIE_AVAILABLE */
+ 559:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #if IFXHSPHY_IS_PADINTERFACE_SGBT_AVAILABLE
+ 560:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 		else if (hsphyData->hsphyCfg.padInterface == IfxHsphy_PadNativeInterface_sgbt)
+ 561:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 		{
+ 562:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			hsphyData->hsphyCfg.cfgData = phyConfig->cfgData;
+ 563:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 		}
+ 564:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #endif /* IFXHSPHY_IS_PADINTERFACE_SGBT_AVAILABLE */
+ 565:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         else
+ 566:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 567:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             retval = FALSE;
+ 568:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         }
+ 569:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #endif /* #if IFXHSPHY_IS_GETH_AVAILABLE */
+ 570:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     }
+ 571:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 572:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     return retval;
+ 358              	 .loc 1 572 5 is_stmt 1
+ 573:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** }
+ 359              	 .loc 1 573 1 is_stmt 0
+ 360 0156 0090     	 ret 
+ 361              	.LFE334:
+ 363              	 .global IfxHsphy_Hsphy_phyInit_end
+ 364              	IfxHsphy_Hsphy_phyInit_end:
+ 365              	 .section .text.IfxHsphy_Hsphy_initModule,"ax",@progbits
+ 366              	 .align 1
+ 367              	 .global IfxHsphy_Hsphy_initModule
+ 369              	IfxHsphy_Hsphy_initModule:
+ 370              	.LFB331:
+  79:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     IfxHsphy_status            retval            = IfxHsphy_status_success;
+ 371              	 .loc 1 79 1 is_stmt 1
+ 372              	.LVL23:
+ 373 0000 40AE     	 mov.aa %a14,%SP
+ 374              	.LCFI3:
+ 375 0002 404C     	 mov.aa %a12,%a4
+ 376 0004 405D     	 mov.aa %a13,%a5
+  80:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     uint8                      index             = 0;
+ 377              	 .loc 1 80 5
+ 378              	.LVL24:
+  81:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #if IFXHSPHY_IS_GETH_AVAILABLE	
+ 379              	 .loc 1 81 5
+  83:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     IfxHsphy_Geth_RgmiiCfg        *rgmiiConfig;
+ 380              	 .loc 1 83 5
+  84:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     IfxHsphy_Geth_MiiCfg          *miiConfig;
+ 381              	 .loc 1 84 5
+  85:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     IfxHsphy_Geth_RmiiCfg         *rmiiConfig;
+ 382              	 .loc 1 85 5
+  86:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     IfxHsphy_Xspi_XspiCfg         *xspiConfig;
+ 383              	 .loc 1 86 5
+  87:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #else	
+ 384              	 .loc 1 87 5
+  91:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     uint8                      timeOutError      = 0U;
+ 385              	 .loc 1 91 5
+  92:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 386              	 .loc 1 92 5
+  94:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     hsphy->hsphySFR = hsphySFR;
+ 387              	 .loc 1 94 5
+  94:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     hsphy->hsphySFR = hsphySFR;
+ 388              	 .loc 1 94 32 is_stmt 0
+ 389 0006 545A     	 ld.w %d10,[%a5]0
+ 390              	.LVL25:
+  95:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     boolean                    retvalCheck       = FALSE;
+ 391              	 .loc 1 95 5 is_stmt 1
+  95:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     boolean                    retvalCheck       = FALSE;
+ 392              	 .loc 1 95 21 is_stmt 0
+ 393 0008 744A     	 st.w [%a4]0,%d10
+  96:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 394              	 .loc 1 96 5 is_stmt 1
+ 395              	.LVL26:
+ 102:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #elif defined(DEVICE_TC4ZX)
+ 396              	 .loc 1 102 5
+ 102:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #elif defined(DEVICE_TC4ZX)
+ 397              	 .loc 1 102 16 is_stmt 0
+ 398 000a 8209     	 mov %d9,0
+  80:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     uint8                      index             = 0;
+ 399              	 .loc 1 80 32
+ 400 000c 8218     	 mov %d8,1
+ 102:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #elif defined(DEVICE_TC4ZX)
+ 401              	 .loc 1 102 5
+ 402 000e 1D000000 	 j .L28
+ 403              	.LVL27:
+ 404              	.L68:
+ 102:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #elif defined(DEVICE_TC4ZX)
+ 405              	 .loc 1 102 55 is_stmt 1 discriminator 2
+ 406 0012 C219     	 add %d9,1
+ 407              	.LVL28:
+ 408 0014 8FF90F91 	 and %d9,%d9,255
+ 409              	.LVL29:
+ 410              	.L28:
+ 102:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #elif defined(DEVICE_TC4ZX)
+ 411              	 .loc 1 102 27 discriminator 1
+ 412 0018 FF390080 	 jge.u %d9,3,.L67
+ 109:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 413              	 .loc 1 109 6
+ 109:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 414              	 .loc 1 109 16 is_stmt 0
+ 415 001c 53892120 	 mul %d2,%d9,24
+ 416 0020 6025     	 mov.a %a5,%d2
+ 417 0022 B045     	 add.a %a5,4
+ 418 0024 1B190020 	 addi %d2,%d9,1
+ 419 0028 0622     	 sh %d2,2
+ 420 002a 01C20026 	 addsc.a %a2,%a12,%d2,0
+ 421 002e 30D5     	 add.a %a5,%a13
+ 422 0030 D424     	 ld.a %a4,[%a2]0
+ 423 0032 6D000000 	 call IfxHsphy_Hsphy_phyInit
+ 424              	.LVL30:
+ 109:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 425              	 .loc 1 109 13
+ 426 0036 2628     	 and %d8,%d2
+ 427              	.LVL31:
+ 111:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 428              	 .loc 1 111 9 is_stmt 1
+ 111:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 429              	 .loc 1 111 12 is_stmt 0
+ 430 0038 DF080080 	 jnz %d8,.L68
+ 113:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         }
+ 431              	 .loc 1 113 20
+ 432 003c 8238     	 mov %d8,3
+ 433              	.LVL32:
+ 434 003e 1D000000 	 j .L27
+ 435              	.LVL33:
+ 436              	.L67:
+ 118:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 437              	 .loc 1 118 5 is_stmt 1
+ 118:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 438              	 .loc 1 118 19 is_stmt 0
+ 439 0042 60A4     	 mov.a %a4,%d10
+ 440 0044 6D000000 	 call IfxHsphy_enableModule
+ 441              	.LVL34:
+ 120:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     {
+ 442              	 .loc 1 120 5 is_stmt 1
+ 120:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     {
+ 443              	 .loc 1 120 8 is_stmt 0
+ 444 0048 DF120000 	 jeq %d2,1,.L51
+ 125:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 445              	 .loc 1 125 5 is_stmt 1
+ 125:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 446              	 .loc 1 125 19 is_stmt 0
+ 447 004c 60A4     	 mov.a %a4,%d10
+ 448 004e 6D000000 	 call IfxHsphy_resetModule
+ 449              	.LVL35:
+ 127:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     {
+ 450              	 .loc 1 127 5 is_stmt 1
+ 127:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     {
+ 451              	 .loc 1 127 8 is_stmt 0
+ 452 0052 DF120000 	 jeq %d2,1,.L52
+ 134:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #elif defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X)
+ 453              	 .loc 1 134 16
+ 454 0056 8202     	 mov %d2,0
+ 455              	.LVL36:
+ 456 0058 1D000000 	 j .L31
+ 457              	.LVL37:
+ 458              	.L32:
+ 134:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #elif defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X)
+ 459              	 .loc 1 134 55 is_stmt 1 discriminator 2
+ 460 005c C212     	 add %d2,1
+ 461              	.LVL38:
+ 462 005e 8FF20F21 	 and %d2,%d2,255
+ 463              	.LVL39:
+ 464              	.L31:
+ 134:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #elif defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC44X)
+ 465              	 .loc 1 134 27 discriminator 1
+ 466 0062 FF320080 	 jge.u %d2,3,.L69
+ 141:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 467              	 .loc 1 141 9
+ 141:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 468              	 .loc 1 141 30 is_stmt 0
+ 469 0066 1B120030 	 addi %d3,%d2,1
+ 470 006a 0623     	 sh %d3,2
+ 471 006c 01C30026 	 addsc.a %a2,%a12,%d3,0
+ 472 0070 D422     	 ld.a %a2,[%a2]0
+ 141:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 473              	 .loc 1 141 47
+ 474 0072 19230400 	 ld.w %d3,[%a2]4
+ 141:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 475              	 .loc 1 141 12
+ 476 0076 DF730080 	 jne %d3,7,.L32
+ 141:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 477              	 .loc 1 141 139 discriminator 1
+ 478 007a 992D1400 	 ld.a %a13,[%a2]20
+ 141:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 479              	 .loc 1 141 102 discriminator 1
+ 480 007e BD0D0000 	 jz.a %a13,.L32
+ 144:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             retvalCheck = IfxHsphy_Xspi_xspiInit(hsphy->hsphySFR, xspiConfig);
+ 481              	 .loc 1 144 13 is_stmt 1
+ 482              	.LVL40:
+ 145:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 483              	 .loc 1 145 13
+ 145:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 484              	 .loc 1 145 27 is_stmt 0
+ 485 0082 40D5     	 mov.aa %a5,%a13
+ 486 0084 D4C4     	 ld.a %a4,[%a12]0
+ 487 0086 6D000000 	 call IfxHsphy_Xspi_xspiInit
+ 488              	.LVL41:
+ 147:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 489              	 .loc 1 147 13 is_stmt 1
+ 147:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 490              	 .loc 1 147 16 is_stmt 0
+ 491 008a DF120000 	 jeq %d2,1,.L53
+ 152:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 492              	 .loc 1 152 13 is_stmt 1
+ 152:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 493              	 .loc 1 152 27 is_stmt 0
+ 494 008e 19D22000 	 ld.w %d2,[%a13]32
+ 495              	.LVL42:
+ 152:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 496              	 .loc 1 152 16
+ 497 0092 DF020000 	 jz %d2,.L33
+ 154:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             }
+ 498              	 .loc 1 154 17 is_stmt 1
+ 499 0096 40D5     	 mov.aa %a5,%a13
+ 500 0098 D4C4     	 ld.a %a4,[%a12]0
+ 501 009a 6D000000 	 call IfxHsphy_Xspi_setXspiPins
+ 502              	.LVL43:
+ 503              	.L33:
+ 157:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         }
+ 504              	 .loc 1 157 13
+ 157:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         }
+ 505              	 .loc 1 157 20 is_stmt 0
+ 506 009e 8218     	 mov %d8,1
+ 507              	.LVL44:
+ 508 00a0 1D000000 	 j .L27
+ 509              	.LVL45:
+ 510              	.L69:
+  92:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 511              	 .loc 1 92 32
+ 512 00a4 820D     	 mov %d13,0
+  91:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     uint8                      timeOutError      = 0U;
+ 513              	 .loc 1 91 32
+ 514 00a6 7BF00090 	 movh %d9,15
+ 515 00aa 1B092494 	 addi %d9,%d9,16960
+ 165:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #elif defined(DEVICE_TC4ZX)
+ 516              	 .loc 1 165 16
+ 517 00ae 820B     	 mov %d11,0
+ 518 00b0 1D000000 	 j .L35
+ 519              	.LVL46:
+ 520              	.L74:
+ 188:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 521              	 .loc 1 188 136 discriminator 1
+ 522 00b4 992D1400 	 ld.a %a13,[%a2]20
+ 188:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 523              	 .loc 1 188 99 discriminator 1
+ 524 00b8 BD0D0000 	 jz.a %a13,.L36
+ 525              	.LBB2:
+ 192:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			IfxHsphy_EthIndex ethIndex = xpcsConfig->ethIdx;
+ 526              	 .loc 1 192 4 is_stmt 1
+ 527              	.LVL47:
+ 193:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #else			
+ 528              	 .loc 1 193 4
+ 193:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #else			
+ 529              	 .loc 1 193 22 is_stmt 0
+ 530 00bc 19DE0800 	 ld.w %d14,[%a13]8
+ 531              	.LVL48:
+ 198:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 532              	 .loc 1 198 13 is_stmt 1
+ 198:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 533              	 .loc 1 198 27 is_stmt 0
+ 534 00c0 40D5     	 mov.aa %a5,%a13
+ 535 00c2 D4C4     	 ld.a %a4,[%a12]0
+ 536 00c4 6D000000 	 call IfxHsphy_resetXpcs
+ 537              	.LVL49:
+ 200:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			{
+ 538              	 .loc 1 200 4 is_stmt 1
+ 200:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			{
+ 539              	 .loc 1 200 7 is_stmt 0
+ 540 00c8 DF120000 	 jeq %d2,1,.L70
+ 541              	.LVL50:
+ 542              	.L37:
+ 207:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			}
+ 543              	 .loc 1 207 5 is_stmt 1 discriminator 2
+ 207:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			}
+ 544              	 .loc 1 207 65 discriminator 2
+ 205:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			{
+ 545              	 .loc 1 205 87 discriminator 2
+ 205:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			{
+ 546              	 .loc 1 205 16 is_stmt 0 discriminator 2
+ 547 00cc 54C3     	 ld.w %d3,[%a12]0
+ 205:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			{
+ 548              	 .loc 1 205 43 discriminator 2
+ 549 00ce 54D2     	 ld.w %d2,[%a13]0
+ 205:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			{
+ 550              	 .loc 1 205 75 discriminator 2
+ 551 00d0 8F720120 	 sh %d2,%d2,23
+ 552 00d4 4232     	 add %d2,%d3
+ 553 00d6 7BE00840 	 movh %d4,142
+ 554 00da 1B040440 	 addi %d4,%d4,64
+ 555 00de 6022     	 mov.a %a2,%d2
+ 556 00e0 01240026 	 addsc.a %a2,%a2,%d4,0
+ 557 00e4 5422     	 ld.w %d2,[%a2]0
+ 558 00e6 37026321 	 extr.u %d2,%d2,2,3
+ 205:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			{
+ 559              	 .loc 1 205 87 discriminator 2
+ 560 00ea DF420000 	 jeq %d2,4,.L38
+ 207:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			}
+ 561              	 .loc 1 207 5 is_stmt 1
+ 562 00ee C2F9     	 add %d9,-1
+ 563              	.LVL51:
+ 564 00f0 DF090080 	 jnz %d9,.L37
+ 565 00f4 821D     	 mov %d13,1
+ 566              	.LVL52:
+ 567              	.L38:
+ 210:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			{
+ 568              	 .loc 1 210 4
+ 210:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			{
+ 569              	 .loc 1 210 7 is_stmt 0
+ 570 00f6 DF0D0080 	 jnz %d13,.L58
+ 216:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			IfxHsphy_Geth_SgmiiSpeedConfigStatus retvalCheck_sgmii;
+ 571              	 .loc 1 216 4 is_stmt 1
+ 216:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			IfxHsphy_Geth_SgmiiSpeedConfigStatus retvalCheck_sgmii;
+ 572              	 .loc 1 216 41 is_stmt 0
+ 573 00fa 1B0E1820 	 addi %d2,%d14,384
+ 574 00fe 0622     	 sh %d2,2
+ 575 0100 6032     	 mov.a %a2,%d3
+ 576 0102 01220026 	 addsc.a %a2,%a2,%d2,0
+ 577 0106 5422     	 ld.w %d2,[%a2]0
+ 578 0108 B742032E 	 insert %d2,%d2,4,28,3
+ 579 010c 7422     	 st.w [%a2]0,%d2
+ 217:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			retvalCheck_sgmii                    = IfxHsphy_Geth_setSgmiiSpeedMode(hsphy->hsphySFR, hsphy->h
+ 580              	 .loc 1 217 4 is_stmt 1
+ 218:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #else            
+ 581              	 .loc 1 218 4
+ 218:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #else            
+ 582              	 .loc 1 218 108 is_stmt 0
+ 583 010e 1B1C0020 	 addi %d2,%d12,1
+ 584 0112 0622     	 sh %d2,2
+ 585 0114 01C20026 	 addsc.a %a2,%a12,%d2,0
+ 586 0118 D422     	 ld.a %a2,[%a2]0
+ 218:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #else            
+ 587              	 .loc 1 218 43
+ 588 011a 40D5     	 mov.aa %a5,%a13
+ 589 011c 19241000 	 ld.w %d4,[%a2]16
+ 590 0120 D4C4     	 ld.a %a4,[%a12]0
+ 591 0122 6D000000 	 call IfxHsphy_Geth_setSgmiiSpeedMode
+ 592              	.LVL53:
+ 225:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			{
+ 593              	 .loc 1 225 4 is_stmt 1
+ 225:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			{
+ 594              	 .loc 1 225 7 is_stmt 0
+ 595 0126 DF020000 	 jz %d2,.L40
+ 227:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 					{
+ 596              	 .loc 1 227 5 is_stmt 1
+ 227:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 					{
+ 597              	 .loc 1 227 8 is_stmt 0
+ 598 012a DF120000 	 jeq %d2,1,.L71
+ 233:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 					}
+ 599              	 .loc 1 233 14
+ 600 012e 8238     	 mov %d8,3
+ 601              	.LVL54:
+ 602 0130 1D000000 	 j .L27
+ 603              	.LVL55:
+ 604              	.L71:
+ 229:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 					}
+ 605              	 .loc 1 229 14
+ 606 0134 8228     	 mov %d8,2
+ 607              	.LVL56:
+ 608 0136 1D000000 	 j .L27
+ 609              	.LVL57:
+ 610              	.L75:
+ 611              	.LBE2:
+ 612              	.LBB3:
+ 254:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             IfxHsphy_EthIndex ethIndex = xpcsConfig->ethIdx;
+ 613              	 .loc 1 254 13 is_stmt 1
+ 255:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             retvalCheck = IfxHsphy_resetXpcs(hsphy->hsphySFR, xpcsConfig);
+ 614              	 .loc 1 255 13
+ 255:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             retvalCheck = IfxHsphy_resetXpcs(hsphy->hsphySFR, xpcsConfig);
+ 615              	 .loc 1 255 31 is_stmt 0
+ 616 013a 19DE0800 	 ld.w %d14,[%a13]8
+ 617              	.LVL58:
+ 256:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 618              	 .loc 1 256 13 is_stmt 1
+ 256:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 619              	 .loc 1 256 27 is_stmt 0
+ 620 013e 40D5     	 mov.aa %a5,%a13
+ 621 0140 D4C4     	 ld.a %a4,[%a12]0
+ 622 0142 6D000000 	 call IfxHsphy_resetXpcs
+ 623              	.LVL59:
+ 258:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 624              	 .loc 1 258 13 is_stmt 1
+ 258:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 625              	 .loc 1 258 16 is_stmt 0
+ 626 0146 DF120000 	 jeq %d2,1,.L60
+ 263:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 627              	 .loc 1 263 31
+ 628 014a 7BF00090 	 movh %d9,15
+ 629              	.LVL60:
+ 630 014e 1B092494 	 addi %d9,%d9,16960
+ 631              	.LVL61:
+ 632              	.L42:
+ 267:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             }
+ 633              	 .loc 1 267 17 is_stmt 1 discriminator 2
+ 267:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             }
+ 634              	 .loc 1 267 77 discriminator 2
+ 265:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 635              	 .loc 1 265 96 discriminator 2
+ 265:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 636              	 .loc 1 265 25 is_stmt 0 discriminator 2
+ 637 0152 54C3     	 ld.w %d3,[%a12]0
+ 265:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 638              	 .loc 1 265 52 discriminator 2
+ 639 0154 54D2     	 ld.w %d2,[%a13]0
+ 265:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 640              	 .loc 1 265 84 discriminator 2
+ 641 0156 8F720120 	 sh %d2,%d2,23
+ 642 015a 4232     	 add %d2,%d3
+ 643 015c 7BE00840 	 movh %d4,142
+ 644 0160 1B040440 	 addi %d4,%d4,64
+ 645 0164 6022     	 mov.a %a2,%d2
+ 646 0166 01240026 	 addsc.a %a2,%a2,%d4,0
+ 647 016a 5422     	 ld.w %d2,[%a2]0
+ 648 016c 37026321 	 extr.u %d2,%d2,2,3
+ 265:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 649              	 .loc 1 265 96 discriminator 2
+ 650 0170 DF420000 	 jeq %d2,4,.L43
+ 267:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             }
+ 651              	 .loc 1 267 17 is_stmt 1
+ 652 0174 C2F9     	 add %d9,-1
+ 653              	.LVL62:
+ 654 0176 DF090080 	 jnz %d9,.L42
+ 655 017a 821D     	 mov %d13,1
+ 656              	.LVL63:
+ 657              	.L43:
+ 270:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 658              	 .loc 1 270 13
+ 270:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 659              	 .loc 1 270 16 is_stmt 0
+ 660 017c DF0D0080 	 jnz %d13,.L62
+ 275:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             retvalCheck                          = IfxHsphy_Geth_setUsxgmiiSpeedMode(hsphy->hsphySF
+ 661              	 .loc 1 275 13 is_stmt 1
+ 275:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             retvalCheck                          = IfxHsphy_Geth_setUsxgmiiSpeedMode(hsphy->hsphySF
+ 662              	 .loc 1 275 50 is_stmt 0
+ 663 0180 1B0E1820 	 addi %d2,%d14,384
+ 664 0184 0622     	 sh %d2,2
+ 665 0186 6032     	 mov.a %a2,%d3
+ 666 0188 01220026 	 addsc.a %a2,%a2,%d2,0
+ 667 018c 5422     	 ld.w %d2,[%a2]0
+ 668 018e B742032E 	 insert %d2,%d2,4,28,3
+ 669 0192 7422     	 st.w [%a2]0,%d2
+ 276:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 670              	 .loc 1 276 13 is_stmt 1
+ 276:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 671              	 .loc 1 276 119 is_stmt 0
+ 672 0194 1B1C0020 	 addi %d2,%d12,1
+ 673 0198 0622     	 sh %d2,2
+ 674 019a 01C20026 	 addsc.a %a2,%a12,%d2,0
+ 675 019e D422     	 ld.a %a2,[%a2]0
+ 276:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 676              	 .loc 1 276 52
+ 677 01a0 40D5     	 mov.aa %a5,%a13
+ 678 01a2 19241000 	 ld.w %d4,[%a2]16
+ 679 01a6 D4C4     	 ld.a %a4,[%a12]0
+ 680 01a8 6D000000 	 call IfxHsphy_Geth_setUsxgmiiSpeedMode
+ 681              	.LVL64:
+ 278:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 682              	 .loc 1 278 13 is_stmt 1
+ 278:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 683              	 .loc 1 278 16 is_stmt 0
+ 684 01ac DF120000 	 jeq %d2,1,.L72
+ 685              	.LVL65:
+ 686              	.L40:
+ 687              	.LBE3:
+ 365:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #else
+ 688              	 .loc 1 365 3 is_stmt 1
+ 365:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #else
+ 689              	 .loc 1 365 24 is_stmt 0
+ 690 01b0 1B1C0020 	 addi %d2,%d12,1
+ 691 01b4 0622     	 sh %d2,2
+ 692 01b6 01C20026 	 addsc.a %a2,%a12,%d2,0
+ 693 01ba D422     	 ld.a %a2,[%a2]0
+ 365:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #else
+ 694              	 .loc 1 365 41
+ 695 01bc 19220400 	 ld.w %d2,[%a2]4
+ 365:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #else
+ 696              	 .loc 1 365 6
+ 697 01c0 BF220080 	 jlt.u %d2,2,.L73
+ 698              	.L48:
+ 165:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #elif defined(DEVICE_TC4ZX)
+ 699              	 .loc 1 165 55 is_stmt 1 discriminator 2
+ 700 01c4 C21B     	 add %d11,1
+ 701              	.LVL66:
+ 702 01c6 8FFB0FB1 	 and %d11,%d11,255
+ 703              	.LVL67:
+ 704              	.L35:
+ 165:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** #elif defined(DEVICE_TC4ZX)
+ 705              	 .loc 1 165 27 discriminator 1
+ 706 01ca FF3B0080 	 jge.u %d11,3,.L27
+ 172:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         hsphySFR->PHY[hsphy->hsphyData[index]->hsphyCfg.phyIdx].CTRL1.B.RST    = 0;
+ 707              	 .loc 1 172 9
+ 172:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         hsphySFR->PHY[hsphy->hsphyData[index]->hsphyCfg.phyIdx].CTRL1.B.RST    = 0;
+ 708              	 .loc 1 172 39 is_stmt 0
+ 709 01ce 02BC     	 mov %d12,%d11
+ 710 01d0 1B1B0020 	 addi %d2,%d11,1
+ 711 01d4 0622     	 sh %d2,2
+ 712 01d6 01C20026 	 addsc.a %a2,%a12,%d2,0
+ 713 01da D423     	 ld.a %a3,[%a2]0
+ 172:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         hsphySFR->PHY[hsphy->hsphyData[index]->hsphyCfg.phyIdx].CTRL1.B.RST    = 0;
+ 714              	 .loc 1 172 56
+ 715 01dc 5432     	 ld.w %d2,[%a3]0
+ 172:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         hsphySFR->PHY[hsphy->hsphyData[index]->hsphyCfg.phyIdx].CTRL1.B.RST    = 0;
+ 716              	 .loc 1 172 80
+ 717 01de 0632     	 sh %d2,3
+ 718 01e0 60A3     	 mov.a %a3,%d10
+ 719 01e2 01320036 	 addsc.a %a3,%a3,%d2,0
+ 720 01e6 D9341480 	 lea %a4,[%a3]532
+ 721 01ea 19321480 	 ld.w %d2,[%a3]532
+ 722 01ee 8F02D021 	 andn %d2,%d2,~(-257)
+ 723 01f2 7442     	 st.w [%a4]0,%d2
+ 173:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         retvalCheck                                                            = IfxHsphy_selFuncti
+ 724              	 .loc 1 173 9 is_stmt 1
+ 173:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         retvalCheck                                                            = IfxHsphy_selFuncti
+ 725              	 .loc 1 173 39 is_stmt 0
+ 726 01f4 D423     	 ld.a %a3,[%a2]0
+ 173:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         retvalCheck                                                            = IfxHsphy_selFuncti
+ 727              	 .loc 1 173 56
+ 728 01f6 5432     	 ld.w %d2,[%a3]0
+ 173:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         retvalCheck                                                            = IfxHsphy_selFuncti
+ 729              	 .loc 1 173 80
+ 730 01f8 0632     	 sh %d2,3
+ 731 01fa 60A3     	 mov.a %a3,%d10
+ 732 01fc 01320036 	 addsc.a %a3,%a3,%d2,0
+ 733 0200 D9341480 	 lea %a4,[%a3]532
+ 734 0204 19321480 	 ld.w %d2,[%a3]532
+ 735 0208 8F02C821 	 andn %d2,%d2,~(-129)
+ 736 020c 7442     	 st.w [%a4]0,%d2
+ 174:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 737              	 .loc 1 174 9 is_stmt 1
+ 174:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 738              	 .loc 1 174 129 is_stmt 0
+ 739 020e D422     	 ld.a %a2,[%a2]0
+ 174:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 740              	 .loc 1 174 82
+ 741 0210 19250800 	 ld.w %d5,[%a2]8
+ 742 0214 5424     	 ld.w %d4,[%a2]0
+ 743 0216 60A4     	 mov.a %a4,%d10
+ 744 0218 6D000000 	 call IfxHsphy_selFunction
+ 745              	.LVL68:
+ 176:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 746              	 .loc 1 176 9 is_stmt 1
+ 176:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 747              	 .loc 1 176 12 is_stmt 0
+ 748 021c DF020000 	 jz %d2,.L54
+ 181:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 749              	 .loc 1 181 9 is_stmt 1
+ 181:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 750              	 .loc 1 181 76 is_stmt 0
+ 751 0220 1B1B0020 	 addi %d2,%d11,1
+ 752              	.LVL69:
+ 753 0224 0622     	 sh %d2,2
+ 754 0226 01C20026 	 addsc.a %a2,%a12,%d2,0
+ 755 022a D422     	 ld.a %a2,[%a2]0
+ 181:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 756              	 .loc 1 181 23
+ 757 022c 19250800 	 ld.w %d5,[%a2]8
+ 758 0230 5424     	 ld.w %d4,[%a2]0
+ 759 0232 60A4     	 mov.a %a4,%d10
+ 760 0234 6D000000 	 call IfxHsphy_setPhyRefClockSel
+ 761              	.LVL70:
+ 183:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 762              	 .loc 1 183 9 is_stmt 1
+ 183:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 763              	 .loc 1 183 12 is_stmt 0
+ 764 0238 DF020000 	 jz %d2,.L55
+ 188:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 765              	 .loc 1 188 9 is_stmt 1
+ 188:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 766              	 .loc 1 188 30 is_stmt 0
+ 767 023c 1B1B0020 	 addi %d2,%d11,1
+ 768              	.LVL71:
+ 769 0240 0622     	 sh %d2,2
+ 770 0242 01C20026 	 addsc.a %a2,%a12,%d2,0
+ 771 0246 D422     	 ld.a %a2,[%a2]0
+ 188:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 772              	 .loc 1 188 47
+ 773 0248 19220400 	 ld.w %d2,[%a2]4
+ 188:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 774              	 .loc 1 188 12
+ 775 024c DF120000 	 jeq %d2,1,.L74
+ 776              	.L36:
+ 251:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 777              	 .loc 1 251 14 is_stmt 1
+ 251:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 778              	 .loc 1 251 17 is_stmt 0
+ 779 0250 DF020080 	 jnz %d2,.L41
+ 251:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 780              	 .loc 1 251 144 discriminator 1
+ 781 0254 992D1400 	 ld.a %a13,[%a2]20
+ 251:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 782              	 .loc 1 251 107 discriminator 1
+ 783 0258 BD0D0080 	 jnz.a %a13,.L75
+ 784              	.L41:
+ 286:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 785              	 .loc 1 286 14 is_stmt 1
+ 286:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 786              	 .loc 1 286 17 is_stmt 0
+ 787 025c DF420000 	 jeq %d2,4,.L76
+ 788              	.L45:
+ 305:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 789              	 .loc 1 305 14 is_stmt 1
+ 305:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 790              	 .loc 1 305 17 is_stmt 0
+ 791 0260 DF620000 	 jeq %d2,6,.L77
+ 792              	.L46:
+ 319:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 793              	 .loc 1 319 14 is_stmt 1
+ 319:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 794              	 .loc 1 319 17 is_stmt 0
+ 795 0264 DF520000 	 jeq %d2,5,.L78
+ 796              	.L47:
+ 335:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 797              	 .loc 1 335 14 is_stmt 1
+ 335:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 798              	 .loc 1 335 17 is_stmt 0
+ 799 0268 DF220000 	 jeq %d2,2,.L79
+ 361:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         }
+ 800              	 .loc 1 361 20
+ 801 026c 8238     	 mov %d8,3
+ 802              	.LVL72:
+ 803 026e 1D000000 	 j .L40
+ 804              	.LVL73:
+ 805              	.L76:
+ 286:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 806              	 .loc 1 286 145 discriminator 1
+ 807 0272 992D1400 	 ld.a %a13,[%a2]20
+ 286:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 808              	 .loc 1 286 108 discriminator 1
+ 809 0276 BD0D0000 	 jz.a %a13,.L45
+ 810              	.LBB4:
+ 289:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             IfxHsphy_EthIndex ethIndex = rgmiiConfig->ethIdx;
+ 811              	 .loc 1 289 13 is_stmt 1
+ 812              	.LVL74:
+ 290:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             hsphy->hsphySFR->ETH[ethIndex].B.EPR = IfxHsphy_EthCtrlExtPhySel_rgmii;
+ 813              	 .loc 1 290 13
+ 290:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             hsphy->hsphySFR->ETH[ethIndex].B.EPR = IfxHsphy_EthCtrlExtPhySel_rgmii;
+ 814              	 .loc 1 290 31 is_stmt 0
+ 815 027a 19DE2000 	 ld.w %d14,[%a13]32
+ 816              	.LVL75:
+ 291:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             retvalCheck                          = IfxHsphy_Geth_rgmiiInit(hsphy->hsphySFR, rgmiiCo
+ 817              	 .loc 1 291 13 is_stmt 1
+ 291:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             retvalCheck                          = IfxHsphy_Geth_rgmiiInit(hsphy->hsphySFR, rgmiiCo
+ 818              	 .loc 1 291 50 is_stmt 0
+ 819 027e 1B0E1820 	 addi %d2,%d14,384
+ 820 0282 0622     	 sh %d2,2
+ 821 0284 D4C2     	 ld.a %a2,[%a12]0
+ 822 0286 01220026 	 addsc.a %a2,%a2,%d2,0
+ 823 028a 5422     	 ld.w %d2,[%a2]0
+ 824 028c B712032E 	 insert %d2,%d2,1,28,3
+ 825 0290 7422     	 st.w [%a2]0,%d2
+ 292:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 826              	 .loc 1 292 13 is_stmt 1
+ 292:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 827              	 .loc 1 292 52 is_stmt 0
+ 828 0292 40D5     	 mov.aa %a5,%a13
+ 829 0294 D4C4     	 ld.a %a4,[%a12]0
+ 830 0296 6D000000 	 call IfxHsphy_Geth_rgmiiInit
+ 831              	.LVL76:
+ 294:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 832              	 .loc 1 294 13 is_stmt 1
+ 294:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 833              	 .loc 1 294 16 is_stmt 0
+ 834 029a DF120000 	 jeq %d2,1,.L64
+ 299:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 835              	 .loc 1 299 13 is_stmt 1
+ 299:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 836              	 .loc 1 299 28 is_stmt 0
+ 837 029e 19D22400 	 ld.w %d2,[%a13]36
+ 838              	.LVL77:
+ 299:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 839              	 .loc 1 299 16
+ 840 02a2 DF020000 	 jz %d2,.L40
+ 301:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             }
+ 841              	 .loc 1 301 17 is_stmt 1
+ 842 02a6 40D5     	 mov.aa %a5,%a13
+ 843 02a8 02E4     	 mov %d4,%d14
+ 844 02aa D4C4     	 ld.a %a4,[%a12]0
+ 845 02ac 6D000000 	 call IfxHsphy_Geth_setRgmiiPins
+ 846              	.LVL78:
+ 847 02b0 1D000000 	 j .L40
+ 848              	.LVL79:
+ 849              	.L77:
+ 850              	.LBE4:
+ 305:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 851              	 .loc 1 305 143 is_stmt 0 discriminator 1
+ 852 02b4 99251400 	 ld.a %a5,[%a2]20
+ 305:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 853              	 .loc 1 305 106 discriminator 1
+ 854 02b8 BD050000 	 jz.a %a5,.L46
+ 855              	.LBB5:
+ 308:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             IfxHsphy_EthIndex ethIndex = miiConfig->ethIdx;
+ 856              	 .loc 1 308 13 is_stmt 1
+ 857              	.LVL80:
+ 309:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             hsphy->hsphySFR->ETH[ethIndex].B.EPR = IfxHsphy_EthCtrlExtPhySel_mii;
+ 858              	 .loc 1 309 13
+ 309:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             hsphy->hsphySFR->ETH[ethIndex].B.EPR = IfxHsphy_EthCtrlExtPhySel_mii;
+ 859              	 .loc 1 309 31 is_stmt 0
+ 860 02bc 19540400 	 ld.w %d4,[%a5]4
+ 861              	.LVL81:
+ 310:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 862              	 .loc 1 310 13 is_stmt 1
+ 310:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 863              	 .loc 1 310 50 is_stmt 0
+ 864 02c0 1B041820 	 addi %d2,%d4,384
+ 865 02c4 0622     	 sh %d2,2
+ 866 02c6 D4C2     	 ld.a %a2,[%a12]0
+ 867 02c8 01220026 	 addsc.a %a2,%a2,%d2,0
+ 868 02cc 5422     	 ld.w %d2,[%a2]0
+ 869 02ce B702032E 	 insert %d2,%d2,0,28,3
+ 870 02d2 7422     	 st.w [%a2]0,%d2
+ 313:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 871              	 .loc 1 313 13 is_stmt 1
+ 313:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 872              	 .loc 1 313 26 is_stmt 0
+ 873 02d4 5452     	 ld.w %d2,[%a5]0
+ 313:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 874              	 .loc 1 313 16
+ 875 02d6 DF020000 	 jz %d2,.L40
+ 315:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             }
+ 876              	 .loc 1 315 17 is_stmt 1
+ 877 02da D4C4     	 ld.a %a4,[%a12]0
+ 878 02dc 6D000000 	 call IfxHsphy_Geth_setMiiPins
+ 879              	.LVL82:
+ 880 02e0 1D000000 	 j .L40
+ 881              	.L78:
+ 882              	.LBE5:
+ 319:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 883              	 .loc 1 319 144 is_stmt 0 discriminator 1
+ 884 02e4 99251400 	 ld.a %a5,[%a2]20
+ 319:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         {
+ 885              	 .loc 1 319 107 discriminator 1
+ 886 02e8 BD050000 	 jz.a %a5,.L47
+ 887              	.LBB6:
+ 322:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             IfxHsphy_EthIndex ethIndex = rmiiConfig->ethIdx;
+ 888              	 .loc 1 322 13 is_stmt 1
+ 889              	.LVL83:
+ 323:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             hsphy->hsphySFR->ETH[ethIndex].B.EPR = IfxHsphy_EthCtrlExtPhySel_rmii;
+ 890              	 .loc 1 323 13
+ 323:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             hsphy->hsphySFR->ETH[ethIndex].B.EPR = IfxHsphy_EthCtrlExtPhySel_rmii;
+ 891              	 .loc 1 323 31 is_stmt 0
+ 892 02ec 19540400 	 ld.w %d4,[%a5]4
+ 893              	.LVL84:
+ 324:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             hsphy->hsphySFR->CMNCFG.B.FSR        = 1;
+ 894              	 .loc 1 324 13 is_stmt 1
+ 324:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             hsphy->hsphySFR->CMNCFG.B.FSR        = 1;
+ 895              	 .loc 1 324 50 is_stmt 0
+ 896 02f0 1B041820 	 addi %d2,%d4,384
+ 897 02f4 0622     	 sh %d2,2
+ 898 02f6 D4C2     	 ld.a %a2,[%a12]0
+ 899 02f8 01220026 	 addsc.a %a2,%a2,%d2,0
+ 900 02fc 5422     	 ld.w %d2,[%a2]0
+ 901 02fe B722032E 	 insert %d2,%d2,2,28,3
+ 902 0302 7422     	 st.w [%a2]0,%d2
+ 325:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             /* TODO: Check do we need any initializations for RMII */
+ 903              	 .loc 1 325 13 is_stmt 1
+ 325:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             /* TODO: Check do we need any initializations for RMII */
+ 904              	 .loc 1 325 18 is_stmt 0
+ 905 0304 D4C2     	 ld.a %a2,[%a12]0
+ 325:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             /* TODO: Check do we need any initializations for RMII */
+ 906              	 .loc 1 325 50
+ 907 0306 D9230080 	 lea %a3,[%a2]512
+ 908 030a 19220080 	 ld.w %d2,[%a2]512
+ 909 030e B7120122 	 insert %d2,%d2,1,4,1
+ 910 0312 7432     	 st.w [%a3]0,%d2
+ 328:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 911              	 .loc 1 328 13 is_stmt 1
+ 328:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 912              	 .loc 1 328 27 is_stmt 0
+ 913 0314 5452     	 ld.w %d2,[%a5]0
+ 328:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 914              	 .loc 1 328 16
+ 915 0316 DF020000 	 jz %d2,.L40
+ 330:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             }
+ 916              	 .loc 1 330 17 is_stmt 1
+ 917 031a D4C4     	 ld.a %a4,[%a12]0
+ 918 031c 6D000000 	 call IfxHsphy_Geth_setRmiiPins
+ 919              	.LVL85:
+ 920 0320 1D000000 	 j .L40
+ 921              	.L79:
+ 922              	.LBE6:
+ 337:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         }
+ 923              	 .loc 1 337 20 is_stmt 0
+ 924 0324 8218     	 mov %d8,1
+ 925              	.LVL86:
+ 926 0326 1D000000 	 j .L40
+ 927              	.LVL87:
+ 928              	.L73:
+ 370:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 929              	 .loc 1 370 13 is_stmt 1
+ 370:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 930              	 .loc 1 370 27 is_stmt 0
+ 931 032a D4C4     	 ld.a %a4,[%a12]0
+ 932 032c 6D000000 	 call IfxHsphy_getHsphyIndex
+ 933              	.LVL88:
+ 370:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 934              	 .loc 1 370 108
+ 935 0330 1B1C0030 	 addi %d3,%d12,1
+ 936 0334 0623     	 sh %d3,2
+ 937 0336 01C30026 	 addsc.a %a2,%a12,%d3,0
+ 938 033a D422     	 ld.a %a2,[%a2]0
+ 370:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 939              	 .loc 1 370 27
+ 940 033c 5425     	 ld.w %d5,[%a2]0
+ 941 033e 0224     	 mov %d4,%d2
+ 942 0340 6D000000 	 call IfxHsphy_Hsphy_initDone
+ 943              	.LVL89:
+ 372:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 944              	 .loc 1 372 13 is_stmt 1
+ 372:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             {
+ 945              	 .loc 1 372 16 is_stmt 0
+ 946 0344 DF020080 	 jnz %d2,.L48
+ 374:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             }
+ 947              	 .loc 1 374 24
+ 948 0348 8208     	 mov %d8,0
+ 949              	.LVL90:
+ 950 034a 1D000000 	 j .L27
+ 951              	.LVL91:
+ 952              	.L51:
+ 122:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     }
+ 953              	 .loc 1 122 16
+ 954 034e 8228     	 mov %d8,2
+ 955              	.LVL92:
+ 956              	.L27:
+ 380:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 
+ 957              	 .loc 1 380 1
+ 958 0350 0282     	 mov %d2,%d8
+ 959 0352 0090     	 ret 
+ 960              	.LVL93:
+ 961              	.L52:
+ 129:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****     }
+ 962              	 .loc 1 129 16
+ 963 0354 8228     	 mov %d8,2
+ 964              	.LVL94:
+ 965 0356 1D000000 	 j .L27
+ 966              	.LVL95:
+ 967              	.L53:
+ 149:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             }
+ 968              	 .loc 1 149 24
+ 969 035a 8228     	 mov %d8,2
+ 970              	.LVL96:
+ 971 035c 1D000000 	 j .L27
+ 972              	.LVL97:
+ 973              	.L54:
+ 178:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         }
+ 974              	 .loc 1 178 20
+ 975 0360 8238     	 mov %d8,3
+ 976              	.LVL98:
+ 977 0362 1D000000 	 j .L27
+ 978              	.LVL99:
+ 979              	.L55:
+ 185:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****         }
+ 980              	 .loc 1 185 20
+ 981 0366 8238     	 mov %d8,3
+ 982              	.LVL100:
+ 983 0368 1D000000 	 j .L27
+ 984              	.LVL101:
+ 985              	.L70:
+ 986              	.LBB7:
+ 202:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			}
+ 987              	 .loc 1 202 12
+ 988 036c 8228     	 mov %d8,2
+ 989              	.LVL102:
+ 990 036e 1D000000 	 j .L27
+ 991              	.LVL103:
+ 992              	.L58:
+ 212:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c **** 			}
+ 993              	 .loc 1 212 12
+ 994 0372 8228     	 mov %d8,2
+ 995              	.LVL104:
+ 996 0374 1D000000 	 j .L27
+ 997              	.LVL105:
+ 998              	.L60:
+ 999              	.LBE7:
+ 1000              	.LBB8:
+ 260:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             }
+ 1001              	 .loc 1 260 24
+ 1002 0378 8228     	 mov %d8,2
+ 1003              	.LVL106:
+ 1004 037a 1D000000 	 j .L27
+ 1005              	.LVL107:
+ 1006              	.L62:
+ 272:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             }
+ 1007              	 .loc 1 272 24
+ 1008 037e 8228     	 mov %d8,2
+ 1009              	.LVL108:
+ 1010 0380 1D000000 	 j .L27
+ 1011              	.LVL109:
+ 1012              	.L72:
+ 280:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             }
+ 1013              	 .loc 1 280 24
+ 1014 0384 8228     	 mov %d8,2
+ 1015              	.LVL110:
+ 1016 0386 1D000000 	 j .L27
+ 1017              	.LVL111:
+ 1018              	.L64:
+ 1019              	.LBE8:
+ 1020              	.LBB9:
+ 296:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.c ****             }
+ 1021              	 .loc 1 296 24
+ 1022 038a 8228     	 mov %d8,2
+ 1023              	.LVL112:
+ 1024 038c 1D000000 	 j .L27
+ 1025              	.LBE9:
+ 1026              	.LFE331:
+ 1028              	 .global IfxHsphy_Hsphy_initModule_end
+ 1029              	IfxHsphy_Hsphy_initModule_end:
+ 1030              	 .global IfxHsphy_Hsphy_defaultConfig
+ 1031              	 .section .rodata.IfxHsphy_Hsphy_defaultConfig,"a"
+ 1032              	 .align 2
+ 1035              	IfxHsphy_Hsphy_defaultConfig:
+ 1036 0000 00000000 	 .word 0
+ 1037 0004 02000000 	 .word 2
+ 1038 0008 00000000 	 .word 0
+ 1039 000c 01000000 	 .word 1
+ 1040 0010 02000000 	 .word 2
+ 1041 0014 01000000 	 .word 1
+ 1042 0018 00000000 	 .zero 12
+ 1042      00000000 
+ 1042      00000000 
+ 1043              	 .global IfxHsphy_Hsphy_configLookUpTbl
+ 1044              	 .section .rodata.IfxHsphy_Hsphy_configLookUpTbl,"a"
+ 1045              	 .align 2
+ 1048              	IfxHsphy_Hsphy_configLookUpTbl:
+ 1049 0000 00000000 	 .word 0
+ 1050 0004 02000000 	 .word 2
+ 1051 0008 01000000 	 .word 1
+ 1052 000c 00       	 .byte 0
+ 1053 000d 000000   	 .zero 3
+ 1054 0010 06000000 	 .word 6
+ 1055 0014 00000000 	 .word 0
+ 1056 0018 00000000 	 .word 0
+ 1057 001c 01000000 	 .word 1
+ 1058 0020 00000000 	 .word 0
+ 1059 0024 00       	 .byte 0
+ 1060 0025 000000   	 .zero 3
+ 1061 0028 01000000 	 .word 1
+ 1062 002c 00000000 	 .word 0
+ 1063 0030 00000000 	 .word 0
+ 1064 0034 01000000 	 .word 1
+ 1065 0038 00000000 	 .word 0
+ 1066 003c 00       	 .byte 0
+ 1067 003d 000000   	 .zero 3
+ 1068 0040 01000000 	 .word 1
+ 1069 0044 00000000 	 .word 0
+ 1070 0048 00000000 	 .word 0
+ 1071 004c 01000000 	 .word 1
+ 1072 0050 00000000 	 .word 0
+ 1073 0054 00       	 .byte 0
+ 1074 0055 000000   	 .zero 3
+ 1075 0058 07000000 	 .word 7
+ 1076 005c 00000000 	 .word 0
+ 1077 0060 00000000 	 .word 0
+ 1078 0064 01000000 	 .word 1
+ 1079 0068 00000000 	 .word 0
+ 1080 006c 00       	 .byte 0
+ 1081 006d 000000   	 .zero 3
+ 1082 0070 03000000 	 .word 3
+ 1083 0074 00000000 	 .word 0
+ 1084 0078 00000000 	 .word 0
+ 1085 007c 01000000 	 .word 1
+ 1086 0080 00000000 	 .word 0
+ 1087 0084 00       	 .byte 0
+ 1088 0085 000000   	 .zero 3
+ 1089 0088 04000000 	 .word 4
+ 1090 008c 00000000 	 .word 0
+ 1091 0090 00000000 	 .word 0
+ 1092 0094 01000000 	 .word 1
+ 1093 0098 00000000 	 .word 0
+ 1094 009c 00       	 .byte 0
+ 1095 009d 000000   	 .zero 3
+ 1096 00a0 05000000 	 .word 5
+ 1097 00a4 00000000 	 .word 0
+ 1098 00a8 00000000 	 .word 0
+ 1099 00ac 00000000 	 .word 0
+ 1100 00b0 00000000 	 .word 0
+ 1101 00b4 00       	 .byte 0
+ 1102 00b5 000000   	 .zero 3
+ 1103 00b8 05000000 	 .word 5
+ 1104 00bc 00000000 	 .word 0
+ 1105 00c0 00000000 	 .word 0
+ 1106 00c4 06000000 	 .word 6
+ 1107 00c8 00000000 	 .word 0
+ 1108 00cc 00       	 .byte 0
+ 1109 00cd 000000   	 .zero 3
+ 1110 00d0 01000000 	 .word 1
+ 1111 00d4 00000000 	 .word 0
+ 1112 00d8 00000000 	 .word 0
+ 1113 00dc 06000000 	 .word 6
+ 1114 00e0 00000000 	 .word 0
+ 1115 00e4 00       	 .byte 0
+ 1116 00e5 000000   	 .zero 3
+ 1117 00e8 00000000 	 .word 0
+ 1118 00ec 00000000 	 .word 0
+ 1119 00f0 00000000 	 .word 0
+ 1120 00f4 05000000 	 .word 5
+ 1121 00f8 00000000 	 .word 0
+ 1122 00fc 00       	 .byte 0
+ 1123 00fd 000000   	 .zero 3
+ 1124 0100 01000000 	 .word 1
+ 1125 0104 00000000 	 .word 0
+ 1126 0108 00000000 	 .word 0
+ 1127 010c 05000000 	 .word 5
+ 1128 0110 00000000 	 .word 0
+ 1129 0114 00       	 .byte 0
+ 1130 0115 000000   	 .zero 3
+ 1131 0118 00000000 	 .word 0
+ 1132 011c 00000000 	 .word 0
+ 1133 0120 00000000 	 .word 0
+ 1134 0124 04000000 	 .word 4
+ 1135 0128 00000000 	 .word 0
+ 1136 012c 00       	 .byte 0
+ 1137 012d 000000   	 .zero 3
+ 1138 0130 01000000 	 .word 1
+ 1139 0134 00000000 	 .word 0
+ 1140 0138 00000000 	 .word 0
+ 1141 013c 04000000 	 .word 4
+ 1142 0140 00000000 	 .word 0
+ 1143 0144 00       	 .byte 0
+ 1144 0145 000000   	 .zero 3
+ 1145 0148 03000000 	 .word 3
+ 1146 014c 00000000 	 .word 0
+ 1147 0150 00000000 	 .word 0
+ 1148 0154 04000000 	 .word 4
+ 1149 0158 00000000 	 .word 0
+ 1150 015c 00       	 .byte 0
+ 1151 015d 000000   	 .zero 3
+ 1152 0160 00000000 	 .word 0
+ 1153 0164 00000000 	 .word 0
+ 1154 0168 03000000 	 .word 3
+ 1155 016c 07000000 	 .word 7
+ 1156 0170 02000000 	 .word 2
+ 1157 0174 00       	 .byte 0
+ 1158 0175 000000   	 .zero 3
+ 1159 0178 02000000 	 .word 2
+ 1160 017c 00000000 	 .word 0
+ 1161 0180 01000000 	 .word 1
+ 1162 0184 01000000 	 .word 1
+ 1163 0188 00000000 	 .word 0
+ 1164 018c 01       	 .byte 1
+ 1165 018d 000000   	 .zero 3
+ 1166 0190 01000000 	 .word 1
+ 1167 0194 00000000 	 .word 0
+ 1168 0198 01000000 	 .word 1
+ 1169 019c 01000000 	 .word 1
+ 1170 01a0 00000000 	 .word 0
+ 1171 01a4 01       	 .byte 1
+ 1172 01a5 000000   	 .zero 3
+ 1173 01a8 01000000 	 .word 1
+ 1174 01ac 00000000 	 .word 0
+ 1175 01b0 01000000 	 .word 1
+ 1176 01b4 01000000 	 .word 1
+ 1177 01b8 00000000 	 .word 0
+ 1178 01bc 01       	 .byte 1
+ 1179 01bd 000000   	 .zero 3
+ 1180 01c0 07000000 	 .word 7
+ 1181 01c4 00000000 	 .word 0
+ 1182 01c8 01000000 	 .word 1
+ 1183 01cc 01000000 	 .word 1
+ 1184 01d0 00000000 	 .word 0
+ 1185 01d4 01       	 .byte 1
+ 1186 01d5 000000   	 .zero 3
+ 1187 01d8 03000000 	 .word 3
+ 1188 01dc 00000000 	 .word 0
+ 1189 01e0 01000000 	 .word 1
+ 1190 01e4 01000000 	 .word 1
+ 1191 01e8 00000000 	 .word 0
+ 1192 01ec 01       	 .byte 1
+ 1193 01ed 000000   	 .zero 3
+ 1194 01f0 04000000 	 .word 4
+ 1195 01f4 00000000 	 .word 0
+ 1196 01f8 01000000 	 .word 1
+ 1197 01fc 01000000 	 .word 1
+ 1198 0200 00000000 	 .word 0
+ 1199 0204 01       	 .byte 1
+ 1200 0205 000000   	 .zero 3
+ 1201 0208 05000000 	 .word 5
+ 1202 020c 00000000 	 .word 0
+ 1203 0210 01000000 	 .word 1
+ 1204 0214 03000000 	 .word 3
+ 1205 0218 03000000 	 .word 3
+ 1206 021c 00       	 .byte 0
+ 1207 021d 000000   	 .zero 3
+ 1208 0220 03000000 	 .word 3
+ 1209 0224 00000000 	 .word 0
+ 1210 0228 01000000 	 .word 1
+ 1211 022c 00000000 	 .word 0
+ 1212 0230 00000000 	 .word 0
+ 1213 0234 01       	 .byte 1
+ 1214 0235 000000   	 .zero 3
+ 1215 0238 05000000 	 .word 5
+ 1216 023c 00000000 	 .word 0
+ 1217 0240 01000000 	 .word 1
+ 1218 0244 06000000 	 .word 6
+ 1219 0248 00000000 	 .word 0
+ 1220 024c 01       	 .byte 1
+ 1221 024d 000000   	 .zero 3
+ 1222 0250 01000000 	 .word 1
+ 1223 0254 00000000 	 .word 0
+ 1224 0258 01000000 	 .word 1
+ 1225 025c 06000000 	 .word 6
+ 1226 0260 00000000 	 .word 0
+ 1227 0264 01       	 .byte 1
+ 1228 0265 000000   	 .zero 3
+ 1229 0268 00000000 	 .word 0
+ 1230 026c 00000000 	 .word 0
+ 1231 0270 01000000 	 .word 1
+ 1232 0274 05000000 	 .word 5
+ 1233 0278 00000000 	 .word 0
+ 1234 027c 01       	 .byte 1
+ 1235 027d 000000   	 .zero 3
+ 1236 0280 01000000 	 .word 1
+ 1237 0284 00000000 	 .word 0
+ 1238 0288 01000000 	 .word 1
+ 1239 028c 05000000 	 .word 5
+ 1240 0290 00000000 	 .word 0
+ 1241 0294 01       	 .byte 1
+ 1242 0295 000000   	 .zero 3
+ 1243 0298 00000000 	 .word 0
+ 1244 029c 00000000 	 .word 0
+ 1245 02a0 02000000 	 .word 2
+ 1246 02a4 02000000 	 .word 2
+ 1247 02a8 01000000 	 .word 1
+ 1248 02ac 01       	 .byte 1
+ 1249 02ad 000000   	 .zero 3
+ 1250 02b0 06000000 	 .word 6
+ 1251 02b4 00000000 	 .word 0
+ 1252 02b8 02000000 	 .word 2
+ 1253 02bc 03000000 	 .word 3
+ 1254 02c0 03000000 	 .word 3
+ 1255 02c4 00       	 .byte 0
+ 1256 02c5 000000   	 .zero 3
+ 1257 02c8 03000000 	 .word 3
+ 1258 02cc 00000000 	 .word 0
+ 1323              	.Letext0:
+ 1324              	 .file 2 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 1325              	 .file 3 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+ 1326              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 1327              	 .file 5 "../Libraries/Infra/Sfr/TC4Dx/IfxHsphy_regdef.h"
+ 1328              	 .file 6 "../Libraries/iLLD/TC4xx/CpuGeneric/_Impl/TC4Dx/IfxHsphy_cfg_TC4Dx.h"
+ 1329              	 .file 7 "../Libraries/Infra/Sfr/TC4Dx/IfxGeth_regdef.h"
+ 1330              	 .file 8 "../Libraries/iLLD/TC4xx/Tricore/_Impl/TC4Dx/IfxCpu_cfg_TC4Dx.h"
+ 1331              	 .file 9 "../Libraries/iLLD/TC4xx/CpuGeneric/Clock/Std/IfxClock.h"
+ 1332              	 .file 10 "../Libraries/iLLD/TC4xx/CpuGeneric/Geth/Std/IfxGeth.h"
+ 1333              	 .file 11 "../Libraries/Infra/Sfr/TC4Dx/IfxPort_regdef.h"
+ 1334              	 .file 12 "../Libraries/iLLD/TC4xx/CpuGeneric/Port/Std/IfxPort.h"
+ 1335              	 .file 13 "../Libraries/iLLD/TC4xx/CpuGeneric/_PinMap/IfxGeth_PinMap.h"
+ 1336              	 .file 14 "../Libraries/Infra/Sfr/TC4Dx/IfxXspi_regdef.h"
+ 1337              	 .file 15 "../Libraries/iLLD/TC4xx/CpuGeneric/_PinMap/IfxXspi_PinMap.h"
+ 1338              	 .file 16 "../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Std/IfxHsphy.h"
+ 1339              	 .file 17 "../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Hsphy/IfxHsphy_Hsphy.h"
+ 116971 0000 00000000 	 .word IfxHsphy_Hsphy_initModuleConfig
+ 116972 0004 00000000 	 .word IfxHsphy_Hsphy_initModuleConfig_end
+ 116973 0008 F000FC44 	 .word 0x44fc00f0
+ 116974 000c 00003000 	 .word 0x00300000
+ 116975 0010 00000000 	 .word 0x00000000
+ 116976 0014 C0800000 	 .word 0x000080c0
+ 116977 0018 00000000 	 .word IfxHsphy_Hsphy_initDone
+ 116978 001c 00000000 	 .word IfxHsphy_Hsphy_initDone_end
+ 116979 0020 34071444 	 .word 0x44140734
+ 116980 0024 30000000 	 .word 0x00000030
+ 116981 0028 04000000 	 .word 0x00000004
+ 116982 002c 40000200 	 .word 0x00020040
+ 116983 0030 00000000 	 .word IfxHsphy_Hsphy_phyInit
+ 116984 0034 00000000 	 .word IfxHsphy_Hsphy_phyInit_end
+ 116985 0038 3C003C44 	 .word 0x443c003c
+ 116986 003c 00003000 	 .word 0x00300000
+ 116987 0040 04000000 	 .word 0x00000004
+ 116988 0044 C0000000 	 .word 0x000000c0
+ 116989 0048 00000000 	 .word IfxHsphy_Hsphy_initModule
+ 116990 004c 00000000 	 .word IfxHsphy_Hsphy_initModule_end
+ 116991 0050 3C7F3C74 	 .word 0x743c7f3c
+ 116992 0054 00003000 	 .word 0x00300000
+ 116993 0058 04000000 	 .word 0x00000004
+ 116994 005c 40000200 	 .word 0x00020040
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxHsphy_Hsphy.c
+                            *ABS*:00000000 IfxHsphy_Hsphy.c
+    {standard input}:1035   .rodata.IfxHsphy_Hsphy_defaultConfig:00000000 IfxHsphy_Hsphy_defaultConfig
+    {standard input}:35     .text.IfxHsphy_Hsphy_initModuleConfig:00000000 IfxHsphy_Hsphy_initModuleConfig
+    {standard input}:86     .text.IfxHsphy_Hsphy_initModuleConfig:00000070 IfxHsphy_Hsphy_initModuleConfig_end
+    {standard input}:91     .text.IfxHsphy_Hsphy_initDone:00000000 IfxHsphy_Hsphy_initDone
+    {standard input}:155    .text.IfxHsphy_Hsphy_initDone:0000003c IfxHsphy_Hsphy_initDone_end
+    {standard input}:160    .text.IfxHsphy_Hsphy_phyInit:00000000 IfxHsphy_Hsphy_phyInit
+    {standard input}:1048   .rodata.IfxHsphy_Hsphy_configLookUpTbl:00000000 IfxHsphy_Hsphy_configLookUpTbl
+    {standard input}:364    .text.IfxHsphy_Hsphy_phyInit:00000158 IfxHsphy_Hsphy_phyInit_end
+    {standard input}:369    .text.IfxHsphy_Hsphy_initModule:00000000 IfxHsphy_Hsphy_initModule
+    {standard input}:1029   .text.IfxHsphy_Hsphy_initModule:00000390 IfxHsphy_Hsphy_initModule_end
+
+UNDEFINED SYMBOLS
+IfxHsphy_getHsphyAddress
+IfxHsphy_isPhyReady
+IfxHsphy_setExtLdDone
+IfxHsphy_enableModule
+IfxHsphy_resetModule
+IfxHsphy_Xspi_xspiInit
+IfxHsphy_Xspi_setXspiPins
+IfxHsphy_resetXpcs
+IfxHsphy_Geth_setSgmiiSpeedMode
+IfxHsphy_Geth_setUsxgmiiSpeedMode
+IfxHsphy_selFunction
+IfxHsphy_setPhyRefClockSel
+IfxHsphy_Geth_rgmiiInit
+IfxHsphy_Geth_setRgmiiPins
+IfxHsphy_Geth_setMiiPins
+IfxHsphy_Geth_setRmiiPins
+IfxHsphy_getHsphyIndex

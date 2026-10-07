@@ -1,0 +1,2106 @@
+   1              	
+   2              	 .file "IfxSmm.c"
+   3              	 .file "IfxSmm.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.IfxSmm_initVoltageDroopLegacyConfig,"ax",@progbits
+   7              	 .align 1
+   8              	 .global IfxSmm_initVoltageDroopLegacyConfig
+  10              	IfxSmm_initVoltageDroopLegacyConfig:
+  11              	.LFB228:
+  12              	 .file 1 "../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c"
+   1:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** /**
+   2:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****  * \file IfxSmm.c
+   3:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****  * \brief SMM  basic functionality
+   4:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****  *
+   5:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****  *
+   8:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****  *
+   9:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****  *
+  10:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****  *                                 IMPORTANT NOTICE
+  11:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****  *
+  12:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****  * this file except in compliance with IFASLL.
+  15:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****  *
+  16:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****  *
+  26:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****  *
+  27:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****  */
+  28:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** 
+  29:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** /******************************************************************************/
+  30:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** /*----------------------------------Includes----------------------------------*/
+  31:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** /******************************************************************************/
+  32:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** 
+  33:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** #include "IfxSmm.h"
+  34:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** 
+  35:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** /******************************************************************************/
+  36:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** /*-------------------------Function Implementations---------------------------*/
+  37:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** /******************************************************************************/
+  38:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** 
+  39:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** void IfxSmm_initVoltageDroopLegacyConfig(IfxSmm_VoltageDroopLegacyConfig *voltageDroopConfig)
+  40:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** {
+  13              	 .loc 1 40 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  41:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     /*Enabling usage of Voltage Droop Timer*/
+  42:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     voltageDroopConfig->enableVoltageDroopTimer                  = TRUE;
+  17              	 .loc 1 42 5
+  18              	 .loc 1 42 66 is_stmt 0
+  19 0002 8212     	 mov %d2,1
+  20 0004 3442     	 st.b [%a4]0,%d2
+  43:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     /*Enabling update of Voltage Droop Timer Overflow Flag in event of overflow*/
+  44:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     voltageDroopConfig->enableVoltageDroopTimerOverflowFlag      = TRUE;
+  21              	 .loc 1 44 5 is_stmt 1
+  22              	 .loc 1 44 66 is_stmt 0
+  23 0006 E9420100 	 st.b [%a4]1,%d2
+  45:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     /*Disabling Voltage Droop Timer interrupt*/
+  46:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     voltageDroopConfig->enableVoltageDroopTimerOverflowInterrupt = FALSE;
+  24              	 .loc 1 46 5 is_stmt 1
+  25              	 .loc 1 46 66 is_stmt 0
+  26 000a 8202     	 mov %d2,0
+  27 000c E9420200 	 st.b [%a4]2,%d2
+  47:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     /* Droop timer Compare value */
+  48:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     voltageDroopConfig->droopTimerCompareValue                   = 0x100;
+  28              	 .loc 1 48 5 is_stmt 1
+  29              	 .loc 1 48 66 is_stmt 0
+  30 0010 3B001020 	 mov %d2,256
+  31 0014 F9420800 	 st.h [%a4]8,%d2
+  49:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     /* Requesting for a reduction voltage(negative voltage droop)*/
+  50:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     voltageDroopConfig->droopRequestType                         = IfxSmm_VoltageDroopRequest_negat
+  32              	 .loc 1 50 5 is_stmt 1
+  33              	 .loc 1 50 66 is_stmt 0
+  34 0018 8222     	 mov %d2,2
+  35 001a 59420400 	 st.w [%a4]4,%d2
+  51:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** }
+  36              	 .loc 1 51 1
+  37 001e 0090     	 ret 
+  38              	.LFE228:
+  40              	 .global IfxSmm_initVoltageDroopLegacyConfig_end
+  41              	IfxSmm_initVoltageDroopLegacyConfig_end:
+  42              	 .section .text.IfxSmm_initAndRequestLegacyVoltageDroop,"ax",@progbits
+  43              	 .align 1
+  44              	 .global IfxSmm_initAndRequestLegacyVoltageDroop
+  46              	IfxSmm_initAndRequestLegacyVoltageDroop:
+  47              	.LFB229:
+  52:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** 
+  53:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** 
+  54:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** boolean IfxSmm_initAndRequestLegacyVoltageDroop(IfxSmm_VoltageDroopLegacyConfig *voltageDroopConfig
+  55:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** {
+  48              	 .loc 1 55 1 is_stmt 1
+  49              	.LVL1:
+  50 0000 40AE     	 mov.aa %a14,%SP
+  51              	.LCFI1:
+  56:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     Ifx_SMM_PMTRCSR0 pmtCsr0;
+  52              	 .loc 1 56 5
+  57:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     boolean          request = 1;
+  53              	 .loc 1 57 5
+  54              	.LVL2:
+  58:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** 
+  59:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     if (!SMM_PMTRCSR3.B.VDTRUN)
+  55              	 .loc 1 59 5
+  56              	 .loc 1 59 24 is_stmt 0
+  57 0002 9160002F 	 movh.a %a2,61446
+  58 0006 D9222420 	 lea %a2,[%a2]164
+  59 000a 5422     	 ld.w %d2,[%a2]0
+  60 000c 37026222 	 extr.u %d2,%d2,4,2
+  61              	 .loc 1 59 8
+  62 0010 DF020080 	 jnz %d2,.L4
+  60:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     {
+  61:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** #if (IFX_PROT_ENABLED == 1U)
+  62:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMM.PROTE, IfxApProt_State_config);
+  63:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** #endif
+  64:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** 
+  65:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         pmtCsr0.U                = SMM_PMTRCSR0.U;
+  63              	 .loc 1 65 9 is_stmt 1
+  64              	 .loc 1 65 48 is_stmt 0
+  65 0014 9160002F 	 movh.a %a2,61446
+  66 0018 D9221820 	 lea %a2,[%a2]152
+  67 001c 5422     	 ld.w %d2,[%a2]0
+  66:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         pmtCsr0.B.VDTEN          = voltageDroopConfig->enableVoltageDroopTimer;
+  68              	 .loc 1 66 9 is_stmt 1
+  69              	 .loc 1 66 54 is_stmt 0
+  70 001e 1443     	 ld.bu %d3,[%a4]0
+  71              	 .loc 1 66 34
+  72 0020 67321020 	 ins.t %d2,%d2,16,%d3,0
+  73              	.LVL3:
+  67:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         pmtCsr0.B.VDTOVEN        = voltageDroopConfig->enableVoltageDroopTimerOverflowFlag;
+  74              	 .loc 1 67 9 is_stmt 1
+  75              	 .loc 1 67 54 is_stmt 0
+  76 0024 39430100 	 ld.bu %d3,[%a4]1
+  77              	 .loc 1 67 34
+  78 0028 67321120 	 ins.t %d2,%d2,17,%d3,0
+  68:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         pmtCsr0.B.VDTOVIEN       = voltageDroopConfig->enableVoltageDroopTimerOverflowInterrupt;
+  79              	 .loc 1 68 9 is_stmt 1
+  80              	 .loc 1 68 54 is_stmt 0
+  81 002c 39430200 	 ld.bu %d3,[%a4]2
+  82              	 .loc 1 68 34
+  83 0030 67321220 	 ins.t %d2,%d2,18,%d3,0
+  69:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         pmtCsr0.B.DROOPENAB      = 0u;
+  84              	 .loc 1 69 9 is_stmt 1
+  85              	 .loc 1 69 34 is_stmt 0
+  86 0034 8F02C421 	 andn %d2,%d2,~(-65)
+  87              	.LVL4:
+  70:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         SMM_PMTRCSR0.U           = pmtCsr0.U;
+  88              	 .loc 1 70 9 is_stmt 1
+  89              	 .loc 1 70 34 is_stmt 0
+  90 0038 7422     	 st.w [%a2]0,%d2
+  71:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         SMM_PMTRCSR1.B.VDTCV     = voltageDroopConfig->droopTimerCompareValue;
+  91              	 .loc 1 71 9 is_stmt 1
+  92              	 .loc 1 71 54 is_stmt 0
+  93 003a C9430800 	 ld.h %d3,[%a4]8
+  94              	 .loc 1 71 34
+  95 003e 9160002F 	 movh.a %a2,61446
+  96 0042 D9221C20 	 lea %a2,[%a2]156
+  97 0046 5422     	 ld.w %d2,[%a2]0
+  98              	.LVL5:
+  99 0048 37320A28 	 insert %d2,%d2,%d3,16,10
+ 100 004c 7422     	 st.w [%a2]0,%d2
+  72:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         __dsync();
+ 101              	 .loc 1 72 9 is_stmt 1
+ 102              	.LBB6:
+ 103              	.LBB7:
+ 104              	 .file 2 "../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h"
+   1:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**
+   2:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \file IfxCpu_IntrinsicsGnuc.h
+   3:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  *
+   4:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \version iLLD-TC4-v2.7.0
+   5:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   6:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  *
+   7:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  *
+   8:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  *
+   9:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  *                                 IMPORTANT NOTICE
+  10:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  *
+  11:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  *
+  12:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * this file except in compliance with IFASLL.
+  15:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  *
+  16:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  *
+  26:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \defgroup IfxLld_Cpu_Intrinsics_Gnuc Intrinsics for GNU compiler
+  27:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \ingroup IfxLld_Cpu_Intrinsics
+  28:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  *
+  29:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+  30:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+  31:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #ifndef IFXCPU_INTRINSICSGCC_H
+  32:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define IFXCPU_INTRINSICSGCC_H 1
+  33:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+  34:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /* old style intrinsics handling for AGENtiX environment */
+  35:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #if defined(SCTB_EMBEDDED)
+  36:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** # define IFXCPU_INTRINSICSGNUC_USE_MACHINE_INTRINSICS 0
+  37:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #else
+  38:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** # define IFXCPU_INTRINSICSGNUC_USE_MACHINE_INTRINSICS 1
+  39:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #endif
+  40:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+  41:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /******************************************************************************/
+  42:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #include "Ifx_Types.h"
+  43:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+  44:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #if IFXCPU_INTRINSICSGNUC_USE_MACHINE_INTRINSICS
+  45:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #include "machine/intrinsics.h"
+  46:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #endif
+  47:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+  48:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /******************************************************************************/
+  49:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /* *INDENT-OFF* */
+  50:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define STRINGIFY(x)    #x
+  51:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+  52:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /* Endian Swap for CRC32 Calculation*/
+  53:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define CPU_CRC_ENDIAN_SWAP 0  /* No Swap by default*/
+  54:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+  55:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Function call without return
+  56:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+  57:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__non_return_call(fun)	__asm__ volatile ("ji %0"::"a"(fun))
+  58:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+  59:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Jump and link
+  60:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+  61:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE void Ifx__jump_and_link(void (*fun)(void))
+  62:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+  63:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 	__asm__ volatile ("jli %0"::"a"(fun));
+  64:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+  65:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+  66:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE void Ifx__moveToDataParam0(unsigned int var)
+  67:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+  68:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 	__asm__ volatile ("mov\t %%d4, %0"::"d"(var));
+  69:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+  70:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+  71:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE void Ifx__moveToDataParamRet(unsigned int var)
+  72:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+  73:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 	__asm__ volatile ("mov\t %%d2, %0"::"d"(var));
+  74:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+  75:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+  76:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE unsigned int Ifx__getDataParamRet(void)
+  77:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+  78:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 	unsigned int var;
+  79:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 	__asm__ volatile (" mov\t %0, %%d2":"=d"(var));
+  80:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 	return var;
+  81:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+  82:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+  83:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE void Ifx__moveToAddrParam0(const void *var)
+  84:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+  85:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 	__asm__ volatile ("mov.aa\t %%a4, %0"::"a"(var));
+  86:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+  87:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+  88:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE void Ifx__jumpToFunction(const void *fun)
+  89:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+  90:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 	Ifx__non_return_call(fun);
+  91:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+  92:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+  93:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE void Ifx__jumpToFunctionWithLink(const void *fun)
+  94:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+  95:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 	Ifx__jump_and_link((void (*)(void))fun);
+  96:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+  97:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+  98:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE void Ifx__jumpBackToLink(void)
+  99:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 100:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 	__asm__ volatile ("ji %a11");
+ 101:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 102:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 103:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Function to copy 128 bit data from source to destination
+ 104:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * Addresses must be 128 bit aligned.
+ 105:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 106:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE void Ifx__copyDoubleDouble(volatile uint32 *src, volatile uint32 *dst)
+ 107:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 108:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ ("\t ld.d %%e0, [%0] 0 \n"
+ 109:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****              "\t st.d [%1] 0, %%e0 \n"
+ 110:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****              "\t ld.d %%e0, [%0] 8 \n"
+ 111:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****              "\t st.d [%1] 8, %%e0 \n"
+ 112:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****              ::"a" (src), "a" (dst):);
+ 113:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 114:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 115:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** \defgroup IfxLld_Cpu_Intrinsics_Gnuc_any_type Cross type arithmetic operation
+ 116:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  *
+ 117:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * Macro compatible with float, fix point, signed integer and unsigned integer
+ 118:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  *
+ 119:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \ingroup IfxLld_Cpu_Intrinsics_Gnuc
+ 120:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \{
+ 121:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 122:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__minX(X,Y)                     ( ((X) < (Y)) ? (X) : (Y) )
+ 123:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__maxX(X,Y)                     ( ((X) > (Y)) ? (X) : (Y) )
+ 124:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__saturateX(X,Min,Max)          ( Ifx__minX(Ifx__maxX(X, Min), Max) )
+ 125:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__checkrangeX(X,Min,Max)        (((X) >= (Min)) && ((X) <= (Max)))
+ 126:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** \} */
+ 127:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 128:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** \defgroup IfxLld_Cpu_Intrinsics_Gnuc_singed_integer Signed integer operation
+ 129:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \ingroup IfxLld_Cpu_Intrinsics_Gnuc
+ 130:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \{
+ 131:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 132:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__saturate(X,Min,Max)           ( Ifx__min(Ifx__max(X, Min), Max) )
+ 133:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** \} */
+ 134:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 135:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** \defgroup IfxLld_Cpu_Intrinsics_Gnuc_unsinged_integer Unsigned integer operation
+ 136:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \ingroup IfxLld_Cpu_Intrinsics_Gnuc
+ 137:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \{
+ 138:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 139:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__saturateu(X,Min,Max)           ( Ifx__minu(Ifx__maxu(X, Min), Max) )
+ 140:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** \} */
+ 141:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 142:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** \defgroup IfxLld_Cpu_Intrinsics_Gnucmin_max Minimum and Maximum of (sint16) Integers
+ 143:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  These intrinsic functions return the minimum or maximum of a sint16, uint16 or sint16
+ 144:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \ingroup IfxLld_Cpu_Intrinsics_Gnuc
+ 145:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \{
+ 146:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 147:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 148:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Return maximum of two integers
+ 149:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 150:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint32 Ifx__max(sint32 a, sint32 b)
+ 151:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 152:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint32 res;
+ 153:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("max %0, %1, %2": "=d" (res) : "d" (a), "d" (b));
+ 154:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 155:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 156:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 157:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Return maximum of two sint16
+ 158:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 159:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint32 Ifx__maxs(sint16 a, sint16 b)
+ 160:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 161:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint32 res;
+ 162:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("max.h %0, %1, %2": "=d" (res) : "d" (a), "d" (b));
+ 163:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 164:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 165:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Return maximum of two unsigned integers
+ 166:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 167:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE uint32 Ifx__maxu(uint32 a, uint32 b)
+ 168:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 169:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     uint32 res;
+ 170:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("max.u %0, %1, %2": "=d" (res) : "d" (a), "d" (b));
+ 171:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 172:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 173:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 174:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Return minimum of two integers
+ 175:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 176:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint32 Ifx__min(sint32 a, sint32 b)
+ 177:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 178:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint32 res;
+ 179:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("min %0, %1, %2": "=d" (res) : "d" (a), "d" (b));
+ 180:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 181:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 182:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 183:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Return minimum of two sint16
+ 184:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 185:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint16 Ifx__mins(sint16 a, sint16 b)
+ 186:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 187:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint16 res;
+ 188:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("min.h %0, %1, %2": "=d" (res) : "d" (a), "d" (b));
+ 189:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 190:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 191:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 192:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Return minimum of two unsigned integers
+ 193:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 194:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE uint32 Ifx__minu(uint32 a, uint32 b)
+ 195:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 196:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     uint32 res;
+ 197:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("min.u %0, %1, %2": "=d" (res) : "d" (a), "d" (b));
+ 198:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 199:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 200:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 201:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** \} */
+ 202:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 203:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** \defgroup intrinsicsgnuc_float Floating point operation
+ 204:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \ingroup IfxLld_Cpu_Intrinsics_Gnuc
+ 205:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \{
+ 206:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 207:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 208:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__sqrf(X)                       ((X) * (X))
+ 209:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__sqrtf(X)                      sqrtf(X)
+ 210:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__checkrange(X,Min,Max)         (((X) >= (Min)) && ((X) <= (Max)))
+ 211:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 212:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__roundf(X)                     ((((X) - (sint32)(X)) > 0.5f) ? (1 + (sint32)(X)) : ((si
+ 213:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__absf(X)                       ( ((X) < 0.0f) ? -(X) : (X) )
+ 214:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__minf(X,Y)                     ( ((X) < (Y)) ? (X) : (Y) )
+ 215:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__maxf(X,Y)                     ( ((X) > (Y)) ? (X) : (Y) )
+ 216:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__saturatef(X,Min,Max)          ( Ifx__minf(Ifx__maxf(X, Min), Max) )
+ 217:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__checkrangef(X,Min,Max)        (((X) >= (Min)) && ((X) <= (Max)))
+ 218:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 219:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__abs_stdreal(X)                ( ((X) > 0.0f) ? (X) : -(X) )
+ 220:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__min_stdreal(X,Y)              ( ((X) < (Y)) ? (X) : (Y) )
+ 221:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__max_stdreal(X,Y)              ( ((X) > (Y)) ? (X) : (Y) )
+ 222:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__saturate_stdreal(X,Min,Max)   ( Ifx__min_stdreal(Ifx__max_stdreal(X, Min), Max) )
+ 223:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 224:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__neqf(X,Y)                     ( ((X) > (Y)) ||  ((X) < (Y)) )     /**< X != Y */
+ 225:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__leqf(X,Y)                     ( !((X) > (Y)) )     /**< X <= Y */
+ 226:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__geqf(X,Y)                     ( !((X) < (Y)) )     /**< X >= Y */
+ 227:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** \} */
+ 228:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 229:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** \defgroup IfxLld_Cpu_Intrinsics_Gnucfractional Fractional Arithmetic Support
+ 230:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  The next table provides an overview of intrinsic functions to convert fractional values. Note that
+ 231:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  TASKING VX-toolset C compiler for TriCore fully supports the fractional type so normally you shoul
+ 232:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  need these intrinsic functions (except for __mulfractlong). For compatibility reasons the TASKING 
+ 233:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  compiler does support these functions.
+ 234:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \ingroup IfxLld_Cpu_Intrinsics_Gnuc
+ 235:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \{
+ 236:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 237:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 238:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Count the consecutive number of bits that have the same value as bit 15 of an sfract
+ 239:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 240:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint16 Ifx__clssf(sfract a)
+ 241:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 242:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint16 res;
+ 243:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("sh  %1,%1,16    \n\
+ 244:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       cls  %0,%1":"=d"(res):"d"(a):"memory");
+ 245:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 246:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 247:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 248:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Convert fract to float
+ 249:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 250:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE float Ifx__fract_to_float(fract a)
+ 251:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 252:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     float res;
+ 253:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("q31tof  %0,%1,%2":"=d"(res):"d"(a), "d"(0):"memory");
+ 254:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 255:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 256:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 257:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Convert float to fract
+ 258:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 259:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE fract Ifx__float_to_fract(float a)
+ 260:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 261:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     fract res;
+ 262:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("ftoq31  %0,%1,%2":"=d"(res):"d"(a), "d"(0):"memory");
+ 263:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 264:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 265:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 266:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Convert fract to sfract
+ 267:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 268:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sfract Ifx__fract_to_sfract(fract a)
+ 269:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 270:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sfract res;
+ 271:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("mov.u  %0,0x8000        \n\
+ 272:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     adds  %0,%1              \n\
+ 273:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     extr  %0,%0,0x10,0x10 "
+ 274:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=&d"(res):"d"(a):"memory");
+ 275:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 276:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 277:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 278:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Convert float to sfract
+ 279:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 280:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sfract Ifx__float_to_sfract(float a)
+ 281:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 282:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     fract tmp = Ifx__float_to_fract(a);
+ 283:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return Ifx__fract_to_sfract(tmp);
+ 284:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 285:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 286:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Convert laccum to fract
+ 287:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 288:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE fract Ifx__getfract(laccum a)
+ 289:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 290:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     fract res;
+ 291:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("dextr  %0,%H1,%L1,0x11":"=&d" (res):"d" (a):"memory");
+ 292:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 293:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 294:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 295:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Multiply-add with rounding. Returns the rounded result of ( a + b * c )
+ 296:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 297:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sfract Ifx__mac_r_sf(sfract a, sfract b, sfract c)
+ 298:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 299:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sfract res;
+ 300:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("sh  %1,%1,16        \n\
+ 301:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                        maddrs.q  %0,%1,%2L,%3L,1        \n\
+ 302:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                        sh %0,%0,-16":"=d"(res):"d"(a), "d"(b), "d"(c):"memory");
+ 303:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 304:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 305:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 306:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Multiply-add sfract. Returns ( a + b * c )
+ 307:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 308:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sfract Ifx__mac_sf(sfract a, sfract b, sfract c)
+ 309:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 310:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sfract res;
+ 311:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("sh  %1,%1,16        \n\
+ 312:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       madds.q  %0,%1,%2L,%3L,1        \n\
+ 313:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       sh %0,%0,-16":"=d"(res):"d"(a), "d"(b), "d"(c):"memory");
+ 314:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 315:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 316:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 317:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Integer part of the multiplication of a fract and a fract
+ 318:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 319:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE long Ifx__mulfractfract(fract a, fract b)
+ 320:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 321:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     long res;
+ 322:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("mul.q %0,%1,%2,1":"=d"(res):"d"(a), "d"(b):"memory");
+ 323:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 324:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 325:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 326:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Integer part of the multiplication of a fract and a long
+ 327:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 328:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE long Ifx__mulfractlong(fract a, long b)
+ 329:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 330:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     long res;
+ 331:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("mul.q %0,%1,%2,1":"=d"(res):"d"(a), "d"(b):"memory");
+ 332:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 333:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 334:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 335:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Convert fract to sfract
+ 336:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 337:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sfract Ifx__round16(fract a)
+ 338:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 339:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sfract res;
+ 340:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("mov.u  %0,0x8000        \n\
+ 341:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     adds  %0,%1              \n\
+ 342:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     insert  %0,%0,0,0,0x10 \n\
+ 343:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 					sh  %0,%0,-16"
+ 344:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=&d"(res):"d"(a):"memory");
+ 345:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 346:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 347:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 348:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Convert signed sint16 to sfract
+ 349:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 350:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sfract Ifx__s16_to_sfract(sint16 a)
+ 351:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 352:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sfract res;
+ 353:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("sh  %0,%1,16    \n\
+ 354:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                        sh  %0,%1,-16":"=d"(res):"d"(a):"memory");
+ 355:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 356:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 357:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 358:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Convert sfract to sint16
+ 359:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 360:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint16 Ifx__sfract_to_s16(sfract a)
+ 361:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 362:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint16 res;
+ 363:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("sh  %1,%1,16    \n\
+ 364:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                        sh  %0,%1,-16":"=d"(res):"d"(a):"memory");
+ 365:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 366:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 367:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 368:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Convert sfract to uint16
+ 369:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 370:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE uint16 Ifx__sfract_to_u16(sfract a)
+ 371:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 372:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     uint16 res;
+ 373:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("sh  %1,%1,16    \n\
+ 374:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                        sh  %0,%1,-16":"=d"(res):"d"(a):"memory");
+ 375:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 376:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 377:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 378:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Left/right shift of an laccum
+ 379:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 380:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE laccum Ifx__shaaccum(laccum a, sint32 b)
+ 381:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 382:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     laccum res;
+ 383:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("jge   %2,0,0f        \n\
+ 384:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     sha   %H0,%H1,%2     \n\
+ 385:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     rsub  %2,%2,0        \n\
+ 386:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     dextr %L0,%H1,%L1,%2 \n\
+ 387:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     j  1f                \n\
+ 388:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     0:dextr %H0,%H1,%L1,%2 \n\
+ 389:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     sha   %L0,%L1,%2     \n\
+ 390:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     1:"
+ 391:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a), "d"(b):"memory");
+ 392:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 393:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 394:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 395:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Left/right shift of an fract
+ 396:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 397:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE fract Ifx__shafracts(fract a, sint32 b)
+ 398:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 399:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     fract res;
+ 400:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("shas  %0,%1,%2":"=d"(res):"d"(a), "d"(b):"memory");
+ 401:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 402:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 403:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 404:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Left/right shift of an sfract
+ 405:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 406:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sfract Ifx__shasfracts(sfract a, sint32 b)
+ 407:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 408:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sfract res;
+ 409:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("shas  %0,%1,%2":"=d"(res):"d"(a), "d"(b):"memory");
+ 410:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 411:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 412:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 413:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Convert uint16 to sfract
+ 414:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 415:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sfract Ifx__u16_to_sfract(uint16 a)
+ 416:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 417:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sfract res;
+ 418:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("sh  %0,%1,16    \n\
+ 419:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                        sh  %0,%1,-16":"=d"(res):"d"(a):"memory");
+ 420:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 421:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 422:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 423:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** \} */
+ 424:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 425:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** \defgroup IfxLld_Cpu_Intrinsics_Gnucinsert Insert / Extract Bit-fields and Bits
+ 426:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \ingroup IfxLld_Cpu_Intrinsics_Gnuc
+ 427:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \{
+ 428:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 429:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 430:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Extract a bit-field (bit pos to bit pos+width) from value
+ 431:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 432:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint32 Ifx__extr(sint32 a, uint32 p, uint32 w)
+ 433:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 434:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint32 res;
+ 435:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("mov %%d14,%2  \n\
+ 436:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                      mov %%d15,%3  \n\
+ 437:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                      extr %0,%1,%%e14"
+ 438:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       : "=d" (res) : "d" (a), "d" (p), "d" (w):"d14", "d15");
+ 439:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 440:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 441:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 442:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Same as __extr() but return bit-field as unsigned integer
+ 443:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 444:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE uint32 Ifx__extru(uint32 a, uint32 p, uint32 w)
+ 445:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 446:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     uint32 res;
+ 447:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("mov %%d14,%2  \n\
+ 448:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                      mov %%d15,%3  \n\
+ 449:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                      extr.u %0,%1,%%e14"
+ 450:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       : "=d" (res) : "d" (a), "d" (p), "d" (w):"d14", "d15");
+ 451:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 452:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 453:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 454:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Load a single bit.
+ 455:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 456:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** //#define __getbit(address,bitoffset ) __extru( *(address), bitoffset, 1 )
+ 457:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__getbit(address, bitoffset) ((*(address) & (1U << (bitoffset))) != 0)
+ 458:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 459:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Atomic load-modify-store.
+ 460:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 461:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__imaskldmst(address, value, bitoffset, bits) \
+ 462:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****   {long long tmp;\
+ 463:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****   __asm__("imask %A0,%1,%2,%3"\
+ 464:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****           :"=d"((long long)tmp)\
+ 465:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****           :"d"(value),"d"(bitoffset),"i"(bits): "memory");\
+ 466:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****   __asm__("ldmst [%0]0,%A1"::"a"(address),"d"(tmp): "memory");}
+ 467:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 468:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Return trg but replace trgbit by srcbit in src.
+ 469:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 470:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint32 Ifx__ins(sint32 trg, const sint32 trgbit, sint32 src, const sint32 srcbit)
+ 471:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 472:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint32 res;
+ 473:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("ins.t %0,%1,%2,%3,%4":"=d"(res):"d"(trg), "i"(trgbit), "d"(src), "i"(srcbit)
+ 474:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 475:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 476:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 477:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Extract bit-field (width bits starting at bit 0) from src and insert it in trg at pos.
+ 478:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 479:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint32 Ifx__insert(sint32 a, sint32 b, sint32 p, const sint32 w)
+ 480:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 481:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint32 res;
+ 482:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("mov %%d14,%3  \n\
+ 483:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                      mov %%d15,%4  \n\
+ 484:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                      insert %0,%1,%2,%%e14"
+ 485:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a), "d"(b), "d"(p), "d"(w):"d14", "d15");
+ 486:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 487:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 488:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 489:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Return trg but replace trgbit by inverse of srcbit in src.
+ 490:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 491:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint32 Ifx__insn(sint32 trg, const sint32 trgbit, sint32 src, const sint32 srcbit)
+ 492:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 493:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint32 res;
+ 494:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("insn.t %0,%1,%2,%3,%4":"=d"(res):"d"(trg), "i"(trgbit), "d"(src), "i"(srcbit
+ 495:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 496:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 497:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 498:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Store a single bit.
+ 499:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 500:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__putbit(value,address,bitoffset ) Ifx__imaskldmst(address, value, bitoffset,1)
+ 501:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 502:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** \} */
+ 503:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 504:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** \defgroup IfxLld_Cpu_Intrinsics_Gnucinterrupt_handling Interrupt Handling
+ 505:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  The next table provides an overview of the intrinsic functions to read or set interrupt handling.
+ 506:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \ingroup IfxLld_Cpu_Intrinsics_Gnuc
+ 507:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \{
+ 508:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 509:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 510:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #if !IFXCPU_INTRINSICSGNUC_USE_MACHINE_INTRINSICS
+ 511:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Set CPU priority number [0..255] (or [0..1023] for TriCore 1.6.x) and enable interrupts immedia
+ 512:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 513:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__bisr(intlvl) __asm__ volatile ("bisr "#intlvl : : : "memory")
+ 514:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #endif
+ 515:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 516:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Disable interrupts. Only supported for TriCore1
+ 517:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 518:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__disable() __asm__ volatile ("disable" : : : "memory")
+ 519:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 520:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Disable interrupts and return previous interrupt state (enabled or disabled). Direct supported 
+ 521:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 522:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint32 Ifx__disable_and_save(void)
+ 523:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 524:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint32 res;
+ 525:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile("disable %0":"=d"(res));
+ 526:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 527:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 528:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 529:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Enable interrupts immediately at function entry
+ 530:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 531:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__enable() __asm__ volatile ("enable" : : : "memory")
+ 532:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 533:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Restore interrupt state. Direct supported for TriCore1.6. Emulated on TC1.3.1
+ 534:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 535:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE void Ifx__restore(sint32 ie)
+ 536:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 537:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("restore %0"::"d"(ie));
+ 538:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 539:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 540:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #if !IFXCPU_INTRINSICSGNUC_USE_MACHINE_INTRINSICS
+ 541:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Call a system call function number
+ 542:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 543:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__syscall(svcno) __tric_syscall(svcno)
+ 544:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__tric_syscall(svcno) __asm__ volatile ("syscall "STRINGIFY(svcno) : : : "memory")
+ 545:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #endif
+ 546:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 547:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #if (__TRICORE_CORE__ == 0x162)
+ 548:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__hvcall(hvcno) \
+ 549:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** switch (hvcno) \
+ 550:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** { \
+ 551:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** case 1: \
+ 552:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {__asm volatile (".word 0x004010AD");}\
+ 553:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** break; \
+ 554:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** case 2: \
+ 555:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {__asm volatile (".word 0x004020AD");}\
+ 556:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** break; \
+ 557:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** case 3: \
+ 558:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {__asm volatile (".word 0x004030AD");}\
+ 559:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** break; \
+ 560:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** case 4: \
+ 561:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {__asm volatile (".word 0x004040AD");}\
+ 562:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** break; \
+ 563:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** case 5: \
+ 564:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {__asm volatile (".word 0x004050AD");}\
+ 565:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** break; \
+ 566:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** case 6: \
+ 567:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {__asm volatile (".word 0x004060AD");}\
+ 568:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** break; \
+ 569:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** case 7: \
+ 570:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {__asm volatile (".word 0x004070AD");}\
+ 571:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** break; \
+ 572:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 573:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__rfh() \
+ 574:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** __asm volatile (".word 0x05C0000D");
+ 575:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #else
+ 576:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__hvcall(hvcno) __asm__ volatile ("hvcall " STRINGIFY(hvcno) : : : "memory")
+ 577:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__rfh() __asm__ volatile ("rfh " STRINGIFY() : : : "memory")
+ 578:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #endif
+ 579:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** \} */
+ 580:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 581:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** \defgroup IfxLld_Cpu_Intrinsics_Gnucmiscellaneous Miscellaneous Intrinsic Functions
+ 582:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \ingroup IfxLld_Cpu_Intrinsics_Gnuc
+ 583:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \{
+ 584:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 585:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 586:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Write back and invalidate cache address "p". Generates CACHEA.WI [Ab].
+ 587:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 588:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE void Ifx__cacheawi(uint8* p)
+ 589:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 590:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile("cachea.wi [%0]0"::"a"(p));
+ 591:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 592:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Write back and invalidate cache index "p". Generates CACHEI.WI [Ab].
+ 593:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 594:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE void Ifx__cacheiwi(uint8* p)
+ 595:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 596:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile("cachei.wi [%0]0"::"a"(p));
+ 597:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 598:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 599:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Write back and invalidate cache address \"p\" and return post incremented
+ 600:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * value of \"p\". Generates CACHEA.WI [Ab+].
+ 601:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 602:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE uint8* Ifx__cacheawi_bo_post_inc(uint8* p)
+ 603:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 604:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile("cachea.wi  [%0+]0"::"a"(p));
+ 605:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return p;
+ 606:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 607:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 608:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Multiply two 32-bit numbers to an intermediate 64-bit result, and scale
+ 609:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * back the result to 32 bits. To scale back the result, 32 bits are extracted
+ 610:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * from the intermediate 64-bit result: bit 63-offset to bit 31-offset.
+ 611:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 612:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint32 Ifx__mulsc(sint32 a, sint32 b, sint32 offset)
+ 613:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 614:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint32 res;
+ 615:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile("mul  %%e12,%1,%2      \n\
+ 616:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     dextr  %0,%%d13,%%d12,%3"
+ 617:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                      :"=d"(res):"d"(a), "d"(b), "d"(offset):"d12", "d13");
+ 618:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 619:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 620:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 621:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Rotate operand left count times. The bits that are shifted out are inserted at the right side 
+ 622:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 623:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE uint32 Ifx__rol(uint32 operand, uint32 count)
+ 624:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 625:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     uint32 res;
+ 626:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile("dextr  %0,%1,%1,%2":"=d"(res):"d"(operand), "d"(count):"memory");
+ 627:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 628:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 629:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 630:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Rotate operand right count times. The bits that are shifted out are inserted at the left side 
+ 631:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 632:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE uint32 Ifx__ror(uint32 operand, uint32 count)
+ 633:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 634:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     uint32 res;
+ 635:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile("rsub %2,%2,0 \n\
+ 636:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     dextr  %0,%1,%1,%2"
+ 637:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                      :"=d"(res):"d"(operand), "d"(count):"memory");
+ 638:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 639:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 640:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** \} */
+ 641:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 642:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** \defgroup IfxLld_Cpu_Intrinsics_Gnucpacked Packed Data Type Support
+ 643:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  The next table provides an overview of the intrinsic functions for initialization of packed data t
+ 644:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \ingroup IfxLld_Cpu_Intrinsics_Gnuc
+ 645:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \{
+ 646:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 647:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 648:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Absolute value of __packb
+ 649:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 650:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE __packb Ifx__absb(__packb a)
+ 651:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 652:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __packb res;
+ 653:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("abs.b %0,%1"
+ 654:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a):"memory");
+ 655:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 656:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 657:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 658:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Absolute value of __packhw
+ 659:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 660:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE __packhw Ifx__absh(__packhw a)
+ 661:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 662:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __packhw res;
+ 663:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("abs.h %0,%1"
+ 664:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a):"memory");
+ 665:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 666:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 667:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 668:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Absolute value of __packhw using saturation
+ 669:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 670:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE __packhw Ifx__abssh(__packhw a)
+ 671:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 672:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __packb res;
+ 673:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("abss.h %0,%1"
+ 674:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a):"memory");
+ 675:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 676:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 677:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 678:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Extract first byte from a __packb
+ 679:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 680:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint8 Ifx__extractbyte1(__packb a)
+ 681:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 682:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint8 res;
+ 683:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("extr  %0,%1,0,8"
+ 684:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a):"memory");
+ 685:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 686:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 687:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 688:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Extract second byte from a __packb
+ 689:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 690:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint8 Ifx__extractbyte2(__packb a)
+ 691:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 692:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint8 res;
+ 693:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("extr  %0,%1,8,8"
+ 694:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a):"memory");
+ 695:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 696:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 697:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 698:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Extract third byte from a __packb
+ 699:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 700:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint8 Ifx__extractbyte3(__packb a)
+ 701:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 702:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint8 res;
+ 703:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("extr  %0,%1,16,8"
+ 704:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a):"memory");
+ 705:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 706:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 707:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 708:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Extract fourth byte from a __packb
+ 709:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 710:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint8 Ifx__extractbyte4(__packb a)
+ 711:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 712:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint8 res;
+ 713:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("extr  %0,%1,24,8"
+ 714:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a):"memory");
+ 715:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 716:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 717:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 718:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Extract first sint16 from a __packhw
+ 719:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 720:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint16 Ifx__extracthw1(__packhw a)
+ 721:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 722:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint16 res;
+ 723:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("extr  %0,%1,0,16"
+ 724:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a):"memory");
+ 725:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 726:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 727:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 728:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Extract second sint16 from a __packhw
+ 729:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 730:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint16 Ifx__extracthw2(__packhw a)
+ 731:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 732:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint16 res;
+ 733:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("extr  %0,%1,16,16"
+ 734:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a):"memory");
+ 735:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 736:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 737:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 738:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Extract first uint8 from a __packb
+ 739:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 740:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE uint8 Ifx__extractubyte1(__upackb a)
+ 741:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 742:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     uint8 res;
+ 743:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("extr  %0,%1,0,8"
+ 744:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a):"memory");
+ 745:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 746:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 747:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 748:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Extract second uint8 from a __packb
+ 749:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 750:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE uint8 Ifx__extractubyte2(__upackb a)
+ 751:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 752:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     uint8 res;
+ 753:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("extr  %0,%1,8,8"
+ 754:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a):"memory");
+ 755:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 756:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 757:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 758:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Extract third uint8 from a __packb
+ 759:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 760:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE uint8 Ifx__extractubyte3(__upackb a)
+ 761:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 762:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     uint8 res;
+ 763:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("extr  %0,%1,16,8"
+ 764:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a):"memory");
+ 765:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 766:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 767:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 768:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Extract fourth uint8 from a __packb
+ 769:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 770:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE uint8 Ifx__extractubyte4(__upackb a)
+ 771:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 772:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     uint8 res;
+ 773:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("extr  %0,%1,24,8"
+ 774:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a):"memory");
+ 775:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 776:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 777:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 778:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Extract first uint16 from a __packhw
+ 779:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 780:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE uint16 Ifx__extractuhw1(__upackhw a)
+ 781:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 782:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     uint16 res;
+ 783:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("extr  %0,%1,0,16"
+ 784:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a):"memory");
+ 785:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 786:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 787:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 788:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Extract second uint16 from a __packhw
+ 789:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 790:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE uint16 Ifx__extractuhw2(__upackhw a)
+ 791:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 792:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     uint16 res;
+ 793:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("extr  %0,%1,16,16"
+ 794:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a):"memory");
+ 795:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 796:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 797:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 798:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Extract first byte from a __packb
+ 799:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 800:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint8 Ifx__getbyte1(__packb* a)
+ 801:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 802:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint8 res;
+ 803:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("ld.w  %0,[%1]0 \n\
+ 804:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                      extr  %0,%0,0,8"
+ 805:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"a"(a):"memory");
+ 806:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 807:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 808:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 809:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 810:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Extract second byte from a __packb
+ 811:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 812:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint8 Ifx__getbyte2(__packb* a)
+ 813:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 814:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint8 res;
+ 815:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("ld.w  %0,[%1]0 \n\
+ 816:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                      extr  %0,%0,8,8"
+ 817:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"a"(a):"memory");
+ 818:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 819:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 820:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 821:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 822:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Extract third byte from a __packb
+ 823:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 824:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint8 Ifx__getbyte3(__packb* a)
+ 825:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 826:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint8 res;
+ 827:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("ld.w  %0,[%1]0 \n\
+ 828:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                      extr  %0,%0,16,8"
+ 829:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"a"(a):"memory");
+ 830:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 831:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 832:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 833:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 834:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Extract fourth byte from a __packb
+ 835:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 836:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint8 Ifx__getbyte4(__packb* a)
+ 837:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 838:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint8 res;
+ 839:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("ld.w  %0,[%1]0 \n\
+ 840:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                      extr  %0,%0,24,8"
+ 841:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"a"(a):"memory");
+ 842:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 843:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 844:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 845:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 846:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Extract first sint16 from a __packhw
+ 847:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 848:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint16 Ifx__gethw1(__packhw* a)
+ 849:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 850:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint16 res;
+ 851:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("ld.w  %0,[%1]0 \n\
+ 852:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                      extr  %0,%0,0,16"
+ 853:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"a"(a):"memory");
+ 854:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 855:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 856:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Extract second sint16 from a __packhw
+ 857:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 858:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint16 Ifx__gethw2(__packhw* a)
+ 859:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 860:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint16 res;
+ 861:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("ld.w  %0,[%1]0 \n\
+ 862:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                      extr  %0,%0,16,16"
+ 863:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"a"(a):"memory");
+ 864:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 865:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 866:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 867:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Extract first uint8 from a __packb
+ 868:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 869:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE uint8 Ifx__getubyte1(__upackb* a)
+ 870:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 871:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     uint8 res;
+ 872:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("ld.w  %0,[%1]0 \n\
+ 873:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                      extr  %0,%0,0,8"
+ 874:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"a"(a):"memory");
+ 875:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 876:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 877:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 878:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Extract second uint8 from a __packb
+ 879:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 880:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE uint8 Ifx__getubyte2(__upackb* a)
+ 881:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 882:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     uint8 res;
+ 883:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("ld.w  %0,[%1]0 \n\
+ 884:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                      extr  %0,%0,8,8"
+ 885:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"a"(a):"memory");
+ 886:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 887:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 888:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 889:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Extract third uint8 from a __packb
+ 890:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 891:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE uint8 Ifx__getubyte3(__upackb* a)
+ 892:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 893:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     uint8 res;
+ 894:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("ld.w  %0,[%1]0 \n\
+ 895:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                      extr  %0,%0,16,8"
+ 896:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"a"(a):"memory");
+ 897:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 898:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 899:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 900:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Extract fourth uint8 from a __packb
+ 901:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 902:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE uint8 Ifx__getubyte4(__upackb* a)
+ 903:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 904:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     uint8 res;
+ 905:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("ld.w  %0,[%1]0 \n\
+ 906:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                      extr  %0,%0,24,8"
+ 907:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"a"(a):"memory");
+ 908:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 909:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 910:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 911:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Extract first uint16 from a __packhw
+ 912:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 913:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE uint16 Ifx__getuhw1(__upackhw* a)
+ 914:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 915:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     uint16 res;
+ 916:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("ld.w  %0,[%1]0 \n\
+ 917:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                      extr  %0,%0,0,16"
+ 918:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"a"(a):"memory");
+ 919:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 920:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 921:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 922:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Extract second uint16 from a __packhw
+ 923:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 924:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE uint16 Ifx__getuhw2(__upackhw* a)
+ 925:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 926:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     uint16 res;
+ 927:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("ld.w  %0,[%1]0 \n\
+ 928:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                      extr  %0,%0,16,16"
+ 929:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"a"(a):"memory");
+ 930:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 931:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 932:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 933:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Initialize  __packb with four integers
+ 934:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 935:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE __packb Ifx__initpackb(sint32 a, sint32 b, sint32 c, sint32 d)
+ 936:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 937:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __packb res;
+ 938:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("insert  %3,%3,%4,8,8   \n\
+ 939:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     insert  %4,%1,%2,8,8   \n\
+ 940:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     insert  %0,%4,%3,16,16 "
+ 941:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a), "d"(b), "d"(c), "d"(d):"memory");
+ 942:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 943:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 944:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 945:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Initialize  __packb with a long integer
+ 946:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 947:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE __packb Ifx__initpackbl(long a)
+ 948:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 949:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return (__packb) a;
+ 950:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 951:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 952:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Initialize  __packhw with two integers
+ 953:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 954:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE __packhw Ifx__initpackhw(sint16 a, sint16 b)
+ 955:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 956:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __packhw res;
+ 957:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("insert  %0,%1,%2,16,16"
+ 958:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a), "d"(b):"memory");
+ 959:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 960:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 961:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 962:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Initialize  __packhw with a long integer
+ 963:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 964:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE __packhw Ifx__initpackhwl(long a)
+ 965:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 966:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return a;
+ 967:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 968:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 969:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Initialize  __packb with four unsigned integers
+ 970:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 971:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE __upackb    Ifx__initupackb( uint32 a, uint32 b, uint32 c, uint32 d)
+ 972:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 973:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __upackb res;
+ 974:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("insert  %3,%3,%4,8,8   \n\
+ 975:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     insert  %1,%1,%2,8,8   \n\
+ 976:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     insert  %0,%1,%3,16,16"
+ 977:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a), "d"(b), "d"(c), "d"(d):"memory");
+ 978:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 979:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 980:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 981:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Initialize  __packhw with two unsigned integers
+ 982:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 983:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE __upackhw    Ifx__initupackhw( uint16 a, uint16 b)
+ 984:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 985:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __upackhw res;
+ 986:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("insert  %0,%1,%2,16,16"
+ 987:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a), "d"(b):"memory");
+ 988:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 989:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+ 990:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+ 991:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Insert sint8 into first byte of a __packb
+ 992:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+ 993:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE __packb Ifx__insertbyte1(__packb a, sint8 b)
+ 994:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+ 995:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __packb res;
+ 996:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("insert  %0,%1,%2,0,8"
+ 997:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a), "d"(b):"memory");
+ 998:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+ 999:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1000:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1001:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Insert sint8 into second byte of a __packb
+1002:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1003:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE __packb Ifx__insertbyte2(__packb a, sint8 b)
+1004:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1005:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __packb res;
+1006:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("insert  %0,%1,%2,8,8"
+1007:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a), "d"(b):"memory");
+1008:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+1009:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1010:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1011:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Insert sint8 into third byte of a __packb
+1012:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1013:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE __packb Ifx__insertbyte3(__packb a, sint8 b)
+1014:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1015:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __packb res;
+1016:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("insert  %0,%1,%2,16,8"
+1017:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a), "d"(b):"memory");
+1018:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+1019:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1020:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1021:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Insert sint8 into fourth byte of a __packb
+1022:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1023:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE __packb Ifx__insertbyte4(__packb a, sint8 b)
+1024:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1025:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __packb res;
+1026:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("insert  %0,%1,%2,24,8"
+1027:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a), "d"(b):"memory");
+1028:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+1029:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1030:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1031:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Insert sint8 into first uint8 of a __packb
+1032:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1033:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE __upackb    Ifx__insertubyte1( __upackb a, uint8 b)
+1034:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1035:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __upackb res;
+1036:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("insert  %0,%1,%2,0,8"
+1037:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a), "d"(b):"memory");
+1038:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+1039:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1040:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1041:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Insert sint8 into second uint8 of a __packb
+1042:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1043:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE __upackb    Ifx__insertubyte2( __upackb a, uint8 b)
+1044:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1045:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __upackb res;
+1046:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("insert  %0,%1,%2,8,8"
+1047:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a), "d"(b):"memory");
+1048:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+1049:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1050:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1051:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Insert sint8 into third uint8 of a __packb
+1052:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1053:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE __upackb     Ifx__insertubyte3( __upackb a, uint8 b)
+1054:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1055:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __upackb res;
+1056:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("insert  %0,%1,%2,16,8"
+1057:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a), "d"(b):"memory");
+1058:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+1059:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1060:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1061:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Insert sint8 into fourth uint8 of a __packb
+1062:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1063:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE __upackb     Ifx__insertubyte4( __upackb a, uint8 b)
+1064:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1065:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __upackb res;
+1066:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("insert  %0,%1,%2,24,8"
+1067:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a), "d"(b):"memory");
+1068:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+1069:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1070:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1071:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Insert sint16 into first halfword of a __packhw
+1072:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1073:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE __packhw Ifx__inserthw1(__packhw a, sint16 b)
+1074:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1075:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __packhw res;
+1076:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("insert  %0,%1,%2,0,16"
+1077:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a), "d"(b):"memory");
+1078:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+1079:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1080:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1081:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Insert sint16 into second halfword of a __packhw
+1082:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1083:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE __packhw Ifx__inserthw2(__packhw a, sint16 b)
+1084:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1085:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __packhw res;
+1086:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("insert  %0,%1,%2,16,16"
+1087:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a), "d"(b):"memory");
+1088:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+1089:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1090:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1091:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Insert uint16 into first halfword of a __upackhw
+1092:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1093:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE __upackhw    Ifx__insertuhw1( __upackhw a, uint16 b)
+1094:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1095:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __upackhw res;
+1096:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("insert  %0,%1,%2,0,16"
+1097:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a), "d"(b):"memory");
+1098:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+1099:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1100:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1101:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Insert uint16 into second halfword of a __upackhw
+1102:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1103:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE __upackhw    Ifx__insertuhw2( __upackhw a, uint16 b)
+1104:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1105:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __upackhw res;
+1106:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("insert  %0,%1,%2,16,16"
+1107:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a), "d"(b):"memory");
+1108:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+1109:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1110:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1111:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Minimum of two  __packb values
+1112:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1113:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE __packb Ifx__minb(__packb a, __packb b)
+1114:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1115:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __packb res;
+1116:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("min.b %0,%1,%2"
+1117:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a), "d"(b):"memory");
+1118:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+1119:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1120:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1121:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Minimum of two __upackb  values
+1122:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1123:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE __upackb     Ifx__minbu( __upackb  a, __upackb  b)
+1124:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1125:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __upackb res;
+1126:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("min.bu %0,%1,%2"
+1127:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a), "d"(b):"memory");
+1128:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+1129:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1130:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1131:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Minimum of two  __packhw values
+1132:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1133:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE __packhw Ifx__minh(__packhw a, __packhw b)
+1134:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1135:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __packhw res;
+1136:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("min.h %0,%1,%2"
+1137:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a), "d"(b):"memory");
+1138:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+1139:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1140:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1141:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Minimum of two __upackhw values
+1142:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1143:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE __upackhw    Ifx__minhu( __upackhw a, __upackhw b)
+1144:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1145:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __upackhw res;
+1146:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("min.hu %0,%1,%2"
+1147:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       :"=d"(res):"d"(a), "d"(b):"memory");
+1148:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+1149:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1150:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1151:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Insert sint8 into first byte of a __packb
+1152:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1153:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE void Ifx__setbyte1(__packb* a, sint8 b)
+1154:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1155:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("ld.w  %%d15,[%0] \n\
+1156:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     insert  %%d15,%%d15,%1,0,8 \n\
+1157:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     st.w [%0],%%d15"
+1158:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       ::"a"(a), "d"(b):"d15", "memory");
+1159:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1160:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1161:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Insert sint8 into second byte of a __packb
+1162:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1163:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE void Ifx__setbyte2(__packb* a, sint8 b)
+1164:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1165:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("ld.w  %%d15,[%0] \n\
+1166:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     insert  %%d15,%%d15,%1,8,8 \n\
+1167:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     st.w [%0],%%d15"
+1168:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       ::"a"(a), "d"(b):"d15", "memory");
+1169:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1170:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1171:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Insert sint8 into third byte of a __packb
+1172:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1173:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE void Ifx__setbyte3(__packb* a, sint8 b)
+1174:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1175:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("ld.w  %%d15,[%0] \n\
+1176:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     insert  %%d15,%%d15,%1,16,8 \n\
+1177:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     st.w [%0],%%d15"
+1178:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       ::"a"(a), "d"(b):"d15", "memory");
+1179:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1180:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1181:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Insert sint8 into fourth byte of a __packb
+1182:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1183:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE void Ifx__setbyte4(__packb* a, sint8 b)
+1184:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1185:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("ld.w  %%d15,[%0] \n\
+1186:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     insert  %%d15,%%d15,%1,24,8 \n\
+1187:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     st.w [%0],%%d15"
+1188:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       ::"a"(a), "d"(b):"d15", "memory");
+1189:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1190:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1191:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Insert sint16 into first halfword of a __packhw
+1192:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1193:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE void Ifx__sethw1(__packhw* a, sint16 b)
+1194:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1195:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("ld.w  %%d15,[%0] \n\
+1196:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     insert  %%d15,%%d15,%1,0,16 \n\
+1197:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     st.w [%0],%%d15"
+1198:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       ::"a"(a), "d"(b):"d15", "memory");
+1199:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1200:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1201:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Insert sint16 into second halfword of a __packhw
+1202:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1203:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE void Ifx__sethw2(__packhw* a, sint16 b)
+1204:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1205:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("ld.w  %%d15,[%0] \n\
+1206:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     insert  %%d15,%%d15,%1,16,16 \n\
+1207:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     st.w [%0],%%d15"
+1208:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       ::"a"(a), "d"(b):"d15", "memory");
+1209:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1210:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1211:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Insert uint8 into first byte of a __upackb
+1212:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1213:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE void Ifx__setubyte1(__upackb* a, uint8 b)
+1214:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1215:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("ld.w  %%d15,[%0] \n\
+1216:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     insert  %%d15,%%d15,%1,0,8 \n\
+1217:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     st.w [%0],%%d15"
+1218:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       ::"a"(a), "d"(b):"d15", "memory");
+1219:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1220:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1221:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Insert uint8 into second byte of a __upackb
+1222:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1223:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE void Ifx__setubyte2(__upackb* a, uint8 b)
+1224:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1225:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("ld.w  %%d15,[%0] \n\
+1226:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     insert  %%d15,%%d15,%1,8,8 \n\
+1227:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     st.w [%0],%%d15"
+1228:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       ::"a"(a), "d"(b):"d15", "memory");
+1229:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1230:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1231:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Insert uint8 into third byte of a __upackb
+1232:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1233:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE void Ifx__setubyte3(__upackb* a, uint8 b)
+1234:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1235:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("ld.w  %%d15,[%0] \n\
+1236:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     insert  %%d15,%%d15,%1,16,8 \n\
+1237:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     st.w [%0],%%d15"
+1238:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       ::"a"(a), "d"(b):"d15", "memory");
+1239:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1240:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1241:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Insert uint8 into fourth byte of a __upackb
+1242:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1243:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE void Ifx__setubyte4(__upackb* a, uint8 b)
+1244:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1245:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("ld.w  %%d15,[%0] \n\
+1246:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     insert  %%d15,%%d15,%1,24,8 \n\
+1247:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     st.w [%0],%%d15"
+1248:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       ::"a"(a), "d"(b):"d15", "memory");
+1249:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1250:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1251:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Insert uint16 into first halfword of a __upackhw
+1252:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1253:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE void Ifx__setuhw1(__upackhw* a, uint16 b)
+1254:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1255:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("ld.w  %%d15,[%0] \n\
+1256:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     insert  %%d15,%%d15,%1,0,16 \n\
+1257:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     st.w [%0],%%d15"
+1258:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       ::"a"(a), "d"(b):"d15", "memory");
+1259:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1260:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1261:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Insert uint16 into second halfword of a __upackhw
+1262:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1263:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE void Ifx__setuhw2(__upackhw* a, uint16 b)
+1264:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1265:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("ld.w  %%d15,[%0] \n\
+1266:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     insert  %%d15,%%d15,%1,16,16 \n\
+1267:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                     st.w [%0],%%d15"
+1268:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****                       ::"a"(a), "d"(b):"d15", "memory");
+1269:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1270:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1271:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** \} */
+1272:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1273:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** \defgroup IfxLld_Cpu_Intrinsics_Gnucregister Register Handling
+1274:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  The next table provides an overview of the intrinsic functions that you can use to access control 
+1275:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \ingroup IfxLld_Cpu_Intrinsics_Gnuc
+1276:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \{
+1277:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1278:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1279:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Return absolute value
+1280:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1281:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__abs(a) __builtin_abs(a)
+1282:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1283:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Return absolue difference of two integers
+1284:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1285:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint32 Ifx__absdif(sint32 a, sint32 b)
+1286:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1287:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint32 res;
+1288:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("absdif %0, %1, %2": "=d" (res) : "d" (a), "d" (b));
+1289:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+1290:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1291:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1292:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Return absolute value with saturation
+1293:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1294:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint32 Ifx__abss(sint32 a)
+1295:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1296:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint32 res;
+1297:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("abss %0, %1": "=d" (res) : "d" (a));
+1298:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+1299:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1300:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1301:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Count leading ones in int
+1302:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1303:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint32 Ifx__clo(sint32 a)
+1304:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1305:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint32 res;
+1306:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("clo %0,%1":"=d"(res):"d"(a));
+1307:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+1308:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1309:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1310:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Count number of redundant sign bits (all consecutive bits with the same value as bit 31
+1311:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1312:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint32 Ifx__cls(sint32 a)
+1313:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1314:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint32 res;
+1315:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("cls %0,%1":"=d"(res):"d"(a));
+1316:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+1317:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1318:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1319:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Count leading zeros in int
+1320:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1321:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define  Ifx__clz(a) __builtin_clz(a)
+1322:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1323:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Return absolute double precision floating-point value
+1324:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1325:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE double Ifx__fabs(double d)
+1326:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1327:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     double res;
+1328:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("insert  %0,%1,0,31,1": "=d" (res) : "d" (d):"memory");
+1329:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+1330:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1331:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1332:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Return absolute floating-point value
+1333:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1334:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE float Ifx__fabsf(float f)
+1335:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1336:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     float res;
+1337:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("insert  %0,%1,0,31,1": "=d" (res) : "d" (f):"memory");
+1338:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+1339:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1340:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1341:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #if !IFXCPU_INTRINSICSGNUC_USE_MACHINE_INTRINSICS
+1342:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Move contents of the addressed core SFR into a data register
+1343:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1344:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__mfcr(regaddr)  \
+1345:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  ({ sint32 res; __asm__ volatile ("mfcr %0,%1": "=d" (res) :"i"(regaddr): "memory"); res; })
+1346:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1347:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** //({ sint32 res; __asm__ volatile ("mfcr %0,"#regaddr : "=d" (res) : : "memory"); res; })
+1348:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1349:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Move contents of a data register (second int) to the addressed core SFR (first int)
+1350:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1351:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__mtcr(regaddr,val) __asm__ volatile ("mtcr %0,%1\n\tisync"::"i"(regaddr),"d"(val):"memo
+1352:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #endif
+1353:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1354:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Return parity
+1355:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1356:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint32 Ifx__parity(sint32 a)
+1357:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1358:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint32 res;
+1359:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("parity  %0,%1": "=d" (res) : "d" (a):"memory");
+1360:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+1361:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1362:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1363:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Return saturated byte
+1364:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1365:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint8 Ifx__satb(sint32 a)
+1366:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1367:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint8 res;
+1368:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("sat.b %0,%1":"=d"(res):"d"(a));
+1369:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+1370:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1371:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1372:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Return saturated uint8
+1373:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1374:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE uint8 Ifx__satbu(uint32 a)
+1375:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1376:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     uint8 res;
+1377:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("sat.bu %0,%1":"=d"(res):"d"(a));
+1378:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+1379:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1380:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1381:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Return saturated halfword
+1382:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1383:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint16 Ifx__sath(sint32 a)
+1384:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1385:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint16 res;
+1386:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("sat.h %0,%1":"=d"(res):"d"(a));
+1387:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+1388:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1389:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1390:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /**  Return saturated unsigned halfword
+1391:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1392:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE uint16 Ifx__sathu(uint32 a)
+1393:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1394:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     uint16 res;
+1395:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("sat.hu %0,%1":"=d"(res):"d"(a));
+1396:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+1397:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1398:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1399:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** \} */
+1400:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1401:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** \defgroup IfxLld_Cpu_Intrinsics_Gnucsaturation Saturation Arithmetic Support
+1402:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  These intrinsics support saturation arithmetic
+1403:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \ingroup IfxLld_Cpu_Intrinsics_Gnuc
+1404:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \{
+1405:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1406:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1407:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** add signed with saturation
+1408:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1409:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint32 Ifx__adds(sint32 a, sint32 b)
+1410:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1411:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint32 res;
+1412:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("adds %0, %1, %2": "=d" (res) : "d" (a), "d" (b));
+1413:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+1414:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1415:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1416:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** add unsigned with saturation
+1417:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1418:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE uint32 Ifx__addsu(uint32 a, uint32 b)
+1419:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1420:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     uint32 res;
+1421:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("adds.u %0, %1, %2": "=d" (res) : "d" (a), "d" (b));
+1422:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+1423:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1424:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1425:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** substract signed with saturation
+1426:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1427:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE sint32 Ifx__subs(sint32 a, sint32 b)
+1428:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1429:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     sint32 res;
+1430:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("subs %0, %1, %2": "=d" (res) : "d" (a), "d" (b));
+1431:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+1432:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1433:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1434:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** substract unsigned with saturation
+1435:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1436:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE uint32 Ifx__subsu(uint32 a, uint32 b)
+1437:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1438:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     uint32 res;
+1439:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("subs.u %0, %1, %2": "=d" (res) : "d" (a), "d" (b));
+1440:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     return res;
+1441:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1442:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1443:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** \} */
+1444:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1445:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** \defgroup IfxLld_Cpu_Intrinsics_Gnucsingle_assembly Insert Single Assembly Instruction
+1446:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  The next table provides an overview of the intrinsic functions that you can use to insert a single
+1447:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  instruction.You can also use inline assembly but these intrinsics provide a shorthand for frequent
+1448:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  assembly instructions.
+1449:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \ingroup IfxLld_Cpu_Intrinsics_Gnuc
+1450:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  * \{
+1451:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1452:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1453:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Insert DEBUG instruction
+1454:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1455:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE void Ifx__debug(void)
+1456:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1457:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("debug" : : : "memory");
+1458:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** }
+1459:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1460:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Insert a memory barrier
+1461:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1462:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** #define Ifx__mem_barrier __asm__ volatile("":::"memory");
+1463:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** 
+1464:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** /** Insert DSYNC instruction
+1465:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****  */
+1466:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** IFX_INLINE void Ifx__dsync(void)
+1467:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h **** {
+1468:../Libraries/iLLD/TC4xx/Tricore/Cpu/Std/IfxCpu_IntrinsicsGcc.h ****     __asm__ volatile ("dsync" : : : "memory");
+ 105              	 .loc 2 1468 5
+ 106              	
+ 107              	 
+ 108 004e 0D008004 	 dsync
+ 109              	 
+ 110              	
+ 111              	.LBE7:
+ 112              	.LBE6:
+  73:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         SMM_PMTRCSR3.B.VDROOPREQ = voltageDroopConfig->droopRequestType;
+ 113              	 .loc 1 73 9
+ 114              	 .loc 1 73 54 is_stmt 0
+ 115 0052 19430400 	 ld.w %d3,[%a4]4
+ 116              	 .loc 1 73 34
+ 117 0056 9160002F 	 movh.a %a2,61446
+ 118 005a D9222420 	 lea %a2,[%a2]164
+ 119 005e 5422     	 ld.w %d2,[%a2]0
+ 120 0060 37320220 	 insert %d2,%d2,%d3,0,2
+ 121 0064 7422     	 st.w [%a2]0,%d2
+  74:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** 
+  75:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** #if (IFX_PROT_ENABLED == 1U)
+  76:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMM.PROTE, IfxApProt_State_run);
+  77:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** #endif
+  78:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         request = 0;
+ 122              	 .loc 1 78 9 is_stmt 1
+ 123              	.LVL6:
+ 124              	 .loc 1 78 17 is_stmt 0
+ 125 0066 8202     	 mov %d2,0
+ 126 0068 0090     	 ret 
+ 127              	.LVL7:
+ 128              	.L4:
+  57:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** 
+ 129              	 .loc 1 57 22
+ 130 006a 8212     	 mov %d2,1
+ 131              	.LVL8:
+  79:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     }
+  80:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** 
+  81:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     return request;
+ 132              	 .loc 1 81 5 is_stmt 1
+  82:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** }
+ 133              	 .loc 1 82 1 is_stmt 0
+ 134 006c 0090     	 ret 
+ 135              	.LFE229:
+ 137              	 .global IfxSmm_initAndRequestLegacyVoltageDroop_end
+ 138              	IfxSmm_initAndRequestLegacyVoltageDroop_end:
+ 139              	 .section .text.IfxSmm_initLoadJumpConfig,"ax",@progbits
+ 140              	 .align 1
+ 141              	 .global IfxSmm_initLoadJumpConfig
+ 143              	IfxSmm_initLoadJumpConfig:
+ 144              	.LFB230:
+  83:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** 
+  84:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** 
+  85:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** void IfxSmm_initLoadJumpConfig(IfxSmm_LoadJumpConfig *loadJumpConfig)
+  86:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** {
+ 145              	 .loc 1 86 1 is_stmt 1
+ 146              	.LVL9:
+ 147 0000 40AE     	 mov.aa %a14,%SP
+ 148              	.LCFI2:
+  87:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     loadJumpConfig->enableLoadJumpTimer                  = TRUE;
+ 149              	 .loc 1 87 5
+ 150              	 .loc 1 87 58 is_stmt 0
+ 151 0002 8212     	 mov %d2,1
+ 152 0004 3442     	 st.b [%a4]0,%d2
+  88:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     loadJumpConfig->enableLoadJumpTimerOverflowFlag      = TRUE;
+ 153              	 .loc 1 88 5 is_stmt 1
+ 154              	 .loc 1 88 58 is_stmt 0
+ 155 0006 E9420100 	 st.b [%a4]1,%d2
+  89:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     loadJumpConfig->enableLoadJumpTimerOverflowInterrupt = FALSE;
+ 156              	 .loc 1 89 5 is_stmt 1
+ 157              	 .loc 1 89 58 is_stmt 0
+ 158 000a 8202     	 mov %d2,0
+ 159 000c E9420200 	 st.b [%a4]2,%d2
+  90:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     loadJumpConfig->loadjumpTimerCompareValue            = 0x100;
+ 160              	 .loc 1 90 5 is_stmt 1
+ 161              	 .loc 1 90 58 is_stmt 0
+ 162 0010 3B001020 	 mov %d2,256
+ 163 0014 F9420400 	 st.h [%a4]4,%d2
+  91:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** }
+ 164              	 .loc 1 91 1
+ 165 0018 0090     	 ret 
+ 166              	.LFE230:
+ 168              	 .global IfxSmm_initLoadJumpConfig_end
+ 169              	IfxSmm_initLoadJumpConfig_end:
+ 170              	 .section .text.IfxSmm_initAndRequestLoadJump,"ax",@progbits
+ 171              	 .align 1
+ 172              	 .global IfxSmm_initAndRequestLoadJump
+ 174              	IfxSmm_initAndRequestLoadJump:
+ 175              	.LFB231:
+  92:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** 
+  93:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** 
+  94:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** boolean IfxSmm_initAndRequestLoadJump(IfxSmm_LoadJumpConfig *loadJumpConfig)
+  95:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** {
+ 176              	 .loc 1 95 1 is_stmt 1
+ 177              	.LVL10:
+ 178 0000 40AE     	 mov.aa %a14,%SP
+ 179              	.LCFI3:
+  96:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     Ifx_SMM_PMTRCSR0 pmtCsr0;
+ 180              	 .loc 1 96 5
+  97:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     boolean          request = 1;
+ 181              	 .loc 1 97 5
+ 182              	.LVL11:
+  98:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** 
+  99:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     if (!SMM_PMTRCSR2.B.LJTRUN)
+ 183              	 .loc 1 99 5
+ 184              	 .loc 1 99 24 is_stmt 0
+ 185 0002 9160002F 	 movh.a %a2,61446
+ 186 0006 D9222020 	 lea %a2,[%a2]160
+ 187 000a 5422     	 ld.w %d2,[%a2]0
+ 188 000c 37026222 	 extr.u %d2,%d2,4,2
+ 189              	 .loc 1 99 8
+ 190 0010 DF020080 	 jnz %d2,.L8
+ 100:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     {
+ 101:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** #if (IFX_PROT_ENABLED == 1U)
+ 102:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMM.PROTE, IfxApProt_State_config);
+ 103:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** #endif
+ 104:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** 
+ 105:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         pmtCsr0.U               = SMM_PMTRCSR0.U;
+ 191              	 .loc 1 105 9 is_stmt 1
+ 192              	 .loc 1 105 47 is_stmt 0
+ 193 0014 9160002F 	 movh.a %a2,61446
+ 194 0018 D9221820 	 lea %a2,[%a2]152
+ 195 001c 5422     	 ld.w %d2,[%a2]0
+ 106:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         pmtCsr0.B.LJTEN         = loadJumpConfig->enableLoadJumpTimer;
+ 196              	 .loc 1 106 9 is_stmt 1
+ 197              	 .loc 1 106 49 is_stmt 0
+ 198 001e 1443     	 ld.bu %d3,[%a4]0
+ 199              	 .loc 1 106 33
+ 200 0020 67320020 	 ins.t %d2,%d2,0,%d3,0
+ 201              	.LVL12:
+ 107:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         pmtCsr0.B.LJTOVEN       = loadJumpConfig->enableLoadJumpTimerOverflowFlag;
+ 202              	 .loc 1 107 9 is_stmt 1
+ 203              	 .loc 1 107 49 is_stmt 0
+ 204 0024 39430100 	 ld.bu %d3,[%a4]1
+ 205              	 .loc 1 107 33
+ 206 0028 67320120 	 ins.t %d2,%d2,1,%d3,0
+ 108:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         pmtCsr0.B.LJTOVIEN      = loadJumpConfig->enableLoadJumpTimerOverflowInterrupt;
+ 207              	 .loc 1 108 9 is_stmt 1
+ 208              	 .loc 1 108 49 is_stmt 0
+ 209 002c 39430200 	 ld.bu %d3,[%a4]2
+ 210              	 .loc 1 108 33
+ 211 0030 67320220 	 ins.t %d2,%d2,2,%d3,0
+ 109:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         SMM_PMTRCSR0.U          = pmtCsr0.U;
+ 212              	 .loc 1 109 9 is_stmt 1
+ 213              	 .loc 1 109 33 is_stmt 0
+ 214 0034 7422     	 st.w [%a2]0,%d2
+ 110:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         SMM_PMTRCSR1.B.LJTCV    = loadJumpConfig->loadjumpTimerCompareValue;
+ 215              	 .loc 1 110 9 is_stmt 1
+ 216              	 .loc 1 110 49 is_stmt 0
+ 217 0036 B9430400 	 ld.hu %d3,[%a4]4
+ 218              	 .loc 1 110 33
+ 219 003a 9160002F 	 movh.a %a2,61446
+ 220 003e D9221C20 	 lea %a2,[%a2]156
+ 221 0042 5422     	 ld.w %d2,[%a2]0
+ 222              	.LVL13:
+ 223 0044 37321020 	 insert %d2,%d2,%d3,0,16
+ 224 0048 7422     	 st.w [%a2]0,%d2
+ 111:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         __dsync();
+ 225              	 .loc 1 111 9 is_stmt 1
+ 226              	.LBB8:
+ 227              	.LBB9:
+ 228              	 .loc 2 1468 5
+ 229              	
+ 230              	 
+ 231 004a 0D008004 	 dsync
+ 232              	 
+ 233              	
+ 234              	.LBE9:
+ 235              	.LBE8:
+ 112:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         SMM_PMTRCSR2.B.LDJMPREQ = 1U;
+ 236              	 .loc 1 112 9
+ 237              	 .loc 1 112 33 is_stmt 0
+ 238 004e 9160002F 	 movh.a %a2,61446
+ 239 0052 D9222020 	 lea %a2,[%a2]160
+ 240 0056 5422     	 ld.w %d2,[%a2]0
+ 241 0058 B7120220 	 insert %d2,%d2,1,0,2
+ 242 005c 7422     	 st.w [%a2]0,%d2
+ 113:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** 
+ 114:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** #if (IFX_PROT_ENABLED == 1U)
+ 115:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMM.PROTE, IfxApProt_State_run);
+ 116:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** #endif
+ 117:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         request = 0;
+ 243              	 .loc 1 117 9 is_stmt 1
+ 244              	.LVL14:
+ 245              	 .loc 1 117 17 is_stmt 0
+ 246 005e 8202     	 mov %d2,0
+ 247 0060 0090     	 ret 
+ 248              	.LVL15:
+ 249              	.L8:
+  97:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** 
+ 250              	 .loc 1 97 22
+ 251 0062 8212     	 mov %d2,1
+ 252              	.LVL16:
+ 118:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     }
+ 119:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** 
+ 120:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     return request;
+ 253              	 .loc 1 120 5 is_stmt 1
+ 121:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** }
+ 254              	 .loc 1 121 1 is_stmt 0
+ 255 0064 0090     	 ret 
+ 256              	.LFE231:
+ 258              	 .global IfxSmm_initAndRequestLoadJump_end
+ 259              	IfxSmm_initAndRequestLoadJump_end:
+ 260              	 .section .text.IfxSmm_initVoltageDroopConfig,"ax",@progbits
+ 261              	 .align 1
+ 262              	 .global IfxSmm_initVoltageDroopConfig
+ 264              	IfxSmm_initVoltageDroopConfig:
+ 265              	.LFB232:
+ 122:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** 
+ 123:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** 
+ 124:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** void IfxSmm_initVoltageDroopConfig(IfxSmm_VoltageDroopConfig *voltageDroopConfig)
+ 125:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** {
+ 266              	 .loc 1 125 1 is_stmt 1
+ 267              	.LVL17:
+ 268 0000 40AE     	 mov.aa %a14,%SP
+ 269              	.LCFI4:
+ 126:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     voltageDroopConfig->droopReq = 1;
+ 270              	 .loc 1 126 5
+ 271              	 .loc 1 126 34 is_stmt 0
+ 272 0002 8212     	 mov %d2,1
+ 273 0004 E9420500 	 st.b [%a4]5,%d2
+ 127:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     voltageDroopConfig->dir      = FALSE;
+ 274              	 .loc 1 127 5 is_stmt 1
+ 275              	 .loc 1 127 34 is_stmt 0
+ 276 0008 8202     	 mov %d2,0
+ 277 000a E9420400 	 st.b [%a4]4,%d2
+ 128:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     voltageDroopConfig->steps    = IfxSmm_VoltageDroopStep_25mV;
+ 278              	 .loc 1 128 5 is_stmt 1
+ 279              	 .loc 1 128 34 is_stmt 0
+ 280 000e 8252     	 mov %d2,5
+ 281 0010 7442     	 st.w [%a4]0,%d2
+ 129:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     voltageDroopConfig->dwellCnt = 0x5;
+ 282              	 .loc 1 129 5 is_stmt 1
+ 283              	 .loc 1 129 34 is_stmt 0
+ 284 0012 E9420600 	 st.b [%a4]6,%d2
+ 130:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** }
+ 285              	 .loc 1 130 1
+ 286 0016 0090     	 ret 
+ 287              	.LFE232:
+ 289              	 .global IfxSmm_initVoltageDroopConfig_end
+ 290              	IfxSmm_initVoltageDroopConfig_end:
+ 291              	 .section .text.IfxSmm_initAndRequestVoltageDroop,"ax",@progbits
+ 292              	 .align 1
+ 293              	 .global IfxSmm_initAndRequestVoltageDroop
+ 295              	IfxSmm_initAndRequestVoltageDroop:
+ 296              	.LFB233:
+ 131:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** 
+ 132:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** 
+ 133:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** boolean IfxSmm_initAndRequestVoltageDroop(IfxSmm_VoltageDroopConfig *voltageDroopConfig)
+ 134:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** {
+ 297              	 .loc 1 134 1 is_stmt 1
+ 298              	.LVL18:
+ 299 0000 40AE     	 mov.aa %a14,%SP
+ 300              	.LCFI5:
+ 135:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     boolean          request = 1;
+ 301              	 .loc 1 135 5
+ 302              	.LVL19:
+ 136:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     Ifx_SMM_DRPCTRL  drpCtrl;
+ 303              	 .loc 1 136 5
+ 137:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     Ifx_SMM_PMTRCSR0 pmtCsr0;
+ 304              	 .loc 1 137 5
+ 138:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** 
+ 139:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     /* Busy bit check */
+ 140:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     if (!SMM_DRPCTRL.B.BUSY)
+ 305              	 .loc 1 140 5
+ 306              	 .loc 1 140 23 is_stmt 0
+ 307 0002 9160002F 	 movh.a %a2,61446
+ 308 0006 D9223020 	 lea %a2,[%a2]176
+ 309 000a 5422     	 ld.w %d2,[%a2]0
+ 310              	 .loc 1 140 8
+ 311 000c 6FE20080 	 jnz.t %d2,14,.L13
+ 141:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     {
+ 142:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         /* Check error bit status.IF error bit set clear earlier errors*/
+ 143:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         if (SMM_DRPCTRL.B.ERR)
+ 312              	 .loc 1 143 9 is_stmt 1
+ 313              	 .loc 1 143 26 is_stmt 0
+ 314 0010 5422     	 ld.w %d2,[%a2]0
+ 315              	 .loc 1 143 12
+ 316 0012 6FB20000 	 jz.t %d2,11,.L12
+ 144:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         {
+ 145:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****             SMM_DRPCTRL.B.ERRCLR = 1;
+ 317              	 .loc 1 145 13 is_stmt 1
+ 318              	 .loc 1 145 34 is_stmt 0
+ 319 0016 5422     	 ld.w %d2,[%a2]0
+ 320 0018 B7128127 	 insert %d2,%d2,1,15,1
+ 321 001c 7422     	 st.w [%a2]0,%d2
+ 322              	.L12:
+ 146:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         }
+ 147:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** 
+ 148:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         /*Reading register*/
+ 149:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         drpCtrl.U           = SMM_DRPCTRL.U;
+ 323              	 .loc 1 149 9 is_stmt 1
+ 324              	 .loc 1 149 42 is_stmt 0
+ 325 001e 9160002F 	 movh.a %a2,61446
+ 326 0022 D9223020 	 lea %a2,[%a2]176
+ 327 0026 5422     	 ld.w %d2,[%a2]0
+ 150:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         pmtCsr0.U           = SMM_PMTRCSR0.U;
+ 328              	 .loc 1 150 9 is_stmt 1
+ 329              	 .loc 1 150 43 is_stmt 0
+ 330 0028 9160003F 	 movh.a %a3,61446
+ 331 002c D9331820 	 lea %a3,[%a3]152
+ 332 0030 5433     	 ld.w %d3,[%a3]0
+ 151:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** 
+ 152:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         drpCtrl.B.REQ       = voltageDroopConfig->droopReq;
+ 333              	 .loc 1 152 9 is_stmt 1
+ 334              	 .loc 1 152 49 is_stmt 0
+ 335 0032 39440500 	 ld.bu %d4,[%a4]5
+ 336              	 .loc 1 152 29
+ 337 0036 67420020 	 ins.t %d2,%d2,0,%d4,0
+ 338              	.LVL20:
+ 153:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         drpCtrl.B.DWELL_CNT = voltageDroopConfig->dwellCnt;
+ 339              	 .loc 1 153 9 is_stmt 1
+ 340              	 .loc 1 153 49 is_stmt 0
+ 341 003a 39440600 	 ld.bu %d4,[%a4]6
+ 342              	 .loc 1 153 29
+ 343 003e 37428420 	 insert %d2,%d2,%d4,1,4
+ 154:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         drpCtrl.B.DIR       = voltageDroopConfig->dir;
+ 344              	 .loc 1 154 9 is_stmt 1
+ 345              	 .loc 1 154 49 is_stmt 0
+ 346 0042 39440400 	 ld.bu %d4,[%a4]4
+ 347              	 .loc 1 154 29
+ 348 0046 67420920 	 ins.t %d2,%d2,9,%d4,0
+ 155:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         drpCtrl.B.STEPS     = voltageDroopConfig->steps;
+ 349              	 .loc 1 155 9 is_stmt 1
+ 350              	 .loc 1 155 49 is_stmt 0
+ 351 004a 5444     	 ld.w %d4,[%a4]0
+ 352              	 .loc 1 155 29
+ 353 004c 37428422 	 insert %d2,%d2,%d4,5,4
+ 156:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** 
+ 157:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         pmtCsr0.B.DROOPENAB = 1u;
+ 354              	 .loc 1 157 9 is_stmt 1
+ 355              	 .loc 1 157 29 is_stmt 0
+ 356 0050 B7130133 	 insert %d3,%d3,1,6,1
+ 357              	.LVL21:
+ 158:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** #if (IFX_PROT_ENABLED == 1U)
+ 159:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMM.PROTE, IfxApProt_State_config);
+ 160:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** #endif
+ 161:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         SMM_PMTRCSR0.U = pmtCsr0.U;
+ 358              	 .loc 1 161 9 is_stmt 1
+ 359              	 .loc 1 161 24 is_stmt 0
+ 360 0054 7433     	 st.w [%a3]0,%d3
+ 162:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         SMM_DRPCTRL.U  = drpCtrl.U;
+ 361              	 .loc 1 162 9 is_stmt 1
+ 362              	 .loc 1 162 24 is_stmt 0
+ 363 0056 7422     	 st.w [%a2]0,%d2
+ 163:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** #if (IFX_PROT_ENABLED == 1U)
+ 164:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMM.PROTE, IfxApProt_State_run);
+ 165:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** #endif
+ 166:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****         request = 0;
+ 364              	 .loc 1 166 9 is_stmt 1
+ 365              	.LVL22:
+ 366              	 .loc 1 166 17 is_stmt 0
+ 367 0058 8202     	 mov %d2,0
+ 368              	.LVL23:
+ 369 005a 0090     	 ret 
+ 370              	.LVL24:
+ 371              	.L13:
+ 135:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     Ifx_SMM_DRPCTRL  drpCtrl;
+ 372              	 .loc 1 135 22
+ 373 005c 8212     	 mov %d2,1
+ 374              	.LVL25:
+ 167:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     }
+ 168:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** 
+ 169:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     return request;
+ 375              	 .loc 1 169 5 is_stmt 1
+ 170:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** }
+ 376              	 .loc 1 170 1 is_stmt 0
+ 377 005e 0090     	 ret 
+ 378              	.LFE233:
+ 380              	 .global IfxSmm_initAndRequestVoltageDroop_end
+ 381              	IfxSmm_initAndRequestVoltageDroop_end:
+ 382              	 .section .text.IfxSmm_configureAccessToSmm,"ax",@progbits
+ 383              	 .align 1
+ 384              	 .global IfxSmm_configureAccessToSmm
+ 386              	IfxSmm_configureAccessToSmm:
+ 387              	.LFB234:
+ 171:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** 
+ 172:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** 
+ 173:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** void IfxSmm_configureAccessToSmm(IfxApApu_ApuConfig *apConfig)
+ 174:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** {
+ 388              	 .loc 1 174 1 is_stmt 1
+ 389              	.LVL26:
+ 390 0000 40AE     	 mov.aa %a14,%SP
+ 391              	.LCFI6:
+ 175:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c ****     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_SMM.ACCEN, apConfig);
+ 392              	 .loc 1 175 5
+ 393 0002 4045     	 mov.aa %a5,%a4
+ 394 0004 9160004F 	 movh.a %a4,61446
+ 395              	.LVL27:
+ 396 0008 D9441800 	 lea %a4,[%a4]24
+ 397 000c 6D000000 	 call IfxApApu_init
+ 398              	.LVL28:
+ 176:../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.c **** }
+ 399              	 .loc 1 176 1 is_stmt 0
+ 400 0010 0090     	 ret 
+ 401              	.LFE234:
+ 403              	 .global IfxSmm_configureAccessToSmm_end
+ 404              	IfxSmm_configureAccessToSmm_end:
+ 505              	.Letext0:
+ 506              	 .file 3 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 507              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 508              	 .file 5 "../Libraries/Infra/Sfr/TC4Dx/IfxSmm_regdef.h"
+ 509              	 .file 6 "../Libraries/iLLD/TC4xx/CpuGeneric/Ap/IfxAccen_regdef.h"
+ 510              	 .file 7 "../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h"
+ 511              	 .file 8 "../Libraries/iLLD/TC4xx/Tricore/Smm/Std/IfxSmm.h"
+ 11250 0000 00000000 	 .word IfxSmm_initVoltageDroopLegacyConfig
+ 11251 0004 00000000 	 .word IfxSmm_initVoltageDroopLegacyConfig_end
+ 11252 0008 04001444 	 .word 0x44140004
+ 11253 000c 00001000 	 .word 0x00100000
+ 11254 0010 00000000 	 .word 0x00000000
+ 11255 0014 C0000000 	 .word 0x000000c0
+ 11256 0018 00000000 	 .word IfxSmm_initAndRequestLegacyVoltageDroop
+ 11257 001c 00000000 	 .word IfxSmm_initAndRequestLegacyVoltageDroop_end
+ 11258 0020 0C001444 	 .word 0x4414000c
+ 11259 0024 00001000 	 .word 0x00100000
+ 11260 0028 04000000 	 .word 0x00000004
+ 11261 002c C0010000 	 .word 0x000001c0
+ 11262 0030 00000000 	 .word IfxSmm_initLoadJumpConfig
+ 11263 0034 00000000 	 .word IfxSmm_initLoadJumpConfig_end
+ 11264 0038 04001044 	 .word 0x44100004
+ 11265 003c 00001000 	 .word 0x00100000
+ 11266 0040 00000000 	 .word 0x00000000
+ 11267 0044 C0000000 	 .word 0x000000c0
+ 11268 0048 00000000 	 .word IfxSmm_initAndRequestLoadJump
+ 11269 004c 00000000 	 .word IfxSmm_initAndRequestLoadJump_end
+ 11270 0050 0C001444 	 .word 0x4414000c
+ 11271 0054 00001000 	 .word 0x00100000
+ 11272 0058 04000000 	 .word 0x00000004
+ 11273 005c C0010000 	 .word 0x000001c0
+ 11274 0060 00000000 	 .word IfxSmm_initVoltageDroopConfig
+ 11275 0064 00000000 	 .word IfxSmm_initVoltageDroopConfig_end
+ 11276 0068 04001044 	 .word 0x44100004
+ 11277 006c 00001000 	 .word 0x00100000
+ 11278 0070 00000000 	 .word 0x00000000
+ 11279 0074 C0000000 	 .word 0x000000c0
+ 11280 0078 00000000 	 .word IfxSmm_initAndRequestVoltageDroop
+ 11281 007c 00000000 	 .word IfxSmm_initAndRequestVoltageDroop_end
+ 11282 0080 1C001C44 	 .word 0x441c001c
+ 11283 0084 00001000 	 .word 0x00100000
+ 11284 0088 04000000 	 .word 0x00000004
+ 11285 008c C0000000 	 .word 0x000000c0
+ 11286 0090 00000000 	 .word IfxSmm_configureAccessToSmm
+ 11287 0094 00000000 	 .word IfxSmm_configureAccessToSmm_end
+ 11288 0098 00003044 	 .word 0x44300000
+ 11289 009c 00001000 	 .word 0x00100000
+ 11290 00a0 00000000 	 .word 0x00000000
+ 11291 00a4 40000200 	 .word 0x00020040
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxSmm.c
+                            *ABS*:00000000 IfxSmm.c
+    {standard input}:10     .text.IfxSmm_initVoltageDroopLegacyConfig:00000000 IfxSmm_initVoltageDroopLegacyConfig
+    {standard input}:41     .text.IfxSmm_initVoltageDroopLegacyConfig:00000020 IfxSmm_initVoltageDroopLegacyConfig_end
+    {standard input}:46     .text.IfxSmm_initAndRequestLegacyVoltageDroop:00000000 IfxSmm_initAndRequestLegacyVoltageDroop
+    {standard input}:138    .text.IfxSmm_initAndRequestLegacyVoltageDroop:0000006e IfxSmm_initAndRequestLegacyVoltageDroop_end
+    {standard input}:143    .text.IfxSmm_initLoadJumpConfig:00000000 IfxSmm_initLoadJumpConfig
+    {standard input}:169    .text.IfxSmm_initLoadJumpConfig:0000001a IfxSmm_initLoadJumpConfig_end
+    {standard input}:174    .text.IfxSmm_initAndRequestLoadJump:00000000 IfxSmm_initAndRequestLoadJump
+    {standard input}:259    .text.IfxSmm_initAndRequestLoadJump:00000066 IfxSmm_initAndRequestLoadJump_end
+    {standard input}:264    .text.IfxSmm_initVoltageDroopConfig:00000000 IfxSmm_initVoltageDroopConfig
+    {standard input}:290    .text.IfxSmm_initVoltageDroopConfig:00000018 IfxSmm_initVoltageDroopConfig_end
+    {standard input}:295    .text.IfxSmm_initAndRequestVoltageDroop:00000000 IfxSmm_initAndRequestVoltageDroop
+    {standard input}:381    .text.IfxSmm_initAndRequestVoltageDroop:00000060 IfxSmm_initAndRequestVoltageDroop_end
+    {standard input}:386    .text.IfxSmm_configureAccessToSmm:00000000 IfxSmm_configureAccessToSmm
+    {standard input}:404    .text.IfxSmm_configureAccessToSmm:00000012 IfxSmm_configureAccessToSmm_end
+
+UNDEFINED SYMBOLS
+IfxApApu_init

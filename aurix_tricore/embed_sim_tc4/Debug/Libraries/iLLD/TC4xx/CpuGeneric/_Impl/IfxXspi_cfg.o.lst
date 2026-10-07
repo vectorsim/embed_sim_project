@@ -1,0 +1,25 @@
+   1              	
+   2              	 .file "IfxXspi_cfg.c"
+   3              	 .file "IfxXspi_cfg.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .global IfxXspi_cfg_indexMap
+   7              	 .section .rodata.IfxXspi_cfg_indexMap,"a"
+   8              	 .align 2
+  11              	IfxXspi_cfg_indexMap:
+  12 0000 000004F9 	 .word -117178368
+  13 0004 00000000 	 .word 0
+  14              	.section .text,"ax",@progbits
+  15              	.Letext0:
+  16              	 .file 1 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+  17              	 .file 2 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+  18              	 .file 3 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+  19              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/IfxXspi_regdef.h"
+  20              	 .file 5 "../Libraries/iLLD/TC4xx/CpuGeneric/_Impl/TC4Dx/IfxXspi_cfg_TC4Dx.h"
+  21              	 .file 6 "../Libraries/iLLD/TC4xx/CpuGeneric/_Impl/IfxXspi_cfg.c"
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxXspi_cfg.c
+                            *ABS*:00000000 IfxXspi_cfg.c
+    {standard input}:11     .rodata.IfxXspi_cfg_indexMap:00000000 IfxXspi_cfg_indexMap
+
+NO UNDEFINED SYMBOLS

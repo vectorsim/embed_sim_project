@@ -1,0 +1,588 @@
+   1              	
+   2              	 .file "IfxEray_PinMap_TC4Dx_BGA436_COM.c"
+   3              	 .file "IfxEray_PinMap_TC4Dx_BGA436_COM.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .global IfxEray_Txen_Out_pinTable
+   7              	 .section .data.IfxEray_Txen_Out_pinTable,"aw"
+   8              	 .align 2
+  11              	IfxEray_Txen_Out_pinTable:
+  12 0000 00000000 	 .word IfxEray0_TXENA_P02_4_OUT
+  13 0004 00000000 	 .word IfxEray0_TXENA_P10_9_OUT
+  14 0008 00000000 	 .word IfxEray0_TXENA_P14_9_OUT
+  15 000c 00000000 	 .word 0
+  16 0010 00000000 	 .word 0
+  17 0014 00000000 	 .word IfxEray0_TXENB_P02_5_OUT
+  18 0018 00000000 	 .word IfxEray0_TXENB_P10_6_OUT
+  19 001c 00000000 	 .word IfxEray0_TXENB_P10_9_OUT
+  20 0020 00000000 	 .word IfxEray0_TXENB_P14_6_OUT
+  21 0024 00000000 	 .word IfxEray0_TXENB_P14_9_OUT
+  22 0028 00000000 	 .word IfxEray1_TXENA_P01_14_OUT
+  23 002c 00000000 	 .word IfxEray1_TXENA_P10_9_OUT
+  24 0030 00000000 	 .word IfxEray1_TXENA_P14_9_OUT
+  25 0034 00000000 	 .word 0
+  26 0038 00000000 	 .word 0
+  27 003c 00000000 	 .word IfxEray1_TXENB_P02_15_OUT
+  28 0040 00000000 	 .word IfxEray1_TXENB_P04_2_OUT
+  29 0044 00000000 	 .word IfxEray1_TXENB_P10_6_OUT
+  30 0048 00000000 	 .word IfxEray1_TXENB_P10_9_OUT
+  31 004c 00000000 	 .word IfxEray1_TXENB_P14_6_OUT
+  32              	 .global IfxEray_Txd_Out_pinTable
+  33              	 .section .data.IfxEray_Txd_Out_pinTable,"aw"
+  34              	 .align 2
+  37              	IfxEray_Txd_Out_pinTable:
+  38 0000 00000000 	 .word IfxEray0_TXDA_P02_0_OUT
+  39 0004 00000000 	 .word IfxEray0_TXDA_P10_0_OUT
+  40 0008 00000000 	 .word IfxEray0_TXDA_P10_10_OUT
+  41 000c 00000000 	 .word IfxEray0_TXDA_P14_0_OUT
+  42 0010 00000000 	 .word IfxEray0_TXDA_P14_10_OUT
+  43 0014 00000000 	 .word IfxEray0_TXDB_P02_2_OUT
+  44 0018 00000000 	 .word IfxEray0_TXDB_P10_5_OUT
+  45 001c 00000000 	 .word IfxEray0_TXDB_P14_0_OUT
+  46 0020 00000000 	 .word IfxEray0_TXDB_P14_5_OUT
+  47 0024 00000000 	 .word 0
+  48 0028 00000000 	 .word IfxEray1_TXDA_P01_12_OUT
+  49 002c 00000000 	 .word IfxEray1_TXDA_P10_10_OUT
+  50 0030 00000000 	 .word IfxEray1_TXDA_P14_10_OUT
+  51 0034 00000000 	 .word 0
+  52 0038 00000000 	 .word 0
+  53 003c 00000000 	 .word IfxEray1_TXDB_P01_13_OUT
+  54 0040 00000000 	 .word IfxEray1_TXDB_P10_0_OUT
+  55 0044 00000000 	 .word IfxEray1_TXDB_P10_5_OUT
+  56 0048 00000000 	 .word IfxEray1_TXDB_P14_5_OUT
+  57 004c 00000000 	 .word 0
+  58              	 .global IfxEray_Rxd_In_pinTable
+  59              	 .section .data.IfxEray_Rxd_In_pinTable,"aw"
+  60              	 .align 2
+  63              	IfxEray_Rxd_In_pinTable:
+  64 0000 00000000 	 .word IfxEray0_RXDA0_P14_8_IN
+  65 0004 00000000 	 .word 0
+  66 0008 00000000 	 .word IfxEray0_RXDA2_P02_1_IN
+  67 000c 00000000 	 .word IfxEray0_RXDA3_P14_1_IN
+  68 0010 00000000 	 .word IfxEray0_RXDB0_P14_7_IN
+  69 0014 00000000 	 .word 0
+  70 0018 00000000 	 .word IfxEray0_RXDB2_P02_3_IN
+  71 001c 00000000 	 .word IfxEray0_RXDB3_P14_1_IN
+  72 0020 00000000 	 .word IfxEray1_RXDA0_P14_8_IN
+  73 0024 00000000 	 .word IfxEray1_RXDA1_P01_1_IN
+  74 0028 00000000 	 .word 0
+  75 002c 00000000 	 .word IfxEray1_RXDA3_P10_8_IN
+  76 0030 00000000 	 .word IfxEray1_RXDB0_P14_7_IN
+  77 0034 00000000 	 .word IfxEray1_RXDB1_P01_8_IN
+  78 0038 00000000 	 .word IfxEray1_RXDB2_P03_6_IN
+  79 003c 00000000 	 .word IfxEray1_RXDB3_P10_7_IN
+  80              	 .global IfxEray1_TXENB_P14_6_OUT
+  81              	 .section .rodata.IfxEray1_TXENB_P14_6_OUT,"a"
+  82              	 .align 2
+  85              	IfxEray1_TXENB_P14_6_OUT:
+  86 0000 00D041F4 	 .word -197013504
+  87 0004 01000000 	 .word 1
+  88 0008 00D803F0 	 .word -268183552
+  89 000c 06       	 .byte 6
+  90 000d 000000   	 .zero 3
+  91 0010 71000000 	 .word 113
+  92              	 .global IfxEray1_TXENB_P10_9_OUT
+  93              	 .section .rodata.IfxEray1_TXENB_P10_9_OUT,"a"
+  94              	 .align 2
+  97              	IfxEray1_TXENB_P10_9_OUT:
+  98 0000 00D041F4 	 .word -197013504
+  99 0004 01000000 	 .word 1
+ 100 0008 00C803F0 	 .word -268187648
+ 101 000c 09       	 .byte 9
+ 102 000d 000000   	 .zero 3
+ 103 0010 81000000 	 .word 129
+ 104              	 .global IfxEray1_TXENB_P10_6_OUT
+ 105              	 .section .rodata.IfxEray1_TXENB_P10_6_OUT,"a"
+ 106              	 .align 2
+ 109              	IfxEray1_TXENB_P10_6_OUT:
+ 110 0000 00D041F4 	 .word -197013504
+ 111 0004 01000000 	 .word 1
+ 112 0008 00C803F0 	 .word -268187648
+ 113 000c 06       	 .byte 6
+ 114 000d 000000   	 .zero 3
+ 115 0010 71000000 	 .word 113
+ 116              	 .global IfxEray1_TXENB_P04_2_OUT
+ 117              	 .section .rodata.IfxEray1_TXENB_P04_2_OUT,"a"
+ 118              	 .align 2
+ 121              	IfxEray1_TXENB_P04_2_OUT:
+ 122 0000 00D041F4 	 .word -197013504
+ 123 0004 01000000 	 .word 1
+ 124 0008 00B003F0 	 .word -268193792
+ 125 000c 02       	 .byte 2
+ 126 000d 000000   	 .zero 3
+ 127 0010 61000000 	 .word 97
+ 128              	 .global IfxEray1_TXENB_P02_15_OUT
+ 129              	 .section .rodata.IfxEray1_TXENB_P02_15_OUT,"a"
+ 130              	 .align 2
+ 133              	IfxEray1_TXENB_P02_15_OUT:
+ 134 0000 00D041F4 	 .word -197013504
+ 135 0004 01000000 	 .word 1
+ 136 0008 00A803F0 	 .word -268195840
+ 137 000c 0F       	 .byte 15
+ 138 000d 000000   	 .zero 3
+ 139 0010 61000000 	 .word 97
+ 140              	 .global IfxEray1_TXENA_P14_9_OUT
+ 141              	 .section .rodata.IfxEray1_TXENA_P14_9_OUT,"a"
+ 142              	 .align 2
+ 145              	IfxEray1_TXENA_P14_9_OUT:
+ 146 0000 00D041F4 	 .word -197013504
+ 147 0004 00000000 	 .word 0
+ 148 0008 00D803F0 	 .word -268183552
+ 149 000c 09       	 .byte 9
+ 150 000d 000000   	 .zero 3
+ 151 0010 71000000 	 .word 113
+ 152              	 .global IfxEray1_TXENA_P10_9_OUT
+ 153              	 .section .rodata.IfxEray1_TXENA_P10_9_OUT,"a"
+ 154              	 .align 2
+ 157              	IfxEray1_TXENA_P10_9_OUT:
+ 158 0000 00D041F4 	 .word -197013504
+ 159 0004 00000000 	 .word 0
+ 160 0008 00C803F0 	 .word -268187648
+ 161 000c 09       	 .byte 9
+ 162 000d 000000   	 .zero 3
+ 163 0010 71000000 	 .word 113
+ 164              	 .global IfxEray1_TXENA_P01_14_OUT
+ 165              	 .section .rodata.IfxEray1_TXENA_P01_14_OUT,"a"
+ 166              	 .align 2
+ 169              	IfxEray1_TXENA_P01_14_OUT:
+ 170 0000 00D041F4 	 .word -197013504
+ 171 0004 00000000 	 .word 0
+ 172 0008 00A403F0 	 .word -268196864
+ 173 000c 0E       	 .byte 14
+ 174 000d 000000   	 .zero 3
+ 175 0010 61000000 	 .word 97
+ 176              	 .global IfxEray1_TXDB_P14_5_OUT
+ 177              	 .section .rodata.IfxEray1_TXDB_P14_5_OUT,"a"
+ 178              	 .align 2
+ 181              	IfxEray1_TXDB_P14_5_OUT:
+ 182 0000 00D041F4 	 .word -197013504
+ 183 0004 01000000 	 .word 1
+ 184 0008 00D803F0 	 .word -268183552
+ 185 000c 05       	 .byte 5
+ 186 000d 000000   	 .zero 3
+ 187 0010 71000000 	 .word 113
+ 188              	 .global IfxEray1_TXDB_P10_5_OUT
+ 189              	 .section .rodata.IfxEray1_TXDB_P10_5_OUT,"a"
+ 190              	 .align 2
+ 193              	IfxEray1_TXDB_P10_5_OUT:
+ 194 0000 00D041F4 	 .word -197013504
+ 195 0004 01000000 	 .word 1
+ 196 0008 00C803F0 	 .word -268187648
+ 197 000c 05       	 .byte 5
+ 198 000d 000000   	 .zero 3
+ 199 0010 E1000000 	 .word 225
+ 200              	 .global IfxEray1_TXDB_P10_0_OUT
+ 201              	 .section .rodata.IfxEray1_TXDB_P10_0_OUT,"a"
+ 202              	 .align 2
+ 205              	IfxEray1_TXDB_P10_0_OUT:
+ 206 0000 00D041F4 	 .word -197013504
+ 207 0004 01000000 	 .word 1
+ 208 0008 00C803F0 	 .word -268187648
+ 209 000c 00       	 .byte 0
+ 210 000d 000000   	 .zero 3
+ 211 0010 D1000000 	 .word 209
+ 212              	 .global IfxEray1_TXDB_P01_13_OUT
+ 213              	 .section .rodata.IfxEray1_TXDB_P01_13_OUT,"a"
+ 214              	 .align 2
+ 217              	IfxEray1_TXDB_P01_13_OUT:
+ 218 0000 00D041F4 	 .word -197013504
+ 219 0004 01000000 	 .word 1
+ 220 0008 00A403F0 	 .word -268196864
+ 221 000c 0D       	 .byte 13
+ 222 000d 000000   	 .zero 3
+ 223 0010 61000000 	 .word 97
+ 224              	 .global IfxEray1_TXDA_P14_10_OUT
+ 225              	 .section .rodata.IfxEray1_TXDA_P14_10_OUT,"a"
+ 226              	 .align 2
+ 229              	IfxEray1_TXDA_P14_10_OUT:
+ 230 0000 00D041F4 	 .word -197013504
+ 231 0004 00000000 	 .word 0
+ 232 0008 00D803F0 	 .word -268183552
+ 233 000c 0A       	 .byte 10
+ 234 000d 000000   	 .zero 3
+ 235 0010 71000000 	 .word 113
+ 236              	 .global IfxEray1_TXDA_P10_10_OUT
+ 237              	 .section .rodata.IfxEray1_TXDA_P10_10_OUT,"a"
+ 238              	 .align 2
+ 241              	IfxEray1_TXDA_P10_10_OUT:
+ 242 0000 00D041F4 	 .word -197013504
+ 243 0004 00000000 	 .word 0
+ 244 0008 00C803F0 	 .word -268187648
+ 245 000c 0A       	 .byte 10
+ 246 000d 000000   	 .zero 3
+ 247 0010 71000000 	 .word 113
+ 248              	 .global IfxEray1_TXDA_P01_12_OUT
+ 249              	 .section .rodata.IfxEray1_TXDA_P01_12_OUT,"a"
+ 250              	 .align 2
+ 253              	IfxEray1_TXDA_P01_12_OUT:
+ 254 0000 00D041F4 	 .word -197013504
+ 255 0004 00000000 	 .word 0
+ 256 0008 00A403F0 	 .word -268196864
+ 257 000c 0C       	 .byte 12
+ 258 000d 000000   	 .zero 3
+ 259 0010 61000000 	 .word 97
+ 260              	 .global IfxEray1_RXDB3_P10_7_IN
+ 261              	 .section .rodata.IfxEray1_RXDB3_P10_7_IN,"a"
+ 262              	 .align 2
+ 265              	IfxEray1_RXDB3_P10_7_IN:
+ 266 0000 00D041F4 	 .word -197013504
+ 267 0004 01000000 	 .word 1
+ 268 0008 00C803F0 	 .word -268187648
+ 269 000c 07       	 .byte 7
+ 270 000d 000000   	 .zero 3
+ 271 0010 03000000 	 .word 3
+ 272              	 .global IfxEray1_RXDB2_P03_6_IN
+ 273              	 .section .rodata.IfxEray1_RXDB2_P03_6_IN,"a"
+ 274              	 .align 2
+ 277              	IfxEray1_RXDB2_P03_6_IN:
+ 278 0000 00D041F4 	 .word -197013504
+ 279 0004 01000000 	 .word 1
+ 280 0008 00AC03F0 	 .word -268194816
+ 281 000c 06       	 .byte 6
+ 282 000d 000000   	 .zero 3
+ 283 0010 02000000 	 .word 2
+ 284              	 .global IfxEray1_RXDB1_P01_8_IN
+ 285              	 .section .rodata.IfxEray1_RXDB1_P01_8_IN,"a"
+ 286              	 .align 2
+ 289              	IfxEray1_RXDB1_P01_8_IN:
+ 290 0000 00D041F4 	 .word -197013504
+ 291 0004 01000000 	 .word 1
+ 292 0008 00A403F0 	 .word -268196864
+ 293 000c 08       	 .byte 8
+ 294 000d 000000   	 .zero 3
+ 295 0010 01000000 	 .word 1
+ 296              	 .global IfxEray1_RXDB0_P14_7_IN
+ 297              	 .section .rodata.IfxEray1_RXDB0_P14_7_IN,"a"
+ 298              	 .align 2
+ 301              	IfxEray1_RXDB0_P14_7_IN:
+ 302 0000 00D041F4 	 .word -197013504
+ 303 0004 01000000 	 .word 1
+ 304 0008 00D803F0 	 .word -268183552
+ 305 000c 07       	 .byte 7
+ 306 000d 000000   	 .zero 3
+ 307 0010 00000000 	 .word 0
+ 308              	 .global IfxEray1_RXDA3_P10_8_IN
+ 309              	 .section .rodata.IfxEray1_RXDA3_P10_8_IN,"a"
+ 310              	 .align 2
+ 313              	IfxEray1_RXDA3_P10_8_IN:
+ 314 0000 00D041F4 	 .word -197013504
+ 315 0004 00000000 	 .word 0
+ 316 0008 00C803F0 	 .word -268187648
+ 317 000c 08       	 .byte 8
+ 318 000d 000000   	 .zero 3
+ 319 0010 03000000 	 .word 3
+ 320              	 .global IfxEray1_RXDA1_P01_1_IN
+ 321              	 .section .rodata.IfxEray1_RXDA1_P01_1_IN,"a"
+ 322              	 .align 2
+ 325              	IfxEray1_RXDA1_P01_1_IN:
+ 326 0000 00D041F4 	 .word -197013504
+ 327 0004 00000000 	 .word 0
+ 328 0008 00A403F0 	 .word -268196864
+ 329 000c 01       	 .byte 1
+ 330 000d 000000   	 .zero 3
+ 331 0010 01000000 	 .word 1
+ 332              	 .global IfxEray1_RXDA0_P14_8_IN
+ 333              	 .section .rodata.IfxEray1_RXDA0_P14_8_IN,"a"
+ 334              	 .align 2
+ 337              	IfxEray1_RXDA0_P14_8_IN:
+ 338 0000 00D041F4 	 .word -197013504
+ 339 0004 00000000 	 .word 0
+ 340 0008 00D803F0 	 .word -268183552
+ 341 000c 08       	 .byte 8
+ 342 000d 000000   	 .zero 3
+ 343 0010 00000000 	 .word 0
+ 344              	 .global IfxEray0_TXENB_P14_9_OUT
+ 345              	 .section .rodata.IfxEray0_TXENB_P14_9_OUT,"a"
+ 346              	 .align 2
+ 349              	IfxEray0_TXENB_P14_9_OUT:
+ 350 0000 00C041F4 	 .word -197017600
+ 351 0004 01000000 	 .word 1
+ 352 0008 00D803F0 	 .word -268183552
+ 353 000c 09       	 .byte 9
+ 354 000d 000000   	 .zero 3
+ 355 0010 51000000 	 .word 81
+ 356              	 .global IfxEray0_TXENB_P14_6_OUT
+ 357              	 .section .rodata.IfxEray0_TXENB_P14_6_OUT,"a"
+ 358              	 .align 2
+ 361              	IfxEray0_TXENB_P14_6_OUT:
+ 362 0000 00C041F4 	 .word -197017600
+ 363 0004 01000000 	 .word 1
+ 364 0008 00D803F0 	 .word -268183552
+ 365 000c 06       	 .byte 6
+ 366 000d 000000   	 .zero 3
+ 367 0010 61000000 	 .word 97
+ 368              	 .global IfxEray0_TXENB_P10_9_OUT
+ 369              	 .section .rodata.IfxEray0_TXENB_P10_9_OUT,"a"
+ 370              	 .align 2
+ 373              	IfxEray0_TXENB_P10_9_OUT:
+ 374 0000 00C041F4 	 .word -197017600
+ 375 0004 01000000 	 .word 1
+ 376 0008 00C803F0 	 .word -268187648
+ 377 000c 09       	 .byte 9
+ 378 000d 000000   	 .zero 3
+ 379 0010 51000000 	 .word 81
+ 380              	 .global IfxEray0_TXENB_P10_6_OUT
+ 381              	 .section .rodata.IfxEray0_TXENB_P10_6_OUT,"a"
+ 382              	 .align 2
+ 385              	IfxEray0_TXENB_P10_6_OUT:
+ 386 0000 00C041F4 	 .word -197017600
+ 387 0004 01000000 	 .word 1
+ 388 0008 00C803F0 	 .word -268187648
+ 389 000c 06       	 .byte 6
+ 390 000d 000000   	 .zero 3
+ 391 0010 E1000000 	 .word 225
+ 392              	 .global IfxEray0_TXENB_P02_5_OUT
+ 393              	 .section .rodata.IfxEray0_TXENB_P02_5_OUT,"a"
+ 394              	 .align 2
+ 397              	IfxEray0_TXENB_P02_5_OUT:
+ 398 0000 00C041F4 	 .word -197017600
+ 399 0004 01000000 	 .word 1
+ 400 0008 00A803F0 	 .word -268195840
+ 401 000c 05       	 .byte 5
+ 402 000d 000000   	 .zero 3
+ 403 0010 61000000 	 .word 97
+ 404              	 .global IfxEray0_TXENA_P14_9_OUT
+ 405              	 .section .rodata.IfxEray0_TXENA_P14_9_OUT,"a"
+ 406              	 .align 2
+ 409              	IfxEray0_TXENA_P14_9_OUT:
+ 410 0000 00C041F4 	 .word -197017600
+ 411 0004 00000000 	 .word 0
+ 412 0008 00D803F0 	 .word -268183552
+ 413 000c 09       	 .byte 9
+ 414 000d 000000   	 .zero 3
+ 415 0010 61000000 	 .word 97
+ 416              	 .global IfxEray0_TXENA_P10_9_OUT
+ 417              	 .section .rodata.IfxEray0_TXENA_P10_9_OUT,"a"
+ 418              	 .align 2
+ 421              	IfxEray0_TXENA_P10_9_OUT:
+ 422 0000 00C041F4 	 .word -197017600
+ 423 0004 00000000 	 .word 0
+ 424 0008 00C803F0 	 .word -268187648
+ 425 000c 09       	 .byte 9
+ 426 000d 000000   	 .zero 3
+ 427 0010 61000000 	 .word 97
+ 428              	 .global IfxEray0_TXENA_P02_4_OUT
+ 429              	 .section .rodata.IfxEray0_TXENA_P02_4_OUT,"a"
+ 430              	 .align 2
+ 433              	IfxEray0_TXENA_P02_4_OUT:
+ 434 0000 00C041F4 	 .word -197017600
+ 435 0004 00000000 	 .word 0
+ 436 0008 00A803F0 	 .word -268195840
+ 437 000c 04       	 .byte 4
+ 438 000d 000000   	 .zero 3
+ 439 0010 61000000 	 .word 97
+ 440              	 .global IfxEray0_TXDB_P14_5_OUT
+ 441              	 .section .rodata.IfxEray0_TXDB_P14_5_OUT,"a"
+ 442              	 .align 2
+ 445              	IfxEray0_TXDB_P14_5_OUT:
+ 446 0000 00C041F4 	 .word -197017600
+ 447 0004 01000000 	 .word 1
+ 448 0008 00D803F0 	 .word -268183552
+ 449 000c 05       	 .byte 5
+ 450 000d 000000   	 .zero 3
+ 451 0010 61000000 	 .word 97
+ 452              	 .global IfxEray0_TXDB_P14_0_OUT
+ 453              	 .section .rodata.IfxEray0_TXDB_P14_0_OUT,"a"
+ 454              	 .align 2
+ 457              	IfxEray0_TXDB_P14_0_OUT:
+ 458 0000 00C041F4 	 .word -197017600
+ 459 0004 01000000 	 .word 1
+ 460 0008 00D803F0 	 .word -268183552
+ 461 000c 00       	 .byte 0
+ 462 000d 000000   	 .zero 3
+ 463 0010 41000000 	 .word 65
+ 464              	 .global IfxEray0_TXDB_P10_5_OUT
+ 465              	 .section .rodata.IfxEray0_TXDB_P10_5_OUT,"a"
+ 466              	 .align 2
+ 469              	IfxEray0_TXDB_P10_5_OUT:
+ 470 0000 00C041F4 	 .word -197017600
+ 471 0004 01000000 	 .word 1
+ 472 0008 00C803F0 	 .word -268187648
+ 473 000c 05       	 .byte 5
+ 474 000d 000000   	 .zero 3
+ 475 0010 D1000000 	 .word 209
+ 476              	 .global IfxEray0_TXDB_P02_2_OUT
+ 477              	 .section .rodata.IfxEray0_TXDB_P02_2_OUT,"a"
+ 478              	 .align 2
+ 481              	IfxEray0_TXDB_P02_2_OUT:
+ 482 0000 00C041F4 	 .word -197017600
+ 483 0004 01000000 	 .word 1
+ 484 0008 00A803F0 	 .word -268195840
+ 485 000c 02       	 .byte 2
+ 486 000d 000000   	 .zero 3
+ 487 0010 61000000 	 .word 97
+ 488              	 .global IfxEray0_TXDA_P14_10_OUT
+ 489              	 .section .rodata.IfxEray0_TXDA_P14_10_OUT,"a"
+ 490              	 .align 2
+ 493              	IfxEray0_TXDA_P14_10_OUT:
+ 494 0000 00C041F4 	 .word -197017600
+ 495 0004 00000000 	 .word 0
+ 496 0008 00D803F0 	 .word -268183552
+ 497 000c 0A       	 .byte 10
+ 498 000d 000000   	 .zero 3
+ 499 0010 61000000 	 .word 97
+ 500              	 .global IfxEray0_TXDA_P14_0_OUT
+ 501              	 .section .rodata.IfxEray0_TXDA_P14_0_OUT,"a"
+ 502              	 .align 2
+ 505              	IfxEray0_TXDA_P14_0_OUT:
+ 506 0000 00C041F4 	 .word -197017600
+ 507 0004 00000000 	 .word 0
+ 508 0008 00D803F0 	 .word -268183552
+ 509 000c 00       	 .byte 0
+ 510 000d 000000   	 .zero 3
+ 511 0010 31000000 	 .word 49
+ 512              	 .global IfxEray0_TXDA_P10_10_OUT
+ 513              	 .section .rodata.IfxEray0_TXDA_P10_10_OUT,"a"
+ 514              	 .align 2
+ 517              	IfxEray0_TXDA_P10_10_OUT:
+ 518 0000 00C041F4 	 .word -197017600
+ 519 0004 00000000 	 .word 0
+ 520 0008 00C803F0 	 .word -268187648
+ 521 000c 0A       	 .byte 10
+ 522 000d 000000   	 .zero 3
+ 523 0010 61000000 	 .word 97
+ 524              	 .global IfxEray0_TXDA_P10_0_OUT
+ 525              	 .section .rodata.IfxEray0_TXDA_P10_0_OUT,"a"
+ 526              	 .align 2
+ 529              	IfxEray0_TXDA_P10_0_OUT:
+ 530 0000 00C041F4 	 .word -197017600
+ 531 0004 00000000 	 .word 0
+ 532 0008 00C803F0 	 .word -268187648
+ 533 000c 00       	 .byte 0
+ 534 000d 000000   	 .zero 3
+ 535 0010 C1000000 	 .word 193
+ 536              	 .global IfxEray0_TXDA_P02_0_OUT
+ 537              	 .section .rodata.IfxEray0_TXDA_P02_0_OUT,"a"
+ 538              	 .align 2
+ 541              	IfxEray0_TXDA_P02_0_OUT:
+ 542 0000 00C041F4 	 .word -197017600
+ 543 0004 00000000 	 .word 0
+ 544 0008 00A803F0 	 .word -268195840
+ 545 000c 00       	 .byte 0
+ 546 000d 000000   	 .zero 3
+ 547 0010 61000000 	 .word 97
+ 548              	 .global IfxEray0_RXDB3_P14_1_IN
+ 549              	 .section .rodata.IfxEray0_RXDB3_P14_1_IN,"a"
+ 550              	 .align 2
+ 553              	IfxEray0_RXDB3_P14_1_IN:
+ 554 0000 00C041F4 	 .word -197017600
+ 555 0004 01000000 	 .word 1
+ 556 0008 00D803F0 	 .word -268183552
+ 557 000c 01       	 .byte 1
+ 558 000d 000000   	 .zero 3
+ 559 0010 03000000 	 .word 3
+ 560              	 .global IfxEray0_RXDB2_P02_3_IN
+ 561              	 .section .rodata.IfxEray0_RXDB2_P02_3_IN,"a"
+ 562              	 .align 2
+ 565              	IfxEray0_RXDB2_P02_3_IN:
+ 566 0000 00C041F4 	 .word -197017600
+ 567 0004 01000000 	 .word 1
+ 568 0008 00A803F0 	 .word -268195840
+ 569 000c 03       	 .byte 3
+ 570 000d 000000   	 .zero 3
+ 571 0010 02000000 	 .word 2
+ 572              	 .global IfxEray0_RXDB0_P14_7_IN
+ 573              	 .section .rodata.IfxEray0_RXDB0_P14_7_IN,"a"
+ 574              	 .align 2
+ 577              	IfxEray0_RXDB0_P14_7_IN:
+ 578 0000 00C041F4 	 .word -197017600
+ 579 0004 01000000 	 .word 1
+ 580 0008 00D803F0 	 .word -268183552
+ 581 000c 07       	 .byte 7
+ 582 000d 000000   	 .zero 3
+ 583 0010 00000000 	 .word 0
+ 584              	 .global IfxEray0_RXDA3_P14_1_IN
+ 585              	 .section .rodata.IfxEray0_RXDA3_P14_1_IN,"a"
+ 586              	 .align 2
+ 589              	IfxEray0_RXDA3_P14_1_IN:
+ 590 0000 00C041F4 	 .word -197017600
+ 591 0004 00000000 	 .word 0
+ 592 0008 00D803F0 	 .word -268183552
+ 593 000c 01       	 .byte 1
+ 594 000d 000000   	 .zero 3
+ 595 0010 03000000 	 .word 3
+ 596              	 .global IfxEray0_RXDA2_P02_1_IN
+ 597              	 .section .rodata.IfxEray0_RXDA2_P02_1_IN,"a"
+ 598              	 .align 2
+ 601              	IfxEray0_RXDA2_P02_1_IN:
+ 602 0000 00C041F4 	 .word -197017600
+ 603 0004 00000000 	 .word 0
+ 604 0008 00A803F0 	 .word -268195840
+ 605 000c 01       	 .byte 1
+ 606 000d 000000   	 .zero 3
+ 607 0010 02000000 	 .word 2
+ 608              	 .global IfxEray0_RXDA0_P14_8_IN
+ 609              	 .section .rodata.IfxEray0_RXDA0_P14_8_IN,"a"
+ 610              	 .align 2
+ 613              	IfxEray0_RXDA0_P14_8_IN:
+ 614 0000 00C041F4 	 .word -197017600
+ 615 0004 00000000 	 .word 0
+ 616 0008 00D803F0 	 .word -268183552
+ 617 000c 08       	 .byte 8
+ 618 000d 000000   	 .zero 3
+ 619 0010 00000000 	 .word 0
+ 620              	.section .text,"ax",@progbits
+ 621              	.Letext0:
+ 622              	 .file 1 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 623              	 .file 2 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+ 624              	 .file 3 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 625              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/IfxEray_regdef.h"
+ 626              	 .file 5 "../Libraries/iLLD/TC4xx/Tricore/_Impl/TC4Dx/IfxEray_cfg_TC4Dx.h"
+ 627              	 .file 6 "../Libraries/Infra/Sfr/TC4Dx/IfxPort_regdef.h"
+ 628              	 .file 7 "../Libraries/iLLD/TC4xx/CpuGeneric/Port/Std/IfxPort.h"
+ 629              	 .file 8 "../Libraries/iLLD/TC4xx/Tricore/_PinMap/IfxEray_PinMap.h"
+ 630              	 .file 9 "../Libraries/iLLD/TC4xx/Tricore/_PinMap/TC4Dx/IfxEray_PinMap_TC4Dx_BGA436_COM.h"
+ 631              	 .file 10 "../Libraries/iLLD/TC4xx/Tricore/_PinMap/TC4Dx/IfxEray_PinMap_TC4Dx_BGA436_COM.c"
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxEray_PinMap_TC4Dx_BGA436_COM.c
+                            *ABS*:00000000 IfxEray_PinMap_TC4Dx_BGA436_COM.c
+    {standard input}:11     .data.IfxEray_Txen_Out_pinTable:00000000 IfxEray_Txen_Out_pinTable
+    {standard input}:433    .rodata.IfxEray0_TXENA_P02_4_OUT:00000000 IfxEray0_TXENA_P02_4_OUT
+    {standard input}:421    .rodata.IfxEray0_TXENA_P10_9_OUT:00000000 IfxEray0_TXENA_P10_9_OUT
+    {standard input}:409    .rodata.IfxEray0_TXENA_P14_9_OUT:00000000 IfxEray0_TXENA_P14_9_OUT
+    {standard input}:397    .rodata.IfxEray0_TXENB_P02_5_OUT:00000000 IfxEray0_TXENB_P02_5_OUT
+    {standard input}:385    .rodata.IfxEray0_TXENB_P10_6_OUT:00000000 IfxEray0_TXENB_P10_6_OUT
+    {standard input}:373    .rodata.IfxEray0_TXENB_P10_9_OUT:00000000 IfxEray0_TXENB_P10_9_OUT
+    {standard input}:361    .rodata.IfxEray0_TXENB_P14_6_OUT:00000000 IfxEray0_TXENB_P14_6_OUT
+    {standard input}:349    .rodata.IfxEray0_TXENB_P14_9_OUT:00000000 IfxEray0_TXENB_P14_9_OUT
+    {standard input}:169    .rodata.IfxEray1_TXENA_P01_14_OUT:00000000 IfxEray1_TXENA_P01_14_OUT
+    {standard input}:157    .rodata.IfxEray1_TXENA_P10_9_OUT:00000000 IfxEray1_TXENA_P10_9_OUT
+    {standard input}:145    .rodata.IfxEray1_TXENA_P14_9_OUT:00000000 IfxEray1_TXENA_P14_9_OUT
+    {standard input}:133    .rodata.IfxEray1_TXENB_P02_15_OUT:00000000 IfxEray1_TXENB_P02_15_OUT
+    {standard input}:121    .rodata.IfxEray1_TXENB_P04_2_OUT:00000000 IfxEray1_TXENB_P04_2_OUT
+    {standard input}:109    .rodata.IfxEray1_TXENB_P10_6_OUT:00000000 IfxEray1_TXENB_P10_6_OUT
+    {standard input}:97     .rodata.IfxEray1_TXENB_P10_9_OUT:00000000 IfxEray1_TXENB_P10_9_OUT
+    {standard input}:85     .rodata.IfxEray1_TXENB_P14_6_OUT:00000000 IfxEray1_TXENB_P14_6_OUT
+    {standard input}:37     .data.IfxEray_Txd_Out_pinTable:00000000 IfxEray_Txd_Out_pinTable
+    {standard input}:541    .rodata.IfxEray0_TXDA_P02_0_OUT:00000000 IfxEray0_TXDA_P02_0_OUT
+    {standard input}:529    .rodata.IfxEray0_TXDA_P10_0_OUT:00000000 IfxEray0_TXDA_P10_0_OUT
+    {standard input}:517    .rodata.IfxEray0_TXDA_P10_10_OUT:00000000 IfxEray0_TXDA_P10_10_OUT
+    {standard input}:505    .rodata.IfxEray0_TXDA_P14_0_OUT:00000000 IfxEray0_TXDA_P14_0_OUT
+    {standard input}:493    .rodata.IfxEray0_TXDA_P14_10_OUT:00000000 IfxEray0_TXDA_P14_10_OUT
+    {standard input}:481    .rodata.IfxEray0_TXDB_P02_2_OUT:00000000 IfxEray0_TXDB_P02_2_OUT
+    {standard input}:469    .rodata.IfxEray0_TXDB_P10_5_OUT:00000000 IfxEray0_TXDB_P10_5_OUT
+    {standard input}:457    .rodata.IfxEray0_TXDB_P14_0_OUT:00000000 IfxEray0_TXDB_P14_0_OUT
+    {standard input}:445    .rodata.IfxEray0_TXDB_P14_5_OUT:00000000 IfxEray0_TXDB_P14_5_OUT
+    {standard input}:253    .rodata.IfxEray1_TXDA_P01_12_OUT:00000000 IfxEray1_TXDA_P01_12_OUT
+    {standard input}:241    .rodata.IfxEray1_TXDA_P10_10_OUT:00000000 IfxEray1_TXDA_P10_10_OUT
+    {standard input}:229    .rodata.IfxEray1_TXDA_P14_10_OUT:00000000 IfxEray1_TXDA_P14_10_OUT
+    {standard input}:217    .rodata.IfxEray1_TXDB_P01_13_OUT:00000000 IfxEray1_TXDB_P01_13_OUT
+    {standard input}:205    .rodata.IfxEray1_TXDB_P10_0_OUT:00000000 IfxEray1_TXDB_P10_0_OUT
+    {standard input}:193    .rodata.IfxEray1_TXDB_P10_5_OUT:00000000 IfxEray1_TXDB_P10_5_OUT
+    {standard input}:181    .rodata.IfxEray1_TXDB_P14_5_OUT:00000000 IfxEray1_TXDB_P14_5_OUT
+    {standard input}:63     .data.IfxEray_Rxd_In_pinTable:00000000 IfxEray_Rxd_In_pinTable
+    {standard input}:613    .rodata.IfxEray0_RXDA0_P14_8_IN:00000000 IfxEray0_RXDA0_P14_8_IN
+    {standard input}:601    .rodata.IfxEray0_RXDA2_P02_1_IN:00000000 IfxEray0_RXDA2_P02_1_IN
+    {standard input}:589    .rodata.IfxEray0_RXDA3_P14_1_IN:00000000 IfxEray0_RXDA3_P14_1_IN
+    {standard input}:577    .rodata.IfxEray0_RXDB0_P14_7_IN:00000000 IfxEray0_RXDB0_P14_7_IN
+    {standard input}:565    .rodata.IfxEray0_RXDB2_P02_3_IN:00000000 IfxEray0_RXDB2_P02_3_IN
+    {standard input}:553    .rodata.IfxEray0_RXDB3_P14_1_IN:00000000 IfxEray0_RXDB3_P14_1_IN
+    {standard input}:337    .rodata.IfxEray1_RXDA0_P14_8_IN:00000000 IfxEray1_RXDA0_P14_8_IN
+    {standard input}:325    .rodata.IfxEray1_RXDA1_P01_1_IN:00000000 IfxEray1_RXDA1_P01_1_IN
+    {standard input}:313    .rodata.IfxEray1_RXDA3_P10_8_IN:00000000 IfxEray1_RXDA3_P10_8_IN
+    {standard input}:301    .rodata.IfxEray1_RXDB0_P14_7_IN:00000000 IfxEray1_RXDB0_P14_7_IN
+    {standard input}:289    .rodata.IfxEray1_RXDB1_P01_8_IN:00000000 IfxEray1_RXDB1_P01_8_IN
+    {standard input}:277    .rodata.IfxEray1_RXDB2_P03_6_IN:00000000 IfxEray1_RXDB2_P03_6_IN
+    {standard input}:265    .rodata.IfxEray1_RXDB3_P10_7_IN:00000000 IfxEray1_RXDB3_P10_7_IN
+
+NO UNDEFINED SYMBOLS

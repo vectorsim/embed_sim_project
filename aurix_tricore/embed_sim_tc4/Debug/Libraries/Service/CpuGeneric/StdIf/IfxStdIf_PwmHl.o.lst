@@ -1,0 +1,107 @@
+   1              	
+   2              	 .file "IfxStdIf_PwmHl.c"
+   3              	 .file "IfxStdIf_PwmHl.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.IfxStdIf_PwmHl_initConfig,"ax",@progbits
+   7              	 .align 1
+   8              	 .global IfxStdIf_PwmHl_initConfig
+  10              	IfxStdIf_PwmHl_initConfig:
+  11              	.LFB357:
+  12              	 .file 1 "../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c"
+   1:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c **** /**
+   2:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c ****  * \file IfxStdIf_PwmHl.c
+   3:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c ****  * \brief Standard interface: Multi-channels, dual-complementary PWM interface
+   4:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c ****  * \ingroup IfxStdIf
+   5:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c ****  *
+   6:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c ****  * \version iLLD-TC4-v2.7.0
+   7:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   8:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c ****  *
+   9:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c ****  *
+  10:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c ****   *                                 IMPORTANT NOTICE
+  11:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c ****  *
+  12:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c ****  *
+  13:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  14:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  15:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c ****  * this file except in compliance with IFASLL.
+  16:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c ****  *
+  17:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  18:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  19:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  20:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  21:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  22:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  23:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c ****  * defects in the licensed items, or non-infringement of third parties'
+  24:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c ****  * intellectual property rights. See the full license text for the specific
+  25:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c ****  * language governing permissions and limitations under IFASLL.
+  26:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c ****  *
+  27:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c ****  */
+  28:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c **** 
+  29:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c **** #include "IfxStdIf_PwmHl.h"
+  30:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c **** 
+  31:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c **** void IfxStdIf_PwmHl_initConfig(IfxStdIf_PwmHl_Config *config)
+  32:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c **** {
+  13              	 .loc 1 32 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  33:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c ****     config->deadtime         = 0;
+  17              	 .loc 1 33 5
+  18              	 .loc 1 33 30 is_stmt 0
+  19 0002 8202     	 mov %d2,0
+  20 0004 7442     	 st.w [%a4]0,%d2
+  34:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c ****     config->minPulse         = 0;
+  21              	 .loc 1 34 5 is_stmt 1
+  22              	 .loc 1 34 30 is_stmt 0
+  23 0006 59420400 	 st.w [%a4]4,%d2
+  35:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c ****     config->channelCount     = 0;
+  24              	 .loc 1 35 5 is_stmt 1
+  25              	 .loc 1 35 30 is_stmt 0
+  26 000a 8202     	 mov %d2,0
+  27 000c E9420800 	 st.b [%a4]8,%d2
+  36:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c ****     config->emergencyEnabled = FALSE;
+  28              	 .loc 1 36 5 is_stmt 1
+  29              	 .loc 1 36 30 is_stmt 0
+  30 0010 E9420900 	 st.b [%a4]9,%d2
+  37:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c ****     config->outputMode       = IfxPort_OutputMode_pushPull;
+  31              	 .loc 1 37 5 is_stmt 1
+  32              	 .loc 1 37 30 is_stmt 0
+  33 0014 8212     	 mov %d2,1
+  34 0016 59420C00 	 st.w [%a4]12,%d2
+  38:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c ****     config->outputDriver     = IfxPort_PadDriver_cmosAutomotiveSpeed1;
+  35              	 .loc 1 38 5 is_stmt 1
+  36              	 .loc 1 38 30 is_stmt 0
+  37 001a 8203     	 mov %d3,0
+  38 001c 59431000 	 st.w [%a4]16,%d3
+  39:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c ****     config->ccxActiveState   = Ifx_ActiveState_high;
+  39              	 .loc 1 39 5 is_stmt 1
+  40              	 .loc 1 39 30 is_stmt 0
+  41 0020 59421400 	 st.w [%a4]20,%d2
+  40:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c ****     config->coutxActiveState = Ifx_ActiveState_high;
+  42              	 .loc 1 40 5 is_stmt 1
+  43              	 .loc 1 40 30 is_stmt 0
+  44 0024 59421800 	 st.w [%a4]24,%d2
+  41:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.c **** }
+  45              	 .loc 1 41 1
+  46 0028 0090     	 ret 
+  47              	.LFE357:
+  49              	 .global IfxStdIf_PwmHl_initConfig_end
+  50              	IfxStdIf_PwmHl_initConfig_end:
+  79              	.Letext0:
+  80              	 .file 2 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+  81              	 .file 3 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+  82              	 .file 4 "../Libraries/iLLD/TC4xx/CpuGeneric/Port/Std/IfxPort.h"
+  83              	 .file 5 "../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_PwmHl.h"
+ 598 0000 00000000 	 .word IfxStdIf_PwmHl_initConfig
+ 599 0004 00000000 	 .word IfxStdIf_PwmHl_initConfig_end
+ 600 0008 0C001444 	 .word 0x4414000c
+ 601 000c 00001000 	 .word 0x00100000
+ 602 0010 00000000 	 .word 0x00000000
+ 603 0014 C0000000 	 .word 0x000000c0
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxStdIf_PwmHl.c
+                            *ABS*:00000000 IfxStdIf_PwmHl.c
+    {standard input}:10     .text.IfxStdIf_PwmHl_initConfig:00000000 IfxStdIf_PwmHl_initConfig
+    {standard input}:50     .text.IfxStdIf_PwmHl_initConfig:0000002a IfxStdIf_PwmHl_initConfig_end
+
+NO UNDEFINED SYMBOLS

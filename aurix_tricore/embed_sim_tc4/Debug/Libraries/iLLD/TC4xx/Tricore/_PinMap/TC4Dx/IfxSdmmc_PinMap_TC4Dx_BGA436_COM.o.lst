@@ -1,0 +1,206 @@
+   1              	
+   2              	 .file "IfxSdmmc_PinMap_TC4Dx_BGA436_COM.c"
+   3              	 .file "IfxSdmmc_PinMap_TC4Dx_BGA436_COM.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .global IfxSdmmc_Dat7_InOut_pinTable
+   7              	 .section .data.IfxSdmmc_Dat7_InOut_pinTable,"aw"
+   8              	 .align 2
+  11              	IfxSdmmc_Dat7_InOut_pinTable:
+  12 0000 00000000 	 .word IfxSdmmc0_DAT7_P15_0_INOUT
+  13              	 .global IfxSdmmc_Dat6_InOut_pinTable
+  14              	 .section .data.IfxSdmmc_Dat6_InOut_pinTable,"aw"
+  15              	 .align 2
+  18              	IfxSdmmc_Dat6_InOut_pinTable:
+  19 0000 00000000 	 .word IfxSdmmc0_DAT6_P20_14_INOUT
+  20              	 .global IfxSdmmc_Dat5_InOut_pinTable
+  21              	 .section .data.IfxSdmmc_Dat5_InOut_pinTable,"aw"
+  22              	 .align 2
+  25              	IfxSdmmc_Dat5_InOut_pinTable:
+  26 0000 00000000 	 .word IfxSdmmc0_DAT5_P20_13_INOUT
+  27              	 .global IfxSdmmc_Dat4_InOut_pinTable
+  28              	 .section .data.IfxSdmmc_Dat4_InOut_pinTable,"aw"
+  29              	 .align 2
+  32              	IfxSdmmc_Dat4_InOut_pinTable:
+  33 0000 00000000 	 .word IfxSdmmc0_DAT4_P20_12_INOUT
+  34              	 .global IfxSdmmc_Dat3_InOut_pinTable
+  35              	 .section .data.IfxSdmmc_Dat3_InOut_pinTable,"aw"
+  36              	 .align 2
+  39              	IfxSdmmc_Dat3_InOut_pinTable:
+  40 0000 00000000 	 .word IfxSdmmc0_DAT3_P20_11_INOUT
+  41              	 .global IfxSdmmc_Dat2_InOut_pinTable
+  42              	 .section .data.IfxSdmmc_Dat2_InOut_pinTable,"aw"
+  43              	 .align 2
+  46              	IfxSdmmc_Dat2_InOut_pinTable:
+  47 0000 00000000 	 .word IfxSdmmc0_DAT2_P20_10_INOUT
+  48              	 .global IfxSdmmc_Dat1_InOut_pinTable
+  49              	 .section .data.IfxSdmmc_Dat1_InOut_pinTable,"aw"
+  50              	 .align 2
+  53              	IfxSdmmc_Dat1_InOut_pinTable:
+  54 0000 00000000 	 .word IfxSdmmc0_DAT1_P20_8_INOUT
+  55              	 .global IfxSdmmc_Dat0_InOut_pinTable
+  56              	 .section .data.IfxSdmmc_Dat0_InOut_pinTable,"aw"
+  57              	 .align 2
+  60              	IfxSdmmc_Dat0_InOut_pinTable:
+  61 0000 00000000 	 .word IfxSdmmc0_DAT0_P20_7_INOUT
+  62              	 .global IfxSdmmc_Cmd_InOut_pinTable
+  63              	 .section .data.IfxSdmmc_Cmd_InOut_pinTable,"aw"
+  64              	 .align 2
+  67              	IfxSdmmc_Cmd_InOut_pinTable:
+  68 0000 00000000 	 .word IfxSdmmc0_CMD_P15_3_INOUT
+  69              	 .global IfxSdmmc_Clkrx_In_pinTable
+  70              	 .section .data.IfxSdmmc_Clkrx_In_pinTable,"aw"
+  71              	 .align 2
+  74              	IfxSdmmc_Clkrx_In_pinTable:
+  75 0000 00000000 	 .word IfxSdmmc0_CLKRX_P15_1_IN
+  76              	 .global IfxSdmmc_Clk_Out_pinTable
+  77              	 .section .data.IfxSdmmc_Clk_Out_pinTable,"aw"
+  78              	 .align 2
+  81              	IfxSdmmc_Clk_Out_pinTable:
+  82 0000 00000000 	 .word IfxSdmmc0_CLK_P15_1_OUT
+  83              	 .global IfxSdmmc0_DAT7_P15_0_INOUT
+  84              	 .section .rodata.IfxSdmmc0_DAT7_P15_0_INOUT,"a"
+  85              	 .align 2
+  88              	IfxSdmmc0_DAT7_P15_0_INOUT:
+  89 0000 00006BF4 	 .word -194314240
+  90 0004 00DC03F0 	 .word -268182528
+  91 0008 00       	 .byte 0
+  92 0009 000000   	 .zero 3
+  93 000c 00000000 	 .word 0
+  94 0010 01000000 	 .word 1
+  95              	 .global IfxSdmmc0_DAT6_P20_14_INOUT
+  96              	 .section .rodata.IfxSdmmc0_DAT6_P20_14_INOUT,"a"
+  97              	 .align 2
+ 100              	IfxSdmmc0_DAT6_P20_14_INOUT:
+ 101 0000 00006BF4 	 .word -194314240
+ 102 0004 00F003F0 	 .word -268177408
+ 103 0008 0E       	 .byte 14
+ 104 0009 000000   	 .zero 3
+ 105 000c 00000000 	 .word 0
+ 106 0010 01000000 	 .word 1
+ 107              	 .global IfxSdmmc0_DAT5_P20_13_INOUT
+ 108              	 .section .rodata.IfxSdmmc0_DAT5_P20_13_INOUT,"a"
+ 109              	 .align 2
+ 112              	IfxSdmmc0_DAT5_P20_13_INOUT:
+ 113 0000 00006BF4 	 .word -194314240
+ 114 0004 00F003F0 	 .word -268177408
+ 115 0008 0D       	 .byte 13
+ 116 0009 000000   	 .zero 3
+ 117 000c 00000000 	 .word 0
+ 118 0010 01000000 	 .word 1
+ 119              	 .global IfxSdmmc0_DAT4_P20_12_INOUT
+ 120              	 .section .rodata.IfxSdmmc0_DAT4_P20_12_INOUT,"a"
+ 121              	 .align 2
+ 124              	IfxSdmmc0_DAT4_P20_12_INOUT:
+ 125 0000 00006BF4 	 .word -194314240
+ 126 0004 00F003F0 	 .word -268177408
+ 127 0008 0C       	 .byte 12
+ 128 0009 000000   	 .zero 3
+ 129 000c 00000000 	 .word 0
+ 130 0010 01000000 	 .word 1
+ 131              	 .global IfxSdmmc0_DAT3_P20_11_INOUT
+ 132              	 .section .rodata.IfxSdmmc0_DAT3_P20_11_INOUT,"a"
+ 133              	 .align 2
+ 136              	IfxSdmmc0_DAT3_P20_11_INOUT:
+ 137 0000 00006BF4 	 .word -194314240
+ 138 0004 00F003F0 	 .word -268177408
+ 139 0008 0B       	 .byte 11
+ 140 0009 000000   	 .zero 3
+ 141 000c 00000000 	 .word 0
+ 142 0010 01000000 	 .word 1
+ 143              	 .global IfxSdmmc0_DAT2_P20_10_INOUT
+ 144              	 .section .rodata.IfxSdmmc0_DAT2_P20_10_INOUT,"a"
+ 145              	 .align 2
+ 148              	IfxSdmmc0_DAT2_P20_10_INOUT:
+ 149 0000 00006BF4 	 .word -194314240
+ 150 0004 00F003F0 	 .word -268177408
+ 151 0008 0A       	 .byte 10
+ 152 0009 000000   	 .zero 3
+ 153 000c 00000000 	 .word 0
+ 154 0010 01000000 	 .word 1
+ 155              	 .global IfxSdmmc0_DAT1_P20_8_INOUT
+ 156              	 .section .rodata.IfxSdmmc0_DAT1_P20_8_INOUT,"a"
+ 157              	 .align 2
+ 160              	IfxSdmmc0_DAT1_P20_8_INOUT:
+ 161 0000 00006BF4 	 .word -194314240
+ 162 0004 00F003F0 	 .word -268177408
+ 163 0008 08       	 .byte 8
+ 164 0009 000000   	 .zero 3
+ 165 000c 00000000 	 .word 0
+ 166 0010 01000000 	 .word 1
+ 167              	 .global IfxSdmmc0_DAT0_P20_7_INOUT
+ 168              	 .section .rodata.IfxSdmmc0_DAT0_P20_7_INOUT,"a"
+ 169              	 .align 2
+ 172              	IfxSdmmc0_DAT0_P20_7_INOUT:
+ 173 0000 00006BF4 	 .word -194314240
+ 174 0004 00F003F0 	 .word -268177408
+ 175 0008 07       	 .byte 7
+ 176 0009 000000   	 .zero 3
+ 177 000c 00000000 	 .word 0
+ 178 0010 01000000 	 .word 1
+ 179              	 .global IfxSdmmc0_CMD_P15_3_INOUT
+ 180              	 .section .rodata.IfxSdmmc0_CMD_P15_3_INOUT,"a"
+ 181              	 .align 2
+ 184              	IfxSdmmc0_CMD_P15_3_INOUT:
+ 185 0000 00006BF4 	 .word -194314240
+ 186 0004 00DC03F0 	 .word -268182528
+ 187 0008 03       	 .byte 3
+ 188 0009 000000   	 .zero 3
+ 189 000c 00000000 	 .word 0
+ 190 0010 01000000 	 .word 1
+ 191              	 .global IfxSdmmc0_CLK_P15_1_OUT
+ 192              	 .section .rodata.IfxSdmmc0_CLK_P15_1_OUT,"a"
+ 193              	 .align 2
+ 196              	IfxSdmmc0_CLK_P15_1_OUT:
+ 197 0000 00006BF4 	 .word -194314240
+ 198 0004 00DC03F0 	 .word -268182528
+ 199 0008 01       	 .byte 1
+ 200 0009 000000   	 .zero 3
+ 201 000c 71000000 	 .word 113
+ 202              	 .global IfxSdmmc0_CLKRX_P15_1_IN
+ 203              	 .section .rodata.IfxSdmmc0_CLKRX_P15_1_IN,"a"
+ 204              	 .align 2
+ 207              	IfxSdmmc0_CLKRX_P15_1_IN:
+ 208 0000 00006BF4 	 .word -194314240
+ 209 0004 00DC03F0 	 .word -268182528
+ 210 0008 01       	 .byte 1
+ 211 0009 000000   	 .zero 3
+ 212 000c 00000000 	 .word 0
+ 213              	.section .text,"ax",@progbits
+ 214              	.Letext0:
+ 215              	 .file 1 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 216              	 .file 2 "../Libraries/Infra/Sfr/TC4Dx/IfxSdmmc_regdef.h"
+ 217              	 .file 3 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 218              	 .file 4 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+ 219              	 .file 5 "../Libraries/Infra/Sfr/TC4Dx/IfxPort_regdef.h"
+ 220              	 .file 6 "../Libraries/iLLD/TC4xx/CpuGeneric/Port/Std/IfxPort.h"
+ 221              	 .file 7 "../Libraries/iLLD/TC4xx/Tricore/_PinMap/IfxSdmmc_PinMap.h"
+ 222              	 .file 8 "../Libraries/iLLD/TC4xx/Tricore/_PinMap/TC4Dx/IfxSdmmc_PinMap_TC4Dx_BGA436_COM.h"
+ 223              	 .file 9 "../Libraries/iLLD/TC4xx/Tricore/_PinMap/TC4Dx/IfxSdmmc_PinMap_TC4Dx_BGA436_COM.c"
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxSdmmc_PinMap_TC4Dx_BGA436_COM.c
+                            *ABS*:00000000 IfxSdmmc_PinMap_TC4Dx_BGA436_COM.c
+    {standard input}:11     .data.IfxSdmmc_Dat7_InOut_pinTable:00000000 IfxSdmmc_Dat7_InOut_pinTable
+    {standard input}:88     .rodata.IfxSdmmc0_DAT7_P15_0_INOUT:00000000 IfxSdmmc0_DAT7_P15_0_INOUT
+    {standard input}:18     .data.IfxSdmmc_Dat6_InOut_pinTable:00000000 IfxSdmmc_Dat6_InOut_pinTable
+    {standard input}:100    .rodata.IfxSdmmc0_DAT6_P20_14_INOUT:00000000 IfxSdmmc0_DAT6_P20_14_INOUT
+    {standard input}:25     .data.IfxSdmmc_Dat5_InOut_pinTable:00000000 IfxSdmmc_Dat5_InOut_pinTable
+    {standard input}:112    .rodata.IfxSdmmc0_DAT5_P20_13_INOUT:00000000 IfxSdmmc0_DAT5_P20_13_INOUT
+    {standard input}:32     .data.IfxSdmmc_Dat4_InOut_pinTable:00000000 IfxSdmmc_Dat4_InOut_pinTable
+    {standard input}:124    .rodata.IfxSdmmc0_DAT4_P20_12_INOUT:00000000 IfxSdmmc0_DAT4_P20_12_INOUT
+    {standard input}:39     .data.IfxSdmmc_Dat3_InOut_pinTable:00000000 IfxSdmmc_Dat3_InOut_pinTable
+    {standard input}:136    .rodata.IfxSdmmc0_DAT3_P20_11_INOUT:00000000 IfxSdmmc0_DAT3_P20_11_INOUT
+    {standard input}:46     .data.IfxSdmmc_Dat2_InOut_pinTable:00000000 IfxSdmmc_Dat2_InOut_pinTable
+    {standard input}:148    .rodata.IfxSdmmc0_DAT2_P20_10_INOUT:00000000 IfxSdmmc0_DAT2_P20_10_INOUT
+    {standard input}:53     .data.IfxSdmmc_Dat1_InOut_pinTable:00000000 IfxSdmmc_Dat1_InOut_pinTable
+    {standard input}:160    .rodata.IfxSdmmc0_DAT1_P20_8_INOUT:00000000 IfxSdmmc0_DAT1_P20_8_INOUT
+    {standard input}:60     .data.IfxSdmmc_Dat0_InOut_pinTable:00000000 IfxSdmmc_Dat0_InOut_pinTable
+    {standard input}:172    .rodata.IfxSdmmc0_DAT0_P20_7_INOUT:00000000 IfxSdmmc0_DAT0_P20_7_INOUT
+    {standard input}:67     .data.IfxSdmmc_Cmd_InOut_pinTable:00000000 IfxSdmmc_Cmd_InOut_pinTable
+    {standard input}:184    .rodata.IfxSdmmc0_CMD_P15_3_INOUT:00000000 IfxSdmmc0_CMD_P15_3_INOUT
+    {standard input}:74     .data.IfxSdmmc_Clkrx_In_pinTable:00000000 IfxSdmmc_Clkrx_In_pinTable
+    {standard input}:207    .rodata.IfxSdmmc0_CLKRX_P15_1_IN:00000000 IfxSdmmc0_CLKRX_P15_1_IN
+    {standard input}:81     .data.IfxSdmmc_Clk_Out_pinTable:00000000 IfxSdmmc_Clk_Out_pinTable
+    {standard input}:196    .rodata.IfxSdmmc0_CLK_P15_1_OUT:00000000 IfxSdmmc0_CLK_P15_1_OUT
+
+NO UNDEFINED SYMBOLS

@@ -1,0 +1,2162 @@
+   1              	
+   2              	 .file "Ifx_AngleTrkF32.c"
+   3              	 .file "Ifx_AngleTrkF32.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.Ifx_AngleTrkF32_setOffset,"ax",@progbits
+   7              	 .align 1
+   8              	 .global Ifx_AngleTrkF32_setOffset
+  10              	Ifx_AngleTrkF32_setOffset:
+  11              	.LFB576:
+  12              	 .file 1 "../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c"
+   1:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** /**
+   2:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * \file Ifx_AngleTrkF32.c
+   3:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * \brief Angle-tracking observer for sin/cos analog position sensor
+   4:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  *
+   5:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  *
+   6:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * \version iLLD-TC4-v2.7.0
+   7:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   8:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  *
+   9:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  *
+  10:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****   *                                 IMPORTANT NOTICE
+  11:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  *
+  12:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  *
+  13:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  14:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  15:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * this file except in compliance with IFASLL.
+  16:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  *
+  17:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  18:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  19:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  20:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  21:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  22:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  23:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * defects in the licensed items, or non-infringement of third parties'
+  24:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * intellectual property rights. See the full license text for the specific
+  25:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * language governing permissions and limitations under IFASLL.
+  26:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  *
+  27:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  */
+  28:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+  29:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** //________________________________________________________________________________________
+  30:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** // INCLUDES
+  31:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+  32:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** #include "Ifx_AngleTrkF32.h"
+  33:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** #include <math.h>
+  34:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** #include "string.h"
+  35:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** #include "Ifx_LutAtan2F32.h"
+  36:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+  37:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** //________________________________________________________________________________________
+  38:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** // LOCAL DEFINITIONS
+  39:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+  40:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** #define IFX_ANGLETRKF32_ATAN2F Ifx_LutAtan2F32_float32
+  41:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+  42:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** //________________________________________________________________________________________
+  43:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** // LOCAL FUNCTION PROTOTYPES
+  44:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+  45:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** void Ifx_AngleTrkF32_setUserSampling(Ifx_AngleTrkF32 *aObsv, float32 Ts);
+  46:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+  47:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** //________________________________________________________________________________________
+  48:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** // GLOBAL VARIABLES
+  49:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+  50:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** //________________________________________________________________________________________
+  51:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** // LOCAL VARIABLES
+  52:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+  53:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** //________________________________________________________________________________________
+  54:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** // LOCAL FUNCTION IMPLEMENTATIONS
+  55:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+  56:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** IFX_INLINE float32 Ifx_AngleTrkF32_bound(float32 angle, float32 periodPerRotation)
+  57:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** {
+  58:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     float32 fullPeriod = 2 * IFX_PI;
+  59:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+  60:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     if (angle >= (fullPeriod / 2))
+  61:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     {
+  62:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****         angle = angle - fullPeriod;
+  63:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     }
+  64:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     else if (angle < (-fullPeriod / 2))
+  65:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     {
+  66:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****         angle = angle + fullPeriod;
+  67:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     }
+  68:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     else
+  69:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     {}
+  70:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+  71:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     return angle;
+  72:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+  73:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+  74:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+  75:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** IFX_INLINE float32 Ifx_AngleTrkF32_boundInput(float32 input)
+  76:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** {
+  77:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     return Ifx_AngleTrkF32_bound(input, 1);
+  78:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+  79:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+  80:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+  81:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** __attribute__((used)) IFX_INLINE float32 round_f(float32 val)
+  82:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** {
+  83:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     /*lint -e632 -e633 -e524*/
+  84:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     sint32 val_i = (sint32)val;
+  85:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+  86:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     /*lint +e632 +e633 +e524*/
+  87:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     if ((val - (float32)val_i) > 0.5)
+  88:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     {
+  89:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****         val = (float32)(val_i + 1);
+  90:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     }
+  91:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     else
+  92:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     {
+  93:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****         val = (float32)val_i;
+  94:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     }
+  95:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+  96:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     return val;
+  97:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+  98:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+  99:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 100:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** //________________________________________________________________________________________
+ 101:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** // PUBLIC FUNCTION IMPLEMENTATIONS
+ 102:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** #define ATO_T   (15e-3f)
+ 103:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** #define ATO_K   (39.05f)
+ 104:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** #define ATO_PSI (1.5f * IFX_PI)
+ 105:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 106:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** void Ifx_AngleTrkF32_setControlGains(Ifx_AngleTrkF32_CfgData *cfgData, float32 K, float32 T, float3
+ 107:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** {
+ 108:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     cfgData->kp = ((2 * K) + (psi * psi) + 1) / (T * T);
+ 109:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     cfgData->ki = K * ((psi * psi) + 1) / (T * T * T);
+ 110:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     cfgData->kd = (K + 2) / T;
+ 111:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 112:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 113:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 114:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** /** \brief Fill config with default values */
+ 115:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** void Ifx_AngleTrkF32_initConfig(Ifx_AngleTrkF32_Config *config, sint16 *sinIn, sint16 *cosIn)
+ 116:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** {
+ 117:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     Ifx_AngleTrkF32_CfgData cfgData;
+ 118:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     Ifx_AngleTrkF32_setControlGains(&cfgData, ATO_K, ATO_T, ATO_PSI);
+ 119:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->kp                = cfgData.kp;
+ 120:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->ki                = cfgData.ki;
+ 121:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->kd                = cfgData.kd;
+ 122:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->sinIn             = sinIn;
+ 123:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->cosIn             = cosIn;
+ 124:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->errorThreshold    = 5.0f / 180 * IFX_PI;
+ 125:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->sqrAmplMax        = (sint32)((1.01f * 1.01f) * 2048);
+ 126:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->sqrAmplMin        = (sint32)((0.99f * 0.99f) * 2048);
+ 127:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->speedLpfFc        = 100;
+ 128:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->periodPerRotation = 1;
+ 129:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->reversed          = FALSE;
+ 130:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->offset            = 0;
+ 131:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->resolution        = (1UL << 12);/** \brief 12-bit default resolution */
+ 132:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 133:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 134:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 135:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** void Ifx_AngleTrkF32_setUserSampling(Ifx_AngleTrkF32 *aObsv, float32 Ts)
+ 136:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** {
+ 137:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->base.Ts = Ts;
+ 138:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->halfTs  = aObsv->base.Ts / 2.0F;
+ 139:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 140:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 141:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 142:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** /** \brief Initialize the Angle Tracking object
+ 143:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * \param aObsv Pointer to the Ifx_AngleTrkF32 object
+ 144:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * \param config Pointer to the configuration data
+ 145:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * \param Ts sampling period in seconds
+ 146:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  */
+ 147:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** void Ifx_AngleTrkF32_init(Ifx_AngleTrkF32 *aObsv, const Ifx_AngleTrkF32_Config *config, float32 Ts)
+ 148:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** {
+ 149:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->base.offset            = config->offset;
+ 150:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->base.resolution        = config->resolution;
+ 151:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->base.reversed          = config->reversed;
+ 152:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->base.Ts                = Ts;
+ 153:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->base.rawPosition       = 0;
+ 154:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->base.direction         = IfxStdIf_Pos_Dir_unknown;
+ 155:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->base.turn              = 0;
+ 156:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->base.status.status     = 0;
+ 157:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->base.periodPerRotation = config->periodPerRotation;
+ 158:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->base.positionConst     = 1.0 / (float32)aObsv->base.resolution * 2.0 * IFX_PI;
+ 159:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 160:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->cfgData.kd             = config->kd;
+ 161:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->cfgData.ki             = config->ki;
+ 162:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->cfgData.kp             = config->kp;
+ 163:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->cfgData.errorThreshold = config->errorThreshold;
+ 164:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->cfgData.sqrAmplMax     = config->sqrAmplMax;
+ 165:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->cfgData.sqrAmplMin     = config->sqrAmplMin;
+ 166:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->sinIn                  = config->sinIn;
+ 167:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->cosIn                  = config->cosIn;
+ 168:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 169:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     Ifx_AngleTrkF32_setUserSampling(aObsv, Ts);
+ 170:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->angleErr  = 0.0F;
+ 171:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->angleEst  = 0.0F;
+ 172:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->accelEst  = 0.0F;
+ 173:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->speedEstA = 0.0F;
+ 174:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->speedEstB = 0.0F;
+ 175:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->angleRef  = 0.0F;
+ 176:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     {
+ 177:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** #if IFX_CFG_ANGLETRKF32_SPEED_FILTER
+ 178:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****         Ifx_LowPassPt1F32_Config lpfConfig;
+ 179:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****         lpfConfig.gain            = 1.0F;
+ 180:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****         lpfConfig.cutOffFrequency = (2 * IFX_PI * config->speedLpfFc);
+ 181:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****         lpfConfig.samplingTime    = Ts;
+ 182:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****         Ifx_LowPassPt1F32_init(&aObsv->speedLpf, &lpfConfig);
+ 183:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** #endif
+ 184:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     }
+ 185:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 186:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 187:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 188:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** /** \brief Step function of Ifx_AngleTrkF32 should be called at every sampling period provided
+ 189:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * during initialisation (call to Ifx_AngleTrkF32_init()).
+ 190:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  *
+ 191:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * \note This function is automatically called by Ifx_AngleTrkF32_update()
+ 192:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * \param aObsv Pointer to the Ifx_AngleTrkF32 object
+ 193:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * \param sinIn sine input signal. The offset shall be zero.
+ 194:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * \param cosIn cosine input signal. The offset shall be zero.
+ 195:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * \param phase phase of input signal.
+ 196:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * \note This function returns the angular position in radians
+ 197:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * \note The amplitude of both sinIn and cosIn signal shall be the same.
+ 198:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  */
+ 199:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** float32 Ifx_AngleTrkF32_step(Ifx_AngleTrkF32 *aObsv, sint16 sinIn, sint16 cosIn, float32 phase)
+ 200:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** {
+ 201:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     float32 angleRef, angleEst, dAccel, dSpeed, dAngle;
+ 202:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 203:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     if (aObsv->base.reversed != FALSE)
+ 204:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     {
+ 205:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****         angleRef = IFX_ANGLETRKF32_ATAN2F((float32)cosIn, (float32)sinIn);
+ 206:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     }
+ 207:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     else
+ 208:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     {
+ 209:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****         angleRef = IFX_ANGLETRKF32_ATAN2F((float32)sinIn, (float32)cosIn);
+ 210:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     }
+ 211:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 212:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->angleAtan = angleRef;
+ 213:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     angleRef         = angleRef + phase;
+ 214:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 215:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->angleRef  = angleRef;
+ 216:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 217:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     // Acceleration, zero-order-hold integrator:
+ 218:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     dAccel          = aObsv->cfgData.ki * aObsv->angleErr;
+ 219:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->accelEst = aObsv->accelEst + (dAccel * aObsv->base.Ts);
+ 220:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 221:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     // Speed, zero-order-hold integrator:
+ 222:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     dSpeed           = ((aObsv->cfgData.kp * aObsv->angleErr) + aObsv->accelEst);
+ 223:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->speedEstA = aObsv->speedEstA + (dSpeed * aObsv->base.Ts);
+ 224:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 225:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     // Angle, first-order-hold integrator:
+ 226:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     dAngle           = ((aObsv->cfgData.kd * aObsv->angleErr) + aObsv->speedEstA);
+ 227:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     angleEst         = aObsv->angleEst + ((dAngle + aObsv->speedEstB) * aObsv->halfTs);
+ 228:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->speedEstB = dAngle;
+ 229:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 230:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->angleEst  = Ifx_AngleTrkF32_boundInput(angleEst);
+ 231:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 232:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     // Error, is calculated here to compensate one period delay
+ 233:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->angleErr       = Ifx_AngleTrkF32_boundInput(aObsv->angleRef - aObsv->angleEst);
+ 234:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 235:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->base.direction = aObsv->speedEstB > 0 ? IfxStdIf_Pos_Dir_forward : IfxStdIf_Pos_Dir_back
+ 236:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 237:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** #if IFX_CFG_ANGLETRKF32_SPEED_FILTER
+ 238:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     // Filter speed:
+ 239:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     Ifx_LowPassPt1F32_do(&aObsv->speedLpf, aObsv->speedEstB);
+ 240:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** #endif
+ 241:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 242:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     return aObsv->angleEst;
+ 243:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 244:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 245:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 246:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** /** \brief Set the position offset (in ticks)
+ 247:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * \param aObsv Pointer to the Ifx_AngleTrkF32 object
+ 248:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * \param offset Position offset in ticks 
+ 249:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  */
+ 250:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** void Ifx_AngleTrkF32_setOffset(Ifx_AngleTrkF32 *aObsv, IfxStdIf_Pos_RawAngle offset)
+ 251:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** {
+  13              	 .loc 1 251 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+ 252:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     Ifx_AngleTrkF32_PosIf *base = &aObsv->base;
+  17              	 .loc 1 252 5
+  18              	.LVL1:
+ 253:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     base->offset = offset;
+  19              	 .loc 1 253 5
+  20              	 .loc 1 253 18 is_stmt 0
+  21 0002 59441000 	 st.w [%a4]16,%d4
+ 254:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+  22              	 .loc 1 254 1
+  23 0006 0090     	 ret 
+  24              	.LFE576:
+  26              	 .global Ifx_AngleTrkF32_setOffset_end
+  27              	Ifx_AngleTrkF32_setOffset_end:
+  28              	 .section .text.Ifx_AngleTrkF32_getRawPosition,"ax",@progbits
+  29              	 .align 1
+  30              	 .global Ifx_AngleTrkF32_getRawPosition
+  32              	Ifx_AngleTrkF32_getRawPosition:
+  33              	.LFB579:
+ 255:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 256:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 257:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** /** \brief Update the status flags.
+ 258:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * \param aObsv Pointer to the Ifx_AngleTrkF32 object
+ 259:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * \param sinIn Sinus value
+ 260:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * \param cosIn Cosinus value
+ 261:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * \note This function is automatically called by Ifx_AngleTrkF32_update()
+ 262:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  */
+ 263:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** void Ifx_AngleTrkF32_updateStatus(Ifx_AngleTrkF32 *aObsv, sint16 sinIn, sint16 cosIn)
+ 264:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** {
+ 265:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     Ifx_AngleTrkF32_PosIf *base    = &aObsv->base;
+ 266:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     sint32                  sqrAmpl = ((sint32)sinIn * (sint32)sinIn) + ((sint32)cosIn * (sint32)co
+ 267:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     base->status.B.signalLoss        = (sqrAmpl < aObsv->cfgData.sqrAmplMin);
+ 268:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     base->status.B.signalDegradation = (sqrAmpl > aObsv->cfgData.sqrAmplMax);
+ 269:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     base->status.B.trackingLoss      = __absf(aObsv->angleErr) > aObsv->cfgData.errorThreshold;
+ 270:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 271:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 272:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 273:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** /** \brief Update the object directly from its analog input
+ 274:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * \param aObsv Pointer to the Ifx_AngleTrkF32 object
+ 275:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  */
+ 276:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** void Ifx_AngleTrkF32_update(Ifx_AngleTrkF32 *aObsv)
+ 277:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** {
+ 278:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     Ifx_AngleTrkF32_PosIf *base        = &aObsv->base;
+ 279:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     float32                 angleEst    = Ifx_AngleTrkF32_step(aObsv, *aObsv->sinIn, *aObsv->cosIn,
+ 280:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 281:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     IfxStdIf_Pos_RawAngle   newPosition = (IfxStdIf_Pos_RawAngle)(angleEst * (aObsv->base.resolutio
+ 282:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     newPosition       = newPosition & (aObsv->base.resolution - 1);
+ 283:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     base->rawPosition = newPosition;
+ 284:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 285:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     Ifx_AngleTrkF32_updateStatus(aObsv, *aObsv->sinIn, *aObsv->cosIn);
+ 286:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 287:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 288:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 289:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** /** \brief Returns the actual position
+ 290:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * \param aObsv Pointer to the Ifx_AngleTrkF32 object
+ 291:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * \note This function returns the angular position in ticks [0 .. Ifx_AngleTrkF32.base.resolution-
+ 292:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  */
+ 293:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** IfxStdIf_Pos_RawAngle Ifx_AngleTrkF32_getRawPosition(Ifx_AngleTrkF32 *aObsv)
+ 294:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** {
+  34              	 .loc 1 294 1 is_stmt 1
+  35              	.LVL2:
+  36 0000 40AE     	 mov.aa %a14,%SP
+  37              	.LCFI1:
+ 295:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     Ifx_AngleTrkF32_PosIf *base = &aObsv->base;
+  38              	 .loc 1 295 5
+  39              	.LVL3:
+ 296:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     return base->rawPosition;
+  40              	 .loc 1 296 5
+ 297:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+  41              	 .loc 1 297 1 is_stmt 0
+  42 0002 5442     	 ld.w %d2,[%a4]0
+  43 0004 0090     	 ret 
+  44              	.LFE579:
+  46              	 .global Ifx_AngleTrkF32_getRawPosition_end
+  47              	Ifx_AngleTrkF32_getRawPosition_end:
+  48              	 .section .text.Ifx_AngleTrkF32_getSpeed,"ax",@progbits
+  49              	 .align 1
+  50              	 .global Ifx_AngleTrkF32_getSpeed
+  52              	Ifx_AngleTrkF32_getSpeed:
+  53              	.LFB580:
+ 298:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 299:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 300:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** /** \brief Returns the Speed
+ 301:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  * \param aObsv Pointer to the Ifx_AngleTrkF32 object
+ 302:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****  */
+ 303:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** float32 Ifx_AngleTrkF32_getSpeed(Ifx_AngleTrkF32 *aObsv)
+ 304:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** {
+  54              	 .loc 1 304 1 is_stmt 1
+  55              	.LVL4:
+  56 0000 40AE     	 mov.aa %a14,%SP
+  57              	.LCFI2:
+ 305:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     //return aObsv->speedEstB;   /* note: using speedEstB has better dynamic */
+ 306:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     return aObsv->speedLpf.out;
+  58              	 .loc 1 306 5
+ 307:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+  59              	 .loc 1 307 1 is_stmt 0
+  60 0002 19422C10 	 ld.w %d2,[%a4]108
+  61 0006 0090     	 ret 
+  62              	.LFE580:
+  64              	 .global Ifx_AngleTrkF32_getSpeed_end
+  65              	Ifx_AngleTrkF32_getSpeed_end:
+  66              	 .section .text.Ifx_AngleTrkF32_getAbsolutePosition,"ax",@progbits
+  67              	 .align 1
+  68              	 .global Ifx_AngleTrkF32_getAbsolutePosition
+  70              	Ifx_AngleTrkF32_getAbsolutePosition:
+  71              	.LFB581:
+ 308:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 309:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 310:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** /*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
+ 311:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** float32 Ifx_AngleTrkF32_getAbsolutePosition(Ifx_AngleTrkF32 *driver)
+ 312:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** {
+  72              	 .loc 1 312 1 is_stmt 1
+  73              	.LVL5:
+  74 0000 40AE     	 mov.aa %a14,%SP
+  75              	.LCFI3:
+ 313:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     return ((float32)driver->base.turn + (float32)driver->base.rawPosition / (float32)driver->base.
+  76              	 .loc 1 313 5
+  77              	 .loc 1 313 34 is_stmt 0
+  78 0002 19420400 	 ld.w %d2,[%a4]4
+  79              	 .loc 1 313 13
+  80 0006 4B024131 	 itof %d3,%d2
+  81              	 .loc 1 313 63
+  82 000a 5442     	 ld.w %d2,[%a4]0
+  83              	 .loc 1 313 42
+  84 000c 4B024141 	 itof %d4,%d2
+  85              	 .loc 1 313 99
+  86 0010 19421800 	 ld.w %d2,[%a4]24
+  87              	 .loc 1 313 78
+  88 0014 4B024121 	 itof %d2,%d2
+  89              	 .loc 1 313 76
+  90 0018 4B245120 	 div.f %d2,%d4,%d2
+  91              	 .loc 1 313 40
+  92 001c 6B022123 	 add.f %d2,%d3,%d2
+  93 0020 4B029222 	 ftodf %e2,%d2
+  94              	 .loc 1 313 112
+  95 0024 6B022222 	 add.df %e2,%e2,%e2
+  96              	 .loc 1 313 118
+  97 0028 7B000046 	 movh %d4,24576
+  98 002c 7B900054 	 movh %d5,16393
+  99 0030 1BB51F52 	 addi %d5,%d5,8699
+ 100 0034 4B424220 	 mul.df %e2,%e2,%e4
+ 314:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 101              	 .loc 1 314 1
+ 102 0038 4B028222 	 dftof %d2,%e2
+ 103 003c 0090     	 ret 
+ 104              	.LFE581:
+ 106              	 .global Ifx_AngleTrkF32_getAbsolutePosition_end
+ 107              	Ifx_AngleTrkF32_getAbsolutePosition_end:
+ 108              	 .section .text.Ifx_AngleTrkF32_getDirection,"ax",@progbits
+ 109              	 .align 1
+ 110              	 .global Ifx_AngleTrkF32_getDirection
+ 112              	Ifx_AngleTrkF32_getDirection:
+ 113              	.LFB582:
+ 315:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 316:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 317:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** IfxStdIf_Pos_Dir Ifx_AngleTrkF32_getDirection(Ifx_AngleTrkF32 *driver)
+ 318:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** {
+ 114              	 .loc 1 318 1 is_stmt 1
+ 115              	.LVL6:
+ 116 0000 40AE     	 mov.aa %a14,%SP
+ 117              	.LCFI4:
+ 319:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     return driver->base.direction;
+ 118              	 .loc 1 319 5
+ 320:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 119              	 .loc 1 320 1 is_stmt 0
+ 120 0002 19420800 	 ld.w %d2,[%a4]8
+ 121 0006 0090     	 ret 
+ 122              	.LFE582:
+ 124              	 .global Ifx_AngleTrkF32_getDirection_end
+ 125              	Ifx_AngleTrkF32_getDirection_end:
+ 126              	 .section .text.Ifx_AngleTrkF32_getFault,"ax",@progbits
+ 127              	 .align 1
+ 128              	 .global Ifx_AngleTrkF32_getFault
+ 130              	Ifx_AngleTrkF32_getFault:
+ 131              	.LFB583:
+ 321:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 322:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 323:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** IfxStdIf_Pos_Status Ifx_AngleTrkF32_getFault(Ifx_AngleTrkF32 *driver)
+ 324:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** {
+ 132              	 .loc 1 324 1 is_stmt 1
+ 133              	.LVL7:
+ 134 0000 40AE     	 mov.aa %a14,%SP
+ 135              	.LCFI5:
+ 325:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     return driver->base.status;
+ 136              	 .loc 1 325 5
+ 326:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 137              	 .loc 1 326 1 is_stmt 0
+ 138 0002 19420C00 	 ld.w %d2,[%a4]12
+ 139 0006 0090     	 ret 
+ 140              	.LFE583:
+ 142              	 .global Ifx_AngleTrkF32_getFault_end
+ 143              	Ifx_AngleTrkF32_getFault_end:
+ 144              	 .section .text.Ifx_AngleTrkF32_getOffset,"ax",@progbits
+ 145              	 .align 1
+ 146              	 .global Ifx_AngleTrkF32_getOffset
+ 148              	Ifx_AngleTrkF32_getOffset:
+ 149              	.LFB584:
+ 327:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 328:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 329:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** sint32 Ifx_AngleTrkF32_getOffset(Ifx_AngleTrkF32 *driver)
+ 330:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** {
+ 150              	 .loc 1 330 1 is_stmt 1
+ 151              	.LVL8:
+ 152 0000 40AE     	 mov.aa %a14,%SP
+ 153              	.LCFI6:
+ 331:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     return driver->base.offset;
+ 154              	 .loc 1 331 5
+ 332:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 155              	 .loc 1 332 1 is_stmt 0
+ 156 0002 19421000 	 ld.w %d2,[%a4]16
+ 157 0006 0090     	 ret 
+ 158              	.LFE584:
+ 160              	 .global Ifx_AngleTrkF32_getOffset_end
+ 161              	Ifx_AngleTrkF32_getOffset_end:
+ 162              	 .section .text.Ifx_AngleTrkF32_getPeriodPerRotation,"ax",@progbits
+ 163              	 .align 1
+ 164              	 .global Ifx_AngleTrkF32_getPeriodPerRotation
+ 166              	Ifx_AngleTrkF32_getPeriodPerRotation:
+ 167              	.LFB585:
+ 333:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 334:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 335:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** uint16 Ifx_AngleTrkF32_getPeriodPerRotation(Ifx_AngleTrkF32 *driver)
+ 336:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** {
+ 168              	 .loc 1 336 1 is_stmt 1
+ 169              	.LVL9:
+ 170 0000 40AE     	 mov.aa %a14,%SP
+ 171              	.LCFI7:
+ 337:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     return driver->base.periodPerRotation;
+ 172              	 .loc 1 337 5
+ 338:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 173              	 .loc 1 338 1 is_stmt 0
+ 174 0002 B9421600 	 ld.hu %d2,[%a4]22
+ 175 0006 0090     	 ret 
+ 176              	.LFE585:
+ 178              	 .global Ifx_AngleTrkF32_getPeriodPerRotation_end
+ 179              	Ifx_AngleTrkF32_getPeriodPerRotation_end:
+ 180              	 .section .text.Ifx_AngleTrkF32_getPosition,"ax",@progbits
+ 181              	 .align 1
+ 182              	 .global Ifx_AngleTrkF32_getPosition
+ 184              	Ifx_AngleTrkF32_getPosition:
+ 185              	.LFB586:
+ 339:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 340:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 341:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** float32 Ifx_AngleTrkF32_getPosition(Ifx_AngleTrkF32 *driver)
+ 342:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** {
+ 186              	 .loc 1 342 1 is_stmt 1
+ 187              	.LVL10:
+ 188 0000 40AE     	 mov.aa %a14,%SP
+ 189              	.LCFI8:
+ 343:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     return (float32)driver->base.rawPosition * driver->base.positionConst;
+ 190              	 .loc 1 343 5
+ 191              	 .loc 1 343 33 is_stmt 0
+ 192 0002 5442     	 ld.w %d2,[%a4]0
+ 193              	 .loc 1 343 12
+ 194 0004 4B024131 	 itof %d3,%d2
+ 195              	 .loc 1 343 60
+ 196 0008 19422000 	 ld.w %d2,[%a4]32
+ 344:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 197              	 .loc 1 344 1
+ 198 000c 4B234120 	 mul.f %d2,%d3,%d2
+ 199 0010 0090     	 ret 
+ 200              	.LFE586:
+ 202              	 .global Ifx_AngleTrkF32_getPosition_end
+ 203              	Ifx_AngleTrkF32_getPosition_end:
+ 204              	 .section .text.Ifx_AngleTrkF32_getRefreshPeriod,"ax",@progbits
+ 205              	 .align 1
+ 206              	 .global Ifx_AngleTrkF32_getRefreshPeriod
+ 208              	Ifx_AngleTrkF32_getRefreshPeriod:
+ 209              	.LFB587:
+ 345:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 346:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 347:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** float32 Ifx_AngleTrkF32_getRefreshPeriod(Ifx_AngleTrkF32 *driver)
+ 348:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** {
+ 210              	 .loc 1 348 1 is_stmt 1
+ 211              	.LVL11:
+ 212 0000 40AE     	 mov.aa %a14,%SP
+ 213              	.LCFI9:
+ 349:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     return driver->base.Ts;
+ 214              	 .loc 1 349 5
+ 350:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 215              	 .loc 1 350 1 is_stmt 0
+ 216 0002 19421C00 	 ld.w %d2,[%a4]28
+ 217 0006 0090     	 ret 
+ 218              	.LFE587:
+ 220              	 .global Ifx_AngleTrkF32_getRefreshPeriod_end
+ 221              	Ifx_AngleTrkF32_getRefreshPeriod_end:
+ 222              	 .section .text.Ifx_AngleTrkF32_getResolution,"ax",@progbits
+ 223              	 .align 1
+ 224              	 .global Ifx_AngleTrkF32_getResolution
+ 226              	Ifx_AngleTrkF32_getResolution:
+ 227              	.LFB588:
+ 351:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 352:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 353:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** sint32 Ifx_AngleTrkF32_getResolution(Ifx_AngleTrkF32 *driver)
+ 354:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** {
+ 228              	 .loc 1 354 1 is_stmt 1
+ 229              	.LVL12:
+ 230 0000 40AE     	 mov.aa %a14,%SP
+ 231              	.LCFI10:
+ 355:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     return driver->base.resolution;
+ 232              	 .loc 1 355 5
+ 356:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 233              	 .loc 1 356 1 is_stmt 0
+ 234 0002 19421800 	 ld.w %d2,[%a4]24
+ 235 0006 0090     	 ret 
+ 236              	.LFE588:
+ 238              	 .global Ifx_AngleTrkF32_getResolution_end
+ 239              	Ifx_AngleTrkF32_getResolution_end:
+ 240              	 .section .text.Ifx_AngleTrkF32_getSensorType,"ax",@progbits
+ 241              	 .align 1
+ 242              	 .global Ifx_AngleTrkF32_getSensorType
+ 244              	Ifx_AngleTrkF32_getSensorType:
+ 245              	.LFB589:
+ 357:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 358:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 359:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** IfxStdIf_Pos_SensorType Ifx_AngleTrkF32_getSensorType(Ifx_AngleTrkF32 *driver)
+ 360:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** {
+ 246              	 .loc 1 360 1 is_stmt 1
+ 247              	.LVL13:
+ 248 0000 40AE     	 mov.aa %a14,%SP
+ 249              	.LCFI11:
+ 361:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     return IfxStdIf_Pos_SensorType_angletrk;
+ 250              	 .loc 1 361 5
+ 362:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 251              	 .loc 1 362 1 is_stmt 0
+ 252 0002 8232     	 mov %d2,3
+ 253 0004 0090     	 ret 
+ 254              	.LFE589:
+ 256              	 .global Ifx_AngleTrkF32_getSensorType_end
+ 257              	Ifx_AngleTrkF32_getSensorType_end:
+ 258              	 .section .text.Ifx_AngleTrkF32_getTurn,"ax",@progbits
+ 259              	 .align 1
+ 260              	 .global Ifx_AngleTrkF32_getTurn
+ 262              	Ifx_AngleTrkF32_getTurn:
+ 263              	.LFB590:
+ 363:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 364:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 365:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** sint32 Ifx_AngleTrkF32_getTurn(Ifx_AngleTrkF32 *driver)
+ 366:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** {
+ 264              	 .loc 1 366 1 is_stmt 1
+ 265              	.LVL14:
+ 266 0000 40AE     	 mov.aa %a14,%SP
+ 267              	.LCFI12:
+ 367:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     return driver->base.turn;
+ 268              	 .loc 1 367 5
+ 368:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 269              	 .loc 1 368 1 is_stmt 0
+ 270 0002 19420400 	 ld.w %d2,[%a4]4
+ 271 0006 0090     	 ret 
+ 272              	.LFE590:
+ 274              	 .global Ifx_AngleTrkF32_getTurn_end
+ 275              	Ifx_AngleTrkF32_getTurn_end:
+ 276              	 .section .text.Ifx_AngleTrkF32_resetFaults,"ax",@progbits
+ 277              	 .align 1
+ 278              	 .global Ifx_AngleTrkF32_resetFaults
+ 280              	Ifx_AngleTrkF32_resetFaults:
+ 281              	.LFB591:
+ 369:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 370:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 371:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** void Ifx_AngleTrkF32_resetFaults(Ifx_AngleTrkF32 *driver)
+ 372:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** {
+ 282              	 .loc 1 372 1 is_stmt 1
+ 283              	.LVL15:
+ 284 0000 40AE     	 mov.aa %a14,%SP
+ 285              	.LCFI13:
+ 373:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     driver->base.status.status = 0;
+ 286              	 .loc 1 373 5
+ 287              	 .loc 1 373 32 is_stmt 0
+ 288 0002 8202     	 mov %d2,0
+ 289 0004 59420C00 	 st.w [%a4]12,%d2
+ 374:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 290              	 .loc 1 374 1
+ 291 0008 0090     	 ret 
+ 292              	.LFE591:
+ 294              	 .global Ifx_AngleTrkF32_resetFaults_end
+ 295              	Ifx_AngleTrkF32_resetFaults_end:
+ 296              	 .section .text.Ifx_AngleTrkF32_setRefreshPeriod,"ax",@progbits
+ 297              	 .align 1
+ 298              	 .global Ifx_AngleTrkF32_setRefreshPeriod
+ 300              	Ifx_AngleTrkF32_setRefreshPeriod:
+ 301              	.LFB592:
+ 375:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 376:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 377:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** void Ifx_AngleTrkF32_setRefreshPeriod(Ifx_AngleTrkF32 *driver, float32 updatePeriod)
+ 378:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** {
+ 302              	 .loc 1 378 1 is_stmt 1
+ 303              	.LVL16:
+ 304 0000 40AE     	 mov.aa %a14,%SP
+ 305              	.LCFI14:
+ 379:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     driver->base.Ts = updatePeriod;
+ 306              	 .loc 1 379 5
+ 307              	 .loc 1 379 21 is_stmt 0
+ 308 0002 59441C00 	 st.w [%a4]28,%d4
+ 380:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 309              	 .loc 1 380 1
+ 310 0006 0090     	 ret 
+ 311              	.LFE592:
+ 313              	 .global Ifx_AngleTrkF32_setRefreshPeriod_end
+ 314              	Ifx_AngleTrkF32_setRefreshPeriod_end:
+ 315              	 .section .text.Ifx_AngleTrkF32_reset,"ax",@progbits
+ 316              	 .align 1
+ 317              	 .global Ifx_AngleTrkF32_reset
+ 319              	Ifx_AngleTrkF32_reset:
+ 320              	.LFB593:
+ 381:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 382:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 383:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** void Ifx_AngleTrkF32_reset(Ifx_AngleTrkF32 *driver)
+ 384:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** {
+ 321              	 .loc 1 384 1 is_stmt 1
+ 322              	.LVL17:
+ 323 0000 40AE     	 mov.aa %a14,%SP
+ 324              	.LCFI15:
+ 385:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     driver->base.rawPosition = 0;
+ 325              	 .loc 1 385 5
+ 326              	 .loc 1 385 30 is_stmt 0
+ 327 0002 8203     	 mov %d3,0
+ 328 0004 7443     	 st.w [%a4]0,%d3
+ 386:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     driver->base.direction   = IfxStdIf_Pos_Dir_unknown;
+ 329              	 .loc 1 386 5 is_stmt 1
+ 330              	 .loc 1 386 30 is_stmt 0
+ 331 0006 8222     	 mov %d2,2
+ 332 0008 59420800 	 st.w [%a4]8,%d2
+ 387:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     driver->base.turn        = 0;
+ 333              	 .loc 1 387 5 is_stmt 1
+ 334              	 .loc 1 387 30 is_stmt 0
+ 335 000c 59430400 	 st.w [%a4]4,%d3
+ 388:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     driver->angleErr         = 0.0F;
+ 336              	 .loc 1 388 5 is_stmt 1
+ 337              	 .loc 1 388 30 is_stmt 0
+ 338 0010 8202     	 mov %d2,0
+ 339 0012 59422010 	 st.w [%a4]96,%d2
+ 389:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     driver->angleEst         = 0.0F;
+ 340              	 .loc 1 389 5 is_stmt 1
+ 341              	 .loc 1 389 30 is_stmt 0
+ 342 0016 59421010 	 st.w [%a4]80,%d2
+ 390:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     driver->accelEst         = 0.0F;
+ 343              	 .loc 1 390 5 is_stmt 1
+ 344              	 .loc 1 390 30 is_stmt 0
+ 345 001a 59421C10 	 st.w [%a4]92,%d2
+ 391:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     driver->speedEstA        = 0.0F;
+ 346              	 .loc 1 391 5 is_stmt 1
+ 347              	 .loc 1 391 30 is_stmt 0
+ 348 001e 59421410 	 st.w [%a4]84,%d2
+ 392:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     driver->speedEstB        = 0.0F;
+ 349              	 .loc 1 392 5 is_stmt 1
+ 350              	 .loc 1 392 30 is_stmt 0
+ 351 0022 59421810 	 st.w [%a4]88,%d2
+ 393:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     driver->angleRef         = 0.0F;
+ 352              	 .loc 1 393 5 is_stmt 1
+ 353              	 .loc 1 393 30 is_stmt 0
+ 354 0026 59420C10 	 st.w [%a4]76,%d2
+ 394:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** #if IFX_CFG_ANGLETRKF32_SPEED_FILTER
+ 395:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     Ifx_LowPassPt1F32_reset(&driver->speedLpf);
+ 355              	 .loc 1 395 5 is_stmt 1
+ 356              	.LVL18:
+ 357              	.LBB14:
+ 358              	.LBB15:
+ 359              	 .file 2 "../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h"
+   1:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h **** /**
+   2:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  * \file Ifx_LowPassPt1F32.h
+   3:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  * \brief Low pass filter PT1
+   4:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  *
+   5:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  *
+   8:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  *
+   9:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****   *                                 IMPORTANT NOTICE
+  10:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  *
+  11:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  *
+  12:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  * this file except in compliance with IFASLL.
+  15:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  *
+  16:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  *
+  26:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  * \defgroup library_srvsw_sysse_math_f32_lowpasspt1 Low-pass Filter: Type PT1
+  27:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  * This module implements a PT1 low pass filter.
+  28:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  * http://de.wikipedia.org/wiki/PT1-Glied
+  29:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  *
+  30:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  * Formula: \n
+  31:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  * \f$ y_k = y_{k-1} + a * x_k - b * y_{k-1} \f$ \n
+  32:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  * with \f$(T^* = \frac{T_s}{T+T_s})\f$, \f$(a = K*T^*)\f$, \f$(b = T^*)\f$
+  33:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  * with \f$(T_s: Sample time)\f$, \f$(K: Gain)\f$, \f$(T = \frac{1}{\omega_0})\f$
+  34:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  *
+  35:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  * \ingroup library_srvsw_sysse_math_f32
+  36:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  *
+  37:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  */
+  38:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h **** 
+  39:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h **** #ifndef IFX_LOWPASSPT1F32_H
+  40:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h **** #define IFX_LOWPASSPT1F32_H 1
+  41:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h **** //------------------------------------------------------------------------------
+  42:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h **** #include "Ifx_Types.h"
+  43:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h **** //------------------------------------------------------------------------------
+  44:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h **** 
+  45:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h **** /** \brief PT1 object definition.
+  46:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  */
+  47:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h **** typedef struct
+  48:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h **** {
+  49:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****     float32 a;              /**< \brief a parameter */
+  50:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****     float32 b;              /**< \brief b parameter */
+  51:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****     float32 out;            /**< \brief last output */
+  52:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h **** } Ifx_LowPassPt1F32;
+  53:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h **** 
+  54:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h **** /** \brief PT1 configuration */
+  55:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h **** typedef struct
+  56:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h **** {
+  57:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****     float32 cutOffFrequency; /**< \brief Cut off frequency */
+  58:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****     float32 gain;            /**< \brief Gain */
+  59:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****     float32 samplingTime;    /**< \brief Sampling time */
+  60:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h **** } Ifx_LowPassPt1F32_Config;
+  61:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h **** 
+  62:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h **** //------------------------------------------------------------------------------
+  63:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h **** 
+  64:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h **** /** \addtogroup  library_srvsw_sysse_math_f32_lowpasspt1
+  65:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  * \{ */
+  66:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h **** IFX_EXTERN void    Ifx_LowPassPt1F32_init(Ifx_LowPassPt1F32 *filter, const Ifx_LowPassPt1F32_Config
+  67:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h **** IFX_INLINE void    Ifx_LowPassPt1F32_reset(Ifx_LowPassPt1F32 *filter);
+  68:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h **** IFX_EXTERN float32 Ifx_LowPassPt1F32_do(Ifx_LowPassPt1F32 *filter, float32 input);
+  69:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h **** /** \} */
+  70:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h **** 
+  71:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h **** //------------------------------------------------------------------------------
+  72:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h **** 
+  73:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h **** /** \brief Reset the internal filter variable
+  74:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  * \param filter Specifies PT1 filter.
+  75:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****  */
+  76:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h **** IFX_INLINE void Ifx_LowPassPt1F32_reset(Ifx_LowPassPt1F32 *filter)
+  77:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h **** {
+  78:../Libraries/Service/Tricore/Math/Ifx_LowPassPt1F32.h ****     filter->out = 0.0;
+ 360              	 .loc 2 78 5
+ 361              	 .loc 2 78 17 is_stmt 0
+ 362 002a 59422C10 	 st.w [%a4]108,%d2
+ 363              	.LVL19:
+ 364              	.LBE15:
+ 365              	.LBE14:
+ 396:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** #endif
+ 397:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 398:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     driver->base.status.status = 0;
+ 366              	 .loc 1 398 5 is_stmt 1
+ 367              	 .loc 1 398 32 is_stmt 0
+ 368 002e 59430C00 	 st.w [%a4]12,%d3
+ 399:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 369              	 .loc 1 399 1
+ 370 0032 0090     	 ret 
+ 371              	.LFE593:
+ 373              	 .global Ifx_AngleTrkF32_reset_end
+ 374              	Ifx_AngleTrkF32_reset_end:
+ 375              	 .section .text.round_f,"ax",@progbits
+ 376              	 .align 1
+ 378              	round_f:
+ 379              	.LFB570:
+  82:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     /*lint -e632 -e633 -e524*/
+ 380              	 .loc 1 82 1 is_stmt 1
+ 381              	.LVL20:
+ 382 0000 40AE     	 mov.aa %a14,%SP
+ 383              	.LCFI16:
+  84:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 384              	 .loc 1 84 5
+  84:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 385              	 .loc 1 84 12 is_stmt 0
+ 386 0002 4B043131 	 ftoiz %d3,%d4
+ 387              	.LVL21:
+  87:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     {
+ 388              	 .loc 1 87 5 is_stmt 1
+  87:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     {
+ 389              	 .loc 1 87 16 is_stmt 0
+ 390 0006 4B034121 	 itof %d2,%d3
+  87:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     {
+ 391              	 .loc 1 87 14
+ 392 000a 6B023144 	 sub.f %d4,%d4,%d2
+ 393              	.LVL22:
+  87:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     {
+ 394              	 .loc 1 87 8
+ 395 000e 7B00F053 	 movh %d5,16128
+ 396 0012 4B540140 	 cmp.f %d4,%d4,%d5
+ 397 0016 6F240000 	 jz.t %d4,2,.L17
+  89:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     }
+ 398              	 .loc 1 89 9 is_stmt 1
+  89:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     }
+ 399              	 .loc 1 89 31 is_stmt 0
+ 400 001a 1B130020 	 addi %d2,%d3,1
+  89:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     }
+ 401              	 .loc 1 89 13
+ 402 001e 4B024121 	 itof %d2,%d2
+ 403              	.LVL23:
+  96:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 404              	 .loc 1 96 5 is_stmt 1
+ 405              	.L17:
+  97:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 406              	 .loc 1 97 1 is_stmt 0
+ 407 0022 0090     	 ret 
+ 408              	.LFE570:
+ 410              	 .section .text.Ifx_AngleTrkF32_setControlGains,"ax",@progbits
+ 411              	 .align 1
+ 412              	 .global Ifx_AngleTrkF32_setControlGains
+ 414              	Ifx_AngleTrkF32_setControlGains:
+ 415              	.LFB571:
+ 107:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     cfgData->kp = ((2 * K) + (psi * psi) + 1) / (T * T);
+ 416              	 .loc 1 107 1 is_stmt 1
+ 417              	.LVL24:
+ 418 0000 40AE     	 mov.aa %a14,%SP
+ 419              	.LCFI17:
+ 108:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     cfgData->ki = K * ((psi * psi) + 1) / (T * T * T);
+ 420              	 .loc 1 108 5
+ 108:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     cfgData->ki = K * ((psi * psi) + 1) / (T * T * T);
+ 421              	 .loc 1 108 23 is_stmt 0
+ 422 0002 6B042124 	 add.f %d2,%d4,%d4
+ 108:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     cfgData->ki = K * ((psi * psi) + 1) / (T * T * T);
+ 423              	 .loc 1 108 35
+ 424 0006 4B664130 	 mul.f %d3,%d6,%d6
+ 108:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     cfgData->ki = K * ((psi * psi) + 1) / (T * T * T);
+ 425              	 .loc 1 108 28
+ 426 000a 6B032122 	 add.f %d2,%d2,%d3
+ 108:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     cfgData->ki = K * ((psi * psi) + 1) / (T * T * T);
+ 427              	 .loc 1 108 42
+ 428 000e 7B00F863 	 movh %d6,16256
+ 429              	.LVL25:
+ 430 0012 6B062172 	 add.f %d7,%d2,%d6
+ 108:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     cfgData->ki = K * ((psi * psi) + 1) / (T * T * T);
+ 431              	 .loc 1 108 52
+ 432 0016 4B554120 	 mul.f %d2,%d5,%d5
+ 108:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     cfgData->ki = K * ((psi * psi) + 1) / (T * T * T);
+ 433              	 .loc 1 108 47
+ 434 001a 4B275170 	 div.f %d7,%d7,%d2
+ 108:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     cfgData->ki = K * ((psi * psi) + 1) / (T * T * T);
+ 435              	 .loc 1 108 17
+ 436 001e 7447     	 st.w [%a4]0,%d7
+ 109:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     cfgData->kd = (K + 2) / T;
+ 437              	 .loc 1 109 5 is_stmt 1
+ 109:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     cfgData->kd = (K + 2) / T;
+ 438              	 .loc 1 109 36 is_stmt 0
+ 439 0020 6B062133 	 add.f %d3,%d3,%d6
+ 109:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     cfgData->kd = (K + 2) / T;
+ 440              	 .loc 1 109 21
+ 441 0024 4B434130 	 mul.f %d3,%d3,%d4
+ 109:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     cfgData->kd = (K + 2) / T;
+ 442              	 .loc 1 109 50
+ 443 0028 4B524120 	 mul.f %d2,%d2,%d5
+ 109:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     cfgData->kd = (K + 2) / T;
+ 444              	 .loc 1 109 41
+ 445 002c 4B235120 	 div.f %d2,%d3,%d2
+ 109:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     cfgData->kd = (K + 2) / T;
+ 446              	 .loc 1 109 17
+ 447 0030 59420400 	 st.w [%a4]4,%d2
+ 110:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 448              	 .loc 1 110 5 is_stmt 1
+ 110:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 449              	 .loc 1 110 22 is_stmt 0
+ 450 0034 7B000024 	 movh %d2,16384
+ 451 0038 6B022124 	 add.f %d2,%d4,%d2
+ 110:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 452              	 .loc 1 110 27
+ 453 003c 4B525120 	 div.f %d2,%d2,%d5
+ 110:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 454              	 .loc 1 110 17
+ 455 0040 59420800 	 st.w [%a4]8,%d2
+ 111:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 456              	 .loc 1 111 1
+ 457 0044 0090     	 ret 
+ 458              	.LFE571:
+ 460              	 .global Ifx_AngleTrkF32_setControlGains_end
+ 461              	Ifx_AngleTrkF32_setControlGains_end:
+ 462              	 .section .text.Ifx_AngleTrkF32_initConfig,"ax",@progbits
+ 463              	 .align 1
+ 464              	 .global Ifx_AngleTrkF32_initConfig
+ 466              	Ifx_AngleTrkF32_initConfig:
+ 467              	.LFB572:
+ 116:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     Ifx_AngleTrkF32_CfgData cfgData;
+ 468              	 .loc 1 116 1 is_stmt 1
+ 469              	.LVL26:
+ 470 0000 40AE     	 mov.aa %a14,%SP
+ 471              	.LCFI18:
+ 472 0002 2018     	 sub.a %SP,24
+ 473 0004 404C     	 mov.aa %a12,%a4
+ 474 0006 8059     	 mov.d %d9,%a5
+ 475 0008 8068     	 mov.d %d8,%a6
+ 117:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     Ifx_AngleTrkF32_setControlGains(&cfgData, ATO_K, ATO_T, ATO_PSI);
+ 476              	 .loc 1 117 5
+ 118:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->kp                = cfgData.kp;
+ 477              	 .loc 1 118 5
+ 478 000a 7B700964 	 movh %d6,16535
+ 479 000e 1B46BE6C 	 addi %d6,%d6,-13340
+ 480 0012 7B60C753 	 movh %d5,15478
+ 481 0016 1BF5285C 	 addi %d5,%d5,-15729
+ 482 001a 7BC02144 	 movh %d4,16924
+ 483 001e 1B343343 	 addi %d4,%d4,13107
+ 484 0022 D9E4E8FF 	 lea %a4,[%a14]-24
+ 485              	.LVL27:
+ 486 0026 6D000000 	 call Ifx_AngleTrkF32_setControlGains
+ 487              	.LVL28:
+ 119:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->ki                = cfgData.ki;
+ 488              	 .loc 1 119 5
+ 119:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->ki                = cfgData.ki;
+ 489              	 .loc 1 119 40 is_stmt 0
+ 490 002a 19E2E8FF 	 ld.w %d2,[%a14]-24
+ 119:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->ki                = cfgData.ki;
+ 491              	 .loc 1 119 31
+ 492 002e 74C2     	 st.w [%a12]0,%d2
+ 120:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->kd                = cfgData.kd;
+ 493              	 .loc 1 120 5 is_stmt 1
+ 120:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->kd                = cfgData.kd;
+ 494              	 .loc 1 120 40 is_stmt 0
+ 495 0030 19E2ECFF 	 ld.w %d2,[%a14]-20
+ 120:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->kd                = cfgData.kd;
+ 496              	 .loc 1 120 31
+ 497 0034 59C20400 	 st.w [%a12]4,%d2
+ 121:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->sinIn             = sinIn;
+ 498              	 .loc 1 121 5 is_stmt 1
+ 121:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->sinIn             = sinIn;
+ 499              	 .loc 1 121 40 is_stmt 0
+ 500 0038 19E2F0FF 	 ld.w %d2,[%a14]-16
+ 121:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->sinIn             = sinIn;
+ 501              	 .loc 1 121 31
+ 502 003c 59C20800 	 st.w [%a12]8,%d2
+ 122:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->cosIn             = cosIn;
+ 503              	 .loc 1 122 5 is_stmt 1
+ 122:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->cosIn             = cosIn;
+ 504              	 .loc 1 122 31 is_stmt 0
+ 505 0040 59C92800 	 st.w [%a12]40,%d9
+ 123:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->errorThreshold    = 5.0f / 180 * IFX_PI;
+ 506              	 .loc 1 123 5 is_stmt 1
+ 123:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->errorThreshold    = 5.0f / 180 * IFX_PI;
+ 507              	 .loc 1 123 31 is_stmt 0
+ 508 0044 59C82C00 	 st.w [%a12]44,%d8
+ 124:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->sqrAmplMax        = (sint32)((1.01f * 1.01f) * 2048);
+ 509              	 .loc 1 124 5 is_stmt 1
+ 124:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->sqrAmplMax        = (sint32)((1.01f * 1.01f) * 2048);
+ 510              	 .loc 1 124 31 is_stmt 0
+ 511 0048 7B30DB23 	 movh %d2,15795
+ 512 004c 1B328C2B 	 addi %d2,%d2,-18237
+ 513 0050 59C21000 	 st.w [%a12]16,%d2
+ 125:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->sqrAmplMin        = (sint32)((0.99f * 0.99f) * 2048);
+ 514              	 .loc 1 125 5 is_stmt 1
+ 125:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->sqrAmplMin        = (sint32)((0.99f * 0.99f) * 2048);
+ 515              	 .loc 1 125 31 is_stmt 0
+ 516 0054 3B908220 	 mov %d2,2089
+ 517 0058 59C21400 	 st.w [%a12]20,%d2
+ 126:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->speedLpfFc        = 100;
+ 518              	 .loc 1 126 5 is_stmt 1
+ 126:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->speedLpfFc        = 100;
+ 519              	 .loc 1 126 31 is_stmt 0
+ 520 005c 3B707D20 	 mov %d2,2007
+ 521 0060 59C21800 	 st.w [%a12]24,%d2
+ 127:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->periodPerRotation = 1;
+ 522              	 .loc 1 127 5 is_stmt 1
+ 127:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->periodPerRotation = 1;
+ 523              	 .loc 1 127 31 is_stmt 0
+ 524 0064 7B802C24 	 movh %d2,17096
+ 525 0068 59C20C00 	 st.w [%a12]12,%d2
+ 128:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->reversed          = FALSE;
+ 526              	 .loc 1 128 5 is_stmt 1
+ 128:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->reversed          = FALSE;
+ 527              	 .loc 1 128 31 is_stmt 0
+ 528 006c 8212     	 mov %d2,1
+ 529 006e F9C21C00 	 st.h [%a12]28,%d2
+ 129:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->offset            = 0;
+ 530              	 .loc 1 129 5 is_stmt 1
+ 129:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->offset            = 0;
+ 531              	 .loc 1 129 31 is_stmt 0
+ 532 0072 8202     	 mov %d2,0
+ 533 0074 E9C21E00 	 st.b [%a12]30,%d2
+ 130:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->resolution        = (1UL << 12);/** \brief 12-bit default resolution */
+ 534              	 .loc 1 130 5 is_stmt 1
+ 130:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     config->resolution        = (1UL << 12);/** \brief 12-bit default resolution */
+ 535              	 .loc 1 130 31 is_stmt 0
+ 536 0078 8202     	 mov %d2,0
+ 537 007a 59C22400 	 st.w [%a12]36,%d2
+ 131:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 538              	 .loc 1 131 5 is_stmt 1
+ 131:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 539              	 .loc 1 131 31 is_stmt 0
+ 540 007e 3B000021 	 mov %d2,4096
+ 541 0082 59C22000 	 st.w [%a12]32,%d2
+ 132:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 542              	 .loc 1 132 1
+ 543 0086 0090     	 ret 
+ 544              	.LFE572:
+ 546              	 .global Ifx_AngleTrkF32_initConfig_end
+ 547              	Ifx_AngleTrkF32_initConfig_end:
+ 548              	 .section .text.Ifx_AngleTrkF32_setUserSampling,"ax",@progbits
+ 549              	 .align 1
+ 550              	 .global Ifx_AngleTrkF32_setUserSampling
+ 552              	Ifx_AngleTrkF32_setUserSampling:
+ 553              	.LFB573:
+ 136:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->base.Ts = Ts;
+ 554              	 .loc 1 136 1 is_stmt 1
+ 555              	.LVL29:
+ 556 0000 40AE     	 mov.aa %a14,%SP
+ 557              	.LCFI19:
+ 137:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->halfTs  = aObsv->base.Ts / 2.0F;
+ 558              	 .loc 1 137 5
+ 137:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->halfTs  = aObsv->base.Ts / 2.0F;
+ 559              	 .loc 1 137 20 is_stmt 0
+ 560 0002 59441C00 	 st.w [%a4]28,%d4
+ 138:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 561              	 .loc 1 138 5 is_stmt 1
+ 138:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 562              	 .loc 1 138 37 is_stmt 0
+ 563 0006 7B00F023 	 movh %d2,16128
+ 564 000a 4B244120 	 mul.f %d2,%d4,%d2
+ 138:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 565              	 .loc 1 138 20
+ 566 000e 59420410 	 st.w [%a4]68,%d2
+ 139:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 567              	 .loc 1 139 1
+ 568 0012 0090     	 ret 
+ 569              	.LFE573:
+ 571              	 .global Ifx_AngleTrkF32_setUserSampling_end
+ 572              	Ifx_AngleTrkF32_setUserSampling_end:
+ 573              	 .section .text.Ifx_AngleTrkF32_init,"ax",@progbits
+ 574              	 .align 1
+ 575              	 .global Ifx_AngleTrkF32_init
+ 577              	Ifx_AngleTrkF32_init:
+ 578              	.LFB574:
+ 148:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->base.offset            = config->offset;
+ 579              	 .loc 1 148 1 is_stmt 1
+ 580              	.LVL30:
+ 581 0000 40AE     	 mov.aa %a14,%SP
+ 582              	.LCFI20:
+ 583 0002 2010     	 sub.a %SP,16
+ 584 0004 404C     	 mov.aa %a12,%a4
+ 585 0006 405D     	 mov.aa %a13,%a5
+ 586 0008 0248     	 mov %d8,%d4
+ 149:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->base.resolution        = config->resolution;
+ 587              	 .loc 1 149 5
+ 149:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->base.resolution        = config->resolution;
+ 588              	 .loc 1 149 35 is_stmt 0
+ 589 000a 19522400 	 ld.w %d2,[%a5]36
+ 590 000e 59421000 	 st.w [%a4]16,%d2
+ 150:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->base.reversed          = config->reversed;
+ 591              	 .loc 1 150 5 is_stmt 1
+ 150:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->base.reversed          = config->reversed;
+ 592              	 .loc 1 150 43 is_stmt 0
+ 593 0012 19532000 	 ld.w %d3,[%a5]32
+ 150:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->base.reversed          = config->reversed;
+ 594              	 .loc 1 150 35
+ 595 0016 59431800 	 st.w [%a4]24,%d3
+ 151:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->base.Ts                = Ts;
+ 596              	 .loc 1 151 5 is_stmt 1
+ 151:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->base.Ts                = Ts;
+ 597              	 .loc 1 151 43 is_stmt 0
+ 598 001a 39521E00 	 ld.bu %d2,[%a5]30
+ 151:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->base.Ts                = Ts;
+ 599              	 .loc 1 151 35
+ 600 001e E9421400 	 st.b [%a4]20,%d2
+ 152:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->base.rawPosition       = 0;
+ 601              	 .loc 1 152 5 is_stmt 1
+ 152:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->base.rawPosition       = 0;
+ 602              	 .loc 1 152 35 is_stmt 0
+ 603 0022 59441C00 	 st.w [%a4]28,%d4
+ 153:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->base.direction         = IfxStdIf_Pos_Dir_unknown;
+ 604              	 .loc 1 153 5 is_stmt 1
+ 153:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->base.direction         = IfxStdIf_Pos_Dir_unknown;
+ 605              	 .loc 1 153 35 is_stmt 0
+ 606 0026 8202     	 mov %d2,0
+ 607 0028 7442     	 st.w [%a4]0,%d2
+ 154:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->base.turn              = 0;
+ 608              	 .loc 1 154 5 is_stmt 1
+ 154:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->base.turn              = 0;
+ 609              	 .loc 1 154 35 is_stmt 0
+ 610 002a 8225     	 mov %d5,2
+ 611 002c 59450800 	 st.w [%a4]8,%d5
+ 155:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->base.status.status     = 0;
+ 612              	 .loc 1 155 5 is_stmt 1
+ 155:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->base.status.status     = 0;
+ 613              	 .loc 1 155 35 is_stmt 0
+ 614 0030 59420400 	 st.w [%a4]4,%d2
+ 156:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->base.periodPerRotation = config->periodPerRotation;
+ 615              	 .loc 1 156 5 is_stmt 1
+ 156:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->base.periodPerRotation = config->periodPerRotation;
+ 616              	 .loc 1 156 35 is_stmt 0
+ 617 0034 59420C00 	 st.w [%a4]12,%d2
+ 157:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->base.positionConst     = 1.0 / (float32)aObsv->base.resolution * 2.0 * IFX_PI;
+ 618              	 .loc 1 157 5 is_stmt 1
+ 157:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->base.positionConst     = 1.0 / (float32)aObsv->base.resolution * 2.0 * IFX_PI;
+ 619              	 .loc 1 157 43 is_stmt 0
+ 620 0038 B9521C00 	 ld.hu %d2,[%a5]28
+ 157:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->base.positionConst     = 1.0 / (float32)aObsv->base.resolution * 2.0 * IFX_PI;
+ 621              	 .loc 1 157 35
+ 622 003c F9421600 	 st.h [%a4]22,%d2
+ 158:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 623              	 .loc 1 158 5 is_stmt 1
+ 158:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 624              	 .loc 1 158 43 is_stmt 0
+ 625 0040 4B034121 	 itof %d2,%d3
+ 626 0044 4B029222 	 ftodf %e2,%d2
+ 158:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 627              	 .loc 1 158 41
+ 628 0048 8206     	 mov %d6,0
+ 629 004a 7B00FF73 	 movh %d7,16368
+ 630 004e 4B265220 	 div.df %e2,%e6,%e2
+ 158:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 631              	 .loc 1 158 75
+ 632 0052 6B022222 	 add.df %e2,%e2,%e2
+ 158:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 633              	 .loc 1 158 81
+ 634 0056 7B000066 	 movh %d6,24576
+ 635 005a 7B900074 	 movh %d7,16393
+ 636 005e 1BB71F72 	 addi %d7,%d7,8699
+ 637 0062 4B624220 	 mul.df %e2,%e2,%e6
+ 638 0066 4B028222 	 dftof %d2,%e2
+ 158:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 639              	 .loc 1 158 35
+ 640 006a 59422000 	 st.w [%a4]32,%d2
+ 160:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->cfgData.ki             = config->ki;
+ 641              	 .loc 1 160 5 is_stmt 1
+ 160:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->cfgData.ki             = config->ki;
+ 642              	 .loc 1 160 43 is_stmt 0
+ 643 006e 19520800 	 ld.w %d2,[%a5]8
+ 160:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->cfgData.ki             = config->ki;
+ 644              	 .loc 1 160 35
+ 645 0072 59422C00 	 st.w [%a4]44,%d2
+ 161:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->cfgData.kp             = config->kp;
+ 646              	 .loc 1 161 5 is_stmt 1
+ 161:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->cfgData.kp             = config->kp;
+ 647              	 .loc 1 161 43 is_stmt 0
+ 648 0076 19520400 	 ld.w %d2,[%a5]4
+ 161:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->cfgData.kp             = config->kp;
+ 649              	 .loc 1 161 35
+ 650 007a 59422800 	 st.w [%a4]40,%d2
+ 162:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->cfgData.errorThreshold = config->errorThreshold;
+ 651              	 .loc 1 162 5 is_stmt 1
+ 162:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->cfgData.errorThreshold = config->errorThreshold;
+ 652              	 .loc 1 162 43 is_stmt 0
+ 653 007e 5452     	 ld.w %d2,[%a5]0
+ 162:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->cfgData.errorThreshold = config->errorThreshold;
+ 654              	 .loc 1 162 35
+ 655 0080 59422400 	 st.w [%a4]36,%d2
+ 163:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->cfgData.sqrAmplMax     = config->sqrAmplMax;
+ 656              	 .loc 1 163 5 is_stmt 1
+ 163:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->cfgData.sqrAmplMax     = config->sqrAmplMax;
+ 657              	 .loc 1 163 43 is_stmt 0
+ 658 0084 19521000 	 ld.w %d2,[%a5]16
+ 163:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->cfgData.sqrAmplMax     = config->sqrAmplMax;
+ 659              	 .loc 1 163 35
+ 660 0088 59423000 	 st.w [%a4]48,%d2
+ 164:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->cfgData.sqrAmplMin     = config->sqrAmplMin;
+ 661              	 .loc 1 164 5 is_stmt 1
+ 164:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->cfgData.sqrAmplMin     = config->sqrAmplMin;
+ 662              	 .loc 1 164 35 is_stmt 0
+ 663 008c 19521400 	 ld.w %d2,[%a5]20
+ 664 0090 59423400 	 st.w [%a4]52,%d2
+ 165:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->sinIn                  = config->sinIn;
+ 665              	 .loc 1 165 5 is_stmt 1
+ 165:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->sinIn                  = config->sinIn;
+ 666              	 .loc 1 165 35 is_stmt 0
+ 667 0094 19521800 	 ld.w %d2,[%a5]24
+ 668 0098 59423800 	 st.w [%a4]56,%d2
+ 166:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->cosIn                  = config->cosIn;
+ 669              	 .loc 1 166 5 is_stmt 1
+ 166:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->cosIn                  = config->cosIn;
+ 670              	 .loc 1 166 35 is_stmt 0
+ 671 009c 19522800 	 ld.w %d2,[%a5]40
+ 672 00a0 59423C00 	 st.w [%a4]60,%d2
+ 167:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 673              	 .loc 1 167 5 is_stmt 1
+ 167:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 674              	 .loc 1 167 35 is_stmt 0
+ 675 00a4 19522C00 	 ld.w %d2,[%a5]44
+ 676 00a8 59420010 	 st.w [%a4]64,%d2
+ 169:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->angleErr  = 0.0F;
+ 677              	 .loc 1 169 5 is_stmt 1
+ 678 00ac 6D000000 	 call Ifx_AngleTrkF32_setUserSampling
+ 679              	.LVL31:
+ 170:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->angleEst  = 0.0F;
+ 680              	 .loc 1 170 5
+ 170:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->angleEst  = 0.0F;
+ 681              	 .loc 1 170 22 is_stmt 0
+ 682 00b0 8202     	 mov %d2,0
+ 683 00b2 59C22010 	 st.w [%a12]96,%d2
+ 171:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->accelEst  = 0.0F;
+ 684              	 .loc 1 171 5 is_stmt 1
+ 171:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->accelEst  = 0.0F;
+ 685              	 .loc 1 171 22 is_stmt 0
+ 686 00b6 59C21010 	 st.w [%a12]80,%d2
+ 172:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->speedEstA = 0.0F;
+ 687              	 .loc 1 172 5 is_stmt 1
+ 172:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->speedEstA = 0.0F;
+ 688              	 .loc 1 172 22 is_stmt 0
+ 689 00ba 59C21C10 	 st.w [%a12]92,%d2
+ 173:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->speedEstB = 0.0F;
+ 690              	 .loc 1 173 5 is_stmt 1
+ 173:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->speedEstB = 0.0F;
+ 691              	 .loc 1 173 22 is_stmt 0
+ 692 00be 59C21410 	 st.w [%a12]84,%d2
+ 174:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->angleRef  = 0.0F;
+ 693              	 .loc 1 174 5 is_stmt 1
+ 174:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->angleRef  = 0.0F;
+ 694              	 .loc 1 174 22 is_stmt 0
+ 695 00c2 59C21810 	 st.w [%a12]88,%d2
+ 175:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     {
+ 696              	 .loc 1 175 5 is_stmt 1
+ 175:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     {
+ 697              	 .loc 1 175 22 is_stmt 0
+ 698 00c6 59C20C10 	 st.w [%a12]76,%d2
+ 699              	.LBB16:
+ 178:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****         lpfConfig.gain            = 1.0F;
+ 700              	 .loc 1 178 9 is_stmt 1
+ 179:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****         lpfConfig.cutOffFrequency = (2 * IFX_PI * config->speedLpfFc);
+ 701              	 .loc 1 179 9
+ 179:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****         lpfConfig.cutOffFrequency = (2 * IFX_PI * config->speedLpfFc);
+ 702              	 .loc 1 179 35 is_stmt 0
+ 703 00ca 7B00F823 	 movh %d2,16256
+ 704 00ce 59E2F8FF 	 st.w [%a14]-8,%d2
+ 180:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****         lpfConfig.samplingTime    = Ts;
+ 705              	 .loc 1 180 9 is_stmt 1
+ 180:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****         lpfConfig.samplingTime    = Ts;
+ 706              	 .loc 1 180 57 is_stmt 0
+ 707 00d2 19D20C00 	 ld.w %d2,[%a13]12
+ 180:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****         lpfConfig.samplingTime    = Ts;
+ 708              	 .loc 1 180 49
+ 709 00d6 7B900C34 	 movh %d3,16585
+ 710 00da 1BB3FD30 	 addi %d3,%d3,4059
+ 711 00de 4B324120 	 mul.f %d2,%d2,%d3
+ 180:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****         lpfConfig.samplingTime    = Ts;
+ 712              	 .loc 1 180 35
+ 713 00e2 59E2F4FF 	 st.w [%a14]-12,%d2
+ 181:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****         Ifx_LowPassPt1F32_init(&aObsv->speedLpf, &lpfConfig);
+ 714              	 .loc 1 181 9 is_stmt 1
+ 181:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****         Ifx_LowPassPt1F32_init(&aObsv->speedLpf, &lpfConfig);
+ 715              	 .loc 1 181 35 is_stmt 0
+ 716 00e6 59E8FCFF 	 st.w [%a14]-4,%d8
+ 182:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** #endif
+ 717              	 .loc 1 182 9 is_stmt 1
+ 718 00ea D9E5F4FF 	 lea %a5,[%a14]-12
+ 719 00ee D9C42410 	 lea %a4,[%a12]100
+ 720 00f2 6D000000 	 call Ifx_LowPassPt1F32_init
+ 721              	.LVL32:
+ 722              	.LBE16:
+ 185:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 723              	 .loc 1 185 1 is_stmt 0
+ 724 00f6 0090     	 ret 
+ 725              	.LFE574:
+ 727              	 .global Ifx_AngleTrkF32_init_end
+ 728              	Ifx_AngleTrkF32_init_end:
+ 729              	 .section .text.Ifx_AngleTrkF32_step,"ax",@progbits
+ 730              	 .align 1
+ 731              	 .global Ifx_AngleTrkF32_step
+ 733              	Ifx_AngleTrkF32_step:
+ 734              	.LFB575:
+ 200:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     float32 angleRef, angleEst, dAccel, dSpeed, dAngle;
+ 735              	 .loc 1 200 1 is_stmt 1
+ 736              	.LVL33:
+ 737 0000 40AE     	 mov.aa %a14,%SP
+ 738              	.LCFI21:
+ 739 0002 404C     	 mov.aa %a12,%a4
+ 740 0004 0268     	 mov %d8,%d6
+ 741 0006 37055020 	 extr %d2,%d5,0,16
+ 201:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 742              	 .loc 1 201 5
+ 203:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     {
+ 743              	 .loc 1 203 5
+ 203:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     {
+ 744              	 .loc 1 203 20 is_stmt 0
+ 745 000a 39431400 	 ld.bu %d3,[%a4]20
+ 203:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     {
+ 746              	 .loc 1 203 8
+ 747 000e DF030000 	 jz %d3,.L26
+ 205:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     }
+ 748              	 .loc 1 205 9 is_stmt 1
+ 205:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     }
+ 749              	 .loc 1 205 20 is_stmt 0
+ 750 0012 4B044151 	 itof %d5,%d4
+ 751              	.LVL34:
+ 752 0016 4B024141 	 itof %d4,%d2
+ 753              	.LVL35:
+ 754 001a 6D000000 	 call Ifx_LutAtan2F32_float32
+ 755              	.LVL36:
+ 756              	.L27:
+ 212:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     angleRef         = angleRef + phase;
+ 757              	 .loc 1 212 5 is_stmt 1
+ 212:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     angleRef         = angleRef + phase;
+ 758              	 .loc 1 212 22 is_stmt 0
+ 759 001e 59C20810 	 st.w [%a12]72,%d2
+ 213:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 760              	 .loc 1 213 5 is_stmt 1
+ 213:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 761              	 .loc 1 213 22 is_stmt 0
+ 762 0022 6B082162 	 add.f %d6,%d2,%d8
+ 763              	.LVL37:
+ 215:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 764              	 .loc 1 215 5 is_stmt 1
+ 215:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 765              	 .loc 1 215 22 is_stmt 0
+ 766 0026 59C60C10 	 st.w [%a12]76,%d6
+ 218:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->accelEst = aObsv->accelEst + (dAccel * aObsv->base.Ts);
+ 767              	 .loc 1 218 5 is_stmt 1
+ 218:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->accelEst = aObsv->accelEst + (dAccel * aObsv->base.Ts);
+ 768              	 .loc 1 218 37 is_stmt 0
+ 769 002a 19C22800 	 ld.w %d2,[%a12]40
+ 218:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->accelEst = aObsv->accelEst + (dAccel * aObsv->base.Ts);
+ 770              	 .loc 1 218 48
+ 771 002e 19C32010 	 ld.w %d3,[%a12]96
+ 218:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->accelEst = aObsv->accelEst + (dAccel * aObsv->base.Ts);
+ 772              	 .loc 1 218 21
+ 773 0032 4B324120 	 mul.f %d2,%d2,%d3
+ 774              	.LVL38:
+ 219:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 775              	 .loc 1 219 5 is_stmt 1
+ 219:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 776              	 .loc 1 219 28 is_stmt 0
+ 777 0036 19C41C10 	 ld.w %d4,[%a12]92
+ 219:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 778              	 .loc 1 219 62
+ 779 003a 19C51C00 	 ld.w %d5,[%a12]28
+ 219:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 780              	 .loc 1 219 49
+ 781 003e 4B254120 	 mul.f %d2,%d5,%d2
+ 782              	.LVL39:
+ 219:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 783              	 .loc 1 219 39
+ 784 0042 6B022124 	 add.f %d2,%d4,%d2
+ 219:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 785              	 .loc 1 219 21
+ 786 0046 59C21C10 	 st.w [%a12]92,%d2
+ 222:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->speedEstA = aObsv->speedEstA + (dSpeed * aObsv->base.Ts);
+ 787              	 .loc 1 222 5 is_stmt 1
+ 222:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->speedEstA = aObsv->speedEstA + (dSpeed * aObsv->base.Ts);
+ 788              	 .loc 1 222 40 is_stmt 0
+ 789 004a 19C42400 	 ld.w %d4,[%a12]36
+ 222:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->speedEstA = aObsv->speedEstA + (dSpeed * aObsv->base.Ts);
+ 790              	 .loc 1 222 44
+ 791 004e 4B434140 	 mul.f %d4,%d3,%d4
+ 222:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->speedEstA = aObsv->speedEstA + (dSpeed * aObsv->base.Ts);
+ 792              	 .loc 1 222 22
+ 793 0052 6B042122 	 add.f %d2,%d2,%d4
+ 794              	.LVL40:
+ 223:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 795              	 .loc 1 223 5 is_stmt 1
+ 223:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 796              	 .loc 1 223 29 is_stmt 0
+ 797 0056 D9C21410 	 lea %a2,[%a12]84
+ 798 005a 19C41410 	 ld.w %d4,[%a12]84
+ 223:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 799              	 .loc 1 223 51
+ 800 005e 4B254120 	 mul.f %d2,%d5,%d2
+ 801              	.LVL41:
+ 223:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 802              	 .loc 1 223 41
+ 803 0062 6B022124 	 add.f %d2,%d4,%d2
+ 223:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 804              	 .loc 1 223 22
+ 805 0066 7422     	 st.w [%a2]0,%d2
+ 226:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     angleEst         = aObsv->angleEst + ((dAngle + aObsv->speedEstB) * aObsv->halfTs);
+ 806              	 .loc 1 226 5 is_stmt 1
+ 226:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     angleEst         = aObsv->angleEst + ((dAngle + aObsv->speedEstB) * aObsv->halfTs);
+ 807              	 .loc 1 226 40 is_stmt 0
+ 808 0068 19C42C00 	 ld.w %d4,[%a12]44
+ 226:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     angleEst         = aObsv->angleEst + ((dAngle + aObsv->speedEstB) * aObsv->halfTs);
+ 809              	 .loc 1 226 44
+ 810 006c 4B434140 	 mul.f %d4,%d3,%d4
+ 226:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     angleEst         = aObsv->angleEst + ((dAngle + aObsv->speedEstB) * aObsv->halfTs);
+ 811              	 .loc 1 226 22
+ 812 0070 6B042142 	 add.f %d4,%d2,%d4
+ 813              	.LVL42:
+ 227:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->speedEstB = dAngle;
+ 814              	 .loc 1 227 5 is_stmt 1
+ 227:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->speedEstB = dAngle;
+ 815              	 .loc 1 227 29 is_stmt 0
+ 816 0074 19C31010 	 ld.w %d3,[%a12]80
+ 817              	.LVL43:
+ 227:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->speedEstB = dAngle;
+ 818              	 .loc 1 227 58
+ 819 0078 19C21810 	 ld.w %d2,[%a12]88
+ 227:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->speedEstB = dAngle;
+ 820              	 .loc 1 227 51
+ 821 007c 6B042122 	 add.f %d2,%d2,%d4
+ 227:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->speedEstB = dAngle;
+ 822              	 .loc 1 227 78
+ 823 0080 19C50410 	 ld.w %d5,[%a12]68
+ 227:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->speedEstB = dAngle;
+ 824              	 .loc 1 227 71
+ 825 0084 4B524120 	 mul.f %d2,%d2,%d5
+ 227:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     aObsv->speedEstB = dAngle;
+ 826              	 .loc 1 227 22
+ 827 0088 6B022133 	 add.f %d3,%d3,%d2
+ 828              	.LVL44:
+ 228:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 829              	 .loc 1 228 5 is_stmt 1
+ 228:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 830              	 .loc 1 228 22 is_stmt 0
+ 831 008c 59C41810 	 st.w [%a12]88,%d4
+ 230:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 832              	 .loc 1 230 5 is_stmt 1
+ 833              	.LVL45:
+ 834              	.LBB17:
+  77:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 835              	 .loc 1 77 5
+ 836              	.LBB18:
+ 837              	.LBB19:
+  58:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 838              	 .loc 1 58 5
+  60:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     {
+ 839              	 .loc 1 60 5
+  60:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     {
+ 840              	 .loc 1 60 8 is_stmt 0
+ 841 0090 7B900424 	 movh %d2,16457
+ 842 0094 1BB2FD20 	 addi %d2,%d2,4059
+ 843 0098 4B230120 	 cmp.f %d2,%d3,%d2
+ 844 009c 8722A220 	 or.t %d2,%d2,2,%d2,1
+ 845 00a0 DF020000 	 jz %d2,.L41
+  62:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     }
+ 846              	 .loc 1 62 9 is_stmt 1
+  62:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     }
+ 847              	 .loc 1 62 15 is_stmt 0
+ 848 00a4 7B900C24 	 movh %d2,16585
+ 849 00a8 1BB2FD20 	 addi %d2,%d2,4059
+ 850 00ac 6B023133 	 sub.f %d3,%d3,%d2
+ 851              	.LVL46:
+ 852              	.L30:
+  69:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 853              	 .loc 1 69 6 is_stmt 1
+  71:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 854              	 .loc 1 71 5
+ 855              	.LBE19:
+ 856              	.LBE18:
+ 857              	.LBE17:
+ 230:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 858              	 .loc 1 230 22 is_stmt 0
+ 859 00b0 59C31010 	 st.w [%a12]80,%d3
+ 233:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 860              	 .loc 1 233 5 is_stmt 1
+ 233:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 861              	 .loc 1 233 29 is_stmt 0
+ 862 00b4 6B033166 	 sub.f %d6,%d6,%d3
+ 863              	.LVL47:
+ 864              	.LBB22:
+  77:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 865              	 .loc 1 77 5 is_stmt 1
+ 866              	.LBB23:
+ 867              	.LBB24:
+  58:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 868              	 .loc 1 58 5
+  60:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     {
+ 869              	 .loc 1 60 5
+  60:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     {
+ 870              	 .loc 1 60 8 is_stmt 0
+ 871 00b8 7B900424 	 movh %d2,16457
+ 872 00bc 1BB2FD20 	 addi %d2,%d2,4059
+ 873 00c0 4B260120 	 cmp.f %d2,%d6,%d2
+ 874 00c4 8722A220 	 or.t %d2,%d2,2,%d2,1
+ 875 00c8 DF020000 	 jz %d2,.L42
+  62:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     }
+ 876              	 .loc 1 62 9 is_stmt 1
+  62:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     }
+ 877              	 .loc 1 62 15 is_stmt 0
+ 878 00cc 7B900C24 	 movh %d2,16585
+ 879 00d0 1BB2FD20 	 addi %d2,%d2,4059
+ 880 00d4 6B023166 	 sub.f %d6,%d6,%d2
+ 881              	.LVL48:
+ 882              	.L34:
+  69:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 883              	 .loc 1 69 6 is_stmt 1
+  71:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 884              	 .loc 1 71 5
+ 885              	.LBE24:
+ 886              	.LBE23:
+ 887              	.LBE22:
+ 233:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 888              	 .loc 1 233 27 is_stmt 0
+ 889 00d8 59C62010 	 st.w [%a12]96,%d6
+ 890              	.LVL49:
+ 235:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 891              	 .loc 1 235 5 is_stmt 1
+ 235:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 892              	 .loc 1 235 46 is_stmt 0
+ 893 00dc 8213     	 mov %d3,1
+ 894 00de 8202     	 mov %d2,0
+ 895 00e0 4B240120 	 cmp.f %d2,%d4,%d2
+ 896 00e4 6F220080 	 jnz.t %d2,2,.L36
+ 897 00e8 8203     	 mov %d3,0
+ 898              	.L36:
+ 899 00ea 8FF30F21 	 and %d2,%d3,255
+ 235:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 900              	 .loc 1 235 77
+ 901 00ee 8F128021 	 xor %d2,%d2,1
+ 235:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 902              	 .loc 1 235 27
+ 903 00f2 59C20800 	 st.w [%a12]8,%d2
+ 239:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** #endif
+ 904              	 .loc 1 239 5 is_stmt 1
+ 905 00f6 D9C42410 	 lea %a4,[%a12]100
+ 906 00fa 6D000000 	 call Ifx_LowPassPt1F32_do
+ 907              	.LVL50:
+ 242:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 908              	 .loc 1 242 5
+ 243:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 909              	 .loc 1 243 1 is_stmt 0
+ 910 00fe 19C21010 	 ld.w %d2,[%a12]80
+ 911 0102 0090     	 ret 
+ 912              	.LVL51:
+ 913              	.L26:
+ 209:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     }
+ 914              	 .loc 1 209 9 is_stmt 1
+ 209:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     }
+ 915              	 .loc 1 209 20 is_stmt 0
+ 916 0104 4B024151 	 itof %d5,%d2
+ 917              	.LVL52:
+ 918 0108 4B044141 	 itof %d4,%d4
+ 919              	.LVL53:
+ 920 010c 6D000000 	 call Ifx_LutAtan2F32_float32
+ 921              	.LVL54:
+ 922 0110 1D000000 	 j .L27
+ 923              	.LVL55:
+ 924              	.L41:
+ 925              	.LBB27:
+ 926              	.LBB21:
+ 927              	.LBB20:
+  64:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     {
+ 928              	 .loc 1 64 10 is_stmt 1
+  64:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     {
+ 929              	 .loc 1 64 13 is_stmt 0
+ 930 0114 7B90042C 	 movh %d2,49225
+ 931 0118 1BB2FD20 	 addi %d2,%d2,4059
+ 932 011c 4B230120 	 cmp.f %d2,%d3,%d2
+ 933 0120 6F020000 	 jz.t %d2,0,.L30
+  66:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     }
+ 934              	 .loc 1 66 9 is_stmt 1
+  66:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     }
+ 935              	 .loc 1 66 15 is_stmt 0
+ 936 0124 7B900C24 	 movh %d2,16585
+ 937 0128 1BB2FD20 	 addi %d2,%d2,4059
+ 938 012c 6B022133 	 add.f %d3,%d3,%d2
+ 939              	.LVL56:
+ 940 0130 1D000000 	 j .L30
+ 941              	.LVL57:
+ 942              	.L42:
+ 943              	.LBE20:
+ 944              	.LBE21:
+ 945              	.LBE27:
+ 946              	.LBB28:
+ 947              	.LBB26:
+ 948              	.LBB25:
+  64:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     {
+ 949              	 .loc 1 64 10 is_stmt 1
+  64:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     {
+ 950              	 .loc 1 64 13 is_stmt 0
+ 951 0134 7B90042C 	 movh %d2,49225
+ 952 0138 1BB2FD20 	 addi %d2,%d2,4059
+ 953 013c 4B260120 	 cmp.f %d2,%d6,%d2
+ 954 0140 6F020000 	 jz.t %d2,0,.L34
+  66:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     }
+ 955              	 .loc 1 66 9 is_stmt 1
+  66:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     }
+ 956              	 .loc 1 66 15 is_stmt 0
+ 957 0144 7B900C24 	 movh %d2,16585
+ 958 0148 1BB2FD20 	 addi %d2,%d2,4059
+ 959 014c 6B022166 	 add.f %d6,%d6,%d2
+ 960              	.LVL58:
+ 961 0150 1D000000 	 j .L34
+ 962              	.LBE25:
+ 963              	.LBE26:
+ 964              	.LBE28:
+ 965              	.LFE575:
+ 967              	 .global Ifx_AngleTrkF32_step_end
+ 968              	Ifx_AngleTrkF32_step_end:
+ 969              	 .section .text.Ifx_AngleTrkF32_updateStatus,"ax",@progbits
+ 970              	 .align 1
+ 971              	 .global Ifx_AngleTrkF32_updateStatus
+ 973              	Ifx_AngleTrkF32_updateStatus:
+ 974              	.LFB577:
+ 264:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     Ifx_AngleTrkF32_PosIf *base    = &aObsv->base;
+ 975              	 .loc 1 264 1 is_stmt 1
+ 976              	.LVL59:
+ 977 0000 40AE     	 mov.aa %a14,%SP
+ 978              	.LCFI22:
+ 265:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     sint32                  sqrAmpl = ((sint32)sinIn * (sint32)sinIn) + ((sint32)cosIn * (sint32)co
+ 979              	 .loc 1 265 5
+ 980              	.LVL60:
+ 266:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     base->status.B.signalLoss        = (sqrAmpl < aObsv->cfgData.sqrAmplMin);
+ 981              	 .loc 1 266 5
+ 266:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     base->status.B.signalLoss        = (sqrAmpl < aObsv->cfgData.sqrAmplMin);
+ 982              	 .loc 1 266 88 is_stmt 0
+ 983 0002 E255     	 mul %d5,%d5
+ 984              	.LVL61:
+ 266:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     base->status.B.signalLoss        = (sqrAmpl < aObsv->cfgData.sqrAmplMin);
+ 985              	 .loc 1 266 29
+ 986 0004 03440A45 	 madd %d4,%d5,%d4,%d4
+ 987              	.LVL62:
+ 267:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     base->status.B.signalDegradation = (sqrAmpl > aObsv->cfgData.sqrAmplMax);
+ 988              	 .loc 1 267 5 is_stmt 1
+ 267:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     base->status.B.signalDegradation = (sqrAmpl > aObsv->cfgData.sqrAmplMax);
+ 989              	 .loc 1 267 65 is_stmt 0
+ 990 0008 19423800 	 ld.w %d2,[%a4]56
+ 267:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     base->status.B.signalDegradation = (sqrAmpl > aObsv->cfgData.sqrAmplMax);
+ 991              	 .loc 1 267 49
+ 992 000c 0B242031 	 lt %d3,%d4,%d2
+ 267:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     base->status.B.signalDegradation = (sqrAmpl > aObsv->cfgData.sqrAmplMax);
+ 993              	 .loc 1 267 38
+ 994 0010 39420C00 	 ld.bu %d2,[%a4]12
+ 995 0014 67320120 	 ins.t %d2,%d2,1,%d3,0
+ 996 0018 E9420C00 	 st.b [%a4]12,%d2
+ 268:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     base->status.B.trackingLoss      = __absf(aObsv->angleErr) > aObsv->cfgData.errorThreshold;
+ 997              	 .loc 1 268 5 is_stmt 1
+ 268:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     base->status.B.trackingLoss      = __absf(aObsv->angleErr) > aObsv->cfgData.errorThreshold;
+ 998              	 .loc 1 268 65 is_stmt 0
+ 999 001c 19433400 	 ld.w %d3,[%a4]52
+ 268:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     base->status.B.trackingLoss      = __absf(aObsv->angleErr) > aObsv->cfgData.errorThreshold;
+ 1000              	 .loc 1 268 49
+ 1001 0020 0B432031 	 lt %d3,%d3,%d4
+ 268:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     base->status.B.trackingLoss      = __absf(aObsv->angleErr) > aObsv->cfgData.errorThreshold;
+ 1002              	 .loc 1 268 38
+ 1003 0024 67320220 	 ins.t %d2,%d2,2,%d3,0
+ 1004 0028 E9420C00 	 st.b [%a4]12,%d2
+ 269:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 1005              	 .loc 1 269 5 is_stmt 1
+ 269:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 1006              	 .loc 1 269 40 is_stmt 0
+ 1007 002c 19422010 	 ld.w %d2,[%a4]96
+ 1008 0030 8203     	 mov %d3,0
+ 1009 0032 4B320130 	 cmp.f %d3,%d2,%d3
+ 1010 0036 6F030080 	 jnz.t %d3,0,.L48
+ 1011              	.L44:
+ 269:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 1012              	 .loc 1 269 80 discriminator 4
+ 1013 003a 19443000 	 ld.w %d4,[%a4]48
+ 1014              	.LVL63:
+ 269:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 1015              	 .loc 1 269 64 discriminator 4
+ 1016 003e 8213     	 mov %d3,1
+ 1017 0040 4B240120 	 cmp.f %d2,%d4,%d2
+ 1018 0044 6F020080 	 jnz.t %d2,0,.L46
+ 1019 0048 8203     	 mov %d3,0
+ 1020              	.L46:
+ 269:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 1021              	 .loc 1 269 38 discriminator 4
+ 1022 004a 39420C00 	 ld.bu %d2,[%a4]12
+ 1023 004e 67320320 	 ins.t %d2,%d2,3,%d3,0
+ 1024 0052 E9420C00 	 st.b [%a4]12,%d2
+ 270:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 1025              	 .loc 1 270 1 discriminator 4
+ 1026 0056 0090     	 ret 
+ 1027              	.LVL64:
+ 1028              	.L48:
+ 269:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 1029              	 .loc 1 269 40 discriminator 1
+ 1030 0058 4B021123 	 neg.f %d2,%d2
+ 1031 005c 1D000000 	 j .L44
+ 1032              	.LFE577:
+ 1034              	 .global Ifx_AngleTrkF32_updateStatus_end
+ 1035              	Ifx_AngleTrkF32_updateStatus_end:
+ 1036              	 .section .text.Ifx_AngleTrkF32_update,"ax",@progbits
+ 1037              	 .align 1
+ 1038              	 .global Ifx_AngleTrkF32_update
+ 1040              	Ifx_AngleTrkF32_update:
+ 1041              	.LFB578:
+ 277:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     Ifx_AngleTrkF32_PosIf *base        = &aObsv->base;
+ 1042              	 .loc 1 277 1 is_stmt 1
+ 1043              	.LVL65:
+ 1044 0000 40AE     	 mov.aa %a14,%SP
+ 1045              	.LCFI23:
+ 1046 0002 404C     	 mov.aa %a12,%a4
+ 278:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     float32                 angleEst    = Ifx_AngleTrkF32_step(aObsv, *aObsv->sinIn, *aObsv->cosIn,
+ 1047              	 .loc 1 278 5
+ 1048              	.LVL66:
+ 279:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 1049              	 .loc 1 279 5
+ 279:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 1050              	 .loc 1 279 77 is_stmt 0
+ 1051 0004 99423C00 	 ld.a %a2,[%a4]60
+ 279:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 1052              	 .loc 1 279 92
+ 1053 0008 99430010 	 ld.a %a3,[%a4]64
+ 279:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 1054              	 .loc 1 279 43
+ 1055 000c 8206     	 mov %d6,0
+ 1056 000e 9435     	 ld.h %d5,[%a3]0
+ 1057 0010 9424     	 ld.h %d4,[%a2]0
+ 1058 0012 6D000000 	 call Ifx_AngleTrkF32_step
+ 1059              	.LVL67:
+ 281:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     newPosition       = newPosition & (aObsv->base.resolution - 1);
+ 1060              	 .loc 1 281 5 is_stmt 1
+ 281:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     newPosition       = newPosition & (aObsv->base.resolution - 1);
+ 1061              	 .loc 1 281 90 is_stmt 0
+ 1062 0016 19C41800 	 ld.w %d4,[%a12]24
+ 281:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     newPosition       = newPosition & (aObsv->base.resolution - 1);
+ 1063              	 .loc 1 281 102
+ 1064 001a 8F141E30 	 sh %d3,%d4,-31
+ 1065 001e 4243     	 add %d3,%d4
+ 1066 0020 86F3     	 sha %d3,-1
+ 281:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     newPosition       = newPosition & (aObsv->base.resolution - 1);
+ 1067              	 .loc 1 281 76
+ 1068 0022 4B034131 	 itof %d3,%d3
+ 1069 0026 4B234120 	 mul.f %d2,%d3,%d2
+ 1070              	.LVL68:
+ 281:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     newPosition       = newPosition & (aObsv->base.resolution - 1);
+ 1071              	 .loc 1 281 107
+ 1072 002a 7B900434 	 movh %d3,16457
+ 1073 002e 1BB3FD30 	 addi %d3,%d3,4059
+ 1074 0032 4B325120 	 div.f %d2,%d2,%d3
+ 281:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     newPosition       = newPosition & (aObsv->base.resolution - 1);
+ 1075              	 .loc 1 281 29
+ 1076 0036 4B023121 	 ftoiz %d2,%d2
+ 1077              	.LVL69:
+ 282:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     base->rawPosition = newPosition;
+ 1078              	 .loc 1 282 5 is_stmt 1
+ 282:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     base->rawPosition = newPosition;
+ 1079              	 .loc 1 282 63 is_stmt 0
+ 1080 003a C2F4     	 add %d4,-1
+ 282:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     base->rawPosition = newPosition;
+ 1081              	 .loc 1 282 23
+ 1082 003c 2642     	 and %d2,%d4
+ 1083              	.LVL70:
+ 283:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 1084              	 .loc 1 283 5 is_stmt 1
+ 283:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 1085              	 .loc 1 283 23 is_stmt 0
+ 1086 003e 74C2     	 st.w [%a12]0,%d2
+ 285:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 1087              	 .loc 1 285 5 is_stmt 1
+ 285:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 1088              	 .loc 1 285 47 is_stmt 0
+ 1089 0040 99C23C00 	 ld.a %a2,[%a12]60
+ 285:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 1090              	 .loc 1 285 62
+ 1091 0044 99C30010 	 ld.a %a3,[%a12]64
+ 285:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 1092              	 .loc 1 285 5
+ 1093 0048 9435     	 ld.h %d5,[%a3]0
+ 1094 004a 9424     	 ld.h %d4,[%a2]0
+ 1095 004c 40C4     	 mov.aa %a4,%a12
+ 1096 004e 6D000000 	 call Ifx_AngleTrkF32_updateStatus
+ 1097              	.LVL71:
+ 286:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 1098              	 .loc 1 286 1
+ 1099 0052 0090     	 ret 
+ 1100              	.LFE578:
+ 1102              	 .global Ifx_AngleTrkF32_update_end
+ 1103              	Ifx_AngleTrkF32_update_end:
+ 1104              	 .section .text.Ifx_AngleTrkF32_stdIfPosInit,"ax",@progbits
+ 1105              	 .align 1
+ 1106              	 .global Ifx_AngleTrkF32_stdIfPosInit
+ 1108              	Ifx_AngleTrkF32_stdIfPosInit:
+ 1109              	.LFB594:
+ 400:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 401:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 402:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** boolean Ifx_AngleTrkF32_stdIfPosInit(IfxStdIf_Pos *stdif, Ifx_AngleTrkF32 *driver)
+ 403:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** {
+ 1110              	 .loc 1 403 1 is_stmt 1
+ 1111              	.LVL72:
+ 1112 0000 40AE     	 mov.aa %a14,%SP
+ 1113              	.LCFI24:
+ 404:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     /* Ensure the stdif is reset to zeros */
+ 405:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     memset(stdif, 0, sizeof(IfxStdIf_Pos));
+ 1114              	 .loc 1 405 5
+ 1115 0002 4043     	 mov.aa %a3,%a4
+ 1116 0004 8202     	 mov %d2,0
+ 1117 0006 C5022710 	 lea %a2,104-1
+ 1118              	 0:
+ 1119 000a 2432     	 st.b [%a3+]1,%d2
+ 1120 000c FD200000 	 loop %a2,0b
+ 406:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 407:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     /* Set the driver */
+ 408:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     stdif->driver = driver;
+ 1121              	 .loc 1 408 5
+ 1122              	 .loc 1 408 19 is_stmt 0
+ 1123 0010 F445     	 st.a [%a4]0,%a5
+ 409:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 410:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     /* *INDENT-OFF* Note: this file was indented manually by the author. */
+ 411:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     /* Set the API link */
+ 412:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 	stdif->onZeroIrq          =(IfxStdIf_Pos_OnZeroIrq               )NULL_PTR;
+ 1124              	 .loc 1 412 2 is_stmt 1
+ 413:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 	stdif->getAbsolutePosition=(IfxStdIf_Pos_GetAbsolutePosition     )&Ifx_AngleTrkF32_getAbsolutePosi
+ 1125              	 .loc 1 413 2
+ 1126              	 .loc 1 413 28 is_stmt 0
+ 1127 0012 91000020 	 movh.a %a2,hi:Ifx_AngleTrkF32_getAbsolutePosition
+ 1128 0016 D9220000 	 lea %a2,[%a2]lo:Ifx_AngleTrkF32_getAbsolutePosition
+ 1129 001a B5420800 	 st.a [%a4]8,%a2
+ 414:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 	stdif->getDirection		  =(IfxStdIf_Pos_GetDirection            )&Ifx_AngleTrkF32_getDirection;
+ 1130              	 .loc 1 414 2 is_stmt 1
+ 1131              	 .loc 1 414 25 is_stmt 0
+ 1132 001e 91000020 	 movh.a %a2,hi:Ifx_AngleTrkF32_getDirection
+ 1133 0022 D9220000 	 lea %a2,[%a2]lo:Ifx_AngleTrkF32_getDirection
+ 1134 0026 B5421800 	 st.a [%a4]24,%a2
+ 415:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 	stdif->getFault           =(IfxStdIf_Pos_GetFault                )&Ifx_AngleTrkF32_getFault;
+ 1135              	 .loc 1 415 2 is_stmt 1
+ 1136              	 .loc 1 415 28 is_stmt 0
+ 1137 002a 91000020 	 movh.a %a2,hi:Ifx_AngleTrkF32_getFault
+ 1138 002e D9220000 	 lea %a2,[%a2]lo:Ifx_AngleTrkF32_getFault
+ 1139 0032 B5421C00 	 st.a [%a4]28,%a2
+ 416:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 	stdif->getOffset		  =(IfxStdIf_Pos_GetOffset			     )&Ifx_AngleTrkF32_getOffset;
+ 1140              	 .loc 1 416 2 is_stmt 1
+ 1141              	 .loc 1 416 22 is_stmt 0
+ 1142 0036 91000020 	 movh.a %a2,hi:Ifx_AngleTrkF32_getOffset
+ 1143 003a D9220000 	 lea %a2,[%a2]lo:Ifx_AngleTrkF32_getOffset
+ 1144 003e B5420C00 	 st.a [%a4]12,%a2
+ 417:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 	stdif->getPeriodPerRotation  =(IfxStdIf_Pos_GetPeriodPerRotation )&Ifx_AngleTrkF32_getPeriodPerRot
+ 1145              	 .loc 1 417 2 is_stmt 1
+ 1146              	 .loc 1 417 31 is_stmt 0
+ 1147 0042 91000020 	 movh.a %a2,hi:Ifx_AngleTrkF32_getPeriodPerRotation
+ 1148 0046 D9220000 	 lea %a2,[%a2]lo:Ifx_AngleTrkF32_getPeriodPerRotation
+ 1149 004a B5422400 	 st.a [%a4]36,%a2
+ 418:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 	stdif->getPosition		  =(IfxStdIf_Pos_GetPosition			 )&Ifx_AngleTrkF32_getPosition;
+ 1150              	 .loc 1 418 2 is_stmt 1
+ 1151              	 .loc 1 418 24 is_stmt 0
+ 1152 004e 91000020 	 movh.a %a2,hi:Ifx_AngleTrkF32_getPosition
+ 1153 0052 D9220000 	 lea %a2,[%a2]lo:Ifx_AngleTrkF32_getPosition
+ 1154 0056 B5421400 	 st.a [%a4]20,%a2
+ 419:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 	stdif->getRawPosition	  =(IfxStdIf_Pos_GetRawPosition          )&Ifx_AngleTrkF32_getRawPosition;
+ 1155              	 .loc 1 419 2 is_stmt 1
+ 1156              	 .loc 1 419 26 is_stmt 0
+ 1157 005a 91000020 	 movh.a %a2,hi:Ifx_AngleTrkF32_getRawPosition
+ 1158 005e D9220000 	 lea %a2,[%a2]lo:Ifx_AngleTrkF32_getRawPosition
+ 1159 0062 B5422000 	 st.a [%a4]32,%a2
+ 420:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 	stdif->getRefreshPeriod   =(IfxStdIf_Pos_GetRefreshPeriod        )&Ifx_AngleTrkF32_getRefreshPerio
+ 1160              	 .loc 1 420 2 is_stmt 1
+ 1161              	 .loc 1 420 28 is_stmt 0
+ 1162 0066 91000020 	 movh.a %a2,hi:Ifx_AngleTrkF32_getRefreshPeriod
+ 1163 006a D9220000 	 lea %a2,[%a2]lo:Ifx_AngleTrkF32_getRefreshPeriod
+ 1164 006e B5422800 	 st.a [%a4]40,%a2
+ 421:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 	stdif->getResolution      =(IfxStdIf_Pos_GetResolution           )&Ifx_AngleTrkF32_getResolution;
+ 1165              	 .loc 1 421 2 is_stmt 1
+ 1166              	 .loc 1 421 28 is_stmt 0
+ 1167 0072 91000020 	 movh.a %a2,hi:Ifx_AngleTrkF32_getResolution
+ 1168 0076 D9220000 	 lea %a2,[%a2]lo:Ifx_AngleTrkF32_getResolution
+ 1169 007a B5422C00 	 st.a [%a4]44,%a2
+ 422:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     stdif->getSensorType      =(IfxStdIf_Pos_GetSensorType           )&Ifx_AngleTrkF32_getSensorTyp
+ 1170              	 .loc 1 422 5 is_stmt 1
+ 1171              	 .loc 1 422 31 is_stmt 0
+ 1172 007e 91000020 	 movh.a %a2,hi:Ifx_AngleTrkF32_getSensorType
+ 1173 0082 D9220000 	 lea %a2,[%a2]lo:Ifx_AngleTrkF32_getSensorType
+ 1174 0086 B5423000 	 st.a [%a4]48,%a2
+ 423:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 	stdif->reset			  =(IfxStdIf_Pos_Reset				     )&Ifx_AngleTrkF32_reset;
+ 1175              	 .loc 1 423 2 is_stmt 1
+ 1176              	 .loc 1 423 19 is_stmt 0
+ 1177 008a 91000020 	 movh.a %a2,hi:Ifx_AngleTrkF32_reset
+ 1178 008e D9220000 	 lea %a2,[%a2]lo:Ifx_AngleTrkF32_reset
+ 1179 0092 B5420010 	 st.a [%a4]64,%a2
+ 424:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 	stdif->resetFaults		  =(IfxStdIf_Pos_ResetFaults			 )&Ifx_AngleTrkF32_resetFaults;
+ 1180              	 .loc 1 424 2 is_stmt 1
+ 1181              	 .loc 1 424 24 is_stmt 0
+ 1182 0096 91000020 	 movh.a %a2,hi:Ifx_AngleTrkF32_resetFaults
+ 1183 009a D9220000 	 lea %a2,[%a2]lo:Ifx_AngleTrkF32_resetFaults
+ 1184 009e B5420410 	 st.a [%a4]68,%a2
+ 425:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 	stdif->getSpeed           =(IfxStdIf_Pos_GetSpeed                )&Ifx_AngleTrkF32_getSpeed;
+ 1185              	 .loc 1 425 2 is_stmt 1
+ 1186              	 .loc 1 425 28 is_stmt 0
+ 1187 00a2 91000020 	 movh.a %a2,hi:Ifx_AngleTrkF32_getSpeed
+ 1188 00a6 D9220000 	 lea %a2,[%a2]lo:Ifx_AngleTrkF32_getSpeed
+ 1189 00aa B5420810 	 st.a [%a4]72,%a2
+ 426:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 	stdif->update			  =(IfxStdIf_Pos_Update				     )&Ifx_AngleTrkF32_update;
+ 1190              	 .loc 1 426 2 is_stmt 1
+ 1191              	 .loc 1 426 20 is_stmt 0
+ 1192 00ae 91000020 	 movh.a %a2,hi:Ifx_AngleTrkF32_update
+ 1193 00b2 D9220000 	 lea %a2,[%a2]lo:Ifx_AngleTrkF32_update
+ 1194 00b6 B5420C10 	 st.a [%a4]76,%a2
+ 427:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 	stdif->setPosition		  =(IfxStdIf_Pos_SetPosition			 )NULL_PTR;
+ 1195              	 .loc 1 427 2 is_stmt 1
+ 428:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 	stdif->setRawPosition	  =(IfxStdIf_Pos_SetRawPosition			 )NULL_PTR;
+ 1196              	 .loc 1 428 2
+ 429:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 	stdif->setSpeed		      =(IfxStdIf_Pos_SetSpeed			     )NULL_PTR;
+ 1197              	 .loc 1 429 2
+ 430:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 	stdif->setOffset		  =(IfxStdIf_Pos_SetOffset			     )&Ifx_AngleTrkF32_setOffset;
+ 1198              	 .loc 1 430 2
+ 1199              	 .loc 1 430 22 is_stmt 0
+ 1200 00ba 91000020 	 movh.a %a2,hi:Ifx_AngleTrkF32_setOffset
+ 1201 00be D9220000 	 lea %a2,[%a2]lo:Ifx_AngleTrkF32_setOffset
+ 1202 00c2 B5421010 	 st.a [%a4]80,%a2
+ 431:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 	stdif->setRefreshPeriod   =(IfxStdIf_Pos_SetRefreshPeriod        )&Ifx_AngleTrkF32_setRefreshPerio
+ 1203              	 .loc 1 431 2 is_stmt 1
+ 1204              	 .loc 1 431 28 is_stmt 0
+ 1205 00c6 91000020 	 movh.a %a2,hi:Ifx_AngleTrkF32_setRefreshPeriod
+ 1206 00ca D9220000 	 lea %a2,[%a2]lo:Ifx_AngleTrkF32_setRefreshPeriod
+ 1207 00ce B5422410 	 st.a [%a4]100,%a2
+ 432:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 	stdif->getTurn            =(IfxStdIf_Pos_GetTurn                 )&Ifx_AngleTrkF32_getTurn;
+ 1208              	 .loc 1 432 2 is_stmt 1
+ 1209              	 .loc 1 432 28 is_stmt 0
+ 1210 00d2 91000020 	 movh.a %a2,hi:Ifx_AngleTrkF32_getTurn
+ 1211 00d6 D9220000 	 lea %a2,[%a2]lo:Ifx_AngleTrkF32_getTurn
+ 1212 00da B5423400 	 st.a [%a4]52,%a2
+ 433:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     /* *INDENT-ON* */
+ 434:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** 
+ 435:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c ****     return TRUE;
+ 1213              	 .loc 1 435 5 is_stmt 1
+ 436:../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.c **** }
+ 1214              	 .loc 1 436 1 is_stmt 0
+ 1215 00de 8212     	 mov %d2,1
+ 1216 00e0 0090     	 ret 
+ 1217              	.LFE594:
+ 1219              	 .global Ifx_AngleTrkF32_stdIfPosInit_end
+ 1220              	Ifx_AngleTrkF32_stdIfPosInit_end:
+ 1537              	.Letext0:
+ 1538              	 .file 3 "c:\\infineon\\aurix-configuration-studio-1.0.24\\eclipse\\tricore-gcc11\\lib\\gcc\\tricore-elf\\11.3.1\\include\\stddef.h"
+ 1539              	 .file 4 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 1540              	 .file 5 "../Libraries/Service/CpuGeneric/StdIf/IfxStdIf.h"
+ 1541              	 .file 6 "../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.h"
+ 1542              	 .file 7 "../Libraries/Service/Tricore/Math/Ifx_AngleTrkF32.h"
+ 1543              	 .file 8 "c:\\infineon\\aurix-configuration-studio-1.0.24\\eclipse\\tricore-gcc11\\tricore-elf\\include\\string.h"
+ 1544              	 .file 9 "../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.h"
+ 5930 0000 00000000 	 .word Ifx_AngleTrkF32_setOffset
+ 5931 0004 00000000 	 .word Ifx_AngleTrkF32_setOffset_end
+ 5932 0008 10001444 	 .word 0x44140010
+ 5933 000c 10001000 	 .word 0x00100010
+ 5934 0010 00000000 	 .word 0x00000000
+ 5935 0014 C0000000 	 .word 0x000000c0
+ 5936 0018 00000000 	 .word Ifx_AngleTrkF32_getRawPosition
+ 5937 001c 00000000 	 .word Ifx_AngleTrkF32_getRawPosition_end
+ 5938 0020 04001044 	 .word 0x44100004
+ 5939 0024 00001000 	 .word 0x00100000
+ 5940 0028 04000000 	 .word 0x00000004
+ 5941 002c C0000000 	 .word 0x000000c0
+ 5942 0030 00000000 	 .word Ifx_AngleTrkF32_getSpeed
+ 5943 0034 00000000 	 .word Ifx_AngleTrkF32_getSpeed_end
+ 5944 0038 04001444 	 .word 0x44140004
+ 5945 003c 00001000 	 .word 0x00100000
+ 5946 0040 04000000 	 .word 0x00000004
+ 5947 0044 C0000000 	 .word 0x000000c0
+ 5948 0048 00000000 	 .word Ifx_AngleTrkF32_getAbsolutePosition
+ 5949 004c 00000000 	 .word Ifx_AngleTrkF32_getAbsolutePosition_end
+ 5950 0050 3C001444 	 .word 0x4414003c
+ 5951 0054 00001000 	 .word 0x00100000
+ 5952 0058 04000000 	 .word 0x00000004
+ 5953 005c C0000000 	 .word 0x000000c0
+ 5954 0060 00000000 	 .word Ifx_AngleTrkF32_getDirection
+ 5955 0064 00000000 	 .word Ifx_AngleTrkF32_getDirection_end
+ 5956 0068 04001444 	 .word 0x44140004
+ 5957 006c 00001000 	 .word 0x00100000
+ 5958 0070 04000000 	 .word 0x00000004
+ 5959 0074 C0000000 	 .word 0x000000c0
+ 5960 0078 00000000 	 .word Ifx_AngleTrkF32_getFault
+ 5961 007c 00000000 	 .word Ifx_AngleTrkF32_getFault_end
+ 5962 0080 04001444 	 .word 0x44140004
+ 5963 0084 00001000 	 .word 0x00100000
+ 5964 0088 04000000 	 .word 0x00000004
+ 5965 008c C0000000 	 .word 0x000000c0
+ 5966 0090 00000000 	 .word Ifx_AngleTrkF32_getOffset
+ 5967 0094 00000000 	 .word Ifx_AngleTrkF32_getOffset_end
+ 5968 0098 04001444 	 .word 0x44140004
+ 5969 009c 00001000 	 .word 0x00100000
+ 5970 00a0 04000000 	 .word 0x00000004
+ 5971 00a4 C0000000 	 .word 0x000000c0
+ 5972 00a8 00000000 	 .word Ifx_AngleTrkF32_getPeriodPerRotation
+ 5973 00ac 00000000 	 .word Ifx_AngleTrkF32_getPeriodPerRotation_end
+ 5974 00b0 04001044 	 .word 0x44100004
+ 5975 00b4 00001000 	 .word 0x00100000
+ 5976 00b8 04000000 	 .word 0x00000004
+ 5977 00bc C0000000 	 .word 0x000000c0
+ 5978 00c0 00000000 	 .word Ifx_AngleTrkF32_getPosition
+ 5979 00c4 00000000 	 .word Ifx_AngleTrkF32_getPosition_end
+ 5980 00c8 0C001444 	 .word 0x4414000c
+ 5981 00cc 00001000 	 .word 0x00100000
+ 5982 00d0 04000000 	 .word 0x00000004
+ 5983 00d4 C0000000 	 .word 0x000000c0
+ 5984 00d8 00000000 	 .word Ifx_AngleTrkF32_getRefreshPeriod
+ 5985 00dc 00000000 	 .word Ifx_AngleTrkF32_getRefreshPeriod_end
+ 5986 00e0 04001444 	 .word 0x44140004
+ 5987 00e4 00001000 	 .word 0x00100000
+ 5988 00e8 04000000 	 .word 0x00000004
+ 5989 00ec C0000000 	 .word 0x000000c0
+ 5990 00f0 00000000 	 .word Ifx_AngleTrkF32_getResolution
+ 5991 00f4 00000000 	 .word Ifx_AngleTrkF32_getResolution_end
+ 5992 00f8 04001444 	 .word 0x44140004
+ 5993 00fc 00001000 	 .word 0x00100000
+ 5994 0100 04000000 	 .word 0x00000004
+ 5995 0104 C0000000 	 .word 0x000000c0
+ 5996 0108 00000000 	 .word Ifx_AngleTrkF32_getSensorType
+ 5997 010c 00000000 	 .word Ifx_AngleTrkF32_getSensorType_end
+ 5998 0110 04000044 	 .word 0x44000004
+ 5999 0114 00001000 	 .word 0x00100000
+ 6000 0118 04000000 	 .word 0x00000004
+ 6001 011c C0000000 	 .word 0x000000c0
+ 6002 0120 00000000 	 .word Ifx_AngleTrkF32_getTurn
+ 6003 0124 00000000 	 .word Ifx_AngleTrkF32_getTurn_end
+ 6004 0128 04001444 	 .word 0x44140004
+ 6005 012c 00001000 	 .word 0x00100000
+ 6006 0130 04000000 	 .word 0x00000004
+ 6007 0134 C0000000 	 .word 0x000000c0
+ 6008 0138 00000000 	 .word Ifx_AngleTrkF32_resetFaults
+ 6009 013c 00000000 	 .word Ifx_AngleTrkF32_resetFaults_end
+ 6010 0140 04001444 	 .word 0x44140004
+ 6011 0144 00001000 	 .word 0x00100000
+ 6012 0148 00000000 	 .word 0x00000000
+ 6013 014c C0000000 	 .word 0x000000c0
+ 6014 0150 00000000 	 .word Ifx_AngleTrkF32_setRefreshPeriod
+ 6015 0154 00000000 	 .word Ifx_AngleTrkF32_setRefreshPeriod_end
+ 6016 0158 10001444 	 .word 0x44140010
+ 6017 015c 10001000 	 .word 0x00100010
+ 6018 0160 00000000 	 .word 0x00000000
+ 6019 0164 C0000000 	 .word 0x000000c0
+ 6020 0168 00000000 	 .word Ifx_AngleTrkF32_reset
+ 6021 016c 00000000 	 .word Ifx_AngleTrkF32_reset_end
+ 6022 0170 0C001444 	 .word 0x4414000c
+ 6023 0174 00001000 	 .word 0x00100000
+ 6024 0178 00000000 	 .word 0x00000000
+ 6025 017c C0000000 	 .word 0x000000c0
+ 6026 0180 00000000 	 .word Ifx_AngleTrkF32_setControlGains
+ 6027 0184 00000000 	 .word Ifx_AngleTrkF32_setControlGains_end
+ 6028 0188 FC001444 	 .word 0x441400fc
+ 6029 018c 70001000 	 .word 0x00100070
+ 6030 0190 00000000 	 .word 0x00000000
+ 6031 0194 C0000000 	 .word 0x000000c0
+ 6032 0198 00000000 	 .word Ifx_AngleTrkF32_initConfig
+ 6033 019c 00000000 	 .word Ifx_AngleTrkF32_initConfig_end
+ 6034 01a0 74037454 	 .word 0x54740374
+ 6035 01a4 00007000 	 .word 0x00700000
+ 6036 01a8 00000000 	 .word 0x00000000
+ 6037 01ac 40800200 	 .word 0x00028040
+ 6038 01b0 00000000 	 .word Ifx_AngleTrkF32_setUserSampling
+ 6039 01b4 00000000 	 .word Ifx_AngleTrkF32_setUserSampling_end
+ 6040 01b8 14001444 	 .word 0x44140014
+ 6041 01bc 10001000 	 .word 0x00100010
+ 6042 01c0 00000000 	 .word 0x00000000
+ 6043 01c4 C0000000 	 .word 0x000000c0
+ 6044 01c8 00000000 	 .word Ifx_AngleTrkF32_init
+ 6045 01cc 00000000 	 .word Ifx_AngleTrkF32_init_end
+ 6046 01d0 FC013C74 	 .word 0x743c01fc
+ 6047 01d4 10003000 	 .word 0x00300010
+ 6048 01d8 00000000 	 .word 0x00000000
+ 6049 01dc 40800200 	 .word 0x00028040
+ 6050 01e0 00000000 	 .word Ifx_AngleTrkF32_step
+ 6051 01e4 00000000 	 .word Ifx_AngleTrkF32_step_end
+ 6052 01e8 7C011454 	 .word 0x5414017c
+ 6053 01ec 70001000 	 .word 0x00100070
+ 6054 01f0 04000000 	 .word 0x00000004
+ 6055 01f4 40000200 	 .word 0x00020040
+ 6056 01f8 00000000 	 .word Ifx_AngleTrkF32_updateStatus
+ 6057 01fc 00000000 	 .word Ifx_AngleTrkF32_updateStatus_end
+ 6058 0200 3C001444 	 .word 0x4414003c
+ 6059 0204 30001000 	 .word 0x00100030
+ 6060 0208 00000000 	 .word 0x00000000
+ 6061 020c C0000000 	 .word 0x000000c0
+ 6062 0210 00000000 	 .word Ifx_AngleTrkF32_update
+ 6063 0214 00000000 	 .word Ifx_AngleTrkF32_update_end
+ 6064 0218 7C001C54 	 .word 0x541c007c
+ 6065 021c 00001000 	 .word 0x00100000
+ 6066 0220 00000000 	 .word 0x00000000
+ 6067 0224 40000200 	 .word 0x00020040
+ 6068 0228 00000000 	 .word Ifx_AngleTrkF32_stdIfPosInit
+ 6069 022c 00000000 	 .word Ifx_AngleTrkF32_stdIfPosInit_end
+ 6070 0230 04003C44 	 .word 0x443c0004
+ 6071 0234 00003000 	 .word 0x00300000
+ 6072 0238 04000000 	 .word 0x00000004
+ 6073 023c C0000000 	 .word 0x000000c0
+DEFINED SYMBOLS
+                            *ABS*:00000000 Ifx_AngleTrkF32.c
+                            *ABS*:00000000 Ifx_AngleTrkF32.c
+    {standard input}:10     .text.Ifx_AngleTrkF32_setOffset:00000000 Ifx_AngleTrkF32_setOffset
+    {standard input}:27     .text.Ifx_AngleTrkF32_setOffset:00000008 Ifx_AngleTrkF32_setOffset_end
+    {standard input}:32     .text.Ifx_AngleTrkF32_getRawPosition:00000000 Ifx_AngleTrkF32_getRawPosition
+    {standard input}:47     .text.Ifx_AngleTrkF32_getRawPosition:00000006 Ifx_AngleTrkF32_getRawPosition_end
+    {standard input}:52     .text.Ifx_AngleTrkF32_getSpeed:00000000 Ifx_AngleTrkF32_getSpeed
+    {standard input}:65     .text.Ifx_AngleTrkF32_getSpeed:00000008 Ifx_AngleTrkF32_getSpeed_end
+    {standard input}:70     .text.Ifx_AngleTrkF32_getAbsolutePosition:00000000 Ifx_AngleTrkF32_getAbsolutePosition
+    {standard input}:107    .text.Ifx_AngleTrkF32_getAbsolutePosition:0000003e Ifx_AngleTrkF32_getAbsolutePosition_end
+    {standard input}:112    .text.Ifx_AngleTrkF32_getDirection:00000000 Ifx_AngleTrkF32_getDirection
+    {standard input}:125    .text.Ifx_AngleTrkF32_getDirection:00000008 Ifx_AngleTrkF32_getDirection_end
+    {standard input}:130    .text.Ifx_AngleTrkF32_getFault:00000000 Ifx_AngleTrkF32_getFault
+    {standard input}:143    .text.Ifx_AngleTrkF32_getFault:00000008 Ifx_AngleTrkF32_getFault_end
+    {standard input}:148    .text.Ifx_AngleTrkF32_getOffset:00000000 Ifx_AngleTrkF32_getOffset
+    {standard input}:161    .text.Ifx_AngleTrkF32_getOffset:00000008 Ifx_AngleTrkF32_getOffset_end
+    {standard input}:166    .text.Ifx_AngleTrkF32_getPeriodPerRotation:00000000 Ifx_AngleTrkF32_getPeriodPerRotation
+    {standard input}:179    .text.Ifx_AngleTrkF32_getPeriodPerRotation:00000008 Ifx_AngleTrkF32_getPeriodPerRotation_end
+    {standard input}:184    .text.Ifx_AngleTrkF32_getPosition:00000000 Ifx_AngleTrkF32_getPosition
+    {standard input}:203    .text.Ifx_AngleTrkF32_getPosition:00000012 Ifx_AngleTrkF32_getPosition_end
+    {standard input}:208    .text.Ifx_AngleTrkF32_getRefreshPeriod:00000000 Ifx_AngleTrkF32_getRefreshPeriod
+    {standard input}:221    .text.Ifx_AngleTrkF32_getRefreshPeriod:00000008 Ifx_AngleTrkF32_getRefreshPeriod_end
+    {standard input}:226    .text.Ifx_AngleTrkF32_getResolution:00000000 Ifx_AngleTrkF32_getResolution
+    {standard input}:239    .text.Ifx_AngleTrkF32_getResolution:00000008 Ifx_AngleTrkF32_getResolution_end
+    {standard input}:244    .text.Ifx_AngleTrkF32_getSensorType:00000000 Ifx_AngleTrkF32_getSensorType
+    {standard input}:257    .text.Ifx_AngleTrkF32_getSensorType:00000006 Ifx_AngleTrkF32_getSensorType_end
+    {standard input}:262    .text.Ifx_AngleTrkF32_getTurn:00000000 Ifx_AngleTrkF32_getTurn
+    {standard input}:275    .text.Ifx_AngleTrkF32_getTurn:00000008 Ifx_AngleTrkF32_getTurn_end
+    {standard input}:280    .text.Ifx_AngleTrkF32_resetFaults:00000000 Ifx_AngleTrkF32_resetFaults
+    {standard input}:295    .text.Ifx_AngleTrkF32_resetFaults:0000000a Ifx_AngleTrkF32_resetFaults_end
+    {standard input}:300    .text.Ifx_AngleTrkF32_setRefreshPeriod:00000000 Ifx_AngleTrkF32_setRefreshPeriod
+    {standard input}:314    .text.Ifx_AngleTrkF32_setRefreshPeriod:00000008 Ifx_AngleTrkF32_setRefreshPeriod_end
+    {standard input}:319    .text.Ifx_AngleTrkF32_reset:00000000 Ifx_AngleTrkF32_reset
+    {standard input}:374    .text.Ifx_AngleTrkF32_reset:00000034 Ifx_AngleTrkF32_reset_end
+    {standard input}:378    .text.round_f:00000000 round_f
+    {standard input}:414    .text.Ifx_AngleTrkF32_setControlGains:00000000 Ifx_AngleTrkF32_setControlGains
+    {standard input}:461    .text.Ifx_AngleTrkF32_setControlGains:00000046 Ifx_AngleTrkF32_setControlGains_end
+    {standard input}:466    .text.Ifx_AngleTrkF32_initConfig:00000000 Ifx_AngleTrkF32_initConfig
+    {standard input}:547    .text.Ifx_AngleTrkF32_initConfig:00000088 Ifx_AngleTrkF32_initConfig_end
+    {standard input}:552    .text.Ifx_AngleTrkF32_setUserSampling:00000000 Ifx_AngleTrkF32_setUserSampling
+    {standard input}:572    .text.Ifx_AngleTrkF32_setUserSampling:00000014 Ifx_AngleTrkF32_setUserSampling_end
+    {standard input}:577    .text.Ifx_AngleTrkF32_init:00000000 Ifx_AngleTrkF32_init
+    {standard input}:728    .text.Ifx_AngleTrkF32_init:000000f8 Ifx_AngleTrkF32_init_end
+    {standard input}:733    .text.Ifx_AngleTrkF32_step:00000000 Ifx_AngleTrkF32_step
+    {standard input}:968    .text.Ifx_AngleTrkF32_step:00000154 Ifx_AngleTrkF32_step_end
+    {standard input}:973    .text.Ifx_AngleTrkF32_updateStatus:00000000 Ifx_AngleTrkF32_updateStatus
+    {standard input}:1035   .text.Ifx_AngleTrkF32_updateStatus:00000060 Ifx_AngleTrkF32_updateStatus_end
+    {standard input}:1040   .text.Ifx_AngleTrkF32_update:00000000 Ifx_AngleTrkF32_update
+    {standard input}:1103   .text.Ifx_AngleTrkF32_update:00000054 Ifx_AngleTrkF32_update_end
+    {standard input}:1108   .text.Ifx_AngleTrkF32_stdIfPosInit:00000000 Ifx_AngleTrkF32_stdIfPosInit
+    {standard input}:1220   .text.Ifx_AngleTrkF32_stdIfPosInit:000000e2 Ifx_AngleTrkF32_stdIfPosInit_end
+
+UNDEFINED SYMBOLS
+Ifx_LowPassPt1F32_init
+Ifx_LutAtan2F32_float32
+Ifx_LowPassPt1F32_do

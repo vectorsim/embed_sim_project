@@ -1,0 +1,1236 @@
+   1              	
+   2              	 .file "IfxSrc.c"
+   3              	 .file "IfxSrc.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.IfxSrc_setOtgbSrnIndex,"ax",@progbits
+   7              	 .align 1
+   8              	 .global IfxSrc_setOtgbSrnIndex
+  10              	IfxSrc_setOtgbSrnIndex:
+  11              	.LFB306:
+  12              	 .file 1 "../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c"
+   1:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** /**
+   2:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****  * \file IfxSrc.c
+   3:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****  * \brief SRC basic functionality
+   4:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****  *
+   5:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****  *
+   8:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****  *
+   9:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****  *
+  10:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****  *                                 IMPORTANT NOTICE
+  11:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****  *
+  12:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****  * this file except in compliance with IFASLL.
+  15:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****  *
+  16:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****  *
+  26:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****  *
+  27:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****  */
+  28:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 
+  29:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** /******************************************************************************/
+  30:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** /*----------------------------------Includes----------------------------------*/
+  31:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** /******************************************************************************/
+  32:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 
+  33:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** #include "IfxSrc.h"
+  34:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 
+  35:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** /******************************************************************************/
+  36:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** /*-------------------------Function Implementations---------------------------*/
+  37:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** /******************************************************************************/
+  38:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 
+  39:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** void IfxSrc_setOtgbSrnIndex(volatile Ifx_INT *intr, IfxSrc_OtgbSrnIndex srnIndex, IfxSrc_OtgbSrnInd
+  40:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** {
+  13              	 .loc 1 40 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  41:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     Ifx_INT_OIXS0 intrSel0;
+  17              	 .loc 1 41 5
+  42:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     Ifx_INT_OIXS1 intrSel1;
+  18              	 .loc 1 42 5
+  43:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 
+  44:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     intrSel0.U = intr->OIXS0.U;
+  19              	 .loc 1 44 5
+  20              	 .loc 1 44 29 is_stmt 0
+  21 0002 19431400 	 ld.w %d3,[%a4]20
+  22              	.LVL1:
+  45:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     intrSel1.U = intr->OIXS1.U;
+  23              	 .loc 1 45 5 is_stmt 1
+  24              	 .loc 1 45 29 is_stmt 0
+  25 0006 19421800 	 ld.w %d2,[%a4]24
+  26              	.LVL2:
+  46:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 
+  47:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     switch (srnIndex)
+  27              	 .loc 1 47 5 is_stmt 1
+  28 000a FF440080 	 jge.u %d4,4,.L2
+  29 000e 91000020 	 movh.a %a2,hi:.L4
+  30 0012 D9220000 	 lea %a2,[%a2]lo:.L4
+  31 0016 01240226 	 addsc.a %a2,%a2,%d4,2
+  32 001a DC02     	 ji %a2
+  33              	 .align 2
+  34              	 .align 2
+  35              	.L4:
+  36              	 .code32
+  37 001c 1D000000 	 j .L7
+  38              	 .code32
+  39 0020 1D000000 	 j .L6
+  40              	 .code32
+  41 0024 1D000000 	 j .L5
+  42              	 .code32
+  43 0028 1D000000 	 j .L3
+  44              	.L7:
+  48:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     {
+  49:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     case IfxSrc_OtgbSrnIndex_srnIndex0: intrSel0.B.IRQ0 = srnIndexVal->srnIndexVal0;
+  45              	 .loc 1 49 41
+  46              	 .loc 1 49 70 is_stmt 0
+  47 002c 9454     	 ld.h %d4,[%a5]0
+  48              	.LVL3:
+  49              	 .loc 1 49 57
+  50 002e 37430B30 	 insert %d3,%d3,%d4,0,11
+  50:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****         break;
+  51              	 .loc 1 50 9 is_stmt 1
+  52              	.L2:
+  51:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     case IfxSrc_OtgbSrnIndex_srnIndex1: intrSel0.B.IRQ1 = srnIndexVal->srnIndexVal1;
+  52:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****         break;
+  53:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     case IfxSrc_OtgbSrnIndex_srnIndex2: intrSel1.B.IRQ2 = srnIndexVal->srnIndexVal2;
+  54:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****         break;
+  55:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     case IfxSrc_OtgbSrnIndex_srnIndex3: intrSel1.B.IRQ3 = srnIndexVal->srnIndexVal3;
+  56:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****         break;
+  57:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     }
+  58:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 
+  59:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     intr->OIXS0.U = intrSel0.U;
+  53              	 .loc 1 59 5
+  54              	 .loc 1 59 19 is_stmt 0
+  55 0032 59431400 	 st.w [%a4]20,%d3
+  60:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     intr->OIXS1.U = intrSel1.U;
+  56              	 .loc 1 60 5 is_stmt 1
+  57              	 .loc 1 60 19 is_stmt 0
+  58 0036 59421800 	 st.w [%a4]24,%d2
+  61:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** }
+  59              	 .loc 1 61 1
+  60 003a 0090     	 ret 
+  61              	.LVL4:
+  62              	.L6:
+  51:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     case IfxSrc_OtgbSrnIndex_srnIndex1: intrSel0.B.IRQ1 = srnIndexVal->srnIndexVal1;
+  63              	 .loc 1 51 41 is_stmt 1
+  51:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     case IfxSrc_OtgbSrnIndex_srnIndex1: intrSel0.B.IRQ1 = srnIndexVal->srnIndexVal1;
+  64              	 .loc 1 51 70 is_stmt 0
+  65 003c C9540200 	 ld.h %d4,[%a5]2
+  66              	.LVL5:
+  51:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     case IfxSrc_OtgbSrnIndex_srnIndex1: intrSel0.B.IRQ1 = srnIndexVal->srnIndexVal1;
+  67              	 .loc 1 51 57
+  68 0040 37430B38 	 insert %d3,%d3,%d4,16,11
+  52:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     case IfxSrc_OtgbSrnIndex_srnIndex2: intrSel1.B.IRQ2 = srnIndexVal->srnIndexVal2;
+  69              	 .loc 1 52 9 is_stmt 1
+  70 0044 1D000000 	 j .L2
+  71              	.LVL6:
+  72              	.L5:
+  53:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****         break;
+  73              	 .loc 1 53 41
+  53:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****         break;
+  74              	 .loc 1 53 70 is_stmt 0
+  75 0048 C9540400 	 ld.h %d4,[%a5]4
+  76              	.LVL7:
+  53:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****         break;
+  77              	 .loc 1 53 57
+  78 004c 37420B20 	 insert %d2,%d2,%d4,0,11
+  54:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     case IfxSrc_OtgbSrnIndex_srnIndex3: intrSel1.B.IRQ3 = srnIndexVal->srnIndexVal3;
+  79              	 .loc 1 54 9 is_stmt 1
+  80 0050 1D000000 	 j .L2
+  81              	.LVL8:
+  82              	.L3:
+  55:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****         break;
+  83              	 .loc 1 55 41
+  55:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****         break;
+  84              	 .loc 1 55 70 is_stmt 0
+  85 0054 C9540600 	 ld.h %d4,[%a5]6
+  86              	.LVL9:
+  55:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****         break;
+  87              	 .loc 1 55 57
+  88 0058 37420B28 	 insert %d2,%d2,%d4,16,11
+  56:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     }
+  89              	 .loc 1 56 9 is_stmt 1
+  90 005c 1D000000 	 j .L2
+  91              	.LFE306:
+  93              	 .global IfxSrc_setOtgbSrnIndex_end
+  94              	IfxSrc_setOtgbSrnIndex_end:
+  95              	 .section .text.IfxSrc_initOtgbConfig,"ax",@progbits
+  96              	 .align 1
+  97              	 .global IfxSrc_initOtgbConfig
+  99              	IfxSrc_initOtgbConfig:
+ 100              	.LFB308:
+  62:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 
+  63:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 
+  64:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** void IfxSrc_initOtgb(volatile Ifx_INT *intr, IfxSrc_OtgbConfig *OtgbConfig)
+  65:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** {
+  66:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 	/* Configures the trigger for the Otgb source */
+  67:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     IfxSrc_configOtgbTriggerSet(intr, OtgbConfig->trigger);
+  68:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     /* Used to select the OTGB Bus for the selected triggerSet */
+  69:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     IfxSrc_configOtgbBusSelect(intr, OtgbConfig->busSelect);
+  70:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 
+  71:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     if (OtgbConfig->trigger == IfxSrc_TrigSet_is)
+  72:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     {
+  73:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     	/* Used to select only one SRN index and corresponding SRN index Value */
+  74:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****         IfxSrc_setOtgbSrnIndex(intr, (IfxSrc_OtgbSrnIndex)0U, &OtgbConfig->srnIndexVal);
+  75:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****         IfxSrc_setOtgbSrnIndex(intr, (IfxSrc_OtgbSrnIndex)1U, &OtgbConfig->srnIndexVal);
+  76:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****         IfxSrc_setOtgbSrnIndex(intr, (IfxSrc_OtgbSrnIndex)2U, &OtgbConfig->srnIndexVal);
+  77:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****         IfxSrc_setOtgbSrnIndex(intr, (IfxSrc_OtgbSrnIndex)3U, &OtgbConfig->srnIndexVal);
+  78:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     }
+  79:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     else if (OtgbConfig->trigger == IfxSrc_TrigSet_sp)
+  80:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     {
+  81:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     	/* Configures interrupt triggers for OTGB service provider based on the provided configuration
+  82:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****         IfxSrc_configOtgbServiceProviderTrigger(intr, &OtgbConfig->spConfig);
+  83:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     }
+  84:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     else
+  85:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     {
+  86:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****         /* Configured to SPA trigger Set */
+  87:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     }
+  88:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** }
+  89:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 
+  90:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 
+  91:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** void IfxSrc_initOtgbConfig(IfxSrc_OtgbConfig *OtgbConfig)
+  92:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** {
+ 101              	 .loc 1 92 1
+ 102              	.LVL10:
+ 103 0000 40AE     	 mov.aa %a14,%SP
+ 104              	.LCFI1:
+  93:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 	/* Initializes the OTGB configuration structure with default values */
+  94:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     OtgbConfig->trigger                  = IfxSrc_TrigSet_is;
+ 105              	 .loc 1 94 5
+ 106              	 .loc 1 94 42 is_stmt 0
+ 107 0002 8212     	 mov %d2,1
+ 108 0004 7442     	 st.w [%a4]0,%d2
+  95:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     OtgbConfig->busSelect                = IfxSrc_OtgbBusSel_otgb0;
+ 109              	 .loc 1 95 5 is_stmt 1
+ 110              	 .loc 1 95 42 is_stmt 0
+ 111 0006 8202     	 mov %d2,0
+ 112 0008 59420400 	 st.w [%a4]4,%d2
+  96:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     OtgbConfig->srnIndexVal.srnIndexVal0 = 0;
+ 113              	 .loc 1 96 5 is_stmt 1
+ 114              	 .loc 1 96 42 is_stmt 0
+ 115 000c F9420800 	 st.h [%a4]8,%d2
+  97:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     OtgbConfig->srnIndexVal.srnIndexVal1 = 0;
+ 116              	 .loc 1 97 5 is_stmt 1
+ 117              	 .loc 1 97 42 is_stmt 0
+ 118 0010 F9420A00 	 st.h [%a4]10,%d2
+  98:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     OtgbConfig->srnIndexVal.srnIndexVal2 = 0;
+ 119              	 .loc 1 98 5 is_stmt 1
+ 120              	 .loc 1 98 42 is_stmt 0
+ 121 0014 F9420C00 	 st.h [%a4]12,%d2
+  99:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     OtgbConfig->srnIndexVal.srnIndexVal3 = 0;
+ 122              	 .loc 1 99 5 is_stmt 1
+ 123              	 .loc 1 99 42 is_stmt 0
+ 124 0018 F9420E00 	 st.h [%a4]14,%d2
+ 100:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     OtgbConfig->spConfig.tos0            = IfxSrc_Tos_cpu0;
+ 125              	 .loc 1 100 5 is_stmt 1
+ 126              	 .loc 1 100 42 is_stmt 0
+ 127 001c 59421400 	 st.w [%a4]20,%d2
+ 101:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     OtgbConfig->spConfig.tos1            = IfxSrc_Tos_cpu0;
+ 128              	 .loc 1 101 5 is_stmt 1
+ 129              	 .loc 1 101 42 is_stmt 0
+ 130 0020 59421800 	 st.w [%a4]24,%d2
+ 102:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     OtgbConfig->spConfig.bus0Enable      = FALSE;
+ 131              	 .loc 1 102 5 is_stmt 1
+ 132              	 .loc 1 102 42 is_stmt 0
+ 133 0024 E9421000 	 st.b [%a4]16,%d2
+ 103:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     OtgbConfig->spConfig.bus1Enable      = FALSE;
+ 134              	 .loc 1 103 5 is_stmt 1
+ 135              	 .loc 1 103 42 is_stmt 0
+ 136 0028 E9421100 	 st.b [%a4]17,%d2
+ 104:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** }
+ 137              	 .loc 1 104 1
+ 138 002c 0090     	 ret 
+ 139              	.LFE308:
+ 141              	 .global IfxSrc_initOtgbConfig_end
+ 142              	IfxSrc_initOtgbConfig_end:
+ 143              	 .section .text.IfxSrc_configOtgbServiceProviderTrigger,"ax",@progbits
+ 144              	 .align 1
+ 145              	 .global IfxSrc_configOtgbServiceProviderTrigger
+ 147              	IfxSrc_configOtgbServiceProviderTrigger:
+ 148              	.LFB309:
+ 105:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 
+ 106:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 
+ 107:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** void IfxSrc_configOtgbServiceProviderTrigger(volatile Ifx_INT *intr, IfxSrc_spConfig *spConfig)
+ 108:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** {
+ 149              	 .loc 1 108 1 is_stmt 1
+ 150              	.LVL11:
+ 151 0000 40AE     	 mov.aa %a14,%SP
+ 152              	.LCFI2:
+ 109:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     Ifx_INT_OIT irqTrace;
+ 153              	 .loc 1 109 5
+ 110:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     irqTrace.U = intr->OIT.U;
+ 154              	 .loc 1 110 5
+ 155              	 .loc 1 110 27 is_stmt 0
+ 156 0002 19421C00 	 ld.w %d2,[%a4]28
+ 157              	.LVL12:
+ 111:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 
+ 112:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     if (spConfig->bus0Enable == TRUE)
+ 158              	 .loc 1 112 5 is_stmt 1
+ 159              	 .loc 1 112 17 is_stmt 0
+ 160 0006 1453     	 ld.bu %d3,[%a5]0
+ 161              	 .loc 1 112 8
+ 162 0008 DF130000 	 jeq %d3,1,.L12
+ 163              	.L10:
+ 113:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     {
+ 114:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****         irqTrace.B.TOS0 = spConfig->tos0;
+ 115:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****         irqTrace.B.OE0  = 1;
+ 116:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     }
+ 117:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 
+ 118:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     if (spConfig->bus1Enable == TRUE)
+ 164              	 .loc 1 118 5 is_stmt 1
+ 165              	 .loc 1 118 17 is_stmt 0
+ 166 000c 39530100 	 ld.bu %d3,[%a5]1
+ 167              	 .loc 1 118 8
+ 168 0010 DF130000 	 jeq %d3,1,.L13
+ 169              	.L11:
+ 119:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     {
+ 120:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****         irqTrace.B.TOS1 = spConfig->tos1;
+ 121:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****         irqTrace.B.OE1  = 1;
+ 122:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     }
+ 123:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 
+ 124:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     intr->OIT.U = irqTrace.U;
+ 170              	 .loc 1 124 5 is_stmt 1
+ 171              	 .loc 1 124 17 is_stmt 0
+ 172 0014 59421C00 	 st.w [%a4]28,%d2
+ 125:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** }
+ 173              	 .loc 1 125 1
+ 174 0018 0090     	 ret 
+ 175              	.L12:
+ 114:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****         irqTrace.B.OE0  = 1;
+ 176              	 .loc 1 114 9 is_stmt 1
+ 114:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****         irqTrace.B.OE0  = 1;
+ 177              	 .loc 1 114 35 is_stmt 0
+ 178 001a 19530400 	 ld.w %d3,[%a5]4
+ 114:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****         irqTrace.B.OE0  = 1;
+ 179              	 .loc 1 114 25
+ 180 001e 37320420 	 insert %d2,%d2,%d3,0,4
+ 115:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     }
+ 181              	 .loc 1 115 9 is_stmt 1
+ 115:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     }
+ 182              	 .loc 1 115 25 is_stmt 0
+ 183 0022 B7128123 	 insert %d2,%d2,1,7,1
+ 184 0026 1D000000 	 j .L10
+ 185              	.L13:
+ 120:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****         irqTrace.B.OE1  = 1;
+ 186              	 .loc 1 120 9 is_stmt 1
+ 120:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****         irqTrace.B.OE1  = 1;
+ 187              	 .loc 1 120 35 is_stmt 0
+ 188 002a 19530800 	 ld.w %d3,[%a5]8
+ 120:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****         irqTrace.B.OE1  = 1;
+ 189              	 .loc 1 120 25
+ 190 002e 37320424 	 insert %d2,%d2,%d3,8,4
+ 121:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     }
+ 191              	 .loc 1 121 9 is_stmt 1
+ 121:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     }
+ 192              	 .loc 1 121 25 is_stmt 0
+ 193 0032 B7128127 	 insert %d2,%d2,1,15,1
+ 194 0036 1D000000 	 j .L11
+ 195              	.LFE309:
+ 197              	 .global IfxSrc_configOtgbServiceProviderTrigger_end
+ 198              	IfxSrc_configOtgbServiceProviderTrigger_end:
+ 199              	 .section .text.IfxSrc_initOtgb,"ax",@progbits
+ 200              	 .align 1
+ 201              	 .global IfxSrc_initOtgb
+ 203              	IfxSrc_initOtgb:
+ 204              	.LFB307:
+  65:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 	/* Configures the trigger for the Otgb source */
+ 205              	 .loc 1 65 1 is_stmt 1
+ 206              	.LVL13:
+ 207 0000 40AE     	 mov.aa %a14,%SP
+ 208              	.LCFI3:
+ 209 0002 404C     	 mov.aa %a12,%a4
+  67:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     /* Used to select the OTGB Bus for the selected triggerSet */
+ 210              	 .loc 1 67 5
+ 211 0004 5453     	 ld.w %d3,[%a5]0
+ 212              	.LVL14:
+ 213              	.LBB6:
+ 214              	.LBB7:
+ 215              	 .file 2 "../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h"
+   1:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /**
+   2:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \file IfxSrc.h
+   3:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \brief SRC  basic functionality
+   4:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \ingroup IfxLld_Src
+   5:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+   6:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \version iLLD-TC4-v2.7.0
+   7:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   8:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+   9:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+  10:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+  11:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *                                 IMPORTANT NOTICE
+  12:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+  13:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  14:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  15:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * this file except in compliance with IFASLL.
+  16:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+  17:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  18:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * Unless required by applicable law or agreed to in writing, software distributed
+  19:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  20:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  21:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * whether express, implied, statutory or otherwise, including but not limited to
+  22:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  23:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * defects in the licensed items, or non-infringement of third parties'
+  24:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * intellectual property rights. See the full license text for the specific
+  25:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * language governing permissions and limitations under IFASLL.
+  26:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+  27:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+  28:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \defgroup IfxLld_Src SRC
+  29:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \addtogroup IfxLld_Src
+  30:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \{
+  31:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \defgroup IfxLld_Src_Usage How to use Service Request Mechanism?
+  32:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \addtogroup IfxLld_Src_Usage
+  33:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \{
+  34:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+  35:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * For Aurix controller peripherals that can generate service requests is connected to one
+  36:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * or more Service Request Nodes (SRNs) in the central Interrupt Router(IR) module. Refer to Contro
+  37:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+  38:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * IfxSrc driver provides the APIs to configure and control service requests. Refer \ref IfxLld_Src
+  39:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * details of these APIs.
+  40:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+  41:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+  42:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \section Ifx_Src_UsageInit Initialize the Service Request Node
+  43:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+  44:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * Service request node is initialized to configure the following,\n
+  45:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * 1) Route the interrupt trigger to service provider, which are:\n
+  46:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *  __a. One of the available CPUs or\n
+  47:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *  __b. DMA controller\n
+  48:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *  __c. CSRM controller\n
+  49:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *  __d. PPU\n
+  50:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+  51:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * 2) Priority of CPU Interrupt or DMA Trigger.
+  52:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+  53:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * For Interrupt or DMA to be correctly triggered, following steps are to be done in the user code:
+  54:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+  55:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \subsection Ifx_Src_UsageInitStep1 Step1: Configure the Node
+  56:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+  57:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * User must configure the service request node in the application / driver files.
+  58:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+  59:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \subsection Ifx_Src_UsageInitStep2 Step2: Enable the Trigger
+  60:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+  61:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * Enable the service request node to connect the trigger event from the hardware to service provid
+  62:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+  63:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * Example:
+  64:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * Following example show the configuration for STM0 Service request 0 trigger configured to trigge
+  65:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * CPU1 with the priority specified by IFX_INTPRIO_STM0 (from the example at IfxCpu_Irq)
+  66:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+  67:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \code
+  68:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * //file: myApplication.c
+  69:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+  70:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * #include "Ifx_IntPrioDef.h" // to get the priority numbers
+  71:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+  72:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * void myDriverInitFunction(void)
+  73:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * {
+  74:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *    // driver init code
+  75:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+  76:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *    // Step1: Call the function to route the trigger from for SRC_STM0_SR0 to CPU1
+  77:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *    // and priority specified at Ifx_IntPrioDef.h globally
+  78:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *    IfxSrc_init(&MODULE_SRC.STM[0].SR[0], IfxSrc_Tos_cpu1, IFX_INTPRIO_STM0, IfxSrc_VmId_0);
+  79:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+  80:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *    // Step2: Enable the service request node
+  81:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *    IfxSrc_enable(&MODULE_SRC.STM.STM[0].SR[0]);
+  82:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * }
+  83:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \endcode
+  84:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+  85:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \}
+  86:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \}
+  87:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+  88:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \defgroup IfxLld_Src_Std_Service_Request Service Request Functions
+  89:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \ingroup IfxLld_Src_Std
+  90:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \defgroup IfxLld_Src_Std_Module Module Functions
+  91:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \ingroup IfxLld_Src_Std
+  92:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  */
+  93:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+  94:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** #ifndef IFXSRC_H
+  95:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** #define IFXSRC_H 1
+  96:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+  97:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /******************************************************************************/
+  98:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /*----------------------------------Includes----------------------------------*/
+  99:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /******************************************************************************/
+ 100:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 101:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** #include "_Impl/IfxSrc_cfg.h"
+ 102:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** #if !defined(IFX_ILLD_PPU_USAGE)
+ 103:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** #include "Cpu/Std/IfxCpu_Intrinsics.h"
+ 104:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** #endif
+ 105:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** #if defined(IFX_ILLD_PPU_USAGE)
+ 106:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** #include "Ppu/Std/IfxPpu_Intrinsics.h"
+ 107:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** #endif
+ 108:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** #include "IfxSrc_reg.h"
+ 109:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** #include "IfxInt_reg.h"
+ 110:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** #if !defined(IFX_ILLD_PPU_USAGE)
+ 111:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** #include "Cpu/Std/IfxCpu.h"
+ 112:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** #endif
+ 113:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** #include "Ap/Std/IfxApApu.h"
+ 114:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** #include "Ap/Std/IfxApProt.h"
+ 115:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 116:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /******************************************************************************/
+ 117:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /*-------------------------------Enumerations---------------------------------*/
+ 118:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /******************************************************************************/
+ 119:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 120:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /** \brief OCDS Trigger Bus Interface Selection
+ 121:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  */
+ 122:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** typedef enum
+ 123:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** {
+ 124:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     IfxSrc_OtgbBusSel_otgb0 = 0,  /**< \brief TriggerSet is output on OTGB0 */
+ 125:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     IfxSrc_OtgbBusSel_otgb1 = 1   /**< \brief TriggerSet is output on OTGB1 */
+ 126:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** } IfxSrc_OtgbBusSel;
+ 127:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 128:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /** \brief SRN index for interrupt triggers
+ 129:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  */
+ 130:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** typedef enum
+ 131:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** {
+ 132:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     IfxSrc_OtgbSrnIndex_srnIndex0 = 0,  /**< \brief SRN index for interrupt trigger-0 */
+ 133:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     IfxSrc_OtgbSrnIndex_srnIndex1 = 1,  /**< \brief SRN index for interrupt trigger-1 */
+ 134:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     IfxSrc_OtgbSrnIndex_srnIndex2 = 2,  /**< \brief SRN index for interrupt trigger-2 */
+ 135:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     IfxSrc_OtgbSrnIndex_srnIndex3 = 3   /**< \brief SRN index for interrupt trigger-3 */
+ 136:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** } IfxSrc_OtgbSrnIndex;
+ 137:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 138:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /** \brief TriggerSet Selection availbale in IR.
+ 139:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  */
+ 140:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** typedef enum
+ 141:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** {
+ 142:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     IfxSrc_TrigSet_none = 0,  /**< \brief No TriggerSet Selected */
+ 143:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     IfxSrc_TrigSet_is   = 1,  /**< \brief TriggerSet 1 : TS16_IS Interrupt Selection selected */
+ 144:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     IfxSrc_TrigSet_spa  = 2,  /**< \brief TriggerSet 2 : TS16_SPA Service Provider Activity selecte
+ 145:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     IfxSrc_TrigSet_sp   = 3   /**< \brief TriggerSet 3 : TS16_SP Service Provider selected */
+ 146:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** } IfxSrc_TrigSet;
+ 147:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 148:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /******************************************************************************/
+ 149:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /*-----------------------------Data Structures--------------------------------*/
+ 150:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /******************************************************************************/
+ 151:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 152:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /** \brief SRN index Values corresponding to each SRN index
+ 153:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  */
+ 154:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** typedef struct
+ 155:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** {
+ 156:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     uint16 srnIndexVal0;       /**< \brief SRN index value for interrupt trigger-0. Range: 0 to 0x7
+ 157:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     uint16 srnIndexVal1;       /**< \brief SRN index Value for interrupt trigger-1. Range: 0 to 0x7
+ 158:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     uint16 srnIndexVal2;       /**< \brief SRN index Value for interrupt trigger-2. Range: 0 to 0x7
+ 159:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     uint16 srnIndexVal3;       /**< \brief SRN index Value for interrupt trigger-3. Range: 0 to 0x7
+ 160:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** } IfxSrc_OtgbSrnIndexVal;
+ 161:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 162:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /** \brief Configuration for Service Provider trigger Set
+ 163:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  */
+ 164:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** typedef struct
+ 165:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** {
+ 166:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     boolean    bus0Enable;       /**< \brief OTGB0 enable/disable */
+ 167:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     boolean    bus1Enable;       /**< \brief OTGB1 enable/diable */
+ 168:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     IfxSrc_Tos tos0;             /**< \brief type of  service (TOS)-0 for service provider tiggerSe
+ 169:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     IfxSrc_Tos tos1;             /**< \brief type of service(TOS)-1 for service provider triggerSet
+ 170:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** } IfxSrc_spConfig;
+ 171:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 172:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /** \brief OTGB configuration parameters for all trigger sets
+ 173:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  */
+ 174:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** typedef struct
+ 175:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** {
+ 176:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     IfxSrc_TrigSet         trigger;           /**< \brief Trigger Set Selection */
+ 177:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     IfxSrc_OtgbBusSel      busSelect;         /**< \brief bus Selction for the selected trigger Set
+ 178:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     IfxSrc_OtgbSrnIndexVal srnIndexVal;       /**< \brief SRN index value for corressponding SRN in
+ 179:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     IfxSrc_spConfig        spConfig;          /**< \brief Service Provider triggerSet configuration
+ 180:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** } IfxSrc_OtgbConfig;
+ 181:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 182:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /** \addtogroup IfxLld_Src_Std_Service_Request
+ 183:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \{ */
+ 184:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 185:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /******************************************************************************/
+ 186:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /*-------------------------Inline Function Prototypes-------------------------*/
+ 187:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /******************************************************************************/
+ 188:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 189:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /** \brief Resets the overrun flag of the Service Request.
+ 190:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 191:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[inout] src Pointer to the Service Request Control register which the overrun flag should 
+ 192:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 193:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \retval None
+ 194:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 195:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * Usage example: see \ref IfxSrc_init
+ 196:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 197:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  */
+ 198:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_INLINE void IfxSrc_clearOverrun(volatile Ifx_SRC_SRCR *src);
+ 199:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 200:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /** \brief Clears a pending request in the source controller by setting the clear request bit.
+ 201:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 202:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[inout] src Pointer to the Service Request Control register which the request should be cl
+ 203:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 204:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \retval None
+ 205:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 206:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * Usage example: see \ref IfxSrc_init
+ 207:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 208:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  */
+ 209:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_INLINE void IfxSrc_clearRequest(volatile Ifx_SRC_SRCR *src);
+ 210:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 211:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /** \brief Clears a pending request in the source controller by setting the clear request bit.
+ 212:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 213:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[in] src Pointer to the Service Request Control register for which the overrun status shou
+ 214:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 215:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \retval Current service request control overrun status.
+ 216:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 217:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * Usage example: see \ref IfxSrc_init
+ 218:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 219:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  */
+ 220:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_INLINE boolean IfxSrc_isOverrun(volatile Ifx_SRC_SRCR *src);
+ 221:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 222:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /** \brief Checks if a source is requested by examining the SRR bit.
+ 223:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 224:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[in] src Pointer to the Service Request Control register for which the request status shou
+ 225:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 226:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \retval Current service request control request status.
+ 227:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 228:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * Usage example: see \ref IfxSrc_init
+ 229:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 230:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  */
+ 231:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_INLINE boolean IfxSrc_isRequested(volatile Ifx_SRC_SRCR *src);
+ 232:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 233:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /** \brief Requests a specific interrupt service by software
+ 234:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 235:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[inout] src Pointer to the Service Request Control register which the interrupt has to be 
+ 236:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 237:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \retval None
+ 238:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 239:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * Usage example: see \ref IfxSrc_init
+ 240:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 241:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  */
+ 242:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_INLINE void IfxSrc_setRequest(volatile Ifx_SRC_SRCR *src);
+ 243:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 244:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /** \brief Get the ECC error status occurred in the specified service type.
+ 245:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 246:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[in] intr          Pointer to the Interrupt Control Unit register for which the ECC error 
+ 247:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[in] typeOfService Type of interrupt service provider.[Interrupt Control Unit mapped to ty
+ 248:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 249:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \retval Current interrupt control unit ECC error status.
+ 250:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 251:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * Usage example: see \ref IfxSrc_init
+ 252:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 253:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  */
+ 254:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_INLINE boolean IfxSrc_getEccError(volatile Ifx_INT *intr, IfxSrc_Tos typeOfService);
+ 255:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 256:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /** \brief Clears the ECC error status for a specified service type.
+ 257:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 258:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[inout] intr          Pointer to the Interrupt Control Unit register for which the ECC err
+ 259:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[in]    typeOfService Type of interrupt service provider.[Interrupt Control Unit mapped to
+ 260:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 261:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \retval None
+ 262:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 263:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * Usage example: see \ref IfxSrc_init
+ 264:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 265:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  */
+ 266:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_INLINE void IfxSrc_clearEccError(volatile Ifx_INT *intr, IfxSrc_Tos typeOfService);
+ 267:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 268:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /** \brief Enables a specific interrupt line service request in broadcast interrupt group.
+ 269:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 270:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[inout] intr          Pointer to the Service Request Broadcast register for which the inte
+ 271:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[in]    groupNum      Service request broadcast group in which interrupt line should be en
+ 272:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[in]    interruptLine Specific interrupt line number in service request broadcast group. R
+ 273:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 274:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \retval None
+ 275:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 276:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * Usage example: see \ref IfxSrc_init
+ 277:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 278:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  */
+ 279:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_INLINE void IfxSrc_enableBroadcastInterruptLine(volatile Ifx_INT *intr, IfxSrc_Int_group groupN
+ 280:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 281:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /** \brief Disables a specific interrupt line service request in broadcast interrupt group.
+ 282:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 283:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[inout] intr          Pointer to the Service Request Broadcast register for which the inte
+ 284:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[in]    groupNum      Service request broadcast group in which interrupt line should be di
+ 285:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[in]    interruptLine Specific interrupt line number in service request broadcast group. R
+ 286:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 287:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \retval None
+ 288:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 289:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * Usage example: see \ref IfxSrc_init
+ 290:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 291:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  */
+ 292:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_INLINE void IfxSrc_disableBroadcastInterruptLine(volatile Ifx_INT *intr, IfxSrc_Int_group group
+ 293:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 294:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /** \brief Trigger a specific interrupt line in service request broadcast group by software.
+ 295:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 296:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[inout] intr          Pointer to the Service Request Broadcast register for which the inte
+ 297:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[in]    groupNum      Service request broadcast group in which interrupt line should be tr
+ 298:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[in]    interruptLine Specific interrupt line number in service request broadcast group. R
+ 299:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 300:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \retval None
+ 301:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 302:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * Usage example: see \ref IfxSrc_init
+ 303:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 304:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  */
+ 305:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_INLINE void IfxSrc_triggerBroadcastinterruptLine(volatile Ifx_INT *intr, IfxSrc_Int_group group
+ 306:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 307:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /** \brief Trigger interrupts in service request broadcast group by software.
+ 308:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 309:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[inout] intr       Pointer to the Service Request Broadcast register for which the interru
+ 310:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[in]    groupNum   Service request broadcast group in which interrupts should be triggered
+ 311:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[in]    interrupts Number of Interrupts in service request broadcast group. Range: 0 to 7.
+ 312:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 313:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \retval None
+ 314:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 315:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * Usage example: see \ref IfxSrc_init
+ 316:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 317:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  */
+ 318:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_INLINE void IfxSrc_triggerBroadcastinterrupts(volatile Ifx_INT *intr, IfxSrc_Int_group groupNum
+ 319:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 320:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /** \} */
+ 321:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 322:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /** \addtogroup IfxLld_Src_Std_Module
+ 323:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \{ */
+ 324:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 325:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /******************************************************************************/
+ 326:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /*-------------------------Inline Function Prototypes-------------------------*/
+ 327:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /******************************************************************************/
+ 328:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 329:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /** \brief Deinitializes the source register by resetting its fields to their default values.
+ 330:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * Resets the TOS to F.
+ 331:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 332:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[inout] src Pointer to the Service Request Control register which should be deinitialized.
+ 333:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 334:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \retval None
+ 335:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 336:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * Usage example: see \ref IfxSrc_init
+ 337:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 338:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  */
+ 339:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_INLINE void IfxSrc_deinit(volatile Ifx_SRC_SRCR *src);
+ 340:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 341:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /** \brief Disables the source control register (SRCR) by setting the SRE bit to 0.
+ 342:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 343:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[inout] src Pointer to the Service Request Control register for which the interrupt has to
+ 344:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 345:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \retval None
+ 346:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 347:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * Usage example: see \ref IfxSrc_init
+ 348:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 349:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  */
+ 350:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_INLINE void IfxSrc_disable(volatile Ifx_SRC_SRCR *src);
+ 351:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 352:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /** \brief Enables a specific interrupt service request.
+ 353:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 354:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[inout] src Pointer to the Service Request Control register for which the interrupt has to
+ 355:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 356:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \retval None
+ 357:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 358:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * Usage example: see \ref IfxSrc_init
+ 359:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 360:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  */
+ 361:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_INLINE void IfxSrc_enable(volatile Ifx_SRC_SRCR *src);
+ 362:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 363:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /** \brief Initializes the service request control register.
+ 364:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * Note: In case Virtualization is disabled VM Number is always written with zero.
+ 365:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * Note: In case of re-initialization, use IfxSrc_deinit to reset the TOS to F.
+ 366:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 367:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[inout] src          Pointer to the Service Request Control register which should be initi
+ 368:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[in]    typOfService Type of interrupt service provider. Range: \ref IfxSrc_Tos.
+ 369:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[in]    priority     Interrupt priority.
+ 370:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[in]    vmNumber     The Virtual Machine which is going to be the interrupt service provid
+ 371:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 372:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \retval None
+ 373:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 374:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * Get the peripheral service control register which request need to be serviced and assign this se
+ 375:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \code
+ 376:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * //define the interrupt priority
+ 377:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * #define IFXASCLIN0_TX_INTPRIO 2
+ 378:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * //get the service request
+ 379:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * volatile Ifx_SRC_SRCR *src = IfxAsclin_getSrcPointerRx( &MODULE_ASCLIN0 );
+ 380:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * //initlaise the service request
+ 381:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * IfxSrc_init( src, IfxSrc_Tos_cpu0, IFXASCLIN0_TX_INTPRIO, IfxSrc_VmId_0);
+ 382:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * // enable the service
+ 383:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * IfxSrc_enable( src );
+ 384:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * //check for service request flags and clear if they occur
+ 385:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * if ( IfxSrc_isRequested( src ) == TRUE )
+ 386:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * {
+ 387:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *    IfxSrc_clearRequest( src );
+ 388:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * }
+ 389:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * if ( IfxSrc_isOverrun( src ) == TRUE )
+ 390:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * {
+ 391:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *      IfxSrc_clearOverrun( src );
+ 392:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * }
+ 393:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * // Atlast deinitialise the service control
+ 394:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * IfxSrc_deinit( src );
+ 395:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \endcode
+ 396:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 397:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  */
+ 398:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_INLINE void IfxSrc_init(volatile Ifx_SRC_SRCR *src, IfxSrc_Tos typOfService, Ifx_Priority prior
+ 399:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 400:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /** \} */
+ 401:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 402:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /******************************************************************************/
+ 403:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /*-------------------------Inline Function Prototypes-------------------------*/
+ 404:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /******************************************************************************/
+ 405:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 406:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /** \brief Configures the trigger for the Otgb source.
+ 407:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 408:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[inout] intr             Points to the OTGB OCS register.
+ 409:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[in]    triggerSelection Type of triggerSet chosen. Range: \ref IfxSrc_TrigSet.
+ 410:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 411:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \retval None
+ 412:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  */
+ 413:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_INLINE void IfxSrc_configOtgbTriggerSet(volatile Ifx_INT *intr, IfxSrc_TrigSet triggerSelection
+ 414:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 415:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /** \brief Used to select the OTGB Bus for the selected triggerSet.
+ 416:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 417:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[inout] intr         Points to the OTGB OCS regoster.
+ 418:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[in]    busSelection Bus chosen for the trigger selected. Range: \ref IfxSrc_OtgbBusSel.
+ 419:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 420:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \retval None
+ 421:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  */
+ 422:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_INLINE void IfxSrc_configOtgbBusSelect(volatile Ifx_INT *intr, IfxSrc_OtgbBusSel busSelection);
+ 423:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 424:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /** \brief Configure GPSR[x].DATA.
+ 425:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 426:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[inout] src  GPSRGxSRy pointer.
+ 427:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[in]    data Unsigned 16-bit data. Range: 0 to 0xFFFF.
+ 428:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 429:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \retval None
+ 430:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  */
+ 431:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_INLINE void IfxSrc_updateGpsrData(volatile Ifx_INT_GPSRG_SWC *src, uint16 data);
+ 432:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 433:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /******************************************************************************/
+ 434:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /*-------------------------Global Function Prototypes-------------------------*/
+ 435:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /******************************************************************************/
+ 436:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 437:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /** \brief Used to select only one SRN index and corresponding SRN index Value.
+ 438:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 439:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[inout] intr        Points to OTGB OIX register.
+ 440:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[in]    srnIndex    SRN index passed by the user. Range: \ref IfxSrc_OtgbSrnIndex.
+ 441:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[in]    srnIndexVal Value corresponding to the srnIndex.
+ 442:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 443:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \retval None
+ 444:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  */
+ 445:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_EXTERN void IfxSrc_setOtgbSrnIndex(volatile Ifx_INT *intr, IfxSrc_OtgbSrnIndex srnIndex, IfxSrc
+ 446:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 447:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /** \brief Used to configure the selected triggerSet.
+ 448:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * 1. for IS triggerSet, 4 SRN are configured according to the input provided by the user.
+ 449:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * 2. for SP triggerSet, sp config provided by the user is configured.
+ 450:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * 3.for SPA triggerSet, no additional configuration required.
+ 451:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 452:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[inout] intr       ICU module pointer.
+ 453:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[in]    OtgbConfig Configuration for all the triggerSets.
+ 454:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 455:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \retval None
+ 456:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  */
+ 457:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_EXTERN void IfxSrc_initOtgb(volatile Ifx_INT *intr, IfxSrc_OtgbConfig *OtgbConfig);
+ 458:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 459:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /** \brief Initializes the OTGB configuration structure with default values.
+ 460:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 461:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[inout] OtgbConfig Configuration param passed to congure all three trigger Sets.
+ 462:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 463:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \retval None
+ 464:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  */
+ 465:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_EXTERN void IfxSrc_initOtgbConfig(IfxSrc_OtgbConfig *OtgbConfig);
+ 466:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 467:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /** \brief Configures interrupt triggers for OTGB service provider based on the provided configurat
+ 468:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 469:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[inout] intr     Points to OTGB OIT register.
+ 470:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[in]    spConfig Service provider configuration struct object.
+ 471:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 472:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \retval None
+ 473:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  */
+ 474:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_EXTERN void IfxSrc_configOtgbServiceProviderTrigger(volatile Ifx_INT *intr, IfxSrc_spConfig *sp
+ 475:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 476:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /** \brief Configures access to all masters to all the ICUs in the device.
+ 477:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 478:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \param[in] apConfig Pointer to the IfxApApu_ApuConfig structure that contains the configuration 
+ 479:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  *
+ 480:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  * \retval None
+ 481:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****  */
+ 482:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_EXTERN void IfxSrc_configureAccessToSrcs(IfxApApu_ApuConfig *apConfig);
+ 483:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 484:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /******************************************************************************/
+ 485:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /*---------------------Inline Function Implementations------------------------*/
+ 486:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** /******************************************************************************/
+ 487:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 488:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_INLINE void IfxSrc_clearOverrun(volatile Ifx_SRC_SRCR *src)
+ 489:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** {
+ 490:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     src->B.IOVCLR = 1;
+ 491:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** }
+ 492:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 493:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 494:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_INLINE void IfxSrc_clearRequest(volatile Ifx_SRC_SRCR *src)
+ 495:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** {
+ 496:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     src->B.CLRR = 1;
+ 497:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** }
+ 498:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 499:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 500:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_INLINE void IfxSrc_deinit(volatile Ifx_SRC_SRCR *src)
+ 501:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** {
+ 502:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     Ifx_SRC_SRCR srcTmp;
+ 503:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 504:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     srcTmp.U     = 0U;
+ 505:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     srcTmp.B.TOS = 0xFU;
+ 506:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 507:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     src->U       = srcTmp.U;
+ 508:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** }
+ 509:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 510:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 511:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_INLINE void IfxSrc_disable(volatile Ifx_SRC_SRCR *src)
+ 512:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** {
+ 513:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     src->B.SRE = 0;
+ 514:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** }
+ 515:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 516:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 517:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_INLINE void IfxSrc_enable(volatile Ifx_SRC_SRCR *src)
+ 518:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** {
+ 519:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     src->B.SRE = 1;
+ 520:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** }
+ 521:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 522:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 523:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_INLINE void IfxSrc_init(volatile Ifx_SRC_SRCR *src, IfxSrc_Tos typOfService, Ifx_Priority prior
+ 524:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** {
+ 525:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     Ifx_SRC_SRCR srcTmp;
+ 526:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 527:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     srcTmp.U = src->U;
+ 528:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 529:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     /* For TOS other than CPU0-5 write VM bitfield with 0 */
+ 530:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     if (typOfService > 5U)
+ 531:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     {
+ 532:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****         vmNumber = IfxSrc_VmId_0;
+ 533:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     }
+ 534:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 535:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** #if !defined(IFX_ILLD_PPU_USAGE)
+ 536:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 537:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     if (IfxCpu_getCoreIndex() == IfxCpu_ResourceCpu_6)
+ 538:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     {
+ 539:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****         srcTmp.B.CS = 1U;
+ 540:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     }
+ 541:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 542:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** #endif
+ 543:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** #if (IFX_CFG_VIRTUALIZATION_DISABLED == 1)
+ 544:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     /* If Virtualization is disabled then always write VM bitfield with 0 */
+ 545:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     srcTmp.B.SRPN = priority;
+ 546:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     srcTmp.B.TOS  = typOfService;
+ 547:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     srcTmp.B.VM   = 0U;
+ 548:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** #else
+ 549:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     srcTmp.B.SRPN = priority;
+ 550:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     srcTmp.B.TOS  = typOfService;
+ 551:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     srcTmp.B.VM   = vmNumber;
+ 552:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** #endif
+ 553:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 554:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     src->U = srcTmp.U;
+ 555:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     IfxSrc_clearRequest(src);
+ 556:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** }
+ 557:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 558:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 559:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_INLINE boolean IfxSrc_isOverrun(volatile Ifx_SRC_SRCR *src)
+ 560:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** {
+ 561:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     return src->B.IOV ? TRUE : FALSE;
+ 562:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** }
+ 563:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 564:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 565:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_INLINE boolean IfxSrc_isRequested(volatile Ifx_SRC_SRCR *src)
+ 566:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** {
+ 567:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     return src->B.SRR ? TRUE : FALSE;
+ 568:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** }
+ 569:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 570:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 571:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_INLINE void IfxSrc_setRequest(volatile Ifx_SRC_SRCR *src)
+ 572:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** {
+ 573:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     src->B.SETR = 1;
+ 574:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** }
+ 575:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 576:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 577:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_INLINE boolean IfxSrc_getEccError(volatile Ifx_INT *intr, IfxSrc_Tos typeOfService)
+ 578:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** {
+ 579:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     return intr->ICU[typeOfService].ECTRL.B.STAT ? TRUE : FALSE;
+ 580:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** }
+ 581:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 582:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 583:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_INLINE void IfxSrc_clearEccError(volatile Ifx_INT *intr, IfxSrc_Tos typeOfService)
+ 584:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** {
+ 585:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     intr->ICU[typeOfService].ECTRL.B.STATCLR = 1U;
+ 586:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** }
+ 587:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 588:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 589:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_INLINE void IfxSrc_enableBroadcastInterruptLine(volatile Ifx_INT *intr, IfxSrc_Int_group groupN
+ 590:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** {
+ 591:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     intr->GPSRG[groupNum].SWC[interruptLine].B.BRDIS = 0U;
+ 592:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** }
+ 593:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 594:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 595:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_INLINE void IfxSrc_disableBroadcastInterruptLine(volatile Ifx_INT *intr, IfxSrc_Int_group group
+ 596:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** {
+ 597:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     intr->GPSRG[groupNum].SWC[interruptLine].B.BRDIS = 1U;
+ 598:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** }
+ 599:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 600:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 601:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_INLINE void IfxSrc_triggerBroadcastinterruptLine(volatile Ifx_INT *intr, IfxSrc_Int_group group
+ 602:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** {
+ 603:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     intr->SRB[groupNum].U |= (1U << interruptLine);
+ 604:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** }
+ 605:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 606:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 607:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_INLINE void IfxSrc_triggerBroadcastinterrupts(volatile Ifx_INT *intr, IfxSrc_Int_group groupNum
+ 608:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** {
+ 609:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     volatile uint16 interruptLines;
+ 610:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     interruptLines         = (1U << interrupts) - (uint8)1U;
+ 611:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     intr->SRB[groupNum].U |= interruptLines;
+ 612:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** }
+ 613:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 614:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 615:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_INLINE void IfxSrc_configOtgbTriggerSet(volatile Ifx_INT *intr, IfxSrc_TrigSet triggerSelection
+ 616:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** {
+ 617:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     intr->OCS.B.TGS = triggerSelection;
+ 216              	 .loc 2 617 5
+ 217              	 .loc 2 617 21 is_stmt 0
+ 218 0006 D9420400 	 lea %a2,[%a4]4
+ 219 000a 19420400 	 ld.w %d2,[%a4]4
+ 220 000e 37320220 	 insert %d2,%d2,%d3,0,2
+ 221 0012 7422     	 st.w [%a2]0,%d2
+ 222              	.LVL15:
+ 223              	.LBE7:
+ 224              	.LBE6:
+  69:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 
+ 225              	 .loc 1 69 5 is_stmt 1
+ 226 0014 19530400 	 ld.w %d3,[%a5]4
+ 227              	.LVL16:
+ 228              	.LBB8:
+ 229              	.LBB9:
+ 618:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** }
+ 619:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 620:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** 
+ 621:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** IFX_INLINE void IfxSrc_configOtgbBusSelect(volatile Ifx_INT *intr, IfxSrc_OtgbBusSel busSelection)
+ 622:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h **** {
+ 623:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.h ****     intr->OCS.B.TGB = busSelection;
+ 230              	 .loc 2 623 5
+ 231              	 .loc 2 623 21 is_stmt 0
+ 232 0018 D9420400 	 lea %a2,[%a4]4
+ 233 001c 19420400 	 ld.w %d2,[%a4]4
+ 234 0020 67320220 	 ins.t %d2,%d2,2,%d3,0
+ 235 0024 7422     	 st.w [%a2]0,%d2
+ 236              	.LVL17:
+ 237              	.LBE9:
+ 238              	.LBE8:
+  71:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     {
+ 239              	 .loc 1 71 5 is_stmt 1
+  71:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     {
+ 240              	 .loc 1 71 19 is_stmt 0
+ 241 0026 5452     	 ld.w %d2,[%a5]0
+  71:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     {
+ 242              	 .loc 1 71 8
+ 243 0028 DF120000 	 jeq %d2,1,.L17
+  79:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     {
+ 244              	 .loc 1 79 10 is_stmt 1
+  79:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     {
+ 245              	 .loc 1 79 13 is_stmt 0
+ 246 002c DF320000 	 jeq %d2,3,.L18
+ 247              	.LVL18:
+ 248              	.L14:
+  88:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 
+ 249              	 .loc 1 88 1
+ 250 0030 0090     	 ret 
+ 251              	.LVL19:
+ 252              	.L17:
+  74:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****         IfxSrc_setOtgbSrnIndex(intr, (IfxSrc_OtgbSrnIndex)1U, &OtgbConfig->srnIndexVal);
+ 253              	 .loc 1 74 9 is_stmt 1
+ 254 0032 8052     	 mov.d %d2,%a5
+ 255 0034 1B820080 	 addi %d8,%d2,8
+ 256 0038 6085     	 mov.a %a5,%d8
+ 257              	.LVL20:
+ 258 003a 8204     	 mov %d4,0
+ 259 003c 6D000000 	 call IfxSrc_setOtgbSrnIndex
+ 260              	.LVL21:
+  75:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****         IfxSrc_setOtgbSrnIndex(intr, (IfxSrc_OtgbSrnIndex)2U, &OtgbConfig->srnIndexVal);
+ 261              	 .loc 1 75 9
+ 262 0040 6085     	 mov.a %a5,%d8
+ 263 0042 8214     	 mov %d4,1
+ 264 0044 40C4     	 mov.aa %a4,%a12
+ 265 0046 6D000000 	 call IfxSrc_setOtgbSrnIndex
+ 266              	.LVL22:
+  76:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****         IfxSrc_setOtgbSrnIndex(intr, (IfxSrc_OtgbSrnIndex)3U, &OtgbConfig->srnIndexVal);
+ 267              	 .loc 1 76 9
+ 268 004a 6085     	 mov.a %a5,%d8
+ 269 004c 8224     	 mov %d4,2
+ 270 004e 40C4     	 mov.aa %a4,%a12
+ 271 0050 6D000000 	 call IfxSrc_setOtgbSrnIndex
+ 272              	.LVL23:
+  77:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     }
+ 273              	 .loc 1 77 9
+ 274 0054 6085     	 mov.a %a5,%d8
+ 275 0056 8234     	 mov %d4,3
+ 276 0058 40C4     	 mov.aa %a4,%a12
+ 277 005a 6D000000 	 call IfxSrc_setOtgbSrnIndex
+ 278              	.LVL24:
+ 279 005e 0090     	 ret 
+ 280              	.LVL25:
+ 281              	.L18:
+  82:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     }
+ 282              	 .loc 1 82 9
+ 283 0060 D9551000 	 lea %a5,[%a5]16
+ 284              	.LVL26:
+ 285 0064 6D000000 	 call IfxSrc_configOtgbServiceProviderTrigger
+ 286              	.LVL27:
+  87:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** }
+ 287              	 .loc 1 87 5
+  88:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 
+ 288              	 .loc 1 88 1 is_stmt 0
+ 289 0068 1D000000 	 j .L14
+ 290              	.LFE307:
+ 292              	 .global IfxSrc_initOtgb_end
+ 293              	IfxSrc_initOtgb_end:
+ 294              	 .section .text.IfxSrc_configureAccessToSrcs,"ax",@progbits
+ 295              	 .align 1
+ 296              	 .global IfxSrc_configureAccessToSrcs
+ 298              	IfxSrc_configureAccessToSrcs:
+ 299              	.LFB310:
+ 126:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 
+ 127:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 
+ 128:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** void IfxSrc_configureAccessToSrcs(IfxApApu_ApuConfig *apConfig)
+ 129:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** {
+ 300              	 .loc 1 129 1 is_stmt 1
+ 301              	.LVL28:
+ 302 0000 40AE     	 mov.aa %a14,%SP
+ 303              	.LCFI4:
+ 304 0002 8049     	 mov.d %d9,%a4
+ 130:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** #if defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X)
+ 131:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 	IfxSrc_Tos tos[IFXSRC_NUM_ICU] = {IfxSrc_Tos_cpu0,IfxSrc_Tos_cpu1,IfxSrc_Tos_cpu2,IfxSrc_Tos_cpu3,
+ 132:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** #elif defined(DEVICE_TC46X) || defined(DEVICE_TC46XAA)
+ 133:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 	IfxSrc_Tos tos[IFXSRC_NUM_ICU] = {IfxSrc_Tos_cpu0,IfxSrc_Tos_cpu1,IfxSrc_Tos_cpu2,IfxSrc_Tos_cpu3,
+ 134:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** #elif defined(DEVICE_TC45X)
+ 135:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     IfxSrc_Tos tos[IFXSRC_NUM_ICU] = {IfxSrc_Tos_cpu0,IfxSrc_Tos_cpu1,IfxSrc_Tos_csrm,IfxSrc_Tos_dm
+ 136:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** #elif defined(DEVICE_TC44X)
+ 137:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     IfxSrc_Tos tos[IFXSRC_NUM_ICU] = {IfxSrc_Tos_cpu0,IfxSrc_Tos_cpu1,IfxSrc_Tos_cpu2,IfxSrc_Tos_cs
+ 138:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** #elif defined(DEVICE_TC4ZX)
+ 139:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     IfxSrc_Tos tos[IFXSRC_NUM_ICU] = {IfxSrc_Tos_cpu0,IfxSrc_Tos_cpu1,IfxSrc_Tos_cpu2,IfxSrc_Tos_cp
+ 140:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** #elif defined(DEVICE_TC4EX)
+ 141:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     IfxSrc_Tos tos[IFXSRC_NUM_ICU] = {IfxSrc_Tos_cpu0,IfxSrc_Tos_cpu1,IfxSrc_Tos_cpu2,IfxSrc_Tos_cs
+ 142:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** #elif defined(DEVICE_TC4PX)
+ 143:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     IfxSrc_Tos tos[IFXSRC_NUM_ICU] = {IfxSrc_Tos_cpu0,IfxSrc_Tos_cpu1,IfxSrc_Tos_csrm,IfxSrc_Tos_dm
+ 144:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** #else
+ 145:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 	uint8 tos;
+ 305              	 .loc 1 145 2
+ 146:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** #endif /* #if defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) */
+ 147:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 
+ 148:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** #if defined(DEVICE_TC49XN) || defined(DEVICE_TC49XNAA)
+ 149:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     /* Allow Service Request register access register access for CPUx targeted SRNs (TOS=x) */
+ 150:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     for (tos = 0; tos < IFXSRC_NUM_CORES; tos++)
+ 151:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     {
+ 152:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****         IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_INT.TOS[tos].ACCENSCTRL, apConfig);
+ 153:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****         IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_INT.TOS[tos].ACCENSCFG, apConfig);
+ 154:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     }
+ 155:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 
+ 156:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     for (tos = 6U; tos <= IFXSRC_NUM_ICU; tos++)
+ 157:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 	{
+ 158:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 		IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_INT.TOS[tos].ACCENSCTRL, apConfig);
+ 159:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 		IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_INT.TOS[tos].ACCENSCFG, apConfig);
+ 160:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 	}
+ 161:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** #elif defined(DEVICE_TC4DX)
+ 162:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     
+ 163:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     /* Allow Service Request register access register access for CPUx targeted SRNs (TOS=x) */
+ 164:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     for (tos = 0; tos < IFXSRC_NUM_ICU; tos++)
+ 306              	 .loc 1 164 5
+ 307              	.LVL29:
+ 308              	 .loc 1 164 14 is_stmt 0
+ 309 0004 8208     	 mov %d8,0
+ 310              	 .loc 1 164 5
+ 311 0006 1D000000 	 j .L20
+ 312              	.LVL30:
+ 313              	.L21:
+ 314              	 .loc 1 164 44 is_stmt 1 discriminator 2
+ 315 000a C218     	 add %d8,1
+ 316              	.LVL31:
+ 317 000c 8FF80F81 	 and %d8,%d8,255
+ 318              	.LVL32:
+ 319              	.L20:
+ 320              	 .loc 1 164 23 discriminator 1
+ 321 0010 FFA80080 	 jge.u %d8,10,.L23
+ 165:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     {
+ 166:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****         if (tos != IfxSrc_Tos_gtm)
+ 322              	 .loc 1 166 9
+ 323              	 .loc 1 166 12 is_stmt 0
+ 324 0014 3B900020 	 mov %d2,9
+ 325 0018 5F280000 	 jeq %d8,%d2,.L21
+ 167:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****         {
+ 168:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****             IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_INT.TOS[tos].ACCENSCTRL, apConfig);
+ 326              	 .loc 1 168 13 is_stmt 1
+ 327 001c 530823A0 	 mul %d10,%d8,48
+ 328 0020 60A2     	 mov.a %a2,%d10
+ 329 0022 D9241800 	 lea %a4,[%a2]24
+ 330              	 .loc 1 168 46 is_stmt 0
+ 331 0026 7B3044BF 	 movh %d11,62531
+ 332 002a 1B0B30B0 	 addi %d11,%d11,768
+ 333              	 .loc 1 168 13
+ 334 002e 6095     	 mov.a %a5,%d9
+ 335 0030 014B0046 	 addsc.a %a4,%a4,%d11,0
+ 336 0034 6D000000 	 call IfxApApu_init
+ 337              	.LVL33:
+ 169:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****             IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_INT.TOS[tos].ACCENSCFG, apConfig);
+ 338              	 .loc 1 169 13 is_stmt 1
+ 339 0038 6095     	 mov.a %a5,%d9
+ 340 003a 60A2     	 mov.a %a2,%d10
+ 341 003c 012B0046 	 addsc.a %a4,%a2,%d11,0
+ 342 0040 6D000000 	 call IfxApApu_init
+ 343              	.LVL34:
+ 344 0044 1D000000 	 j .L21
+ 345              	.L23:
+ 170:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****         }
+ 171:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     }
+ 172:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** #else
+ 173:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     uint8 i;
+ 174:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c ****     /* Allow Service Request register access register access for CPUx targeted SRNs (TOS=x) */
+ 175:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 	for (i = 0; i < IFXSRC_NUM_ICU; i++)
+ 176:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 	{
+ 177:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 		IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_INT.TOS[tos[i]].ACCENSCTRL, apConfig);
+ 178:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 		IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_INT.TOS[tos[i]].ACCENSCFG, apConfig);
+ 179:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** 	}
+ 180:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** #endif /* #if defined(DEVICE_TC49XN) || defined(DEVICE_TC49XNAA) */
+ 181:../Libraries/iLLD/TC4xx/CpuGeneric/Src/Std/IfxSrc.c **** }
+ 346              	 .loc 1 181 1 is_stmt 0
+ 347 0048 0090     	 ret 
+ 348              	.LFE310:
+ 350              	 .global IfxSrc_configureAccessToSrcs_end
+ 351              	IfxSrc_configureAccessToSrcs_end:
+ 428              	.Letext0:
+ 429              	 .file 3 "../Libraries/iLLD/TC4xx/CpuGeneric/_Impl/TC4Dx/IfxSrc_cfg_TC4Dx.h"
+ 430              	 .file 4 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 431              	 .file 5 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 432              	 .file 6 "../Libraries/Infra/Sfr/TC4Dx/IfxInt_regdef.h"
+ 433              	 .file 7 "../Libraries/iLLD/TC4xx/CpuGeneric/Ap/IfxAccen_regdef.h"
+ 434              	 .file 8 "../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h"
+ 9119 0000 00000000 	 .word IfxSrc_setOtgbSrnIndex
+ 9120 0004 00000000 	 .word IfxSrc_setOtgbSrnIndex_end
+ 9121 0008 1C003444 	 .word 0x4434001c
+ 9122 000c 10003000 	 .word 0x00300010
+ 9123 0010 00000000 	 .word 0x00000000
+ 9124 0014 C0000000 	 .word 0x000000c0
+ 9125 0018 00000000 	 .word IfxSrc_initOtgbConfig
+ 9126 001c 00000000 	 .word IfxSrc_initOtgbConfig_end
+ 9127 0020 04001444 	 .word 0x44140004
+ 9128 0024 00001000 	 .word 0x00100000
+ 9129 0028 00000000 	 .word 0x00000000
+ 9130 002c C0000000 	 .word 0x000000c0
+ 9131 0030 00000000 	 .word IfxSrc_configOtgbServiceProviderTrigger
+ 9132 0034 00000000 	 .word IfxSrc_configOtgbServiceProviderTrigger_end
+ 9133 0038 0C003444 	 .word 0x4434000c
+ 9134 003c 00003000 	 .word 0x00300000
+ 9135 0040 00000000 	 .word 0x00000000
+ 9136 0044 C0000000 	 .word 0x000000c0
+ 9137 0048 00000000 	 .word IfxSrc_initOtgb
+ 9138 004c 00000000 	 .word IfxSrc_initOtgb_end
+ 9139 0050 1C013454 	 .word 0x5434011c
+ 9140 0054 00003000 	 .word 0x00300000
+ 9141 0058 00000000 	 .word 0x00000000
+ 9142 005c 40000200 	 .word 0x00020040
+ 9143 0060 00000000 	 .word IfxSrc_configureAccessToSrcs
+ 9144 0064 00000000 	 .word IfxSrc_configureAccessToSrcs_end
+ 9145 0068 040F3444 	 .word 0x44340f04
+ 9146 006c 00001000 	 .word 0x00100000
+ 9147 0070 00000000 	 .word 0x00000000
+ 9148 0074 40000200 	 .word 0x00020040
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxSrc.c
+                            *ABS*:00000000 IfxSrc.c
+    {standard input}:10     .text.IfxSrc_setOtgbSrnIndex:00000000 IfxSrc_setOtgbSrnIndex
+    {standard input}:94     .text.IfxSrc_setOtgbSrnIndex:00000060 IfxSrc_setOtgbSrnIndex_end
+    {standard input}:99     .text.IfxSrc_initOtgbConfig:00000000 IfxSrc_initOtgbConfig
+    {standard input}:142    .text.IfxSrc_initOtgbConfig:0000002e IfxSrc_initOtgbConfig_end
+    {standard input}:147    .text.IfxSrc_configOtgbServiceProviderTrigger:00000000 IfxSrc_configOtgbServiceProviderTrigger
+    {standard input}:198    .text.IfxSrc_configOtgbServiceProviderTrigger:0000003a IfxSrc_configOtgbServiceProviderTrigger_end
+    {standard input}:203    .text.IfxSrc_initOtgb:00000000 IfxSrc_initOtgb
+    {standard input}:293    .text.IfxSrc_initOtgb:0000006c IfxSrc_initOtgb_end
+    {standard input}:298    .text.IfxSrc_configureAccessToSrcs:00000000 IfxSrc_configureAccessToSrcs
+    {standard input}:351    .text.IfxSrc_configureAccessToSrcs:0000004a IfxSrc_configureAccessToSrcs_end
+
+UNDEFINED SYMBOLS
+IfxApApu_init

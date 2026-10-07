@@ -1,0 +1,358 @@
+   1              	
+   2              	 .file "IfxScu_PinMap_TC4Dx_BGA436_COM.c"
+   3              	 .file "IfxScu_PinMap_TC4Dx_BGA436_COM.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .global IfxScu_Req_In_pinTable
+   7              	 .section .data.IfxScu_Req_In_pinTable,"aw"
+   8              	 .align 2
+  11              	IfxScu_Req_In_pinTable:
+  12 0000 00000000 	 .word IfxScu_REQ0A_P15_4_IN
+  13 0004 00000000 	 .word IfxScu_REQ0B_P10_7_IN
+  14 0008 00000000 	 .word 0
+  15 000c 00000000 	 .word 0
+  16 0010 00000000 	 .word 0
+  17 0014 00000000 	 .word IfxScu_REQ0F_P02_7_IN
+  18 0018 00000000 	 .word 0
+  19 001c 00000000 	 .word IfxScu_REQ1A_P14_3_IN
+  20 0020 00000000 	 .word IfxScu_REQ1B_P10_8_IN
+  21 0024 00000000 	 .word 0
+  22 0028 00000000 	 .word 0
+  23 002c 00000000 	 .word 0
+  24 0030 00000000 	 .word 0
+  25 0034 00000000 	 .word IfxScu_REQ1G_P16_1_IN
+  26 0038 00000000 	 .word IfxScu_REQ2A_P10_2_IN
+  27 003c 00000000 	 .word IfxScu_REQ2B_P02_1_IN
+  28 0040 00000000 	 .word IfxScu_REQ2C_P00_4_IN
+  29 0044 00000000 	 .word 0
+  30 0048 00000000 	 .word 0
+  31 004c 00000000 	 .word 0
+  32 0050 00000000 	 .word 0
+  33 0054 00000000 	 .word IfxScu_REQ3A_P10_3_IN
+  34 0058 00000000 	 .word IfxScu_REQ3B_P14_1_IN
+  35 005c 00000000 	 .word IfxScu_REQ3C_P02_0_IN
+  36 0060 00000000 	 .word 0
+  37 0064 00000000 	 .word 0
+  38 0068 00000000 	 .word 0
+  39 006c 00000000 	 .word 0
+  40 0070 00000000 	 .word IfxScu_REQ4A_P33_7_IN
+  41 0074 00000000 	 .word 0
+  42 0078 00000000 	 .word 0
+  43 007c 00000000 	 .word IfxScu_REQ4D_P15_5_IN
+  44 0080 00000000 	 .word 0
+  45 0084 00000000 	 .word 0
+  46 0088 00000000 	 .word IfxScu_REQ4G_P25_1_IN
+  47 008c 00000000 	 .word IfxScu_REQ5A_P15_8_IN
+  48 0090 00000000 	 .word 0
+  49 0094 00000000 	 .word 0
+  50 0098 00000000 	 .word 0
+  51 009c 00000000 	 .word IfxScu_REQ5E_P22_4_IN
+  52 00a0 00000000 	 .word 0
+  53 00a4 00000000 	 .word IfxScu_REQ5G_P02_8_IN
+  54 00a8 00000000 	 .word IfxScu_REQ6A_P20_0_IN
+  55 00ac 00000000 	 .word 0
+  56 00b0 00000000 	 .word 0
+  57 00b4 00000000 	 .word 0
+  58 00b8 00000000 	 .word 0
+  59 00bc 00000000 	 .word IfxScu_REQ6F_P23_1_IN
+  60 00c0 00000000 	 .word 0
+  61 00c4 00000000 	 .word IfxScu_REQ7A_P20_9_IN
+  62 00c8 00000000 	 .word IfxScu_REQ7B_P15_1_IN
+  63 00cc 00000000 	 .word 0
+  64 00d0 00000000 	 .word 0
+  65 00d4 00000000 	 .word 0
+  66 00d8 00000000 	 .word 0
+  67 00dc 00000000 	 .word IfxScu_REQ7G_P02_11_IN
+  68              	 .global IfxScu_REQ7G_P02_11_IN
+  69              	 .section .rodata.IfxScu_REQ7G_P02_11_IN,"a"
+  70              	 .align 2
+  73              	IfxScu_REQ7G_P02_11_IN:
+  74 0000 004002F0 	 .word -268288000
+  75 0004 07       	 .byte 7
+  76 0005 000000   	 .zero 3
+  77 0008 00A803F0 	 .word -268195840
+  78 000c 0B       	 .byte 11
+  79 000d 000000   	 .zero 3
+  80 0010 06000000 	 .word 6
+  81              	 .global IfxScu_REQ7B_P15_1_IN
+  82              	 .section .rodata.IfxScu_REQ7B_P15_1_IN,"a"
+  83              	 .align 2
+  86              	IfxScu_REQ7B_P15_1_IN:
+  87 0000 004002F0 	 .word -268288000
+  88 0004 07       	 .byte 7
+  89 0005 000000   	 .zero 3
+  90 0008 00DC03F0 	 .word -268182528
+  91 000c 01       	 .byte 1
+  92 000d 000000   	 .zero 3
+  93 0010 01000000 	 .word 1
+  94              	 .global IfxScu_REQ7A_P20_9_IN
+  95              	 .section .rodata.IfxScu_REQ7A_P20_9_IN,"a"
+  96              	 .align 2
+  99              	IfxScu_REQ7A_P20_9_IN:
+ 100 0000 004002F0 	 .word -268288000
+ 101 0004 07       	 .byte 7
+ 102 0005 000000   	 .zero 3
+ 103 0008 00F003F0 	 .word -268177408
+ 104 000c 09       	 .byte 9
+ 105 000d 000000   	 .zero 3
+ 106 0010 00000000 	 .word 0
+ 107              	 .global IfxScu_REQ6F_P23_1_IN
+ 108              	 .section .rodata.IfxScu_REQ6F_P23_1_IN,"a"
+ 109              	 .align 2
+ 112              	IfxScu_REQ6F_P23_1_IN:
+ 113 0000 004002F0 	 .word -268288000
+ 114 0004 06       	 .byte 6
+ 115 0005 000000   	 .zero 3
+ 116 0008 00FC03F0 	 .word -268174336
+ 117 000c 01       	 .byte 1
+ 118 000d 000000   	 .zero 3
+ 119 0010 05000000 	 .word 5
+ 120              	 .global IfxScu_REQ6A_P20_0_IN
+ 121              	 .section .rodata.IfxScu_REQ6A_P20_0_IN,"a"
+ 122              	 .align 2
+ 125              	IfxScu_REQ6A_P20_0_IN:
+ 126 0000 004002F0 	 .word -268288000
+ 127 0004 06       	 .byte 6
+ 128 0005 000000   	 .zero 3
+ 129 0008 00F003F0 	 .word -268177408
+ 130 000c 00       	 .byte 0
+ 131 000d 000000   	 .zero 3
+ 132 0010 00000000 	 .word 0
+ 133              	 .global IfxScu_REQ5G_P02_8_IN
+ 134              	 .section .rodata.IfxScu_REQ5G_P02_8_IN,"a"
+ 135              	 .align 2
+ 138              	IfxScu_REQ5G_P02_8_IN:
+ 139 0000 004002F0 	 .word -268288000
+ 140 0004 05       	 .byte 5
+ 141 0005 000000   	 .zero 3
+ 142 0008 00A803F0 	 .word -268195840
+ 143 000c 08       	 .byte 8
+ 144 000d 000000   	 .zero 3
+ 145 0010 06000000 	 .word 6
+ 146              	 .global IfxScu_REQ5E_P22_4_IN
+ 147              	 .section .rodata.IfxScu_REQ5E_P22_4_IN,"a"
+ 148              	 .align 2
+ 151              	IfxScu_REQ5E_P22_4_IN:
+ 152 0000 004002F0 	 .word -268288000
+ 153 0004 05       	 .byte 5
+ 154 0005 000000   	 .zero 3
+ 155 0008 00F803F0 	 .word -268175360
+ 156 000c 04       	 .byte 4
+ 157 000d 000000   	 .zero 3
+ 158 0010 04000000 	 .word 4
+ 159              	 .global IfxScu_REQ5A_P15_8_IN
+ 160              	 .section .rodata.IfxScu_REQ5A_P15_8_IN,"a"
+ 161              	 .align 2
+ 164              	IfxScu_REQ5A_P15_8_IN:
+ 165 0000 004002F0 	 .word -268288000
+ 166 0004 05       	 .byte 5
+ 167 0005 000000   	 .zero 3
+ 168 0008 00DC03F0 	 .word -268182528
+ 169 000c 08       	 .byte 8
+ 170 000d 000000   	 .zero 3
+ 171 0010 00000000 	 .word 0
+ 172              	 .global IfxScu_REQ4G_P25_1_IN
+ 173              	 .section .rodata.IfxScu_REQ4G_P25_1_IN,"a"
+ 174              	 .align 2
+ 177              	IfxScu_REQ4G_P25_1_IN:
+ 178 0000 004002F0 	 .word -268288000
+ 179 0004 04       	 .byte 4
+ 180 0005 000000   	 .zero 3
+ 181 0008 000404F0 	 .word -268172288
+ 182 000c 01       	 .byte 1
+ 183 000d 000000   	 .zero 3
+ 184 0010 06000000 	 .word 6
+ 185              	 .global IfxScu_REQ4D_P15_5_IN
+ 186              	 .section .rodata.IfxScu_REQ4D_P15_5_IN,"a"
+ 187              	 .align 2
+ 190              	IfxScu_REQ4D_P15_5_IN:
+ 191 0000 004002F0 	 .word -268288000
+ 192 0004 04       	 .byte 4
+ 193 0005 000000   	 .zero 3
+ 194 0008 00DC03F0 	 .word -268182528
+ 195 000c 05       	 .byte 5
+ 196 000d 000000   	 .zero 3
+ 197 0010 03000000 	 .word 3
+ 198              	 .global IfxScu_REQ4A_P33_7_IN
+ 199              	 .section .rodata.IfxScu_REQ4A_P33_7_IN,"a"
+ 200              	 .align 2
+ 203              	IfxScu_REQ4A_P33_7_IN:
+ 204 0000 004002F0 	 .word -268288000
+ 205 0004 04       	 .byte 4
+ 206 0005 000000   	 .zero 3
+ 207 0008 002404F0 	 .word -268164096
+ 208 000c 07       	 .byte 7
+ 209 000d 000000   	 .zero 3
+ 210 0010 00000000 	 .word 0
+ 211              	 .global IfxScu_REQ3C_P02_0_IN
+ 212              	 .section .rodata.IfxScu_REQ3C_P02_0_IN,"a"
+ 213              	 .align 2
+ 216              	IfxScu_REQ3C_P02_0_IN:
+ 217 0000 004002F0 	 .word -268288000
+ 218 0004 03       	 .byte 3
+ 219 0005 000000   	 .zero 3
+ 220 0008 00A803F0 	 .word -268195840
+ 221 000c 00       	 .byte 0
+ 222 000d 000000   	 .zero 3
+ 223 0010 02000000 	 .word 2
+ 224              	 .global IfxScu_REQ3B_P14_1_IN
+ 225              	 .section .rodata.IfxScu_REQ3B_P14_1_IN,"a"
+ 226              	 .align 2
+ 229              	IfxScu_REQ3B_P14_1_IN:
+ 230 0000 004002F0 	 .word -268288000
+ 231 0004 03       	 .byte 3
+ 232 0005 000000   	 .zero 3
+ 233 0008 00D803F0 	 .word -268183552
+ 234 000c 01       	 .byte 1
+ 235 000d 000000   	 .zero 3
+ 236 0010 01000000 	 .word 1
+ 237              	 .global IfxScu_REQ3A_P10_3_IN
+ 238              	 .section .rodata.IfxScu_REQ3A_P10_3_IN,"a"
+ 239              	 .align 2
+ 242              	IfxScu_REQ3A_P10_3_IN:
+ 243 0000 004002F0 	 .word -268288000
+ 244 0004 03       	 .byte 3
+ 245 0005 000000   	 .zero 3
+ 246 0008 00C803F0 	 .word -268187648
+ 247 000c 03       	 .byte 3
+ 248 000d 000000   	 .zero 3
+ 249 0010 00000000 	 .word 0
+ 250              	 .global IfxScu_REQ2C_P00_4_IN
+ 251              	 .section .rodata.IfxScu_REQ2C_P00_4_IN,"a"
+ 252              	 .align 2
+ 255              	IfxScu_REQ2C_P00_4_IN:
+ 256 0000 004002F0 	 .word -268288000
+ 257 0004 02       	 .byte 2
+ 258 0005 000000   	 .zero 3
+ 259 0008 00A003F0 	 .word -268197888
+ 260 000c 04       	 .byte 4
+ 261 000d 000000   	 .zero 3
+ 262 0010 02000000 	 .word 2
+ 263              	 .global IfxScu_REQ2B_P02_1_IN
+ 264              	 .section .rodata.IfxScu_REQ2B_P02_1_IN,"a"
+ 265              	 .align 2
+ 268              	IfxScu_REQ2B_P02_1_IN:
+ 269 0000 004002F0 	 .word -268288000
+ 270 0004 02       	 .byte 2
+ 271 0005 000000   	 .zero 3
+ 272 0008 00A803F0 	 .word -268195840
+ 273 000c 01       	 .byte 1
+ 274 000d 000000   	 .zero 3
+ 275 0010 01000000 	 .word 1
+ 276              	 .global IfxScu_REQ2A_P10_2_IN
+ 277              	 .section .rodata.IfxScu_REQ2A_P10_2_IN,"a"
+ 278              	 .align 2
+ 281              	IfxScu_REQ2A_P10_2_IN:
+ 282 0000 004002F0 	 .word -268288000
+ 283 0004 02       	 .byte 2
+ 284 0005 000000   	 .zero 3
+ 285 0008 00C803F0 	 .word -268187648
+ 286 000c 02       	 .byte 2
+ 287 000d 000000   	 .zero 3
+ 288 0010 00000000 	 .word 0
+ 289              	 .global IfxScu_REQ1G_P16_1_IN
+ 290              	 .section .rodata.IfxScu_REQ1G_P16_1_IN,"a"
+ 291              	 .align 2
+ 294              	IfxScu_REQ1G_P16_1_IN:
+ 295 0000 004002F0 	 .word -268288000
+ 296 0004 01       	 .byte 1
+ 297 0005 000000   	 .zero 3
+ 298 0008 00E003F0 	 .word -268181504
+ 299 000c 01       	 .byte 1
+ 300 000d 000000   	 .zero 3
+ 301 0010 06000000 	 .word 6
+ 302              	 .global IfxScu_REQ1B_P10_8_IN
+ 303              	 .section .rodata.IfxScu_REQ1B_P10_8_IN,"a"
+ 304              	 .align 2
+ 307              	IfxScu_REQ1B_P10_8_IN:
+ 308 0000 004002F0 	 .word -268288000
+ 309 0004 01       	 .byte 1
+ 310 0005 000000   	 .zero 3
+ 311 0008 00C803F0 	 .word -268187648
+ 312 000c 08       	 .byte 8
+ 313 000d 000000   	 .zero 3
+ 314 0010 01000000 	 .word 1
+ 315              	 .global IfxScu_REQ1A_P14_3_IN
+ 316              	 .section .rodata.IfxScu_REQ1A_P14_3_IN,"a"
+ 317              	 .align 2
+ 320              	IfxScu_REQ1A_P14_3_IN:
+ 321 0000 004002F0 	 .word -268288000
+ 322 0004 01       	 .byte 1
+ 323 0005 000000   	 .zero 3
+ 324 0008 00D803F0 	 .word -268183552
+ 325 000c 03       	 .byte 3
+ 326 000d 000000   	 .zero 3
+ 327 0010 00000000 	 .word 0
+ 328              	 .global IfxScu_REQ0F_P02_7_IN
+ 329              	 .section .rodata.IfxScu_REQ0F_P02_7_IN,"a"
+ 330              	 .align 2
+ 333              	IfxScu_REQ0F_P02_7_IN:
+ 334 0000 004002F0 	 .word -268288000
+ 335 0004 00       	 .byte 0
+ 336 0005 000000   	 .zero 3
+ 337 0008 00A803F0 	 .word -268195840
+ 338 000c 07       	 .byte 7
+ 339 000d 000000   	 .zero 3
+ 340 0010 05000000 	 .word 5
+ 341              	 .global IfxScu_REQ0B_P10_7_IN
+ 342              	 .section .rodata.IfxScu_REQ0B_P10_7_IN,"a"
+ 343              	 .align 2
+ 346              	IfxScu_REQ0B_P10_7_IN:
+ 347 0000 004002F0 	 .word -268288000
+ 348 0004 00       	 .byte 0
+ 349 0005 000000   	 .zero 3
+ 350 0008 00C803F0 	 .word -268187648
+ 351 000c 07       	 .byte 7
+ 352 000d 000000   	 .zero 3
+ 353 0010 01000000 	 .word 1
+ 354              	 .global IfxScu_REQ0A_P15_4_IN
+ 355              	 .section .rodata.IfxScu_REQ0A_P15_4_IN,"a"
+ 356              	 .align 2
+ 359              	IfxScu_REQ0A_P15_4_IN:
+ 360 0000 004002F0 	 .word -268288000
+ 361 0004 00       	 .byte 0
+ 362 0005 000000   	 .zero 3
+ 363 0008 00DC03F0 	 .word -268182528
+ 364 000c 04       	 .byte 4
+ 365 000d 000000   	 .zero 3
+ 366 0010 00000000 	 .word 0
+ 367              	.section .text,"ax",@progbits
+ 368              	.Letext0:
+ 369              	 .file 1 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 370              	 .file 2 "../Libraries/Infra/Sfr/TC4Dx/IfxScu_regdef.h"
+ 371              	 .file 3 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 372              	 .file 4 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+ 373              	 .file 5 "../Libraries/Infra/Sfr/TC4Dx/IfxPort_regdef.h"
+ 374              	 .file 6 "../Libraries/iLLD/TC4xx/CpuGeneric/Port/Std/IfxPort.h"
+ 375              	 .file 7 "../Libraries/iLLD/TC4xx/Tricore/_PinMap/IfxScu_PinMap.h"
+ 376              	 .file 8 "../Libraries/iLLD/TC4xx/Tricore/_PinMap/TC4Dx/IfxScu_PinMap_TC4Dx_BGA436_COM.h"
+ 377              	 .file 9 "../Libraries/iLLD/TC4xx/Tricore/_PinMap/TC4Dx/IfxScu_PinMap_TC4Dx_BGA436_COM.c"
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxScu_PinMap_TC4Dx_BGA436_COM.c
+                            *ABS*:00000000 IfxScu_PinMap_TC4Dx_BGA436_COM.c
+    {standard input}:11     .data.IfxScu_Req_In_pinTable:00000000 IfxScu_Req_In_pinTable
+    {standard input}:359    .rodata.IfxScu_REQ0A_P15_4_IN:00000000 IfxScu_REQ0A_P15_4_IN
+    {standard input}:346    .rodata.IfxScu_REQ0B_P10_7_IN:00000000 IfxScu_REQ0B_P10_7_IN
+    {standard input}:333    .rodata.IfxScu_REQ0F_P02_7_IN:00000000 IfxScu_REQ0F_P02_7_IN
+    {standard input}:320    .rodata.IfxScu_REQ1A_P14_3_IN:00000000 IfxScu_REQ1A_P14_3_IN
+    {standard input}:307    .rodata.IfxScu_REQ1B_P10_8_IN:00000000 IfxScu_REQ1B_P10_8_IN
+    {standard input}:294    .rodata.IfxScu_REQ1G_P16_1_IN:00000000 IfxScu_REQ1G_P16_1_IN
+    {standard input}:281    .rodata.IfxScu_REQ2A_P10_2_IN:00000000 IfxScu_REQ2A_P10_2_IN
+    {standard input}:268    .rodata.IfxScu_REQ2B_P02_1_IN:00000000 IfxScu_REQ2B_P02_1_IN
+    {standard input}:255    .rodata.IfxScu_REQ2C_P00_4_IN:00000000 IfxScu_REQ2C_P00_4_IN
+    {standard input}:242    .rodata.IfxScu_REQ3A_P10_3_IN:00000000 IfxScu_REQ3A_P10_3_IN
+    {standard input}:229    .rodata.IfxScu_REQ3B_P14_1_IN:00000000 IfxScu_REQ3B_P14_1_IN
+    {standard input}:216    .rodata.IfxScu_REQ3C_P02_0_IN:00000000 IfxScu_REQ3C_P02_0_IN
+    {standard input}:203    .rodata.IfxScu_REQ4A_P33_7_IN:00000000 IfxScu_REQ4A_P33_7_IN
+    {standard input}:190    .rodata.IfxScu_REQ4D_P15_5_IN:00000000 IfxScu_REQ4D_P15_5_IN
+    {standard input}:177    .rodata.IfxScu_REQ4G_P25_1_IN:00000000 IfxScu_REQ4G_P25_1_IN
+    {standard input}:164    .rodata.IfxScu_REQ5A_P15_8_IN:00000000 IfxScu_REQ5A_P15_8_IN
+    {standard input}:151    .rodata.IfxScu_REQ5E_P22_4_IN:00000000 IfxScu_REQ5E_P22_4_IN
+    {standard input}:138    .rodata.IfxScu_REQ5G_P02_8_IN:00000000 IfxScu_REQ5G_P02_8_IN
+    {standard input}:125    .rodata.IfxScu_REQ6A_P20_0_IN:00000000 IfxScu_REQ6A_P20_0_IN
+    {standard input}:112    .rodata.IfxScu_REQ6F_P23_1_IN:00000000 IfxScu_REQ6F_P23_1_IN
+    {standard input}:99     .rodata.IfxScu_REQ7A_P20_9_IN:00000000 IfxScu_REQ7A_P20_9_IN
+    {standard input}:86     .rodata.IfxScu_REQ7B_P15_1_IN:00000000 IfxScu_REQ7B_P15_1_IN
+    {standard input}:73     .rodata.IfxScu_REQ7G_P02_11_IN:00000000 IfxScu_REQ7G_P02_11_IN
+
+NO UNDEFINED SYMBOLS

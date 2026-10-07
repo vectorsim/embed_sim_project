@@ -1,0 +1,11 @@
+   1              	
+   2              	 .file "CompilerGnuc.c"
+   3              	 .file "CompilerGnuc.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:00000000 CompilerGnuc.c
+                            *ABS*:00000000 CompilerGnuc.c
+
+NO UNDEFINED SYMBOLS

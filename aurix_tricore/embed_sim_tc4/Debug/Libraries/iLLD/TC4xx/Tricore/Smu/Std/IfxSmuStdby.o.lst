@@ -1,0 +1,297 @@
+   1              	
+   2              	 .file "IfxSmuStdby.c"
+   3              	 .file "IfxSmuStdby.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.IfxSmuStdby_setFaultSignalAlarmConfigEventFlag,"ax",@progbits
+   7              	 .align 1
+   8              	 .global IfxSmuStdby_setFaultSignalAlarmConfigEventFlag
+  10              	IfxSmuStdby_setFaultSignalAlarmConfigEventFlag:
+  11              	.LFB205:
+  12              	 .file 1 "../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c"
+   1:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** /**
+   2:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****  * \file IfxSmuStdby.c
+   3:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****  * \brief SMU  basic functionality
+   4:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****  *
+   5:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****  *
+   8:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****  *
+   9:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****  *
+  10:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****  *                                 IMPORTANT NOTICE
+  11:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****  *
+  12:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****  * this file except in compliance with IFASLL.
+  15:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****  *
+  16:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****  *
+  26:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****  *
+  27:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****  */
+  28:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** 
+  29:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** /******************************************************************************/
+  30:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** /*----------------------------------Includes----------------------------------*/
+  31:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** /******************************************************************************/
+  32:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** 
+  33:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** #include "IfxSmuStdby.h"
+  34:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** 
+  35:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** /******************************************************************************/
+  36:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** /*-------------------------Function Implementations---------------------------*/
+  37:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** /******************************************************************************/
+  38:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** 
+  39:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** void IfxSmuStdby_setFaultSignalAlarmConfigEventFlag(void *address, IfxSmu_Alarm alarm, IfxSmuStdby_
+  40:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** {
+  13              	 .loc 1 40 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  41:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     uint8                       alarmPos = (int)alarm & 0x1F;
+  17              	 .loc 1 41 5
+  18              	 .loc 1 41 33 is_stmt 0
+  19 0002 8FF40141 	 and %d4,%d4,31
+  20              	.LVL1:
+  42:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     Ifx_SMU_STDBY_AGSTDBY_FSP0 *fsp0     = (Ifx_SMU_STDBY_AGSTDBY_FSP0 *)address;
+  21              	 .loc 1 42 5 is_stmt 1
+  43:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     Ifx_SMU_STDBY_AGSTDBY_FSP0  fsp0Temp;
+  22              	 .loc 1 43 5
+  44:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     fsp0Temp.U = fsp0->U;
+  23              	 .loc 1 44 5
+  24              	 .loc 1 44 22 is_stmt 0
+  25 0006 5443     	 ld.w %d3,[%a4]0
+  45:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** 
+  46:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     if (enable)
+  26              	 .loc 1 46 5 is_stmt 1
+  27              	 .loc 1 46 8 is_stmt 0
+  28 0008 DF050000 	 jz %d5,.L2
+  47:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     {
+  48:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****         fsp0Temp.U |= (1U << alarmPos);
+  29              	 .loc 1 48 9 is_stmt 1
+  30              	 .loc 1 48 20 is_stmt 0
+  31 000c D7130124 	 insert %d2,%d3,1,%d4,1
+  32              	.LVL2:
+  33              	.L3:
+  49:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     }
+  50:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     else
+  51:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     {
+  52:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****         fsp0Temp.U &= ~(1U << alarmPos);
+  53:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     }
+  54:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** 
+  55:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     /* AG2iFSP_STDBY register bits protection setting this bit enables the other bits in the regist
+  56:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****        changed in the same write operation */
+  57:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     fsp0Temp.B.BITPROT = 1U;
+  34              	 .loc 1 57 5 is_stmt 1
+  35              	 .loc 1 57 24 is_stmt 0
+  36 0010 B712012F 	 insert %d2,%d2,1,30,1
+  37              	.LVL3:
+  58:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** 
+  59:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** #if (IFX_PROT_ENABLED == 1U)
+  60:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMUSTDBY.PROTSTDBYE, IfxApProt_State_config);
+  61:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** #endif
+  62:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** 
+  63:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     fsp0->U = fsp0Temp.U;
+  38              	 .loc 1 63 5 is_stmt 1
+  39              	 .loc 1 63 13 is_stmt 0
+  40 0014 7442     	 st.w [%a4]0,%d2
+  64:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** 
+  65:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** #if (IFX_PROT_ENABLED == 1U)
+  66:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMUSTDBY.PROTSTDBYE, IfxApProt_State_run);
+  67:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** #endif
+  68:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** }
+  41              	 .loc 1 68 1
+  42 0016 0090     	 ret 
+  43              	.LVL4:
+  44              	.L2:
+  52:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     }
+  45              	 .loc 1 52 9 is_stmt 1
+  52:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     }
+  46              	 .loc 1 52 20 is_stmt 0
+  47 0018 D7030124 	 insert %d2,%d3,0,%d4,1
+  48 001c 1D000000 	 j .L3
+  49              	.LFE205:
+  51              	 .global IfxSmuStdby_setFaultSignalAlarmConfigEventFlag_end
+  52              	IfxSmuStdby_setFaultSignalAlarmConfigEventFlag_end:
+  53              	 .section .text.IfxSmuStdby_setSmuStdbyAlarmStatusFlag,"ax",@progbits
+  54              	 .align 1
+  55              	 .global IfxSmuStdby_setSmuStdbyAlarmStatusFlag
+  57              	IfxSmuStdby_setSmuStdbyAlarmStatusFlag:
+  58              	.LFB206:
+  69:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** 
+  70:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** 
+  71:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** void IfxSmuStdby_setSmuStdbyAlarmStatusFlag(IfxSmu_Alarm alarm, IfxSmuStdby_AlarmStatusFlag status)
+  72:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** {
+  59              	 .loc 1 72 1 is_stmt 1
+  60              	.LVL5:
+  61 0000 40AE     	 mov.aa %a14,%SP
+  62              	.LCFI1:
+  73:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     Ifx_SMU_STDBY_AGSTDBY_STS sts;
+  63              	 .loc 1 73 5
+  74:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     Ifx_SMU_STDBY_CMDSTDBY    cmdStdby;
+  64              	 .loc 1 74 5
+  75:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     uint16                    alarmGroup = (int)alarm >> 5;
+  65              	 .loc 1 75 5
+  66              	.LVL6:
+  76:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     uint8                     alarmPos   = (int)alarm & 0x1F;
+  67              	 .loc 1 76 5
+  68              	 .loc 1 76 31 is_stmt 0
+  69 0002 8FF40131 	 and %d3,%d4,31
+  70              	.LVL7:
+  77:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** 
+  78:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** #if (IFX_PROT_ENABLED == 1U)
+  79:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMUSTDBY.PROTSTDBYE, IfxApProt_State_config);
+  80:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** #endif
+  81:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** 
+  82:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     cmdStdby.U          = SMUSTDBY_CMDSTDBY.U;
+  71              	 .loc 1 82 5 is_stmt 1
+  72              	 .loc 1 82 44 is_stmt 0
+  73 0006 9150022F 	 movh.a %a2,61477
+  74 000a D9229C09 	 lea %a2,[%a2]-26596
+  75 000e 5422     	 ld.w %d2,[%a2]0
+  83:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     /* SMU_stdby alarm status bits in AGSTDBYi_STS can be cleared */
+  84:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     cmdStdby.B.ASCE     = 1;
+  76              	 .loc 1 84 5 is_stmt 1
+  77              	 .loc 1 84 25 is_stmt 0
+  78 0010 B7128124 	 insert %d2,%d2,1,9,1
+  79              	.LVL8:
+  85:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     /* CMDSTDBY register bits protection setting this bit enables the other bits in the registers  
+  86:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****        be changed in the same write operation*/
+  87:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     cmdStdby.B.BITPROT  = 1;
+  80              	 .loc 1 87 5 is_stmt 1
+  81              	 .loc 1 87 25 is_stmt 0
+  82 0014 B712012F 	 insert %d2,%d2,1,30,1
+  88:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     SMUSTDBY_CMDSTDBY.U = cmdStdby.U;
+  83              	 .loc 1 88 5 is_stmt 1
+  84              	 .loc 1 88 25 is_stmt 0
+  85 0018 7422     	 st.w [%a2]0,%d2
+  89:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** 
+  90:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     sts.U               = MODULE_SMUSTDBY.AGSTDBY[alarmGroup].STS.U;
+  86              	 .loc 1 90 5 is_stmt 1
+  87 001a 3704F042 	 extr.u %d4,%d4,5,16
+  88              	.LVL9:
+  89              	 .loc 1 90 66 is_stmt 0
+  90 001e 7B50022F 	 movh %d2,61477
+  91              	.LVL10:
+  92 0022 1B028029 	 addi %d2,%d2,-26624
+  93 0026 13442122 	 madd %d2,%d2,%d4,20
+  94 002a 6022     	 mov.a %a2,%d2
+  95 002c 19223000 	 ld.w %d2,[%a2]48
+  91:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** 
+  92:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     if (status == IfxSmuStdby_AlarmStatusFlag_faultExist)
+  96              	 .loc 1 92 5 is_stmt 1
+  97              	 .loc 1 92 8 is_stmt 0
+  98 0030 DF150000 	 jeq %d5,1,.L7
+  93:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     {
+  94:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****         sts.U |= 1U << alarmPos;
+  95:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     }
+  96:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     else
+  97:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     {
+  98:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****         sts.U &= ~(1U << alarmPos);
+  99              	 .loc 1 98 9 is_stmt 1
+ 100              	 .loc 1 98 15 is_stmt 0
+ 101 0034 D7020133 	 insert %d3,%d2,0,%d3,1
+ 102              	.LVL11:
+ 103              	.L6:
+  99:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     }
+ 100:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** 
+ 101:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     MODULE_SMUSTDBY.AGSTDBY[alarmGroup].STS.U = sts.U;
+ 104              	 .loc 1 101 5 is_stmt 1
+ 105              	 .loc 1 101 47 is_stmt 0
+ 106 0038 7B50022F 	 movh %d2,61477
+ 107 003c 1B028029 	 addi %d2,%d2,-26624
+ 108 0040 13442122 	 madd %d2,%d2,%d4,20
+ 109 0044 6022     	 mov.a %a2,%d2
+ 110              	.LVL12:
+ 111 0046 59233000 	 st.w [%a2]48,%d3
+ 102:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** 
+ 103:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** #if (IFX_PROT_ENABLED == 1U)
+ 104:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMUSTDBY.PROTSTDBYE, IfxApProt_State_run);
+ 105:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** #endif
+ 106:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** }
+ 112              	 .loc 1 106 1
+ 113 004a 0090     	 ret 
+ 114              	.LVL13:
+ 115              	.L7:
+  94:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     }
+ 116              	 .loc 1 94 9 is_stmt 1
+  94:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     }
+ 117              	 .loc 1 94 15 is_stmt 0
+ 118 004c D7120133 	 insert %d3,%d2,1,%d3,1
+ 119              	.LVL14:
+ 120 0050 1D000000 	 j .L6
+ 121              	.LFE206:
+ 123              	 .global IfxSmuStdby_setSmuStdbyAlarmStatusFlag_end
+ 124              	IfxSmuStdby_setSmuStdbyAlarmStatusFlag_end:
+ 125              	 .section .text.IfxSmuStdby_configureAccessToStandbySmu,"ax",@progbits
+ 126              	 .align 1
+ 127              	 .global IfxSmuStdby_configureAccessToStandbySmu
+ 129              	IfxSmuStdby_configureAccessToStandbySmu:
+ 130              	.LFB207:
+ 107:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** 
+ 108:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** 
+ 109:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** #if IFXSMU_CONFIG_STDBY_SMU
+ 110:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** void IfxSmuStdby_configureAccessToStandbySmu(IfxApApu_ApuConfig *apConfig)
+ 111:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** {
+ 131              	 .loc 1 111 1 is_stmt 1
+ 132              	.LVL15:
+ 133 0000 40AE     	 mov.aa %a14,%SP
+ 134              	.LCFI2:
+ 112:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** 	/* Initializes and Configures the APU with the config value passed */
+ 113:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c ****     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_SMUSTDBY.ACCENSTDBY, apConfig);
+ 135              	 .loc 1 113 5
+ 136 0002 4045     	 mov.aa %a5,%a4
+ 137 0004 9150024F 	 movh.a %a4,61477
+ 138              	.LVL16:
+ 139 0008 D944A429 	 lea %a4,[%a4]-26460
+ 140 000c 6D000000 	 call IfxApApu_init
+ 141              	.LVL17:
+ 114:../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.c **** }
+ 142              	 .loc 1 114 1 is_stmt 0
+ 143 0010 0090     	 ret 
+ 144              	.LFE207:
+ 146              	 .global IfxSmuStdby_configureAccessToStandbySmu_end
+ 147              	IfxSmuStdby_configureAccessToStandbySmu_end:
+ 200              	.Letext0:
+ 201              	 .file 2 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 202              	 .file 3 "../Libraries/iLLD/TC4xx/Tricore/_Impl/TC4Dx/IfxSmu_cfg_TC4Dx.h"
+ 203              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 204              	 .file 5 "../Libraries/Infra/Sfr/TC4Dx/IfxSmu_stdby_regdef.h"
+ 205              	 .file 6 "../Libraries/iLLD/TC4xx/CpuGeneric/Ap/IfxAccen_regdef.h"
+ 206              	 .file 7 "../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h"
+ 207              	 .file 8 "../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmuStdby.h"
+ 10728 0000 00000000 	 .word IfxSmuStdby_setFaultSignalAlarmConfigEventFlag
+ 10729 0004 00000000 	 .word IfxSmuStdby_setFaultSignalAlarmConfigEventFlag_end
+ 10730 0008 3C001044 	 .word 0x4410003c
+ 10731 000c 30001000 	 .word 0x00100030
+ 10732 0010 00000000 	 .word 0x00000000
+ 10733 0014 C0000000 	 .word 0x000000c0
+ 10734 0018 00000000 	 .word IfxSmuStdby_setSmuStdbyAlarmStatusFlag
+ 10735 001c 00000000 	 .word IfxSmuStdby_setSmuStdbyAlarmStatusFlag_end
+ 10736 0020 3C000444 	 .word 0x4404003c
+ 10737 0024 30000000 	 .word 0x00000030
+ 10738 0028 00000000 	 .word 0x00000000
+ 10739 002c C0000000 	 .word 0x000000c0
+ 10740 0030 00000000 	 .word IfxSmuStdby_configureAccessToStandbySmu
+ 10741 0034 00000000 	 .word IfxSmuStdby_configureAccessToStandbySmu_end
+ 10742 0038 00003044 	 .word 0x44300000
+ 10743 003c 00001000 	 .word 0x00100000
+ 10744 0040 00000000 	 .word 0x00000000
+ 10745 0044 40000200 	 .word 0x00020040
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxSmuStdby.c
+                            *ABS*:00000000 IfxSmuStdby.c
+    {standard input}:10     .text.IfxSmuStdby_setFaultSignalAlarmConfigEventFlag:00000000 IfxSmuStdby_setFaultSignalAlarmConfigEventFlag
+    {standard input}:52     .text.IfxSmuStdby_setFaultSignalAlarmConfigEventFlag:00000020 IfxSmuStdby_setFaultSignalAlarmConfigEventFlag_end
+    {standard input}:57     .text.IfxSmuStdby_setSmuStdbyAlarmStatusFlag:00000000 IfxSmuStdby_setSmuStdbyAlarmStatusFlag
+    {standard input}:124    .text.IfxSmuStdby_setSmuStdbyAlarmStatusFlag:00000054 IfxSmuStdby_setSmuStdbyAlarmStatusFlag_end
+    {standard input}:129    .text.IfxSmuStdby_configureAccessToStandbySmu:00000000 IfxSmuStdby_configureAccessToStandbySmu
+    {standard input}:147    .text.IfxSmuStdby_configureAccessToStandbySmu:00000012 IfxSmuStdby_configureAccessToStandbySmu_end
+
+UNDEFINED SYMBOLS
+IfxApApu_init

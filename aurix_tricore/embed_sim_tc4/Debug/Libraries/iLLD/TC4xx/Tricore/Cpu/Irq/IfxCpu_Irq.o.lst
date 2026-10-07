@@ -1,0 +1,359 @@
+   1              	
+   2              	 .file "IfxCpu_Irq.c"
+   3              	 .file "IfxCpu_Irq.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	.section .data,"aw",@progbits
+   7              	 .align 2
+   8              	.LC0:
+   9 0000 00000000 	 .word 0
+  10 0004 01000000 	 .word 1
+  11 0008 02000000 	 .word 2
+  12 000c 03000000 	 .word 3
+  13 0010 04000000 	 .word 4
+  14 0014 05000000 	 .word 5
+  15              	 .section .text.IfxCpu_Irq_getTos,"ax",@progbits
+  16              	 .align 1
+  17              	 .global IfxCpu_Irq_getTos
+  19              	IfxCpu_Irq_getTos:
+  20              	.LFB306:
+  21              	 .file 1 "../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c"
+   1:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** /**
+   2:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****  * \file IfxCpu_Irq.c
+   3:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****  * \brief CPU  basic functionality
+   4:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****  *
+   5:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****  *
+   8:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****  *
+   9:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****  *                                 IMPORTANT NOTICE
+  10:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****  *
+  11:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****  *
+  12:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****  * this file except in compliance with IFASLL.
+  15:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****  *
+  16:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****  *
+  26:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****  */
+  27:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** 
+  28:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** /******************************************************************************/
+  29:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** /*----------------------------------Includes----------------------------------*/
+  30:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** /******************************************************************************/
+  31:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** 
+  32:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #include "IfxCpu_Irq.h"
+  33:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #include "Compilers.h"
+  34:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #include "Cpu/Std/IfxCpu_Intrinsics.h"
+  35:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #include "IfxCpu_reg.h"
+  36:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #include "_Impl/IfxCpu_cfg.h"
+  37:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #include "_Impl/IfxDma_cfg.h"
+  38:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** 
+  39:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** /*******************************************************************************
+  40:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** **                      Private macros                                        **
+  41:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** *******************************************************************************/
+  42:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** 
+  43:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** /*******************************************************************************
+  44:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** **                       Global variables/constants                           **
+  45:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** *******************************************************************************/
+  46:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #if defined(IFX_USE_SW_MANAGED_INT)
+  47:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** 
+  48:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** typedef void (*Ifx_Isr)(void);
+  49:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** 
+  50:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** BEGIN_DATA_SECTION(.bss_cpu0)
+  51:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** static Ifx_Isr IfxCpu_Irq_swIntVector0[256];
+  52:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** END_DATA_SECTION
+  53:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #if IFXCPU_NUM_SAFE_MODULES >= 2
+  54:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** BEGIN_DATA_SECTION(.bss_cpu1)
+  55:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** static Ifx_Isr IfxCpu_Irq_swIntVector1[256];
+  56:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** END_DATA_SECTION
+  57:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #endif
+  58:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #if IFXCPU_NUM_SAFE_MODULES >= 3
+  59:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** BEGIN_DATA_SECTION(.bss_cpu2)
+  60:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** static Ifx_Isr IfxCpu_Irq_swIntVector2[256];
+  61:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** END_DATA_SECTION
+  62:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #endif
+  63:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #if IFXCPU_NUM_SAFE_MODULES >= 4
+  64:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** BEGIN_DATA_SECTION(.bss_cpu3)
+  65:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** static Ifx_Isr IfxCpu_Irq_swIntVector3[256];
+  66:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** END_DATA_SECTION
+  67:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #endif
+  68:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #if IFXCPU_NUM_SAFE_MODULES >= 5
+  69:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** BEGIN_DATA_SECTION(.bss_cpu4)
+  70:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** static Ifx_Isr IfxCpu_Irq_swIntVector4[256];
+  71:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** END_DATA_SECTION
+  72:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #endif
+  73:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #if IFXCPU_NUM_SAFE_MODULES >= 6
+  74:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** BEGIN_DATA_SECTION(.bss_cpu5)
+  75:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** static Ifx_Isr IfxCpu_Irq_swIntVector5[256];
+  76:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** END_DATA_SECTION
+  77:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #endif
+  78:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** 
+  79:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #ifndef IFX_CFG_CPU_IRQ_DEBUG
+  80:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #define IFX_CFG_CPU_IRQ_DEBUG __debug()
+  81:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #endif
+  82:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** 
+  83:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #endif /*defined(IFX_USE_SW_MANAGED_INT) */
+  84:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** 
+  85:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** /*******************************************************************************
+  86:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** **                      Global Function definitions                          **
+  87:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** *******************************************************************************/
+  88:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #if defined(IFX_USE_SW_MANAGED_INT)
+  89:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** 
+  90:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** /** \brief API to install the interrupt service routine for Software Managed Interrupts.
+  91:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****  *
+  92:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****  */
+  93:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** void IfxCpu_Irq_installInterruptHandler(void *isrFuncPointer, uint32 serviceReqPrioNumber)
+  94:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** {
+  95:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     switch (IfxCpu_Irq_getTos(IfxCpu_getCoreIndex()))
+  96:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     {
+  97:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     case IfxSrc_Tos_cpu0:
+  98:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****         IfxCpu_Irq_swIntVector0[serviceReqPrioNumber] = (Ifx_Isr)isrFuncPointer;
+  99:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****         break;
+ 100:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #if IFXCPU_NUM_SAFE_MODULES >= 2
+ 101:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     case IfxSrc_Tos_cpu1:
+ 102:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****         IfxCpu_Irq_swIntVector1[serviceReqPrioNumber] = (Ifx_Isr)isrFuncPointer;
+ 103:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****         break;
+ 104:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #endif
+ 105:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #if IFXCPU_NUM_SAFE_MODULES >= 3
+ 106:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     case IfxSrc_Tos_cpu2:
+ 107:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****         IfxCpu_Irq_swIntVector2[serviceReqPrioNumber] = (Ifx_Isr)isrFuncPointer;
+ 108:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****         break;
+ 109:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #endif
+ 110:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #if IFXCPU_NUM_SAFE_MODULES >= 4
+ 111:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     case IfxSrc_Tos_cpu3:
+ 112:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****         IfxCpu_Irq_swIntVector3[serviceReqPrioNumber] = (Ifx_Isr)isrFuncPointer;
+ 113:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****         break;
+ 114:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #endif
+ 115:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #if IFXCPU_NUM_SAFE_MODULES >= 5
+ 116:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     case IfxSrc_Tos_cpu4:
+ 117:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****         IfxCpu_Irq_swIntVector4[serviceReqPrioNumber] = (Ifx_Isr)isrFuncPointer;
+ 118:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****         break;
+ 119:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #endif
+ 120:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #if IFXCPU_NUM_SAFE_MODULES >= 6
+ 121:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     case IfxSrc_Tos_cpu5:
+ 122:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****         IfxCpu_Irq_swIntVector5[serviceReqPrioNumber] = (Ifx_Isr)isrFuncPointer;
+ 123:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****         break;
+ 124:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #endif
+ 125:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     case IfxSrc_Tos_dma0:
+ 126:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****         break;
+ 127:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #if IFXDMA_NUM_MODULES == 2
+ 128:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     case IfxSrc_Tos_dma1:
+ 129:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****         break;
+ 130:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #endif
+ 131:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     default:
+ 132:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****         break;
+ 133:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     }
+ 134:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** }
+ 135:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** 
+ 136:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** 
+ 137:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** /** SW managed Interrupt vector tables
+ 138:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****  *
+ 139:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****  * These are vector tables with single entry for Software Managed Interrupts defined for each core.
+ 140:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****  * This function need to be located at boundary 0xXFE0 where (X=1,3,5 and so on). For the software 
+ 141:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****  * interrupts to work correctly, the BIV must be set to address of this function.
+ 142:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****  *
+ 143:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****  */
+ 144:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** IFX_INTERRUPT_INTERNAL(IfxCpu_Irq_intVecTable0, 0, 255)
+ 145:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** {
+ 146:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     Ifx_CPU_ICR icr;
+ 147:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** 
+ 148:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     icr.U = __mfcr(CPU_ICR);    /*Fetch the ICR value */
+ 149:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** 
+ 150:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     /*Call the ISR */
+ 151:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     if (IfxCpu_Irq_swIntVector0[icr.B.CCPN])
+ 152:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     {
+ 153:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****         IfxCpu_Irq_swIntVector0[icr.B.CCPN]();
+ 154:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     }
+ 155:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     else
+ 156:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     {
+ 157:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****         IFX_CFG_CPU_IRQ_DEBUG;
+ 158:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     }
+ 159:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** }
+ 160:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** 
+ 161:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #if IFXCPU_NUM_SAFE_MODULES >= 2
+ 162:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** IFX_INTERRUPT_INTERNAL(IfxCpu_Irq_intVecTable1, 1, 255)
+ 163:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** {
+ 164:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     Ifx_CPU_ICR icr;
+ 165:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** 
+ 166:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     icr.U = __mfcr(CPU_ICR);    /*Fetch the ICR value */
+ 167:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** 
+ 168:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     /*Call the ISR */
+ 169:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     if (IfxCpu_Irq_swIntVector1[icr.B.CCPN])
+ 170:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     {
+ 171:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****         IfxCpu_Irq_swIntVector1[icr.B.CCPN]();
+ 172:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     }
+ 173:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     else
+ 174:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     {
+ 175:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****         IFX_CFG_CPU_IRQ_DEBUG;
+ 176:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     }
+ 177:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** }
+ 178:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #endif
+ 179:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** 
+ 180:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #if IFXCPU_NUM_SAFE_MODULES >= 3
+ 181:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** IFX_INTERRUPT_INTERNAL(IfxCpu_Irq_intVecTable2, 2, 255)
+ 182:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** {
+ 183:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     Ifx_CPU_ICR icr;
+ 184:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** 
+ 185:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     icr.U = __mfcr(CPU_ICR);    /*Fetch the ICR value */
+ 186:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** 
+ 187:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     /*Call the ISR */
+ 188:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     if (IfxCpu_Irq_swIntVector2[icr.B.CCPN])
+ 189:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     {
+ 190:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****         IfxCpu_Irq_swIntVector2[icr.B.CCPN]();
+ 191:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     }
+ 192:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     else
+ 193:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     {
+ 194:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****         IFX_CFG_CPU_IRQ_DEBUG;
+ 195:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     }
+ 196:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** }
+ 197:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #endif
+ 198:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** 
+ 199:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #if IFXCPU_NUM_SAFE_MODULES >= 4
+ 200:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** IFX_INTERRUPT_INTERNAL(IfxCpu_Irq_intVecTable3, 3, 255)
+ 201:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** {
+ 202:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     Ifx_CPU_ICR icr;
+ 203:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** 
+ 204:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     icr.U = __mfcr(CPU_ICR);    /*Fetch the ICR value */
+ 205:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** 
+ 206:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     /*Call the ISR */
+ 207:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     if (IfxCpu_Irq_swIntVector3[icr.B.CCPN])
+ 208:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     {
+ 209:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****         IfxCpu_Irq_swIntVector3[icr.B.CCPN]();
+ 210:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     }
+ 211:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     else
+ 212:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     {
+ 213:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****         IFX_CFG_CPU_IRQ_DEBUG;
+ 214:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     }
+ 215:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** }
+ 216:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #endif
+ 217:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** 
+ 218:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #if IFXCPU_NUM_SAFE_MODULES >= 5
+ 219:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** IFX_INTERRUPT_INTERNAL(IfxCpu_Irq_intVecTable4, 4, 255)
+ 220:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** {
+ 221:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     Ifx_CPU_ICR icr;
+ 222:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** 
+ 223:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     icr.U = __mfcr(CPU_ICR);    /*Fetch the ICR value */
+ 224:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** 
+ 225:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     /*Call the ISR */
+ 226:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     if (IfxCpu_Irq_swIntVector4[icr.B.CCPN])
+ 227:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     {
+ 228:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****         IfxCpu_Irq_swIntVector4[icr.B.CCPN]();
+ 229:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     }
+ 230:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     else
+ 231:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     {
+ 232:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****         IFX_CFG_CPU_IRQ_DEBUG;
+ 233:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     }
+ 234:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** }
+ 235:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #endif
+ 236:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** 
+ 237:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #if IFXCPU_NUM_SAFE_MODULES >= 6
+ 238:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** IFX_INTERRUPT_INTERNAL(IfxCpu_Irq_intVecTable5, 5, 255)
+ 239:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** {
+ 240:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     Ifx_CPU_ICR icr;
+ 241:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** 
+ 242:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     icr.U = __mfcr(CPU_ICR);    /*Fetch the ICR value */
+ 243:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** 
+ 244:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     /*Call the ISR */
+ 245:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     if (IfxCpu_Irq_swIntVector5[icr.B.CCPN])
+ 246:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     {
+ 247:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****         IfxCpu_Irq_swIntVector5[icr.B.CCPN]();
+ 248:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     }
+ 249:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     else
+ 250:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     {
+ 251:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****         IFX_CFG_CPU_IRQ_DEBUG;
+ 252:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     }
+ 253:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** }
+ 254:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #endif
+ 255:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** 
+ 256:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #endif /*defined(IFX_USE_SW_MANAGED_INT) */
+ 257:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** 
+ 258:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** /** \brief API to get type of service of the caller CPU.
+ 259:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****  *
+ 260:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****  */
+ 261:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** IfxSrc_Tos IfxCpu_Irq_getTos(IfxCpu_ResourceCpu coreId)
+ 262:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** {
+  22              	 .loc 1 262 1
+  23              	.LVL0:
+  24 0000 40AE     	 mov.aa %a14,%SP
+  25              	.LCFI0:
+  26 0002 2018     	 sub.a %SP,24
+ 263:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     const IfxSrc_Tos tos[IFXCPU_NUM_SAFE_MODULES] = {
+  27              	 .loc 1 263 5
+  28              	 .loc 1 263 22 is_stmt 0
+  29 0004 91000020 	 movh.a %a2,hi:.LC0
+  30 0008 D9220000 	 lea %a2,[%a2]lo:.LC0
+  31 000c D9E3E8FF 	 lea %a3,[%a14]-24
+  32              	 
+  33 0010 09205002 	 ld.dd %q0,[%a2+]16
+  34 0014 89305002 	 st.dd [%a3+]16,%q0
+  35 0018 09204801 	 ld.d %e0,[%a2+]8
+  36 001c 89304801 	 st.d [%a3+]8,%e0
+ 264:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****         IfxSrc_Tos_cpu0,
+ 265:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #if IFXCPU_NUM_SAFE_MODULES >= 2
+ 266:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****         IfxSrc_Tos_cpu1,
+ 267:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #endif
+ 268:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #if IFXCPU_NUM_SAFE_MODULES >= 3
+ 269:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****         IfxSrc_Tos_cpu2,
+ 270:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #endif
+ 271:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #if IFXCPU_NUM_SAFE_MODULES >= 4
+ 272:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****         IfxSrc_Tos_cpu3,
+ 273:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #endif
+ 274:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #if IFXCPU_NUM_SAFE_MODULES >= 5
+ 275:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****         IfxSrc_Tos_cpu4,
+ 276:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #endif
+ 277:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #if IFXCPU_NUM_SAFE_MODULES >= 6
+ 278:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****         IfxSrc_Tos_cpu5,
+ 279:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** #endif
+ 280:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     };
+ 281:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** 
+ 282:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     if(coreId == 6)
+  37              	 .loc 1 282 5 is_stmt 1
+  38              	 .loc 1 282 7 is_stmt 0
+  39 0020 DF640000 	 jeq %d4,6,.L3
+ 283:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     {
+ 284:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     	return IfxSrc_Tos_csrm;
+ 285:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     }
+ 286:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     else
+ 287:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     {
+ 288:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     	return tos[coreId];
+  40              	 .loc 1 288 6 is_stmt 1
+  41              	 .loc 1 288 16 is_stmt 0
+  42 0024 8F240020 	 sh %d2,%d4,2
+  43 0028 01E20026 	 addsc.a %a2,%a14,%d2,0
+  44 002c 1922E8FF 	 ld.w %d2,[%a2]-24
+  45 0030 0090     	 ret 
+  46              	.L3:
+ 284:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     }
+  47              	 .loc 1 284 13
+  48 0032 8262     	 mov %d2,6
+ 289:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c ****     }
+ 290:../Libraries/iLLD/TC4xx/Tricore/Cpu/Irq/IfxCpu_Irq.c **** }
+  49              	 .loc 1 290 1
+  50 0034 0090     	 ret 
+  51              	.LFE306:
+  53              	 .global IfxCpu_Irq_getTos_end
+  54              	IfxCpu_Irq_getTos_end:
+  83              	.Letext0:
+  84              	 .file 2 "../Libraries/iLLD/TC4xx/Tricore/_Impl/TC4Dx/IfxCpu_cfg_TC4Dx.h"
+  85              	 .file 3 "../Libraries/iLLD/TC4xx/CpuGeneric/_Impl/TC4Dx/IfxSrc_cfg_TC4Dx.h"
+ 496 0000 00000000 	 .word IfxCpu_Irq_getTos
+ 497 0004 00000000 	 .word IfxCpu_Irq_getTos_end
+ 498 0008 1F001C44 	 .word 0x441c001f
+ 499 000c 10000000 	 .word 0x00000010
+ 500 0010 04000000 	 .word 0x00000004
+ 501 0014 C0800000 	 .word 0x000080c0
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxCpu_Irq.c
+                            *ABS*:00000000 IfxCpu_Irq.c
+    {standard input}:19     .text.IfxCpu_Irq_getTos:00000000 IfxCpu_Irq_getTos
+    {standard input}:54     .text.IfxCpu_Irq_getTos:00000036 IfxCpu_Irq_getTos_end
+
+NO UNDEFINED SYMBOLS

@@ -1,0 +1,213 @@
+   1              	
+   2              	 .file "Ifx_LutSincosF32.c"
+   3              	 .file "Ifx_LutSincosF32.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.Ifx_LutSincosF32_init,"ax",@progbits
+   7              	 .align 1
+   8              	 .global Ifx_LutSincosF32_init
+  10              	Ifx_LutSincosF32_init:
+  11              	.LFB178:
+  12              	 .file 1 "../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c"
+   1:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c **** /**
+   2:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****  * \file Ifx_LutSincosF32.c
+   3:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****  * \brief Sin/Cos lookup functions with fixed-point angle data type
+   4:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****  *
+   5:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****  *
+   6:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****  * \version iLLD-TC4-v2.7.0
+   7:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   8:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****  *
+   9:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****  *
+  10:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****   *                                 IMPORTANT NOTICE
+  11:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****  *
+  12:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****  *
+  13:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  14:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  15:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****  * this file except in compliance with IFASLL.
+  16:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****  *
+  17:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  18:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  19:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  20:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  21:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  22:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  23:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****  * defects in the licensed items, or non-infringement of third parties'
+  24:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****  * intellectual property rights. See the full license text for the specific
+  25:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****  * language governing permissions and limitations under IFASLL.
+  26:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****  *
+  27:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****  */
+  28:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c **** #include "Ifx_LutSincosF32.h"
+  29:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c **** 
+  30:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c **** #include <math.h>
+  31:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c **** 
+  32:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c **** void Ifx_LutSincosF32_init(void)
+  33:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c **** {
+  13              	 .loc 1 33 1
+  14 0000 40AE     	 mov.aa %a14,%SP
+  15              	.LCFI0:
+  34:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c **** #if IFX_LUT_TABLE_CONST == 0
+  35:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****     {   /* generate sin and cos table */
+  36:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****         sint32 k;
+  37:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c **** 
+  38:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****         for (k = 0; k <= (IFX_LUT_ANGLE_PI / 2); k++)
+  39:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****         {
+  40:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****             Ifx_g_LutSincosF32_table[k] = sinf((IFX_PI * 2 * k) / IFX_LUT_ANGLE_RESOLUTION);
+  41:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****         }
+  42:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****     }
+  43:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c **** #endif
+  44:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c **** }
+  16              	 .loc 1 44 1
+  17 0002 0090     	 ret 
+  18              	.LFE178:
+  20              	 .global Ifx_LutSincosF32_init_end
+  21              	Ifx_LutSincosF32_init_end:
+  22              	 .section .text.Ifx_LutSincosF32_sin,"ax",@progbits
+  23              	 .align 1
+  24              	 .global Ifx_LutSincosF32_sin
+  26              	Ifx_LutSincosF32_sin:
+  27              	.LFB179:
+  45:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c **** 
+  46:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c **** 
+  47:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c **** float32 Ifx_LutSincosF32_sin(Ifx_Lut_FxpAngle fxpAngle)
+  48:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c **** {
+  28              	 .loc 1 48 1
+  29              	.LVL0:
+  30 0000 40AE     	 mov.aa %a14,%SP
+  31              	.LCFI1:
+  49:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****     float32 result;
+  32              	 .loc 1 49 5
+  50:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****     fxpAngle = fxpAngle & (IFX_LUT_ANGLE_RESOLUTION - 1);
+  33              	 .loc 1 50 5
+  34              	 .loc 1 50 14 is_stmt 0
+  35 0002 B7041426 	 insert %d2,%d4,0,12,20
+  36              	.LVL1:
+  51:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c **** 
+  52:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****     if (fxpAngle < (IFX_LUT_ANGLE_PI / 2))
+  37              	 .loc 1 52 5 is_stmt 1
+  38              	 .loc 1 52 8 is_stmt 0
+  39 0006 3B00C030 	 mov %d3,3072
+  40 000a 2643     	 and %d3,%d4
+  41 000c DF030080 	 jnz %d3,.L3
+  53:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****     {
+  54:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****         result = Ifx_g_LutSincosF32_table[fxpAngle];
+  42              	 .loc 1 54 9 is_stmt 1
+  43              	 .loc 1 54 16 is_stmt 0
+  44 0010 0622     	 sh %d2,2
+  45              	.LVL2:
+  46 0012 91000020 	 movh.a %a2,hi:Ifx_g_LutSincosF32_table
+  47 0016 D9220000 	 lea %a2,[%a2]lo:Ifx_g_LutSincosF32_table
+  48 001a 01220026 	 addsc.a %a2,%a2,%d2,0
+  49 001e 5422     	 ld.w %d2,[%a2]0
+  50              	.LVL3:
+  51 0020 0090     	 ret 
+  52              	.LVL4:
+  53              	.L3:
+  55:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****     }
+  56:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****     else if (fxpAngle < IFX_LUT_ANGLE_PI)
+  54              	 .loc 1 56 10 is_stmt 1
+  55              	 .loc 1 56 13 is_stmt 0
+  56 0022 6FB40080 	 jnz.t %d4,11,.L5
+  57:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****     {
+  58:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****         fxpAngle = IFX_LUT_ANGLE_PI - fxpAngle;
+  57              	 .loc 1 58 9 is_stmt 1
+  58              	 .loc 1 58 18 is_stmt 0
+  59 0026 3B008030 	 mov %d3,2048
+  60 002a 0B238020 	 sub %d2,%d3,%d2
+  61              	.LVL5:
+  59:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****         result   = Ifx_g_LutSincosF32_table[fxpAngle];
+  62              	 .loc 1 59 9 is_stmt 1
+  63              	 .loc 1 59 18 is_stmt 0
+  64 002e 0622     	 sh %d2,2
+  65              	.LVL6:
+  66 0030 91000020 	 movh.a %a2,hi:Ifx_g_LutSincosF32_table
+  67 0034 D9220000 	 lea %a2,[%a2]lo:Ifx_g_LutSincosF32_table
+  68 0038 01220026 	 addsc.a %a2,%a2,%d2,0
+  69 003c 5422     	 ld.w %d2,[%a2]0
+  70              	.LVL7:
+  71 003e 0090     	 ret 
+  72              	.LVL8:
+  73              	.L5:
+  60:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****     }
+  61:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****     else if (fxpAngle < (IFX_LUT_ANGLE_PI / 2 * 3))
+  74              	 .loc 1 61 10 is_stmt 1
+  75              	 .loc 1 61 13 is_stmt 0
+  76 0040 3B00C030 	 mov %d3,3072
+  77 0044 7F320000 	 jge %d2,%d3,.L6
+  62:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****     {
+  63:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****         fxpAngle = fxpAngle - IFX_LUT_ANGLE_PI;
+  78              	 .loc 1 63 9 is_stmt 1
+  79              	 .loc 1 63 18 is_stmt 0
+  80 0048 1B02802F 	 addi %d2,%d2,-2048
+  81              	.LVL9:
+  64:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****         result   = -Ifx_g_LutSincosF32_table[fxpAngle];
+  82              	 .loc 1 64 9 is_stmt 1
+  83              	 .loc 1 64 45 is_stmt 0
+  84 004c 0622     	 sh %d2,2
+  85              	.LVL10:
+  86 004e 91000020 	 movh.a %a2,hi:Ifx_g_LutSincosF32_table
+  87 0052 D9220000 	 lea %a2,[%a2]lo:Ifx_g_LutSincosF32_table
+  88 0056 01220026 	 addsc.a %a2,%a2,%d2,0
+  89 005a 5422     	 ld.w %d2,[%a2]0
+  90              	 .loc 1 64 18
+  91 005c 4B021123 	 neg.f %d2,%d2
+  92              	.LVL11:
+  93 0060 0090     	 ret 
+  94              	.LVL12:
+  95              	.L6:
+  65:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****     }
+  66:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****     else
+  67:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****     {
+  68:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****         fxpAngle = IFX_LUT_ANGLE_RESOLUTION - fxpAngle;
+  96              	 .loc 1 68 9 is_stmt 1
+  97              	 .loc 1 68 18 is_stmt 0
+  98 0062 3B000031 	 mov %d3,4096
+  99 0066 0B238020 	 sub %d2,%d3,%d2
+ 100              	.LVL13:
+  69:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****         result   = -Ifx_g_LutSincosF32_table[fxpAngle];
+ 101              	 .loc 1 69 9 is_stmt 1
+ 102              	 .loc 1 69 45 is_stmt 0
+ 103 006a 0622     	 sh %d2,2
+ 104              	.LVL14:
+ 105 006c 91000020 	 movh.a %a2,hi:Ifx_g_LutSincosF32_table
+ 106 0070 D9220000 	 lea %a2,[%a2]lo:Ifx_g_LutSincosF32_table
+ 107 0074 01220026 	 addsc.a %a2,%a2,%d2,0
+ 108 0078 5422     	 ld.w %d2,[%a2]0
+ 109              	 .loc 1 69 18
+ 110 007a 4B021123 	 neg.f %d2,%d2
+ 111              	.LVL15:
+  70:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****     }
+  71:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c **** 
+  72:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c ****     return result;
+ 112              	 .loc 1 72 5 is_stmt 1
+  73:../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.c **** }
+ 113              	 .loc 1 73 1 is_stmt 0
+ 114 007e 0090     	 ret 
+ 115              	.LFE179:
+ 117              	 .global Ifx_LutSincosF32_sin_end
+ 118              	Ifx_LutSincosF32_sin_end:
+ 159              	.Letext0:
+ 160              	 .file 2 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 161              	 .file 3 "../Libraries/Service/Tricore/Math/Ifx_Lut.h"
+ 162              	 .file 4 "../Libraries/Service/Tricore/Math/Ifx_LutSincosF32.h"
+ 632 0000 00000000 	 .word Ifx_LutSincosF32_init
+ 633 0004 00000000 	 .word Ifx_LutSincosF32_init_end
+ 634 0008 00000044 	 .word 0x44000000
+ 635 000c 00000000 	 .word 0x00000000
+ 636 0010 00000000 	 .word 0x00000000
+ 637 0014 C0000000 	 .word 0x000000c0
+ 638 0018 00000000 	 .word Ifx_LutSincosF32_sin
+ 639 001c 00000000 	 .word Ifx_LutSincosF32_sin_end
+ 640 0020 1C000444 	 .word 0x4404001c
+ 641 0024 10000000 	 .word 0x00000010
+ 642 0028 04000000 	 .word 0x00000004
+ 643 002c C0000000 	 .word 0x000000c0
+DEFINED SYMBOLS
+                            *ABS*:00000000 Ifx_LutSincosF32.c
+                            *ABS*:00000000 Ifx_LutSincosF32.c
+    {standard input}:10     .text.Ifx_LutSincosF32_init:00000000 Ifx_LutSincosF32_init
+    {standard input}:21     .text.Ifx_LutSincosF32_init:00000004 Ifx_LutSincosF32_init_end
+    {standard input}:26     .text.Ifx_LutSincosF32_sin:00000000 Ifx_LutSincosF32_sin
+    {standard input}:118    .text.Ifx_LutSincosF32_sin:00000080 Ifx_LutSincosF32_sin_end
+
+UNDEFINED SYMBOLS
+Ifx_g_LutSincosF32_table

@@ -1,0 +1,179 @@
+   1              	
+   2              	 .file "Ifx_Cfg_SswBmhd.c"
+   3              	 .file "Ifx_Cfg_SswBmhd.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .global usercfg_0_copy
+   7              	 .section .usercfg_0_copy,"a",@progbits
+   8              	 .align 2
+  11              	usercfg_0_copy:
+  12 0000 009040AE 	 .word -1371500544
+  13 0004 3F000000 	 .word 63
+  14 0008 00000000 	 .zero 4
+  15 000c 00000000 	 .word 0
+  16 0010 00000000 	 .word 0
+  17 0014 00000000 	 .word 0
+  18 0018 00000000 	 .word 0
+  19 001c 02000000 	 .word 2
+  20 0020 05000000 	 .word 5
+  21 0024 00000000 	 .word 0
+  22 0028 ECCB0F53 	 .word 1393544172
+  23 002c 00000000 	 .zero 1956
+  23      00000000 
+  23      00000000 
+  23      00000000 
+  23      00000000 
+  24 07d0 00000000 	 .word 0
+  25 07d4 00000000 	 .word 0
+  26 07d8 00000000 	 .word 0
+  27 07dc 00000000 	 .word 0
+  28 07e0 00000000 	 .word 0
+  29 07e4 00000000 	 .word 0
+  30 07e8 00000000 	 .word 0
+  31 07ec 00000000 	 .word 0
+  32 07f0 34122143 	 .word 1126240820
+  33              	 .global usercfg_0_orig
+  34              	 .section .usercfg_0_orig,"a",@progbits
+  35              	 .align 2
+  38              	usercfg_0_orig:
+  39 0000 008840AE 	 .word -1371502592
+  40 0004 3F000000 	 .word 63
+  41 0008 00000000 	 .zero 4
+  42 000c 00000000 	 .word 0
+  43 0010 00000000 	 .word 0
+  44 0014 00000000 	 .word 0
+  45 0018 00000000 	 .word 0
+  46 001c 02000000 	 .word 2
+  47 0020 05000000 	 .word 5
+  48 0024 00000000 	 .word 0
+  49 0028 17C2DC51 	 .word 1373422103
+  50 002c 00000000 	 .zero 1956
+  50      00000000 
+  50      00000000 
+  50      00000000 
+  50      00000000 
+  51 07d0 00000000 	 .word 0
+  52 07d4 00000000 	 .word 0
+  53 07d8 00000000 	 .word 0
+  54 07dc 00000000 	 .word 0
+  55 07e0 00000000 	 .word 0
+  56 07e4 00000000 	 .word 0
+  57 07e8 00000000 	 .word 0
+  58 07ec 00000000 	 .word 0
+  59 07f0 34122143 	 .word 1126240820
+  60              	 .global bmhd_3_orig
+  61              	 .section .bmhd_3_orig,"a",@progbits
+  62              	 .align 2
+  65              	bmhd_3_orig:
+  66 0000 006040AE 	 .word -1371512832
+  67 0004 0F00     	 .short 15
+  68 0006 59B3     	 .short -19623
+  69 0008 000000A0 	 .word -1610612736
+  70 000c 024FB2CC 	 .word -860729598
+  71 0010 00000000 	 .zero 1984
+  71      00000000 
+  71      00000000 
+  71      00000000 
+  71      00000000 
+  72 07d0 00000000 	 .word 0
+  73 07d4 00000000 	 .word 0
+  74 07d8 00000000 	 .word 0
+  75 07dc 00000000 	 .word 0
+  76 07e0 00000000 	 .word 0
+  77 07e4 00000000 	 .word 0
+  78 07e8 00000000 	 .word 0
+  79 07ec 00000000 	 .word 0
+  80 07f0 34122143 	 .word 1126240820
+  81 07f4 00000000 	 .zero 4
+  82 07f8 34122143 	 .word 1126240820
+  83              	 .global bmhd_2_orig
+  84              	 .section .bmhd_2_orig,"a",@progbits
+  85              	 .align 2
+  88              	bmhd_2_orig:
+  89 0000 005840AE 	 .word -1371514880
+  90 0004 0F00     	 .short 15
+  91 0006 59B3     	 .short -19623
+  92 0008 000000A0 	 .word -1610612736
+  93 000c CE8D96B7 	 .word -1214870066
+  94 0010 00000000 	 .zero 1984
+  94      00000000 
+  94      00000000 
+  94      00000000 
+  94      00000000 
+  95 07d0 00000000 	 .word 0
+  96 07d4 00000000 	 .word 0
+  97 07d8 00000000 	 .word 0
+  98 07dc 00000000 	 .word 0
+  99 07e0 00000000 	 .word 0
+ 100 07e4 00000000 	 .word 0
+ 101 07e8 00000000 	 .word 0
+ 102 07ec 00000000 	 .word 0
+ 103 07f0 34122143 	 .word 1126240820
+ 104 07f4 00000000 	 .zero 4
+ 105 07f8 34122143 	 .word 1126240820
+ 106              	 .global bmhd_1_orig
+ 107              	 .section .bmhd_1_orig,"a",@progbits
+ 108              	 .align 2
+ 111              	bmhd_1_orig:
+ 112 0000 005040AE 	 .word -1371516928
+ 113 0004 0F00     	 .short 15
+ 114 0006 59B3     	 .short -19623
+ 115 0008 000000A0 	 .word -1610612736
+ 116 000c 3ACD41A4 	 .word -1539191494
+ 117 0010 00000000 	 .zero 1984
+ 117      00000000 
+ 117      00000000 
+ 117      00000000 
+ 117      00000000 
+ 118 07d0 00000000 	 .word 0
+ 119 07d4 00000000 	 .word 0
+ 120 07d8 00000000 	 .word 0
+ 121 07dc 00000000 	 .word 0
+ 122 07e0 00000000 	 .word 0
+ 123 07e4 00000000 	 .word 0
+ 124 07e8 00000000 	 .word 0
+ 125 07ec 00000000 	 .word 0
+ 126 07f0 34122143 	 .word 1126240820
+ 127 07f4 00000000 	 .zero 4
+ 128 07f8 34122143 	 .word 1126240820
+ 129              	 .global bmhd_0_orig
+ 130              	 .section .bmhd_0_orig,"a",@progbits
+ 131              	 .align 2
+ 134              	bmhd_0_orig:
+ 135 0000 004840AE 	 .word -1371518976
+ 136 0004 0F00     	 .short 15
+ 137 0006 59B3     	 .short -19623
+ 138 0008 000000A0 	 .word -1610612736
+ 139 000c 260C3890 	 .word -1875375066
+ 140 0010 00000000 	 .zero 1984
+ 140      00000000 
+ 140      00000000 
+ 140      00000000 
+ 140      00000000 
+ 141 07d0 00000000 	 .word 0
+ 142 07d4 00000000 	 .word 0
+ 143 07d8 00000000 	 .word 0
+ 144 07dc 00000000 	 .word 0
+ 145 07e0 00000000 	 .word 0
+ 146 07e4 00000000 	 .word 0
+ 147 07e8 00000000 	 .word 0
+ 148 07ec 00000000 	 .word 0
+ 149 07f0 34122143 	 .word 1126240820
+ 150 07f4 00000000 	 .zero 4
+ 151 07f8 34122143 	 .word 1126240820
+ 152              	.section .text,"ax",@progbits
+ 153              	.Letext0:
+ 154              	 .file 1 "../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw.h"
+ 155              	 .file 2 "../Configurations/Ifx_Cfg_SswBmhd.c"
+ 156              	 .file 3 "../Libraries/iLLD/TC4xx/Tricore/_Impl/TC4Dx/IfxCpu_cfg_TC4Dx.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 Ifx_Cfg_SswBmhd.c
+                            *ABS*:00000000 Ifx_Cfg_SswBmhd.c
+    {standard input}:11     .usercfg_0_copy:00000000 usercfg_0_copy
+    {standard input}:38     .usercfg_0_orig:00000000 usercfg_0_orig
+    {standard input}:65     .bmhd_3_orig:00000000 bmhd_3_orig
+    {standard input}:88     .bmhd_2_orig:00000000 bmhd_2_orig
+    {standard input}:111    .bmhd_1_orig:00000000 bmhd_1_orig
+    {standard input}:134    .bmhd_0_orig:00000000 bmhd_0_orig
+
+NO UNDEFINED SYMBOLS

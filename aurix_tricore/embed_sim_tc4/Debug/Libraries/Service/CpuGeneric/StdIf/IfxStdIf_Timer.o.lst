@@ -1,0 +1,560 @@
+   1              	
+   2              	 .file "IfxStdIf_Timer.c"
+   3              	 .file "IfxStdIf_Timer.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.IfxStdIf_Timer_nopGetFrequency,"ax",@progbits
+   7              	 .align 1
+   9              	IfxStdIf_Timer_nopGetFrequency:
+  10              	.LFB347:
+  11              	 .file 1 "../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c"
+   1:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** /**
+   2:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****  * \file IfxStdIf_Timer.c
+   3:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****  * \brief Standard interface: Timer
+   4:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****  * \ingroup IfxStdIf
+   5:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****  *
+   6:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****  * \version iLLD-TC4-v2.7.0
+   7:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   8:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****  *
+   9:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****  *
+  10:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****   *                                 IMPORTANT NOTICE
+  11:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****  *
+  12:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****  *
+  13:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  14:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  15:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****  * this file except in compliance with IFASLL.
+  16:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****  *
+  17:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  18:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  19:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  20:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  21:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  22:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  23:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****  * defects in the licensed items, or non-infringement of third parties'
+  24:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****  * intellectual property rights. See the full license text for the specific
+  25:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****  * language governing permissions and limitations under IFASLL.
+  26:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****  *
+  27:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****  */
+  28:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** 
+  29:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** #include "IfxStdIf_Timer.h"
+  30:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** 
+  31:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** void IfxStdIf_Timer_initConfig(IfxStdIf_Timer_Config *config)
+  32:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** {
+  33:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->frequency                  = 1000;
+  34:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->isrPriority                = 0;
+  35:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->isrProvider                = IfxSrc_Tos_cpu0;
+  36:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->minResolution              = 0;
+  37:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->trigger.outputMode         = IfxPort_OutputMode_pushPull;
+  38:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->trigger.outputDriver       = IfxPort_PadDriver_cmosAutomotiveSpeed1;
+  39:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->trigger.risingEdgeAtPeriod = FALSE;
+  40:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->trigger.outputEnabled      = FALSE;
+  41:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->trigger.enabled            = FALSE;
+  42:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->trigger.triggerPoint       = 0;
+  43:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->trigger.isrPriority        = 0;
+  44:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->trigger.isrProvider        = IfxSrc_Tos_cpu0;
+  45:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->countDir                   = IfxStdIf_Timer_CountDir_up;
+  46:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->startOffset 					   = 0.0;
+  47:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** }
+  48:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** 
+  49:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** 
+  50:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** static float32 IfxStdIf_Timer_nopGetFrequency(IfxStdIf_InterfaceDriver stdif)
+  51:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** {
+  12              	 .loc 1 51 1
+  13              	.LVL0:
+  14 0000 40AE     	 mov.aa %a14,%SP
+  15              	.LCFI0:
+  52:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** 	return 0.0;
+  16              	 .loc 1 52 2
+  53:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** }
+  17              	 .loc 1 53 1 is_stmt 0
+  18 0002 8202     	 mov %d2,0
+  19 0004 0090     	 ret 
+  20              	.LFE347:
+  22              	 .section .text.IfxStdIf_Timer_nopGetPeriod,"ax",@progbits
+  23              	 .align 1
+  25              	IfxStdIf_Timer_nopGetPeriod:
+  26              	.LFB348:
+  54:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** static Ifx_TimerValue IfxStdIf_Timer_nopGetPeriod(IfxStdIf_InterfaceDriver stdif)
+  55:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** {
+  27              	 .loc 1 55 1 is_stmt 1
+  28              	.LVL1:
+  29 0000 40AE     	 mov.aa %a14,%SP
+  30              	.LCFI1:
+  56:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** 	return 0;
+  31              	 .loc 1 56 2
+  57:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** }
+  32              	 .loc 1 57 1 is_stmt 0
+  33 0002 8202     	 mov %d2,0
+  34 0004 0090     	 ret 
+  35              	.LFE348:
+  37              	 .section .text.IfxStdIf_Timer_nopGetResolution,"ax",@progbits
+  38              	 .align 1
+  40              	IfxStdIf_Timer_nopGetResolution:
+  41              	.LFB349:
+  58:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** static float32 IfxStdIf_Timer_nopGetResolution(IfxStdIf_InterfaceDriver stdif)
+  59:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** {
+  42              	 .loc 1 59 1 is_stmt 1
+  43              	.LVL2:
+  44 0000 40AE     	 mov.aa %a14,%SP
+  45              	.LCFI2:
+  60:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** 	return 0.0;
+  46              	 .loc 1 60 2
+  61:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** }
+  47              	 .loc 1 61 1 is_stmt 0
+  48 0002 8202     	 mov %d2,0
+  49 0004 0090     	 ret 
+  50              	.LFE349:
+  52              	 .section .text.IfxStdIf_Timer_nopGetTrigger,"ax",@progbits
+  53              	 .align 1
+  55              	IfxStdIf_Timer_nopGetTrigger:
+  56              	.LFB350:
+  62:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** static Ifx_TimerValue IfxStdIf_Timer_nopGetTrigger(IfxStdIf_InterfaceDriver stdif)
+  63:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** {
+  57              	 .loc 1 63 1 is_stmt 1
+  58              	.LVL3:
+  59 0000 40AE     	 mov.aa %a14,%SP
+  60              	.LCFI3:
+  64:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** 	return 0;
+  61              	 .loc 1 64 2
+  65:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** }
+  62              	 .loc 1 65 1 is_stmt 0
+  63 0002 8202     	 mov %d2,0
+  64 0004 0090     	 ret 
+  65              	.LFE350:
+  67              	 .section .text.IfxStdIf_Timer_nopSetFrequency,"ax",@progbits
+  68              	 .align 1
+  70              	IfxStdIf_Timer_nopSetFrequency:
+  71              	.LFB351:
+  66:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** static boolean IfxStdIf_Timer_nopSetFrequency(IfxStdIf_InterfaceDriver stdif, float32 frequency)
+  67:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** {
+  72              	 .loc 1 67 1 is_stmt 1
+  73              	.LVL4:
+  74 0000 40AE     	 mov.aa %a14,%SP
+  75              	.LCFI4:
+  68:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** 	return FALSE;
+  76              	 .loc 1 68 2
+  69:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** }
+  77              	 .loc 1 69 1 is_stmt 0
+  78 0002 8202     	 mov %d2,0
+  79 0004 0090     	 ret 
+  80              	.LFE351:
+  82              	 .section .text.IfxStdIf_Timer_nopUpdateInputFrequency,"ax",@progbits
+  83              	 .align 1
+  85              	IfxStdIf_Timer_nopUpdateInputFrequency:
+  86              	.LFB352:
+  70:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** static void IfxStdIf_Timer_nopUpdateInputFrequency(IfxStdIf_InterfaceDriver stdif)
+  71:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** {
+  87              	 .loc 1 71 1 is_stmt 1
+  88              	.LVL5:
+  89 0000 40AE     	 mov.aa %a14,%SP
+  90              	.LCFI5:
+  72:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** }
+  91              	 .loc 1 72 1
+  92 0002 0090     	 ret 
+  93              	.LFE352:
+  95              	 .section .text.IfxStdIf_Timer_nopApplyUpdate,"ax",@progbits
+  96              	 .align 1
+  98              	IfxStdIf_Timer_nopApplyUpdate:
+  99              	.LFB353:
+  73:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** static void IfxStdIf_Timer_nopApplyUpdate(IfxStdIf_InterfaceDriver stdif)
+  74:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** {
+ 100              	 .loc 1 74 1
+ 101              	.LVL6:
+ 102 0000 40AE     	 mov.aa %a14,%SP
+ 103              	.LCFI6:
+  75:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** }
+ 104              	 .loc 1 75 1
+ 105 0002 0090     	 ret 
+ 106              	.LFE353:
+ 108              	 .section .text.IfxStdIf_Timer_nopDisableUpdate,"ax",@progbits
+ 109              	 .align 1
+ 111              	IfxStdIf_Timer_nopDisableUpdate:
+ 112              	.LFB354:
+  76:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** static void IfxStdIf_Timer_nopDisableUpdate(IfxStdIf_InterfaceDriver stdif)
+  77:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** {
+ 113              	 .loc 1 77 1
+ 114              	.LVL7:
+ 115 0000 40AE     	 mov.aa %a14,%SP
+ 116              	.LCFI7:
+  78:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** }
+ 117              	 .loc 1 78 1
+ 118 0002 0090     	 ret 
+ 119              	.LFE354:
+ 121              	 .section .text.IfxStdIf_Timer_nopGetInputFrequency,"ax",@progbits
+ 122              	 .align 1
+ 124              	IfxStdIf_Timer_nopGetInputFrequency:
+ 125              	.LFB355:
+  79:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** static float32 IfxStdIf_Timer_nopGetInputFrequency(IfxStdIf_InterfaceDriver stdif)
+  80:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** {
+ 126              	 .loc 1 80 1
+ 127              	.LVL8:
+ 128 0000 40AE     	 mov.aa %a14,%SP
+ 129              	.LCFI8:
+  81:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** 	return 0.0;
+ 130              	 .loc 1 81 2
+  82:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** }
+ 131              	 .loc 1 82 1 is_stmt 0
+ 132 0002 8202     	 mov %d2,0
+ 133 0004 0090     	 ret 
+ 134              	.LFE355:
+ 136              	 .section .text.IfxStdIf_Timer_nopRun,"ax",@progbits
+ 137              	 .align 1
+ 139              	IfxStdIf_Timer_nopRun:
+ 140              	.LFB356:
+  83:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** static void IfxStdIf_Timer_nopRun(IfxStdIf_InterfaceDriver stdif)
+  84:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** {
+ 141              	 .loc 1 84 1 is_stmt 1
+ 142              	.LVL9:
+ 143 0000 40AE     	 mov.aa %a14,%SP
+ 144              	.LCFI9:
+  85:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** }
+ 145              	 .loc 1 85 1
+ 146 0002 0090     	 ret 
+ 147              	.LFE356:
+ 149              	 .section .text.IfxStdIf_Timer_nopSetPeriod,"ax",@progbits
+ 150              	 .align 1
+ 152              	IfxStdIf_Timer_nopSetPeriod:
+ 153              	.LFB357:
+  86:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** static boolean IfxStdIf_Timer_nopSetPeriod(IfxStdIf_InterfaceDriver stdif, Ifx_TimerValue period)
+  87:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** {
+ 154              	 .loc 1 87 1
+ 155              	.LVL10:
+ 156 0000 40AE     	 mov.aa %a14,%SP
+ 157              	.LCFI10:
+  88:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** 	return FALSE;
+ 158              	 .loc 1 88 2
+  89:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** }
+ 159              	 .loc 1 89 1 is_stmt 0
+ 160 0002 8202     	 mov %d2,0
+ 161 0004 0090     	 ret 
+ 162              	.LFE357:
+ 164              	 .section .text.IfxStdIf_Timer_nopSetSingleMode,"ax",@progbits
+ 165              	 .align 1
+ 167              	IfxStdIf_Timer_nopSetSingleMode:
+ 168              	.LFB358:
+  90:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** static void IfxStdIf_Timer_nopSetSingleMode(IfxStdIf_InterfaceDriver stdif, boolean enabled)
+  91:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** {
+ 169              	 .loc 1 91 1 is_stmt 1
+ 170              	.LVL11:
+ 171 0000 40AE     	 mov.aa %a14,%SP
+ 172              	.LCFI11:
+  92:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** }
+ 173              	 .loc 1 92 1
+ 174 0002 0090     	 ret 
+ 175              	.LFE358:
+ 177              	 .section .text.IfxStdIf_Timer_nopSetTrigger,"ax",@progbits
+ 178              	 .align 1
+ 180              	IfxStdIf_Timer_nopSetTrigger:
+ 181              	.LFB359:
+  93:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** static void IfxStdIf_Timer_nopSetTrigger(IfxStdIf_InterfaceDriver stdif, Ifx_TimerValue triggerPoin
+  94:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** {
+ 182              	 .loc 1 94 1
+ 183              	.LVL12:
+ 184 0000 40AE     	 mov.aa %a14,%SP
+ 185              	.LCFI12:
+  95:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** }
+ 186              	 .loc 1 95 1
+ 187 0002 0090     	 ret 
+ 188              	.LFE359:
+ 190              	 .section .text.IfxStdIf_Timer_nopStop,"ax",@progbits
+ 191              	 .align 1
+ 193              	IfxStdIf_Timer_nopStop:
+ 194              	.LFB360:
+  96:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** static void IfxStdIf_Timer_nopStop(IfxStdIf_InterfaceDriver stdif)
+  97:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** {
+ 195              	 .loc 1 97 1
+ 196              	.LVL13:
+ 197 0000 40AE     	 mov.aa %a14,%SP
+ 198              	.LCFI13:
+  98:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** }
+ 199              	 .loc 1 98 1
+ 200 0002 0090     	 ret 
+ 201              	.LFE360:
+ 203              	 .section .text.IfxStdIf_Timer_nopAckTimerIrq,"ax",@progbits
+ 204              	 .align 1
+ 206              	IfxStdIf_Timer_nopAckTimerIrq:
+ 207              	.LFB361:
+  99:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** static boolean IfxStdIf_Timer_nopAckTimerIrq(IfxStdIf_InterfaceDriver stdif)
+ 100:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** {
+ 208              	 .loc 1 100 1
+ 209              	.LVL14:
+ 210 0000 40AE     	 mov.aa %a14,%SP
+ 211              	.LCFI14:
+ 101:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** 	return FALSE;
+ 212              	 .loc 1 101 2
+ 102:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** }
+ 213              	 .loc 1 102 1 is_stmt 0
+ 214 0002 8202     	 mov %d2,0
+ 215 0004 0090     	 ret 
+ 216              	.LFE361:
+ 218              	 .section .text.IfxStdIf_Timer_nopAckTriggerIrq,"ax",@progbits
+ 219              	 .align 1
+ 221              	IfxStdIf_Timer_nopAckTriggerIrq:
+ 222              	.LFB362:
+ 103:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** static boolean IfxStdIf_Timer_nopAckTriggerIrq(IfxStdIf_InterfaceDriver stdif)
+ 104:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** {
+ 223              	 .loc 1 104 1 is_stmt 1
+ 224              	.LVL15:
+ 225 0000 40AE     	 mov.aa %a14,%SP
+ 226              	.LCFI15:
+ 105:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** 	return FALSE;
+ 227              	 .loc 1 105 2
+ 106:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** }
+ 228              	 .loc 1 106 1 is_stmt 0
+ 229 0002 8202     	 mov %d2,0
+ 230 0004 0090     	 ret 
+ 231              	.LFE362:
+ 233              	 .section .text.IfxStdIf_Timer_initConfig,"ax",@progbits
+ 234              	 .align 1
+ 235              	 .global IfxStdIf_Timer_initConfig
+ 237              	IfxStdIf_Timer_initConfig:
+ 238              	.LFB346:
+  32:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->frequency                  = 1000;
+ 239              	 .loc 1 32 1 is_stmt 1
+ 240              	.LVL16:
+ 241 0000 40AE     	 mov.aa %a14,%SP
+ 242              	.LCFI16:
+  33:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->isrPriority                = 0;
+ 243              	 .loc 1 33 5
+  33:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->isrPriority                = 0;
+ 244              	 .loc 1 33 40 is_stmt 0
+ 245 0002 7BA04724 	 movh %d2,17530
+ 246 0006 7442     	 st.w [%a4]0,%d2
+  34:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->isrProvider                = IfxSrc_Tos_cpu0;
+ 247              	 .loc 1 34 5 is_stmt 1
+  34:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->isrProvider                = IfxSrc_Tos_cpu0;
+ 248              	 .loc 1 34 40 is_stmt 0
+ 249 0008 8202     	 mov %d2,0
+ 250 000a F9420400 	 st.h [%a4]4,%d2
+  35:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->minResolution              = 0;
+ 251              	 .loc 1 35 5 is_stmt 1
+  35:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->minResolution              = 0;
+ 252              	 .loc 1 35 40 is_stmt 0
+ 253 000e 8203     	 mov %d3,0
+ 254 0010 59430800 	 st.w [%a4]8,%d3
+  36:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->trigger.outputMode         = IfxPort_OutputMode_pushPull;
+ 255              	 .loc 1 36 5 is_stmt 1
+  36:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->trigger.outputMode         = IfxPort_OutputMode_pushPull;
+ 256              	 .loc 1 36 40 is_stmt 0
+ 257 0014 8204     	 mov %d4,0
+ 258 0016 59440C00 	 st.w [%a4]12,%d4
+  37:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->trigger.outputDriver       = IfxPort_PadDriver_cmosAutomotiveSpeed1;
+ 259              	 .loc 1 37 5 is_stmt 1
+  37:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->trigger.outputDriver       = IfxPort_PadDriver_cmosAutomotiveSpeed1;
+ 260              	 .loc 1 37 40 is_stmt 0
+ 261 001a 8215     	 mov %d5,1
+ 262 001c 59452000 	 st.w [%a4]32,%d5
+  38:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->trigger.risingEdgeAtPeriod = FALSE;
+ 263              	 .loc 1 38 5 is_stmt 1
+  38:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->trigger.risingEdgeAtPeriod = FALSE;
+ 264              	 .loc 1 38 40 is_stmt 0
+ 265 0020 59432400 	 st.w [%a4]36,%d3
+  39:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->trigger.outputEnabled      = FALSE;
+ 266              	 .loc 1 39 5 is_stmt 1
+  39:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->trigger.outputEnabled      = FALSE;
+ 267              	 .loc 1 39 40 is_stmt 0
+ 268 0024 E9422800 	 st.b [%a4]40,%d2
+  40:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->trigger.enabled            = FALSE;
+ 269              	 .loc 1 40 5 is_stmt 1
+  40:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->trigger.enabled            = FALSE;
+ 270              	 .loc 1 40 40 is_stmt 0
+ 271 0028 E9422900 	 st.b [%a4]41,%d2
+  41:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->trigger.triggerPoint       = 0;
+ 272              	 .loc 1 41 5 is_stmt 1
+  41:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->trigger.triggerPoint       = 0;
+ 273              	 .loc 1 41 40 is_stmt 0
+ 274 002c E9421000 	 st.b [%a4]16,%d2
+  42:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->trigger.isrPriority        = 0;
+ 275              	 .loc 1 42 5 is_stmt 1
+  42:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->trigger.isrPriority        = 0;
+ 276              	 .loc 1 42 40 is_stmt 0
+ 277 0030 59431400 	 st.w [%a4]20,%d3
+  43:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->trigger.isrProvider        = IfxSrc_Tos_cpu0;
+ 278              	 .loc 1 43 5 is_stmt 1
+  43:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->trigger.isrProvider        = IfxSrc_Tos_cpu0;
+ 279              	 .loc 1 43 40 is_stmt 0
+ 280 0034 F9431800 	 st.h [%a4]24,%d3
+  44:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->countDir                   = IfxStdIf_Timer_CountDir_up;
+ 281              	 .loc 1 44 5 is_stmt 1
+  44:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->countDir                   = IfxStdIf_Timer_CountDir_up;
+ 282              	 .loc 1 44 40 is_stmt 0
+ 283 0038 59431C00 	 st.w [%a4]28,%d3
+  45:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->startOffset 					   = 0.0;
+ 284              	 .loc 1 45 5 is_stmt 1
+  45:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     config->startOffset 					   = 0.0;
+ 285              	 .loc 1 45 40 is_stmt 0
+ 286 003c 59432C00 	 st.w [%a4]44,%d3
+  46:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** }
+ 287              	 .loc 1 46 5 is_stmt 1
+  46:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** }
+ 288              	 .loc 1 46 33 is_stmt 0
+ 289 0040 59443000 	 st.w [%a4]48,%d4
+  47:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** 
+ 290              	 .loc 1 47 1
+ 291 0044 0090     	 ret 
+ 292              	.LFE346:
+ 294              	 .global IfxStdIf_Timer_initConfig_end
+ 295              	IfxStdIf_Timer_initConfig_end:
+ 296              	 .section .text.IfxStdIf_Timer_initStdIf,"ax",@progbits
+ 297              	 .align 1
+ 298              	 .global IfxStdIf_Timer_initStdIf
+ 300              	IfxStdIf_Timer_initStdIf:
+ 301              	.LFB363:
+ 107:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** 
+ 108:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** 
+ 109:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** void IfxStdIf_Timer_initStdIf(IfxStdIf_Timer *stdIf, IfxStdIf_InterfaceDriver driver)
+ 110:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** {
+ 302              	 .loc 1 110 1 is_stmt 1
+ 303              	.LVL17:
+ 304 0000 40AE     	 mov.aa %a14,%SP
+ 305              	.LCFI17:
+ 111:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     stdIf->driver               = driver;
+ 306              	 .loc 1 111 5
+ 307              	 .loc 1 111 33 is_stmt 0
+ 308 0002 F445     	 st.a [%a4]0,%a5
+ 112:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     stdIf->getFrequency         =&IfxStdIf_Timer_nopGetFrequency        ;
+ 309              	 .loc 1 112 5 is_stmt 1
+ 310              	 .loc 1 112 33 is_stmt 0
+ 311 0004 91000020 	 movh.a %a2,hi:IfxStdIf_Timer_nopGetFrequency
+ 312 0008 D9220000 	 lea %a2,[%a2]lo:IfxStdIf_Timer_nopGetFrequency
+ 313 000c B5420400 	 st.a [%a4]4,%a2
+ 113:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     stdIf->getPeriod            =&IfxStdIf_Timer_nopGetPeriod           ;
+ 314              	 .loc 1 113 5 is_stmt 1
+ 315              	 .loc 1 113 33 is_stmt 0
+ 316 0010 91000020 	 movh.a %a2,hi:IfxStdIf_Timer_nopGetPeriod
+ 317 0014 D9220000 	 lea %a2,[%a2]lo:IfxStdIf_Timer_nopGetPeriod
+ 318 0018 B5420800 	 st.a [%a4]8,%a2
+ 114:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     stdIf->getResolution        =&IfxStdIf_Timer_nopGetResolution       ;
+ 319              	 .loc 1 114 5 is_stmt 1
+ 320              	 .loc 1 114 33 is_stmt 0
+ 321 001c 91000020 	 movh.a %a2,hi:IfxStdIf_Timer_nopGetResolution
+ 322 0020 D9220000 	 lea %a2,[%a2]lo:IfxStdIf_Timer_nopGetResolution
+ 323 0024 B5420C00 	 st.a [%a4]12,%a2
+ 115:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     stdIf->getTrigger           =&IfxStdIf_Timer_nopGetTrigger          ;
+ 324              	 .loc 1 115 5 is_stmt 1
+ 325              	 .loc 1 115 33 is_stmt 0
+ 326 0028 91000020 	 movh.a %a2,hi:IfxStdIf_Timer_nopGetTrigger
+ 327 002c D9220000 	 lea %a2,[%a2]lo:IfxStdIf_Timer_nopGetTrigger
+ 328 0030 B5421000 	 st.a [%a4]16,%a2
+ 116:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     stdIf->setFrequency         =&IfxStdIf_Timer_nopSetFrequency        ;
+ 329              	 .loc 1 116 5 is_stmt 1
+ 330              	 .loc 1 116 33 is_stmt 0
+ 331 0034 91000020 	 movh.a %a2,hi:IfxStdIf_Timer_nopSetFrequency
+ 332 0038 D9220000 	 lea %a2,[%a2]lo:IfxStdIf_Timer_nopSetFrequency
+ 333 003c B5421400 	 st.a [%a4]20,%a2
+ 117:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     stdIf->updateInputFrequency =&IfxStdIf_Timer_nopUpdateInputFrequency;
+ 334              	 .loc 1 117 5 is_stmt 1
+ 335              	 .loc 1 117 33 is_stmt 0
+ 336 0040 91000020 	 movh.a %a2,hi:IfxStdIf_Timer_nopUpdateInputFrequency
+ 337 0044 D9220000 	 lea %a2,[%a2]lo:IfxStdIf_Timer_nopUpdateInputFrequency
+ 338 0048 B5421800 	 st.a [%a4]24,%a2
+ 118:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     stdIf->applyUpdate          =&IfxStdIf_Timer_nopApplyUpdate         ;
+ 339              	 .loc 1 118 5 is_stmt 1
+ 340              	 .loc 1 118 33 is_stmt 0
+ 341 004c 91000020 	 movh.a %a2,hi:IfxStdIf_Timer_nopApplyUpdate
+ 342 0050 D9220000 	 lea %a2,[%a2]lo:IfxStdIf_Timer_nopApplyUpdate
+ 343 0054 B5421C00 	 st.a [%a4]28,%a2
+ 119:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     stdIf->disableUpdate        =&IfxStdIf_Timer_nopDisableUpdate       ;
+ 344              	 .loc 1 119 5 is_stmt 1
+ 345              	 .loc 1 119 33 is_stmt 0
+ 346 0058 91000020 	 movh.a %a2,hi:IfxStdIf_Timer_nopDisableUpdate
+ 347 005c D9220000 	 lea %a2,[%a2]lo:IfxStdIf_Timer_nopDisableUpdate
+ 348 0060 B5422000 	 st.a [%a4]32,%a2
+ 120:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     stdIf->getInputFrequency    =&IfxStdIf_Timer_nopGetInputFrequency   ;
+ 349              	 .loc 1 120 5 is_stmt 1
+ 350              	 .loc 1 120 33 is_stmt 0
+ 351 0064 91000020 	 movh.a %a2,hi:IfxStdIf_Timer_nopGetInputFrequency
+ 352 0068 D9220000 	 lea %a2,[%a2]lo:IfxStdIf_Timer_nopGetInputFrequency
+ 353 006c B5422400 	 st.a [%a4]36,%a2
+ 121:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     stdIf->run                  =&IfxStdIf_Timer_nopRun                 ;
+ 354              	 .loc 1 121 5 is_stmt 1
+ 355              	 .loc 1 121 33 is_stmt 0
+ 356 0070 91000020 	 movh.a %a2,hi:IfxStdIf_Timer_nopRun
+ 357 0074 D9220000 	 lea %a2,[%a2]lo:IfxStdIf_Timer_nopRun
+ 358 0078 B5422800 	 st.a [%a4]40,%a2
+ 122:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     stdIf->setPeriod            =&IfxStdIf_Timer_nopSetPeriod           ;
+ 359              	 .loc 1 122 5 is_stmt 1
+ 360              	 .loc 1 122 33 is_stmt 0
+ 361 007c 91000020 	 movh.a %a2,hi:IfxStdIf_Timer_nopSetPeriod
+ 362 0080 D9220000 	 lea %a2,[%a2]lo:IfxStdIf_Timer_nopSetPeriod
+ 363 0084 B5422C00 	 st.a [%a4]44,%a2
+ 123:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     stdIf->setSingleMode        =&IfxStdIf_Timer_nopSetSingleMode       ;
+ 364              	 .loc 1 123 5 is_stmt 1
+ 365              	 .loc 1 123 33 is_stmt 0
+ 366 0088 91000020 	 movh.a %a2,hi:IfxStdIf_Timer_nopSetSingleMode
+ 367 008c D9220000 	 lea %a2,[%a2]lo:IfxStdIf_Timer_nopSetSingleMode
+ 368 0090 B5423000 	 st.a [%a4]48,%a2
+ 124:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     stdIf->setTrigger           =&IfxStdIf_Timer_nopSetTrigger          ;
+ 369              	 .loc 1 124 5 is_stmt 1
+ 370              	 .loc 1 124 33 is_stmt 0
+ 371 0094 91000020 	 movh.a %a2,hi:IfxStdIf_Timer_nopSetTrigger
+ 372 0098 D9220000 	 lea %a2,[%a2]lo:IfxStdIf_Timer_nopSetTrigger
+ 373 009c B5423400 	 st.a [%a4]52,%a2
+ 125:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     stdIf->stop                 =&IfxStdIf_Timer_nopStop                ;
+ 374              	 .loc 1 125 5 is_stmt 1
+ 375              	 .loc 1 125 33 is_stmt 0
+ 376 00a0 91000020 	 movh.a %a2,hi:IfxStdIf_Timer_nopStop
+ 377 00a4 D9220000 	 lea %a2,[%a2]lo:IfxStdIf_Timer_nopStop
+ 378 00a8 B5423800 	 st.a [%a4]56,%a2
+ 126:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     stdIf->ackTimerIrq          =&IfxStdIf_Timer_nopAckTimerIrq         ;
+ 379              	 .loc 1 126 5 is_stmt 1
+ 380              	 .loc 1 126 33 is_stmt 0
+ 381 00ac 91000020 	 movh.a %a2,hi:IfxStdIf_Timer_nopAckTimerIrq
+ 382 00b0 D9220000 	 lea %a2,[%a2]lo:IfxStdIf_Timer_nopAckTimerIrq
+ 383 00b4 B5423C00 	 st.a [%a4]60,%a2
+ 127:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c ****     stdIf->ackTriggerIrq        =&IfxStdIf_Timer_nopAckTriggerIrq       ;
+ 384              	 .loc 1 127 5 is_stmt 1
+ 385              	 .loc 1 127 33 is_stmt 0
+ 386 00b8 91000020 	 movh.a %a2,hi:IfxStdIf_Timer_nopAckTriggerIrq
+ 387 00bc D9220000 	 lea %a2,[%a2]lo:IfxStdIf_Timer_nopAckTriggerIrq
+ 388 00c0 B5420010 	 st.a [%a4]64,%a2
+ 128:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.c **** }
+ 389              	 .loc 1 128 1
+ 390 00c4 0090     	 ret 
+ 391              	.LFE363:
+ 393              	 .global IfxStdIf_Timer_initStdIf_end
+ 394              	IfxStdIf_Timer_initStdIf_end:
+ 627              	.Letext0:
+ 628              	 .file 2 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 629              	 .file 3 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+ 630              	 .file 4 "../Libraries/iLLD/TC4xx/CpuGeneric/_Impl/TC4Dx/IfxSrc_cfg_TC4Dx.h"
+ 631              	 .file 5 "../Libraries/iLLD/TC4xx/CpuGeneric/Port/Std/IfxPort.h"
+ 632              	 .file 6 "../Libraries/Service/CpuGeneric/StdIf/IfxStdIf.h"
+ 633              	 .file 7 "../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Timer.h"
+ 2527 0000 00000000 	 .word IfxStdIf_Timer_initConfig
+ 2528 0004 00000000 	 .word IfxStdIf_Timer_initConfig_end
+ 2529 0008 3C001444 	 .word 0x4414003c
+ 2530 000c 00001000 	 .word 0x00100000
+ 2531 0010 00000000 	 .word 0x00000000
+ 2532 0014 C0000000 	 .word 0x000000c0
+ 2533 0018 00000000 	 .word IfxStdIf_Timer_initStdIf
+ 2534 001c 00000000 	 .word IfxStdIf_Timer_initStdIf_end
+ 2535 0020 00003C44 	 .word 0x443c0000
+ 2536 0024 00003000 	 .word 0x00300000
+ 2537 0028 00000000 	 .word 0x00000000
+ 2538 002c C0000000 	 .word 0x000000c0
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxStdIf_Timer.c
+                            *ABS*:00000000 IfxStdIf_Timer.c
+    {standard input}:9      .text.IfxStdIf_Timer_nopGetFrequency:00000000 IfxStdIf_Timer_nopGetFrequency
+    {standard input}:25     .text.IfxStdIf_Timer_nopGetPeriod:00000000 IfxStdIf_Timer_nopGetPeriod
+    {standard input}:40     .text.IfxStdIf_Timer_nopGetResolution:00000000 IfxStdIf_Timer_nopGetResolution
+    {standard input}:55     .text.IfxStdIf_Timer_nopGetTrigger:00000000 IfxStdIf_Timer_nopGetTrigger
+    {standard input}:70     .text.IfxStdIf_Timer_nopSetFrequency:00000000 IfxStdIf_Timer_nopSetFrequency
+    {standard input}:85     .text.IfxStdIf_Timer_nopUpdateInputFrequency:00000000 IfxStdIf_Timer_nopUpdateInputFrequency
+    {standard input}:98     .text.IfxStdIf_Timer_nopApplyUpdate:00000000 IfxStdIf_Timer_nopApplyUpdate
+    {standard input}:111    .text.IfxStdIf_Timer_nopDisableUpdate:00000000 IfxStdIf_Timer_nopDisableUpdate
+    {standard input}:124    .text.IfxStdIf_Timer_nopGetInputFrequency:00000000 IfxStdIf_Timer_nopGetInputFrequency
+    {standard input}:139    .text.IfxStdIf_Timer_nopRun:00000000 IfxStdIf_Timer_nopRun
+    {standard input}:152    .text.IfxStdIf_Timer_nopSetPeriod:00000000 IfxStdIf_Timer_nopSetPeriod
+    {standard input}:167    .text.IfxStdIf_Timer_nopSetSingleMode:00000000 IfxStdIf_Timer_nopSetSingleMode
+    {standard input}:180    .text.IfxStdIf_Timer_nopSetTrigger:00000000 IfxStdIf_Timer_nopSetTrigger
+    {standard input}:193    .text.IfxStdIf_Timer_nopStop:00000000 IfxStdIf_Timer_nopStop
+    {standard input}:206    .text.IfxStdIf_Timer_nopAckTimerIrq:00000000 IfxStdIf_Timer_nopAckTimerIrq
+    {standard input}:221    .text.IfxStdIf_Timer_nopAckTriggerIrq:00000000 IfxStdIf_Timer_nopAckTriggerIrq
+    {standard input}:237    .text.IfxStdIf_Timer_initConfig:00000000 IfxStdIf_Timer_initConfig
+    {standard input}:295    .text.IfxStdIf_Timer_initConfig:00000046 IfxStdIf_Timer_initConfig_end
+    {standard input}:300    .text.IfxStdIf_Timer_initStdIf:00000000 IfxStdIf_Timer_initStdIf
+    {standard input}:394    .text.IfxStdIf_Timer_initStdIf:000000c6 IfxStdIf_Timer_initStdIf_end
+
+NO UNDEFINED SYMBOLS

@@ -1,0 +1,3129 @@
+   1              	
+   2              	 .file "IfxCan_PinMap_TC4Dx_BGA436_COM.c"
+   3              	 .file "IfxCan_PinMap_TC4Dx_BGA436_COM.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .global IfxCan_Txd_Out_pinTable
+   7              	 .section .data.IfxCan_Txd_Out_pinTable,"aw"
+   8              	 .align 2
+  11              	IfxCan_Txd_Out_pinTable:
+  12 0000 00000000 	 .word IfxCan_TXD00_P01_13_OUT
+  13 0004 00000000 	 .word IfxCan_TXD00_P02_0_OUT
+  14 0008 00000000 	 .word IfxCan_TXD00_P02_13_OUT
+  15 000c 00000000 	 .word IfxCan_TXD00_P20_8_OUT
+  16 0010 00000000 	 .word IfxCan_TXD00_P33_8_OUT
+  17 0014 00000000 	 .word IfxCan_TXD00_P33_13_OUT
+  18 0018 00000000 	 .word IfxCan_TXD00_P34_1_OUT
+  19 001c 00000000 	 .word IfxCan_TXD00_P34_3_OUT
+  20 0020 00000000 	 .word 0
+  21 0024 00000000 	 .word 0
+  22 0028 00000000 	 .word 0
+  23 002c 00000000 	 .word IfxCan_TXD01_P01_3_OUT
+  24 0030 00000000 	 .word IfxCan_TXD01_P02_9_OUT
+  25 0034 00000000 	 .word IfxCan_TXD01_P03_11_OUT
+  26 0038 00000000 	 .word IfxCan_TXD01_P03_15_OUT
+  27 003c 00000000 	 .word IfxCan_TXD01_P04_0_OUT
+  28 0040 00000000 	 .word IfxCan_TXD01_P10_0_OUT
+  29 0044 00000000 	 .word IfxCan_TXD01_P14_0_OUT
+  30 0048 00000000 	 .word IfxCan_TXD01_P15_2_OUT
+  31 004c 00000000 	 .word IfxCan_TXD01_P33_9_OUT
+  32 0050 00000000 	 .word 0
+  33 0054 00000000 	 .word 0
+  34 0058 00000000 	 .word IfxCan_TXD02_P02_2_OUT
+  35 005c 00000000 	 .word IfxCan_TXD02_P03_13_OUT
+  36 0060 00000000 	 .word IfxCan_TXD02_P10_3_OUT
+  37 0064 00000000 	 .word IfxCan_TXD02_P10_10_OUT
+  38 0068 00000000 	 .word IfxCan_TXD02_P14_10_OUT
+  39 006c 00000000 	 .word IfxCan_TXD02_P15_0_OUT
+  40 0070 00000000 	 .word IfxCan_TXD02_P32_5_OUT
+  41 0074 00000000 	 .word 0
+  42 0078 00000000 	 .word 0
+  43 007c 00000000 	 .word 0
+  44 0080 00000000 	 .word 0
+  45 0084 00000000 	 .word IfxCan_TXD03_P00_2_OUT
+  46 0088 00000000 	 .word IfxCan_TXD03_P01_2_OUT
+  47 008c 00000000 	 .word IfxCan_TXD03_P04_5_OUT
+  48 0090 00000000 	 .word IfxCan_TXD03_P16_10_OUT
+  49 0094 00000000 	 .word IfxCan_TXD03_P16_14_OUT
+  50 0098 00000000 	 .word IfxCan_TXD03_P20_3_OUT
+  51 009c 00000000 	 .word IfxCan_TXD03_P20_10_OUT
+  52 00a0 00000000 	 .word IfxCan_TXD03_P32_4_OUT
+  53 00a4 00000000 	 .word 0
+  54 00a8 00000000 	 .word 0
+  55 00ac 00000000 	 .word 0
+  56 00b0 00000000 	 .word IfxCan_TXD10_P00_0_OUT
+  57 00b4 00000000 	 .word IfxCan_TXD10_P10_9_OUT
+  58 00b8 00000000 	 .word IfxCan_TXD10_P13_0_OUT
+  59 00bc 00000000 	 .word IfxCan_TXD10_P14_9_OUT
+  60 00c0 00000000 	 .word IfxCan_TXD10_P23_1_OUT
+  61 00c4 00000000 	 .word IfxCan_TXD10_P30_1_OUT
+  62 00c8 00000000 	 .word 0
+  63 00cc 00000000 	 .word 0
+  64 00d0 00000000 	 .word 0
+  65 00d4 00000000 	 .word 0
+  66 00d8 00000000 	 .word 0
+  67 00dc 00000000 	 .word IfxCan_TXD11_P00_4_OUT
+  68 00e0 00000000 	 .word IfxCan_TXD11_P02_5_OUT
+  69 00e4 00000000 	 .word IfxCan_TXD11_P03_4_OUT
+  70 00e8 00000000 	 .word IfxCan_TXD11_P03_5_OUT
+  71 00ec 00000000 	 .word IfxCan_TXD11_P16_5_OUT
+  72 00f0 00000000 	 .word IfxCan_TXD11_P23_6_OUT
+  73 00f4 00000000 	 .word IfxCan_TXD11_P30_6_OUT
+  74 00f8 00000000 	 .word 0
+  75 00fc 00000000 	 .word 0
+  76 0100 00000000 	 .word 0
+  77 0104 00000000 	 .word 0
+  78 0108 00000000 	 .word IfxCan_TXD12_P10_7_OUT
+  79 010c 00000000 	 .word IfxCan_TXD12_P16_4_OUT
+  80 0110 00000000 	 .word IfxCan_TXD12_P20_7_OUT
+  81 0114 00000000 	 .word IfxCan_TXD12_P23_2_OUT
+  82 0118 00000000 	 .word IfxCan_TXD12_P23_3_OUT
+  83 011c 00000000 	 .word IfxCan_TXD12_P30_2_OUT
+  84 0120 00000000 	 .word 0
+  85 0124 00000000 	 .word 0
+  86 0128 00000000 	 .word 0
+  87 012c 00000000 	 .word 0
+  88 0130 00000000 	 .word 0
+  89 0134 00000000 	 .word IfxCan_TXD13_P10_6_OUT
+  90 0138 00000000 	 .word IfxCan_TXD13_P14_6_OUT
+  91 013c 00000000 	 .word IfxCan_TXD13_P16_0_OUT
+  92 0140 00000000 	 .word IfxCan_TXD13_P22_4_OUT
+  93 0144 00000000 	 .word IfxCan_TXD13_P33_4_OUT
+  94 0148 00000000 	 .word 0
+  95 014c 00000000 	 .word 0
+  96 0150 00000000 	 .word 0
+  97 0154 00000000 	 .word 0
+  98 0158 00000000 	 .word 0
+  99 015c 00000000 	 .word 0
+ 100 0160 00000000 	 .word IfxCan_TXD20_P01_13_OUT
+ 101 0164 00000000 	 .word IfxCan_TXD20_P02_13_OUT
+ 102 0168 00000000 	 .word IfxCan_TXD20_P04_0_OUT
+ 103 016c 00000000 	 .word IfxCan_TXD20_P10_6_OUT
+ 104 0170 00000000 	 .word IfxCan_TXD20_P10_7_OUT
+ 105 0174 00000000 	 .word IfxCan_TXD20_P16_5_OUT
+ 106 0178 00000000 	 .word IfxCan_TXD20_P16_12_OUT
+ 107 017c 00000000 	 .word IfxCan_TXD20_P34_1_OUT
+ 108 0180 00000000 	 .word IfxCan_TXD20_P34_3_OUT
+ 109 0184 00000000 	 .word 0
+ 110 0188 00000000 	 .word 0
+ 111 018c 00000000 	 .word IfxCan_TXD21_P00_2_OUT
+ 112 0190 00000000 	 .word IfxCan_TXD21_P01_2_OUT
+ 113 0194 00000000 	 .word IfxCan_TXD21_P04_5_OUT
+ 114 0198 00000000 	 .word IfxCan_TXD21_P13_9_OUT
+ 115 019c 00000000 	 .word IfxCan_TXD21_P20_3_OUT
+ 116 01a0 00000000 	 .word IfxCan_TXD21_P22_6_OUT
+ 117 01a4 00000000 	 .word IfxCan_TXD21_P30_2_OUT
+ 118 01a8 00000000 	 .word IfxCan_TXD21_P32_4_OUT
+ 119 01ac 00000000 	 .word 0
+ 120 01b0 00000000 	 .word 0
+ 121 01b4 00000000 	 .word 0
+ 122 01b8 00000000 	 .word IfxCan_TXD22_P03_11_OUT
+ 123 01bc 00000000 	 .word IfxCan_TXD22_P10_13_OUT
+ 124 01c0 00000000 	 .word IfxCan_TXD22_P14_13_OUT
+ 125 01c4 00000000 	 .word IfxCan_TXD22_P22_8_OUT
+ 126 01c8 00000000 	 .word IfxCan_TXD22_P23_5_OUT
+ 127 01cc 00000000 	 .word IfxCan_TXD22_P30_5_OUT
+ 128 01d0 00000000 	 .word IfxCan_TXD22_P32_6_OUT
+ 129 01d4 00000000 	 .word IfxCan_TXD22_P33_12_OUT
+ 130 01d8 00000000 	 .word 0
+ 131 01dc 00000000 	 .word 0
+ 132 01e0 00000000 	 .word 0
+ 133 01e4 00000000 	 .word IfxCan_TXD23_P03_1_OUT
+ 134 01e8 00000000 	 .word IfxCan_TXD23_P03_8_OUT
+ 135 01ec 00000000 	 .word IfxCan_TXD23_P10_9_OUT
+ 136 01f0 00000000 	 .word IfxCan_TXD23_P10_14_OUT
+ 137 01f4 00000000 	 .word IfxCan_TXD23_P13_4_OUT
+ 138 01f8 00000000 	 .word IfxCan_TXD23_P14_9_OUT
+ 139 01fc 00000000 	 .word IfxCan_TXD23_P14_11_OUT
+ 140 0200 00000000 	 .word IfxCan_TXD23_P14_14_OUT
+ 141 0204 00000000 	 .word IfxCan_TXD23_P22_10_OUT
+ 142 0208 00000000 	 .word IfxCan_TXD23_P23_2_OUT
+ 143 020c 00000000 	 .word IfxCan_TXD23_P23_3_OUT
+ 144 0210 00000000 	 .word IfxCan_TXD30_P02_9_OUT
+ 145 0214 00000000 	 .word IfxCan_TXD30_P10_0_OUT
+ 146 0218 00000000 	 .word 0
+ 147 021c 00000000 	 .word 0
+ 148 0220 00000000 	 .word 0
+ 149 0224 00000000 	 .word 0
+ 150 0228 00000000 	 .word 0
+ 151 022c 00000000 	 .word 0
+ 152 0230 00000000 	 .word 0
+ 153 0234 00000000 	 .word 0
+ 154 0238 00000000 	 .word 0
+ 155 023c 00000000 	 .word IfxCan_TXD31_P01_3_OUT
+ 156 0240 00000000 	 .word IfxCan_TXD31_P03_11_OUT
+ 157 0244 00000000 	 .word IfxCan_TXD31_P10_3_OUT
+ 158 0248 00000000 	 .word IfxCan_TXD31_P33_15_OUT
+ 159 024c 00000000 	 .word IfxCan_TXD31_P35_3_OUT
+ 160 0250 00000000 	 .word 0
+ 161 0254 00000000 	 .word 0
+ 162 0258 00000000 	 .word 0
+ 163 025c 00000000 	 .word 0
+ 164 0260 00000000 	 .word 0
+ 165 0264 00000000 	 .word 0
+ 166 0268 00000000 	 .word IfxCan_TXD32_P01_2_OUT
+ 167 026c 00000000 	 .word IfxCan_TXD32_P04_5_OUT
+ 168 0270 00000000 	 .word IfxCan_TXD32_P10_2_OUT
+ 169 0274 00000000 	 .word IfxCan_TXD32_P20_9_OUT
+ 170 0278 00000000 	 .word IfxCan_TXD32_P31_6_OUT
+ 171 027c 00000000 	 .word 0
+ 172 0280 00000000 	 .word 0
+ 173 0284 00000000 	 .word 0
+ 174 0288 00000000 	 .word 0
+ 175 028c 00000000 	 .word 0
+ 176 0290 00000000 	 .word 0
+ 177 0294 00000000 	 .word IfxCan_TXD33_P13_3_OUT
+ 178 0298 00000000 	 .word IfxCan_TXD33_P13_11_OUT
+ 179 029c 00000000 	 .word IfxCan_TXD33_P21_7_OUT
+ 180 02a0 00000000 	 .word 0
+ 181 02a4 00000000 	 .word 0
+ 182 02a8 00000000 	 .word 0
+ 183 02ac 00000000 	 .word 0
+ 184 02b0 00000000 	 .word 0
+ 185 02b4 00000000 	 .word 0
+ 186 02b8 00000000 	 .word 0
+ 187 02bc 00000000 	 .word 0
+ 188 02c0 00000000 	 .word IfxCan_TXD40_P00_8_OUT
+ 189 02c4 00000000 	 .word IfxCan_TXD40_P00_14_OUT
+ 190 02c8 00000000 	 .word IfxCan_TXD40_P01_1_OUT
+ 191 02cc 00000000 	 .word IfxCan_TXD40_P04_4_OUT
+ 192 02d0 00000000 	 .word IfxCan_TXD40_P21_1_OUT
+ 193 02d4 00000000 	 .word 0
+ 194 02d8 00000000 	 .word 0
+ 195 02dc 00000000 	 .word 0
+ 196 02e0 00000000 	 .word 0
+ 197 02e4 00000000 	 .word 0
+ 198 02e8 00000000 	 .word 0
+ 199 02ec 00000000 	 .word IfxCan_TXD41_P10_1_OUT
+ 200 02f0 00000000 	 .word IfxCan_TXD41_P14_1_OUT
+ 201 02f4 00000000 	 .word IfxCan_TXD41_P22_3_OUT
+ 202 02f8 00000000 	 .word IfxCan_TXD41_P35_2_OUT
+ 203 02fc 00000000 	 .word 0
+ 204 0300 00000000 	 .word 0
+ 205 0304 00000000 	 .word 0
+ 206 0308 00000000 	 .word 0
+ 207 030c 00000000 	 .word 0
+ 208 0310 00000000 	 .word 0
+ 209 0314 00000000 	 .word 0
+ 210 0318 00000000 	 .word IfxCan_TXD42_P04_4_OUT
+ 211 031c 00000000 	 .word IfxCan_TXD42_P13_5_OUT
+ 212 0320 00000000 	 .word IfxCan_TXD42_P13_14_OUT
+ 213 0324 00000000 	 .word IfxCan_TXD42_P15_5_OUT
+ 214 0328 00000000 	 .word IfxCan_TXD42_P22_11_OUT
+ 215 032c 00000000 	 .word IfxCan_TXD42_P25_1_OUT
+ 216 0330 00000000 	 .word 0
+ 217 0334 00000000 	 .word 0
+ 218 0338 00000000 	 .word 0
+ 219 033c 00000000 	 .word 0
+ 220 0340 00000000 	 .word 0
+ 221 0344 00000000 	 .word IfxCan_TXD43_P03_7_OUT
+ 222 0348 00000000 	 .word IfxCan_TXD43_P13_8_OUT
+ 223 034c 00000000 	 .word IfxCan_TXD43_P15_8_OUT
+ 224 0350 00000000 	 .word IfxCan_TXD43_P34_5_OUT
+ 225 0354 00000000 	 .word IfxCan_TXD43_P35_5_OUT
+ 226 0358 00000000 	 .word 0
+ 227 035c 00000000 	 .word 0
+ 228 0360 00000000 	 .word 0
+ 229 0364 00000000 	 .word 0
+ 230 0368 00000000 	 .word 0
+ 231 036c 00000000 	 .word 0
+ 232              	 .global IfxCan_Rxd_In_pinTable
+ 233              	 .section .data.IfxCan_Rxd_In_pinTable,"aw"
+ 234              	 .align 2
+ 237              	IfxCan_Rxd_In_pinTable:
+ 238 0000 00000000 	 .word IfxCan_RXD00A_P02_1_IN
+ 239 0004 00000000 	 .word IfxCan_RXD00B_P20_7_IN
+ 240 0008 00000000 	 .word 0
+ 241 000c 00000000 	 .word IfxCan_RXD00D_P33_12_IN
+ 242 0010 00000000 	 .word IfxCan_RXD00E_P33_7_IN
+ 243 0014 00000000 	 .word IfxCan_RXD00F_P01_8_IN
+ 244 0018 00000000 	 .word IfxCan_RXD00G_P34_2_IN
+ 245 001c 00000000 	 .word IfxCan_RXD00H_P02_14_IN
+ 246 0020 00000000 	 .word IfxCan_RXD01A_P15_3_IN
+ 247 0024 00000000 	 .word IfxCan_RXD01B_P14_1_IN
+ 248 0028 00000000 	 .word IfxCan_RXD01C_P01_4_IN
+ 249 002c 00000000 	 .word IfxCan_RXD01D_P33_10_IN
+ 250 0030 00000000 	 .word IfxCan_RXD01E_P02_10_IN
+ 251 0034 00000000 	 .word IfxCan_RXD01F_P03_14_IN
+ 252 0038 00000000 	 .word IfxCan_RXD01G_P03_9_IN
+ 253 003c 00000000 	 .word IfxCan_RXD01H_P04_1_IN
+ 254 0040 00000000 	 .word IfxCan_RXD02A_P15_1_IN
+ 255 0044 00000000 	 .word IfxCan_RXD02B_P02_3_IN
+ 256 0048 00000000 	 .word IfxCan_RXD02C_P32_6_IN
+ 257 004c 00000000 	 .word IfxCan_RXD02D_P14_8_IN
+ 258 0050 00000000 	 .word IfxCan_RXD02E_P10_2_IN
+ 259 0054 00000000 	 .word IfxCan_RXD02F_P03_13_IN
+ 260 0058 00000000 	 .word IfxCan_RXD02G_P10_8_IN
+ 261 005c 00000000 	 .word IfxCan_RXD02H_P02_7_IN
+ 262 0060 00000000 	 .word IfxCan_RXD03A_P00_3_IN
+ 263 0064 00000000 	 .word IfxCan_RXD03B_P32_2_IN
+ 264 0068 00000000 	 .word IfxCan_RXD03C_P20_0_IN
+ 265 006c 00000000 	 .word 0
+ 266 0070 00000000 	 .word IfxCan_RXD03E_P20_9_IN
+ 267 0074 00000000 	 .word IfxCan_RXD03F_P01_0_IN
+ 268 0078 00000000 	 .word IfxCan_RXD03G_P16_6_IN
+ 269 007c 00000000 	 .word IfxCan_RXD03H_P04_3_IN
+ 270 0080 00000000 	 .word IfxCan_RXD10A_P00_1_IN
+ 271 0084 00000000 	 .word IfxCan_RXD10B_P14_7_IN
+ 272 0088 00000000 	 .word IfxCan_RXD10C_P23_0_IN
+ 273 008c 00000000 	 .word IfxCan_RXD10D_P13_1_IN
+ 274 0090 00000000 	 .word IfxCan_RXD10E_P30_0_IN
+ 275 0094 00000000 	 .word IfxCan_RXD10F_P13_6_IN
+ 276 0098 00000000 	 .word 0
+ 277 009c 00000000 	 .word IfxCan_RXD10H_P10_7_IN
+ 278 00a0 00000000 	 .word IfxCan_RXD11A_P02_4_IN
+ 279 00a4 00000000 	 .word IfxCan_RXD11B_P00_5_IN
+ 280 00a8 00000000 	 .word IfxCan_RXD11C_P23_7_IN
+ 281 00ac 00000000 	 .word 0
+ 282 00b0 00000000 	 .word IfxCan_RXD11E_P16_8_IN
+ 283 00b4 00000000 	 .word IfxCan_RXD11F_P30_7_IN
+ 284 00b8 00000000 	 .word IfxCan_RXD11G_P13_0_IN
+ 285 00bc 00000000 	 .word IfxCan_RXD11H_P03_4_IN
+ 286 00c0 00000000 	 .word IfxCan_RXD12A_P20_6_IN
+ 287 00c4 00000000 	 .word IfxCan_RXD12B_P10_8_IN
+ 288 00c8 00000000 	 .word IfxCan_RXD12C_P23_3_IN
+ 289 00cc 00000000 	 .word 0
+ 290 00d0 00000000 	 .word IfxCan_RXD12E_P16_9_IN
+ 291 00d4 00000000 	 .word IfxCan_RXD12F_P30_3_IN
+ 292 00d8 00000000 	 .word 0
+ 293 00dc 00000000 	 .word 0
+ 294 00e0 00000000 	 .word IfxCan_RXD13A_P14_7_IN
+ 295 00e4 00000000 	 .word IfxCan_RXD13B_P33_5_IN
+ 296 00e8 00000000 	 .word IfxCan_RXD13C_P22_5_IN
+ 297 00ec 00000000 	 .word 0
+ 298 00f0 00000000 	 .word 0
+ 299 00f4 00000000 	 .word IfxCan_RXD13F_P16_1_IN
+ 300 00f8 00000000 	 .word 0
+ 301 00fc 00000000 	 .word IfxCan_RXD13H_P10_7_IN
+ 302 0100 00000000 	 .word IfxCan_RXD20A_P10_5_IN
+ 303 0104 00000000 	 .word IfxCan_RXD20B_P10_8_IN
+ 304 0108 00000000 	 .word IfxCan_RXD20C_P34_2_IN
+ 305 010c 00000000 	 .word IfxCan_RXD20D_P02_14_IN
+ 306 0110 00000000 	 .word IfxCan_RXD20E_P01_8_IN
+ 307 0114 00000000 	 .word 0
+ 308 0118 00000000 	 .word IfxCan_RXD20G_P16_13_IN
+ 309 011c 00000000 	 .word IfxCan_RXD20H_P04_1_IN
+ 310 0120 00000000 	 .word IfxCan_RXD21A_P00_3_IN
+ 311 0124 00000000 	 .word IfxCan_RXD21B_P13_12_IN
+ 312 0128 00000000 	 .word IfxCan_RXD21C_P20_0_IN
+ 313 012c 00000000 	 .word IfxCan_RXD21D_P32_2_IN
+ 314 0130 00000000 	 .word IfxCan_RXD21E_P01_0_IN
+ 315 0134 00000000 	 .word IfxCan_RXD21F_P22_7_IN
+ 316 0138 00000000 	 .word IfxCan_RXD21G_P13_8_IN
+ 317 013c 00000000 	 .word IfxCan_RXD21H_P30_3_IN
+ 318 0140 00000000 	 .word IfxCan_RXD22A_P33_13_IN
+ 319 0144 00000000 	 .word IfxCan_RXD22B_P32_7_IN
+ 320 0148 00000000 	 .word IfxCan_RXD22C_P23_6_IN
+ 321 014c 00000000 	 .word IfxCan_RXD22D_P14_14_IN
+ 322 0150 00000000 	 .word IfxCan_RXD22E_P22_9_IN
+ 323 0154 00000000 	 .word IfxCan_RXD22F_P03_12_IN
+ 324 0158 00000000 	 .word IfxCan_RXD22G_P10_14_IN
+ 325 015c 00000000 	 .word IfxCan_RXD22H_P30_6_IN
+ 326 0160 00000000 	 .word IfxCan_RXD23A_P14_10_IN
+ 327 0164 00000000 	 .word IfxCan_RXD23B_P23_3_IN
+ 328 0168 00000000 	 .word IfxCan_RXD23C_P14_15_IN
+ 329 016c 00000000 	 .word IfxCan_RXD23D_P13_5_IN
+ 330 0170 00000000 	 .word IfxCan_RXD23E_P22_11_IN
+ 331 0174 00000000 	 .word IfxCan_RXD23F_P03_2_IN
+ 332 0178 00000000 	 .word IfxCan_RXD23G_P10_15_IN
+ 333 017c 00000000 	 .word IfxCan_RXD23H_P10_10_IN
+ 334 0180 00000000 	 .word IfxCan_RXD30A_P10_4_IN
+ 335 0184 00000000 	 .word IfxCan_RXD30B_P02_8_IN
+ 336 0188 00000000 	 .word IfxCan_RXD30C_P16_11_IN
+ 337 018c 00000000 	 .word IfxCan_RXD30D_P02_11_IN
+ 338 0190 00000000 	 .word IfxCan_RXD30E_P03_0_IN
+ 339 0194 00000000 	 .word 0
+ 340 0198 00000000 	 .word 0
+ 341 019c 00000000 	 .word 0
+ 342 01a0 00000000 	 .word 0
+ 343 01a4 00000000 	 .word IfxCan_RXD31B_P33_14_IN
+ 344 01a8 00000000 	 .word IfxCan_RXD31C_P02_0_IN
+ 345 01ac 00000000 	 .word 0
+ 346 01b0 00000000 	 .word IfxCan_RXD31E_P35_2_IN
+ 347 01b4 00000000 	 .word 0
+ 348 01b8 00000000 	 .word 0
+ 349 01bc 00000000 	 .word 0
+ 350 01c0 00000000 	 .word IfxCan_RXD32A_P01_3_IN
+ 351 01c4 00000000 	 .word IfxCan_RXD32B_P20_6_IN
+ 352 01c8 00000000 	 .word 0
+ 353 01cc 00000000 	 .word IfxCan_RXD32D_P01_6_IN
+ 354 01d0 00000000 	 .word IfxCan_RXD32E_P31_7_IN
+ 355 01d4 00000000 	 .word 0
+ 356 01d8 00000000 	 .word 0
+ 357 01dc 00000000 	 .word 0
+ 358 01e0 00000000 	 .word IfxCan_RXD33A_P13_2_IN
+ 359 01e4 00000000 	 .word IfxCan_RXD33B_P21_6_IN
+ 360 01e8 00000000 	 .word 0
+ 361 01ec 00000000 	 .word IfxCan_RXD33D_P13_13_IN
+ 362 01f0 00000000 	 .word IfxCan_RXD33E_P13_9_IN
+ 363 01f4 00000000 	 .word 0
+ 364 01f8 00000000 	 .word 0
+ 365 01fc 00000000 	 .word 0
+ 366 0200 00000000 	 .word IfxCan_RXD40A_P00_11_IN
+ 367 0204 00000000 	 .word IfxCan_RXD40B_P20_1_IN
+ 368 0208 00000000 	 .word 0
+ 369 020c 00000000 	 .word IfxCan_RXD40D_P00_15_IN
+ 370 0210 00000000 	 .word IfxCan_RXD40E_P00_13_IN
+ 371 0214 00000000 	 .word 0
+ 372 0218 00000000 	 .word 0
+ 373 021c 00000000 	 .word 0
+ 374 0220 00000000 	 .word IfxCan_RXD41A_P22_2_IN
+ 375 0224 00000000 	 .word IfxCan_RXD41B_P14_0_IN
+ 376 0228 00000000 	 .word IfxCan_RXD41C_P35_1_IN
+ 377 022c 00000000 	 .word IfxCan_RXD41D_P35_0_IN
+ 378 0230 00000000 	 .word IfxCan_RXD41E_P10_0_IN
+ 379 0234 00000000 	 .word 0
+ 380 0238 00000000 	 .word 0
+ 381 023c 00000000 	 .word 0
+ 382 0240 00000000 	 .word IfxCan_RXD42A_P22_5_IN
+ 383 0244 00000000 	 .word IfxCan_RXD42B_P15_4_IN
+ 384 0248 00000000 	 .word 0
+ 385 024c 00000000 	 .word IfxCan_RXD42D_P13_4_IN
+ 386 0250 00000000 	 .word IfxCan_RXD42E_P13_15_IN
+ 387 0254 00000000 	 .word IfxCan_RXD42F_P04_5_IN
+ 388 0258 00000000 	 .word 0
+ 389 025c 00000000 	 .word 0
+ 390 0260 00000000 	 .word IfxCan_RXD43A_P34_3_IN
+ 391 0264 00000000 	 .word IfxCan_RXD43B_P15_7_IN
+ 392 0268 00000000 	 .word IfxCan_RXD43C_P03_6_IN
+ 393 026c 00000000 	 .word IfxCan_RXD43D_P13_7_IN
+ 394 0270 00000000 	 .word IfxCan_RXD43E_P35_3_IN
+ 395 0274 00000000 	 .word 0
+ 396 0278 00000000 	 .word 0
+ 397 027c 00000000 	 .word 0
+ 398              	 .global IfxCan_TXD43_P35_5_OUT
+ 399              	 .section .rodata.IfxCan_TXD43_P35_5_OUT,"a"
+ 400              	 .align 2
+ 403              	IfxCan_TXD43_P35_5_OUT:
+ 404 0000 000079F4 	 .word -193396736
+ 405 0004 03000000 	 .word 3
+ 406 0008 002C04F0 	 .word -268162048
+ 407 000c 05       	 .byte 5
+ 408 000d 000000   	 .zero 3
+ 409 0010 41000000 	 .word 65
+ 410              	 .global IfxCan_TXD43_P34_5_OUT
+ 411              	 .section .rodata.IfxCan_TXD43_P34_5_OUT,"a"
+ 412              	 .align 2
+ 415              	IfxCan_TXD43_P34_5_OUT:
+ 416 0000 000079F4 	 .word -193396736
+ 417 0004 03000000 	 .word 3
+ 418 0008 002804F0 	 .word -268163072
+ 419 000c 05       	 .byte 5
+ 420 000d 000000   	 .zero 3
+ 421 0010 31000000 	 .word 49
+ 422              	 .global IfxCan_TXD43_P15_8_OUT
+ 423              	 .section .rodata.IfxCan_TXD43_P15_8_OUT,"a"
+ 424              	 .align 2
+ 427              	IfxCan_TXD43_P15_8_OUT:
+ 428 0000 000079F4 	 .word -193396736
+ 429 0004 03000000 	 .word 3
+ 430 0008 00DC03F0 	 .word -268182528
+ 431 000c 08       	 .byte 8
+ 432 000d 000000   	 .zero 3
+ 433 0010 21000000 	 .word 33
+ 434              	 .global IfxCan_TXD43_P13_8_OUT
+ 435              	 .section .rodata.IfxCan_TXD43_P13_8_OUT,"a"
+ 436              	 .align 2
+ 439              	IfxCan_TXD43_P13_8_OUT:
+ 440 0000 000079F4 	 .word -193396736
+ 441 0004 03000000 	 .word 3
+ 442 0008 00D403F0 	 .word -268184576
+ 443 000c 08       	 .byte 8
+ 444 000d 000000   	 .zero 3
+ 445 0010 31000000 	 .word 49
+ 446              	 .global IfxCan_TXD43_P03_7_OUT
+ 447              	 .section .rodata.IfxCan_TXD43_P03_7_OUT,"a"
+ 448              	 .align 2
+ 451              	IfxCan_TXD43_P03_7_OUT:
+ 452 0000 000079F4 	 .word -193396736
+ 453 0004 03000000 	 .word 3
+ 454 0008 00AC03F0 	 .word -268194816
+ 455 000c 07       	 .byte 7
+ 456 000d 000000   	 .zero 3
+ 457 0010 21000000 	 .word 33
+ 458              	 .global IfxCan_TXD42_P25_1_OUT
+ 459              	 .section .rodata.IfxCan_TXD42_P25_1_OUT,"a"
+ 460              	 .align 2
+ 463              	IfxCan_TXD42_P25_1_OUT:
+ 464 0000 000079F4 	 .word -193396736
+ 465 0004 02000000 	 .word 2
+ 466 0008 000404F0 	 .word -268172288
+ 467 000c 01       	 .byte 1
+ 468 000d 000000   	 .zero 3
+ 469 0010 61000000 	 .word 97
+ 470              	 .global IfxCan_TXD42_P22_11_OUT
+ 471              	 .section .rodata.IfxCan_TXD42_P22_11_OUT,"a"
+ 472              	 .align 2
+ 475              	IfxCan_TXD42_P22_11_OUT:
+ 476 0000 000079F4 	 .word -193396736
+ 477 0004 02000000 	 .word 2
+ 478 0008 00F803F0 	 .word -268175360
+ 479 000c 0B       	 .byte 11
+ 480 000d 000000   	 .zero 3
+ 481 0010 61000000 	 .word 97
+ 482              	 .global IfxCan_TXD42_P15_5_OUT
+ 483              	 .section .rodata.IfxCan_TXD42_P15_5_OUT,"a"
+ 484              	 .align 2
+ 487              	IfxCan_TXD42_P15_5_OUT:
+ 488 0000 000079F4 	 .word -193396736
+ 489 0004 02000000 	 .word 2
+ 490 0008 00DC03F0 	 .word -268182528
+ 491 000c 05       	 .byte 5
+ 492 000d 000000   	 .zero 3
+ 493 0010 41000000 	 .word 65
+ 494              	 .global IfxCan_TXD42_P13_5_OUT
+ 495              	 .section .rodata.IfxCan_TXD42_P13_5_OUT,"a"
+ 496              	 .align 2
+ 499              	IfxCan_TXD42_P13_5_OUT:
+ 500 0000 000079F4 	 .word -193396736
+ 501 0004 02000000 	 .word 2
+ 502 0008 00D403F0 	 .word -268184576
+ 503 000c 05       	 .byte 5
+ 504 000d 000000   	 .zero 3
+ 505 0010 41000000 	 .word 65
+ 506              	 .global IfxCan_TXD42_P13_14_OUT
+ 507              	 .section .rodata.IfxCan_TXD42_P13_14_OUT,"a"
+ 508              	 .align 2
+ 511              	IfxCan_TXD42_P13_14_OUT:
+ 512 0000 000079F4 	 .word -193396736
+ 513 0004 02000000 	 .word 2
+ 514 0008 00D403F0 	 .word -268184576
+ 515 000c 0E       	 .byte 14
+ 516 000d 000000   	 .zero 3
+ 517 0010 41000000 	 .word 65
+ 518              	 .global IfxCan_TXD42_P04_4_OUT
+ 519              	 .section .rodata.IfxCan_TXD42_P04_4_OUT,"a"
+ 520              	 .align 2
+ 523              	IfxCan_TXD42_P04_4_OUT:
+ 524 0000 000079F4 	 .word -193396736
+ 525 0004 02000000 	 .word 2
+ 526 0008 00B003F0 	 .word -268193792
+ 527 000c 04       	 .byte 4
+ 528 000d 000000   	 .zero 3
+ 529 0010 31000000 	 .word 49
+ 530              	 .global IfxCan_TXD41_P35_2_OUT
+ 531              	 .section .rodata.IfxCan_TXD41_P35_2_OUT,"a"
+ 532              	 .align 2
+ 535              	IfxCan_TXD41_P35_2_OUT:
+ 536 0000 000079F4 	 .word -193396736
+ 537 0004 01000000 	 .word 1
+ 538 0008 002C04F0 	 .word -268162048
+ 539 000c 02       	 .byte 2
+ 540 000d 000000   	 .zero 3
+ 541 0010 51000000 	 .word 81
+ 542              	 .global IfxCan_TXD41_P22_3_OUT
+ 543              	 .section .rodata.IfxCan_TXD41_P22_3_OUT,"a"
+ 544              	 .align 2
+ 547              	IfxCan_TXD41_P22_3_OUT:
+ 548 0000 000079F4 	 .word -193396736
+ 549 0004 01000000 	 .word 1
+ 550 0008 00F803F0 	 .word -268175360
+ 551 000c 03       	 .byte 3
+ 552 000d 000000   	 .zero 3
+ 553 0010 61000000 	 .word 97
+ 554              	 .global IfxCan_TXD41_P14_1_OUT
+ 555              	 .section .rodata.IfxCan_TXD41_P14_1_OUT,"a"
+ 556              	 .align 2
+ 559              	IfxCan_TXD41_P14_1_OUT:
+ 560 0000 000079F4 	 .word -193396736
+ 561 0004 01000000 	 .word 1
+ 562 0008 00D803F0 	 .word -268183552
+ 563 000c 01       	 .byte 1
+ 564 000d 000000   	 .zero 3
+ 565 0010 31000000 	 .word 49
+ 566              	 .global IfxCan_TXD41_P10_1_OUT
+ 567              	 .section .rodata.IfxCan_TXD41_P10_1_OUT,"a"
+ 568              	 .align 2
+ 571              	IfxCan_TXD41_P10_1_OUT:
+ 572 0000 000079F4 	 .word -193396736
+ 573 0004 01000000 	 .word 1
+ 574 0008 00C803F0 	 .word -268187648
+ 575 000c 01       	 .byte 1
+ 576 000d 000000   	 .zero 3
+ 577 0010 71000000 	 .word 113
+ 578              	 .global IfxCan_TXD40_P21_1_OUT
+ 579              	 .section .rodata.IfxCan_TXD40_P21_1_OUT,"a"
+ 580              	 .align 2
+ 583              	IfxCan_TXD40_P21_1_OUT:
+ 584 0000 000079F4 	 .word -193396736
+ 585 0004 00000000 	 .word 0
+ 586 0008 00F403F0 	 .word -268176384
+ 587 000c 01       	 .byte 1
+ 588 000d 000000   	 .zero 3
+ 589 0010 21000000 	 .word 33
+ 590              	 .global IfxCan_TXD40_P04_4_OUT
+ 591              	 .section .rodata.IfxCan_TXD40_P04_4_OUT,"a"
+ 592              	 .align 2
+ 595              	IfxCan_TXD40_P04_4_OUT:
+ 596 0000 000079F4 	 .word -193396736
+ 597 0004 00000000 	 .word 0
+ 598 0008 00B003F0 	 .word -268193792
+ 599 000c 04       	 .byte 4
+ 600 000d 000000   	 .zero 3
+ 601 0010 61000000 	 .word 97
+ 602              	 .global IfxCan_TXD40_P01_1_OUT
+ 603              	 .section .rodata.IfxCan_TXD40_P01_1_OUT,"a"
+ 604              	 .align 2
+ 607              	IfxCan_TXD40_P01_1_OUT:
+ 608 0000 000079F4 	 .word -193396736
+ 609 0004 00000000 	 .word 0
+ 610 0008 00A403F0 	 .word -268196864
+ 611 000c 01       	 .byte 1
+ 612 000d 000000   	 .zero 3
+ 613 0010 61000000 	 .word 97
+ 614              	 .global IfxCan_TXD40_P00_8_OUT
+ 615              	 .section .rodata.IfxCan_TXD40_P00_8_OUT,"a"
+ 616              	 .align 2
+ 619              	IfxCan_TXD40_P00_8_OUT:
+ 620 0000 000079F4 	 .word -193396736
+ 621 0004 00000000 	 .word 0
+ 622 0008 00A003F0 	 .word -268197888
+ 623 000c 08       	 .byte 8
+ 624 000d 000000   	 .zero 3
+ 625 0010 41000000 	 .word 65
+ 626              	 .global IfxCan_TXD40_P00_14_OUT
+ 627              	 .section .rodata.IfxCan_TXD40_P00_14_OUT,"a"
+ 628              	 .align 2
+ 631              	IfxCan_TXD40_P00_14_OUT:
+ 632 0000 000079F4 	 .word -193396736
+ 633 0004 00000000 	 .word 0
+ 634 0008 00A003F0 	 .word -268197888
+ 635 000c 0E       	 .byte 14
+ 636 000d 000000   	 .zero 3
+ 637 0010 61000000 	 .word 97
+ 638              	 .global IfxCan_TXD33_P21_7_OUT
+ 639              	 .section .rodata.IfxCan_TXD33_P21_7_OUT,"a"
+ 640              	 .align 2
+ 643              	IfxCan_TXD33_P21_7_OUT:
+ 644 0000 000077F4 	 .word -193527808
+ 645 0004 03000000 	 .word 3
+ 646 0008 00F403F0 	 .word -268176384
+ 647 000c 07       	 .byte 7
+ 648 000d 000000   	 .zero 3
+ 649 0010 41000000 	 .word 65
+ 650              	 .global IfxCan_TXD33_P13_3_OUT
+ 651              	 .section .rodata.IfxCan_TXD33_P13_3_OUT,"a"
+ 652              	 .align 2
+ 655              	IfxCan_TXD33_P13_3_OUT:
+ 656 0000 000077F4 	 .word -193527808
+ 657 0004 03000000 	 .word 3
+ 658 0008 00D403F0 	 .word -268184576
+ 659 000c 03       	 .byte 3
+ 660 000d 000000   	 .zero 3
+ 661 0010 71000000 	 .word 113
+ 662              	 .global IfxCan_TXD33_P13_11_OUT
+ 663              	 .section .rodata.IfxCan_TXD33_P13_11_OUT,"a"
+ 664              	 .align 2
+ 667              	IfxCan_TXD33_P13_11_OUT:
+ 668 0000 000077F4 	 .word -193527808
+ 669 0004 03000000 	 .word 3
+ 670 0008 00D403F0 	 .word -268184576
+ 671 000c 0B       	 .byte 11
+ 672 000d 000000   	 .zero 3
+ 673 0010 71000000 	 .word 113
+ 674              	 .global IfxCan_TXD32_P31_6_OUT
+ 675              	 .section .rodata.IfxCan_TXD32_P31_6_OUT,"a"
+ 676              	 .align 2
+ 679              	IfxCan_TXD32_P31_6_OUT:
+ 680 0000 000077F4 	 .word -193527808
+ 681 0004 02000000 	 .word 2
+ 682 0008 001C04F0 	 .word -268166144
+ 683 000c 06       	 .byte 6
+ 684 000d 000000   	 .zero 3
+ 685 0010 51000000 	 .word 81
+ 686              	 .global IfxCan_TXD32_P20_9_OUT
+ 687              	 .section .rodata.IfxCan_TXD32_P20_9_OUT,"a"
+ 688              	 .align 2
+ 691              	IfxCan_TXD32_P20_9_OUT:
+ 692 0000 000077F4 	 .word -193527808
+ 693 0004 02000000 	 .word 2
+ 694 0008 00F003F0 	 .word -268177408
+ 695 000c 09       	 .byte 9
+ 696 000d 000000   	 .zero 3
+ 697 0010 21000000 	 .word 33
+ 698              	 .global IfxCan_TXD32_P10_2_OUT
+ 699              	 .section .rodata.IfxCan_TXD32_P10_2_OUT,"a"
+ 700              	 .align 2
+ 703              	IfxCan_TXD32_P10_2_OUT:
+ 704 0000 000077F4 	 .word -193527808
+ 705 0004 02000000 	 .word 2
+ 706 0008 00C803F0 	 .word -268187648
+ 707 000c 02       	 .byte 2
+ 708 000d 000000   	 .zero 3
+ 709 0010 21000000 	 .word 33
+ 710              	 .global IfxCan_TXD32_P04_5_OUT
+ 711              	 .section .rodata.IfxCan_TXD32_P04_5_OUT,"a"
+ 712              	 .align 2
+ 715              	IfxCan_TXD32_P04_5_OUT:
+ 716 0000 000077F4 	 .word -193527808
+ 717 0004 02000000 	 .word 2
+ 718 0008 00B003F0 	 .word -268193792
+ 719 000c 05       	 .byte 5
+ 720 000d 000000   	 .zero 3
+ 721 0010 21000000 	 .word 33
+ 722              	 .global IfxCan_TXD32_P01_2_OUT
+ 723              	 .section .rodata.IfxCan_TXD32_P01_2_OUT,"a"
+ 724              	 .align 2
+ 727              	IfxCan_TXD32_P01_2_OUT:
+ 728 0000 000077F4 	 .word -193527808
+ 729 0004 02000000 	 .word 2
+ 730 0008 00A403F0 	 .word -268196864
+ 731 000c 02       	 .byte 2
+ 732 000d 000000   	 .zero 3
+ 733 0010 21000000 	 .word 33
+ 734              	 .global IfxCan_TXD31_P35_3_OUT
+ 735              	 .section .rodata.IfxCan_TXD31_P35_3_OUT,"a"
+ 736              	 .align 2
+ 739              	IfxCan_TXD31_P35_3_OUT:
+ 740 0000 000077F4 	 .word -193527808
+ 741 0004 01000000 	 .word 1
+ 742 0008 002C04F0 	 .word -268162048
+ 743 000c 03       	 .byte 3
+ 744 000d 000000   	 .zero 3
+ 745 0010 21000000 	 .word 33
+ 746              	 .global IfxCan_TXD31_P33_15_OUT
+ 747              	 .section .rodata.IfxCan_TXD31_P33_15_OUT,"a"
+ 748              	 .align 2
+ 751              	IfxCan_TXD31_P33_15_OUT:
+ 752 0000 000077F4 	 .word -193527808
+ 753 0004 01000000 	 .word 1
+ 754 0008 002404F0 	 .word -268164096
+ 755 000c 0F       	 .byte 15
+ 756 000d 000000   	 .zero 3
+ 757 0010 21000000 	 .word 33
+ 758              	 .global IfxCan_TXD31_P10_3_OUT
+ 759              	 .section .rodata.IfxCan_TXD31_P10_3_OUT,"a"
+ 760              	 .align 2
+ 763              	IfxCan_TXD31_P10_3_OUT:
+ 764 0000 000077F4 	 .word -193527808
+ 765 0004 01000000 	 .word 1
+ 766 0008 00C803F0 	 .word -268187648
+ 767 000c 03       	 .byte 3
+ 768 000d 000000   	 .zero 3
+ 769 0010 21000000 	 .word 33
+ 770              	 .global IfxCan_TXD31_P03_11_OUT
+ 771              	 .section .rodata.IfxCan_TXD31_P03_11_OUT,"a"
+ 772              	 .align 2
+ 775              	IfxCan_TXD31_P03_11_OUT:
+ 776 0000 000077F4 	 .word -193527808
+ 777 0004 01000000 	 .word 1
+ 778 0008 00AC03F0 	 .word -268194816
+ 779 000c 0B       	 .byte 11
+ 780 000d 000000   	 .zero 3
+ 781 0010 51000000 	 .word 81
+ 782              	 .global IfxCan_TXD31_P01_3_OUT
+ 783              	 .section .rodata.IfxCan_TXD31_P01_3_OUT,"a"
+ 784              	 .align 2
+ 787              	IfxCan_TXD31_P01_3_OUT:
+ 788 0000 000077F4 	 .word -193527808
+ 789 0004 01000000 	 .word 1
+ 790 0008 00A403F0 	 .word -268196864
+ 791 000c 03       	 .byte 3
+ 792 000d 000000   	 .zero 3
+ 793 0010 21000000 	 .word 33
+ 794              	 .global IfxCan_TXD30_P10_0_OUT
+ 795              	 .section .rodata.IfxCan_TXD30_P10_0_OUT,"a"
+ 796              	 .align 2
+ 799              	IfxCan_TXD30_P10_0_OUT:
+ 800 0000 000077F4 	 .word -193527808
+ 801 0004 00000000 	 .word 0
+ 802 0008 00C803F0 	 .word -268187648
+ 803 000c 00       	 .byte 0
+ 804 000d 000000   	 .zero 3
+ 805 0010 41000000 	 .word 65
+ 806              	 .global IfxCan_TXD30_P02_9_OUT
+ 807              	 .section .rodata.IfxCan_TXD30_P02_9_OUT,"a"
+ 808              	 .align 2
+ 811              	IfxCan_TXD30_P02_9_OUT:
+ 812 0000 000077F4 	 .word -193527808
+ 813 0004 00000000 	 .word 0
+ 814 0008 00A803F0 	 .word -268195840
+ 815 000c 09       	 .byte 9
+ 816 000d 000000   	 .zero 3
+ 817 0010 41000000 	 .word 65
+ 818              	 .global IfxCan_TXD23_P23_3_OUT
+ 819              	 .section .rodata.IfxCan_TXD23_P23_3_OUT,"a"
+ 820              	 .align 2
+ 823              	IfxCan_TXD23_P23_3_OUT:
+ 824 0000 000075F4 	 .word -193658880
+ 825 0004 03000000 	 .word 3
+ 826 0008 00FC03F0 	 .word -268174336
+ 827 000c 03       	 .byte 3
+ 828 000d 000000   	 .zero 3
+ 829 0010 41000000 	 .word 65
+ 830              	 .global IfxCan_TXD23_P23_2_OUT
+ 831              	 .section .rodata.IfxCan_TXD23_P23_2_OUT,"a"
+ 832              	 .align 2
+ 835              	IfxCan_TXD23_P23_2_OUT:
+ 836 0000 000075F4 	 .word -193658880
+ 837 0004 03000000 	 .word 3
+ 838 0008 00FC03F0 	 .word -268174336
+ 839 000c 02       	 .byte 2
+ 840 000d 000000   	 .zero 3
+ 841 0010 41000000 	 .word 65
+ 842              	 .global IfxCan_TXD23_P22_10_OUT
+ 843              	 .section .rodata.IfxCan_TXD23_P22_10_OUT,"a"
+ 844              	 .align 2
+ 847              	IfxCan_TXD23_P22_10_OUT:
+ 848 0000 000075F4 	 .word -193658880
+ 849 0004 03000000 	 .word 3
+ 850 0008 00F803F0 	 .word -268175360
+ 851 000c 0A       	 .byte 10
+ 852 000d 000000   	 .zero 3
+ 853 0010 51000000 	 .word 81
+ 854              	 .global IfxCan_TXD23_P14_9_OUT
+ 855              	 .section .rodata.IfxCan_TXD23_P14_9_OUT,"a"
+ 856              	 .align 2
+ 859              	IfxCan_TXD23_P14_9_OUT:
+ 860 0000 000075F4 	 .word -193658880
+ 861 0004 03000000 	 .word 3
+ 862 0008 00D803F0 	 .word -268183552
+ 863 000c 09       	 .byte 9
+ 864 000d 000000   	 .zero 3
+ 865 0010 21000000 	 .word 33
+ 866              	 .global IfxCan_TXD23_P14_14_OUT
+ 867              	 .section .rodata.IfxCan_TXD23_P14_14_OUT,"a"
+ 868              	 .align 2
+ 871              	IfxCan_TXD23_P14_14_OUT:
+ 872 0000 000075F4 	 .word -193658880
+ 873 0004 03000000 	 .word 3
+ 874 0008 00D803F0 	 .word -268183552
+ 875 000c 0E       	 .byte 14
+ 876 000d 000000   	 .zero 3
+ 877 0010 51000000 	 .word 81
+ 878              	 .global IfxCan_TXD23_P14_11_OUT
+ 879              	 .section .rodata.IfxCan_TXD23_P14_11_OUT,"a"
+ 880              	 .align 2
+ 883              	IfxCan_TXD23_P14_11_OUT:
+ 884 0000 000075F4 	 .word -193658880
+ 885 0004 03000000 	 .word 3
+ 886 0008 00D803F0 	 .word -268183552
+ 887 000c 0B       	 .byte 11
+ 888 000d 000000   	 .zero 3
+ 889 0010 21000000 	 .word 33
+ 890              	 .global IfxCan_TXD23_P13_4_OUT
+ 891              	 .section .rodata.IfxCan_TXD23_P13_4_OUT,"a"
+ 892              	 .align 2
+ 895              	IfxCan_TXD23_P13_4_OUT:
+ 896 0000 000075F4 	 .word -193658880
+ 897 0004 03000000 	 .word 3
+ 898 0008 00D403F0 	 .word -268184576
+ 899 000c 04       	 .byte 4
+ 900 000d 000000   	 .zero 3
+ 901 0010 71000000 	 .word 113
+ 902              	 .global IfxCan_TXD23_P10_9_OUT
+ 903              	 .section .rodata.IfxCan_TXD23_P10_9_OUT,"a"
+ 904              	 .align 2
+ 907              	IfxCan_TXD23_P10_9_OUT:
+ 908 0000 000075F4 	 .word -193658880
+ 909 0004 03000000 	 .word 3
+ 910 0008 00C803F0 	 .word -268187648
+ 911 000c 09       	 .byte 9
+ 912 000d 000000   	 .zero 3
+ 913 0010 21000000 	 .word 33
+ 914              	 .global IfxCan_TXD23_P10_14_OUT
+ 915              	 .section .rodata.IfxCan_TXD23_P10_14_OUT,"a"
+ 916              	 .align 2
+ 919              	IfxCan_TXD23_P10_14_OUT:
+ 920 0000 000075F4 	 .word -193658880
+ 921 0004 03000000 	 .word 3
+ 922 0008 00C803F0 	 .word -268187648
+ 923 000c 0E       	 .byte 14
+ 924 000d 000000   	 .zero 3
+ 925 0010 51000000 	 .word 81
+ 926              	 .global IfxCan_TXD23_P03_8_OUT
+ 927              	 .section .rodata.IfxCan_TXD23_P03_8_OUT,"a"
+ 928              	 .align 2
+ 931              	IfxCan_TXD23_P03_8_OUT:
+ 932 0000 000075F4 	 .word -193658880
+ 933 0004 03000000 	 .word 3
+ 934 0008 00AC03F0 	 .word -268194816
+ 935 000c 08       	 .byte 8
+ 936 000d 000000   	 .zero 3
+ 937 0010 51000000 	 .word 81
+ 938              	 .global IfxCan_TXD23_P03_1_OUT
+ 939              	 .section .rodata.IfxCan_TXD23_P03_1_OUT,"a"
+ 940              	 .align 2
+ 943              	IfxCan_TXD23_P03_1_OUT:
+ 944 0000 000075F4 	 .word -193658880
+ 945 0004 03000000 	 .word 3
+ 946 0008 00AC03F0 	 .word -268194816
+ 947 000c 01       	 .byte 1
+ 948 000d 000000   	 .zero 3
+ 949 0010 71000000 	 .word 113
+ 950              	 .global IfxCan_TXD22_P33_12_OUT
+ 951              	 .section .rodata.IfxCan_TXD22_P33_12_OUT,"a"
+ 952              	 .align 2
+ 955              	IfxCan_TXD22_P33_12_OUT:
+ 956 0000 000075F4 	 .word -193658880
+ 957 0004 02000000 	 .word 2
+ 958 0008 002404F0 	 .word -268164096
+ 959 000c 0C       	 .byte 12
+ 960 000d 000000   	 .zero 3
+ 961 0010 51000000 	 .word 81
+ 962              	 .global IfxCan_TXD22_P32_6_OUT
+ 963              	 .section .rodata.IfxCan_TXD22_P32_6_OUT,"a"
+ 964              	 .align 2
+ 967              	IfxCan_TXD22_P32_6_OUT:
+ 968 0000 000075F4 	 .word -193658880
+ 969 0004 02000000 	 .word 2
+ 970 0008 002004F0 	 .word -268165120
+ 971 000c 06       	 .byte 6
+ 972 000d 000000   	 .zero 3
+ 973 0010 51000000 	 .word 81
+ 974              	 .global IfxCan_TXD22_P30_5_OUT
+ 975              	 .section .rodata.IfxCan_TXD22_P30_5_OUT,"a"
+ 976              	 .align 2
+ 979              	IfxCan_TXD22_P30_5_OUT:
+ 980 0000 000075F4 	 .word -193658880
+ 981 0004 02000000 	 .word 2
+ 982 0008 001804F0 	 .word -268167168
+ 983 000c 05       	 .byte 5
+ 984 000d 000000   	 .zero 3
+ 985 0010 61000000 	 .word 97
+ 986              	 .global IfxCan_TXD22_P23_5_OUT
+ 987              	 .section .rodata.IfxCan_TXD22_P23_5_OUT,"a"
+ 988              	 .align 2
+ 991              	IfxCan_TXD22_P23_5_OUT:
+ 992 0000 000075F4 	 .word -193658880
+ 993 0004 02000000 	 .word 2
+ 994 0008 00FC03F0 	 .word -268174336
+ 995 000c 05       	 .byte 5
+ 996 000d 000000   	 .zero 3
+ 997 0010 61000000 	 .word 97
+ 998              	 .global IfxCan_TXD22_P22_8_OUT
+ 999              	 .section .rodata.IfxCan_TXD22_P22_8_OUT,"a"
+ 1000              	 .align 2
+ 1003              	IfxCan_TXD22_P22_8_OUT:
+ 1004 0000 000075F4 	 .word -193658880
+ 1005 0004 02000000 	 .word 2
+ 1006 0008 00F803F0 	 .word -268175360
+ 1007 000c 08       	 .byte 8
+ 1008 000d 000000   	 .zero 3
+ 1009 0010 51000000 	 .word 81
+ 1010              	 .global IfxCan_TXD22_P14_13_OUT
+ 1011              	 .section .rodata.IfxCan_TXD22_P14_13_OUT,"a"
+ 1012              	 .align 2
+ 1015              	IfxCan_TXD22_P14_13_OUT:
+ 1016 0000 000075F4 	 .word -193658880
+ 1017 0004 02000000 	 .word 2
+ 1018 0008 00D803F0 	 .word -268183552
+ 1019 000c 0D       	 .byte 13
+ 1020 000d 000000   	 .zero 3
+ 1021 0010 51000000 	 .word 81
+ 1022              	 .global IfxCan_TXD22_P10_13_OUT
+ 1023              	 .section .rodata.IfxCan_TXD22_P10_13_OUT,"a"
+ 1024              	 .align 2
+ 1027              	IfxCan_TXD22_P10_13_OUT:
+ 1028 0000 000075F4 	 .word -193658880
+ 1029 0004 02000000 	 .word 2
+ 1030 0008 00C803F0 	 .word -268187648
+ 1031 000c 0D       	 .byte 13
+ 1032 000d 000000   	 .zero 3
+ 1033 0010 51000000 	 .word 81
+ 1034              	 .global IfxCan_TXD22_P03_11_OUT
+ 1035              	 .section .rodata.IfxCan_TXD22_P03_11_OUT,"a"
+ 1036              	 .align 2
+ 1039              	IfxCan_TXD22_P03_11_OUT:
+ 1040 0000 000075F4 	 .word -193658880
+ 1041 0004 02000000 	 .word 2
+ 1042 0008 00AC03F0 	 .word -268194816
+ 1043 000c 0B       	 .byte 11
+ 1044 000d 000000   	 .zero 3
+ 1045 0010 41000000 	 .word 65
+ 1046              	 .global IfxCan_TXD21_P32_4_OUT
+ 1047              	 .section .rodata.IfxCan_TXD21_P32_4_OUT,"a"
+ 1048              	 .align 2
+ 1051              	IfxCan_TXD21_P32_4_OUT:
+ 1052 0000 000075F4 	 .word -193658880
+ 1053 0004 01000000 	 .word 1
+ 1054 0008 002004F0 	 .word -268165120
+ 1055 000c 04       	 .byte 4
+ 1056 000d 000000   	 .zero 3
+ 1057 0010 71000000 	 .word 113
+ 1058              	 .global IfxCan_TXD21_P30_2_OUT
+ 1059              	 .section .rodata.IfxCan_TXD21_P30_2_OUT,"a"
+ 1060              	 .align 2
+ 1063              	IfxCan_TXD21_P30_2_OUT:
+ 1064 0000 000075F4 	 .word -193658880
+ 1065 0004 01000000 	 .word 1
+ 1066 0008 001804F0 	 .word -268167168
+ 1067 000c 02       	 .byte 2
+ 1068 000d 000000   	 .zero 3
+ 1069 0010 41000000 	 .word 65
+ 1070              	 .global IfxCan_TXD21_P22_6_OUT
+ 1071              	 .section .rodata.IfxCan_TXD21_P22_6_OUT,"a"
+ 1072              	 .align 2
+ 1075              	IfxCan_TXD21_P22_6_OUT:
+ 1076 0000 000075F4 	 .word -193658880
+ 1077 0004 01000000 	 .word 1
+ 1078 0008 00F803F0 	 .word -268175360
+ 1079 000c 06       	 .byte 6
+ 1080 000d 000000   	 .zero 3
+ 1081 0010 51000000 	 .word 81
+ 1082              	 .global IfxCan_TXD21_P20_3_OUT
+ 1083              	 .section .rodata.IfxCan_TXD21_P20_3_OUT,"a"
+ 1084              	 .align 2
+ 1087              	IfxCan_TXD21_P20_3_OUT:
+ 1088 0000 000075F4 	 .word -193658880
+ 1089 0004 01000000 	 .word 1
+ 1090 0008 00F003F0 	 .word -268177408
+ 1091 000c 03       	 .byte 3
+ 1092 000d 000000   	 .zero 3
+ 1093 0010 61000000 	 .word 97
+ 1094              	 .global IfxCan_TXD21_P13_9_OUT
+ 1095              	 .section .rodata.IfxCan_TXD21_P13_9_OUT,"a"
+ 1096              	 .align 2
+ 1099              	IfxCan_TXD21_P13_9_OUT:
+ 1100 0000 000075F4 	 .word -193658880
+ 1101 0004 01000000 	 .word 1
+ 1102 0008 00D403F0 	 .word -268184576
+ 1103 000c 09       	 .byte 9
+ 1104 000d 000000   	 .zero 3
+ 1105 0010 51000000 	 .word 81
+ 1106              	 .global IfxCan_TXD21_P04_5_OUT
+ 1107              	 .section .rodata.IfxCan_TXD21_P04_5_OUT,"a"
+ 1108              	 .align 2
+ 1111              	IfxCan_TXD21_P04_5_OUT:
+ 1112 0000 000075F4 	 .word -193658880
+ 1113 0004 01000000 	 .word 1
+ 1114 0008 00B003F0 	 .word -268193792
+ 1115 000c 05       	 .byte 5
+ 1116 000d 000000   	 .zero 3
+ 1117 0010 51000000 	 .word 81
+ 1118              	 .global IfxCan_TXD21_P01_2_OUT
+ 1119              	 .section .rodata.IfxCan_TXD21_P01_2_OUT,"a"
+ 1120              	 .align 2
+ 1123              	IfxCan_TXD21_P01_2_OUT:
+ 1124 0000 000075F4 	 .word -193658880
+ 1125 0004 01000000 	 .word 1
+ 1126 0008 00A403F0 	 .word -268196864
+ 1127 000c 02       	 .byte 2
+ 1128 000d 000000   	 .zero 3
+ 1129 0010 51000000 	 .word 81
+ 1130              	 .global IfxCan_TXD21_P00_2_OUT
+ 1131              	 .section .rodata.IfxCan_TXD21_P00_2_OUT,"a"
+ 1132              	 .align 2
+ 1135              	IfxCan_TXD21_P00_2_OUT:
+ 1136 0000 000075F4 	 .word -193658880
+ 1137 0004 01000000 	 .word 1
+ 1138 0008 00A003F0 	 .word -268197888
+ 1139 000c 02       	 .byte 2
+ 1140 000d 000000   	 .zero 3
+ 1141 0010 31000000 	 .word 49
+ 1142              	 .global IfxCan_TXD20_P34_3_OUT
+ 1143              	 .section .rodata.IfxCan_TXD20_P34_3_OUT,"a"
+ 1144              	 .align 2
+ 1147              	IfxCan_TXD20_P34_3_OUT:
+ 1148 0000 000075F4 	 .word -193658880
+ 1149 0004 00000000 	 .word 0
+ 1150 0008 002804F0 	 .word -268163072
+ 1151 000c 03       	 .byte 3
+ 1152 000d 000000   	 .zero 3
+ 1153 0010 51000000 	 .word 81
+ 1154              	 .global IfxCan_TXD20_P34_1_OUT
+ 1155              	 .section .rodata.IfxCan_TXD20_P34_1_OUT,"a"
+ 1156              	 .align 2
+ 1159              	IfxCan_TXD20_P34_1_OUT:
+ 1160 0000 000075F4 	 .word -193658880
+ 1161 0004 00000000 	 .word 0
+ 1162 0008 002804F0 	 .word -268163072
+ 1163 000c 01       	 .byte 1
+ 1164 000d 000000   	 .zero 3
+ 1165 0010 51000000 	 .word 81
+ 1166              	 .global IfxCan_TXD20_P16_5_OUT
+ 1167              	 .section .rodata.IfxCan_TXD20_P16_5_OUT,"a"
+ 1168              	 .align 2
+ 1171              	IfxCan_TXD20_P16_5_OUT:
+ 1172 0000 000075F4 	 .word -193658880
+ 1173 0004 00000000 	 .word 0
+ 1174 0008 00E003F0 	 .word -268181504
+ 1175 000c 05       	 .byte 5
+ 1176 000d 000000   	 .zero 3
+ 1177 0010 61000000 	 .word 97
+ 1178              	 .global IfxCan_TXD20_P16_12_OUT
+ 1179              	 .section .rodata.IfxCan_TXD20_P16_12_OUT,"a"
+ 1180              	 .align 2
+ 1183              	IfxCan_TXD20_P16_12_OUT:
+ 1184 0000 000075F4 	 .word -193658880
+ 1185 0004 00000000 	 .word 0
+ 1186 0008 00E003F0 	 .word -268181504
+ 1187 000c 0C       	 .byte 12
+ 1188 000d 000000   	 .zero 3
+ 1189 0010 51000000 	 .word 81
+ 1190              	 .global IfxCan_TXD20_P10_7_OUT
+ 1191              	 .section .rodata.IfxCan_TXD20_P10_7_OUT,"a"
+ 1192              	 .align 2
+ 1195              	IfxCan_TXD20_P10_7_OUT:
+ 1196 0000 000075F4 	 .word -193658880
+ 1197 0004 00000000 	 .word 0
+ 1198 0008 00C803F0 	 .word -268187648
+ 1199 000c 07       	 .byte 7
+ 1200 000d 000000   	 .zero 3
+ 1201 0010 51000000 	 .word 81
+ 1202              	 .global IfxCan_TXD20_P10_6_OUT
+ 1203              	 .section .rodata.IfxCan_TXD20_P10_6_OUT,"a"
+ 1204              	 .align 2
+ 1207              	IfxCan_TXD20_P10_6_OUT:
+ 1208 0000 000075F4 	 .word -193658880
+ 1209 0004 00000000 	 .word 0
+ 1210 0008 00C803F0 	 .word -268187648
+ 1211 000c 06       	 .byte 6
+ 1212 000d 000000   	 .zero 3
+ 1213 0010 51000000 	 .word 81
+ 1214              	 .global IfxCan_TXD20_P04_0_OUT
+ 1215              	 .section .rodata.IfxCan_TXD20_P04_0_OUT,"a"
+ 1216              	 .align 2
+ 1219              	IfxCan_TXD20_P04_0_OUT:
+ 1220 0000 000075F4 	 .word -193658880
+ 1221 0004 00000000 	 .word 0
+ 1222 0008 00B003F0 	 .word -268193792
+ 1223 000c 00       	 .byte 0
+ 1224 000d 000000   	 .zero 3
+ 1225 0010 51000000 	 .word 81
+ 1226              	 .global IfxCan_TXD20_P02_13_OUT
+ 1227              	 .section .rodata.IfxCan_TXD20_P02_13_OUT,"a"
+ 1228              	 .align 2
+ 1231              	IfxCan_TXD20_P02_13_OUT:
+ 1232 0000 000075F4 	 .word -193658880
+ 1233 0004 00000000 	 .word 0
+ 1234 0008 00A803F0 	 .word -268195840
+ 1235 000c 0D       	 .byte 13
+ 1236 000d 000000   	 .zero 3
+ 1237 0010 51000000 	 .word 81
+ 1238              	 .global IfxCan_TXD20_P01_13_OUT
+ 1239              	 .section .rodata.IfxCan_TXD20_P01_13_OUT,"a"
+ 1240              	 .align 2
+ 1243              	IfxCan_TXD20_P01_13_OUT:
+ 1244 0000 000075F4 	 .word -193658880
+ 1245 0004 00000000 	 .word 0
+ 1246 0008 00A403F0 	 .word -268196864
+ 1247 000c 0D       	 .byte 13
+ 1248 000d 000000   	 .zero 3
+ 1249 0010 51000000 	 .word 81
+ 1250              	 .global IfxCan_TXD13_P33_4_OUT
+ 1251              	 .section .rodata.IfxCan_TXD13_P33_4_OUT,"a"
+ 1252              	 .align 2
+ 1255              	IfxCan_TXD13_P33_4_OUT:
+ 1256 0000 000073F4 	 .word -193789952
+ 1257 0004 03000000 	 .word 3
+ 1258 0008 002404F0 	 .word -268164096
+ 1259 000c 04       	 .byte 4
+ 1260 000d 000000   	 .zero 3
+ 1261 0010 71000000 	 .word 113
+ 1262              	 .global IfxCan_TXD13_P22_4_OUT
+ 1263              	 .section .rodata.IfxCan_TXD13_P22_4_OUT,"a"
+ 1264              	 .align 2
+ 1267              	IfxCan_TXD13_P22_4_OUT:
+ 1268 0000 000073F4 	 .word -193789952
+ 1269 0004 03000000 	 .word 3
+ 1270 0008 00F803F0 	 .word -268175360
+ 1271 000c 04       	 .byte 4
+ 1272 000d 000000   	 .zero 3
+ 1273 0010 61000000 	 .word 97
+ 1274              	 .global IfxCan_TXD13_P16_0_OUT
+ 1275              	 .section .rodata.IfxCan_TXD13_P16_0_OUT,"a"
+ 1276              	 .align 2
+ 1279              	IfxCan_TXD13_P16_0_OUT:
+ 1280 0000 000073F4 	 .word -193789952
+ 1281 0004 03000000 	 .word 3
+ 1282 0008 00E003F0 	 .word -268181504
+ 1283 000c 00       	 .byte 0
+ 1284 000d 000000   	 .zero 3
+ 1285 0010 51000000 	 .word 81
+ 1286              	 .global IfxCan_TXD13_P14_6_OUT
+ 1287              	 .section .rodata.IfxCan_TXD13_P14_6_OUT,"a"
+ 1288              	 .align 2
+ 1291              	IfxCan_TXD13_P14_6_OUT:
+ 1292 0000 000073F4 	 .word -193789952
+ 1293 0004 03000000 	 .word 3
+ 1294 0008 00D803F0 	 .word -268183552
+ 1295 000c 06       	 .byte 6
+ 1296 000d 000000   	 .zero 3
+ 1297 0010 41000000 	 .word 65
+ 1298              	 .global IfxCan_TXD13_P10_6_OUT
+ 1299              	 .section .rodata.IfxCan_TXD13_P10_6_OUT,"a"
+ 1300              	 .align 2
+ 1303              	IfxCan_TXD13_P10_6_OUT:
+ 1304 0000 000073F4 	 .word -193789952
+ 1305 0004 03000000 	 .word 3
+ 1306 0008 00C803F0 	 .word -268187648
+ 1307 000c 06       	 .byte 6
+ 1308 000d 000000   	 .zero 3
+ 1309 0010 D1000000 	 .word 209
+ 1310              	 .global IfxCan_TXD12_P30_2_OUT
+ 1311              	 .section .rodata.IfxCan_TXD12_P30_2_OUT,"a"
+ 1312              	 .align 2
+ 1315              	IfxCan_TXD12_P30_2_OUT:
+ 1316 0000 000073F4 	 .word -193789952
+ 1317 0004 02000000 	 .word 2
+ 1318 0008 001804F0 	 .word -268167168
+ 1319 000c 02       	 .byte 2
+ 1320 000d 000000   	 .zero 3
+ 1321 0010 51000000 	 .word 81
+ 1322              	 .global IfxCan_TXD12_P23_3_OUT
+ 1323              	 .section .rodata.IfxCan_TXD12_P23_3_OUT,"a"
+ 1324              	 .align 2
+ 1327              	IfxCan_TXD12_P23_3_OUT:
+ 1328 0000 000073F4 	 .word -193789952
+ 1329 0004 02000000 	 .word 2
+ 1330 0008 00FC03F0 	 .word -268174336
+ 1331 000c 03       	 .byte 3
+ 1332 000d 000000   	 .zero 3
+ 1333 0010 51000000 	 .word 81
+ 1334              	 .global IfxCan_TXD12_P23_2_OUT
+ 1335              	 .section .rodata.IfxCan_TXD12_P23_2_OUT,"a"
+ 1336              	 .align 2
+ 1339              	IfxCan_TXD12_P23_2_OUT:
+ 1340 0000 000073F4 	 .word -193789952
+ 1341 0004 02000000 	 .word 2
+ 1342 0008 00FC03F0 	 .word -268174336
+ 1343 000c 02       	 .byte 2
+ 1344 000d 000000   	 .zero 3
+ 1345 0010 51000000 	 .word 81
+ 1346              	 .global IfxCan_TXD12_P20_7_OUT
+ 1347              	 .section .rodata.IfxCan_TXD12_P20_7_OUT,"a"
+ 1348              	 .align 2
+ 1351              	IfxCan_TXD12_P20_7_OUT:
+ 1352 0000 000073F4 	 .word -193789952
+ 1353 0004 02000000 	 .word 2
+ 1354 0008 00F003F0 	 .word -268177408
+ 1355 000c 07       	 .byte 7
+ 1356 000d 000000   	 .zero 3
+ 1357 0010 51000000 	 .word 81
+ 1358              	 .global IfxCan_TXD12_P16_4_OUT
+ 1359              	 .section .rodata.IfxCan_TXD12_P16_4_OUT,"a"
+ 1360              	 .align 2
+ 1363              	IfxCan_TXD12_P16_4_OUT:
+ 1364 0000 000073F4 	 .word -193789952
+ 1365 0004 02000000 	 .word 2
+ 1366 0008 00E003F0 	 .word -268181504
+ 1367 000c 04       	 .byte 4
+ 1368 000d 000000   	 .zero 3
+ 1369 0010 51000000 	 .word 81
+ 1370              	 .global IfxCan_TXD12_P10_7_OUT
+ 1371              	 .section .rodata.IfxCan_TXD12_P10_7_OUT,"a"
+ 1372              	 .align 2
+ 1375              	IfxCan_TXD12_P10_7_OUT:
+ 1376 0000 000073F4 	 .word -193789952
+ 1377 0004 02000000 	 .word 2
+ 1378 0008 00C803F0 	 .word -268187648
+ 1379 000c 07       	 .byte 7
+ 1380 000d 000000   	 .zero 3
+ 1381 0010 61000000 	 .word 97
+ 1382              	 .global IfxCan_TXD11_P30_6_OUT
+ 1383              	 .section .rodata.IfxCan_TXD11_P30_6_OUT,"a"
+ 1384              	 .align 2
+ 1387              	IfxCan_TXD11_P30_6_OUT:
+ 1388 0000 000073F4 	 .word -193789952
+ 1389 0004 01000000 	 .word 1
+ 1390 0008 001804F0 	 .word -268167168
+ 1391 000c 06       	 .byte 6
+ 1392 000d 000000   	 .zero 3
+ 1393 0010 51000000 	 .word 81
+ 1394              	 .global IfxCan_TXD11_P23_6_OUT
+ 1395              	 .section .rodata.IfxCan_TXD11_P23_6_OUT,"a"
+ 1396              	 .align 2
+ 1399              	IfxCan_TXD11_P23_6_OUT:
+ 1400 0000 000073F4 	 .word -193789952
+ 1401 0004 01000000 	 .word 1
+ 1402 0008 00FC03F0 	 .word -268174336
+ 1403 000c 06       	 .byte 6
+ 1404 000d 000000   	 .zero 3
+ 1405 0010 51000000 	 .word 81
+ 1406              	 .global IfxCan_TXD11_P16_5_OUT
+ 1407              	 .section .rodata.IfxCan_TXD11_P16_5_OUT,"a"
+ 1408              	 .align 2
+ 1411              	IfxCan_TXD11_P16_5_OUT:
+ 1412 0000 000073F4 	 .word -193789952
+ 1413 0004 01000000 	 .word 1
+ 1414 0008 00E003F0 	 .word -268181504
+ 1415 000c 05       	 .byte 5
+ 1416 000d 000000   	 .zero 3
+ 1417 0010 51000000 	 .word 81
+ 1418              	 .global IfxCan_TXD11_P03_5_OUT
+ 1419              	 .section .rodata.IfxCan_TXD11_P03_5_OUT,"a"
+ 1420              	 .align 2
+ 1423              	IfxCan_TXD11_P03_5_OUT:
+ 1424 0000 000073F4 	 .word -193789952
+ 1425 0004 01000000 	 .word 1
+ 1426 0008 00AC03F0 	 .word -268194816
+ 1427 000c 05       	 .byte 5
+ 1428 000d 000000   	 .zero 3
+ 1429 0010 21000000 	 .word 33
+ 1430              	 .global IfxCan_TXD11_P03_4_OUT
+ 1431              	 .section .rodata.IfxCan_TXD11_P03_4_OUT,"a"
+ 1432              	 .align 2
+ 1435              	IfxCan_TXD11_P03_4_OUT:
+ 1436 0000 000073F4 	 .word -193789952
+ 1437 0004 01000000 	 .word 1
+ 1438 0008 00AC03F0 	 .word -268194816
+ 1439 000c 04       	 .byte 4
+ 1440 000d 000000   	 .zero 3
+ 1441 0010 61000000 	 .word 97
+ 1442              	 .global IfxCan_TXD11_P02_5_OUT
+ 1443              	 .section .rodata.IfxCan_TXD11_P02_5_OUT,"a"
+ 1444              	 .align 2
+ 1447              	IfxCan_TXD11_P02_5_OUT:
+ 1448 0000 000073F4 	 .word -193789952
+ 1449 0004 01000000 	 .word 1
+ 1450 0008 00A803F0 	 .word -268195840
+ 1451 000c 05       	 .byte 5
+ 1452 000d 000000   	 .zero 3
+ 1453 0010 21000000 	 .word 33
+ 1454              	 .global IfxCan_TXD11_P00_4_OUT
+ 1455              	 .section .rodata.IfxCan_TXD11_P00_4_OUT,"a"
+ 1456              	 .align 2
+ 1459              	IfxCan_TXD11_P00_4_OUT:
+ 1460 0000 000073F4 	 .word -193789952
+ 1461 0004 01000000 	 .word 1
+ 1462 0008 00A003F0 	 .word -268197888
+ 1463 000c 04       	 .byte 4
+ 1464 000d 000000   	 .zero 3
+ 1465 0010 31000000 	 .word 49
+ 1466              	 .global IfxCan_TXD10_P30_1_OUT
+ 1467              	 .section .rodata.IfxCan_TXD10_P30_1_OUT,"a"
+ 1468              	 .align 2
+ 1471              	IfxCan_TXD10_P30_1_OUT:
+ 1472 0000 000073F4 	 .word -193789952
+ 1473 0004 00000000 	 .word 0
+ 1474 0008 001804F0 	 .word -268167168
+ 1475 000c 01       	 .byte 1
+ 1476 000d 000000   	 .zero 3
+ 1477 0010 51000000 	 .word 81
+ 1478              	 .global IfxCan_TXD10_P23_1_OUT
+ 1479              	 .section .rodata.IfxCan_TXD10_P23_1_OUT,"a"
+ 1480              	 .align 2
+ 1483              	IfxCan_TXD10_P23_1_OUT:
+ 1484 0000 000073F4 	 .word -193789952
+ 1485 0004 00000000 	 .word 0
+ 1486 0008 00FC03F0 	 .word -268174336
+ 1487 000c 01       	 .byte 1
+ 1488 000d 000000   	 .zero 3
+ 1489 0010 51000000 	 .word 81
+ 1490              	 .global IfxCan_TXD10_P14_9_OUT
+ 1491              	 .section .rodata.IfxCan_TXD10_P14_9_OUT,"a"
+ 1492              	 .align 2
+ 1495              	IfxCan_TXD10_P14_9_OUT:
+ 1496 0000 000073F4 	 .word -193789952
+ 1497 0004 00000000 	 .word 0
+ 1498 0008 00D803F0 	 .word -268183552
+ 1499 000c 09       	 .byte 9
+ 1500 000d 000000   	 .zero 3
+ 1501 0010 41000000 	 .word 65
+ 1502              	 .global IfxCan_TXD10_P13_0_OUT
+ 1503              	 .section .rodata.IfxCan_TXD10_P13_0_OUT,"a"
+ 1504              	 .align 2
+ 1507              	IfxCan_TXD10_P13_0_OUT:
+ 1508 0000 000073F4 	 .word -193789952
+ 1509 0004 00000000 	 .word 0
+ 1510 0008 00D403F0 	 .word -268184576
+ 1511 000c 00       	 .byte 0
+ 1512 000d 000000   	 .zero 3
+ 1513 0010 71000000 	 .word 113
+ 1514              	 .global IfxCan_TXD10_P10_9_OUT
+ 1515              	 .section .rodata.IfxCan_TXD10_P10_9_OUT,"a"
+ 1516              	 .align 2
+ 1519              	IfxCan_TXD10_P10_9_OUT:
+ 1520 0000 000073F4 	 .word -193789952
+ 1521 0004 00000000 	 .word 0
+ 1522 0008 00C803F0 	 .word -268187648
+ 1523 000c 09       	 .byte 9
+ 1524 000d 000000   	 .zero 3
+ 1525 0010 41000000 	 .word 65
+ 1526              	 .global IfxCan_TXD10_P00_0_OUT
+ 1527              	 .section .rodata.IfxCan_TXD10_P00_0_OUT,"a"
+ 1528              	 .align 2
+ 1531              	IfxCan_TXD10_P00_0_OUT:
+ 1532 0000 000073F4 	 .word -193789952
+ 1533 0004 00000000 	 .word 0
+ 1534 0008 00A003F0 	 .word -268197888
+ 1535 000c 00       	 .byte 0
+ 1536 000d 000000   	 .zero 3
+ 1537 0010 51000000 	 .word 81
+ 1538              	 .global IfxCan_TXD03_P32_4_OUT
+ 1539              	 .section .rodata.IfxCan_TXD03_P32_4_OUT,"a"
+ 1540              	 .align 2
+ 1543              	IfxCan_TXD03_P32_4_OUT:
+ 1544 0000 000071F4 	 .word -193921024
+ 1545 0004 03000000 	 .word 3
+ 1546 0008 002004F0 	 .word -268165120
+ 1547 000c 04       	 .byte 4
+ 1548 000d 000000   	 .zero 3
+ 1549 0010 31000000 	 .word 49
+ 1550              	 .global IfxCan_TXD03_P20_3_OUT
+ 1551              	 .section .rodata.IfxCan_TXD03_P20_3_OUT,"a"
+ 1552              	 .align 2
+ 1555              	IfxCan_TXD03_P20_3_OUT:
+ 1556 0000 000071F4 	 .word -193921024
+ 1557 0004 03000000 	 .word 3
+ 1558 0008 00F003F0 	 .word -268177408
+ 1559 000c 03       	 .byte 3
+ 1560 000d 000000   	 .zero 3
+ 1561 0010 51000000 	 .word 81
+ 1562              	 .global IfxCan_TXD03_P20_10_OUT
+ 1563              	 .section .rodata.IfxCan_TXD03_P20_10_OUT,"a"
+ 1564              	 .align 2
+ 1567              	IfxCan_TXD03_P20_10_OUT:
+ 1568 0000 000071F4 	 .word -193921024
+ 1569 0004 03000000 	 .word 3
+ 1570 0008 00F003F0 	 .word -268177408
+ 1571 000c 0A       	 .byte 10
+ 1572 000d 000000   	 .zero 3
+ 1573 0010 51000000 	 .word 81
+ 1574              	 .global IfxCan_TXD03_P16_14_OUT
+ 1575              	 .section .rodata.IfxCan_TXD03_P16_14_OUT,"a"
+ 1576              	 .align 2
+ 1579              	IfxCan_TXD03_P16_14_OUT:
+ 1580 0000 000071F4 	 .word -193921024
+ 1581 0004 03000000 	 .word 3
+ 1582 0008 00E003F0 	 .word -268181504
+ 1583 000c 0E       	 .byte 14
+ 1584 000d 000000   	 .zero 3
+ 1585 0010 51000000 	 .word 81
+ 1586              	 .global IfxCan_TXD03_P16_10_OUT
+ 1587              	 .section .rodata.IfxCan_TXD03_P16_10_OUT,"a"
+ 1588              	 .align 2
+ 1591              	IfxCan_TXD03_P16_10_OUT:
+ 1592 0000 000071F4 	 .word -193921024
+ 1593 0004 03000000 	 .word 3
+ 1594 0008 00E003F0 	 .word -268181504
+ 1595 000c 0A       	 .byte 10
+ 1596 000d 000000   	 .zero 3
+ 1597 0010 51000000 	 .word 81
+ 1598              	 .global IfxCan_TXD03_P04_5_OUT
+ 1599              	 .section .rodata.IfxCan_TXD03_P04_5_OUT,"a"
+ 1600              	 .align 2
+ 1603              	IfxCan_TXD03_P04_5_OUT:
+ 1604 0000 000071F4 	 .word -193921024
+ 1605 0004 03000000 	 .word 3
+ 1606 0008 00B003F0 	 .word -268193792
+ 1607 000c 05       	 .byte 5
+ 1608 000d 000000   	 .zero 3
+ 1609 0010 31000000 	 .word 49
+ 1610              	 .global IfxCan_TXD03_P01_2_OUT
+ 1611              	 .section .rodata.IfxCan_TXD03_P01_2_OUT,"a"
+ 1612              	 .align 2
+ 1615              	IfxCan_TXD03_P01_2_OUT:
+ 1616 0000 000071F4 	 .word -193921024
+ 1617 0004 03000000 	 .word 3
+ 1618 0008 00A403F0 	 .word -268196864
+ 1619 000c 02       	 .byte 2
+ 1620 000d 000000   	 .zero 3
+ 1621 0010 31000000 	 .word 49
+ 1622              	 .global IfxCan_TXD03_P00_2_OUT
+ 1623              	 .section .rodata.IfxCan_TXD03_P00_2_OUT,"a"
+ 1624              	 .align 2
+ 1627              	IfxCan_TXD03_P00_2_OUT:
+ 1628 0000 000071F4 	 .word -193921024
+ 1629 0004 03000000 	 .word 3
+ 1630 0008 00A003F0 	 .word -268197888
+ 1631 000c 02       	 .byte 2
+ 1632 000d 000000   	 .zero 3
+ 1633 0010 51000000 	 .word 81
+ 1634              	 .global IfxCan_TXD02_P32_5_OUT
+ 1635              	 .section .rodata.IfxCan_TXD02_P32_5_OUT,"a"
+ 1636              	 .align 2
+ 1639              	IfxCan_TXD02_P32_5_OUT:
+ 1640 0000 000071F4 	 .word -193921024
+ 1641 0004 02000000 	 .word 2
+ 1642 0008 002004F0 	 .word -268165120
+ 1643 000c 05       	 .byte 5
+ 1644 000d 000000   	 .zero 3
+ 1645 0010 61000000 	 .word 97
+ 1646              	 .global IfxCan_TXD02_P15_0_OUT
+ 1647              	 .section .rodata.IfxCan_TXD02_P15_0_OUT,"a"
+ 1648              	 .align 2
+ 1651              	IfxCan_TXD02_P15_0_OUT:
+ 1652 0000 000071F4 	 .word -193921024
+ 1653 0004 02000000 	 .word 2
+ 1654 0008 00DC03F0 	 .word -268182528
+ 1655 000c 00       	 .byte 0
+ 1656 000d 000000   	 .zero 3
+ 1657 0010 51000000 	 .word 81
+ 1658              	 .global IfxCan_TXD02_P14_10_OUT
+ 1659              	 .section .rodata.IfxCan_TXD02_P14_10_OUT,"a"
+ 1660              	 .align 2
+ 1663              	IfxCan_TXD02_P14_10_OUT:
+ 1664 0000 000071F4 	 .word -193921024
+ 1665 0004 02000000 	 .word 2
+ 1666 0008 00D803F0 	 .word -268183552
+ 1667 000c 0A       	 .byte 10
+ 1668 000d 000000   	 .zero 3
+ 1669 0010 51000000 	 .word 81
+ 1670              	 .global IfxCan_TXD02_P10_3_OUT
+ 1671              	 .section .rodata.IfxCan_TXD02_P10_3_OUT,"a"
+ 1672              	 .align 2
+ 1675              	IfxCan_TXD02_P10_3_OUT:
+ 1676 0000 000071F4 	 .word -193921024
+ 1677 0004 02000000 	 .word 2
+ 1678 0008 00C803F0 	 .word -268187648
+ 1679 000c 03       	 .byte 3
+ 1680 000d 000000   	 .zero 3
+ 1681 0010 61000000 	 .word 97
+ 1682              	 .global IfxCan_TXD02_P10_10_OUT
+ 1683              	 .section .rodata.IfxCan_TXD02_P10_10_OUT,"a"
+ 1684              	 .align 2
+ 1687              	IfxCan_TXD02_P10_10_OUT:
+ 1688 0000 000071F4 	 .word -193921024
+ 1689 0004 02000000 	 .word 2
+ 1690 0008 00C803F0 	 .word -268187648
+ 1691 000c 0A       	 .byte 10
+ 1692 000d 000000   	 .zero 3
+ 1693 0010 51000000 	 .word 81
+ 1694              	 .global IfxCan_TXD02_P03_13_OUT
+ 1695              	 .section .rodata.IfxCan_TXD02_P03_13_OUT,"a"
+ 1696              	 .align 2
+ 1699              	IfxCan_TXD02_P03_13_OUT:
+ 1700 0000 000071F4 	 .word -193921024
+ 1701 0004 02000000 	 .word 2
+ 1702 0008 00AC03F0 	 .word -268194816
+ 1703 000c 0D       	 .byte 13
+ 1704 000d 000000   	 .zero 3
+ 1705 0010 21000000 	 .word 33
+ 1706              	 .global IfxCan_TXD02_P02_2_OUT
+ 1707              	 .section .rodata.IfxCan_TXD02_P02_2_OUT,"a"
+ 1708              	 .align 2
+ 1711              	IfxCan_TXD02_P02_2_OUT:
+ 1712 0000 000071F4 	 .word -193921024
+ 1713 0004 02000000 	 .word 2
+ 1714 0008 00A803F0 	 .word -268195840
+ 1715 000c 02       	 .byte 2
+ 1716 000d 000000   	 .zero 3
+ 1717 0010 51000000 	 .word 81
+ 1718              	 .global IfxCan_TXD01_P33_9_OUT
+ 1719              	 .section .rodata.IfxCan_TXD01_P33_9_OUT,"a"
+ 1720              	 .align 2
+ 1723              	IfxCan_TXD01_P33_9_OUT:
+ 1724 0000 000071F4 	 .word -193921024
+ 1725 0004 01000000 	 .word 1
+ 1726 0008 002404F0 	 .word -268164096
+ 1727 000c 09       	 .byte 9
+ 1728 000d 000000   	 .zero 3
+ 1729 0010 51000000 	 .word 81
+ 1730              	 .global IfxCan_TXD01_P15_2_OUT
+ 1731              	 .section .rodata.IfxCan_TXD01_P15_2_OUT,"a"
+ 1732              	 .align 2
+ 1735              	IfxCan_TXD01_P15_2_OUT:
+ 1736 0000 000071F4 	 .word -193921024
+ 1737 0004 01000000 	 .word 1
+ 1738 0008 00DC03F0 	 .word -268182528
+ 1739 000c 02       	 .byte 2
+ 1740 000d 000000   	 .zero 3
+ 1741 0010 51000000 	 .word 81
+ 1742              	 .global IfxCan_TXD01_P14_0_OUT
+ 1743              	 .section .rodata.IfxCan_TXD01_P14_0_OUT,"a"
+ 1744              	 .align 2
+ 1747              	IfxCan_TXD01_P14_0_OUT:
+ 1748 0000 000071F4 	 .word -193921024
+ 1749 0004 01000000 	 .word 1
+ 1750 0008 00D803F0 	 .word -268183552
+ 1751 000c 00       	 .byte 0
+ 1752 000d 000000   	 .zero 3
+ 1753 0010 51000000 	 .word 81
+ 1754              	 .global IfxCan_TXD01_P10_0_OUT
+ 1755              	 .section .rodata.IfxCan_TXD01_P10_0_OUT,"a"
+ 1756              	 .align 2
+ 1759              	IfxCan_TXD01_P10_0_OUT:
+ 1760 0000 000071F4 	 .word -193921024
+ 1761 0004 01000000 	 .word 1
+ 1762 0008 00C803F0 	 .word -268187648
+ 1763 000c 00       	 .byte 0
+ 1764 000d 000000   	 .zero 3
+ 1765 0010 E1000000 	 .word 225
+ 1766              	 .global IfxCan_TXD01_P04_0_OUT
+ 1767              	 .section .rodata.IfxCan_TXD01_P04_0_OUT,"a"
+ 1768              	 .align 2
+ 1771              	IfxCan_TXD01_P04_0_OUT:
+ 1772 0000 000071F4 	 .word -193921024
+ 1773 0004 01000000 	 .word 1
+ 1774 0008 00B003F0 	 .word -268193792
+ 1775 000c 00       	 .byte 0
+ 1776 000d 000000   	 .zero 3
+ 1777 0010 41000000 	 .word 65
+ 1778              	 .global IfxCan_TXD01_P03_15_OUT
+ 1779              	 .section .rodata.IfxCan_TXD01_P03_15_OUT,"a"
+ 1780              	 .align 2
+ 1783              	IfxCan_TXD01_P03_15_OUT:
+ 1784 0000 000071F4 	 .word -193921024
+ 1785 0004 01000000 	 .word 1
+ 1786 0008 00AC03F0 	 .word -268194816
+ 1787 000c 0F       	 .byte 15
+ 1788 000d 000000   	 .zero 3
+ 1789 0010 31000000 	 .word 49
+ 1790              	 .global IfxCan_TXD01_P03_11_OUT
+ 1791              	 .section .rodata.IfxCan_TXD01_P03_11_OUT,"a"
+ 1792              	 .align 2
+ 1795              	IfxCan_TXD01_P03_11_OUT:
+ 1796 0000 000071F4 	 .word -193921024
+ 1797 0004 01000000 	 .word 1
+ 1798 0008 00AC03F0 	 .word -268194816
+ 1799 000c 0B       	 .byte 11
+ 1800 000d 000000   	 .zero 3
+ 1801 0010 81000000 	 .word 129
+ 1802              	 .global IfxCan_TXD01_P02_9_OUT
+ 1803              	 .section .rodata.IfxCan_TXD01_P02_9_OUT,"a"
+ 1804              	 .align 2
+ 1807              	IfxCan_TXD01_P02_9_OUT:
+ 1808 0000 000071F4 	 .word -193921024
+ 1809 0004 01000000 	 .word 1
+ 1810 0008 00A803F0 	 .word -268195840
+ 1811 000c 09       	 .byte 9
+ 1812 000d 000000   	 .zero 3
+ 1813 0010 51000000 	 .word 81
+ 1814              	 .global IfxCan_TXD01_P01_3_OUT
+ 1815              	 .section .rodata.IfxCan_TXD01_P01_3_OUT,"a"
+ 1816              	 .align 2
+ 1819              	IfxCan_TXD01_P01_3_OUT:
+ 1820 0000 000071F4 	 .word -193921024
+ 1821 0004 01000000 	 .word 1
+ 1822 0008 00A403F0 	 .word -268196864
+ 1823 000c 03       	 .byte 3
+ 1824 000d 000000   	 .zero 3
+ 1825 0010 51000000 	 .word 81
+ 1826              	 .global IfxCan_TXD00_P34_3_OUT
+ 1827              	 .section .rodata.IfxCan_TXD00_P34_3_OUT,"a"
+ 1828              	 .align 2
+ 1831              	IfxCan_TXD00_P34_3_OUT:
+ 1832 0000 000071F4 	 .word -193921024
+ 1833 0004 00000000 	 .word 0
+ 1834 0008 002804F0 	 .word -268163072
+ 1835 000c 03       	 .byte 3
+ 1836 000d 000000   	 .zero 3
+ 1837 0010 41000000 	 .word 65
+ 1838              	 .global IfxCan_TXD00_P34_1_OUT
+ 1839              	 .section .rodata.IfxCan_TXD00_P34_1_OUT,"a"
+ 1840              	 .align 2
+ 1843              	IfxCan_TXD00_P34_1_OUT:
+ 1844 0000 000071F4 	 .word -193921024
+ 1845 0004 00000000 	 .word 0
+ 1846 0008 002804F0 	 .word -268163072
+ 1847 000c 01       	 .byte 1
+ 1848 000d 000000   	 .zero 3
+ 1849 0010 41000000 	 .word 65
+ 1850              	 .global IfxCan_TXD00_P33_8_OUT
+ 1851              	 .section .rodata.IfxCan_TXD00_P33_8_OUT,"a"
+ 1852              	 .align 2
+ 1855              	IfxCan_TXD00_P33_8_OUT:
+ 1856 0000 000071F4 	 .word -193921024
+ 1857 0004 00000000 	 .word 0
+ 1858 0008 002404F0 	 .word -268164096
+ 1859 000c 08       	 .byte 8
+ 1860 000d 000000   	 .zero 3
+ 1861 0010 51000000 	 .word 81
+ 1862              	 .global IfxCan_TXD00_P33_13_OUT
+ 1863              	 .section .rodata.IfxCan_TXD00_P33_13_OUT,"a"
+ 1864              	 .align 2
+ 1867              	IfxCan_TXD00_P33_13_OUT:
+ 1868 0000 000071F4 	 .word -193921024
+ 1869 0004 00000000 	 .word 0
+ 1870 0008 002404F0 	 .word -268164096
+ 1871 000c 0D       	 .byte 13
+ 1872 000d 000000   	 .zero 3
+ 1873 0010 51000000 	 .word 81
+ 1874              	 .global IfxCan_TXD00_P20_8_OUT
+ 1875              	 .section .rodata.IfxCan_TXD00_P20_8_OUT,"a"
+ 1876              	 .align 2
+ 1879              	IfxCan_TXD00_P20_8_OUT:
+ 1880 0000 000071F4 	 .word -193921024
+ 1881 0004 00000000 	 .word 0
+ 1882 0008 00F003F0 	 .word -268177408
+ 1883 000c 08       	 .byte 8
+ 1884 000d 000000   	 .zero 3
+ 1885 0010 51000000 	 .word 81
+ 1886              	 .global IfxCan_TXD00_P02_13_OUT
+ 1887              	 .section .rodata.IfxCan_TXD00_P02_13_OUT,"a"
+ 1888              	 .align 2
+ 1891              	IfxCan_TXD00_P02_13_OUT:
+ 1892 0000 000071F4 	 .word -193921024
+ 1893 0004 00000000 	 .word 0
+ 1894 0008 00A803F0 	 .word -268195840
+ 1895 000c 0D       	 .byte 13
+ 1896 000d 000000   	 .zero 3
+ 1897 0010 41000000 	 .word 65
+ 1898              	 .global IfxCan_TXD00_P02_0_OUT
+ 1899              	 .section .rodata.IfxCan_TXD00_P02_0_OUT,"a"
+ 1900              	 .align 2
+ 1903              	IfxCan_TXD00_P02_0_OUT:
+ 1904 0000 000071F4 	 .word -193921024
+ 1905 0004 00000000 	 .word 0
+ 1906 0008 00A803F0 	 .word -268195840
+ 1907 000c 00       	 .byte 0
+ 1908 000d 000000   	 .zero 3
+ 1909 0010 51000000 	 .word 81
+ 1910              	 .global IfxCan_TXD00_P01_13_OUT
+ 1911              	 .section .rodata.IfxCan_TXD00_P01_13_OUT,"a"
+ 1912              	 .align 2
+ 1915              	IfxCan_TXD00_P01_13_OUT:
+ 1916 0000 000071F4 	 .word -193921024
+ 1917 0004 00000000 	 .word 0
+ 1918 0008 00A403F0 	 .word -268196864
+ 1919 000c 0D       	 .byte 13
+ 1920 000d 000000   	 .zero 3
+ 1921 0010 41000000 	 .word 65
+ 1922              	 .global IfxCan_RXD43E_P35_3_IN
+ 1923              	 .section .rodata.IfxCan_RXD43E_P35_3_IN,"a"
+ 1924              	 .align 2
+ 1927              	IfxCan_RXD43E_P35_3_IN:
+ 1928 0000 000079F4 	 .word -193396736
+ 1929 0004 03000000 	 .word 3
+ 1930 0008 002C04F0 	 .word -268162048
+ 1931 000c 03       	 .byte 3
+ 1932 000d 000000   	 .zero 3
+ 1933 0010 04000000 	 .word 4
+ 1934              	 .global IfxCan_RXD43D_P13_7_IN
+ 1935              	 .section .rodata.IfxCan_RXD43D_P13_7_IN,"a"
+ 1936              	 .align 2
+ 1939              	IfxCan_RXD43D_P13_7_IN:
+ 1940 0000 000079F4 	 .word -193396736
+ 1941 0004 03000000 	 .word 3
+ 1942 0008 00D403F0 	 .word -268184576
+ 1943 000c 07       	 .byte 7
+ 1944 000d 000000   	 .zero 3
+ 1945 0010 03000000 	 .word 3
+ 1946              	 .global IfxCan_RXD43C_P03_6_IN
+ 1947              	 .section .rodata.IfxCan_RXD43C_P03_6_IN,"a"
+ 1948              	 .align 2
+ 1951              	IfxCan_RXD43C_P03_6_IN:
+ 1952 0000 000079F4 	 .word -193396736
+ 1953 0004 03000000 	 .word 3
+ 1954 0008 00AC03F0 	 .word -268194816
+ 1955 000c 06       	 .byte 6
+ 1956 000d 000000   	 .zero 3
+ 1957 0010 02000000 	 .word 2
+ 1958              	 .global IfxCan_RXD43B_P15_7_IN
+ 1959              	 .section .rodata.IfxCan_RXD43B_P15_7_IN,"a"
+ 1960              	 .align 2
+ 1963              	IfxCan_RXD43B_P15_7_IN:
+ 1964 0000 000079F4 	 .word -193396736
+ 1965 0004 03000000 	 .word 3
+ 1966 0008 00DC03F0 	 .word -268182528
+ 1967 000c 07       	 .byte 7
+ 1968 000d 000000   	 .zero 3
+ 1969 0010 01000000 	 .word 1
+ 1970              	 .global IfxCan_RXD43A_P34_3_IN
+ 1971              	 .section .rodata.IfxCan_RXD43A_P34_3_IN,"a"
+ 1972              	 .align 2
+ 1975              	IfxCan_RXD43A_P34_3_IN:
+ 1976 0000 000079F4 	 .word -193396736
+ 1977 0004 03000000 	 .word 3
+ 1978 0008 002804F0 	 .word -268163072
+ 1979 000c 03       	 .byte 3
+ 1980 000d 000000   	 .zero 3
+ 1981 0010 00000000 	 .word 0
+ 1982              	 .global IfxCan_RXD42F_P04_5_IN
+ 1983              	 .section .rodata.IfxCan_RXD42F_P04_5_IN,"a"
+ 1984              	 .align 2
+ 1987              	IfxCan_RXD42F_P04_5_IN:
+ 1988 0000 000079F4 	 .word -193396736
+ 1989 0004 02000000 	 .word 2
+ 1990 0008 00B003F0 	 .word -268193792
+ 1991 000c 05       	 .byte 5
+ 1992 000d 000000   	 .zero 3
+ 1993 0010 05000000 	 .word 5
+ 1994              	 .global IfxCan_RXD42E_P13_15_IN
+ 1995              	 .section .rodata.IfxCan_RXD42E_P13_15_IN,"a"
+ 1996              	 .align 2
+ 1999              	IfxCan_RXD42E_P13_15_IN:
+ 2000 0000 000079F4 	 .word -193396736
+ 2001 0004 02000000 	 .word 2
+ 2002 0008 00D403F0 	 .word -268184576
+ 2003 000c 0F       	 .byte 15
+ 2004 000d 000000   	 .zero 3
+ 2005 0010 04000000 	 .word 4
+ 2006              	 .global IfxCan_RXD42D_P13_4_IN
+ 2007              	 .section .rodata.IfxCan_RXD42D_P13_4_IN,"a"
+ 2008              	 .align 2
+ 2011              	IfxCan_RXD42D_P13_4_IN:
+ 2012 0000 000079F4 	 .word -193396736
+ 2013 0004 02000000 	 .word 2
+ 2014 0008 00D403F0 	 .word -268184576
+ 2015 000c 04       	 .byte 4
+ 2016 000d 000000   	 .zero 3
+ 2017 0010 03000000 	 .word 3
+ 2018              	 .global IfxCan_RXD42B_P15_4_IN
+ 2019              	 .section .rodata.IfxCan_RXD42B_P15_4_IN,"a"
+ 2020              	 .align 2
+ 2023              	IfxCan_RXD42B_P15_4_IN:
+ 2024 0000 000079F4 	 .word -193396736
+ 2025 0004 02000000 	 .word 2
+ 2026 0008 00DC03F0 	 .word -268182528
+ 2027 000c 04       	 .byte 4
+ 2028 000d 000000   	 .zero 3
+ 2029 0010 01000000 	 .word 1
+ 2030              	 .global IfxCan_RXD42A_P22_5_IN
+ 2031              	 .section .rodata.IfxCan_RXD42A_P22_5_IN,"a"
+ 2032              	 .align 2
+ 2035              	IfxCan_RXD42A_P22_5_IN:
+ 2036 0000 000079F4 	 .word -193396736
+ 2037 0004 02000000 	 .word 2
+ 2038 0008 00F803F0 	 .word -268175360
+ 2039 000c 05       	 .byte 5
+ 2040 000d 000000   	 .zero 3
+ 2041 0010 00000000 	 .word 0
+ 2042              	 .global IfxCan_RXD41E_P10_0_IN
+ 2043              	 .section .rodata.IfxCan_RXD41E_P10_0_IN,"a"
+ 2044              	 .align 2
+ 2047              	IfxCan_RXD41E_P10_0_IN:
+ 2048 0000 000079F4 	 .word -193396736
+ 2049 0004 01000000 	 .word 1
+ 2050 0008 00C803F0 	 .word -268187648
+ 2051 000c 00       	 .byte 0
+ 2052 000d 000000   	 .zero 3
+ 2053 0010 04000000 	 .word 4
+ 2054              	 .global IfxCan_RXD41D_P35_0_IN
+ 2055              	 .section .rodata.IfxCan_RXD41D_P35_0_IN,"a"
+ 2056              	 .align 2
+ 2059              	IfxCan_RXD41D_P35_0_IN:
+ 2060 0000 000079F4 	 .word -193396736
+ 2061 0004 01000000 	 .word 1
+ 2062 0008 002C04F0 	 .word -268162048
+ 2063 000c 00       	 .byte 0
+ 2064 000d 000000   	 .zero 3
+ 2065 0010 03000000 	 .word 3
+ 2066              	 .global IfxCan_RXD41C_P35_1_IN
+ 2067              	 .section .rodata.IfxCan_RXD41C_P35_1_IN,"a"
+ 2068              	 .align 2
+ 2071              	IfxCan_RXD41C_P35_1_IN:
+ 2072 0000 000079F4 	 .word -193396736
+ 2073 0004 01000000 	 .word 1
+ 2074 0008 002C04F0 	 .word -268162048
+ 2075 000c 01       	 .byte 1
+ 2076 000d 000000   	 .zero 3
+ 2077 0010 02000000 	 .word 2
+ 2078              	 .global IfxCan_RXD41B_P14_0_IN
+ 2079              	 .section .rodata.IfxCan_RXD41B_P14_0_IN,"a"
+ 2080              	 .align 2
+ 2083              	IfxCan_RXD41B_P14_0_IN:
+ 2084 0000 000079F4 	 .word -193396736
+ 2085 0004 01000000 	 .word 1
+ 2086 0008 00D803F0 	 .word -268183552
+ 2087 000c 00       	 .byte 0
+ 2088 000d 000000   	 .zero 3
+ 2089 0010 01000000 	 .word 1
+ 2090              	 .global IfxCan_RXD41A_P22_2_IN
+ 2091              	 .section .rodata.IfxCan_RXD41A_P22_2_IN,"a"
+ 2092              	 .align 2
+ 2095              	IfxCan_RXD41A_P22_2_IN:
+ 2096 0000 000079F4 	 .word -193396736
+ 2097 0004 01000000 	 .word 1
+ 2098 0008 00F803F0 	 .word -268175360
+ 2099 000c 02       	 .byte 2
+ 2100 000d 000000   	 .zero 3
+ 2101 0010 00000000 	 .word 0
+ 2102              	 .global IfxCan_RXD40E_P00_13_IN
+ 2103              	 .section .rodata.IfxCan_RXD40E_P00_13_IN,"a"
+ 2104              	 .align 2
+ 2107              	IfxCan_RXD40E_P00_13_IN:
+ 2108 0000 000079F4 	 .word -193396736
+ 2109 0004 00000000 	 .word 0
+ 2110 0008 00A003F0 	 .word -268197888
+ 2111 000c 0D       	 .byte 13
+ 2112 000d 000000   	 .zero 3
+ 2113 0010 04000000 	 .word 4
+ 2114              	 .global IfxCan_RXD40D_P00_15_IN
+ 2115              	 .section .rodata.IfxCan_RXD40D_P00_15_IN,"a"
+ 2116              	 .align 2
+ 2119              	IfxCan_RXD40D_P00_15_IN:
+ 2120 0000 000079F4 	 .word -193396736
+ 2121 0004 00000000 	 .word 0
+ 2122 0008 00A003F0 	 .word -268197888
+ 2123 000c 0F       	 .byte 15
+ 2124 000d 000000   	 .zero 3
+ 2125 0010 03000000 	 .word 3
+ 2126              	 .global IfxCan_RXD40B_P20_1_IN
+ 2127              	 .section .rodata.IfxCan_RXD40B_P20_1_IN,"a"
+ 2128              	 .align 2
+ 2131              	IfxCan_RXD40B_P20_1_IN:
+ 2132 0000 000079F4 	 .word -193396736
+ 2133 0004 00000000 	 .word 0
+ 2134 0008 00F003F0 	 .word -268177408
+ 2135 000c 01       	 .byte 1
+ 2136 000d 000000   	 .zero 3
+ 2137 0010 01000000 	 .word 1
+ 2138              	 .global IfxCan_RXD40A_P00_11_IN
+ 2139              	 .section .rodata.IfxCan_RXD40A_P00_11_IN,"a"
+ 2140              	 .align 2
+ 2143              	IfxCan_RXD40A_P00_11_IN:
+ 2144 0000 000079F4 	 .word -193396736
+ 2145 0004 00000000 	 .word 0
+ 2146 0008 00A003F0 	 .word -268197888
+ 2147 000c 0B       	 .byte 11
+ 2148 000d 000000   	 .zero 3
+ 2149 0010 00000000 	 .word 0
+ 2150              	 .global IfxCan_RXD33E_P13_9_IN
+ 2151              	 .section .rodata.IfxCan_RXD33E_P13_9_IN,"a"
+ 2152              	 .align 2
+ 2155              	IfxCan_RXD33E_P13_9_IN:
+ 2156 0000 000077F4 	 .word -193527808
+ 2157 0004 03000000 	 .word 3
+ 2158 0008 00D403F0 	 .word -268184576
+ 2159 000c 09       	 .byte 9
+ 2160 000d 000000   	 .zero 3
+ 2161 0010 04000000 	 .word 4
+ 2162              	 .global IfxCan_RXD33D_P13_13_IN
+ 2163              	 .section .rodata.IfxCan_RXD33D_P13_13_IN,"a"
+ 2164              	 .align 2
+ 2167              	IfxCan_RXD33D_P13_13_IN:
+ 2168 0000 000077F4 	 .word -193527808
+ 2169 0004 03000000 	 .word 3
+ 2170 0008 00D403F0 	 .word -268184576
+ 2171 000c 0D       	 .byte 13
+ 2172 000d 000000   	 .zero 3
+ 2173 0010 03000000 	 .word 3
+ 2174              	 .global IfxCan_RXD33B_P21_6_IN
+ 2175              	 .section .rodata.IfxCan_RXD33B_P21_6_IN,"a"
+ 2176              	 .align 2
+ 2179              	IfxCan_RXD33B_P21_6_IN:
+ 2180 0000 000077F4 	 .word -193527808
+ 2181 0004 03000000 	 .word 3
+ 2182 0008 00F403F0 	 .word -268176384
+ 2183 000c 06       	 .byte 6
+ 2184 000d 000000   	 .zero 3
+ 2185 0010 01000000 	 .word 1
+ 2186              	 .global IfxCan_RXD33A_P13_2_IN
+ 2187              	 .section .rodata.IfxCan_RXD33A_P13_2_IN,"a"
+ 2188              	 .align 2
+ 2191              	IfxCan_RXD33A_P13_2_IN:
+ 2192 0000 000077F4 	 .word -193527808
+ 2193 0004 03000000 	 .word 3
+ 2194 0008 00D403F0 	 .word -268184576
+ 2195 000c 02       	 .byte 2
+ 2196 000d 000000   	 .zero 3
+ 2197 0010 00000000 	 .word 0
+ 2198              	 .global IfxCan_RXD32E_P31_7_IN
+ 2199              	 .section .rodata.IfxCan_RXD32E_P31_7_IN,"a"
+ 2200              	 .align 2
+ 2203              	IfxCan_RXD32E_P31_7_IN:
+ 2204 0000 000077F4 	 .word -193527808
+ 2205 0004 02000000 	 .word 2
+ 2206 0008 001C04F0 	 .word -268166144
+ 2207 000c 07       	 .byte 7
+ 2208 000d 000000   	 .zero 3
+ 2209 0010 04000000 	 .word 4
+ 2210              	 .global IfxCan_RXD32D_P01_6_IN
+ 2211              	 .section .rodata.IfxCan_RXD32D_P01_6_IN,"a"
+ 2212              	 .align 2
+ 2215              	IfxCan_RXD32D_P01_6_IN:
+ 2216 0000 000077F4 	 .word -193527808
+ 2217 0004 02000000 	 .word 2
+ 2218 0008 00A403F0 	 .word -268196864
+ 2219 000c 06       	 .byte 6
+ 2220 000d 000000   	 .zero 3
+ 2221 0010 03000000 	 .word 3
+ 2222              	 .global IfxCan_RXD32B_P20_6_IN
+ 2223              	 .section .rodata.IfxCan_RXD32B_P20_6_IN,"a"
+ 2224              	 .align 2
+ 2227              	IfxCan_RXD32B_P20_6_IN:
+ 2228 0000 000077F4 	 .word -193527808
+ 2229 0004 02000000 	 .word 2
+ 2230 0008 00F003F0 	 .word -268177408
+ 2231 000c 06       	 .byte 6
+ 2232 000d 000000   	 .zero 3
+ 2233 0010 01000000 	 .word 1
+ 2234              	 .global IfxCan_RXD32A_P01_3_IN
+ 2235              	 .section .rodata.IfxCan_RXD32A_P01_3_IN,"a"
+ 2236              	 .align 2
+ 2239              	IfxCan_RXD32A_P01_3_IN:
+ 2240 0000 000077F4 	 .word -193527808
+ 2241 0004 02000000 	 .word 2
+ 2242 0008 00A403F0 	 .word -268196864
+ 2243 000c 03       	 .byte 3
+ 2244 000d 000000   	 .zero 3
+ 2245 0010 00000000 	 .word 0
+ 2246              	 .global IfxCan_RXD31E_P35_2_IN
+ 2247              	 .section .rodata.IfxCan_RXD31E_P35_2_IN,"a"
+ 2248              	 .align 2
+ 2251              	IfxCan_RXD31E_P35_2_IN:
+ 2252 0000 000077F4 	 .word -193527808
+ 2253 0004 01000000 	 .word 1
+ 2254 0008 002C04F0 	 .word -268162048
+ 2255 000c 02       	 .byte 2
+ 2256 000d 000000   	 .zero 3
+ 2257 0010 04000000 	 .word 4
+ 2258              	 .global IfxCan_RXD31C_P02_0_IN
+ 2259              	 .section .rodata.IfxCan_RXD31C_P02_0_IN,"a"
+ 2260              	 .align 2
+ 2263              	IfxCan_RXD31C_P02_0_IN:
+ 2264 0000 000077F4 	 .word -193527808
+ 2265 0004 01000000 	 .word 1
+ 2266 0008 00A803F0 	 .word -268195840
+ 2267 000c 00       	 .byte 0
+ 2268 000d 000000   	 .zero 3
+ 2269 0010 02000000 	 .word 2
+ 2270              	 .global IfxCan_RXD31B_P33_14_IN
+ 2271              	 .section .rodata.IfxCan_RXD31B_P33_14_IN,"a"
+ 2272              	 .align 2
+ 2275              	IfxCan_RXD31B_P33_14_IN:
+ 2276 0000 000077F4 	 .word -193527808
+ 2277 0004 01000000 	 .word 1
+ 2278 0008 002404F0 	 .word -268164096
+ 2279 000c 0E       	 .byte 14
+ 2280 000d 000000   	 .zero 3
+ 2281 0010 01000000 	 .word 1
+ 2282              	 .global IfxCan_RXD30E_P03_0_IN
+ 2283              	 .section .rodata.IfxCan_RXD30E_P03_0_IN,"a"
+ 2284              	 .align 2
+ 2287              	IfxCan_RXD30E_P03_0_IN:
+ 2288 0000 000077F4 	 .word -193527808
+ 2289 0004 00000000 	 .word 0
+ 2290 0008 00AC03F0 	 .word -268194816
+ 2291 000c 00       	 .byte 0
+ 2292 000d 000000   	 .zero 3
+ 2293 0010 04000000 	 .word 4
+ 2294              	 .global IfxCan_RXD30D_P02_11_IN
+ 2295              	 .section .rodata.IfxCan_RXD30D_P02_11_IN,"a"
+ 2296              	 .align 2
+ 2299              	IfxCan_RXD30D_P02_11_IN:
+ 2300 0000 000077F4 	 .word -193527808
+ 2301 0004 00000000 	 .word 0
+ 2302 0008 00A803F0 	 .word -268195840
+ 2303 000c 0B       	 .byte 11
+ 2304 000d 000000   	 .zero 3
+ 2305 0010 03000000 	 .word 3
+ 2306              	 .global IfxCan_RXD30C_P16_11_IN
+ 2307              	 .section .rodata.IfxCan_RXD30C_P16_11_IN,"a"
+ 2308              	 .align 2
+ 2311              	IfxCan_RXD30C_P16_11_IN:
+ 2312 0000 000077F4 	 .word -193527808
+ 2313 0004 00000000 	 .word 0
+ 2314 0008 00E003F0 	 .word -268181504
+ 2315 000c 0B       	 .byte 11
+ 2316 000d 000000   	 .zero 3
+ 2317 0010 02000000 	 .word 2
+ 2318              	 .global IfxCan_RXD30B_P02_8_IN
+ 2319              	 .section .rodata.IfxCan_RXD30B_P02_8_IN,"a"
+ 2320              	 .align 2
+ 2323              	IfxCan_RXD30B_P02_8_IN:
+ 2324 0000 000077F4 	 .word -193527808
+ 2325 0004 00000000 	 .word 0
+ 2326 0008 00A803F0 	 .word -268195840
+ 2327 000c 08       	 .byte 8
+ 2328 000d 000000   	 .zero 3
+ 2329 0010 01000000 	 .word 1
+ 2330              	 .global IfxCan_RXD30A_P10_4_IN
+ 2331              	 .section .rodata.IfxCan_RXD30A_P10_4_IN,"a"
+ 2332              	 .align 2
+ 2335              	IfxCan_RXD30A_P10_4_IN:
+ 2336 0000 000077F4 	 .word -193527808
+ 2337 0004 00000000 	 .word 0
+ 2338 0008 00C803F0 	 .word -268187648
+ 2339 000c 04       	 .byte 4
+ 2340 000d 000000   	 .zero 3
+ 2341 0010 00000000 	 .word 0
+ 2342              	 .global IfxCan_RXD23H_P10_10_IN
+ 2343              	 .section .rodata.IfxCan_RXD23H_P10_10_IN,"a"
+ 2344              	 .align 2
+ 2347              	IfxCan_RXD23H_P10_10_IN:
+ 2348 0000 000075F4 	 .word -193658880
+ 2349 0004 03000000 	 .word 3
+ 2350 0008 00C803F0 	 .word -268187648
+ 2351 000c 0A       	 .byte 10
+ 2352 000d 000000   	 .zero 3
+ 2353 0010 07000000 	 .word 7
+ 2354              	 .global IfxCan_RXD23G_P10_15_IN
+ 2355              	 .section .rodata.IfxCan_RXD23G_P10_15_IN,"a"
+ 2356              	 .align 2
+ 2359              	IfxCan_RXD23G_P10_15_IN:
+ 2360 0000 000075F4 	 .word -193658880
+ 2361 0004 03000000 	 .word 3
+ 2362 0008 00C803F0 	 .word -268187648
+ 2363 000c 0F       	 .byte 15
+ 2364 000d 000000   	 .zero 3
+ 2365 0010 06000000 	 .word 6
+ 2366              	 .global IfxCan_RXD23F_P03_2_IN
+ 2367              	 .section .rodata.IfxCan_RXD23F_P03_2_IN,"a"
+ 2368              	 .align 2
+ 2371              	IfxCan_RXD23F_P03_2_IN:
+ 2372 0000 000075F4 	 .word -193658880
+ 2373 0004 03000000 	 .word 3
+ 2374 0008 00AC03F0 	 .word -268194816
+ 2375 000c 02       	 .byte 2
+ 2376 000d 000000   	 .zero 3
+ 2377 0010 05000000 	 .word 5
+ 2378              	 .global IfxCan_RXD23E_P22_11_IN
+ 2379              	 .section .rodata.IfxCan_RXD23E_P22_11_IN,"a"
+ 2380              	 .align 2
+ 2383              	IfxCan_RXD23E_P22_11_IN:
+ 2384 0000 000075F4 	 .word -193658880
+ 2385 0004 03000000 	 .word 3
+ 2386 0008 00F803F0 	 .word -268175360
+ 2387 000c 0B       	 .byte 11
+ 2388 000d 000000   	 .zero 3
+ 2389 0010 04000000 	 .word 4
+ 2390              	 .global IfxCan_RXD23D_P13_5_IN
+ 2391              	 .section .rodata.IfxCan_RXD23D_P13_5_IN,"a"
+ 2392              	 .align 2
+ 2395              	IfxCan_RXD23D_P13_5_IN:
+ 2396 0000 000075F4 	 .word -193658880
+ 2397 0004 03000000 	 .word 3
+ 2398 0008 00D403F0 	 .word -268184576
+ 2399 000c 05       	 .byte 5
+ 2400 000d 000000   	 .zero 3
+ 2401 0010 03000000 	 .word 3
+ 2402              	 .global IfxCan_RXD23C_P14_15_IN
+ 2403              	 .section .rodata.IfxCan_RXD23C_P14_15_IN,"a"
+ 2404              	 .align 2
+ 2407              	IfxCan_RXD23C_P14_15_IN:
+ 2408 0000 000075F4 	 .word -193658880
+ 2409 0004 03000000 	 .word 3
+ 2410 0008 00D803F0 	 .word -268183552
+ 2411 000c 0F       	 .byte 15
+ 2412 000d 000000   	 .zero 3
+ 2413 0010 02000000 	 .word 2
+ 2414              	 .global IfxCan_RXD23B_P23_3_IN
+ 2415              	 .section .rodata.IfxCan_RXD23B_P23_3_IN,"a"
+ 2416              	 .align 2
+ 2419              	IfxCan_RXD23B_P23_3_IN:
+ 2420 0000 000075F4 	 .word -193658880
+ 2421 0004 03000000 	 .word 3
+ 2422 0008 00FC03F0 	 .word -268174336
+ 2423 000c 03       	 .byte 3
+ 2424 000d 000000   	 .zero 3
+ 2425 0010 01000000 	 .word 1
+ 2426              	 .global IfxCan_RXD23A_P14_10_IN
+ 2427              	 .section .rodata.IfxCan_RXD23A_P14_10_IN,"a"
+ 2428              	 .align 2
+ 2431              	IfxCan_RXD23A_P14_10_IN:
+ 2432 0000 000075F4 	 .word -193658880
+ 2433 0004 03000000 	 .word 3
+ 2434 0008 00D803F0 	 .word -268183552
+ 2435 000c 0A       	 .byte 10
+ 2436 000d 000000   	 .zero 3
+ 2437 0010 00000000 	 .word 0
+ 2438              	 .global IfxCan_RXD22H_P30_6_IN
+ 2439              	 .section .rodata.IfxCan_RXD22H_P30_6_IN,"a"
+ 2440              	 .align 2
+ 2443              	IfxCan_RXD22H_P30_6_IN:
+ 2444 0000 000075F4 	 .word -193658880
+ 2445 0004 02000000 	 .word 2
+ 2446 0008 001804F0 	 .word -268167168
+ 2447 000c 06       	 .byte 6
+ 2448 000d 000000   	 .zero 3
+ 2449 0010 07000000 	 .word 7
+ 2450              	 .global IfxCan_RXD22G_P10_14_IN
+ 2451              	 .section .rodata.IfxCan_RXD22G_P10_14_IN,"a"
+ 2452              	 .align 2
+ 2455              	IfxCan_RXD22G_P10_14_IN:
+ 2456 0000 000075F4 	 .word -193658880
+ 2457 0004 02000000 	 .word 2
+ 2458 0008 00C803F0 	 .word -268187648
+ 2459 000c 0E       	 .byte 14
+ 2460 000d 000000   	 .zero 3
+ 2461 0010 06000000 	 .word 6
+ 2462              	 .global IfxCan_RXD22F_P03_12_IN
+ 2463              	 .section .rodata.IfxCan_RXD22F_P03_12_IN,"a"
+ 2464              	 .align 2
+ 2467              	IfxCan_RXD22F_P03_12_IN:
+ 2468 0000 000075F4 	 .word -193658880
+ 2469 0004 02000000 	 .word 2
+ 2470 0008 00AC03F0 	 .word -268194816
+ 2471 000c 0C       	 .byte 12
+ 2472 000d 000000   	 .zero 3
+ 2473 0010 05000000 	 .word 5
+ 2474              	 .global IfxCan_RXD22E_P22_9_IN
+ 2475              	 .section .rodata.IfxCan_RXD22E_P22_9_IN,"a"
+ 2476              	 .align 2
+ 2479              	IfxCan_RXD22E_P22_9_IN:
+ 2480 0000 000075F4 	 .word -193658880
+ 2481 0004 02000000 	 .word 2
+ 2482 0008 00F803F0 	 .word -268175360
+ 2483 000c 09       	 .byte 9
+ 2484 000d 000000   	 .zero 3
+ 2485 0010 04000000 	 .word 4
+ 2486              	 .global IfxCan_RXD22D_P14_14_IN
+ 2487              	 .section .rodata.IfxCan_RXD22D_P14_14_IN,"a"
+ 2488              	 .align 2
+ 2491              	IfxCan_RXD22D_P14_14_IN:
+ 2492 0000 000075F4 	 .word -193658880
+ 2493 0004 02000000 	 .word 2
+ 2494 0008 00D803F0 	 .word -268183552
+ 2495 000c 0E       	 .byte 14
+ 2496 000d 000000   	 .zero 3
+ 2497 0010 03000000 	 .word 3
+ 2498              	 .global IfxCan_RXD22C_P23_6_IN
+ 2499              	 .section .rodata.IfxCan_RXD22C_P23_6_IN,"a"
+ 2500              	 .align 2
+ 2503              	IfxCan_RXD22C_P23_6_IN:
+ 2504 0000 000075F4 	 .word -193658880
+ 2505 0004 02000000 	 .word 2
+ 2506 0008 00FC03F0 	 .word -268174336
+ 2507 000c 06       	 .byte 6
+ 2508 000d 000000   	 .zero 3
+ 2509 0010 02000000 	 .word 2
+ 2510              	 .global IfxCan_RXD22B_P32_7_IN
+ 2511              	 .section .rodata.IfxCan_RXD22B_P32_7_IN,"a"
+ 2512              	 .align 2
+ 2515              	IfxCan_RXD22B_P32_7_IN:
+ 2516 0000 000075F4 	 .word -193658880
+ 2517 0004 02000000 	 .word 2
+ 2518 0008 002004F0 	 .word -268165120
+ 2519 000c 07       	 .byte 7
+ 2520 000d 000000   	 .zero 3
+ 2521 0010 01000000 	 .word 1
+ 2522              	 .global IfxCan_RXD22A_P33_13_IN
+ 2523              	 .section .rodata.IfxCan_RXD22A_P33_13_IN,"a"
+ 2524              	 .align 2
+ 2527              	IfxCan_RXD22A_P33_13_IN:
+ 2528 0000 000075F4 	 .word -193658880
+ 2529 0004 02000000 	 .word 2
+ 2530 0008 002404F0 	 .word -268164096
+ 2531 000c 0D       	 .byte 13
+ 2532 000d 000000   	 .zero 3
+ 2533 0010 00000000 	 .word 0
+ 2534              	 .global IfxCan_RXD21H_P30_3_IN
+ 2535              	 .section .rodata.IfxCan_RXD21H_P30_3_IN,"a"
+ 2536              	 .align 2
+ 2539              	IfxCan_RXD21H_P30_3_IN:
+ 2540 0000 000075F4 	 .word -193658880
+ 2541 0004 01000000 	 .word 1
+ 2542 0008 001804F0 	 .word -268167168
+ 2543 000c 03       	 .byte 3
+ 2544 000d 000000   	 .zero 3
+ 2545 0010 07000000 	 .word 7
+ 2546              	 .global IfxCan_RXD21G_P13_8_IN
+ 2547              	 .section .rodata.IfxCan_RXD21G_P13_8_IN,"a"
+ 2548              	 .align 2
+ 2551              	IfxCan_RXD21G_P13_8_IN:
+ 2552 0000 000075F4 	 .word -193658880
+ 2553 0004 01000000 	 .word 1
+ 2554 0008 00D403F0 	 .word -268184576
+ 2555 000c 08       	 .byte 8
+ 2556 000d 000000   	 .zero 3
+ 2557 0010 06000000 	 .word 6
+ 2558              	 .global IfxCan_RXD21F_P22_7_IN
+ 2559              	 .section .rodata.IfxCan_RXD21F_P22_7_IN,"a"
+ 2560              	 .align 2
+ 2563              	IfxCan_RXD21F_P22_7_IN:
+ 2564 0000 000075F4 	 .word -193658880
+ 2565 0004 01000000 	 .word 1
+ 2566 0008 00F803F0 	 .word -268175360
+ 2567 000c 07       	 .byte 7
+ 2568 000d 000000   	 .zero 3
+ 2569 0010 05000000 	 .word 5
+ 2570              	 .global IfxCan_RXD21E_P01_0_IN
+ 2571              	 .section .rodata.IfxCan_RXD21E_P01_0_IN,"a"
+ 2572              	 .align 2
+ 2575              	IfxCan_RXD21E_P01_0_IN:
+ 2576 0000 000075F4 	 .word -193658880
+ 2577 0004 01000000 	 .word 1
+ 2578 0008 00A403F0 	 .word -268196864
+ 2579 000c 00       	 .byte 0
+ 2580 000d 000000   	 .zero 3
+ 2581 0010 04000000 	 .word 4
+ 2582              	 .global IfxCan_RXD21D_P32_2_IN
+ 2583              	 .section .rodata.IfxCan_RXD21D_P32_2_IN,"a"
+ 2584              	 .align 2
+ 2587              	IfxCan_RXD21D_P32_2_IN:
+ 2588 0000 000075F4 	 .word -193658880
+ 2589 0004 01000000 	 .word 1
+ 2590 0008 002004F0 	 .word -268165120
+ 2591 000c 02       	 .byte 2
+ 2592 000d 000000   	 .zero 3
+ 2593 0010 03000000 	 .word 3
+ 2594              	 .global IfxCan_RXD21C_P20_0_IN
+ 2595              	 .section .rodata.IfxCan_RXD21C_P20_0_IN,"a"
+ 2596              	 .align 2
+ 2599              	IfxCan_RXD21C_P20_0_IN:
+ 2600 0000 000075F4 	 .word -193658880
+ 2601 0004 01000000 	 .word 1
+ 2602 0008 00F003F0 	 .word -268177408
+ 2603 000c 00       	 .byte 0
+ 2604 000d 000000   	 .zero 3
+ 2605 0010 02000000 	 .word 2
+ 2606              	 .global IfxCan_RXD21B_P13_12_IN
+ 2607              	 .section .rodata.IfxCan_RXD21B_P13_12_IN,"a"
+ 2608              	 .align 2
+ 2611              	IfxCan_RXD21B_P13_12_IN:
+ 2612 0000 000075F4 	 .word -193658880
+ 2613 0004 01000000 	 .word 1
+ 2614 0008 00D403F0 	 .word -268184576
+ 2615 000c 0C       	 .byte 12
+ 2616 000d 000000   	 .zero 3
+ 2617 0010 01000000 	 .word 1
+ 2618              	 .global IfxCan_RXD21A_P00_3_IN
+ 2619              	 .section .rodata.IfxCan_RXD21A_P00_3_IN,"a"
+ 2620              	 .align 2
+ 2623              	IfxCan_RXD21A_P00_3_IN:
+ 2624 0000 000075F4 	 .word -193658880
+ 2625 0004 01000000 	 .word 1
+ 2626 0008 00A003F0 	 .word -268197888
+ 2627 000c 03       	 .byte 3
+ 2628 000d 000000   	 .zero 3
+ 2629 0010 00000000 	 .word 0
+ 2630              	 .global IfxCan_RXD20H_P04_1_IN
+ 2631              	 .section .rodata.IfxCan_RXD20H_P04_1_IN,"a"
+ 2632              	 .align 2
+ 2635              	IfxCan_RXD20H_P04_1_IN:
+ 2636 0000 000075F4 	 .word -193658880
+ 2637 0004 00000000 	 .word 0
+ 2638 0008 00B003F0 	 .word -268193792
+ 2639 000c 01       	 .byte 1
+ 2640 000d 000000   	 .zero 3
+ 2641 0010 07000000 	 .word 7
+ 2642              	 .global IfxCan_RXD20G_P16_13_IN
+ 2643              	 .section .rodata.IfxCan_RXD20G_P16_13_IN,"a"
+ 2644              	 .align 2
+ 2647              	IfxCan_RXD20G_P16_13_IN:
+ 2648 0000 000075F4 	 .word -193658880
+ 2649 0004 00000000 	 .word 0
+ 2650 0008 00E003F0 	 .word -268181504
+ 2651 000c 0D       	 .byte 13
+ 2652 000d 000000   	 .zero 3
+ 2653 0010 06000000 	 .word 6
+ 2654              	 .global IfxCan_RXD20E_P01_8_IN
+ 2655              	 .section .rodata.IfxCan_RXD20E_P01_8_IN,"a"
+ 2656              	 .align 2
+ 2659              	IfxCan_RXD20E_P01_8_IN:
+ 2660 0000 000075F4 	 .word -193658880
+ 2661 0004 00000000 	 .word 0
+ 2662 0008 00A403F0 	 .word -268196864
+ 2663 000c 08       	 .byte 8
+ 2664 000d 000000   	 .zero 3
+ 2665 0010 04000000 	 .word 4
+ 2666              	 .global IfxCan_RXD20D_P02_14_IN
+ 2667              	 .section .rodata.IfxCan_RXD20D_P02_14_IN,"a"
+ 2668              	 .align 2
+ 2671              	IfxCan_RXD20D_P02_14_IN:
+ 2672 0000 000075F4 	 .word -193658880
+ 2673 0004 00000000 	 .word 0
+ 2674 0008 00A803F0 	 .word -268195840
+ 2675 000c 0E       	 .byte 14
+ 2676 000d 000000   	 .zero 3
+ 2677 0010 03000000 	 .word 3
+ 2678              	 .global IfxCan_RXD20C_P34_2_IN
+ 2679              	 .section .rodata.IfxCan_RXD20C_P34_2_IN,"a"
+ 2680              	 .align 2
+ 2683              	IfxCan_RXD20C_P34_2_IN:
+ 2684 0000 000075F4 	 .word -193658880
+ 2685 0004 00000000 	 .word 0
+ 2686 0008 002804F0 	 .word -268163072
+ 2687 000c 02       	 .byte 2
+ 2688 000d 000000   	 .zero 3
+ 2689 0010 02000000 	 .word 2
+ 2690              	 .global IfxCan_RXD20B_P10_8_IN
+ 2691              	 .section .rodata.IfxCan_RXD20B_P10_8_IN,"a"
+ 2692              	 .align 2
+ 2695              	IfxCan_RXD20B_P10_8_IN:
+ 2696 0000 000075F4 	 .word -193658880
+ 2697 0004 00000000 	 .word 0
+ 2698 0008 00C803F0 	 .word -268187648
+ 2699 000c 08       	 .byte 8
+ 2700 000d 000000   	 .zero 3
+ 2701 0010 01000000 	 .word 1
+ 2702              	 .global IfxCan_RXD20A_P10_5_IN
+ 2703              	 .section .rodata.IfxCan_RXD20A_P10_5_IN,"a"
+ 2704              	 .align 2
+ 2707              	IfxCan_RXD20A_P10_5_IN:
+ 2708 0000 000075F4 	 .word -193658880
+ 2709 0004 00000000 	 .word 0
+ 2710 0008 00C803F0 	 .word -268187648
+ 2711 000c 05       	 .byte 5
+ 2712 000d 000000   	 .zero 3
+ 2713 0010 00000000 	 .word 0
+ 2714              	 .global IfxCan_RXD13H_P10_7_IN
+ 2715              	 .section .rodata.IfxCan_RXD13H_P10_7_IN,"a"
+ 2716              	 .align 2
+ 2719              	IfxCan_RXD13H_P10_7_IN:
+ 2720 0000 000073F4 	 .word -193789952
+ 2721 0004 03000000 	 .word 3
+ 2722 0008 00C803F0 	 .word -268187648
+ 2723 000c 07       	 .byte 7
+ 2724 000d 000000   	 .zero 3
+ 2725 0010 07000000 	 .word 7
+ 2726              	 .global IfxCan_RXD13F_P16_1_IN
+ 2727              	 .section .rodata.IfxCan_RXD13F_P16_1_IN,"a"
+ 2728              	 .align 2
+ 2731              	IfxCan_RXD13F_P16_1_IN:
+ 2732 0000 000073F4 	 .word -193789952
+ 2733 0004 03000000 	 .word 3
+ 2734 0008 00E003F0 	 .word -268181504
+ 2735 000c 01       	 .byte 1
+ 2736 000d 000000   	 .zero 3
+ 2737 0010 05000000 	 .word 5
+ 2738              	 .global IfxCan_RXD13C_P22_5_IN
+ 2739              	 .section .rodata.IfxCan_RXD13C_P22_5_IN,"a"
+ 2740              	 .align 2
+ 2743              	IfxCan_RXD13C_P22_5_IN:
+ 2744 0000 000073F4 	 .word -193789952
+ 2745 0004 03000000 	 .word 3
+ 2746 0008 00F803F0 	 .word -268175360
+ 2747 000c 05       	 .byte 5
+ 2748 000d 000000   	 .zero 3
+ 2749 0010 02000000 	 .word 2
+ 2750              	 .global IfxCan_RXD13B_P33_5_IN
+ 2751              	 .section .rodata.IfxCan_RXD13B_P33_5_IN,"a"
+ 2752              	 .align 2
+ 2755              	IfxCan_RXD13B_P33_5_IN:
+ 2756 0000 000073F4 	 .word -193789952
+ 2757 0004 03000000 	 .word 3
+ 2758 0008 002404F0 	 .word -268164096
+ 2759 000c 05       	 .byte 5
+ 2760 000d 000000   	 .zero 3
+ 2761 0010 01000000 	 .word 1
+ 2762              	 .global IfxCan_RXD13A_P14_7_IN
+ 2763              	 .section .rodata.IfxCan_RXD13A_P14_7_IN,"a"
+ 2764              	 .align 2
+ 2767              	IfxCan_RXD13A_P14_7_IN:
+ 2768 0000 000073F4 	 .word -193789952
+ 2769 0004 03000000 	 .word 3
+ 2770 0008 00D803F0 	 .word -268183552
+ 2771 000c 07       	 .byte 7
+ 2772 000d 000000   	 .zero 3
+ 2773 0010 00000000 	 .word 0
+ 2774              	 .global IfxCan_RXD12F_P30_3_IN
+ 2775              	 .section .rodata.IfxCan_RXD12F_P30_3_IN,"a"
+ 2776              	 .align 2
+ 2779              	IfxCan_RXD12F_P30_3_IN:
+ 2780 0000 000073F4 	 .word -193789952
+ 2781 0004 02000000 	 .word 2
+ 2782 0008 001804F0 	 .word -268167168
+ 2783 000c 03       	 .byte 3
+ 2784 000d 000000   	 .zero 3
+ 2785 0010 05000000 	 .word 5
+ 2786              	 .global IfxCan_RXD12E_P16_9_IN
+ 2787              	 .section .rodata.IfxCan_RXD12E_P16_9_IN,"a"
+ 2788              	 .align 2
+ 2791              	IfxCan_RXD12E_P16_9_IN:
+ 2792 0000 000073F4 	 .word -193789952
+ 2793 0004 02000000 	 .word 2
+ 2794 0008 00E003F0 	 .word -268181504
+ 2795 000c 09       	 .byte 9
+ 2796 000d 000000   	 .zero 3
+ 2797 0010 04000000 	 .word 4
+ 2798              	 .global IfxCan_RXD12C_P23_3_IN
+ 2799              	 .section .rodata.IfxCan_RXD12C_P23_3_IN,"a"
+ 2800              	 .align 2
+ 2803              	IfxCan_RXD12C_P23_3_IN:
+ 2804 0000 000073F4 	 .word -193789952
+ 2805 0004 02000000 	 .word 2
+ 2806 0008 00FC03F0 	 .word -268174336
+ 2807 000c 03       	 .byte 3
+ 2808 000d 000000   	 .zero 3
+ 2809 0010 02000000 	 .word 2
+ 2810              	 .global IfxCan_RXD12B_P10_8_IN
+ 2811              	 .section .rodata.IfxCan_RXD12B_P10_8_IN,"a"
+ 2812              	 .align 2
+ 2815              	IfxCan_RXD12B_P10_8_IN:
+ 2816 0000 000073F4 	 .word -193789952
+ 2817 0004 02000000 	 .word 2
+ 2818 0008 00C803F0 	 .word -268187648
+ 2819 000c 08       	 .byte 8
+ 2820 000d 000000   	 .zero 3
+ 2821 0010 01000000 	 .word 1
+ 2822              	 .global IfxCan_RXD12A_P20_6_IN
+ 2823              	 .section .rodata.IfxCan_RXD12A_P20_6_IN,"a"
+ 2824              	 .align 2
+ 2827              	IfxCan_RXD12A_P20_6_IN:
+ 2828 0000 000073F4 	 .word -193789952
+ 2829 0004 02000000 	 .word 2
+ 2830 0008 00F003F0 	 .word -268177408
+ 2831 000c 06       	 .byte 6
+ 2832 000d 000000   	 .zero 3
+ 2833 0010 00000000 	 .word 0
+ 2834              	 .global IfxCan_RXD11H_P03_4_IN
+ 2835              	 .section .rodata.IfxCan_RXD11H_P03_4_IN,"a"
+ 2836              	 .align 2
+ 2839              	IfxCan_RXD11H_P03_4_IN:
+ 2840 0000 000073F4 	 .word -193789952
+ 2841 0004 01000000 	 .word 1
+ 2842 0008 00AC03F0 	 .word -268194816
+ 2843 000c 04       	 .byte 4
+ 2844 000d 000000   	 .zero 3
+ 2845 0010 07000000 	 .word 7
+ 2846              	 .global IfxCan_RXD11G_P13_0_IN
+ 2847              	 .section .rodata.IfxCan_RXD11G_P13_0_IN,"a"
+ 2848              	 .align 2
+ 2851              	IfxCan_RXD11G_P13_0_IN:
+ 2852 0000 000073F4 	 .word -193789952
+ 2853 0004 01000000 	 .word 1
+ 2854 0008 00D403F0 	 .word -268184576
+ 2855 000c 00       	 .byte 0
+ 2856 000d 000000   	 .zero 3
+ 2857 0010 06000000 	 .word 6
+ 2858              	 .global IfxCan_RXD11F_P30_7_IN
+ 2859              	 .section .rodata.IfxCan_RXD11F_P30_7_IN,"a"
+ 2860              	 .align 2
+ 2863              	IfxCan_RXD11F_P30_7_IN:
+ 2864 0000 000073F4 	 .word -193789952
+ 2865 0004 01000000 	 .word 1
+ 2866 0008 001804F0 	 .word -268167168
+ 2867 000c 07       	 .byte 7
+ 2868 000d 000000   	 .zero 3
+ 2869 0010 05000000 	 .word 5
+ 2870              	 .global IfxCan_RXD11E_P16_8_IN
+ 2871              	 .section .rodata.IfxCan_RXD11E_P16_8_IN,"a"
+ 2872              	 .align 2
+ 2875              	IfxCan_RXD11E_P16_8_IN:
+ 2876 0000 000073F4 	 .word -193789952
+ 2877 0004 01000000 	 .word 1
+ 2878 0008 00E003F0 	 .word -268181504
+ 2879 000c 08       	 .byte 8
+ 2880 000d 000000   	 .zero 3
+ 2881 0010 04000000 	 .word 4
+ 2882              	 .global IfxCan_RXD11C_P23_7_IN
+ 2883              	 .section .rodata.IfxCan_RXD11C_P23_7_IN,"a"
+ 2884              	 .align 2
+ 2887              	IfxCan_RXD11C_P23_7_IN:
+ 2888 0000 000073F4 	 .word -193789952
+ 2889 0004 01000000 	 .word 1
+ 2890 0008 00FC03F0 	 .word -268174336
+ 2891 000c 07       	 .byte 7
+ 2892 000d 000000   	 .zero 3
+ 2893 0010 02000000 	 .word 2
+ 2894              	 .global IfxCan_RXD11B_P00_5_IN
+ 2895              	 .section .rodata.IfxCan_RXD11B_P00_5_IN,"a"
+ 2896              	 .align 2
+ 2899              	IfxCan_RXD11B_P00_5_IN:
+ 2900 0000 000073F4 	 .word -193789952
+ 2901 0004 01000000 	 .word 1
+ 2902 0008 00A003F0 	 .word -268197888
+ 2903 000c 05       	 .byte 5
+ 2904 000d 000000   	 .zero 3
+ 2905 0010 01000000 	 .word 1
+ 2906              	 .global IfxCan_RXD11A_P02_4_IN
+ 2907              	 .section .rodata.IfxCan_RXD11A_P02_4_IN,"a"
+ 2908              	 .align 2
+ 2911              	IfxCan_RXD11A_P02_4_IN:
+ 2912 0000 000073F4 	 .word -193789952
+ 2913 0004 01000000 	 .word 1
+ 2914 0008 00A803F0 	 .word -268195840
+ 2915 000c 04       	 .byte 4
+ 2916 000d 000000   	 .zero 3
+ 2917 0010 00000000 	 .word 0
+ 2918              	 .global IfxCan_RXD10H_P10_7_IN
+ 2919              	 .section .rodata.IfxCan_RXD10H_P10_7_IN,"a"
+ 2920              	 .align 2
+ 2923              	IfxCan_RXD10H_P10_7_IN:
+ 2924 0000 000073F4 	 .word -193789952
+ 2925 0004 00000000 	 .word 0
+ 2926 0008 00C803F0 	 .word -268187648
+ 2927 000c 07       	 .byte 7
+ 2928 000d 000000   	 .zero 3
+ 2929 0010 07000000 	 .word 7
+ 2930              	 .global IfxCan_RXD10F_P13_6_IN
+ 2931              	 .section .rodata.IfxCan_RXD10F_P13_6_IN,"a"
+ 2932              	 .align 2
+ 2935              	IfxCan_RXD10F_P13_6_IN:
+ 2936 0000 000073F4 	 .word -193789952
+ 2937 0004 00000000 	 .word 0
+ 2938 0008 00D403F0 	 .word -268184576
+ 2939 000c 06       	 .byte 6
+ 2940 000d 000000   	 .zero 3
+ 2941 0010 05000000 	 .word 5
+ 2942              	 .global IfxCan_RXD10E_P30_0_IN
+ 2943              	 .section .rodata.IfxCan_RXD10E_P30_0_IN,"a"
+ 2944              	 .align 2
+ 2947              	IfxCan_RXD10E_P30_0_IN:
+ 2948 0000 000073F4 	 .word -193789952
+ 2949 0004 00000000 	 .word 0
+ 2950 0008 001804F0 	 .word -268167168
+ 2951 000c 00       	 .byte 0
+ 2952 000d 000000   	 .zero 3
+ 2953 0010 04000000 	 .word 4
+ 2954              	 .global IfxCan_RXD10D_P13_1_IN
+ 2955              	 .section .rodata.IfxCan_RXD10D_P13_1_IN,"a"
+ 2956              	 .align 2
+ 2959              	IfxCan_RXD10D_P13_1_IN:
+ 2960 0000 000073F4 	 .word -193789952
+ 2961 0004 00000000 	 .word 0
+ 2962 0008 00D403F0 	 .word -268184576
+ 2963 000c 01       	 .byte 1
+ 2964 000d 000000   	 .zero 3
+ 2965 0010 03000000 	 .word 3
+ 2966              	 .global IfxCan_RXD10C_P23_0_IN
+ 2967              	 .section .rodata.IfxCan_RXD10C_P23_0_IN,"a"
+ 2968              	 .align 2
+ 2971              	IfxCan_RXD10C_P23_0_IN:
+ 2972 0000 000073F4 	 .word -193789952
+ 2973 0004 00000000 	 .word 0
+ 2974 0008 00FC03F0 	 .word -268174336
+ 2975 000c 00       	 .byte 0
+ 2976 000d 000000   	 .zero 3
+ 2977 0010 02000000 	 .word 2
+ 2978              	 .global IfxCan_RXD10B_P14_7_IN
+ 2979              	 .section .rodata.IfxCan_RXD10B_P14_7_IN,"a"
+ 2980              	 .align 2
+ 2983              	IfxCan_RXD10B_P14_7_IN:
+ 2984 0000 000073F4 	 .word -193789952
+ 2985 0004 00000000 	 .word 0
+ 2986 0008 00D803F0 	 .word -268183552
+ 2987 000c 07       	 .byte 7
+ 2988 000d 000000   	 .zero 3
+ 2989 0010 01000000 	 .word 1
+ 2990              	 .global IfxCan_RXD10A_P00_1_IN
+ 2991              	 .section .rodata.IfxCan_RXD10A_P00_1_IN,"a"
+ 2992              	 .align 2
+ 2995              	IfxCan_RXD10A_P00_1_IN:
+ 2996 0000 000073F4 	 .word -193789952
+ 2997 0004 00000000 	 .word 0
+ 2998 0008 00A003F0 	 .word -268197888
+ 2999 000c 01       	 .byte 1
+ 3000 000d 000000   	 .zero 3
+ 3001 0010 00000000 	 .word 0
+ 3002              	 .global IfxCan_RXD03H_P04_3_IN
+ 3003              	 .section .rodata.IfxCan_RXD03H_P04_3_IN,"a"
+ 3004              	 .align 2
+ 3007              	IfxCan_RXD03H_P04_3_IN:
+ 3008 0000 000071F4 	 .word -193921024
+ 3009 0004 03000000 	 .word 3
+ 3010 0008 00B003F0 	 .word -268193792
+ 3011 000c 03       	 .byte 3
+ 3012 000d 000000   	 .zero 3
+ 3013 0010 07000000 	 .word 7
+ 3014              	 .global IfxCan_RXD03G_P16_6_IN
+ 3015              	 .section .rodata.IfxCan_RXD03G_P16_6_IN,"a"
+ 3016              	 .align 2
+ 3019              	IfxCan_RXD03G_P16_6_IN:
+ 3020 0000 000071F4 	 .word -193921024
+ 3021 0004 03000000 	 .word 3
+ 3022 0008 00E003F0 	 .word -268181504
+ 3023 000c 06       	 .byte 6
+ 3024 000d 000000   	 .zero 3
+ 3025 0010 06000000 	 .word 6
+ 3026              	 .global IfxCan_RXD03F_P01_0_IN
+ 3027              	 .section .rodata.IfxCan_RXD03F_P01_0_IN,"a"
+ 3028              	 .align 2
+ 3031              	IfxCan_RXD03F_P01_0_IN:
+ 3032 0000 000071F4 	 .word -193921024
+ 3033 0004 03000000 	 .word 3
+ 3034 0008 00A403F0 	 .word -268196864
+ 3035 000c 00       	 .byte 0
+ 3036 000d 000000   	 .zero 3
+ 3037 0010 05000000 	 .word 5
+ 3038              	 .global IfxCan_RXD03E_P20_9_IN
+ 3039              	 .section .rodata.IfxCan_RXD03E_P20_9_IN,"a"
+ 3040              	 .align 2
+ 3043              	IfxCan_RXD03E_P20_9_IN:
+ 3044 0000 000071F4 	 .word -193921024
+ 3045 0004 03000000 	 .word 3
+ 3046 0008 00F003F0 	 .word -268177408
+ 3047 000c 09       	 .byte 9
+ 3048 000d 000000   	 .zero 3
+ 3049 0010 04000000 	 .word 4
+ 3050              	 .global IfxCan_RXD03C_P20_0_IN
+ 3051              	 .section .rodata.IfxCan_RXD03C_P20_0_IN,"a"
+ 3052              	 .align 2
+ 3055              	IfxCan_RXD03C_P20_0_IN:
+ 3056 0000 000071F4 	 .word -193921024
+ 3057 0004 03000000 	 .word 3
+ 3058 0008 00F003F0 	 .word -268177408
+ 3059 000c 00       	 .byte 0
+ 3060 000d 000000   	 .zero 3
+ 3061 0010 02000000 	 .word 2
+ 3062              	 .global IfxCan_RXD03B_P32_2_IN
+ 3063              	 .section .rodata.IfxCan_RXD03B_P32_2_IN,"a"
+ 3064              	 .align 2
+ 3067              	IfxCan_RXD03B_P32_2_IN:
+ 3068 0000 000071F4 	 .word -193921024
+ 3069 0004 03000000 	 .word 3
+ 3070 0008 002004F0 	 .word -268165120
+ 3071 000c 02       	 .byte 2
+ 3072 000d 000000   	 .zero 3
+ 3073 0010 01000000 	 .word 1
+ 3074              	 .global IfxCan_RXD03A_P00_3_IN
+ 3075              	 .section .rodata.IfxCan_RXD03A_P00_3_IN,"a"
+ 3076              	 .align 2
+ 3079              	IfxCan_RXD03A_P00_3_IN:
+ 3080 0000 000071F4 	 .word -193921024
+ 3081 0004 03000000 	 .word 3
+ 3082 0008 00A003F0 	 .word -268197888
+ 3083 000c 03       	 .byte 3
+ 3084 000d 000000   	 .zero 3
+ 3085 0010 00000000 	 .word 0
+ 3086              	 .global IfxCan_RXD02H_P02_7_IN
+ 3087              	 .section .rodata.IfxCan_RXD02H_P02_7_IN,"a"
+ 3088              	 .align 2
+ 3091              	IfxCan_RXD02H_P02_7_IN:
+ 3092 0000 000071F4 	 .word -193921024
+ 3093 0004 02000000 	 .word 2
+ 3094 0008 00A803F0 	 .word -268195840
+ 3095 000c 07       	 .byte 7
+ 3096 000d 000000   	 .zero 3
+ 3097 0010 07000000 	 .word 7
+ 3098              	 .global IfxCan_RXD02G_P10_8_IN
+ 3099              	 .section .rodata.IfxCan_RXD02G_P10_8_IN,"a"
+ 3100              	 .align 2
+ 3103              	IfxCan_RXD02G_P10_8_IN:
+ 3104 0000 000071F4 	 .word -193921024
+ 3105 0004 02000000 	 .word 2
+ 3106 0008 00C803F0 	 .word -268187648
+ 3107 000c 08       	 .byte 8
+ 3108 000d 000000   	 .zero 3
+ 3109 0010 06000000 	 .word 6
+ 3110              	 .global IfxCan_RXD02F_P03_13_IN
+ 3111              	 .section .rodata.IfxCan_RXD02F_P03_13_IN,"a"
+ 3112              	 .align 2
+ 3115              	IfxCan_RXD02F_P03_13_IN:
+ 3116 0000 000071F4 	 .word -193921024
+ 3117 0004 02000000 	 .word 2
+ 3118 0008 00AC03F0 	 .word -268194816
+ 3119 000c 0D       	 .byte 13
+ 3120 000d 000000   	 .zero 3
+ 3121 0010 05000000 	 .word 5
+ 3122              	 .global IfxCan_RXD02E_P10_2_IN
+ 3123              	 .section .rodata.IfxCan_RXD02E_P10_2_IN,"a"
+ 3124              	 .align 2
+ 3127              	IfxCan_RXD02E_P10_2_IN:
+ 3128 0000 000071F4 	 .word -193921024
+ 3129 0004 02000000 	 .word 2
+ 3130 0008 00C803F0 	 .word -268187648
+ 3131 000c 02       	 .byte 2
+ 3132 000d 000000   	 .zero 3
+ 3133 0010 04000000 	 .word 4
+ 3134              	 .global IfxCan_RXD02D_P14_8_IN
+ 3135              	 .section .rodata.IfxCan_RXD02D_P14_8_IN,"a"
+ 3136              	 .align 2
+ 3139              	IfxCan_RXD02D_P14_8_IN:
+ 3140 0000 000071F4 	 .word -193921024
+ 3141 0004 02000000 	 .word 2
+ 3142 0008 00D803F0 	 .word -268183552
+ 3143 000c 08       	 .byte 8
+ 3144 000d 000000   	 .zero 3
+ 3145 0010 03000000 	 .word 3
+ 3146              	 .global IfxCan_RXD02C_P32_6_IN
+ 3147              	 .section .rodata.IfxCan_RXD02C_P32_6_IN,"a"
+ 3148              	 .align 2
+ 3151              	IfxCan_RXD02C_P32_6_IN:
+ 3152 0000 000071F4 	 .word -193921024
+ 3153 0004 02000000 	 .word 2
+ 3154 0008 002004F0 	 .word -268165120
+ 3155 000c 06       	 .byte 6
+ 3156 000d 000000   	 .zero 3
+ 3157 0010 02000000 	 .word 2
+ 3158              	 .global IfxCan_RXD02B_P02_3_IN
+ 3159              	 .section .rodata.IfxCan_RXD02B_P02_3_IN,"a"
+ 3160              	 .align 2
+ 3163              	IfxCan_RXD02B_P02_3_IN:
+ 3164 0000 000071F4 	 .word -193921024
+ 3165 0004 02000000 	 .word 2
+ 3166 0008 00A803F0 	 .word -268195840
+ 3167 000c 03       	 .byte 3
+ 3168 000d 000000   	 .zero 3
+ 3169 0010 01000000 	 .word 1
+ 3170              	 .global IfxCan_RXD02A_P15_1_IN
+ 3171              	 .section .rodata.IfxCan_RXD02A_P15_1_IN,"a"
+ 3172              	 .align 2
+ 3175              	IfxCan_RXD02A_P15_1_IN:
+ 3176 0000 000071F4 	 .word -193921024
+ 3177 0004 02000000 	 .word 2
+ 3178 0008 00DC03F0 	 .word -268182528
+ 3179 000c 01       	 .byte 1
+ 3180 000d 000000   	 .zero 3
+ 3181 0010 00000000 	 .word 0
+ 3182              	 .global IfxCan_RXD01H_P04_1_IN
+ 3183              	 .section .rodata.IfxCan_RXD01H_P04_1_IN,"a"
+ 3184              	 .align 2
+ 3187              	IfxCan_RXD01H_P04_1_IN:
+ 3188 0000 000071F4 	 .word -193921024
+ 3189 0004 01000000 	 .word 1
+ 3190 0008 00B003F0 	 .word -268193792
+ 3191 000c 01       	 .byte 1
+ 3192 000d 000000   	 .zero 3
+ 3193 0010 07000000 	 .word 7
+ 3194              	 .global IfxCan_RXD01G_P03_9_IN
+ 3195              	 .section .rodata.IfxCan_RXD01G_P03_9_IN,"a"
+ 3196              	 .align 2
+ 3199              	IfxCan_RXD01G_P03_9_IN:
+ 3200 0000 000071F4 	 .word -193921024
+ 3201 0004 01000000 	 .word 1
+ 3202 0008 00AC03F0 	 .word -268194816
+ 3203 000c 09       	 .byte 9
+ 3204 000d 000000   	 .zero 3
+ 3205 0010 06000000 	 .word 6
+ 3206              	 .global IfxCan_RXD01F_P03_14_IN
+ 3207              	 .section .rodata.IfxCan_RXD01F_P03_14_IN,"a"
+ 3208              	 .align 2
+ 3211              	IfxCan_RXD01F_P03_14_IN:
+ 3212 0000 000071F4 	 .word -193921024
+ 3213 0004 01000000 	 .word 1
+ 3214 0008 00AC03F0 	 .word -268194816
+ 3215 000c 0E       	 .byte 14
+ 3216 000d 000000   	 .zero 3
+ 3217 0010 05000000 	 .word 5
+ 3218              	 .global IfxCan_RXD01E_P02_10_IN
+ 3219              	 .section .rodata.IfxCan_RXD01E_P02_10_IN,"a"
+ 3220              	 .align 2
+ 3223              	IfxCan_RXD01E_P02_10_IN:
+ 3224 0000 000071F4 	 .word -193921024
+ 3225 0004 01000000 	 .word 1
+ 3226 0008 00A803F0 	 .word -268195840
+ 3227 000c 0A       	 .byte 10
+ 3228 000d 000000   	 .zero 3
+ 3229 0010 04000000 	 .word 4
+ 3230              	 .global IfxCan_RXD01D_P33_10_IN
+ 3231              	 .section .rodata.IfxCan_RXD01D_P33_10_IN,"a"
+ 3232              	 .align 2
+ 3235              	IfxCan_RXD01D_P33_10_IN:
+ 3236 0000 000071F4 	 .word -193921024
+ 3237 0004 01000000 	 .word 1
+ 3238 0008 002404F0 	 .word -268164096
+ 3239 000c 0A       	 .byte 10
+ 3240 000d 000000   	 .zero 3
+ 3241 0010 03000000 	 .word 3
+ 3242              	 .global IfxCan_RXD01C_P01_4_IN
+ 3243              	 .section .rodata.IfxCan_RXD01C_P01_4_IN,"a"
+ 3244              	 .align 2
+ 3247              	IfxCan_RXD01C_P01_4_IN:
+ 3248 0000 000071F4 	 .word -193921024
+ 3249 0004 01000000 	 .word 1
+ 3250 0008 00A403F0 	 .word -268196864
+ 3251 000c 04       	 .byte 4
+ 3252 000d 000000   	 .zero 3
+ 3253 0010 02000000 	 .word 2
+ 3254              	 .global IfxCan_RXD01B_P14_1_IN
+ 3255              	 .section .rodata.IfxCan_RXD01B_P14_1_IN,"a"
+ 3256              	 .align 2
+ 3259              	IfxCan_RXD01B_P14_1_IN:
+ 3260 0000 000071F4 	 .word -193921024
+ 3261 0004 01000000 	 .word 1
+ 3262 0008 00D803F0 	 .word -268183552
+ 3263 000c 01       	 .byte 1
+ 3264 000d 000000   	 .zero 3
+ 3265 0010 01000000 	 .word 1
+ 3266              	 .global IfxCan_RXD01A_P15_3_IN
+ 3267              	 .section .rodata.IfxCan_RXD01A_P15_3_IN,"a"
+ 3268              	 .align 2
+ 3271              	IfxCan_RXD01A_P15_3_IN:
+ 3272 0000 000071F4 	 .word -193921024
+ 3273 0004 01000000 	 .word 1
+ 3274 0008 00DC03F0 	 .word -268182528
+ 3275 000c 03       	 .byte 3
+ 3276 000d 000000   	 .zero 3
+ 3277 0010 00000000 	 .word 0
+ 3278              	 .global IfxCan_RXD00H_P02_14_IN
+ 3279              	 .section .rodata.IfxCan_RXD00H_P02_14_IN,"a"
+ 3280              	 .align 2
+ 3283              	IfxCan_RXD00H_P02_14_IN:
+ 3284 0000 000071F4 	 .word -193921024
+ 3285 0004 00000000 	 .word 0
+ 3286 0008 00A803F0 	 .word -268195840
+ 3287 000c 0E       	 .byte 14
+ 3288 000d 000000   	 .zero 3
+ 3289 0010 07000000 	 .word 7
+ 3290              	 .global IfxCan_RXD00G_P34_2_IN
+ 3291              	 .section .rodata.IfxCan_RXD00G_P34_2_IN,"a"
+ 3292              	 .align 2
+ 3295              	IfxCan_RXD00G_P34_2_IN:
+ 3296 0000 000071F4 	 .word -193921024
+ 3297 0004 00000000 	 .word 0
+ 3298 0008 002804F0 	 .word -268163072
+ 3299 000c 02       	 .byte 2
+ 3300 000d 000000   	 .zero 3
+ 3301 0010 06000000 	 .word 6
+ 3302              	 .global IfxCan_RXD00F_P01_8_IN
+ 3303              	 .section .rodata.IfxCan_RXD00F_P01_8_IN,"a"
+ 3304              	 .align 2
+ 3307              	IfxCan_RXD00F_P01_8_IN:
+ 3308 0000 000071F4 	 .word -193921024
+ 3309 0004 00000000 	 .word 0
+ 3310 0008 00A403F0 	 .word -268196864
+ 3311 000c 08       	 .byte 8
+ 3312 000d 000000   	 .zero 3
+ 3313 0010 05000000 	 .word 5
+ 3314              	 .global IfxCan_RXD00E_P33_7_IN
+ 3315              	 .section .rodata.IfxCan_RXD00E_P33_7_IN,"a"
+ 3316              	 .align 2
+ 3319              	IfxCan_RXD00E_P33_7_IN:
+ 3320 0000 000071F4 	 .word -193921024
+ 3321 0004 00000000 	 .word 0
+ 3322 0008 002404F0 	 .word -268164096
+ 3323 000c 07       	 .byte 7
+ 3324 000d 000000   	 .zero 3
+ 3325 0010 04000000 	 .word 4
+ 3326              	 .global IfxCan_RXD00D_P33_12_IN
+ 3327              	 .section .rodata.IfxCan_RXD00D_P33_12_IN,"a"
+ 3328              	 .align 2
+ 3331              	IfxCan_RXD00D_P33_12_IN:
+ 3332 0000 000071F4 	 .word -193921024
+ 3333 0004 00000000 	 .word 0
+ 3334 0008 002404F0 	 .word -268164096
+ 3335 000c 0C       	 .byte 12
+ 3336 000d 000000   	 .zero 3
+ 3337 0010 03000000 	 .word 3
+ 3338              	 .global IfxCan_RXD00B_P20_7_IN
+ 3339              	 .section .rodata.IfxCan_RXD00B_P20_7_IN,"a"
+ 3340              	 .align 2
+ 3343              	IfxCan_RXD00B_P20_7_IN:
+ 3344 0000 000071F4 	 .word -193921024
+ 3345 0004 00000000 	 .word 0
+ 3346 0008 00F003F0 	 .word -268177408
+ 3347 000c 07       	 .byte 7
+ 3348 000d 000000   	 .zero 3
+ 3349 0010 01000000 	 .word 1
+ 3350              	 .global IfxCan_RXD00A_P02_1_IN
+ 3351              	 .section .rodata.IfxCan_RXD00A_P02_1_IN,"a"
+ 3352              	 .align 2
+ 3355              	IfxCan_RXD00A_P02_1_IN:
+ 3356 0000 000071F4 	 .word -193921024
+ 3357 0004 00000000 	 .word 0
+ 3358 0008 00A803F0 	 .word -268195840
+ 3359 000c 01       	 .byte 1
+ 3360 000d 000000   	 .zero 3
+ 3361 0010 00000000 	 .word 0
+ 3362              	.section .text,"ax",@progbits
+ 3363              	.Letext0:
+ 3364              	 .file 1 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 3365              	 .file 2 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+ 3366              	 .file 3 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 3367              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/IfxCan_regdef.h"
+ 3368              	 .file 5 "../Libraries/iLLD/TC4xx/Tricore/_Impl/TC4Dx/IfxCan_cfg_TC4Dx.h"
+ 3369              	 .file 6 "../Libraries/Infra/Sfr/TC4Dx/IfxPort_regdef.h"
+ 3370              	 .file 7 "../Libraries/iLLD/TC4xx/CpuGeneric/Port/Std/IfxPort.h"
+ 3371              	 .file 8 "../Libraries/iLLD/TC4xx/Tricore/_PinMap/IfxCan_PinMap.h"
+ 3372              	 .file 9 "../Libraries/iLLD/TC4xx/Tricore/_PinMap/TC4Dx/IfxCan_PinMap_TC4Dx_BGA436_COM.h"
+ 3373              	 .file 10 "../Libraries/iLLD/TC4xx/Tricore/_PinMap/TC4Dx/IfxCan_PinMap_TC4Dx_BGA436_COM.c"
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxCan_PinMap_TC4Dx_BGA436_COM.c
+                            *ABS*:00000000 IfxCan_PinMap_TC4Dx_BGA436_COM.c
+    {standard input}:11     .data.IfxCan_Txd_Out_pinTable:00000000 IfxCan_Txd_Out_pinTable
+    {standard input}:1915   .rodata.IfxCan_TXD00_P01_13_OUT:00000000 IfxCan_TXD00_P01_13_OUT
+    {standard input}:1903   .rodata.IfxCan_TXD00_P02_0_OUT:00000000 IfxCan_TXD00_P02_0_OUT
+    {standard input}:1891   .rodata.IfxCan_TXD00_P02_13_OUT:00000000 IfxCan_TXD00_P02_13_OUT
+    {standard input}:1879   .rodata.IfxCan_TXD00_P20_8_OUT:00000000 IfxCan_TXD00_P20_8_OUT
+    {standard input}:1855   .rodata.IfxCan_TXD00_P33_8_OUT:00000000 IfxCan_TXD00_P33_8_OUT
+    {standard input}:1867   .rodata.IfxCan_TXD00_P33_13_OUT:00000000 IfxCan_TXD00_P33_13_OUT
+    {standard input}:1843   .rodata.IfxCan_TXD00_P34_1_OUT:00000000 IfxCan_TXD00_P34_1_OUT
+    {standard input}:1831   .rodata.IfxCan_TXD00_P34_3_OUT:00000000 IfxCan_TXD00_P34_3_OUT
+    {standard input}:1819   .rodata.IfxCan_TXD01_P01_3_OUT:00000000 IfxCan_TXD01_P01_3_OUT
+    {standard input}:1807   .rodata.IfxCan_TXD01_P02_9_OUT:00000000 IfxCan_TXD01_P02_9_OUT
+    {standard input}:1795   .rodata.IfxCan_TXD01_P03_11_OUT:00000000 IfxCan_TXD01_P03_11_OUT
+    {standard input}:1783   .rodata.IfxCan_TXD01_P03_15_OUT:00000000 IfxCan_TXD01_P03_15_OUT
+    {standard input}:1771   .rodata.IfxCan_TXD01_P04_0_OUT:00000000 IfxCan_TXD01_P04_0_OUT
+    {standard input}:1759   .rodata.IfxCan_TXD01_P10_0_OUT:00000000 IfxCan_TXD01_P10_0_OUT
+    {standard input}:1747   .rodata.IfxCan_TXD01_P14_0_OUT:00000000 IfxCan_TXD01_P14_0_OUT
+    {standard input}:1735   .rodata.IfxCan_TXD01_P15_2_OUT:00000000 IfxCan_TXD01_P15_2_OUT
+    {standard input}:1723   .rodata.IfxCan_TXD01_P33_9_OUT:00000000 IfxCan_TXD01_P33_9_OUT
+    {standard input}:1711   .rodata.IfxCan_TXD02_P02_2_OUT:00000000 IfxCan_TXD02_P02_2_OUT
+    {standard input}:1699   .rodata.IfxCan_TXD02_P03_13_OUT:00000000 IfxCan_TXD02_P03_13_OUT
+    {standard input}:1675   .rodata.IfxCan_TXD02_P10_3_OUT:00000000 IfxCan_TXD02_P10_3_OUT
+    {standard input}:1687   .rodata.IfxCan_TXD02_P10_10_OUT:00000000 IfxCan_TXD02_P10_10_OUT
+    {standard input}:1663   .rodata.IfxCan_TXD02_P14_10_OUT:00000000 IfxCan_TXD02_P14_10_OUT
+    {standard input}:1651   .rodata.IfxCan_TXD02_P15_0_OUT:00000000 IfxCan_TXD02_P15_0_OUT
+    {standard input}:1639   .rodata.IfxCan_TXD02_P32_5_OUT:00000000 IfxCan_TXD02_P32_5_OUT
+    {standard input}:1627   .rodata.IfxCan_TXD03_P00_2_OUT:00000000 IfxCan_TXD03_P00_2_OUT
+    {standard input}:1615   .rodata.IfxCan_TXD03_P01_2_OUT:00000000 IfxCan_TXD03_P01_2_OUT
+    {standard input}:1603   .rodata.IfxCan_TXD03_P04_5_OUT:00000000 IfxCan_TXD03_P04_5_OUT
+    {standard input}:1591   .rodata.IfxCan_TXD03_P16_10_OUT:00000000 IfxCan_TXD03_P16_10_OUT
+    {standard input}:1579   .rodata.IfxCan_TXD03_P16_14_OUT:00000000 IfxCan_TXD03_P16_14_OUT
+    {standard input}:1555   .rodata.IfxCan_TXD03_P20_3_OUT:00000000 IfxCan_TXD03_P20_3_OUT
+    {standard input}:1567   .rodata.IfxCan_TXD03_P20_10_OUT:00000000 IfxCan_TXD03_P20_10_OUT
+    {standard input}:1543   .rodata.IfxCan_TXD03_P32_4_OUT:00000000 IfxCan_TXD03_P32_4_OUT
+    {standard input}:1531   .rodata.IfxCan_TXD10_P00_0_OUT:00000000 IfxCan_TXD10_P00_0_OUT
+    {standard input}:1519   .rodata.IfxCan_TXD10_P10_9_OUT:00000000 IfxCan_TXD10_P10_9_OUT
+    {standard input}:1507   .rodata.IfxCan_TXD10_P13_0_OUT:00000000 IfxCan_TXD10_P13_0_OUT
+    {standard input}:1495   .rodata.IfxCan_TXD10_P14_9_OUT:00000000 IfxCan_TXD10_P14_9_OUT
+    {standard input}:1483   .rodata.IfxCan_TXD10_P23_1_OUT:00000000 IfxCan_TXD10_P23_1_OUT
+    {standard input}:1471   .rodata.IfxCan_TXD10_P30_1_OUT:00000000 IfxCan_TXD10_P30_1_OUT
+    {standard input}:1459   .rodata.IfxCan_TXD11_P00_4_OUT:00000000 IfxCan_TXD11_P00_4_OUT
+    {standard input}:1447   .rodata.IfxCan_TXD11_P02_5_OUT:00000000 IfxCan_TXD11_P02_5_OUT
+    {standard input}:1435   .rodata.IfxCan_TXD11_P03_4_OUT:00000000 IfxCan_TXD11_P03_4_OUT
+    {standard input}:1423   .rodata.IfxCan_TXD11_P03_5_OUT:00000000 IfxCan_TXD11_P03_5_OUT
+    {standard input}:1411   .rodata.IfxCan_TXD11_P16_5_OUT:00000000 IfxCan_TXD11_P16_5_OUT
+    {standard input}:1399   .rodata.IfxCan_TXD11_P23_6_OUT:00000000 IfxCan_TXD11_P23_6_OUT
+    {standard input}:1387   .rodata.IfxCan_TXD11_P30_6_OUT:00000000 IfxCan_TXD11_P30_6_OUT
+    {standard input}:1375   .rodata.IfxCan_TXD12_P10_7_OUT:00000000 IfxCan_TXD12_P10_7_OUT
+    {standard input}:1363   .rodata.IfxCan_TXD12_P16_4_OUT:00000000 IfxCan_TXD12_P16_4_OUT
+    {standard input}:1351   .rodata.IfxCan_TXD12_P20_7_OUT:00000000 IfxCan_TXD12_P20_7_OUT
+    {standard input}:1339   .rodata.IfxCan_TXD12_P23_2_OUT:00000000 IfxCan_TXD12_P23_2_OUT
+    {standard input}:1327   .rodata.IfxCan_TXD12_P23_3_OUT:00000000 IfxCan_TXD12_P23_3_OUT
+    {standard input}:1315   .rodata.IfxCan_TXD12_P30_2_OUT:00000000 IfxCan_TXD12_P30_2_OUT
+    {standard input}:1303   .rodata.IfxCan_TXD13_P10_6_OUT:00000000 IfxCan_TXD13_P10_6_OUT
+    {standard input}:1291   .rodata.IfxCan_TXD13_P14_6_OUT:00000000 IfxCan_TXD13_P14_6_OUT
+    {standard input}:1279   .rodata.IfxCan_TXD13_P16_0_OUT:00000000 IfxCan_TXD13_P16_0_OUT
+    {standard input}:1267   .rodata.IfxCan_TXD13_P22_4_OUT:00000000 IfxCan_TXD13_P22_4_OUT
+    {standard input}:1255   .rodata.IfxCan_TXD13_P33_4_OUT:00000000 IfxCan_TXD13_P33_4_OUT
+    {standard input}:1243   .rodata.IfxCan_TXD20_P01_13_OUT:00000000 IfxCan_TXD20_P01_13_OUT
+    {standard input}:1231   .rodata.IfxCan_TXD20_P02_13_OUT:00000000 IfxCan_TXD20_P02_13_OUT
+    {standard input}:1219   .rodata.IfxCan_TXD20_P04_0_OUT:00000000 IfxCan_TXD20_P04_0_OUT
+    {standard input}:1207   .rodata.IfxCan_TXD20_P10_6_OUT:00000000 IfxCan_TXD20_P10_6_OUT
+    {standard input}:1195   .rodata.IfxCan_TXD20_P10_7_OUT:00000000 IfxCan_TXD20_P10_7_OUT
+    {standard input}:1171   .rodata.IfxCan_TXD20_P16_5_OUT:00000000 IfxCan_TXD20_P16_5_OUT
+    {standard input}:1183   .rodata.IfxCan_TXD20_P16_12_OUT:00000000 IfxCan_TXD20_P16_12_OUT
+    {standard input}:1159   .rodata.IfxCan_TXD20_P34_1_OUT:00000000 IfxCan_TXD20_P34_1_OUT
+    {standard input}:1147   .rodata.IfxCan_TXD20_P34_3_OUT:00000000 IfxCan_TXD20_P34_3_OUT
+    {standard input}:1135   .rodata.IfxCan_TXD21_P00_2_OUT:00000000 IfxCan_TXD21_P00_2_OUT
+    {standard input}:1123   .rodata.IfxCan_TXD21_P01_2_OUT:00000000 IfxCan_TXD21_P01_2_OUT
+    {standard input}:1111   .rodata.IfxCan_TXD21_P04_5_OUT:00000000 IfxCan_TXD21_P04_5_OUT
+    {standard input}:1099   .rodata.IfxCan_TXD21_P13_9_OUT:00000000 IfxCan_TXD21_P13_9_OUT
+    {standard input}:1087   .rodata.IfxCan_TXD21_P20_3_OUT:00000000 IfxCan_TXD21_P20_3_OUT
+    {standard input}:1075   .rodata.IfxCan_TXD21_P22_6_OUT:00000000 IfxCan_TXD21_P22_6_OUT
+    {standard input}:1063   .rodata.IfxCan_TXD21_P30_2_OUT:00000000 IfxCan_TXD21_P30_2_OUT
+    {standard input}:1051   .rodata.IfxCan_TXD21_P32_4_OUT:00000000 IfxCan_TXD21_P32_4_OUT
+    {standard input}:1039   .rodata.IfxCan_TXD22_P03_11_OUT:00000000 IfxCan_TXD22_P03_11_OUT
+    {standard input}:1027   .rodata.IfxCan_TXD22_P10_13_OUT:00000000 IfxCan_TXD22_P10_13_OUT
+    {standard input}:1015   .rodata.IfxCan_TXD22_P14_13_OUT:00000000 IfxCan_TXD22_P14_13_OUT
+    {standard input}:1003   .rodata.IfxCan_TXD22_P22_8_OUT:00000000 IfxCan_TXD22_P22_8_OUT
+    {standard input}:991    .rodata.IfxCan_TXD22_P23_5_OUT:00000000 IfxCan_TXD22_P23_5_OUT
+    {standard input}:979    .rodata.IfxCan_TXD22_P30_5_OUT:00000000 IfxCan_TXD22_P30_5_OUT
+    {standard input}:967    .rodata.IfxCan_TXD22_P32_6_OUT:00000000 IfxCan_TXD22_P32_6_OUT
+    {standard input}:955    .rodata.IfxCan_TXD22_P33_12_OUT:00000000 IfxCan_TXD22_P33_12_OUT
+    {standard input}:943    .rodata.IfxCan_TXD23_P03_1_OUT:00000000 IfxCan_TXD23_P03_1_OUT
+    {standard input}:931    .rodata.IfxCan_TXD23_P03_8_OUT:00000000 IfxCan_TXD23_P03_8_OUT
+    {standard input}:907    .rodata.IfxCan_TXD23_P10_9_OUT:00000000 IfxCan_TXD23_P10_9_OUT
+    {standard input}:919    .rodata.IfxCan_TXD23_P10_14_OUT:00000000 IfxCan_TXD23_P10_14_OUT
+    {standard input}:895    .rodata.IfxCan_TXD23_P13_4_OUT:00000000 IfxCan_TXD23_P13_4_OUT
+    {standard input}:859    .rodata.IfxCan_TXD23_P14_9_OUT:00000000 IfxCan_TXD23_P14_9_OUT
+    {standard input}:883    .rodata.IfxCan_TXD23_P14_11_OUT:00000000 IfxCan_TXD23_P14_11_OUT
+    {standard input}:871    .rodata.IfxCan_TXD23_P14_14_OUT:00000000 IfxCan_TXD23_P14_14_OUT
+    {standard input}:847    .rodata.IfxCan_TXD23_P22_10_OUT:00000000 IfxCan_TXD23_P22_10_OUT
+    {standard input}:835    .rodata.IfxCan_TXD23_P23_2_OUT:00000000 IfxCan_TXD23_P23_2_OUT
+    {standard input}:823    .rodata.IfxCan_TXD23_P23_3_OUT:00000000 IfxCan_TXD23_P23_3_OUT
+    {standard input}:811    .rodata.IfxCan_TXD30_P02_9_OUT:00000000 IfxCan_TXD30_P02_9_OUT
+    {standard input}:799    .rodata.IfxCan_TXD30_P10_0_OUT:00000000 IfxCan_TXD30_P10_0_OUT
+    {standard input}:787    .rodata.IfxCan_TXD31_P01_3_OUT:00000000 IfxCan_TXD31_P01_3_OUT
+    {standard input}:775    .rodata.IfxCan_TXD31_P03_11_OUT:00000000 IfxCan_TXD31_P03_11_OUT
+    {standard input}:763    .rodata.IfxCan_TXD31_P10_3_OUT:00000000 IfxCan_TXD31_P10_3_OUT
+    {standard input}:751    .rodata.IfxCan_TXD31_P33_15_OUT:00000000 IfxCan_TXD31_P33_15_OUT
+    {standard input}:739    .rodata.IfxCan_TXD31_P35_3_OUT:00000000 IfxCan_TXD31_P35_3_OUT
+    {standard input}:727    .rodata.IfxCan_TXD32_P01_2_OUT:00000000 IfxCan_TXD32_P01_2_OUT
+    {standard input}:715    .rodata.IfxCan_TXD32_P04_5_OUT:00000000 IfxCan_TXD32_P04_5_OUT
+    {standard input}:703    .rodata.IfxCan_TXD32_P10_2_OUT:00000000 IfxCan_TXD32_P10_2_OUT
+    {standard input}:691    .rodata.IfxCan_TXD32_P20_9_OUT:00000000 IfxCan_TXD32_P20_9_OUT
+    {standard input}:679    .rodata.IfxCan_TXD32_P31_6_OUT:00000000 IfxCan_TXD32_P31_6_OUT
+    {standard input}:655    .rodata.IfxCan_TXD33_P13_3_OUT:00000000 IfxCan_TXD33_P13_3_OUT
+    {standard input}:667    .rodata.IfxCan_TXD33_P13_11_OUT:00000000 IfxCan_TXD33_P13_11_OUT
+    {standard input}:643    .rodata.IfxCan_TXD33_P21_7_OUT:00000000 IfxCan_TXD33_P21_7_OUT
+    {standard input}:619    .rodata.IfxCan_TXD40_P00_8_OUT:00000000 IfxCan_TXD40_P00_8_OUT
+    {standard input}:631    .rodata.IfxCan_TXD40_P00_14_OUT:00000000 IfxCan_TXD40_P00_14_OUT
+    {standard input}:607    .rodata.IfxCan_TXD40_P01_1_OUT:00000000 IfxCan_TXD40_P01_1_OUT
+    {standard input}:595    .rodata.IfxCan_TXD40_P04_4_OUT:00000000 IfxCan_TXD40_P04_4_OUT
+    {standard input}:583    .rodata.IfxCan_TXD40_P21_1_OUT:00000000 IfxCan_TXD40_P21_1_OUT
+    {standard input}:571    .rodata.IfxCan_TXD41_P10_1_OUT:00000000 IfxCan_TXD41_P10_1_OUT
+    {standard input}:559    .rodata.IfxCan_TXD41_P14_1_OUT:00000000 IfxCan_TXD41_P14_1_OUT
+    {standard input}:547    .rodata.IfxCan_TXD41_P22_3_OUT:00000000 IfxCan_TXD41_P22_3_OUT
+    {standard input}:535    .rodata.IfxCan_TXD41_P35_2_OUT:00000000 IfxCan_TXD41_P35_2_OUT
+    {standard input}:523    .rodata.IfxCan_TXD42_P04_4_OUT:00000000 IfxCan_TXD42_P04_4_OUT
+    {standard input}:499    .rodata.IfxCan_TXD42_P13_5_OUT:00000000 IfxCan_TXD42_P13_5_OUT
+    {standard input}:511    .rodata.IfxCan_TXD42_P13_14_OUT:00000000 IfxCan_TXD42_P13_14_OUT
+    {standard input}:487    .rodata.IfxCan_TXD42_P15_5_OUT:00000000 IfxCan_TXD42_P15_5_OUT
+    {standard input}:475    .rodata.IfxCan_TXD42_P22_11_OUT:00000000 IfxCan_TXD42_P22_11_OUT
+    {standard input}:463    .rodata.IfxCan_TXD42_P25_1_OUT:00000000 IfxCan_TXD42_P25_1_OUT
+    {standard input}:451    .rodata.IfxCan_TXD43_P03_7_OUT:00000000 IfxCan_TXD43_P03_7_OUT
+    {standard input}:439    .rodata.IfxCan_TXD43_P13_8_OUT:00000000 IfxCan_TXD43_P13_8_OUT
+    {standard input}:427    .rodata.IfxCan_TXD43_P15_8_OUT:00000000 IfxCan_TXD43_P15_8_OUT
+    {standard input}:415    .rodata.IfxCan_TXD43_P34_5_OUT:00000000 IfxCan_TXD43_P34_5_OUT
+    {standard input}:403    .rodata.IfxCan_TXD43_P35_5_OUT:00000000 IfxCan_TXD43_P35_5_OUT
+    {standard input}:237    .data.IfxCan_Rxd_In_pinTable:00000000 IfxCan_Rxd_In_pinTable
+    {standard input}:3355   .rodata.IfxCan_RXD00A_P02_1_IN:00000000 IfxCan_RXD00A_P02_1_IN
+    {standard input}:3343   .rodata.IfxCan_RXD00B_P20_7_IN:00000000 IfxCan_RXD00B_P20_7_IN
+    {standard input}:3331   .rodata.IfxCan_RXD00D_P33_12_IN:00000000 IfxCan_RXD00D_P33_12_IN
+    {standard input}:3319   .rodata.IfxCan_RXD00E_P33_7_IN:00000000 IfxCan_RXD00E_P33_7_IN
+    {standard input}:3307   .rodata.IfxCan_RXD00F_P01_8_IN:00000000 IfxCan_RXD00F_P01_8_IN
+    {standard input}:3295   .rodata.IfxCan_RXD00G_P34_2_IN:00000000 IfxCan_RXD00G_P34_2_IN
+    {standard input}:3283   .rodata.IfxCan_RXD00H_P02_14_IN:00000000 IfxCan_RXD00H_P02_14_IN
+    {standard input}:3271   .rodata.IfxCan_RXD01A_P15_3_IN:00000000 IfxCan_RXD01A_P15_3_IN
+    {standard input}:3259   .rodata.IfxCan_RXD01B_P14_1_IN:00000000 IfxCan_RXD01B_P14_1_IN
+    {standard input}:3247   .rodata.IfxCan_RXD01C_P01_4_IN:00000000 IfxCan_RXD01C_P01_4_IN
+    {standard input}:3235   .rodata.IfxCan_RXD01D_P33_10_IN:00000000 IfxCan_RXD01D_P33_10_IN
+    {standard input}:3223   .rodata.IfxCan_RXD01E_P02_10_IN:00000000 IfxCan_RXD01E_P02_10_IN
+    {standard input}:3211   .rodata.IfxCan_RXD01F_P03_14_IN:00000000 IfxCan_RXD01F_P03_14_IN
+    {standard input}:3199   .rodata.IfxCan_RXD01G_P03_9_IN:00000000 IfxCan_RXD01G_P03_9_IN
+    {standard input}:3187   .rodata.IfxCan_RXD01H_P04_1_IN:00000000 IfxCan_RXD01H_P04_1_IN
+    {standard input}:3175   .rodata.IfxCan_RXD02A_P15_1_IN:00000000 IfxCan_RXD02A_P15_1_IN
+    {standard input}:3163   .rodata.IfxCan_RXD02B_P02_3_IN:00000000 IfxCan_RXD02B_P02_3_IN
+    {standard input}:3151   .rodata.IfxCan_RXD02C_P32_6_IN:00000000 IfxCan_RXD02C_P32_6_IN
+    {standard input}:3139   .rodata.IfxCan_RXD02D_P14_8_IN:00000000 IfxCan_RXD02D_P14_8_IN
+    {standard input}:3127   .rodata.IfxCan_RXD02E_P10_2_IN:00000000 IfxCan_RXD02E_P10_2_IN
+    {standard input}:3115   .rodata.IfxCan_RXD02F_P03_13_IN:00000000 IfxCan_RXD02F_P03_13_IN
+    {standard input}:3103   .rodata.IfxCan_RXD02G_P10_8_IN:00000000 IfxCan_RXD02G_P10_8_IN
+    {standard input}:3091   .rodata.IfxCan_RXD02H_P02_7_IN:00000000 IfxCan_RXD02H_P02_7_IN
+    {standard input}:3079   .rodata.IfxCan_RXD03A_P00_3_IN:00000000 IfxCan_RXD03A_P00_3_IN
+    {standard input}:3067   .rodata.IfxCan_RXD03B_P32_2_IN:00000000 IfxCan_RXD03B_P32_2_IN
+    {standard input}:3055   .rodata.IfxCan_RXD03C_P20_0_IN:00000000 IfxCan_RXD03C_P20_0_IN
+    {standard input}:3043   .rodata.IfxCan_RXD03E_P20_9_IN:00000000 IfxCan_RXD03E_P20_9_IN
+    {standard input}:3031   .rodata.IfxCan_RXD03F_P01_0_IN:00000000 IfxCan_RXD03F_P01_0_IN
+    {standard input}:3019   .rodata.IfxCan_RXD03G_P16_6_IN:00000000 IfxCan_RXD03G_P16_6_IN
+    {standard input}:3007   .rodata.IfxCan_RXD03H_P04_3_IN:00000000 IfxCan_RXD03H_P04_3_IN
+    {standard input}:2995   .rodata.IfxCan_RXD10A_P00_1_IN:00000000 IfxCan_RXD10A_P00_1_IN
+    {standard input}:2983   .rodata.IfxCan_RXD10B_P14_7_IN:00000000 IfxCan_RXD10B_P14_7_IN
+    {standard input}:2971   .rodata.IfxCan_RXD10C_P23_0_IN:00000000 IfxCan_RXD10C_P23_0_IN
+    {standard input}:2959   .rodata.IfxCan_RXD10D_P13_1_IN:00000000 IfxCan_RXD10D_P13_1_IN
+    {standard input}:2947   .rodata.IfxCan_RXD10E_P30_0_IN:00000000 IfxCan_RXD10E_P30_0_IN
+    {standard input}:2935   .rodata.IfxCan_RXD10F_P13_6_IN:00000000 IfxCan_RXD10F_P13_6_IN
+    {standard input}:2923   .rodata.IfxCan_RXD10H_P10_7_IN:00000000 IfxCan_RXD10H_P10_7_IN
+    {standard input}:2911   .rodata.IfxCan_RXD11A_P02_4_IN:00000000 IfxCan_RXD11A_P02_4_IN
+    {standard input}:2899   .rodata.IfxCan_RXD11B_P00_5_IN:00000000 IfxCan_RXD11B_P00_5_IN
+    {standard input}:2887   .rodata.IfxCan_RXD11C_P23_7_IN:00000000 IfxCan_RXD11C_P23_7_IN
+    {standard input}:2875   .rodata.IfxCan_RXD11E_P16_8_IN:00000000 IfxCan_RXD11E_P16_8_IN
+    {standard input}:2863   .rodata.IfxCan_RXD11F_P30_7_IN:00000000 IfxCan_RXD11F_P30_7_IN
+    {standard input}:2851   .rodata.IfxCan_RXD11G_P13_0_IN:00000000 IfxCan_RXD11G_P13_0_IN
+    {standard input}:2839   .rodata.IfxCan_RXD11H_P03_4_IN:00000000 IfxCan_RXD11H_P03_4_IN
+    {standard input}:2827   .rodata.IfxCan_RXD12A_P20_6_IN:00000000 IfxCan_RXD12A_P20_6_IN
+    {standard input}:2815   .rodata.IfxCan_RXD12B_P10_8_IN:00000000 IfxCan_RXD12B_P10_8_IN
+    {standard input}:2803   .rodata.IfxCan_RXD12C_P23_3_IN:00000000 IfxCan_RXD12C_P23_3_IN
+    {standard input}:2791   .rodata.IfxCan_RXD12E_P16_9_IN:00000000 IfxCan_RXD12E_P16_9_IN
+    {standard input}:2779   .rodata.IfxCan_RXD12F_P30_3_IN:00000000 IfxCan_RXD12F_P30_3_IN
+    {standard input}:2767   .rodata.IfxCan_RXD13A_P14_7_IN:00000000 IfxCan_RXD13A_P14_7_IN
+    {standard input}:2755   .rodata.IfxCan_RXD13B_P33_5_IN:00000000 IfxCan_RXD13B_P33_5_IN
+    {standard input}:2743   .rodata.IfxCan_RXD13C_P22_5_IN:00000000 IfxCan_RXD13C_P22_5_IN
+    {standard input}:2731   .rodata.IfxCan_RXD13F_P16_1_IN:00000000 IfxCan_RXD13F_P16_1_IN
+    {standard input}:2719   .rodata.IfxCan_RXD13H_P10_7_IN:00000000 IfxCan_RXD13H_P10_7_IN
+    {standard input}:2707   .rodata.IfxCan_RXD20A_P10_5_IN:00000000 IfxCan_RXD20A_P10_5_IN
+    {standard input}:2695   .rodata.IfxCan_RXD20B_P10_8_IN:00000000 IfxCan_RXD20B_P10_8_IN
+    {standard input}:2683   .rodata.IfxCan_RXD20C_P34_2_IN:00000000 IfxCan_RXD20C_P34_2_IN
+    {standard input}:2671   .rodata.IfxCan_RXD20D_P02_14_IN:00000000 IfxCan_RXD20D_P02_14_IN
+    {standard input}:2659   .rodata.IfxCan_RXD20E_P01_8_IN:00000000 IfxCan_RXD20E_P01_8_IN
+    {standard input}:2647   .rodata.IfxCan_RXD20G_P16_13_IN:00000000 IfxCan_RXD20G_P16_13_IN
+    {standard input}:2635   .rodata.IfxCan_RXD20H_P04_1_IN:00000000 IfxCan_RXD20H_P04_1_IN
+    {standard input}:2623   .rodata.IfxCan_RXD21A_P00_3_IN:00000000 IfxCan_RXD21A_P00_3_IN
+    {standard input}:2611   .rodata.IfxCan_RXD21B_P13_12_IN:00000000 IfxCan_RXD21B_P13_12_IN
+    {standard input}:2599   .rodata.IfxCan_RXD21C_P20_0_IN:00000000 IfxCan_RXD21C_P20_0_IN
+    {standard input}:2587   .rodata.IfxCan_RXD21D_P32_2_IN:00000000 IfxCan_RXD21D_P32_2_IN
+    {standard input}:2575   .rodata.IfxCan_RXD21E_P01_0_IN:00000000 IfxCan_RXD21E_P01_0_IN
+    {standard input}:2563   .rodata.IfxCan_RXD21F_P22_7_IN:00000000 IfxCan_RXD21F_P22_7_IN
+    {standard input}:2551   .rodata.IfxCan_RXD21G_P13_8_IN:00000000 IfxCan_RXD21G_P13_8_IN
+    {standard input}:2539   .rodata.IfxCan_RXD21H_P30_3_IN:00000000 IfxCan_RXD21H_P30_3_IN
+    {standard input}:2527   .rodata.IfxCan_RXD22A_P33_13_IN:00000000 IfxCan_RXD22A_P33_13_IN
+    {standard input}:2515   .rodata.IfxCan_RXD22B_P32_7_IN:00000000 IfxCan_RXD22B_P32_7_IN
+    {standard input}:2503   .rodata.IfxCan_RXD22C_P23_6_IN:00000000 IfxCan_RXD22C_P23_6_IN
+    {standard input}:2491   .rodata.IfxCan_RXD22D_P14_14_IN:00000000 IfxCan_RXD22D_P14_14_IN
+    {standard input}:2479   .rodata.IfxCan_RXD22E_P22_9_IN:00000000 IfxCan_RXD22E_P22_9_IN
+    {standard input}:2467   .rodata.IfxCan_RXD22F_P03_12_IN:00000000 IfxCan_RXD22F_P03_12_IN
+    {standard input}:2455   .rodata.IfxCan_RXD22G_P10_14_IN:00000000 IfxCan_RXD22G_P10_14_IN
+    {standard input}:2443   .rodata.IfxCan_RXD22H_P30_6_IN:00000000 IfxCan_RXD22H_P30_6_IN
+    {standard input}:2431   .rodata.IfxCan_RXD23A_P14_10_IN:00000000 IfxCan_RXD23A_P14_10_IN
+    {standard input}:2419   .rodata.IfxCan_RXD23B_P23_3_IN:00000000 IfxCan_RXD23B_P23_3_IN
+    {standard input}:2407   .rodata.IfxCan_RXD23C_P14_15_IN:00000000 IfxCan_RXD23C_P14_15_IN
+    {standard input}:2395   .rodata.IfxCan_RXD23D_P13_5_IN:00000000 IfxCan_RXD23D_P13_5_IN
+    {standard input}:2383   .rodata.IfxCan_RXD23E_P22_11_IN:00000000 IfxCan_RXD23E_P22_11_IN
+    {standard input}:2371   .rodata.IfxCan_RXD23F_P03_2_IN:00000000 IfxCan_RXD23F_P03_2_IN
+    {standard input}:2359   .rodata.IfxCan_RXD23G_P10_15_IN:00000000 IfxCan_RXD23G_P10_15_IN
+    {standard input}:2347   .rodata.IfxCan_RXD23H_P10_10_IN:00000000 IfxCan_RXD23H_P10_10_IN
+    {standard input}:2335   .rodata.IfxCan_RXD30A_P10_4_IN:00000000 IfxCan_RXD30A_P10_4_IN
+    {standard input}:2323   .rodata.IfxCan_RXD30B_P02_8_IN:00000000 IfxCan_RXD30B_P02_8_IN
+    {standard input}:2311   .rodata.IfxCan_RXD30C_P16_11_IN:00000000 IfxCan_RXD30C_P16_11_IN
+    {standard input}:2299   .rodata.IfxCan_RXD30D_P02_11_IN:00000000 IfxCan_RXD30D_P02_11_IN
+    {standard input}:2287   .rodata.IfxCan_RXD30E_P03_0_IN:00000000 IfxCan_RXD30E_P03_0_IN
+    {standard input}:2275   .rodata.IfxCan_RXD31B_P33_14_IN:00000000 IfxCan_RXD31B_P33_14_IN
+    {standard input}:2263   .rodata.IfxCan_RXD31C_P02_0_IN:00000000 IfxCan_RXD31C_P02_0_IN
+    {standard input}:2251   .rodata.IfxCan_RXD31E_P35_2_IN:00000000 IfxCan_RXD31E_P35_2_IN
+    {standard input}:2239   .rodata.IfxCan_RXD32A_P01_3_IN:00000000 IfxCan_RXD32A_P01_3_IN
+    {standard input}:2227   .rodata.IfxCan_RXD32B_P20_6_IN:00000000 IfxCan_RXD32B_P20_6_IN
+    {standard input}:2215   .rodata.IfxCan_RXD32D_P01_6_IN:00000000 IfxCan_RXD32D_P01_6_IN
+    {standard input}:2203   .rodata.IfxCan_RXD32E_P31_7_IN:00000000 IfxCan_RXD32E_P31_7_IN
+    {standard input}:2191   .rodata.IfxCan_RXD33A_P13_2_IN:00000000 IfxCan_RXD33A_P13_2_IN
+    {standard input}:2179   .rodata.IfxCan_RXD33B_P21_6_IN:00000000 IfxCan_RXD33B_P21_6_IN
+    {standard input}:2167   .rodata.IfxCan_RXD33D_P13_13_IN:00000000 IfxCan_RXD33D_P13_13_IN
+    {standard input}:2155   .rodata.IfxCan_RXD33E_P13_9_IN:00000000 IfxCan_RXD33E_P13_9_IN
+    {standard input}:2143   .rodata.IfxCan_RXD40A_P00_11_IN:00000000 IfxCan_RXD40A_P00_11_IN
+    {standard input}:2131   .rodata.IfxCan_RXD40B_P20_1_IN:00000000 IfxCan_RXD40B_P20_1_IN
+    {standard input}:2119   .rodata.IfxCan_RXD40D_P00_15_IN:00000000 IfxCan_RXD40D_P00_15_IN
+    {standard input}:2107   .rodata.IfxCan_RXD40E_P00_13_IN:00000000 IfxCan_RXD40E_P00_13_IN
+    {standard input}:2095   .rodata.IfxCan_RXD41A_P22_2_IN:00000000 IfxCan_RXD41A_P22_2_IN
+    {standard input}:2083   .rodata.IfxCan_RXD41B_P14_0_IN:00000000 IfxCan_RXD41B_P14_0_IN
+    {standard input}:2071   .rodata.IfxCan_RXD41C_P35_1_IN:00000000 IfxCan_RXD41C_P35_1_IN
+    {standard input}:2059   .rodata.IfxCan_RXD41D_P35_0_IN:00000000 IfxCan_RXD41D_P35_0_IN
+    {standard input}:2047   .rodata.IfxCan_RXD41E_P10_0_IN:00000000 IfxCan_RXD41E_P10_0_IN
+    {standard input}:2035   .rodata.IfxCan_RXD42A_P22_5_IN:00000000 IfxCan_RXD42A_P22_5_IN
+    {standard input}:2023   .rodata.IfxCan_RXD42B_P15_4_IN:00000000 IfxCan_RXD42B_P15_4_IN
+    {standard input}:2011   .rodata.IfxCan_RXD42D_P13_4_IN:00000000 IfxCan_RXD42D_P13_4_IN
+    {standard input}:1999   .rodata.IfxCan_RXD42E_P13_15_IN:00000000 IfxCan_RXD42E_P13_15_IN
+    {standard input}:1987   .rodata.IfxCan_RXD42F_P04_5_IN:00000000 IfxCan_RXD42F_P04_5_IN
+    {standard input}:1975   .rodata.IfxCan_RXD43A_P34_3_IN:00000000 IfxCan_RXD43A_P34_3_IN
+    {standard input}:1963   .rodata.IfxCan_RXD43B_P15_7_IN:00000000 IfxCan_RXD43B_P15_7_IN
+    {standard input}:1951   .rodata.IfxCan_RXD43C_P03_6_IN:00000000 IfxCan_RXD43C_P03_6_IN
+    {standard input}:1939   .rodata.IfxCan_RXD43D_P13_7_IN:00000000 IfxCan_RXD43D_P13_7_IN
+    {standard input}:1927   .rodata.IfxCan_RXD43E_P35_3_IN:00000000 IfxCan_RXD43E_P35_3_IN
+
+NO UNDEFINED SYMBOLS

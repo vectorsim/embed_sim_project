@@ -1,0 +1,1923 @@
+   1              	
+   2              	 .file "IfxPcieCap.c"
+   3              	 .file "IfxPcieCap.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.IfxPcieCap_getMsixTableBaseOffset,"ax",@progbits
+   7              	 .align 1
+   8              	 .global IfxPcieCap_getMsixTableBaseOffset
+  10              	IfxPcieCap_getMsixTableBaseOffset:
+  11              	.LFB165:
+  12              	 .file 1 "../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c"
+   1:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** /**
+   2:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****  * \file IfxPcieCap.c
+   3:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****  * \brief PCIE  basic functionality
+   4:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****  *
+   5:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****  *
+   8:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****  *
+   9:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****  *
+  10:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****  *                                 IMPORTANT NOTICE
+  11:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****  *
+  12:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****  * this file except in compliance with IFASLL.
+  15:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****  *
+  16:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****  *
+  26:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****  *
+  27:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****  */
+  28:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+  29:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** /******************************************************************************/
+  30:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** /*----------------------------------Includes----------------------------------*/
+  31:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** /******************************************************************************/
+  32:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+  33:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** #include "Ifx_Cfg.h"
+  34:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** #if defined (__TASKING__)
+  35:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** #pragma warning 508		/* To suppress empty file warning */
+  36:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** #endif
+  37:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** #if defined (__ghs__)
+  38:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** #pragma diag_suppress 96		/* To suppress empty file warning */
+  39:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** #endif
+  40:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+  41:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** #if defined(DEVICE_TC4DX) || defined(DEVICE_TC45X)
+  42:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** #include "IfxPcieCap.h"
+  43:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+  44:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** /******************************************************************************/
+  45:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** /*-------------------------Function Implementations---------------------------*/
+  46:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** /******************************************************************************/
+  47:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+  48:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** void IfxPcieCap_getMsixTableBaseOffset(IfxPcieCap_MsixCap *capPtr, uint32 *tableOffset, uint8 *barI
+  49:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+  13              	 .loc 1 49 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  50:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     *tableOffset = (uint32)(capPtr->tableOffset & ~((uint32)(0x7u)));
+  17              	 .loc 1 50 5
+  18              	 .loc 1 50 35 is_stmt 0
+  19 0002 D9420400 	 lea %a2,[%a4]4
+  20 0006 19420400 	 ld.w %d2,[%a4]4
+  21              	 .loc 1 50 20
+  22 000a 8F72C021 	 andn %d2,%d2,~(-8)
+  23              	 .loc 1 50 18
+  24 000e 7452     	 st.w [%a5]0,%d2
+  51:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     *barIndex    = (uint8)((capPtr->tableOffset) & 0x7u);
+  25              	 .loc 1 51 5 is_stmt 1
+  26              	 .loc 1 51 35 is_stmt 0
+  27 0010 5422     	 ld.w %d2,[%a2]0
+  28              	 .loc 1 51 20
+  29 0012 8F720021 	 and %d2,%d2,7
+  30              	 .loc 1 51 18
+  31 0016 3462     	 st.b [%a6]0,%d2
+  52:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+  32              	 .loc 1 52 1
+  33 0018 0090     	 ret 
+  34              	.LFE165:
+  36              	 .global IfxPcieCap_getMsixTableBaseOffset_end
+  37              	IfxPcieCap_getMsixTableBaseOffset_end:
+  38              	 .section .text.IfxPcieCap_enableMsix,"ax",@progbits
+  39              	 .align 1
+  40              	 .global IfxPcieCap_enableMsix
+  42              	IfxPcieCap_enableMsix:
+  43              	.LFB166:
+  53:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+  54:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+  55:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** void IfxPcieCap_enableMsix(IfxPcieCap_MsixCap *capPtr)
+  56:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+  44              	 .loc 1 56 1 is_stmt 1
+  45              	.LVL1:
+  46 0000 40AE     	 mov.aa %a14,%SP
+  47              	.LCFI1:
+  48 0002 2008     	 sub.a %SP,8
+  57:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     volatile IfxPcieCap_MsixMsgCtrl msgCtrl;
+  49              	 .loc 1 57 5
+  58:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     msgCtrl.U            = capPtr->msgControl.U;
+  50              	 .loc 1 58 5
+  51              	 .loc 1 58 46 is_stmt 0
+  52 0004 B9420200 	 ld.hu %d2,[%a4]2
+  53              	 .loc 1 58 26
+  54 0008 F9E2FEFF 	 st.h [%a14]-2,%d2
+  59:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     msgCtrl.B.msixEnable = 1u;
+  55              	 .loc 1 59 5 is_stmt 1
+  56              	 .loc 1 59 26 is_stmt 0
+  57 000c C9E2FEFF 	 ld.h %d2,[%a14]-2
+  58 0010 B7128127 	 insert %d2,%d2,1,15,1
+  59 0014 F9E2FEFF 	 st.h [%a14]-2,%d2
+  60:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     msgCtrl.B.funcMask   = 0u;
+  60              	 .loc 1 60 5 is_stmt 1
+  61              	 .loc 1 60 26 is_stmt 0
+  62 0018 C9E2FEFF 	 ld.h %d2,[%a14]-2
+  63 001c B7020127 	 insert %d2,%d2,0,14,1
+  64 0020 F9E2FEFF 	 st.h [%a14]-2,%d2
+  61:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     capPtr->msgControl.U = msgCtrl.U;
+  65              	 .loc 1 61 5 is_stmt 1
+  66              	 .loc 1 61 35 is_stmt 0
+  67 0024 B9E2FEFF 	 ld.hu %d2,[%a14]-2
+  68              	 .loc 1 61 26
+  69 0028 F9420200 	 st.h [%a4]2,%d2
+  62:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+  70              	 .loc 1 62 1
+  71 002c 0090     	 ret 
+  72              	.LFE166:
+  74              	 .global IfxPcieCap_enableMsix_end
+  75              	IfxPcieCap_enableMsix_end:
+  76              	 .section .text.IfxPcieCap_enableMsi,"ax",@progbits
+  77              	 .align 1
+  78              	 .global IfxPcieCap_enableMsi
+  80              	IfxPcieCap_enableMsi:
+  81              	.LFB167:
+  63:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+  64:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+  65:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** void IfxPcieCap_enableMsi(IfxPcieCap_MsiCap *capPtr)
+  66:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+  82              	 .loc 1 66 1 is_stmt 1
+  83              	.LVL2:
+  84 0000 40AE     	 mov.aa %a14,%SP
+  85              	.LCFI2:
+  67:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     capPtr->msgControl.B.msiEnable = 1u;
+  86              	 .loc 1 67 5
+  87              	 .loc 1 67 36 is_stmt 0
+  88 0002 C9420200 	 ld.h %d2,[%a4]2
+  89 0006 B7120120 	 insert %d2,%d2,1,0,1
+  90 000a F9420200 	 st.h [%a4]2,%d2
+  68:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+  91              	 .loc 1 68 1
+  92 000e 0090     	 ret 
+  93              	.LFE167:
+  95              	 .global IfxPcieCap_enableMsi_end
+  96              	IfxPcieCap_enableMsi_end:
+  97              	 .section .text.IfxPcieCap_isMsixVectorMasked,"ax",@progbits
+  98              	 .align 1
+  99              	 .global IfxPcieCap_isMsixVectorMasked
+ 101              	IfxPcieCap_isMsixVectorMasked:
+ 102              	.LFB168:
+  69:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+  70:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+  71:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** boolean IfxPcieCap_isMsixVectorMasked(IfxPcieCap_MsixCap *capPtr, IfxPcieCap_MsixTableEntry *tableA
+  72:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+ 103              	 .loc 1 72 1 is_stmt 1
+ 104              	.LVL3:
+ 105 0000 40AE     	 mov.aa %a14,%SP
+ 106              	.LCFI3:
+  73:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     boolean vectorMasked = TRUE;
+ 107              	 .loc 1 73 5
+ 108              	.LVL4:
+  74:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+  75:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     if (((tableAddr->vectorCtrl) & (uint32)0x1u) != 0x1u)
+ 109              	 .loc 1 75 5
+ 110              	 .loc 1 75 20 is_stmt 0
+ 111 0002 19520C00 	 ld.w %d2,[%a5]12
+ 112              	 .loc 1 75 8
+ 113 0006 6F020000 	 jz.t %d2,0,.L6
+  73:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     boolean vectorMasked = TRUE;
+ 114              	 .loc 1 73 13
+ 115 000a 8212     	 mov %d2,1
+ 116 000c 0090     	 ret 
+ 117              	.L6:
+  76:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     {
+  77:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         vectorMasked = FALSE;
+ 118              	 .loc 1 77 22
+ 119 000e 8202     	 mov %d2,0
+ 120              	.LVL5:
+  78:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     }
+  79:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+  80:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     return vectorMasked;
+ 121              	 .loc 1 80 5 is_stmt 1
+  81:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+ 122              	 .loc 1 81 1 is_stmt 0
+ 123 0010 0090     	 ret 
+ 124              	.LFE168:
+ 126              	 .global IfxPcieCap_isMsixVectorMasked_end
+ 127              	IfxPcieCap_isMsixVectorMasked_end:
+ 128              	 .section .text.IfxPcieCap_getNumMsixInterrupt,"ax",@progbits
+ 129              	 .align 1
+ 130              	 .global IfxPcieCap_getNumMsixInterrupt
+ 132              	IfxPcieCap_getNumMsixInterrupt:
+ 133              	.LFB169:
+  82:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+  83:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+  84:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** uint8 IfxPcieCap_getNumMsixInterrupt(IfxPcieCap_MsixCap *capPtr, IfxPcieCap_MsixTableEntry *tableAd
+  85:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+ 134              	 .loc 1 85 1 is_stmt 1
+ 135              	.LVL6:
+ 136 0000 40AE     	 mov.aa %a14,%SP
+ 137              	.LCFI4:
+  86:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     uint8 numMsixInt = 0u;
+ 138              	 .loc 1 86 5
+ 139              	.LVL7:
+  87:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     uint8 tableIndex = 0u;
+ 140              	 .loc 1 87 5
+  88:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+  89:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     for (tableIndex = 0; tableIndex < capPtr->msgControl.B.tableSize; tableIndex++)
+ 141              	 .loc 1 89 5
+ 142              	 .loc 1 89 21 is_stmt 0
+ 143 0002 8203     	 mov %d3,0
+  86:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     uint8 tableIndex = 0u;
+ 144              	 .loc 1 86 11
+ 145 0004 8202     	 mov %d2,0
+ 146              	 .loc 1 89 5
+ 147 0006 1D000000 	 j .L8
+ 148              	.LVL8:
+ 149              	.L9:
+  90:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     {
+  91:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         if (((tableAddr->vectorCtrl) & (uint32)0x1u) != 0x1u)           /* Entry is not masked */
+  92:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         {
+  93:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****             numMsixInt++;
+  94:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         }
+  95:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+  96:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         tableAddr++;
+ 150              	 .loc 1 96 9 is_stmt 1 discriminator 2
+ 151              	 .loc 1 96 18 is_stmt 0 discriminator 2
+ 152 000a D9551000 	 lea %a5,[%a5]16
+ 153              	.LVL9:
+  89:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     {
+ 154              	 .loc 1 89 81 is_stmt 1 discriminator 2
+ 155 000e C213     	 add %d3,1
+ 156              	.LVL10:
+ 157 0010 8FF30F31 	 and %d3,%d3,255
+ 158              	.LVL11:
+ 159              	.L8:
+  89:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     {
+ 160              	 .loc 1 89 37 discriminator 1
+  89:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     {
+ 161              	 .loc 1 89 59 is_stmt 0 discriminator 1
+ 162 0014 C9440200 	 ld.h %d4,[%a4]2
+ 163 0018 B7049545 	 insert %d4,%d4,0,11,21
+  89:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     {
+ 164              	 .loc 1 89 37 discriminator 1
+ 165 001c 7F430080 	 jge.u %d3,%d4,.L11
+  91:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         {
+ 166              	 .loc 1 91 9 is_stmt 1
+  91:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         {
+ 167              	 .loc 1 91 24 is_stmt 0
+ 168 0020 19540C00 	 ld.w %d4,[%a5]12
+  91:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         {
+ 169              	 .loc 1 91 12
+ 170 0024 6F040080 	 jnz.t %d4,0,.L9
+  93:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         }
+ 171              	 .loc 1 93 13 is_stmt 1
+  93:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         }
+ 172              	 .loc 1 93 23 is_stmt 0
+ 173 0028 C212     	 add %d2,1
+ 174              	.LVL12:
+ 175 002a 8FF20F21 	 and %d2,%d2,255
+ 176              	.LVL13:
+ 177 002e 1D000000 	 j .L9
+ 178              	.L11:
+  97:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     }
+  98:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+  99:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     return numMsixInt;
+ 179              	 .loc 1 99 5 is_stmt 1
+ 100:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+ 180              	 .loc 1 100 1 is_stmt 0
+ 181 0032 0090     	 ret 
+ 182              	.LFE169:
+ 184              	 .global IfxPcieCap_getNumMsixInterrupt_end
+ 185              	IfxPcieCap_getNumMsixInterrupt_end:
+ 186              	 .section .text.IfxPcieCap_getPwrState,"ax",@progbits
+ 187              	 .align 1
+ 188              	 .global IfxPcieCap_getPwrState
+ 190              	IfxPcieCap_getPwrState:
+ 191              	.LFB170:
+ 101:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 102:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 103:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** IfxPcieCap_PmPwrState IfxPcieCap_getPwrState(IfxPcieCap_PmCap *pciePmCap)
+ 104:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+ 192              	 .loc 1 104 1 is_stmt 1
+ 193              	.LVL14:
+ 194 0000 40AE     	 mov.aa %a14,%SP
+ 195              	.LCFI5:
+ 105:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     return (IfxPcieCap_PmPwrState)(pciePmCap->pmcsr.B.pwrState);
+ 196              	 .loc 1 105 5
+ 197              	 .loc 1 105 54 is_stmt 0
+ 198 0002 C9420400 	 ld.h %d2,[%a4]4
+ 106:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+ 199              	 .loc 1 106 1
+ 200 0006 8F320021 	 and %d2,%d2,3
+ 201 000a 0090     	 ret 
+ 202              	.LFE170:
+ 204              	 .global IfxPcieCap_getPwrState_end
+ 205              	IfxPcieCap_getPwrState_end:
+ 206              	 .section .text.IfxPcieCap_setPwrState,"ax",@progbits
+ 207              	 .align 1
+ 208              	 .global IfxPcieCap_setPwrState
+ 210              	IfxPcieCap_setPwrState:
+ 211              	.LFB171:
+ 107:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 108:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 109:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** boolean IfxPcieCap_setPwrState(IfxPcieCap_PmCap *pciePmCap, IfxPcieCap_PmPwrState pwrState)
+ 110:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+ 212              	 .loc 1 110 1 is_stmt 1
+ 213              	.LVL15:
+ 214 0000 40AE     	 mov.aa %a14,%SP
+ 215              	.LCFI6:
+ 111:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     boolean status = FALSE;
+ 216              	 .loc 1 111 5
+ 217              	.LVL16:
+ 112:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 113:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     if ((pwrState != IfxPcieCap_PmPwrState_none)
+ 218              	 .loc 1 113 5
+ 219              	 .loc 1 113 19 is_stmt 0
+ 220 0002 8BF43F32 	 ne %d3,%d4,-1
+ 114:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         && (pwrState != IfxPcieCap_PmPwrState_d3Cold))
+ 221              	 .loc 1 114 22
+ 222 0006 8B442022 	 ne %d2,%d4,4
+ 223              	 .loc 1 114 9
+ 224 000a 2632     	 and %d2,%d3
+ 113:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         && (pwrState != IfxPcieCap_PmPwrState_d3Cold))
+ 225              	 .loc 1 113 8
+ 226 000c DF020000 	 jz %d2,.L15
+ 115:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     {
+ 116:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         pciePmCap->pmcsr.B.pwrState = (uint32)pwrState;
+ 227              	 .loc 1 116 9 is_stmt 1
+ 228              	 .loc 1 116 37 is_stmt 0
+ 229 0010 C9420400 	 ld.h %d2,[%a4]4
+ 230 0014 37420220 	 insert %d2,%d2,%d4,0,2
+ 231 0018 F9420400 	 st.h [%a4]4,%d2
+ 117:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         status                      = TRUE;
+ 232              	 .loc 1 117 9 is_stmt 1
+ 233              	.LVL17:
+ 234              	 .loc 1 117 37 is_stmt 0
+ 235 001c 8212     	 mov %d2,1
+ 236 001e 0090     	 ret 
+ 237              	.LVL18:
+ 238              	.L15:
+ 111:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 239              	 .loc 1 111 13
+ 240 0020 8202     	 mov %d2,0
+ 241              	.LVL19:
+ 118:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     }
+ 119:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 120:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     return status;
+ 242              	 .loc 1 120 5 is_stmt 1
+ 121:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+ 243              	 .loc 1 121 1 is_stmt 0
+ 244 0022 0090     	 ret 
+ 245              	.LFE171:
+ 247              	 .global IfxPcieCap_setPwrState_end
+ 248              	IfxPcieCap_setPwrState_end:
+ 249              	 .section .text.IfxPcieCap_isPwrStateSupported,"ax",@progbits
+ 250              	 .align 1
+ 251              	 .global IfxPcieCap_isPwrStateSupported
+ 253              	IfxPcieCap_isPwrStateSupported:
+ 254              	.LFB172:
+ 122:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 123:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 124:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** boolean IfxPcieCap_isPwrStateSupported(IfxPcieCap_PmCap *pciePmCap, IfxPcieCap_PmPwrState pwrState)
+ 125:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+ 255              	 .loc 1 125 1 is_stmt 1
+ 256              	.LVL20:
+ 257 0000 40AE     	 mov.aa %a14,%SP
+ 258              	.LCFI7:
+ 126:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     boolean support     = FALSE;
+ 259              	 .loc 1 126 5
+ 260              	.LVL21:
+ 127:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     uint16  supportBits = 0u;
+ 261              	 .loc 1 127 5
+ 128:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 129:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     if ((pwrState > IfxPcieCap_PmPwrState_d0)
+ 262              	 .loc 1 129 5
+ 130:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         && (pwrState < IfxPcieCap_PmPwrState_d3Hot))
+ 263              	 .loc 1 130 9 is_stmt 0
+ 264 0002 1BF4FF2F 	 addi %d2,%d4,-1
+ 129:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         && (pwrState < IfxPcieCap_PmPwrState_d3Hot))
+ 265              	 .loc 1 129 8
+ 266 0006 BF220080 	 jlt.u %d2,2,.L20
+ 131:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     {
+ 132:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         supportBits = ((pciePmCap->pmc.U & ((uint16)3u << 9u)) >> 8u);
+ 133:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         support     = ((supportBits & (1u << (uint16)pwrState)) != 0u) ? TRUE : FALSE;
+ 134:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     }
+ 135:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     else if (pwrState != IfxPcieCap_PmPwrState_none)
+ 267              	 .loc 1 135 10 is_stmt 1
+ 268              	 .loc 1 135 13 is_stmt 0
+ 269 000a DFF40000 	 jeq %d4,-1,.L21
+ 136:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     {
+ 137:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         support = TRUE;
+ 270              	 .loc 1 137 17
+ 271 000e 8212     	 mov %d2,1
+ 272              	.LVL22:
+ 138:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     }
+ 139:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 140:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     return support;
+ 273              	 .loc 1 140 5 is_stmt 1
+ 141:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+ 274              	 .loc 1 141 1 is_stmt 0
+ 275 0010 0090     	 ret 
+ 276              	.LVL23:
+ 277              	.L20:
+ 132:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         support     = ((supportBits & (1u << (uint16)pwrState)) != 0u) ? TRUE : FALSE;
+ 278              	 .loc 1 132 9 is_stmt 1
+ 132:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         support     = ((supportBits & (1u << (uint16)pwrState)) != 0u) ? TRUE : FALSE;
+ 279              	 .loc 1 132 39 is_stmt 0
+ 280 0012 B9420200 	 ld.hu %d2,[%a4]2
+ 132:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         support     = ((supportBits & (1u << (uint16)pwrState)) != 0u) ? TRUE : FALSE;
+ 281              	 .loc 1 132 64
+ 282 0016 0682     	 sh %d2,-8
+ 132:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         support     = ((supportBits & (1u << (uint16)pwrState)) != 0u) ? TRUE : FALSE;
+ 283              	 .loc 1 132 21
+ 284 0018 8F620031 	 and %d3,%d2,6
+ 285              	.LVL24:
+ 133:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     }
+ 286              	 .loc 1 133 9 is_stmt 1
+ 133:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     }
+ 287              	 .loc 1 133 65 is_stmt 0
+ 288 001c 37047020 	 extr.u %d2,%d4,0,16
+ 133:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     }
+ 289              	 .loc 1 133 79
+ 290 0020 57036822 	 extr.u %d2,%d3,%d2,8
+ 133:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     }
+ 291              	 .loc 1 133 21
+ 292 0024 8F120021 	 and %d2,%d2,1
+ 293              	.LVL25:
+ 294 0028 0090     	 ret 
+ 295              	.LVL26:
+ 296              	.L21:
+ 126:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     uint16  supportBits = 0u;
+ 297              	 .loc 1 126 13
+ 298 002a 8202     	 mov %d2,0
+ 299 002c 0090     	 ret 
+ 300              	.LFE172:
+ 302              	 .global IfxPcieCap_isPwrStateSupported_end
+ 303              	IfxPcieCap_isPwrStateSupported_end:
+ 304              	 .section .text.IfxPcieCap_setPmeActive,"ax",@progbits
+ 305              	 .align 1
+ 306              	 .global IfxPcieCap_setPmeActive
+ 308              	IfxPcieCap_setPmeActive:
+ 309              	.LFB173:
+ 142:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 143:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 144:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** void IfxPcieCap_setPmeActive(IfxPcieCap_PmCap *pciePmCap, boolean enable)
+ 145:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+ 310              	 .loc 1 145 1 is_stmt 1
+ 311              	.LVL27:
+ 312 0000 40AE     	 mov.aa %a14,%SP
+ 313              	.LCFI8:
+ 146:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     if (pciePmCap != NULL_PTR)
+ 314              	 .loc 1 146 5
+ 315              	 .loc 1 146 8 is_stmt 0
+ 316 0002 BD040000 	 jz.a %a4,.L22
+ 147:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     {
+ 148:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         if (pciePmCap->pmc.B.pmeSupport != 0u)
+ 317              	 .loc 1 148 9 is_stmt 1
+ 318              	 .loc 1 148 29 is_stmt 0
+ 319 0006 C9420200 	 ld.h %d2,[%a4]2
+ 320 000a 3702E525 	 extr.u %d2,%d2,11,5
+ 321              	 .loc 1 148 12
+ 322 000e DF020000 	 jz %d2,.L22
+ 149:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         {
+ 150:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****             pciePmCap->pmcsr.B.pme = 1u;
+ 323              	 .loc 1 150 13 is_stmt 1
+ 324              	 .loc 1 150 36 is_stmt 0
+ 325 0012 C9420400 	 ld.h %d2,[%a4]4
+ 326 0016 B7120124 	 insert %d2,%d2,1,8,1
+ 327 001a F9420400 	 st.h [%a4]4,%d2
+ 328              	.L22:
+ 151:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         }
+ 152:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     }
+ 153:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+ 329              	 .loc 1 153 1
+ 330 001e 0090     	 ret 
+ 331              	.LFE173:
+ 333              	 .global IfxPcieCap_setPmeActive_end
+ 334              	IfxPcieCap_setPmeActive_end:
+ 335              	 .section .text.IfxPcieCap_setAspmLnkState,"ax",@progbits
+ 336              	 .align 1
+ 337              	 .global IfxPcieCap_setAspmLnkState
+ 339              	IfxPcieCap_setAspmLnkState:
+ 340              	.LFB174:
+ 154:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 155:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 156:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** void IfxPcieCap_setAspmLnkState(IfxPcieCap_PcieCap *pcieCap, IfxPcieCap_PcieAspmLevel aspmLevel)
+ 157:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+ 341              	 .loc 1 157 1 is_stmt 1
+ 342              	.LVL28:
+ 343 0000 40AE     	 mov.aa %a14,%SP
+ 344              	.LCFI9:
+ 158:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     pcieCap->linkCtrl.B.aspmCtrl = (uint16)aspmLevel;
+ 345              	 .loc 1 158 5
+ 346              	 .loc 1 158 34 is_stmt 0
+ 347 0002 C9421000 	 ld.h %d2,[%a4]16
+ 348 0006 37420220 	 insert %d2,%d2,%d4,0,2
+ 349 000a F9421000 	 st.h [%a4]16,%d2
+ 159:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+ 350              	 .loc 1 159 1
+ 351 000e 0090     	 ret 
+ 352              	.LFE174:
+ 354              	 .global IfxPcieCap_setAspmLnkState_end
+ 355              	IfxPcieCap_setAspmLnkState_end:
+ 356              	 .section .text.IfxPcieCap_setLnkRetrain,"ax",@progbits
+ 357              	 .align 1
+ 358              	 .global IfxPcieCap_setLnkRetrain
+ 360              	IfxPcieCap_setLnkRetrain:
+ 361              	.LFB175:
+ 160:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 161:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 162:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** void IfxPcieCap_setLnkRetrain(IfxPcieCap_PcieCap *pcieCap)
+ 163:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+ 362              	 .loc 1 163 1 is_stmt 1
+ 363              	.LVL29:
+ 364 0000 40AE     	 mov.aa %a14,%SP
+ 365              	.LCFI10:
+ 164:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     pcieCap->linkCtrl.B.retrainLink = 1u;
+ 366              	 .loc 1 164 5
+ 367              	 .loc 1 164 37 is_stmt 0
+ 368 0002 C9421000 	 ld.h %d2,[%a4]16
+ 369 0006 B7128122 	 insert %d2,%d2,1,5,1
+ 370 000a F9421000 	 st.h [%a4]16,%d2
+ 165:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+ 371              	 .loc 1 165 1
+ 372 000e 0090     	 ret 
+ 373              	.LFE175:
+ 375              	 .global IfxPcieCap_setLnkRetrain_end
+ 376              	IfxPcieCap_setLnkRetrain_end:
+ 377              	 .section .text.IfxPcieCap_setAerCapability,"ax",@progbits
+ 378              	 .align 1
+ 379              	 .global IfxPcieCap_setAerCapability
+ 381              	IfxPcieCap_setAerCapability:
+ 382              	.LFB176:
+ 166:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 167:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 168:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** boolean IfxPcieCap_setAerCapability(IfxPcieCap_AerCap *aerCap, IfxPcieCap_AerCapabilities capabilit
+ 169:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+ 383              	 .loc 1 169 1 is_stmt 1
+ 384              	.LVL30:
+ 385 0000 40AE     	 mov.aa %a14,%SP
+ 386              	.LCFI11:
+ 387 0002 0242     	 mov %d2,%d4
+ 170:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     boolean               status = TRUE;
+ 388              	 .loc 1 170 5
+ 389              	.LVL31:
+ 171:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     IfxPcieCap_AerCapCtrl capCtrlReg;
+ 390              	 .loc 1 171 5
+ 172:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     capCtrlReg.U = aerCap->capControl.U;
+ 391              	 .loc 1 172 5
+ 392              	 .loc 1 172 38 is_stmt 0
+ 393 0004 19431800 	 ld.w %d3,[%a4]24
+ 394              	 .loc 1 172 18
+ 395 0008 0236     	 mov %d6,%d3
+ 396              	.LVL32:
+ 173:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 174:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     if (enable == TRUE)
+ 397              	 .loc 1 174 5 is_stmt 1
+ 398              	 .loc 1 174 8 is_stmt 0
+ 399 000a DF150000 	 jeq %d5,1,.L30
+ 175:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     {
+ 176:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         if ((capCtrlReg.U & ((uint32)1u << (0x5u + (uint32)(capability << 1u)))) != 0x0u)
+ 177:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         {
+ 178:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****             capCtrlReg.U |= ((uint32)1u << (0x6u + (uint32)(capability << 1u)));
+ 179:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         }
+ 180:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         else
+ 181:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         {
+ 182:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****             status = FALSE;
+ 183:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         }
+ 184:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     }
+ 185:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     else
+ 186:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     {
+ 187:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         capCtrlReg.U &= ~((uint32)1u << (0x6u + (uint32)(capability << 1u)));
+ 400              	 .loc 1 187 9 is_stmt 1
+ 401              	 .loc 1 187 69 is_stmt 0
+ 402 000e 0612     	 sh %d2,1
+ 403              	 .loc 1 187 47
+ 404 0010 C262     	 add %d2,6
+ 405              	 .loc 1 187 22
+ 406 0012 D7030162 	 insert %d6,%d3,0,%d2,1
+ 170:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     IfxPcieCap_AerCapCtrl capCtrlReg;
+ 407              	 .loc 1 170 27
+ 408 0016 8212     	 mov %d2,1
+ 409              	.LVL33:
+ 410              	.L28:
+ 188:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     }
+ 189:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 190:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     aerCap->capControl.U = capCtrlReg.U;
+ 411              	 .loc 1 190 5 is_stmt 1
+ 412              	 .loc 1 190 26 is_stmt 0
+ 413 0018 59461800 	 st.w [%a4]24,%d6
+ 191:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 192:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     return status;
+ 414              	 .loc 1 192 5 is_stmt 1
+ 193:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+ 415              	 .loc 1 193 1 is_stmt 0
+ 416 001c 0090     	 ret 
+ 417              	.LVL34:
+ 418              	.L30:
+ 176:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         {
+ 419              	 .loc 1 176 9 is_stmt 1
+ 176:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         {
+ 420              	 .loc 1 176 72 is_stmt 0
+ 421 001e 0614     	 sh %d4,1
+ 176:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         {
+ 422              	 .loc 1 176 50
+ 423 0020 1B540020 	 addi %d2,%d4,5
+ 424              	.LVL35:
+ 176:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         {
+ 425              	 .loc 1 176 82
+ 426 0024 57036122 	 extr.u %d2,%d3,%d2,1
+ 176:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         {
+ 427              	 .loc 1 176 12
+ 428 0028 DF020000 	 jz %d2,.L29
+ 178:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         }
+ 429              	 .loc 1 178 13 is_stmt 1
+ 178:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         }
+ 430              	 .loc 1 178 50 is_stmt 0
+ 431 002c C264     	 add %d4,6
+ 178:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         }
+ 432              	 .loc 1 178 26
+ 433 002e D7130164 	 insert %d6,%d3,1,%d4,1
+ 170:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     IfxPcieCap_AerCapCtrl capCtrlReg;
+ 434              	 .loc 1 170 27
+ 435 0032 0252     	 mov %d2,%d5
+ 436 0034 1D000000 	 j .L28
+ 437              	.L29:
+ 182:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         }
+ 438              	 .loc 1 182 20
+ 439 0038 8202     	 mov %d2,0
+ 440 003a 1D000000 	 j .L28
+ 441              	.LFE176:
+ 443              	 .global IfxPcieCap_setAerCapability_end
+ 444              	IfxPcieCap_setAerCapability_end:
+ 445              	 .section .text.IfxPcieCap_getAerCapabilitySupport,"ax",@progbits
+ 446              	 .align 1
+ 447              	 .global IfxPcieCap_getAerCapabilitySupport
+ 449              	IfxPcieCap_getAerCapabilitySupport:
+ 450              	.LFB177:
+ 194:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 195:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 196:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** boolean IfxPcieCap_getAerCapabilitySupport(IfxPcieCap_AerCap *aerCap, IfxPcieCap_AerCapabilities ca
+ 197:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+ 451              	 .loc 1 197 1 is_stmt 1
+ 452              	.LVL36:
+ 453 0000 40AE     	 mov.aa %a14,%SP
+ 454              	.LCFI12:
+ 198:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     boolean               supported = FALSE;
+ 455              	 .loc 1 198 5
+ 456              	.LVL37:
+ 199:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     IfxPcieCap_AerCapCtrl capCtrlReg;
+ 457              	 .loc 1 199 5
+ 200:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     capCtrlReg.U = aerCap->capControl.U;
+ 458              	 .loc 1 200 5
+ 459              	 .loc 1 200 38 is_stmt 0
+ 460 0002 19431800 	 ld.w %d3,[%a4]24
+ 201:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 202:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     if ((capCtrlReg.U & ((uint32)1u << (0x5u + (uint32)(capability << 1u)))) != 0x0u)
+ 461              	 .loc 1 202 5 is_stmt 1
+ 462              	 .loc 1 202 68 is_stmt 0
+ 463 0006 8F140020 	 sh %d2,%d4,1
+ 464              	 .loc 1 202 46
+ 465 000a C252     	 add %d2,5
+ 466              	 .loc 1 202 78
+ 467 000c 57036122 	 extr.u %d2,%d3,%d2,1
+ 468              	 .loc 1 202 8
+ 469 0010 DF020000 	 jz %d2,.L32
+ 203:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     {
+ 204:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         supported = TRUE;
+ 470              	 .loc 1 204 19
+ 471 0014 8212     	 mov %d2,1
+ 472              	.L32:
+ 473              	.LVL38:
+ 205:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     }
+ 206:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 207:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     return supported;
+ 474              	 .loc 1 207 5 is_stmt 1
+ 208:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+ 475              	 .loc 1 208 1 is_stmt 0
+ 476 0016 0090     	 ret 
+ 477              	.LFE177:
+ 479              	 .global IfxPcieCap_getAerCapabilitySupport_end
+ 480              	IfxPcieCap_getAerCapabilitySupport_end:
+ 481              	 .section .text.IfxPcieCap_getAerPendingErrors,"ax",@progbits
+ 482              	 .align 1
+ 483              	 .global IfxPcieCap_getAerPendingErrors
+ 485              	IfxPcieCap_getAerPendingErrors:
+ 486              	.LFB178:
+ 209:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 210:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 211:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** uint32 IfxPcieCap_getAerPendingErrors(IfxPcieCap_AerCap *aerCap, IfxPcieCap_AerErrorType errorType,
+ 212:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+ 487              	 .loc 1 212 1 is_stmt 1
+ 488              	.LVL39:
+ 489 0000 40AE     	 mov.aa %a14,%SP
+ 490              	.LCFI13:
+ 213:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     uint32 errorStatus = 0u;
+ 491              	 .loc 1 213 5
+ 492              	.LVL40:
+ 214:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 215:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     if (errorType == IfxPcieCap_AerErrorType_uncorrectable)
+ 493              	 .loc 1 215 5
+ 494              	 .loc 1 215 8 is_stmt 0
+ 495 0002 DF040080 	 jnz %d4,.L35
+ 216:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     {
+ 217:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         errorStatus = aerCap->uncorrErrorStatus.U;
+ 496              	 .loc 1 217 9 is_stmt 1
+ 497              	 .loc 1 217 21 is_stmt 0
+ 498 0006 19430400 	 ld.w %d3,[%a4]4
+ 499              	.LVL41:
+ 500              	.L36:
+ 218:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     }
+ 219:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     else
+ 220:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     {
+ 221:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         errorStatus = aerCap->corrErrorStatus.U;
+ 222:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     }
+ 223:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 224:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     errorStatus &= ~(mask);
+ 501              	 .loc 1 224 5 is_stmt 1
+ 225:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 226:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     return errorStatus;
+ 502              	 .loc 1 226 5
+ 227:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+ 503              	 .loc 1 227 1 is_stmt 0
+ 504 000a 0F53E020 	 andn %d2,%d3,%d5
+ 505              	.LVL42:
+ 506 000e 0090     	 ret 
+ 507              	.LVL43:
+ 508              	.L35:
+ 221:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     }
+ 509              	 .loc 1 221 9 is_stmt 1
+ 221:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     }
+ 510              	 .loc 1 221 21 is_stmt 0
+ 511 0010 19431000 	 ld.w %d3,[%a4]16
+ 512              	.LVL44:
+ 513 0014 1D000000 	 j .L36
+ 514              	.LFE178:
+ 516              	 .global IfxPcieCap_getAerPendingErrors_end
+ 517              	IfxPcieCap_getAerPendingErrors_end:
+ 518              	 .section .text.IfxPcieCap_serAerErrorMask,"ax",@progbits
+ 519              	 .align 1
+ 520              	 .global IfxPcieCap_serAerErrorMask
+ 522              	IfxPcieCap_serAerErrorMask:
+ 523              	.LFB179:
+ 228:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 229:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 230:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** void IfxPcieCap_serAerErrorMask(IfxPcieCap_AerCap *aerCap, IfxPcieCap_AerErrorType errorType, uint3
+ 231:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+ 524              	 .loc 1 231 1 is_stmt 1
+ 525              	.LVL45:
+ 526 0000 40AE     	 mov.aa %a14,%SP
+ 527              	.LCFI14:
+ 232:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     if (errorType == IfxPcieCap_AerErrorType_uncorrectable)
+ 528              	 .loc 1 232 5
+ 529              	 .loc 1 232 8 is_stmt 0
+ 530 0002 DF040080 	 jnz %d4,.L38
+ 233:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     {
+ 234:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         aerCap->uncorrErrorStatus.U |= mask;
+ 531              	 .loc 1 234 9 is_stmt 1
+ 532              	 .loc 1 234 37 is_stmt 0
+ 533 0006 D9420400 	 lea %a2,[%a4]4
+ 534 000a 19430400 	 ld.w %d3,[%a4]4
+ 535 000e A653     	 or %d3,%d5
+ 536 0010 7423     	 st.w [%a2]0,%d3
+ 537 0012 0090     	 ret 
+ 538              	.L38:
+ 235:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     }
+ 236:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     else
+ 237:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     {
+ 238:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         aerCap->corrErrorStatus.U |= mask;
+ 539              	 .loc 1 238 9 is_stmt 1
+ 540              	 .loc 1 238 35 is_stmt 0
+ 541 0014 D9421000 	 lea %a2,[%a4]16
+ 542 0018 19431000 	 ld.w %d3,[%a4]16
+ 543 001c 0F53A020 	 or %d2,%d3,%d5
+ 544 0020 7422     	 st.w [%a2]0,%d2
+ 239:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     }
+ 240:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+ 545              	 .loc 1 240 1
+ 546 0022 0090     	 ret 
+ 547              	.LFE179:
+ 549              	 .global IfxPcieCap_serAerErrorMask_end
+ 550              	IfxPcieCap_serAerErrorMask_end:
+ 551              	 .section .text.IfxPcieCap_getAerTLPHeaderLog,"ax",@progbits
+ 552              	 .align 1
+ 553              	 .global IfxPcieCap_getAerTLPHeaderLog
+ 555              	IfxPcieCap_getAerTLPHeaderLog:
+ 556              	.LFB180:
+ 241:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 242:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 243:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** void IfxPcieCap_getAerTLPHeaderLog(IfxPcieCap_AerCap *aerCap, IfxPcieCap_AerErrorType errorType, vo
+ 244:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+ 557              	 .loc 1 244 1 is_stmt 1
+ 558              	.LVL46:
+ 559 0000 40AE     	 mov.aa %a14,%SP
+ 560              	.LCFI15:
+ 561 0002 8045     	 mov.d %d5,%a4
+ 562 0004 8054     	 mov.d %d4,%a5
+ 563              	.LVL47:
+ 245:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     uint8 index = 0u;
+ 564              	 .loc 1 245 5
+ 246:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 247:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     for (index = 0u; index < 4u; index++)
+ 565              	 .loc 1 247 5
+ 566              	 .loc 1 247 16 is_stmt 0
+ 567 0006 8202     	 mov %d2,0
+ 568              	 .loc 1 247 5
+ 569 0008 1D000000 	 j .L41
+ 570              	.LVL48:
+ 571              	.L42:
+ 248:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     {
+ 249:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         *(((uint32 *)headerPtr) + index) = aerCap->tlpHeaderLog[index];
+ 572              	 .loc 1 249 9 is_stmt 1 discriminator 3
+ 573              	 .loc 1 249 33 is_stmt 0 discriminator 3
+ 574 000c 8F220030 	 sh %d3,%d2,2
+ 575 0010 6042     	 mov.a %a2,%d4
+ 576 0012 01230036 	 addsc.a %a3,%a2,%d3,0
+ 577              	 .loc 1 249 64 discriminator 3
+ 578 0016 1B720030 	 addi %d3,%d2,7
+ 579 001a 0623     	 sh %d3,2
+ 580 001c 6052     	 mov.a %a2,%d5
+ 581 001e 01230026 	 addsc.a %a2,%a2,%d3,0
+ 582 0022 5423     	 ld.w %d3,[%a2]0
+ 583 0024 7433     	 st.w [%a3]0,%d3
+ 247:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     {
+ 584              	 .loc 1 247 39 is_stmt 1 discriminator 3
+ 585 0026 C212     	 add %d2,1
+ 586              	.LVL49:
+ 587 0028 8FF20F21 	 and %d2,%d2,255
+ 588              	.LVL50:
+ 589              	.L41:
+ 247:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     {
+ 590              	 .loc 1 247 28 discriminator 1
+ 591 002c BF420080 	 jlt.u %d2,4,.L42
+ 250:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     }
+ 251:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+ 592              	 .loc 1 251 1 is_stmt 0
+ 593 0030 0090     	 ret 
+ 594              	.LFE180:
+ 596              	 .global IfxPcieCap_getAerTLPHeaderLog_end
+ 597              	IfxPcieCap_getAerTLPHeaderLog_end:
+ 598              	 .section .text.IfxPcieCap_getAerTLPPrefix,"ax",@progbits
+ 599              	 .align 1
+ 600              	 .global IfxPcieCap_getAerTLPPrefix
+ 602              	IfxPcieCap_getAerTLPPrefix:
+ 603              	.LFB181:
+ 252:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 253:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 254:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** void IfxPcieCap_getAerTLPPrefix(IfxPcieCap_AerCap *aerCap, IfxPcieCap_AerErrorType errorType, void 
+ 255:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+ 604              	 .loc 1 255 1 is_stmt 1
+ 605              	.LVL51:
+ 606 0000 40AE     	 mov.aa %a14,%SP
+ 607              	.LCFI16:
+ 608 0002 8054     	 mov.d %d4,%a5
+ 609              	.LVL52:
+ 256:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     uint8 index = 0u;
+ 610              	 .loc 1 256 5
+ 257:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 258:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     if (aerCap->capControl.B.tlpPrefixLogPresent == 1u)
+ 611              	 .loc 1 258 5
+ 612              	 .loc 1 258 50 is_stmt 0
+ 613 0004 19421800 	 ld.w %d2,[%a4]24
+ 614              	 .loc 1 258 8
+ 615 0008 6FB20080 	 jnz.t %d2,11,.L47
+ 616 000c 0090     	 ret 
+ 617              	.LVL53:
+ 618              	.L46:
+ 259:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     {
+ 260:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         for (index = 0u; index < 4u; index++)
+ 261:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         {
+ 262:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****             *(((uint32 *)prefixPtr) + index) = aerCap->tlpPrefixLog[index];
+ 619              	 .loc 1 262 13 is_stmt 1 discriminator 3
+ 620              	 .loc 1 262 37 is_stmt 0 discriminator 3
+ 621 000e 8F220030 	 sh %d3,%d2,2
+ 622 0012 6042     	 mov.a %a2,%d4
+ 623 0014 01230036 	 addsc.a %a3,%a2,%d3,0
+ 624              	 .loc 1 262 68 discriminator 3
+ 625 0018 1BE20030 	 addi %d3,%d2,14
+ 626 001c 0623     	 sh %d3,2
+ 627 001e 01430026 	 addsc.a %a2,%a4,%d3,0
+ 628 0022 5423     	 ld.w %d3,[%a2]0
+ 629 0024 7433     	 st.w [%a3]0,%d3
+ 260:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         {
+ 630              	 .loc 1 260 43 is_stmt 1 discriminator 3
+ 631 0026 C212     	 add %d2,1
+ 632              	.LVL54:
+ 633 0028 8FF20F21 	 and %d2,%d2,255
+ 634              	.LVL55:
+ 635              	.L44:
+ 260:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         {
+ 636              	 .loc 1 260 32 discriminator 1
+ 637 002c BF420080 	 jlt.u %d2,4,.L46
+ 263:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         }
+ 264:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     }
+ 265:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+ 638              	 .loc 1 265 1 is_stmt 0
+ 639 0030 0090     	 ret 
+ 640              	.LVL56:
+ 641              	.L47:
+ 260:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         {
+ 642              	 .loc 1 260 20
+ 643 0032 8202     	 mov %d2,0
+ 644 0034 1D000000 	 j .L44
+ 645              	.LFE181:
+ 647              	 .global IfxPcieCap_getAerTLPPrefix_end
+ 648              	IfxPcieCap_getAerTLPPrefix_end:
+ 649              	 .section .text.IfxPcieCap_setRasDpAutoLinkDown,"ax",@progbits
+ 650              	 .align 1
+ 651              	 .global IfxPcieCap_setRasDpAutoLinkDown
+ 653              	IfxPcieCap_setRasDpAutoLinkDown:
+ 654              	.LFB182:
+ 266:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 267:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 268:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** void IfxPcieCap_setRasDpAutoLinkDown(Ifx_PCIE_DSP_VSECRASCAP *rasdpSFR, boolean enabled)
+ 269:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+ 655              	 .loc 1 269 1 is_stmt 1
+ 656              	.LVL57:
+ 657 0000 40AE     	 mov.aa %a14,%SP
+ 658              	.LCFI17:
+ 270:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     uint32 enable = (enabled == TRUE) ? 1u : 0u;
+ 659              	 .loc 1 270 5
+ 660              	 .loc 1 270 44 is_stmt 0
+ 661 0002 DF140000 	 jeq %d4,1,.L51
+ 662 0006 8203     	 mov %d3,0
+ 663              	.L49:
+ 664              	.LVL58:
+ 271:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     rasdpSFR->RASDP_ERROR_MODE_EN_OFF.B.AUTO_LINK_DOWN_EN = enable;
+ 665              	 .loc 1 271 5 is_stmt 1 discriminator 4
+ 666              	 .loc 1 271 59 is_stmt 0 discriminator 4
+ 667 0008 D9422800 	 lea %a2,[%a4]40
+ 668 000c 19422800 	 ld.w %d2,[%a4]40
+ 669 0010 67320120 	 ins.t %d2,%d2,1,%d3,0
+ 670 0014 7422     	 st.w [%a2]0,%d2
+ 272:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+ 671              	 .loc 1 272 1 discriminator 4
+ 672 0016 0090     	 ret 
+ 673              	.LVL59:
+ 674              	.L51:
+ 270:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     uint32 enable = (enabled == TRUE) ? 1u : 0u;
+ 675              	 .loc 1 270 44
+ 676 0018 8213     	 mov %d3,1
+ 677 001a 1D000000 	 j .L49
+ 678              	.LFE182:
+ 680              	 .global IfxPcieCap_setRasDpAutoLinkDown_end
+ 681              	IfxPcieCap_setRasDpAutoLinkDown_end:
+ 682              	 .section .text.IfxPcieCap_exitRasDpErrorMode,"ax",@progbits
+ 683              	 .align 1
+ 684              	 .global IfxPcieCap_exitRasDpErrorMode
+ 686              	IfxPcieCap_exitRasDpErrorMode:
+ 687              	.LFB183:
+ 273:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 274:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 275:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** void IfxPcieCap_exitRasDpErrorMode(Ifx_PCIE_DSP_VSECRASCAP *rasdpSFR)
+ 276:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+ 688              	 .loc 1 276 1 is_stmt 1
+ 689              	.LVL60:
+ 690 0000 40AE     	 mov.aa %a14,%SP
+ 691              	.LCFI18:
+ 277:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     rasdpSFR->RASDP_ERROR_MODE_CLEAR_OFF.B.ERROR_MODE_CLEAR = 1u;
+ 692              	 .loc 1 277 5
+ 693              	 .loc 1 277 61 is_stmt 0
+ 694 0002 D9422C00 	 lea %a2,[%a4]44
+ 695 0006 19422C00 	 ld.w %d2,[%a4]44
+ 696 000a B7120120 	 insert %d2,%d2,1,0,1
+ 697 000e 7422     	 st.w [%a2]0,%d2
+ 278:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+ 698              	 .loc 1 278 1
+ 699 0010 0090     	 ret 
+ 700              	.LFE183:
+ 702              	 .global IfxPcieCap_exitRasDpErrorMode_end
+ 703              	IfxPcieCap_exitRasDpErrorMode_end:
+ 704              	 .section .text.IfxPcieCap_disableRasDpErrorProt,"ax",@progbits
+ 705              	 .align 1
+ 706              	 .global IfxPcieCap_disableRasDpErrorProt
+ 708              	IfxPcieCap_disableRasDpErrorProt:
+ 709              	.LFB184:
+ 279:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 280:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 281:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** void IfxPcieCap_disableRasDpErrorProt(Ifx_PCIE_DSP_VSECRASCAP *rasdpSFR, uint32 disableMask)
+ 282:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+ 710              	 .loc 1 282 1 is_stmt 1
+ 711              	.LVL61:
+ 712 0000 40AE     	 mov.aa %a14,%SP
+ 713              	.LCFI19:
+ 283:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     rasdpSFR->RASDP_ERROR_PROT_CTRL_OFF.U |= disableMask;
+ 714              	 .loc 1 283 5
+ 715              	 .loc 1 283 43 is_stmt 0
+ 716 0002 D9420800 	 lea %a2,[%a4]8
+ 717 0006 19420800 	 ld.w %d2,[%a4]8
+ 718 000a A642     	 or %d2,%d4
+ 719 000c 7422     	 st.w [%a2]0,%d2
+ 284:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+ 720              	 .loc 1 284 1
+ 721 000e 0090     	 ret 
+ 722              	.LFE184:
+ 724              	 .global IfxPcieCap_disableRasDpErrorProt_end
+ 725              	IfxPcieCap_disableRasDpErrorProt_end:
+ 726              	 .section .text.IfxPcieCap_getRasDpRamErrorAddr,"ax",@progbits
+ 727              	 .align 1
+ 728              	 .global IfxPcieCap_getRasDpRamErrorAddr
+ 730              	IfxPcieCap_getRasDpRamErrorAddr:
+ 731              	.LFB185:
+ 285:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 286:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 287:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** uint32 IfxPcieCap_getRasDpRamErrorAddr(Ifx_PCIE_DSP_VSECRASCAP *rasdpSFR, IfxPcieCap_AerErrorType e
+ 288:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+ 732              	 .loc 1 288 1 is_stmt 1
+ 733              	.LVL62:
+ 734 0000 40AE     	 mov.aa %a14,%SP
+ 735              	.LCFI20:
+ 289:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     uint32 ramAddress = 0u;
+ 736              	 .loc 1 289 5
+ 737              	.LVL63:
+ 290:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 291:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     if (errorType == IfxPcieCap_AerErrorType_uncorrectable)
+ 738              	 .loc 1 291 5
+ 739              	 .loc 1 291 8 is_stmt 0
+ 740 0002 DF040080 	 jnz %d4,.L55
+ 292:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     {
+ 293:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         ramAddress = rasdpSFR->RASDP_RAM_ADDR_UNCORR_ERROR_OFF.B.RAM_ADDR_UNCORR_ERROR;
+ 741              	 .loc 1 293 9 is_stmt 1
+ 742              	 .loc 1 293 65 is_stmt 0
+ 743 0006 19423400 	 ld.w %d2,[%a4]52
+ 744 000a 37027B20 	 extr.u %d2,%d2,0,27
+ 745              	.LVL64:
+ 746 000e 0090     	 ret 
+ 747              	.LVL65:
+ 748              	.L55:
+ 294:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     }
+ 295:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     else
+ 296:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     {
+ 297:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         ramAddress = rasdpSFR->RASDP_RAM_ADDR_CORR_ERROR_OFF.B.RAM_ADDR_CORR_ERROR;
+ 749              	 .loc 1 297 9 is_stmt 1
+ 750              	 .loc 1 297 63 is_stmt 0
+ 751 0010 19423000 	 ld.w %d2,[%a4]48
+ 752 0014 37027B20 	 extr.u %d2,%d2,0,27
+ 753              	.LVL66:
+ 298:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     }
+ 299:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 300:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     return ramAddress;
+ 754              	 .loc 1 300 5 is_stmt 1
+ 301:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+ 755              	 .loc 1 301 1 is_stmt 0
+ 756 0018 0090     	 ret 
+ 757              	.LFE185:
+ 759              	 .global IfxPcieCap_getRasDpRamErrorAddr_end
+ 760              	IfxPcieCap_getRasDpRamErrorAddr_end:
+ 761              	 .section .text.IfxPcieCap_getRasDpRamErrorIndex,"ax",@progbits
+ 762              	 .align 1
+ 763              	 .global IfxPcieCap_getRasDpRamErrorIndex
+ 765              	IfxPcieCap_getRasDpRamErrorIndex:
+ 766              	.LFB186:
+ 302:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 303:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 304:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** uint32 IfxPcieCap_getRasDpRamErrorIndex(Ifx_PCIE_DSP_VSECRASCAP *rasdpSFR, IfxPcieCap_AerErrorType 
+ 305:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+ 767              	 .loc 1 305 1 is_stmt 1
+ 768              	.LVL67:
+ 769 0000 40AE     	 mov.aa %a14,%SP
+ 770              	.LCFI21:
+ 306:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     uint32 ramId = 0u;
+ 771              	 .loc 1 306 5
+ 772              	.LVL68:
+ 307:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 308:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     if (errorType == IfxPcieCap_AerErrorType_uncorrectable)
+ 773              	 .loc 1 308 5
+ 774              	 .loc 1 308 8 is_stmt 0
+ 775 0002 DF040080 	 jnz %d4,.L58
+ 309:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     {
+ 310:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         ramId = rasdpSFR->RASDP_RAM_ADDR_UNCORR_ERROR_OFF.B.RAM_INDEX_UNCORR_ERROR;
+ 776              	 .loc 1 310 9 is_stmt 1
+ 777              	 .loc 1 310 60 is_stmt 0
+ 778 0006 19423400 	 ld.w %d2,[%a4]52
+ 779 000a 8F421E20 	 sh %d2,%d2,-28
+ 780              	.LVL69:
+ 781 000e 0090     	 ret 
+ 782              	.LVL70:
+ 783              	.L58:
+ 311:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     }
+ 312:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     else
+ 313:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     {
+ 314:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         ramId = rasdpSFR->RASDP_RAM_ADDR_CORR_ERROR_OFF.B.RAM_INDEX_CORR_ERROR;
+ 784              	 .loc 1 314 9 is_stmt 1
+ 785              	 .loc 1 314 58 is_stmt 0
+ 786 0010 19423000 	 ld.w %d2,[%a4]48
+ 787 0014 8F421E20 	 sh %d2,%d2,-28
+ 788              	.LVL71:
+ 315:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     }
+ 316:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 317:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     return ramId;
+ 789              	 .loc 1 317 5 is_stmt 1
+ 318:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+ 790              	 .loc 1 318 1 is_stmt 0
+ 791 0018 0090     	 ret 
+ 792              	.LFE186:
+ 794              	 .global IfxPcieCap_getRasDpRamErrorIndex_end
+ 795              	IfxPcieCap_getRasDpRamErrorIndex_end:
+ 796              	 .section .text.IfxPcieCap_enableRasDesErrorInjection,"ax",@progbits
+ 797              	 .align 1
+ 798              	 .global IfxPcieCap_enableRasDesErrorInjection
+ 800              	IfxPcieCap_enableRasDesErrorInjection:
+ 801              	.LFB187:
+ 319:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 320:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 321:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** void IfxPcieCap_enableRasDesErrorInjection(Ifx_PCIE_DSP_RASDESCAP *rasdesSFR, IfxPcieCap_RasDesErro
+ 322:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+ 802              	 .loc 1 322 1 is_stmt 1
+ 803              	.LVL72:
+ 804 0000 40AE     	 mov.aa %a14,%SP
+ 805              	.LCFI22:
+ 323:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     rasdesSFR->EINJ_ENABLE_REG.U |= ((uint32)1u << (uint32)errorType);
+ 806              	 .loc 1 323 5
+ 807              	 .loc 1 323 34 is_stmt 0
+ 808 0002 D9423000 	 lea %a2,[%a4]48
+ 809 0006 19423000 	 ld.w %d2,[%a4]48
+ 810 000a D7120124 	 insert %d2,%d2,1,%d4,1
+ 811 000e 7422     	 st.w [%a2]0,%d2
+ 324:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+ 812              	 .loc 1 324 1
+ 813 0010 0090     	 ret 
+ 814              	.LFE187:
+ 816              	 .global IfxPcieCap_enableRasDesErrorInjection_end
+ 817              	IfxPcieCap_enableRasDesErrorInjection_end:
+ 818              	 .section .text.IfxPcieCap_configureRasDesCrcError,"ax",@progbits
+ 819              	 .align 1
+ 820              	 .global IfxPcieCap_configureRasDesCrcError
+ 822              	IfxPcieCap_configureRasDesCrcError:
+ 823              	.LFB188:
+ 325:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 326:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 327:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** void IfxPcieCap_configureRasDesCrcError(Ifx_PCIE_DSP_RASDESCAP *rasdesSFR, IfxPcieCap_RasDesCrcErro
+ 328:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+ 824              	 .loc 1 328 1 is_stmt 1
+ 825              	.LVL73:
+ 826 0000 40AE     	 mov.aa %a14,%SP
+ 827              	.LCFI23:
+ 329:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     Ifx_PCIE_DSP_RASDESCAP_EINJ0_CRC_REG errReg;
+ 828              	 .loc 1 329 5
+ 330:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     errReg.U                   = rasdesSFR->EINJ0_CRC_REG.U;
+ 829              	 .loc 1 330 5
+ 830              	 .loc 1 330 58 is_stmt 0
+ 831 0002 D9423400 	 lea %a2,[%a4]52
+ 832 0006 19423400 	 ld.w %d2,[%a4]52
+ 331:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 332:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     errReg.B.EINJ0_CRC_TYPE    = (uint32)errorType;
+ 833              	 .loc 1 332 5 is_stmt 1
+ 834              	 .loc 1 332 32 is_stmt 0
+ 835 000a 37420424 	 insert %d2,%d2,%d4,8,4
+ 836              	.LVL74:
+ 333:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     errReg.B.EINJ0_COUNT       = (uint32)count;
+ 837              	 .loc 1 333 5 is_stmt 1
+ 838              	 .loc 1 333 32 is_stmt 0
+ 839 000e 37520820 	 insert %d2,%d2,%d5,0,8
+ 334:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 335:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     rasdesSFR->EINJ0_CRC_REG.U = errReg.U;
+ 840              	 .loc 1 335 5 is_stmt 1
+ 841              	 .loc 1 335 32 is_stmt 0
+ 842 0012 7422     	 st.w [%a2]0,%d2
+ 336:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+ 843              	 .loc 1 336 1
+ 844 0014 0090     	 ret 
+ 845              	.LFE188:
+ 847              	 .global IfxPcieCap_configureRasDesCrcError_end
+ 848              	IfxPcieCap_configureRasDesCrcError_end:
+ 849              	 .section .text.IfxPcieCap_configureRasDesSeqError,"ax",@progbits
+ 850              	 .align 1
+ 851              	 .global IfxPcieCap_configureRasDesSeqError
+ 853              	IfxPcieCap_configureRasDesSeqError:
+ 854              	.LFB189:
+ 337:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 338:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 339:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** void IfxPcieCap_configureRasDesSeqError(Ifx_PCIE_DSP_RASDESCAP *rasdesSFR, IfxPcieCap_RasDesSeqErro
+ 340:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+ 855              	 .loc 1 340 1 is_stmt 1
+ 856              	.LVL75:
+ 857 0000 40AE     	 mov.aa %a14,%SP
+ 858              	.LCFI24:
+ 341:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     Ifx_PCIE_DSP_RASDESCAP_EINJ1_SEQNUM_REG errReg;
+ 859              	 .loc 1 341 5
+ 342:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     errReg.U                      = rasdesSFR->EINJ1_SEQNUM_REG.U;
+ 860              	 .loc 1 342 5
+ 861              	 .loc 1 342 64 is_stmt 0
+ 862 0002 D9423800 	 lea %a2,[%a4]56
+ 863 0006 19423800 	 ld.w %d2,[%a4]56
+ 343:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 344:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     errReg.B.EINJ1_SEQNUM_TYPE    = (uint32)errorType;
+ 864              	 .loc 1 344 5 is_stmt 1
+ 865              	 .loc 1 344 35 is_stmt 0
+ 866 000a 67420820 	 ins.t %d2,%d2,8,%d4,0
+ 867              	.LVL76:
+ 345:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     errReg.B.EINJ1_COUNT          = (uint32)count;
+ 868              	 .loc 1 345 5 is_stmt 1
+ 869              	 .loc 1 345 35 is_stmt 0
+ 870 000e 37620820 	 insert %d2,%d2,%d6,0,8
+ 346:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     errReg.B.EINJ1_BAD_SEQNUM     = badSeqNum;
+ 871              	 .loc 1 346 5 is_stmt 1
+ 872              	 .loc 1 346 35 is_stmt 0
+ 873 0012 37520D28 	 insert %d2,%d2,%d5,16,13
+ 347:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 348:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     rasdesSFR->EINJ1_SEQNUM_REG.U = errReg.U;
+ 874              	 .loc 1 348 5 is_stmt 1
+ 875              	 .loc 1 348 35 is_stmt 0
+ 876 0016 7422     	 st.w [%a2]0,%d2
+ 349:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+ 877              	 .loc 1 349 1
+ 878 0018 0090     	 ret 
+ 879              	.LFE189:
+ 881              	 .global IfxPcieCap_configureRasDesSeqError_end
+ 882              	IfxPcieCap_configureRasDesSeqError_end:
+ 883              	 .section .text.IfxPcieCap_configureRasDesDllpError,"ax",@progbits
+ 884              	 .align 1
+ 885              	 .global IfxPcieCap_configureRasDesDllpError
+ 887              	IfxPcieCap_configureRasDesDllpError:
+ 888              	.LFB190:
+ 350:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 351:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 352:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** void IfxPcieCap_configureRasDesDllpError(Ifx_PCIE_DSP_RASDESCAP *rasdesSFR, IfxPcieCap_RasDesDllpEr
+ 353:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+ 889              	 .loc 1 353 1 is_stmt 1
+ 890              	.LVL77:
+ 891 0000 40AE     	 mov.aa %a14,%SP
+ 892              	.LCFI25:
+ 354:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     Ifx_PCIE_DSP_RASDESCAP_EINJ2_DLLP_REG errReg;
+ 893              	 .loc 1 354 5
+ 355:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     errReg.U                    = rasdesSFR->EINJ2_DLLP_REG.U;
+ 894              	 .loc 1 355 5
+ 895              	 .loc 1 355 60 is_stmt 0
+ 896 0002 D9423C00 	 lea %a2,[%a4]60
+ 897 0006 19423C00 	 ld.w %d2,[%a4]60
+ 356:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 357:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     errReg.B.EINJ2_DLLP_TYPE    = (uint32)errorType;
+ 898              	 .loc 1 357 5 is_stmt 1
+ 899              	 .loc 1 357 33 is_stmt 0
+ 900 000a 37420224 	 insert %d2,%d2,%d4,8,2
+ 901              	.LVL78:
+ 358:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     errReg.B.EINJ2_COUNT        = (uint32)count;
+ 902              	 .loc 1 358 5 is_stmt 1
+ 903              	 .loc 1 358 33 is_stmt 0
+ 904 000e 37520820 	 insert %d2,%d2,%d5,0,8
+ 359:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 360:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     rasdesSFR->EINJ2_DLLP_REG.U = errReg.U;
+ 905              	 .loc 1 360 5 is_stmt 1
+ 906              	 .loc 1 360 33 is_stmt 0
+ 907 0012 7422     	 st.w [%a2]0,%d2
+ 361:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+ 908              	 .loc 1 361 1
+ 909 0014 0090     	 ret 
+ 910              	.LFE190:
+ 912              	 .global IfxPcieCap_configureRasDesDllpError_end
+ 913              	IfxPcieCap_configureRasDesDllpError_end:
+ 914              	 .section .text.IfxPcieCap_configureRasDesSymError,"ax",@progbits
+ 915              	 .align 1
+ 916              	 .global IfxPcieCap_configureRasDesSymError
+ 918              	IfxPcieCap_configureRasDesSymError:
+ 919              	.LFB191:
+ 362:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 363:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 364:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** void IfxPcieCap_configureRasDesSymError(Ifx_PCIE_DSP_RASDESCAP *rasdesSFR, IfxPcieCap_RasDesSymErro
+ 365:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+ 920              	 .loc 1 365 1 is_stmt 1
+ 921              	.LVL79:
+ 922 0000 40AE     	 mov.aa %a14,%SP
+ 923              	.LCFI26:
+ 366:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     Ifx_PCIE_DSP_RASDESCAP_EINJ3_SYMBOL_REG errReg;
+ 924              	 .loc 1 366 5
+ 367:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     errReg.U                      = rasdesSFR->EINJ3_SYMBOL_REG.U;
+ 925              	 .loc 1 367 5
+ 926              	 .loc 1 367 64 is_stmt 0
+ 927 0002 D9420010 	 lea %a2,[%a4]64
+ 928 0006 19420010 	 ld.w %d2,[%a4]64
+ 368:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 369:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     errReg.B.EINJ3_SYMBOL_TYPE    = (uint32)errorType;
+ 929              	 .loc 1 369 5 is_stmt 1
+ 930              	 .loc 1 369 35 is_stmt 0
+ 931 000a 37420324 	 insert %d2,%d2,%d4,8,3
+ 932              	.LVL80:
+ 370:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     errReg.B.EINJ3_COUNT          = (uint32)count;
+ 933              	 .loc 1 370 5 is_stmt 1
+ 934              	 .loc 1 370 35 is_stmt 0
+ 935 000e 37520820 	 insert %d2,%d2,%d5,0,8
+ 371:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 372:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     rasdesSFR->EINJ3_SYMBOL_REG.U = errReg.U;
+ 936              	 .loc 1 372 5 is_stmt 1
+ 937              	 .loc 1 372 35 is_stmt 0
+ 938 0012 7422     	 st.w [%a2]0,%d2
+ 373:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+ 939              	 .loc 1 373 1
+ 940 0014 0090     	 ret 
+ 941              	.LFE191:
+ 943              	 .global IfxPcieCap_configureRasDesSymError_end
+ 944              	IfxPcieCap_configureRasDesSymError_end:
+ 945              	 .section .text.IfxPcieCap_configureRasDesFcError,"ax",@progbits
+ 946              	 .align 1
+ 947              	 .global IfxPcieCap_configureRasDesFcError
+ 949              	IfxPcieCap_configureRasDesFcError:
+ 950              	.LFB192:
+ 374:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 375:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 376:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** void IfxPcieCap_configureRasDesFcError(Ifx_PCIE_DSP_RASDESCAP *rasdesSFR, IfxPcieCap_RasDesFcType f
+ 377:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+ 951              	 .loc 1 377 1 is_stmt 1
+ 952              	.LVL81:
+ 953 0000 40AE     	 mov.aa %a14,%SP
+ 954              	.LCFI27:
+ 378:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     Ifx_PCIE_DSP_RASDESCAP_EINJ4_FC_REG errReg;
+ 955              	 .loc 1 378 5
+ 379:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     errReg.U                       = rasdesSFR->EINJ4_FC_REG.U;
+ 956              	 .loc 1 379 5
+ 957              	 .loc 1 379 61 is_stmt 0
+ 958 0002 D9420410 	 lea %a2,[%a4]68
+ 959 0006 19420410 	 ld.w %d2,[%a4]68
+ 380:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 381:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     errReg.B.EINJ4_UPDFC_TYPE      = (uint32)fcType;
+ 960              	 .loc 1 381 5 is_stmt 1
+ 961              	 .loc 1 381 36 is_stmt 0
+ 962 000a 37420324 	 insert %d2,%d2,%d4,8,3
+ 963              	.LVL82:
+ 382:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     errReg.B.EINJ4_BAD_UPDFC_VALUE = badFcValue;
+ 964              	 .loc 1 382 5 is_stmt 1
+ 965              	 .loc 1 382 36 is_stmt 0
+ 966 000e 37520D28 	 insert %d2,%d2,%d5,16,13
+ 383:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     errReg.B.EINJ4_VC_NUMBER       = (uint32)vcNum;
+ 967              	 .loc 1 383 5 is_stmt 1
+ 968              	 .loc 1 383 36 is_stmt 0
+ 969 0012 37620326 	 insert %d2,%d2,%d6,12,3
+ 384:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     errReg.B.EINJ4_COUNT           = (uint32)count;
+ 970              	 .loc 1 384 5 is_stmt 1
+ 971              	 .loc 1 384 36 is_stmt 0
+ 972 0016 37720820 	 insert %d2,%d2,%d7,0,8
+ 385:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 386:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     rasdesSFR->EINJ4_FC_REG.U      = errReg.U;
+ 973              	 .loc 1 386 5 is_stmt 1
+ 974              	 .loc 1 386 36 is_stmt 0
+ 975 001a 7422     	 st.w [%a2]0,%d2
+ 387:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+ 976              	 .loc 1 387 1
+ 977 001c 0090     	 ret 
+ 978              	.LFE192:
+ 980              	 .global IfxPcieCap_configureRasDesFcError_end
+ 981              	IfxPcieCap_configureRasDesFcError_end:
+ 982              	 .section .text.IfxPcieCap_configureRasDesTlpInsertError,"ax",@progbits
+ 983              	 .align 1
+ 984              	 .global IfxPcieCap_configureRasDesTlpInsertError
+ 986              	IfxPcieCap_configureRasDesTlpInsertError:
+ 987              	.LFB193:
+ 388:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 389:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 390:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** void IfxPcieCap_configureRasDesTlpInsertError(Ifx_PCIE_DSP_RASDESCAP *rasdesSFR, IfxPcieCap_RasDesT
+ 391:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+ 988              	 .loc 1 391 1 is_stmt 1
+ 989              	.LVL83:
+ 990 0000 40AE     	 mov.aa %a14,%SP
+ 991              	.LCFI28:
+ 392:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     Ifx_PCIE_DSP_RASDESCAP_EINJ5_SP_TLP_REG errReg;
+ 992              	 .loc 1 392 5
+ 393:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     errReg.U                      = rasdesSFR->EINJ5_SP_TLP_REG.U;
+ 993              	 .loc 1 393 5
+ 994              	 .loc 1 393 64 is_stmt 0
+ 995 0002 D9420810 	 lea %a2,[%a4]72
+ 996 0006 19420810 	 ld.w %d2,[%a4]72
+ 394:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 395:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     errReg.B.EINJ5_SPECIFIED_TLP  = (uint32)tlpType;
+ 997              	 .loc 1 395 5 is_stmt 1
+ 998              	 .loc 1 395 35 is_stmt 0
+ 999 000a 67420820 	 ins.t %d2,%d2,8,%d4,0
+ 1000              	.LVL84:
+ 396:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     errReg.B.EINJ5_COUNT          = (uint32)count;
+ 1001              	 .loc 1 396 5 is_stmt 1
+ 1002              	 .loc 1 396 35 is_stmt 0
+ 1003 000e 37520820 	 insert %d2,%d2,%d5,0,8
+ 397:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 398:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     rasdesSFR->EINJ5_SP_TLP_REG.U = errReg.U;
+ 1004              	 .loc 1 398 5 is_stmt 1
+ 1005              	 .loc 1 398 35 is_stmt 0
+ 1006 0012 7422     	 st.w [%a2]0,%d2
+ 399:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+ 1007              	 .loc 1 399 1
+ 1008 0014 0090     	 ret 
+ 1009              	.LFE193:
+ 1011              	 .global IfxPcieCap_configureRasDesTlpInsertError_end
+ 1012              	IfxPcieCap_configureRasDesTlpInsertError_end:
+ 1013              	 .section .text.IfxPcieCap_setLtrEnable,"ax",@progbits
+ 1014              	 .align 1
+ 1015              	 .global IfxPcieCap_setLtrEnable
+ 1017              	IfxPcieCap_setLtrEnable:
+ 1018              	.LFB194:
+ 400:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 401:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 402:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** void IfxPcieCap_setLtrEnable(IfxPcieCap_PcieCap *pcieCapPtr, boolean ltrEnable)
+ 403:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+ 1019              	 .loc 1 403 1 is_stmt 1
+ 1020              	.LVL85:
+ 1021 0000 40AE     	 mov.aa %a14,%SP
+ 1022              	.LCFI29:
+ 404:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     pcieCapPtr->deviceCtrl2.B.ltr = (uint16)ltrEnable;
+ 1023              	 .loc 1 404 5
+ 1024              	 .loc 1 404 35 is_stmt 0
+ 1025 0002 C9422800 	 ld.h %d2,[%a4]40
+ 1026 0006 67420A20 	 ins.t %d2,%d2,10,%d4,0
+ 1027 000a F9422800 	 st.h [%a4]40,%d2
+ 405:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+ 1028              	 .loc 1 405 1
+ 1029 000e 0090     	 ret 
+ 1030              	.LFE194:
+ 1032              	 .global IfxPcieCap_setLtrEnable_end
+ 1033              	IfxPcieCap_setLtrEnable_end:
+ 1034              	 .section .text.IfxPcieCap_isLtrEnabled,"ax",@progbits
+ 1035              	 .align 1
+ 1036              	 .global IfxPcieCap_isLtrEnabled
+ 1038              	IfxPcieCap_isLtrEnabled:
+ 1039              	.LFB195:
+ 406:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 407:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 408:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** boolean IfxPcieCap_isLtrEnabled(IfxPcieCap_PcieCap *pcieCapPtr)
+ 409:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+ 1040              	 .loc 1 409 1 is_stmt 1
+ 1041              	.LVL86:
+ 1042 0000 40AE     	 mov.aa %a14,%SP
+ 1043              	.LCFI30:
+ 410:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     boolean ltrEnabled = FALSE;
+ 1044              	 .loc 1 410 5
+ 1045              	.LVL87:
+ 411:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 412:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     if (pcieCapPtr->deviceCtrl2.B.ltr == (uint16)1)
+ 1046              	 .loc 1 412 5
+ 1047              	 .loc 1 412 34 is_stmt 0
+ 1048 0002 C9422800 	 ld.h %d2,[%a4]40
+ 1049              	 .loc 1 412 8
+ 1050 0006 6FA20080 	 jnz.t %d2,10,.L70
+ 410:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     boolean ltrEnabled = FALSE;
+ 1051              	 .loc 1 410 13
+ 1052 000a 8202     	 mov %d2,0
+ 1053 000c 0090     	 ret 
+ 1054              	.L70:
+ 413:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     {
+ 414:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         ltrEnabled = TRUE;
+ 1055              	 .loc 1 414 20
+ 1056 000e 8212     	 mov %d2,1
+ 1057              	.LVL88:
+ 415:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     }
+ 416:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 417:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     return ltrEnabled;
+ 1058              	 .loc 1 417 5 is_stmt 1
+ 418:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+ 1059              	 .loc 1 418 1 is_stmt 0
+ 1060 0010 0090     	 ret 
+ 1061              	.LFE195:
+ 1063              	 .global IfxPcieCap_isLtrEnabled_end
+ 1064              	IfxPcieCap_isLtrEnabled_end:
+ 1065              	 .section .text.IfxPcieCap_isLtrSupported,"ax",@progbits
+ 1066              	 .align 1
+ 1067              	 .global IfxPcieCap_isLtrSupported
+ 1069              	IfxPcieCap_isLtrSupported:
+ 1070              	.LFB196:
+ 419:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 420:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 421:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** boolean IfxPcieCap_isLtrSupported(IfxPcieCap_PcieCap *pcieCapPtr)
+ 422:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+ 1071              	 .loc 1 422 1 is_stmt 1
+ 1072              	.LVL89:
+ 1073 0000 40AE     	 mov.aa %a14,%SP
+ 1074              	.LCFI31:
+ 423:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     boolean ltrEnabled = FALSE;
+ 1075              	 .loc 1 423 5
+ 1076              	.LVL90:
+ 424:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 425:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     if (pcieCapPtr->deviceCap2.B.ltr == (uint16)1)
+ 1077              	 .loc 1 425 5
+ 1078              	 .loc 1 425 33 is_stmt 0
+ 1079 0002 19422400 	 ld.w %d2,[%a4]36
+ 1080              	 .loc 1 425 8
+ 1081 0006 6FB20080 	 jnz.t %d2,11,.L73
+ 423:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     boolean ltrEnabled = FALSE;
+ 1082              	 .loc 1 423 13
+ 1083 000a 8202     	 mov %d2,0
+ 1084 000c 0090     	 ret 
+ 1085              	.L73:
+ 426:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     {
+ 427:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****         ltrEnabled = TRUE;
+ 1086              	 .loc 1 427 20
+ 1087 000e 8212     	 mov %d2,1
+ 1088              	.LVL91:
+ 428:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     }
+ 429:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 430:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     return ltrEnabled;
+ 1089              	 .loc 1 430 5 is_stmt 1
+ 431:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+ 1090              	 .loc 1 431 1 is_stmt 0
+ 1091 0010 0090     	 ret 
+ 1092              	.LFE196:
+ 1094              	 .global IfxPcieCap_isLtrSupported_end
+ 1095              	IfxPcieCap_isLtrSupported_end:
+ 1096              	 .section .text.IfxPcieCap_setLtrMaxLatencies,"ax",@progbits
+ 1097              	 .align 1
+ 1098              	 .global IfxPcieCap_setLtrMaxLatencies
+ 1100              	IfxPcieCap_setLtrMaxLatencies:
+ 1101              	.LFB197:
+ 432:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 433:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 434:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** void IfxPcieCap_setLtrMaxLatencies(IfxPcieCap_LtrCap *ltrCapPtr, uint16 noSnoopLatency, IfxPcieCap_
+ 435:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+ 1102              	 .loc 1 435 1 is_stmt 1
+ 1103              	.LVL92:
+ 1104 0000 40AE     	 mov.aa %a14,%SP
+ 1105              	.LCFI32:
+ 436:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     uint32  ltrLatencyValues = ((uint32)snoopLatency) | ((uint32)(snoopScale) << (uint32)10) | ((((
+ 1106              	 .loc 1 436 5
+ 1107              	 .loc 1 436 79 is_stmt 0
+ 1108 0002 8FA70070 	 sh %d7,%d7,10
+ 1109              	.LVL93:
+ 1110              	 .loc 1 436 55
+ 1111 0006 A676     	 or %d6,%d7
+ 1112              	.LVL94:
+ 1113              	 .loc 1 436 149
+ 1114 0008 8FA50050 	 sh %d5,%d5,10
+ 1115              	.LVL95:
+ 1116              	 .loc 1 436 123
+ 1117 000c A654     	 or %d4,%d5
+ 1118              	.LVL96:
+ 1119              	 .loc 1 436 165
+ 1120 000e 8F040140 	 sh %d4,%d4,16
+ 1121              	 .loc 1 436 13
+ 1122 0012 A664     	 or %d4,%d6
+ 1123              	.LVL97:
+ 437:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 438:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     uint32 *ltrLatPtr        = (uint32 *)&(ltrCapPtr->maxSnoopLatency);
+ 1124              	 .loc 1 438 5 is_stmt 1
+ 439:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 440:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     *ltrLatPtr = ltrLatencyValues;
+ 1125              	 .loc 1 440 5
+ 1126              	 .loc 1 440 16 is_stmt 0
+ 1127 0014 59440400 	 st.w [%a4]4,%d4
+ 441:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+ 1128              	 .loc 1 441 1
+ 1129 0018 0090     	 ret 
+ 1130              	.LFE197:
+ 1132              	 .global IfxPcieCap_setLtrMaxLatencies_end
+ 1133              	IfxPcieCap_setLtrMaxLatencies_end:
+ 1134              	 .section .text.IfxPcieCap_setObffEnable,"ax",@progbits
+ 1135              	 .align 1
+ 1136              	 .global IfxPcieCap_setObffEnable
+ 1138              	IfxPcieCap_setObffEnable:
+ 1139              	.LFB198:
+ 442:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 443:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 444:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** void IfxPcieCap_setObffEnable(IfxPcieCap_PcieCap *pcieCapPtr, IfxPcieCap_ObffType obffType)
+ 445:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+ 1140              	 .loc 1 445 1 is_stmt 1
+ 1141              	.LVL98:
+ 1142 0000 40AE     	 mov.aa %a14,%SP
+ 1143              	.LCFI33:
+ 446:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     pcieCapPtr->deviceCtrl2.B.obff = (uint16)obffType;
+ 1144              	 .loc 1 446 5
+ 1145              	 .loc 1 446 36 is_stmt 0
+ 1146 0002 C9422800 	 ld.h %d2,[%a4]40
+ 1147 0006 37428226 	 insert %d2,%d2,%d4,13,2
+ 1148 000a F9422800 	 st.h [%a4]40,%d2
+ 447:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+ 1149              	 .loc 1 447 1
+ 1150 000e 0090     	 ret 
+ 1151              	.LFE198:
+ 1153              	 .global IfxPcieCap_setObffEnable_end
+ 1154              	IfxPcieCap_setObffEnable_end:
+ 1155              	 .section .text.IfxPcieCap_GetObffCapability,"ax",@progbits
+ 1156              	 .align 1
+ 1157              	 .global IfxPcieCap_GetObffCapability
+ 1159              	IfxPcieCap_GetObffCapability:
+ 1160              	.LFB199:
+ 448:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 449:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 450:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** IfxPcieCap_ObffCapability IfxPcieCap_GetObffCapability(IfxPcieCap_PcieCap *pcieCapPtr)
+ 451:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+ 1161              	 .loc 1 451 1 is_stmt 1
+ 1162              	.LVL99:
+ 1163 0000 40AE     	 mov.aa %a14,%SP
+ 1164              	.LCFI34:
+ 452:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     return (IfxPcieCap_ObffCapability)pcieCapPtr->deviceCap2.B.obff;
+ 1165              	 .loc 1 452 5
+ 1166              	 .loc 1 452 63 is_stmt 0
+ 1167 0002 19422400 	 ld.w %d2,[%a4]36
+ 453:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+ 1168              	 .loc 1 453 1
+ 1169 0006 37026229 	 extr.u %d2,%d2,18,2
+ 1170 000a 0090     	 ret 
+ 1171              	.LFE199:
+ 1173              	 .global IfxPcieCap_GetObffCapability_end
+ 1174              	IfxPcieCap_GetObffCapability_end:
+ 1175              	 .section .text.IfxPcieCap_GetObffType,"ax",@progbits
+ 1176              	 .align 1
+ 1177              	 .global IfxPcieCap_GetObffType
+ 1179              	IfxPcieCap_GetObffType:
+ 1180              	.LFB200:
+ 454:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 455:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** 
+ 456:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** IfxPcieCap_ObffType IfxPcieCap_GetObffType(IfxPcieCap_PcieCap *pcieCapPtr)
+ 457:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** {
+ 1181              	 .loc 1 457 1 is_stmt 1
+ 1182              	.LVL100:
+ 1183 0000 40AE     	 mov.aa %a14,%SP
+ 1184              	.LCFI35:
+ 458:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c ****     return (IfxPcieCap_ObffType)pcieCapPtr->deviceCtrl2.B.obff;
+ 1185              	 .loc 1 458 5
+ 1186              	 .loc 1 458 58 is_stmt 0
+ 1187 0002 C9422800 	 ld.h %d2,[%a4]40
+ 459:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.c **** }
+ 1188              	 .loc 1 459 1
+ 1189 0006 3702E226 	 extr.u %d2,%d2,13,2
+ 1190 000a 0090     	 ret 
+ 1191              	.LFE200:
+ 1193              	 .global IfxPcieCap_GetObffType_end
+ 1194              	IfxPcieCap_GetObffType_end:
+ 1643              	.Letext0:
+ 1644              	 .file 2 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 1645              	 .file 3 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 1646              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/IfxPcie_dsp_regdef.h"
+ 1647              	 .file 5 "../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieCap.h"
+ 14691 0000 00000000 	 .word IfxPcieCap_getMsixTableBaseOffset
+ 14692 0004 00000000 	 .word IfxPcieCap_getMsixTableBaseOffset_end
+ 14693 0008 04007444 	 .word 0x44740004
+ 14694 000c 00007000 	 .word 0x00700000
+ 14695 0010 00000000 	 .word 0x00000000
+ 14696 0014 C0000000 	 .word 0x000000c0
+ 14697 0018 00000000 	 .word IfxPcieCap_enableMsix
+ 14698 001c 00000000 	 .word IfxPcieCap_enableMsix_end
+ 14699 0020 04001044 	 .word 0x44100004
+ 14700 0024 00001000 	 .word 0x00100000
+ 14701 0028 00000000 	 .word 0x00000000
+ 14702 002c C0800000 	 .word 0x000080c0
+ 14703 0030 00000000 	 .word IfxPcieCap_enableMsi
+ 14704 0034 00000000 	 .word IfxPcieCap_enableMsi_end
+ 14705 0038 04001044 	 .word 0x44100004
+ 14706 003c 00001000 	 .word 0x00100000
+ 14707 0040 00000000 	 .word 0x00000000
+ 14708 0044 C0000000 	 .word 0x000000c0
+ 14709 0048 00000000 	 .word IfxPcieCap_isMsixVectorMasked
+ 14710 004c 00000000 	 .word IfxPcieCap_isMsixVectorMasked_end
+ 14711 0050 04002444 	 .word 0x44240004
+ 14712 0054 00003000 	 .word 0x00300000
+ 14713 0058 04000000 	 .word 0x00000004
+ 14714 005c C0000000 	 .word 0x000000c0
+ 14715 0060 00000000 	 .word IfxPcieCap_getNumMsixInterrupt
+ 14716 0064 00000000 	 .word IfxPcieCap_getNumMsixInterrupt_end
+ 14717 0068 1C003444 	 .word 0x4434001c
+ 14718 006c 00003000 	 .word 0x00300000
+ 14719 0070 04000000 	 .word 0x00000004
+ 14720 0074 C0000000 	 .word 0x000000c0
+ 14721 0078 00000000 	 .word IfxPcieCap_getPwrState
+ 14722 007c 00000000 	 .word IfxPcieCap_getPwrState_end
+ 14723 0080 04001044 	 .word 0x44100004
+ 14724 0084 00001000 	 .word 0x00100000
+ 14725 0088 04000000 	 .word 0x00000004
+ 14726 008c C0000000 	 .word 0x000000c0
+ 14727 0090 00000000 	 .word IfxPcieCap_setPwrState
+ 14728 0094 00000000 	 .word IfxPcieCap_setPwrState_end
+ 14729 0098 1C001044 	 .word 0x4410001c
+ 14730 009c 10001000 	 .word 0x00100010
+ 14731 00a0 04000000 	 .word 0x00000004
+ 14732 00a4 C0000000 	 .word 0x000000c0
+ 14733 00a8 00000000 	 .word IfxPcieCap_isPwrStateSupported
+ 14734 00ac 00000000 	 .word IfxPcieCap_isPwrStateSupported_end
+ 14735 00b0 1C001044 	 .word 0x4410001c
+ 14736 00b4 10001000 	 .word 0x00100010
+ 14737 00b8 04000000 	 .word 0x00000004
+ 14738 00bc C0000000 	 .word 0x000000c0
+ 14739 00c0 00000000 	 .word IfxPcieCap_setPmeActive
+ 14740 00c4 00000000 	 .word IfxPcieCap_setPmeActive_end
+ 14741 00c8 04001044 	 .word 0x44100004
+ 14742 00cc 10001000 	 .word 0x00100010
+ 14743 00d0 00000000 	 .word 0x00000000
+ 14744 00d4 C0000000 	 .word 0x000000c0
+ 14745 00d8 00000000 	 .word IfxPcieCap_setAspmLnkState
+ 14746 00dc 00000000 	 .word IfxPcieCap_setAspmLnkState_end
+ 14747 00e0 14001044 	 .word 0x44100014
+ 14748 00e4 10001000 	 .word 0x00100010
+ 14749 00e8 00000000 	 .word 0x00000000
+ 14750 00ec C0000000 	 .word 0x000000c0
+ 14751 00f0 00000000 	 .word IfxPcieCap_setLnkRetrain
+ 14752 00f4 00000000 	 .word IfxPcieCap_setLnkRetrain_end
+ 14753 00f8 04001044 	 .word 0x44100004
+ 14754 00fc 00001000 	 .word 0x00100000
+ 14755 0100 00000000 	 .word 0x00000000
+ 14756 0104 C0000000 	 .word 0x000000c0
+ 14757 0108 00000000 	 .word IfxPcieCap_setAerCapability
+ 14758 010c 00000000 	 .word IfxPcieCap_setAerCapability_end
+ 14759 0110 7C001444 	 .word 0x4414007c
+ 14760 0114 30001000 	 .word 0x00100030
+ 14761 0118 04000000 	 .word 0x00000004
+ 14762 011c C0000000 	 .word 0x000000c0
+ 14763 0120 00000000 	 .word IfxPcieCap_getAerCapabilitySupport
+ 14764 0124 00000000 	 .word IfxPcieCap_getAerCapabilitySupport_end
+ 14765 0128 1C001444 	 .word 0x4414001c
+ 14766 012c 10001000 	 .word 0x00100010
+ 14767 0130 04000000 	 .word 0x00000004
+ 14768 0134 C0000000 	 .word 0x000000c0
+ 14769 0138 00000000 	 .word IfxPcieCap_getAerPendingErrors
+ 14770 013c 00000000 	 .word IfxPcieCap_getAerPendingErrors_end
+ 14771 0140 3C001444 	 .word 0x4414003c
+ 14772 0144 30001000 	 .word 0x00100030
+ 14773 0148 04000000 	 .word 0x00000004
+ 14774 014c C0000000 	 .word 0x000000c0
+ 14775 0150 00000000 	 .word IfxPcieCap_serAerErrorMask
+ 14776 0154 00000000 	 .word IfxPcieCap_serAerErrorMask_end
+ 14777 0158 3C001444 	 .word 0x4414003c
+ 14778 015c 30001000 	 .word 0x00100030
+ 14779 0160 00000000 	 .word 0x00000000
+ 14780 0164 C0000000 	 .word 0x000000c0
+ 14781 0168 00000000 	 .word IfxPcieCap_getAerTLPHeaderLog
+ 14782 016c 00000000 	 .word IfxPcieCap_getAerTLPHeaderLog_end
+ 14783 0170 3C003C44 	 .word 0x443c003c
+ 14784 0174 10003000 	 .word 0x00300010
+ 14785 0178 00000000 	 .word 0x00000000
+ 14786 017c C0000000 	 .word 0x000000c0
+ 14787 0180 00000000 	 .word IfxPcieCap_getAerTLPPrefix
+ 14788 0184 00000000 	 .word IfxPcieCap_getAerTLPPrefix_end
+ 14789 0188 1C003C44 	 .word 0x443c001c
+ 14790 018c 10003000 	 .word 0x00300010
+ 14791 0190 00000000 	 .word 0x00000000
+ 14792 0194 C0000000 	 .word 0x000000c0
+ 14793 0198 00000000 	 .word IfxPcieCap_setRasDpAutoLinkDown
+ 14794 019c 00000000 	 .word IfxPcieCap_setRasDpAutoLinkDown_end
+ 14795 01a0 1C001444 	 .word 0x4414001c
+ 14796 01a4 10001000 	 .word 0x00100010
+ 14797 01a8 00000000 	 .word 0x00000000
+ 14798 01ac C0000000 	 .word 0x000000c0
+ 14799 01b0 00000000 	 .word IfxPcieCap_exitRasDpErrorMode
+ 14800 01b4 00000000 	 .word IfxPcieCap_exitRasDpErrorMode_end
+ 14801 01b8 04001444 	 .word 0x44140004
+ 14802 01bc 00001000 	 .word 0x00100000
+ 14803 01c0 00000000 	 .word 0x00000000
+ 14804 01c4 C0000000 	 .word 0x000000c0
+ 14805 01c8 00000000 	 .word IfxPcieCap_disableRasDpErrorProt
+ 14806 01cc 00000000 	 .word IfxPcieCap_disableRasDpErrorProt_end
+ 14807 01d0 14001444 	 .word 0x44140014
+ 14808 01d4 10001000 	 .word 0x00100010
+ 14809 01d8 00000000 	 .word 0x00000000
+ 14810 01dc C0000000 	 .word 0x000000c0
+ 14811 01e0 00000000 	 .word IfxPcieCap_getRasDpRamErrorAddr
+ 14812 01e4 00000000 	 .word IfxPcieCap_getRasDpRamErrorAddr_end
+ 14813 01e8 14001444 	 .word 0x44140014
+ 14814 01ec 10001000 	 .word 0x00100010
+ 14815 01f0 04000000 	 .word 0x00000004
+ 14816 01f4 C0000000 	 .word 0x000000c0
+ 14817 01f8 00000000 	 .word IfxPcieCap_getRasDpRamErrorIndex
+ 14818 01fc 00000000 	 .word IfxPcieCap_getRasDpRamErrorIndex_end
+ 14819 0200 14001444 	 .word 0x44140014
+ 14820 0204 10001000 	 .word 0x00100010
+ 14821 0208 04000000 	 .word 0x00000004
+ 14822 020c C0000000 	 .word 0x000000c0
+ 14823 0210 00000000 	 .word IfxPcieCap_enableRasDesErrorInjection
+ 14824 0214 00000000 	 .word IfxPcieCap_enableRasDesErrorInjection_end
+ 14825 0218 14001444 	 .word 0x44140014
+ 14826 021c 10001000 	 .word 0x00100010
+ 14827 0220 00000000 	 .word 0x00000000
+ 14828 0224 C0000000 	 .word 0x000000c0
+ 14829 0228 00000000 	 .word IfxPcieCap_configureRasDesCrcError
+ 14830 022c 00000000 	 .word IfxPcieCap_configureRasDesCrcError_end
+ 14831 0230 34001444 	 .word 0x44140034
+ 14832 0234 30001000 	 .word 0x00100030
+ 14833 0238 00000000 	 .word 0x00000000
+ 14834 023c C0000000 	 .word 0x000000c0
+ 14835 0240 00000000 	 .word IfxPcieCap_configureRasDesSeqError
+ 14836 0244 00000000 	 .word IfxPcieCap_configureRasDesSeqError_end
+ 14837 0248 74001444 	 .word 0x44140074
+ 14838 024c 70001000 	 .word 0x00100070
+ 14839 0250 00000000 	 .word 0x00000000
+ 14840 0254 C0000000 	 .word 0x000000c0
+ 14841 0258 00000000 	 .word IfxPcieCap_configureRasDesDllpError
+ 14842 025c 00000000 	 .word IfxPcieCap_configureRasDesDllpError_end
+ 14843 0260 34001444 	 .word 0x44140034
+ 14844 0264 30001000 	 .word 0x00100030
+ 14845 0268 00000000 	 .word 0x00000000
+ 14846 026c C0000000 	 .word 0x000000c0
+ 14847 0270 00000000 	 .word IfxPcieCap_configureRasDesSymError
+ 14848 0274 00000000 	 .word IfxPcieCap_configureRasDesSymError_end
+ 14849 0278 34001444 	 .word 0x44140034
+ 14850 027c 30001000 	 .word 0x00100030
+ 14851 0280 00000000 	 .word 0x00000000
+ 14852 0284 C0000000 	 .word 0x000000c0
+ 14853 0288 00000000 	 .word IfxPcieCap_configureRasDesFcError
+ 14854 028c 00000000 	 .word IfxPcieCap_configureRasDesFcError_end
+ 14855 0290 F4001444 	 .word 0x441400f4
+ 14856 0294 F0001000 	 .word 0x001000f0
+ 14857 0298 00000000 	 .word 0x00000000
+ 14858 029c C0000000 	 .word 0x000000c0
+ 14859 02a0 00000000 	 .word IfxPcieCap_configureRasDesTlpInsertError
+ 14860 02a4 00000000 	 .word IfxPcieCap_configureRasDesTlpInsertError_end
+ 14861 02a8 34001444 	 .word 0x44140034
+ 14862 02ac 30001000 	 .word 0x00100030
+ 14863 02b0 00000000 	 .word 0x00000000
+ 14864 02b4 C0000000 	 .word 0x000000c0
+ 14865 02b8 00000000 	 .word IfxPcieCap_setLtrEnable
+ 14866 02bc 00000000 	 .word IfxPcieCap_setLtrEnable_end
+ 14867 02c0 14001044 	 .word 0x44100014
+ 14868 02c4 10001000 	 .word 0x00100010
+ 14869 02c8 00000000 	 .word 0x00000000
+ 14870 02cc C0000000 	 .word 0x000000c0
+ 14871 02d0 00000000 	 .word IfxPcieCap_isLtrEnabled
+ 14872 02d4 00000000 	 .word IfxPcieCap_isLtrEnabled_end
+ 14873 02d8 04001044 	 .word 0x44100004
+ 14874 02dc 00001000 	 .word 0x00100000
+ 14875 02e0 04000000 	 .word 0x00000004
+ 14876 02e4 C0000000 	 .word 0x000000c0
+ 14877 02e8 00000000 	 .word IfxPcieCap_isLtrSupported
+ 14878 02ec 00000000 	 .word IfxPcieCap_isLtrSupported_end
+ 14879 02f0 04001444 	 .word 0x44140004
+ 14880 02f4 00001000 	 .word 0x00100000
+ 14881 02f8 04000000 	 .word 0x00000004
+ 14882 02fc C0000000 	 .word 0x000000c0
+ 14883 0300 00000000 	 .word IfxPcieCap_setLtrMaxLatencies
+ 14884 0304 00000000 	 .word IfxPcieCap_setLtrMaxLatencies_end
+ 14885 0308 F0001444 	 .word 0x441400f0
+ 14886 030c F0001000 	 .word 0x001000f0
+ 14887 0310 00000000 	 .word 0x00000000
+ 14888 0314 C0000000 	 .word 0x000000c0
+ 14889 0318 00000000 	 .word IfxPcieCap_setObffEnable
+ 14890 031c 00000000 	 .word IfxPcieCap_setObffEnable_end
+ 14891 0320 14001044 	 .word 0x44100014
+ 14892 0324 10001000 	 .word 0x00100010
+ 14893 0328 00000000 	 .word 0x00000000
+ 14894 032c C0000000 	 .word 0x000000c0
+ 14895 0330 00000000 	 .word IfxPcieCap_GetObffCapability
+ 14896 0334 00000000 	 .word IfxPcieCap_GetObffCapability_end
+ 14897 0338 04001444 	 .word 0x44140004
+ 14898 033c 00001000 	 .word 0x00100000
+ 14899 0340 04000000 	 .word 0x00000004
+ 14900 0344 C0000000 	 .word 0x000000c0
+ 14901 0348 00000000 	 .word IfxPcieCap_GetObffType
+ 14902 034c 00000000 	 .word IfxPcieCap_GetObffType_end
+ 14903 0350 04001044 	 .word 0x44100004
+ 14904 0354 00001000 	 .word 0x00100000
+ 14905 0358 04000000 	 .word 0x00000004
+ 14906 035c C0000000 	 .word 0x000000c0
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxPcieCap.c
+                            *ABS*:00000000 IfxPcieCap.c
+    {standard input}:10     .text.IfxPcieCap_getMsixTableBaseOffset:00000000 IfxPcieCap_getMsixTableBaseOffset
+    {standard input}:37     .text.IfxPcieCap_getMsixTableBaseOffset:0000001a IfxPcieCap_getMsixTableBaseOffset_end
+    {standard input}:42     .text.IfxPcieCap_enableMsix:00000000 IfxPcieCap_enableMsix
+    {standard input}:75     .text.IfxPcieCap_enableMsix:0000002e IfxPcieCap_enableMsix_end
+    {standard input}:80     .text.IfxPcieCap_enableMsi:00000000 IfxPcieCap_enableMsi
+    {standard input}:96     .text.IfxPcieCap_enableMsi:00000010 IfxPcieCap_enableMsi_end
+    {standard input}:101    .text.IfxPcieCap_isMsixVectorMasked:00000000 IfxPcieCap_isMsixVectorMasked
+    {standard input}:127    .text.IfxPcieCap_isMsixVectorMasked:00000012 IfxPcieCap_isMsixVectorMasked_end
+    {standard input}:132    .text.IfxPcieCap_getNumMsixInterrupt:00000000 IfxPcieCap_getNumMsixInterrupt
+    {standard input}:185    .text.IfxPcieCap_getNumMsixInterrupt:00000034 IfxPcieCap_getNumMsixInterrupt_end
+    {standard input}:190    .text.IfxPcieCap_getPwrState:00000000 IfxPcieCap_getPwrState
+    {standard input}:205    .text.IfxPcieCap_getPwrState:0000000c IfxPcieCap_getPwrState_end
+    {standard input}:210    .text.IfxPcieCap_setPwrState:00000000 IfxPcieCap_setPwrState
+    {standard input}:248    .text.IfxPcieCap_setPwrState:00000024 IfxPcieCap_setPwrState_end
+    {standard input}:253    .text.IfxPcieCap_isPwrStateSupported:00000000 IfxPcieCap_isPwrStateSupported
+    {standard input}:303    .text.IfxPcieCap_isPwrStateSupported:0000002e IfxPcieCap_isPwrStateSupported_end
+    {standard input}:308    .text.IfxPcieCap_setPmeActive:00000000 IfxPcieCap_setPmeActive
+    {standard input}:334    .text.IfxPcieCap_setPmeActive:00000020 IfxPcieCap_setPmeActive_end
+    {standard input}:339    .text.IfxPcieCap_setAspmLnkState:00000000 IfxPcieCap_setAspmLnkState
+    {standard input}:355    .text.IfxPcieCap_setAspmLnkState:00000010 IfxPcieCap_setAspmLnkState_end
+    {standard input}:360    .text.IfxPcieCap_setLnkRetrain:00000000 IfxPcieCap_setLnkRetrain
+    {standard input}:376    .text.IfxPcieCap_setLnkRetrain:00000010 IfxPcieCap_setLnkRetrain_end
+    {standard input}:381    .text.IfxPcieCap_setAerCapability:00000000 IfxPcieCap_setAerCapability
+    {standard input}:444    .text.IfxPcieCap_setAerCapability:0000003e IfxPcieCap_setAerCapability_end
+    {standard input}:449    .text.IfxPcieCap_getAerCapabilitySupport:00000000 IfxPcieCap_getAerCapabilitySupport
+    {standard input}:480    .text.IfxPcieCap_getAerCapabilitySupport:00000018 IfxPcieCap_getAerCapabilitySupport_end
+    {standard input}:485    .text.IfxPcieCap_getAerPendingErrors:00000000 IfxPcieCap_getAerPendingErrors
+    {standard input}:517    .text.IfxPcieCap_getAerPendingErrors:00000018 IfxPcieCap_getAerPendingErrors_end
+    {standard input}:522    .text.IfxPcieCap_serAerErrorMask:00000000 IfxPcieCap_serAerErrorMask
+    {standard input}:550    .text.IfxPcieCap_serAerErrorMask:00000024 IfxPcieCap_serAerErrorMask_end
+    {standard input}:555    .text.IfxPcieCap_getAerTLPHeaderLog:00000000 IfxPcieCap_getAerTLPHeaderLog
+    {standard input}:597    .text.IfxPcieCap_getAerTLPHeaderLog:00000032 IfxPcieCap_getAerTLPHeaderLog_end
+    {standard input}:602    .text.IfxPcieCap_getAerTLPPrefix:00000000 IfxPcieCap_getAerTLPPrefix
+    {standard input}:648    .text.IfxPcieCap_getAerTLPPrefix:00000038 IfxPcieCap_getAerTLPPrefix_end
+    {standard input}:653    .text.IfxPcieCap_setRasDpAutoLinkDown:00000000 IfxPcieCap_setRasDpAutoLinkDown
+    {standard input}:681    .text.IfxPcieCap_setRasDpAutoLinkDown:0000001e IfxPcieCap_setRasDpAutoLinkDown_end
+    {standard input}:686    .text.IfxPcieCap_exitRasDpErrorMode:00000000 IfxPcieCap_exitRasDpErrorMode
+    {standard input}:703    .text.IfxPcieCap_exitRasDpErrorMode:00000012 IfxPcieCap_exitRasDpErrorMode_end
+    {standard input}:708    .text.IfxPcieCap_disableRasDpErrorProt:00000000 IfxPcieCap_disableRasDpErrorProt
+    {standard input}:725    .text.IfxPcieCap_disableRasDpErrorProt:00000010 IfxPcieCap_disableRasDpErrorProt_end
+    {standard input}:730    .text.IfxPcieCap_getRasDpRamErrorAddr:00000000 IfxPcieCap_getRasDpRamErrorAddr
+    {standard input}:760    .text.IfxPcieCap_getRasDpRamErrorAddr:0000001a IfxPcieCap_getRasDpRamErrorAddr_end
+    {standard input}:765    .text.IfxPcieCap_getRasDpRamErrorIndex:00000000 IfxPcieCap_getRasDpRamErrorIndex
+    {standard input}:795    .text.IfxPcieCap_getRasDpRamErrorIndex:0000001a IfxPcieCap_getRasDpRamErrorIndex_end
+    {standard input}:800    .text.IfxPcieCap_enableRasDesErrorInjection:00000000 IfxPcieCap_enableRasDesErrorInjection
+    {standard input}:817    .text.IfxPcieCap_enableRasDesErrorInjection:00000012 IfxPcieCap_enableRasDesErrorInjection_end
+    {standard input}:822    .text.IfxPcieCap_configureRasDesCrcError:00000000 IfxPcieCap_configureRasDesCrcError
+    {standard input}:848    .text.IfxPcieCap_configureRasDesCrcError:00000016 IfxPcieCap_configureRasDesCrcError_end
+    {standard input}:853    .text.IfxPcieCap_configureRasDesSeqError:00000000 IfxPcieCap_configureRasDesSeqError
+    {standard input}:882    .text.IfxPcieCap_configureRasDesSeqError:0000001a IfxPcieCap_configureRasDesSeqError_end
+    {standard input}:887    .text.IfxPcieCap_configureRasDesDllpError:00000000 IfxPcieCap_configureRasDesDllpError
+    {standard input}:913    .text.IfxPcieCap_configureRasDesDllpError:00000016 IfxPcieCap_configureRasDesDllpError_end
+    {standard input}:918    .text.IfxPcieCap_configureRasDesSymError:00000000 IfxPcieCap_configureRasDesSymError
+    {standard input}:944    .text.IfxPcieCap_configureRasDesSymError:00000016 IfxPcieCap_configureRasDesSymError_end
+    {standard input}:949    .text.IfxPcieCap_configureRasDesFcError:00000000 IfxPcieCap_configureRasDesFcError
+    {standard input}:981    .text.IfxPcieCap_configureRasDesFcError:0000001e IfxPcieCap_configureRasDesFcError_end
+    {standard input}:986    .text.IfxPcieCap_configureRasDesTlpInsertError:00000000 IfxPcieCap_configureRasDesTlpInsertError
+    {standard input}:1012   .text.IfxPcieCap_configureRasDesTlpInsertError:00000016 IfxPcieCap_configureRasDesTlpInsertError_end
+    {standard input}:1017   .text.IfxPcieCap_setLtrEnable:00000000 IfxPcieCap_setLtrEnable
+    {standard input}:1033   .text.IfxPcieCap_setLtrEnable:00000010 IfxPcieCap_setLtrEnable_end
+    {standard input}:1038   .text.IfxPcieCap_isLtrEnabled:00000000 IfxPcieCap_isLtrEnabled
+    {standard input}:1064   .text.IfxPcieCap_isLtrEnabled:00000012 IfxPcieCap_isLtrEnabled_end
+    {standard input}:1069   .text.IfxPcieCap_isLtrSupported:00000000 IfxPcieCap_isLtrSupported
+    {standard input}:1095   .text.IfxPcieCap_isLtrSupported:00000012 IfxPcieCap_isLtrSupported_end
+    {standard input}:1100   .text.IfxPcieCap_setLtrMaxLatencies:00000000 IfxPcieCap_setLtrMaxLatencies
+    {standard input}:1133   .text.IfxPcieCap_setLtrMaxLatencies:0000001a IfxPcieCap_setLtrMaxLatencies_end
+    {standard input}:1138   .text.IfxPcieCap_setObffEnable:00000000 IfxPcieCap_setObffEnable
+    {standard input}:1154   .text.IfxPcieCap_setObffEnable:00000010 IfxPcieCap_setObffEnable_end
+    {standard input}:1159   .text.IfxPcieCap_GetObffCapability:00000000 IfxPcieCap_GetObffCapability
+    {standard input}:1174   .text.IfxPcieCap_GetObffCapability:0000000c IfxPcieCap_GetObffCapability_end
+    {standard input}:1179   .text.IfxPcieCap_GetObffType:00000000 IfxPcieCap_GetObffType
+    {standard input}:1194   .text.IfxPcieCap_GetObffType:0000000c IfxPcieCap_GetObffType_end
+
+NO UNDEFINED SYMBOLS

@@ -1,0 +1,263 @@
+   1              	
+   2              	 .file "Ifx_LutLinearF32.c"
+   3              	 .file "Ifx_LutLinearF32.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.Ifx_LutLinearF32_searchBin,"ax",@progbits
+   7              	 .align 1
+   8              	 .global Ifx_LutLinearF32_searchBin
+  10              	Ifx_LutLinearF32_searchBin:
+  11              	.LFB2:
+  12              	 .file 1 "../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c"
+   1:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c **** /**
+   2:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****  * \file Ifx_LutLinearF32.c
+   3:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****  * \brief Linear look-up function
+   4:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****  *
+   5:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****  *
+   6:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****  * \version iLLD-TC4-v2.7.0
+   7:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   8:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****  *
+   9:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****  *
+  10:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****   *                                 IMPORTANT NOTICE
+  11:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****  *
+  12:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****  *
+  13:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  14:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  15:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****  * this file except in compliance with IFASLL.
+  16:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****  *
+  17:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  18:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  19:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  20:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  21:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  22:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  23:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****  * defects in the licensed items, or non-infringement of third parties'
+  24:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****  * intellectual property rights. See the full license text for the specific
+  25:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****  * language governing permissions and limitations under IFASLL.
+  26:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****  *
+  27:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****  */
+  28:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c **** 
+  29:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c **** #include "Ifx_LutLinearF32.h"
+  30:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c **** 
+  31:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c **** /** \brief Look-up table with binary search implementation
+  32:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****  *
+  33:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****  * Value inside table will be linearly interpolated.
+  34:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****  * Value outside table will be linearly extrapolated.
+  35:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****  *
+  36:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****  * \param ml pointer to the multi-segment object
+  37:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****  * \param index
+  38:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****  * \return linear interpolated value */
+  39:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c **** float32 Ifx_LutLinearF32_searchBin(const Ifx_LutLinearF32 *ml, float32 index)
+  40:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c **** {
+  13              	 .loc 1 40 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  41:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****     sint16 imin;
+  17              	 .loc 1 41 5
+  42:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****     sint16 imax;
+  18              	 .loc 1 42 5
+  43:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****     sint16 imid;
+  19              	 .loc 1 43 5
+  44:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c **** 
+  45:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****     imin = 0;
+  20              	 .loc 1 45 5
+  21              	.LVL1:
+  46:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****     imax = ml->segmentCount - 1;
+  22              	 .loc 1 46 5
+  23              	 .loc 1 46 14 is_stmt 0
+  24 0002 79420000 	 ld.b %d2,[%a4]0
+  25 0006 37027020 	 extr.u %d2,%d2,0,16
+  26              	 .loc 1 46 29
+  27 000a C2F2     	 add %d2,-1
+  28              	 .loc 1 46 10
+  29 000c 37025030 	 extr %d3,%d2,0,16
+  30              	.LVL2:
+  47:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c **** 
+  48:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****     if (ml->segments[1].boundary > ml->segments[0].boundary)
+  31              	 .loc 1 48 5 is_stmt 1
+  32              	 .loc 1 48 11 is_stmt 0
+  33 0010 19450400 	 ld.w %d5,[%a4]4
+  34              	 .loc 1 48 24
+  35 0014 6052     	 mov.a %a2,%d5
+  36 0016 19221400 	 ld.w %d2,[%a2]20
+  37              	 .loc 1 48 51
+  38 001a 19260800 	 ld.w %d6,[%a2]8
+  39              	 .loc 1 48 8
+  40 001e 4B620120 	 cmp.f %d2,%d2,%d6
+  41 0022 6F220080 	 jnz.t %d2,2,.L11
+  45:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****     imax = ml->segmentCount - 1;
+  42              	 .loc 1 45 10
+  43 0026 8202     	 mov %d2,0
+  44              	.LVL3:
+  45              	.L8:
+  49:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****     {
+  50:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****         while (imin < imax)
+  51:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****         {
+  52:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****             imid = imin + (imax - imin) / 2;
+  53:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c **** 
+  54:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****             if (index > ml->segments[imid].boundary)
+  55:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****             {
+  56:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****                 imin = imid + 1;
+  57:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****             }
+  58:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****             else
+  59:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****             {
+  60:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****                 imax = imid;
+  61:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****             }
+  62:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****         }
+  63:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****     }
+  64:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****     else
+  65:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****     {
+  66:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****         while (imin < imax)
+  46              	 .loc 1 66 21 is_stmt 1
+  47 0028 7F320000 	 jge %d2,%d3,.L7
+  67:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****         {
+  68:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****             imid = imin + (imax - imin) / 2;
+  48              	 .loc 1 68 13
+  49              	 .loc 1 68 33 is_stmt 0
+  50 002c 0B238060 	 sub %d6,%d3,%d2
+  51              	 .loc 1 68 41
+  52 0030 8F161E70 	 sh %d7,%d6,-31
+  53 0034 4276     	 add %d6,%d7
+  54 0036 86F6     	 sha %d6,-1
+  55              	 .loc 1 68 25
+  56 0038 4226     	 add %d6,%d2
+  57 003a 37067000 	 extr.u %d0,%d6,0,16
+  58              	 .loc 1 68 18
+  59 003e 37065060 	 extr %d6,%d6,0,16
+  60              	.LVL4:
+  69:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c **** 
+  70:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****             if (index < ml->segments[imid].boundary)
+  61              	 .loc 1 70 13 is_stmt 1
+  62              	 .loc 1 70 37 is_stmt 0
+  63 0042 13C62075 	 madd %d7,%d5,%d6,12
+  64              	 .loc 1 70 43
+  65 0046 6072     	 mov.a %a2,%d7
+  66 0048 19270800 	 ld.w %d7,[%a2]8
+  67              	 .loc 1 70 16
+  68 004c 4B470170 	 cmp.f %d7,%d7,%d4
+  69 0050 6F270080 	 jnz.t %d7,2,.L18
+  71:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****             {
+  72:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****                 imin = imid + 1;
+  73:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****             }
+  74:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****             else
+  75:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****             {
+  76:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****                 imax = imid;
+  70              	 .loc 1 76 22
+  71 0054 0263     	 mov %d3,%d6
+  72              	.LVL5:
+  73 0056 1D000000 	 j .L8
+  74              	.LVL6:
+  75              	.L19:
+  56:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****             }
+  76              	 .loc 1 56 17 is_stmt 1
+  56:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****             }
+  77              	 .loc 1 56 29 is_stmt 0
+  78 005a 1B100020 	 addi %d2,%d0,1
+  79              	.LVL7:
+  56:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****             }
+  80              	 .loc 1 56 22
+  81 005e 37025020 	 extr %d2,%d2,0,16
+  82              	.LVL8:
+  83 0062 1D000000 	 j .L4
+  84              	.LVL9:
+  85              	.L11:
+  45:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****     imax = ml->segmentCount - 1;
+  86              	 .loc 1 45 10
+  87 0066 8202     	 mov %d2,0
+  88              	.LVL10:
+  89              	.L4:
+  50:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****         {
+  90              	 .loc 1 50 21 is_stmt 1
+  91 0068 7F320000 	 jge %d2,%d3,.L7
+  52:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c **** 
+  92              	 .loc 1 52 13
+  52:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c **** 
+  93              	 .loc 1 52 33 is_stmt 0
+  94 006c 0B238060 	 sub %d6,%d3,%d2
+  52:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c **** 
+  95              	 .loc 1 52 41
+  96 0070 8F161E70 	 sh %d7,%d6,-31
+  97 0074 4276     	 add %d6,%d7
+  98 0076 86F6     	 sha %d6,-1
+  52:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c **** 
+  99              	 .loc 1 52 25
+ 100 0078 4226     	 add %d6,%d2
+ 101 007a 37067000 	 extr.u %d0,%d6,0,16
+  52:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c **** 
+ 102              	 .loc 1 52 18
+ 103 007e 37065060 	 extr %d6,%d6,0,16
+ 104              	.LVL11:
+  54:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****             {
+ 105              	 .loc 1 54 13 is_stmt 1
+  54:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****             {
+ 106              	 .loc 1 54 37 is_stmt 0
+ 107 0082 13C62075 	 madd %d7,%d5,%d6,12
+  54:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****             {
+ 108              	 .loc 1 54 43
+ 109 0086 6072     	 mov.a %a2,%d7
+ 110 0088 19270800 	 ld.w %d7,[%a2]8
+  54:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****             {
+ 111              	 .loc 1 54 16
+ 112 008c 4B470170 	 cmp.f %d7,%d7,%d4
+ 113 0090 6F070080 	 jnz.t %d7,0,.L19
+  60:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****             }
+ 114              	 .loc 1 60 22
+ 115 0094 0263     	 mov %d3,%d6
+ 116              	.LVL12:
+ 117 0096 1D000000 	 j .L4
+ 118              	.LVL13:
+ 119              	.L18:
+  72:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****             }
+ 120              	 .loc 1 72 17 is_stmt 1
+  72:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****             }
+ 121              	 .loc 1 72 29 is_stmt 0
+ 122 009a 1B100020 	 addi %d2,%d0,1
+ 123              	.LVL14:
+  72:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****             }
+ 124              	 .loc 1 72 22
+ 125 009e 37025020 	 extr %d2,%d2,0,16
+ 126              	.LVL15:
+ 127 00a2 1D000000 	 j .L8
+ 128              	.LVL16:
+ 129              	.L7:
+  77:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****             }
+  78:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****         }
+  79:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****     }
+  80:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c **** 
+  81:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c ****     return (ml->segments[imin].gain * index) + ml->segments[imin].offset;
+ 130              	 .loc 1 81 5 is_stmt 1
+ 131              	 .loc 1 81 25 is_stmt 0
+ 132 00a6 13C22025 	 madd %d2,%d5,%d2,12
+ 133              	.LVL17:
+ 134 00aa 6022     	 mov.a %a2,%d2
+ 135              	 .loc 1 81 31
+ 136 00ac 5422     	 ld.w %d2,[%a2]0
+ 137              	 .loc 1 81 37
+ 138 00ae 4B424140 	 mul.f %d4,%d2,%d4
+ 139              	.LVL18:
+ 140              	 .loc 1 81 66
+ 141 00b2 19220400 	 ld.w %d2,[%a2]4
+  82:../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.c **** }
+ 142              	 .loc 1 82 1
+ 143 00b6 6B022124 	 add.f %d2,%d4,%d2
+ 144 00ba 0090     	 ret 
+ 145              	.LFE2:
+ 147              	 .global Ifx_LutLinearF32_searchBin_end
+ 148              	Ifx_LutLinearF32_searchBin_end:
+ 177              	.Letext0:
+ 178              	 .file 2 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 179              	 .file 3 "../Libraries/Service/Tricore/Math/Ifx_LutLinearF32.h"
+ 684 0000 00000000 	 .word Ifx_LutLinearF32_searchBin
+ 685 0004 00000000 	 .word Ifx_LutLinearF32_searchBin_end
+ 686 0008 FD001444 	 .word 0x441400fd
+ 687 000c 10001000 	 .word 0x00100010
+ 688 0010 04000000 	 .word 0x00000004
+ 689 0014 C0000000 	 .word 0x000000c0
+DEFINED SYMBOLS
+                            *ABS*:00000000 Ifx_LutLinearF32.c
+                            *ABS*:00000000 Ifx_LutLinearF32.c
+    {standard input}:10     .text.Ifx_LutLinearF32_searchBin:00000000 Ifx_LutLinearF32_searchBin
+    {standard input}:148    .text.Ifx_LutLinearF32_searchBin:000000bc Ifx_LutLinearF32_searchBin_end
+
+NO UNDEFINED SYMBOLS

@@ -1,0 +1,1171 @@
+   1              	
+   2              	 .file "Ifx_LutAtan2F32.c"
+   3              	 .file "Ifx_LutAtan2F32.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.Ifx_LutAtan2F32_init,"ax",@progbits
+   7              	 .align 1
+   8              	 .global Ifx_LutAtan2F32_init
+  10              	Ifx_LutAtan2F32_init:
+  11              	.LFB165:
+  12              	 .file 1 "../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c"
+   1:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** /**
+   2:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****  * \file Ifx_LutAtan2F32.c
+   3:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****  * \brief ATAN2 lookup functions with fixed-point angle data type
+   4:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****  *
+   5:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****  *
+   6:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****  * \version iLLD-TC4-v2.7.0
+   7:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   8:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****  *
+   9:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****  *
+  10:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****   *                                 IMPORTANT NOTICE
+  11:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****  *
+  12:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****  *
+  13:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  14:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  15:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****  * this file except in compliance with IFASLL.
+  16:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****  *
+  17:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  18:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  19:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  20:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  21:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  22:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  23:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****  * defects in the licensed items, or non-infringement of third parties'
+  24:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****  * intellectual property rights. See the full license text for the specific
+  25:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****  * language governing permissions and limitations under IFASLL.
+  26:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****  *
+  27:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****  */
+  28:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** #include "Ifx_LutAtan2F32.h"
+  29:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** 
+  30:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** #include <math.h>
+  31:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** 
+  32:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** void Ifx_LutAtan2F32_init(void)
+  33:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** {
+  13              	 .loc 1 33 1
+  14 0000 40AE     	 mov.aa %a14,%SP
+  15              	.LCFI0:
+  34:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** #if IFX_LUT_TABLE_CONST == 0
+  35:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {   /* generate arctan table */
+  36:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****         sint32  k;
+  37:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****         float32 Step, value;
+  38:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****         Step = (double)IFX_LUT_ATAN_LIMIT_LOW / IFX_LUT_ATAN_SIZE_LOW;
+  39:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** 
+  40:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****         for (k = 0; k < IFX_LUTATAN2F32_SIZE; k++)
+  41:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****         {
+  42:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             Ifx_g_LutAtan2F32_FxpAngle_table[k] = IFX_LUT_F32_TO_FXPANGLE(atanf(k / Step));
+  43:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****         }
+  44:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     }
+  45:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** #endif
+  46:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+  16              	 .loc 1 46 1
+  17 0002 0090     	 ret 
+  18              	.LFE165:
+  20              	 .global Ifx_LutAtan2F32_init_end
+  21              	Ifx_LutAtan2F32_init_end:
+  22              	 .section .text.Ifx_LutAtan2F32_fxpAngle,"ax",@progbits
+  23              	 .align 1
+  24              	 .global Ifx_LutAtan2F32_fxpAngle
+  26              	Ifx_LutAtan2F32_fxpAngle:
+  27              	.LFB168:
+  47:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** 
+  48:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** 
+  49:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** IFX_INLINE Ifx_Lut_FxpAngle Ifx_LutAtan2F32_fxpAnglePrivate(float32 valf)
+  50:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** {
+  51:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     uint32 vali;
+  52:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     valf = IFX_LUTATAN2F32_SIZE * valf;
+  53:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     vali = (uint32)valf;
+  54:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** 
+  55:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     if ((valf - (float32)vali) > 0.5)
+  56:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {   /* Round to nearest */
+  57:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****         vali++;
+  58:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     }
+  59:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** 
+  60:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     return Ifx_g_LutAtan2F32_FxpAngle_table[vali];
+  61:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+  62:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** 
+  63:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** 
+  64:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** IFX_INLINE float32 Ifx_LutAtan2F32_float32Private(float32 val)
+  65:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** {   /* FIXME round to nearest ?? */
+  66:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     return Ifx_g_LutAtan2F32_table[(int)(val * IFX_LUTATAN2F32_SIZE)];
+  67:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+  68:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** 
+  69:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** 
+  70:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** Ifx_Lut_FxpAngle Ifx_LutAtan2F32_fxpAngle(float32 x, float32 y)
+  71:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** {
+  28              	 .loc 1 71 1
+  29              	.LVL0:
+  30 0000 40AE     	 mov.aa %a14,%SP
+  31              	.LCFI1:
+  72:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     Ifx_Lut_FxpAngle angle;
+  32              	 .loc 1 72 5
+  73:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     float32          fx = (float32)x;
+  33              	 .loc 1 73 5
+  34              	.LVL1:
+  74:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     float32          fy = (float32)y;
+  35              	 .loc 1 74 5
+  75:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** 
+  76:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     if (y < 0)
+  36              	 .loc 1 76 5
+  37              	 .loc 1 76 8 is_stmt 0
+  38 0002 8202     	 mov %d2,0
+  39 0004 4B250120 	 cmp.f %d2,%d5,%d2
+  40 0008 6F020080 	 jnz.t %d2,0,.L56
+  77:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {
+  78:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****         if (x < 0)
+  79:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****         {
+  80:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             if (-y < -x)
+  81:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             {   // 180 .. 225 deg
+  82:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****                 angle = -IFX_LUT_ANGLE_PI + Ifx_LutAtan2F32_fxpAnglePrivate(-fy / -fx);
+  83:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+  84:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             else
+  85:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             {   // 225 .. 270 deg
+  86:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****                 angle = -(IFX_LUT_ANGLE_PI / 2) - Ifx_LutAtan2F32_fxpAnglePrivate(-fx / -fy);
+  87:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+  88:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****         }
+  89:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****         else // x >= 0
+  90:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****         {
+  91:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             if (-y < x)
+  92:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             { // 315 .. 360 deg
+  93:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****                 angle = -Ifx_LutAtan2F32_fxpAnglePrivate(-fy / fx); // ok
+  94:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+  95:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             else
+  96:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             {                                                         // 225 .. 270 deg
+  97:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****                 angle = -(IFX_LUT_ANGLE_PI / 2) + Ifx_LutAtan2F32_fxpAnglePrivate(fx / -fy);
+  98:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+  99:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****         }
+ 100:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     }
+ 101:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     else // y >= 0
+ 102:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {
+ 103:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****         if (x < 0)
+  41              	 .loc 1 103 9 is_stmt 1
+  42              	 .loc 1 103 12 is_stmt 0
+  43 000c 8202     	 mov %d2,0
+  44 000e 4B240120 	 cmp.f %d2,%d4,%d2
+  45 0012 6F020080 	 jnz.t %d2,0,.L57
+ 104:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****         {
+ 105:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             if (y < -x)
+ 106:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             {                                                                                 // 13
+ 107:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****                 angle = IFX_LUT_ANGLE_PI - Ifx_LutAtan2F32_fxpAnglePrivate(fy / -fx);       // ok
+ 108:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 109:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             else
+ 110:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             {                                                                                 // 90
+ 111:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****                 angle = (IFX_LUT_ANGLE_PI / 2) + Ifx_LutAtan2F32_fxpAnglePrivate(-fx / fy); // ok
+ 112:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 113:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****         }
+ 114:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****         else // x >= 0
+ 115:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****         {
+ 116:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             if (y < x)
+  46              	 .loc 1 116 13 is_stmt 1
+  47              	 .loc 1 116 16 is_stmt 0
+  48 0016 4B540120 	 cmp.f %d2,%d4,%d5
+  49 001a 6F220000 	 jz.t %d2,2,.L55
+ 117:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             {                                                                                // 0 .
+ 118:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****                 angle = Ifx_LutAtan2F32_fxpAnglePrivate(fy / fx);                          // ok
+  50              	 .loc 1 118 17 is_stmt 1
+  51              	 .loc 1 118 25 is_stmt 0
+  52 001e 4B455140 	 div.f %d4,%d5,%d4
+  53              	.LVL2:
+  54              	.LBB34:
+  55              	.LBB35:
+  51:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     valf = IFX_LUTATAN2F32_SIZE * valf;
+  56              	 .loc 1 51 5 is_stmt 1
+  52:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     vali = (uint32)valf;
+  57              	 .loc 1 52 5
+  52:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     vali = (uint32)valf;
+  58              	 .loc 1 52 10 is_stmt 0
+  59 0022 7B004834 	 movh %d3,17536
+  60 0026 4B344130 	 mul.f %d3,%d4,%d3
+  61              	.LVL3:
+  53:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** 
+  62              	 .loc 1 53 5 is_stmt 1
+  53:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** 
+  63              	 .loc 1 53 10 is_stmt 0
+  64 002a 4B037121 	 ftouz %d2,%d3
+  65              	.LVL4:
+  55:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {   /* Round to nearest */
+  66              	 .loc 1 55 5 is_stmt 1
+  55:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {   /* Round to nearest */
+  67              	 .loc 1 55 17 is_stmt 0
+  68 002e 4B026141 	 utof %d4,%d2
+  55:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {   /* Round to nearest */
+  69              	 .loc 1 55 15
+  70 0032 6B043133 	 sub.f %d3,%d3,%d4
+  71              	.LVL5:
+  55:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {   /* Round to nearest */
+  72              	 .loc 1 55 8
+  73 0036 7B00F043 	 movh %d4,16128
+  74 003a 4B430130 	 cmp.f %d3,%d3,%d4
+  75 003e 6F230000 	 jz.t %d3,2,.L30
+  57:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     }
+  76              	 .loc 1 57 9 is_stmt 1
+  57:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     }
+  77              	 .loc 1 57 13 is_stmt 0
+  78 0042 C212     	 add %d2,1
+  79              	.LVL6:
+  80              	.L30:
+  60:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+  81              	 .loc 1 60 5 is_stmt 1
+  60:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+  82              	 .loc 1 60 44 is_stmt 0
+  83 0044 0622     	 sh %d2,2
+  84              	.LVL7:
+  85 0046 91000020 	 movh.a %a2,hi:Ifx_g_LutAtan2F32_FxpAngle_table
+  86 004a D9220000 	 lea %a2,[%a2]lo:Ifx_g_LutAtan2F32_FxpAngle_table
+  87 004e 01220026 	 addsc.a %a2,%a2,%d2,0
+  88 0052 5422     	 ld.w %d2,[%a2]0
+  89              	.LVL8:
+  90              	.L11:
+  91              	.LBE35:
+  92              	.LBE34:
+ 119:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 120:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             else
+ 121:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             {                                                                                // 45 
+ 122:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****                 angle = (IFX_LUT_ANGLE_PI / 2) - Ifx_LutAtan2F32_fxpAnglePrivate(fx / fy); // ok
+ 123:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 124:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****         }
+ 125:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     }
+ 126:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** 
+ 127:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     return angle & (IFX_LUT_ANGLE_RESOLUTION - 1);
+  93              	 .loc 1 127 5 is_stmt 1
+ 128:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+  94              	 .loc 1 128 1 is_stmt 0
+  95 0054 B7021426 	 insert %d2,%d2,0,12,20
+  96              	.LVL9:
+  97 0058 0090     	 ret 
+  98              	.LVL10:
+  99              	.L56:
+  78:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****         {
+ 100              	 .loc 1 78 9 is_stmt 1
+  78:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****         {
+ 101              	 .loc 1 78 12 is_stmt 0
+ 102 005a 8202     	 mov %d2,0
+ 103 005c 4B240120 	 cmp.f %d2,%d4,%d2
+ 104 0060 6F020080 	 jnz.t %d2,0,.L58
+  91:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             { // 315 .. 360 deg
+ 105              	 .loc 1 91 13 is_stmt 1
+  91:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             { // 315 .. 360 deg
+ 106              	 .loc 1 91 17 is_stmt 0
+ 107 0064 4B051123 	 neg.f %d2,%d5
+  91:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             { // 315 .. 360 deg
+ 108              	 .loc 1 91 16
+ 109 0068 4B420130 	 cmp.f %d3,%d2,%d4
+ 110 006c 6F030000 	 jz.t %d3,0,.L52
+  93:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 111              	 .loc 1 93 17 is_stmt 1
+  93:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 112              	 .loc 1 93 26 is_stmt 0
+ 113 0070 4B425120 	 div.f %d2,%d2,%d4
+ 114              	.LVL11:
+ 115              	.LBB36:
+ 116              	.LBB37:
+  51:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     valf = IFX_LUTATAN2F32_SIZE * valf;
+ 117              	 .loc 1 51 5 is_stmt 1
+  52:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     vali = (uint32)valf;
+ 118              	 .loc 1 52 5
+  52:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     vali = (uint32)valf;
+ 119              	 .loc 1 52 10 is_stmt 0
+ 120 0074 7B004834 	 movh %d3,17536
+ 121 0078 4B324130 	 mul.f %d3,%d2,%d3
+ 122              	.LVL12:
+  53:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** 
+ 123              	 .loc 1 53 5 is_stmt 1
+  53:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** 
+ 124              	 .loc 1 53 10 is_stmt 0
+ 125 007c 4B037121 	 ftouz %d2,%d3
+ 126              	.LVL13:
+  55:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {   /* Round to nearest */
+ 127              	 .loc 1 55 5 is_stmt 1
+  55:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {   /* Round to nearest */
+ 128              	 .loc 1 55 17 is_stmt 0
+ 129 0080 4B026141 	 utof %d4,%d2
+ 130              	.LVL14:
+  55:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {   /* Round to nearest */
+ 131              	 .loc 1 55 15
+ 132 0084 6B043133 	 sub.f %d3,%d3,%d4
+ 133              	.LVL15:
+  55:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {   /* Round to nearest */
+ 134              	 .loc 1 55 8
+ 135 0088 7B00F043 	 movh %d4,16128
+ 136 008c 4B430130 	 cmp.f %d3,%d3,%d4
+ 137 0090 6F230000 	 jz.t %d3,2,.L16
+  57:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     }
+ 138              	 .loc 1 57 9 is_stmt 1
+  57:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     }
+ 139              	 .loc 1 57 13 is_stmt 0
+ 140 0094 C212     	 add %d2,1
+ 141              	.LVL16:
+ 142              	.L16:
+  60:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 143              	 .loc 1 60 5 is_stmt 1
+  60:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 144              	 .loc 1 60 44 is_stmt 0
+ 145 0096 0622     	 sh %d2,2
+ 146              	.LVL17:
+ 147 0098 91000020 	 movh.a %a2,hi:Ifx_g_LutAtan2F32_FxpAngle_table
+ 148 009c D9220000 	 lea %a2,[%a2]lo:Ifx_g_LutAtan2F32_FxpAngle_table
+ 149 00a0 01220026 	 addsc.a %a2,%a2,%d2,0
+ 150 00a4 5422     	 ld.w %d2,[%a2]0
+ 151              	.LVL18:
+ 152              	.LBE37:
+ 153              	.LBE36:
+  93:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 154              	 .loc 1 93 23
+ 155 00a6 3252     	 rsub %d2
+ 156              	.LVL19:
+ 157 00a8 1D000000 	 j .L11
+ 158              	.LVL20:
+ 159              	.L58:
+  80:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             {   // 180 .. 225 deg
+ 160              	 .loc 1 80 13 is_stmt 1
+  80:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             {   // 180 .. 225 deg
+ 161              	 .loc 1 80 16 is_stmt 0
+ 162 00ac 4B540120 	 cmp.f %d2,%d4,%d5
+ 163 00b0 6F020000 	 jz.t %d2,0,.L51
+  82:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 164              	 .loc 1 82 17 is_stmt 1
+  82:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 165              	 .loc 1 82 45 is_stmt 0
+ 166 00b4 4B455140 	 div.f %d4,%d5,%d4
+ 167              	.LVL21:
+ 168              	.LBB38:
+ 169              	.LBB39:
+  51:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     valf = IFX_LUTATAN2F32_SIZE * valf;
+ 170              	 .loc 1 51 5 is_stmt 1
+  52:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     vali = (uint32)valf;
+ 171              	 .loc 1 52 5
+  52:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     vali = (uint32)valf;
+ 172              	 .loc 1 52 10 is_stmt 0
+ 173 00b8 7B004834 	 movh %d3,17536
+ 174 00bc 4B344130 	 mul.f %d3,%d4,%d3
+ 175              	.LVL22:
+  53:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** 
+ 176              	 .loc 1 53 5 is_stmt 1
+  53:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** 
+ 177              	 .loc 1 53 10 is_stmt 0
+ 178 00c0 4B037121 	 ftouz %d2,%d3
+ 179              	.LVL23:
+  55:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {   /* Round to nearest */
+ 180              	 .loc 1 55 5 is_stmt 1
+  55:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {   /* Round to nearest */
+ 181              	 .loc 1 55 17 is_stmt 0
+ 182 00c4 4B026141 	 utof %d4,%d2
+  55:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {   /* Round to nearest */
+ 183              	 .loc 1 55 15
+ 184 00c8 6B043133 	 sub.f %d3,%d3,%d4
+ 185              	.LVL24:
+  55:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {   /* Round to nearest */
+ 186              	 .loc 1 55 8
+ 187 00cc 7B00F043 	 movh %d4,16128
+ 188 00d0 4B430130 	 cmp.f %d3,%d3,%d4
+ 189 00d4 6F230000 	 jz.t %d3,2,.L9
+  57:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     }
+ 190              	 .loc 1 57 9 is_stmt 1
+  57:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     }
+ 191              	 .loc 1 57 13 is_stmt 0
+ 192 00d8 C212     	 add %d2,1
+ 193              	.LVL25:
+ 194              	.L9:
+  60:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 195              	 .loc 1 60 5 is_stmt 1
+  60:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 196              	 .loc 1 60 44 is_stmt 0
+ 197 00da 0622     	 sh %d2,2
+ 198              	.LVL26:
+ 199 00dc 91000020 	 movh.a %a2,hi:Ifx_g_LutAtan2F32_FxpAngle_table
+ 200 00e0 D9220000 	 lea %a2,[%a2]lo:Ifx_g_LutAtan2F32_FxpAngle_table
+ 201 00e4 01220026 	 addsc.a %a2,%a2,%d2,0
+ 202 00e8 5422     	 ld.w %d2,[%a2]0
+ 203              	.LVL27:
+ 204              	.LBE39:
+ 205              	.LBE38:
+  82:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 206              	 .loc 1 82 23
+ 207 00ea 1B02802F 	 addi %d2,%d2,-2048
+ 208              	.LVL28:
+ 209 00ee 1D000000 	 j .L11
+ 210              	.LVL29:
+ 211              	.L51:
+  86:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 212              	 .loc 1 86 17 is_stmt 1
+  86:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 213              	 .loc 1 86 51 is_stmt 0
+ 214 00f2 4B545140 	 div.f %d4,%d4,%d5
+ 215              	.LVL30:
+ 216              	.LBB40:
+ 217              	.LBB41:
+  51:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     valf = IFX_LUTATAN2F32_SIZE * valf;
+ 218              	 .loc 1 51 5 is_stmt 1
+  52:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     vali = (uint32)valf;
+ 219              	 .loc 1 52 5
+  52:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     vali = (uint32)valf;
+ 220              	 .loc 1 52 10 is_stmt 0
+ 221 00f6 7B004834 	 movh %d3,17536
+ 222 00fa 4B344130 	 mul.f %d3,%d4,%d3
+ 223              	.LVL31:
+  53:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** 
+ 224              	 .loc 1 53 5 is_stmt 1
+  53:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** 
+ 225              	 .loc 1 53 10 is_stmt 0
+ 226 00fe 4B037121 	 ftouz %d2,%d3
+ 227              	.LVL32:
+  55:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {   /* Round to nearest */
+ 228              	 .loc 1 55 5 is_stmt 1
+  55:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {   /* Round to nearest */
+ 229              	 .loc 1 55 17 is_stmt 0
+ 230 0102 4B026141 	 utof %d4,%d2
+  55:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {   /* Round to nearest */
+ 231              	 .loc 1 55 15
+ 232 0106 6B043133 	 sub.f %d3,%d3,%d4
+ 233              	.LVL33:
+  55:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {   /* Round to nearest */
+ 234              	 .loc 1 55 8
+ 235 010a 7B00F043 	 movh %d4,16128
+ 236 010e 4B430130 	 cmp.f %d3,%d3,%d4
+ 237 0112 6F230000 	 jz.t %d3,2,.L12
+  57:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     }
+ 238              	 .loc 1 57 9 is_stmt 1
+  57:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     }
+ 239              	 .loc 1 57 13 is_stmt 0
+ 240 0116 C212     	 add %d2,1
+ 241              	.LVL34:
+ 242              	.L12:
+  60:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 243              	 .loc 1 60 5 is_stmt 1
+  60:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 244              	 .loc 1 60 44 is_stmt 0
+ 245 0118 0622     	 sh %d2,2
+ 246              	.LVL35:
+ 247 011a 91000020 	 movh.a %a2,hi:Ifx_g_LutAtan2F32_FxpAngle_table
+ 248 011e D9220000 	 lea %a2,[%a2]lo:Ifx_g_LutAtan2F32_FxpAngle_table
+ 249 0122 01220026 	 addsc.a %a2,%a2,%d2,0
+ 250 0126 5422     	 ld.w %d2,[%a2]0
+ 251              	.LVL36:
+ 252              	.LBE41:
+ 253              	.LBE40:
+  86:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 254              	 .loc 1 86 23
+ 255 0128 3B00C03F 	 mov %d3,-1024
+ 256 012c 0B238020 	 sub %d2,%d3,%d2
+ 257              	.LVL37:
+ 258 0130 1D000000 	 j .L11
+ 259              	.LVL38:
+ 260              	.L52:
+  97:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 261              	 .loc 1 97 17 is_stmt 1
+  97:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 262              	 .loc 1 97 86 is_stmt 0
+ 263 0134 4B041123 	 neg.f %d2,%d4
+  97:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 264              	 .loc 1 97 51
+ 265 0138 4B525120 	 div.f %d2,%d2,%d5
+ 266              	.LVL39:
+ 267              	.LBB42:
+ 268              	.LBB43:
+  51:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     valf = IFX_LUTATAN2F32_SIZE * valf;
+ 269              	 .loc 1 51 5 is_stmt 1
+  52:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     vali = (uint32)valf;
+ 270              	 .loc 1 52 5
+  52:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     vali = (uint32)valf;
+ 271              	 .loc 1 52 10 is_stmt 0
+ 272 013c 7B004834 	 movh %d3,17536
+ 273 0140 4B324130 	 mul.f %d3,%d2,%d3
+ 274              	.LVL40:
+  53:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** 
+ 275              	 .loc 1 53 5 is_stmt 1
+  53:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** 
+ 276              	 .loc 1 53 10 is_stmt 0
+ 277 0144 4B037121 	 ftouz %d2,%d3
+ 278              	.LVL41:
+  55:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {   /* Round to nearest */
+ 279              	 .loc 1 55 5 is_stmt 1
+  55:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {   /* Round to nearest */
+ 280              	 .loc 1 55 17 is_stmt 0
+ 281 0148 4B026141 	 utof %d4,%d2
+ 282              	.LVL42:
+  55:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {   /* Round to nearest */
+ 283              	 .loc 1 55 15
+ 284 014c 6B043133 	 sub.f %d3,%d3,%d4
+ 285              	.LVL43:
+  55:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {   /* Round to nearest */
+ 286              	 .loc 1 55 8
+ 287 0150 7B00F043 	 movh %d4,16128
+ 288 0154 4B430130 	 cmp.f %d3,%d3,%d4
+ 289 0158 6F230000 	 jz.t %d3,2,.L18
+  57:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     }
+ 290              	 .loc 1 57 9 is_stmt 1
+  57:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     }
+ 291              	 .loc 1 57 13 is_stmt 0
+ 292 015c C212     	 add %d2,1
+ 293              	.LVL44:
+ 294              	.L18:
+  60:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 295              	 .loc 1 60 5 is_stmt 1
+  60:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 296              	 .loc 1 60 44 is_stmt 0
+ 297 015e 0622     	 sh %d2,2
+ 298              	.LVL45:
+ 299 0160 91000020 	 movh.a %a2,hi:Ifx_g_LutAtan2F32_FxpAngle_table
+ 300 0164 D9220000 	 lea %a2,[%a2]lo:Ifx_g_LutAtan2F32_FxpAngle_table
+ 301 0168 01220026 	 addsc.a %a2,%a2,%d2,0
+ 302 016c 5422     	 ld.w %d2,[%a2]0
+ 303              	.LVL46:
+ 304              	.LBE43:
+ 305              	.LBE42:
+  97:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 306              	 .loc 1 97 23
+ 307 016e 1B02C02F 	 addi %d2,%d2,-1024
+ 308              	.LVL47:
+ 309 0172 1D000000 	 j .L11
+ 310              	.LVL48:
+ 311              	.L57:
+ 105:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             {                                                                                 // 13
+ 312              	 .loc 1 105 13 is_stmt 1
+ 105:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             {                                                                                 // 13
+ 313              	 .loc 1 105 21 is_stmt 0
+ 314 0176 4B041123 	 neg.f %d2,%d4
+ 105:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             {                                                                                 // 13
+ 315              	 .loc 1 105 16
+ 316 017a 4B520130 	 cmp.f %d3,%d2,%d5
+ 317 017e 6F230000 	 jz.t %d3,2,.L54
+ 107:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 318              	 .loc 1 107 17 is_stmt 1
+ 107:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 319              	 .loc 1 107 79 is_stmt 0
+ 320 0182 4B051123 	 neg.f %d2,%d5
+ 107:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 321              	 .loc 1 107 44
+ 322 0186 4B425120 	 div.f %d2,%d2,%d4
+ 323              	.LVL49:
+ 324              	.LBB44:
+ 325              	.LBB45:
+  51:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     valf = IFX_LUTATAN2F32_SIZE * valf;
+ 326              	 .loc 1 51 5 is_stmt 1
+  52:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     vali = (uint32)valf;
+ 327              	 .loc 1 52 5
+  52:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     vali = (uint32)valf;
+ 328              	 .loc 1 52 10 is_stmt 0
+ 329 018a 7B004834 	 movh %d3,17536
+ 330 018e 4B324130 	 mul.f %d3,%d2,%d3
+ 331              	.LVL50:
+  53:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** 
+ 332              	 .loc 1 53 5 is_stmt 1
+  53:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** 
+ 333              	 .loc 1 53 10 is_stmt 0
+ 334 0192 4B037121 	 ftouz %d2,%d3
+ 335              	.LVL51:
+  55:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {   /* Round to nearest */
+ 336              	 .loc 1 55 5 is_stmt 1
+  55:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {   /* Round to nearest */
+ 337              	 .loc 1 55 17 is_stmt 0
+ 338 0196 4B026141 	 utof %d4,%d2
+ 339              	.LVL52:
+  55:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {   /* Round to nearest */
+ 340              	 .loc 1 55 15
+ 341 019a 6B043133 	 sub.f %d3,%d3,%d4
+ 342              	.LVL53:
+  55:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {   /* Round to nearest */
+ 343              	 .loc 1 55 8
+ 344 019e 7B00F043 	 movh %d4,16128
+ 345 01a2 4B430130 	 cmp.f %d3,%d3,%d4
+ 346 01a6 6F230000 	 jz.t %d3,2,.L24
+  57:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     }
+ 347              	 .loc 1 57 9 is_stmt 1
+  57:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     }
+ 348              	 .loc 1 57 13 is_stmt 0
+ 349 01aa C212     	 add %d2,1
+ 350              	.LVL54:
+ 351              	.L24:
+  60:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 352              	 .loc 1 60 5 is_stmt 1
+  60:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 353              	 .loc 1 60 44 is_stmt 0
+ 354 01ac 0622     	 sh %d2,2
+ 355              	.LVL55:
+ 356 01ae 91000020 	 movh.a %a2,hi:Ifx_g_LutAtan2F32_FxpAngle_table
+ 357 01b2 D9220000 	 lea %a2,[%a2]lo:Ifx_g_LutAtan2F32_FxpAngle_table
+ 358 01b6 01220026 	 addsc.a %a2,%a2,%d2,0
+ 359 01ba 5422     	 ld.w %d2,[%a2]0
+ 360              	.LVL56:
+ 361              	.LBE45:
+ 362              	.LBE44:
+ 107:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 363              	 .loc 1 107 23
+ 364 01bc 3B008030 	 mov %d3,2048
+ 365 01c0 0B238020 	 sub %d2,%d3,%d2
+ 366              	.LVL57:
+ 367 01c4 1D000000 	 j .L11
+ 368              	.LVL58:
+ 369              	.L54:
+ 111:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 370              	 .loc 1 111 17 is_stmt 1
+ 111:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 371              	 .loc 1 111 50 is_stmt 0
+ 372 01c8 4B525120 	 div.f %d2,%d2,%d5
+ 373              	.LVL59:
+ 374              	.LBB46:
+ 375              	.LBB47:
+  51:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     valf = IFX_LUTATAN2F32_SIZE * valf;
+ 376              	 .loc 1 51 5 is_stmt 1
+  52:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     vali = (uint32)valf;
+ 377              	 .loc 1 52 5
+  52:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     vali = (uint32)valf;
+ 378              	 .loc 1 52 10 is_stmt 0
+ 379 01cc 7B004834 	 movh %d3,17536
+ 380 01d0 4B324130 	 mul.f %d3,%d2,%d3
+ 381              	.LVL60:
+  53:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** 
+ 382              	 .loc 1 53 5 is_stmt 1
+  53:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** 
+ 383              	 .loc 1 53 10 is_stmt 0
+ 384 01d4 4B037121 	 ftouz %d2,%d3
+ 385              	.LVL61:
+  55:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {   /* Round to nearest */
+ 386              	 .loc 1 55 5 is_stmt 1
+  55:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {   /* Round to nearest */
+ 387              	 .loc 1 55 17 is_stmt 0
+ 388 01d8 4B026141 	 utof %d4,%d2
+ 389              	.LVL62:
+  55:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {   /* Round to nearest */
+ 390              	 .loc 1 55 15
+ 391 01dc 6B043133 	 sub.f %d3,%d3,%d4
+ 392              	.LVL63:
+  55:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {   /* Round to nearest */
+ 393              	 .loc 1 55 8
+ 394 01e0 7B00F043 	 movh %d4,16128
+ 395 01e4 4B430130 	 cmp.f %d3,%d3,%d4
+ 396 01e8 6F230000 	 jz.t %d3,2,.L26
+  57:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     }
+ 397              	 .loc 1 57 9 is_stmt 1
+  57:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     }
+ 398              	 .loc 1 57 13 is_stmt 0
+ 399 01ec C212     	 add %d2,1
+ 400              	.LVL64:
+ 401              	.L26:
+  60:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 402              	 .loc 1 60 5 is_stmt 1
+  60:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 403              	 .loc 1 60 44 is_stmt 0
+ 404 01ee 0622     	 sh %d2,2
+ 405              	.LVL65:
+ 406 01f0 91000020 	 movh.a %a2,hi:Ifx_g_LutAtan2F32_FxpAngle_table
+ 407 01f4 D9220000 	 lea %a2,[%a2]lo:Ifx_g_LutAtan2F32_FxpAngle_table
+ 408 01f8 01220026 	 addsc.a %a2,%a2,%d2,0
+ 409 01fc 5422     	 ld.w %d2,[%a2]0
+ 410              	.LVL66:
+ 411              	.LBE47:
+ 412              	.LBE46:
+ 111:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 413              	 .loc 1 111 23
+ 414 01fe 1B024020 	 addi %d2,%d2,1024
+ 415              	.LVL67:
+ 416 0202 1D000000 	 j .L11
+ 417              	.LVL68:
+ 418              	.L55:
+ 122:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 419              	 .loc 1 122 17 is_stmt 1
+ 122:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 420              	 .loc 1 122 50 is_stmt 0
+ 421 0206 4B545140 	 div.f %d4,%d4,%d5
+ 422              	.LVL69:
+ 423              	.LBB48:
+ 424              	.LBB49:
+  51:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     valf = IFX_LUTATAN2F32_SIZE * valf;
+ 425              	 .loc 1 51 5 is_stmt 1
+  52:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     vali = (uint32)valf;
+ 426              	 .loc 1 52 5
+  52:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     vali = (uint32)valf;
+ 427              	 .loc 1 52 10 is_stmt 0
+ 428 020a 7B004834 	 movh %d3,17536
+ 429 020e 4B344130 	 mul.f %d3,%d4,%d3
+ 430              	.LVL70:
+  53:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** 
+ 431              	 .loc 1 53 5 is_stmt 1
+  53:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** 
+ 432              	 .loc 1 53 10 is_stmt 0
+ 433 0212 4B037121 	 ftouz %d2,%d3
+ 434              	.LVL71:
+  55:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {   /* Round to nearest */
+ 435              	 .loc 1 55 5 is_stmt 1
+  55:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {   /* Round to nearest */
+ 436              	 .loc 1 55 17 is_stmt 0
+ 437 0216 4B026141 	 utof %d4,%d2
+  55:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {   /* Round to nearest */
+ 438              	 .loc 1 55 15
+ 439 021a 6B043133 	 sub.f %d3,%d3,%d4
+ 440              	.LVL72:
+  55:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {   /* Round to nearest */
+ 441              	 .loc 1 55 8
+ 442 021e 7B00F043 	 movh %d4,16128
+ 443 0222 4B430130 	 cmp.f %d3,%d3,%d4
+ 444 0226 6F230000 	 jz.t %d3,2,.L32
+  57:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     }
+ 445              	 .loc 1 57 9 is_stmt 1
+  57:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     }
+ 446              	 .loc 1 57 13 is_stmt 0
+ 447 022a C212     	 add %d2,1
+ 448              	.LVL73:
+ 449              	.L32:
+  60:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 450              	 .loc 1 60 5 is_stmt 1
+  60:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 451              	 .loc 1 60 44 is_stmt 0
+ 452 022c 0622     	 sh %d2,2
+ 453              	.LVL74:
+ 454 022e 91000020 	 movh.a %a2,hi:Ifx_g_LutAtan2F32_FxpAngle_table
+ 455 0232 D9220000 	 lea %a2,[%a2]lo:Ifx_g_LutAtan2F32_FxpAngle_table
+ 456 0236 01220026 	 addsc.a %a2,%a2,%d2,0
+ 457 023a 5422     	 ld.w %d2,[%a2]0
+ 458              	.LVL75:
+ 459              	.LBE49:
+ 460              	.LBE48:
+ 122:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 461              	 .loc 1 122 23
+ 462 023c 3B004030 	 mov %d3,1024
+ 463 0240 0B238020 	 sub %d2,%d3,%d2
+ 464              	.LVL76:
+ 465 0244 1D000000 	 j .L11
+ 466              	.LFE168:
+ 468              	 .global Ifx_LutAtan2F32_fxpAngle_end
+ 469              	Ifx_LutAtan2F32_fxpAngle_end:
+ 470              	 .section .text.Ifx_LutAtan2F32_float32,"ax",@progbits
+ 471              	 .align 1
+ 472              	 .global Ifx_LutAtan2F32_float32
+ 474              	Ifx_LutAtan2F32_float32:
+ 475              	.LFB169:
+ 129:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** 
+ 130:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** 
+ 131:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** float32 Ifx_LutAtan2F32_float32(float32 y, float32 x)
+ 132:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** {
+ 476              	 .loc 1 132 1 is_stmt 1
+ 477              	.LVL77:
+ 478 0000 40AE     	 mov.aa %a14,%SP
+ 479              	.LCFI2:
+ 133:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     float32 angle;
+ 480              	 .loc 1 133 5
+ 134:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** 
+ 135:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     if (y < 0)
+ 481              	 .loc 1 135 5
+ 482              	 .loc 1 135 8 is_stmt 0
+ 483 0002 8202     	 mov %d2,0
+ 484 0004 4B240120 	 cmp.f %d2,%d4,%d2
+ 485 0008 6F020080 	 jnz.t %d2,0,.L89
+ 136:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {
+ 137:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****         if (x < 0)
+ 138:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****         {
+ 139:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             if (-y < -x)
+ 140:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             {   // 180 .. 225 deg
+ 141:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****                 angle = -IFX_PI + Ifx_LutAtan2F32_float32Private(-y / -x);
+ 142:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 143:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             else
+ 144:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             {   // 225 .. 270 deg
+ 145:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****                 angle = -(IFX_PI / 2) - Ifx_LutAtan2F32_float32Private(-x / -y);
+ 146:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 147:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****         }
+ 148:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****         else // x >= 0
+ 149:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****         {
+ 150:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             if (-y < x)
+ 151:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             { // 315 .. 360 deg
+ 152:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****                 angle = -Ifx_LutAtan2F32_float32Private(-y / x); // ok
+ 153:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 154:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             else
+ 155:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             {                                                      // 225 .. 270 deg
+ 156:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****                 angle = -(IFX_PI / 2) + Ifx_LutAtan2F32_float32Private(x / -y);
+ 157:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 158:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****         }
+ 159:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     }
+ 160:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     else // y >= 0
+ 161:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     {
+ 162:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****         if (x < 0)
+ 486              	 .loc 1 162 9 is_stmt 1
+ 487              	 .loc 1 162 12 is_stmt 0
+ 488 000c 8202     	 mov %d2,0
+ 489 000e 4B250120 	 cmp.f %d2,%d5,%d2
+ 490 0012 6F020080 	 jnz.t %d2,0,.L90
+ 163:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****         {
+ 164:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             if (y < -x)
+ 165:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             {                                                                    // 135 .. 180 deg
+ 166:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****                 angle = IFX_PI - Ifx_LutAtan2F32_float32Private(y / -x);       // ok
+ 167:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 168:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             else
+ 169:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             {                                                                    // 90 .. 135 deg
+ 170:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****                 angle = (IFX_PI / 2) + Ifx_LutAtan2F32_float32Private(-x / y); // ok
+ 171:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 172:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****         }
+ 173:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****         else // x >= 0
+ 174:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****         {
+ 175:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             if (y < x)
+ 491              	 .loc 1 175 13 is_stmt 1
+ 492              	 .loc 1 175 16 is_stmt 0
+ 493 0016 4B540120 	 cmp.f %d2,%d4,%d5
+ 494 001a 6F020000 	 jz.t %d2,0,.L88
+ 176:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             {                                                                   // 0 .. 45 deg
+ 177:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****                 angle = Ifx_LutAtan2F32_float32Private(y / x);                // ok
+ 495              	 .loc 1 177 17 is_stmt 1
+ 496              	 .loc 1 177 25 is_stmt 0
+ 497 001e 4B545120 	 div.f %d2,%d4,%d5
+ 498              	.LVL78:
+ 499              	.LBB50:
+ 500              	.LBB51:
+  66:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 501              	 .loc 1 66 5 is_stmt 1
+  66:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 502              	 .loc 1 66 46 is_stmt 0
+ 503 0022 7B004834 	 movh %d3,17536
+ 504 0026 4B324120 	 mul.f %d2,%d2,%d3
+ 505              	.LVL79:
+  66:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 506              	 .loc 1 66 36
+ 507 002a 4B023121 	 ftoiz %d2,%d2
+  66:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 508              	 .loc 1 66 35
+ 509 002e 0622     	 sh %d2,2
+ 510 0030 91000020 	 movh.a %a2,hi:Ifx_g_LutAtan2F32_table
+ 511 0034 D9220000 	 lea %a2,[%a2]lo:Ifx_g_LutAtan2F32_table
+ 512 0038 01220026 	 addsc.a %a2,%a2,%d2,0
+ 513 003c 5422     	 ld.w %d2,[%a2]0
+ 514              	.LVL80:
+ 515              	.LBE51:
+ 516              	.LBE50:
+ 517 003e 0090     	 ret 
+ 518              	.LVL81:
+ 519              	.L89:
+ 137:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****         {
+ 520              	 .loc 1 137 9 is_stmt 1
+ 137:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****         {
+ 521              	 .loc 1 137 12 is_stmt 0
+ 522 0040 8202     	 mov %d2,0
+ 523 0042 4B250120 	 cmp.f %d2,%d5,%d2
+ 524 0046 6F020080 	 jnz.t %d2,0,.L91
+ 150:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             { // 315 .. 360 deg
+ 525              	 .loc 1 150 13 is_stmt 1
+ 150:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             { // 315 .. 360 deg
+ 526              	 .loc 1 150 17 is_stmt 0
+ 527 004a 4B041123 	 neg.f %d2,%d4
+ 150:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             { // 315 .. 360 deg
+ 528              	 .loc 1 150 16
+ 529 004e 4B520130 	 cmp.f %d3,%d2,%d5
+ 530 0052 6F030000 	 jz.t %d3,0,.L85
+ 152:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 531              	 .loc 1 152 17 is_stmt 1
+ 152:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 532              	 .loc 1 152 26 is_stmt 0
+ 533 0056 4B525120 	 div.f %d2,%d2,%d5
+ 534              	.LVL82:
+ 535              	.LBB52:
+ 536              	.LBB53:
+  66:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 537              	 .loc 1 66 5 is_stmt 1
+  66:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 538              	 .loc 1 66 46 is_stmt 0
+ 539 005a 7B004834 	 movh %d3,17536
+ 540 005e 4B324120 	 mul.f %d2,%d2,%d3
+ 541              	.LVL83:
+  66:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 542              	 .loc 1 66 36
+ 543 0062 4B023121 	 ftoiz %d2,%d2
+  66:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 544              	 .loc 1 66 35
+ 545 0066 0622     	 sh %d2,2
+ 546 0068 91000020 	 movh.a %a2,hi:Ifx_g_LutAtan2F32_table
+ 547 006c D9220000 	 lea %a2,[%a2]lo:Ifx_g_LutAtan2F32_table
+ 548 0070 01220026 	 addsc.a %a2,%a2,%d2,0
+ 549 0074 5422     	 ld.w %d2,[%a2]0
+ 550              	.LVL84:
+ 551              	.LBE53:
+ 552              	.LBE52:
+ 152:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 553              	 .loc 1 152 23
+ 554 0076 4B021123 	 neg.f %d2,%d2
+ 555              	.LVL85:
+ 556 007a 0090     	 ret 
+ 557              	.LVL86:
+ 558              	.L91:
+ 139:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             {   // 180 .. 225 deg
+ 559              	 .loc 1 139 13 is_stmt 1
+ 139:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             {   // 180 .. 225 deg
+ 560              	 .loc 1 139 16 is_stmt 0
+ 561 007c 4B540120 	 cmp.f %d2,%d4,%d5
+ 562 0080 6F220000 	 jz.t %d2,2,.L84
+ 141:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 563              	 .loc 1 141 17 is_stmt 1
+ 141:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 564              	 .loc 1 141 35 is_stmt 0
+ 565 0084 4B545120 	 div.f %d2,%d4,%d5
+ 566              	.LVL87:
+ 567              	.LBB54:
+ 568              	.LBB55:
+  66:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 569              	 .loc 1 66 5 is_stmt 1
+  66:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 570              	 .loc 1 66 46 is_stmt 0
+ 571 0088 7B004834 	 movh %d3,17536
+ 572 008c 4B324120 	 mul.f %d2,%d2,%d3
+ 573              	.LVL88:
+  66:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 574              	 .loc 1 66 36
+ 575 0090 4B023121 	 ftoiz %d2,%d2
+  66:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 576              	 .loc 1 66 35
+ 577 0094 0622     	 sh %d2,2
+ 578 0096 91000020 	 movh.a %a2,hi:Ifx_g_LutAtan2F32_table
+ 579 009a D9220000 	 lea %a2,[%a2]lo:Ifx_g_LutAtan2F32_table
+ 580 009e 01220026 	 addsc.a %a2,%a2,%d2,0
+ 581 00a2 5422     	 ld.w %d2,[%a2]0
+ 582              	.LVL89:
+ 583              	.LBE55:
+ 584              	.LBE54:
+ 141:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 585              	 .loc 1 141 23
+ 586 00a4 7B900434 	 movh %d3,16457
+ 587 00a8 1BB3FD30 	 addi %d3,%d3,4059
+ 588 00ac 6B033122 	 sub.f %d2,%d2,%d3
+ 589              	.LVL90:
+ 590 00b0 0090     	 ret 
+ 591              	.LVL91:
+ 592              	.L84:
+ 145:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 593              	 .loc 1 145 17 is_stmt 1
+ 145:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 594              	 .loc 1 145 41 is_stmt 0
+ 595 00b2 4B455120 	 div.f %d2,%d5,%d4
+ 596              	.LVL92:
+ 597              	.LBB56:
+ 598              	.LBB57:
+  66:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 599              	 .loc 1 66 5 is_stmt 1
+  66:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 600              	 .loc 1 66 46 is_stmt 0
+ 601 00b6 7B004834 	 movh %d3,17536
+ 602 00ba 4B324120 	 mul.f %d2,%d2,%d3
+ 603              	.LVL93:
+  66:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 604              	 .loc 1 66 36
+ 605 00be 4B023121 	 ftoiz %d2,%d2
+  66:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 606              	 .loc 1 66 35
+ 607 00c2 0622     	 sh %d2,2
+ 608 00c4 91000020 	 movh.a %a2,hi:Ifx_g_LutAtan2F32_table
+ 609 00c8 D9220000 	 lea %a2,[%a2]lo:Ifx_g_LutAtan2F32_table
+ 610 00cc 01220026 	 addsc.a %a2,%a2,%d2,0
+ 611 00d0 5422     	 ld.w %d2,[%a2]0
+ 612              	.LVL94:
+ 613              	.LBE57:
+ 614              	.LBE56:
+ 145:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 615              	 .loc 1 145 23
+ 616 00d2 7B90FC3B 	 movh %d3,49097
+ 617 00d6 1BB3FD30 	 addi %d3,%d3,4059
+ 618 00da 6B023123 	 sub.f %d2,%d3,%d2
+ 619              	.LVL95:
+ 620 00de 0090     	 ret 
+ 621              	.LVL96:
+ 622              	.L85:
+ 156:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 623              	 .loc 1 156 17 is_stmt 1
+ 156:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 624              	 .loc 1 156 74 is_stmt 0
+ 625 00e0 4B051123 	 neg.f %d2,%d5
+ 156:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 626              	 .loc 1 156 41
+ 627 00e4 4B425120 	 div.f %d2,%d2,%d4
+ 628              	.LVL97:
+ 629              	.LBB58:
+ 630              	.LBB59:
+  66:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 631              	 .loc 1 66 5 is_stmt 1
+  66:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 632              	 .loc 1 66 46 is_stmt 0
+ 633 00e8 7B004834 	 movh %d3,17536
+ 634 00ec 4B324120 	 mul.f %d2,%d2,%d3
+ 635              	.LVL98:
+  66:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 636              	 .loc 1 66 36
+ 637 00f0 4B023121 	 ftoiz %d2,%d2
+  66:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 638              	 .loc 1 66 35
+ 639 00f4 0622     	 sh %d2,2
+ 640 00f6 91000020 	 movh.a %a2,hi:Ifx_g_LutAtan2F32_table
+ 641 00fa D9220000 	 lea %a2,[%a2]lo:Ifx_g_LutAtan2F32_table
+ 642 00fe 01220026 	 addsc.a %a2,%a2,%d2,0
+ 643 0102 5422     	 ld.w %d2,[%a2]0
+ 644              	.LVL99:
+ 645              	.LBE59:
+ 646              	.LBE58:
+ 156:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 647              	 .loc 1 156 23
+ 648 0104 7B90FC33 	 movh %d3,16329
+ 649 0108 1BB3FD30 	 addi %d3,%d3,4059
+ 650 010c 6B033122 	 sub.f %d2,%d2,%d3
+ 651              	.LVL100:
+ 652 0110 0090     	 ret 
+ 653              	.LVL101:
+ 654              	.L90:
+ 164:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             {                                                                    // 135 .. 180 deg
+ 655              	 .loc 1 164 13 is_stmt 1
+ 164:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             {                                                                    // 135 .. 180 deg
+ 656              	 .loc 1 164 21 is_stmt 0
+ 657 0112 4B051123 	 neg.f %d2,%d5
+ 164:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             {                                                                    // 135 .. 180 deg
+ 658              	 .loc 1 164 16
+ 659 0116 4B420130 	 cmp.f %d3,%d2,%d4
+ 660 011a 6F230000 	 jz.t %d3,2,.L87
+ 166:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 661              	 .loc 1 166 17 is_stmt 1
+ 166:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 662              	 .loc 1 166 67 is_stmt 0
+ 663 011e 4B041123 	 neg.f %d2,%d4
+ 166:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 664              	 .loc 1 166 34
+ 665 0122 4B525120 	 div.f %d2,%d2,%d5
+ 666              	.LVL102:
+ 667              	.LBB60:
+ 668              	.LBB61:
+  66:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 669              	 .loc 1 66 5 is_stmt 1
+  66:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 670              	 .loc 1 66 46 is_stmt 0
+ 671 0126 7B004834 	 movh %d3,17536
+ 672 012a 4B324120 	 mul.f %d2,%d2,%d3
+ 673              	.LVL103:
+  66:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 674              	 .loc 1 66 36
+ 675 012e 4B023121 	 ftoiz %d2,%d2
+  66:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 676              	 .loc 1 66 35
+ 677 0132 0622     	 sh %d2,2
+ 678 0134 91000020 	 movh.a %a2,hi:Ifx_g_LutAtan2F32_table
+ 679 0138 D9220000 	 lea %a2,[%a2]lo:Ifx_g_LutAtan2F32_table
+ 680 013c 01220026 	 addsc.a %a2,%a2,%d2,0
+ 681 0140 5422     	 ld.w %d2,[%a2]0
+ 682              	.LVL104:
+ 683              	.LBE61:
+ 684              	.LBE60:
+ 166:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 685              	 .loc 1 166 23
+ 686 0142 7B900434 	 movh %d3,16457
+ 687 0146 1BB3FD30 	 addi %d3,%d3,4059
+ 688 014a 6B023123 	 sub.f %d2,%d3,%d2
+ 689              	.LVL105:
+ 690 014e 0090     	 ret 
+ 691              	.LVL106:
+ 692              	.L87:
+ 170:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 693              	 .loc 1 170 17 is_stmt 1
+ 170:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 694              	 .loc 1 170 40 is_stmt 0
+ 695 0150 4B425120 	 div.f %d2,%d2,%d4
+ 696              	.LVL107:
+ 697              	.LBB62:
+ 698              	.LBB63:
+  66:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 699              	 .loc 1 66 5 is_stmt 1
+  66:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 700              	 .loc 1 66 46 is_stmt 0
+ 701 0154 7B004834 	 movh %d3,17536
+ 702 0158 4B324120 	 mul.f %d2,%d2,%d3
+ 703              	.LVL108:
+  66:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 704              	 .loc 1 66 36
+ 705 015c 4B023121 	 ftoiz %d2,%d2
+  66:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 706              	 .loc 1 66 35
+ 707 0160 0622     	 sh %d2,2
+ 708 0162 91000020 	 movh.a %a2,hi:Ifx_g_LutAtan2F32_table
+ 709 0166 D9220000 	 lea %a2,[%a2]lo:Ifx_g_LutAtan2F32_table
+ 710 016a 01220026 	 addsc.a %a2,%a2,%d2,0
+ 711 016e 5422     	 ld.w %d2,[%a2]0
+ 712              	.LVL109:
+ 713              	.LBE63:
+ 714              	.LBE62:
+ 170:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 715              	 .loc 1 170 23
+ 716 0170 7B90FC33 	 movh %d3,16329
+ 717 0174 1BB3FD30 	 addi %d3,%d3,4059
+ 718 0178 6B032122 	 add.f %d2,%d2,%d3
+ 719              	.LVL110:
+ 720 017c 0090     	 ret 
+ 721              	.LVL111:
+ 722              	.L88:
+ 178:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 179:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             else
+ 180:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             {                                                                   // 45 .. 90 deg
+ 181:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****                 angle = (IFX_PI / 2) - Ifx_LutAtan2F32_float32Private(x / y); // ok
+ 723              	 .loc 1 181 17 is_stmt 1
+ 724              	 .loc 1 181 40 is_stmt 0
+ 725 017e 4B455120 	 div.f %d2,%d5,%d4
+ 726              	.LVL112:
+ 727              	.LBB64:
+ 728              	.LBB65:
+  66:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 729              	 .loc 1 66 5 is_stmt 1
+  66:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 730              	 .loc 1 66 46 is_stmt 0
+ 731 0182 7B004834 	 movh %d3,17536
+ 732 0186 4B324120 	 mul.f %d2,%d2,%d3
+ 733              	.LVL113:
+  66:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 734              	 .loc 1 66 36
+ 735 018a 4B023121 	 ftoiz %d2,%d2
+  66:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 736              	 .loc 1 66 35
+ 737 018e 0622     	 sh %d2,2
+ 738 0190 91000020 	 movh.a %a2,hi:Ifx_g_LutAtan2F32_table
+ 739 0194 D9220000 	 lea %a2,[%a2]lo:Ifx_g_LutAtan2F32_table
+ 740 0198 01220026 	 addsc.a %a2,%a2,%d2,0
+ 741 019c 5422     	 ld.w %d2,[%a2]0
+ 742              	.LVL114:
+ 743              	.LBE65:
+ 744              	.LBE64:
+ 745              	 .loc 1 181 23
+ 746 019e 7B90FC33 	 movh %d3,16329
+ 747 01a2 1BB3FD30 	 addi %d3,%d3,4059
+ 748 01a6 6B023123 	 sub.f %d2,%d3,%d2
+ 749              	.LVL115:
+ 182:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****             }
+ 183:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****         }
+ 184:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     }
+ 185:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** 
+ 186:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c ****     return angle;
+ 750              	 .loc 1 186 5 is_stmt 1
+ 187:../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.c **** }
+ 751              	 .loc 1 187 1 is_stmt 0
+ 752 01aa 0090     	 ret 
+ 753              	.LFE169:
+ 755              	 .global Ifx_LutAtan2F32_float32_end
+ 756              	Ifx_LutAtan2F32_float32_end:
+ 809              	.Letext0:
+ 810              	 .file 2 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 811              	 .file 3 "../Libraries/Service/Tricore/Math/Ifx_Lut.h"
+ 812              	 .file 4 "../Libraries/Service/Tricore/Math/Ifx_LutAtan2F32.h"
+ 2413 0000 00000000 	 .word Ifx_LutAtan2F32_init
+ 2414 0004 00000000 	 .word Ifx_LutAtan2F32_init_end
+ 2415 0008 00000044 	 .word 0x44000000
+ 2416 000c 00000000 	 .word 0x00000000
+ 2417 0010 00000000 	 .word 0x00000000
+ 2418 0014 C0000000 	 .word 0x000000c0
+ 2419 0018 00000000 	 .word Ifx_LutAtan2F32_fxpAngle
+ 2420 001c 00000000 	 .word Ifx_LutAtan2F32_fxpAngle_end
+ 2421 0020 3C000444 	 .word 0x4404003c
+ 2422 0024 30000000 	 .word 0x00000030
+ 2423 0028 04000000 	 .word 0x00000004
+ 2424 002c C0000000 	 .word 0x000000c0
+ 2425 0030 00000000 	 .word Ifx_LutAtan2F32_float32
+ 2426 0034 00000000 	 .word Ifx_LutAtan2F32_float32_end
+ 2427 0038 3C000444 	 .word 0x4404003c
+ 2428 003c 30000000 	 .word 0x00000030
+ 2429 0040 04000000 	 .word 0x00000004
+ 2430 0044 C0000000 	 .word 0x000000c0
+DEFINED SYMBOLS
+                            *ABS*:00000000 Ifx_LutAtan2F32.c
+                            *ABS*:00000000 Ifx_LutAtan2F32.c
+    {standard input}:10     .text.Ifx_LutAtan2F32_init:00000000 Ifx_LutAtan2F32_init
+    {standard input}:21     .text.Ifx_LutAtan2F32_init:00000004 Ifx_LutAtan2F32_init_end
+    {standard input}:26     .text.Ifx_LutAtan2F32_fxpAngle:00000000 Ifx_LutAtan2F32_fxpAngle
+    {standard input}:469    .text.Ifx_LutAtan2F32_fxpAngle:00000248 Ifx_LutAtan2F32_fxpAngle_end
+    {standard input}:474    .text.Ifx_LutAtan2F32_float32:00000000 Ifx_LutAtan2F32_float32
+    {standard input}:756    .text.Ifx_LutAtan2F32_float32:000001ac Ifx_LutAtan2F32_float32_end
+
+UNDEFINED SYMBOLS
+Ifx_g_LutAtan2F32_FxpAngle_table
+Ifx_g_LutAtan2F32_table

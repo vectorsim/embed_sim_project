@@ -1,0 +1,1475 @@
+   1              	
+   2              	 .file "IfxApApu.c"
+   3              	 .file "IfxApApu.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.IfxApApu_init,"ax",@progbits
+   7              	 .align 1
+   8              	 .global IfxApApu_init
+  10              	IfxApApu_init:
+  11              	.LFB189:
+  12              	 .file 1 "../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c"
+   1:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** /**
+   2:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****  * \file IfxApApu.c
+   3:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****  * \brief AP basic functionality
+   4:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****  *
+   5:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****  *
+   8:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****  *
+   9:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****  *
+  10:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****  *                                 IMPORTANT NOTICE
+  11:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****  *
+  12:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****  * this file except in compliance with IFASLL.
+  15:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****  *
+  16:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****  *
+  26:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****  *
+  27:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****  */
+  28:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** 
+  29:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** /******************************************************************************/
+  30:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** /*----------------------------------Includes----------------------------------*/
+  31:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** /******************************************************************************/
+  32:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** 
+  33:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** #include "IfxApApu.h"
+  34:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** 
+  35:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** /******************************************************************************/
+  36:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** /*-------------------------Function Implementations---------------------------*/
+  37:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** /******************************************************************************/
+  38:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** 
+  39:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** void IfxApApu_init(volatile Ifx_ACCEN_ACCEN *accen, IfxApApu_ApuConfig *config)
+  40:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** {
+  13              	 .loc 1 40 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  41:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     IfxApApu_configWriteRegA(&accen->WRA, config->wraTagId);
+  17              	 .loc 1 41 5
+  18              	.LVL1:
+  19              	.LBB20:
+  20              	.LBB21:
+  21              	 .file 2 "../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h"
+   1:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /**
+   2:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \file IfxApApu.h
+   3:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \brief AP basic functionality
+   4:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \ingroup IfxLld_Ap
+   5:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  *
+   6:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \version iLLD-TC4-v2.7.0
+   7:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   8:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  *
+   9:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  *
+  10:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  *
+  11:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  *                                 IMPORTANT NOTICE
+  12:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  *
+  13:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  14:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  15:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * this file except in compliance with IFASLL.
+  16:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  *
+  17:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  18:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * Unless required by applicable law or agreed to in writing, software distributed
+  19:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  20:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  21:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * whether express, implied, statutory or otherwise, including but not limited to
+  22:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  23:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * defects in the licensed items, or non-infringement of third parties'
+  24:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * intellectual property rights. See the full license text for the specific
+  25:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * language governing permissions and limitations under IFASLL.
+  26:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  *
+  27:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  *
+  28:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \defgroup IfxLld_Ap_Std_Apu Apu Basic Functionality
+  29:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \ingroup IfxLld_Ap_Std
+  30:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \defgroup IfxLld_Ap_Std_Apu_Default Enumerations
+  31:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \ingroup IfxLld_Ap_Std_Apu
+  32:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \defgroup IfxLld_Ap_Std_Apu_Default Structure
+  33:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \ingroup IfxLld_Ap_Std_Apu
+  34:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \defgroup IfxLld_Ap_Std_Apu_Default Functions
+  35:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \ingroup IfxLld_Ap_Std_Apu
+  36:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  */
+  37:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+  38:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** #ifndef IFXAPAPU_H
+  39:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** #define IFXAPAPU_H 1
+  40:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+  41:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /******************************************************************************/
+  42:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /*----------------------------------Includes----------------------------------*/
+  43:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /******************************************************************************/
+  44:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+  45:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** #include "_Impl/IfxAp_cfg.h"
+  46:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** #include "IfxAccen_bf.h"
+  47:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** #include "IfxAccen_reg.h"
+  48:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** #include "IfxApProt.h"
+  49:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+  50:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /******************************************************************************/
+  51:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /*--------------------------------Enumerations--------------------------------*/
+  52:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /******************************************************************************/
+  53:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+  54:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \addtogroup IfxLld_Ap_Std_Apu_Default
+  55:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \{ */
+  56:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \brief PRS Read Write selection
+  57:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  */
+  58:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** typedef enum
+  59:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** {
+  60:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     IfxApApu_PrsRdWr_read = 0U,
+  61:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     IfxApApu_PrsRdWr_write
+  62:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** } IfxApApu_PrsRdWr;
+  63:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+  64:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \brief VM Read Write selection
+  65:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  */
+  66:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** typedef enum
+  67:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** {
+  68:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     IfxApApu_VmRdWr_read = 0U,
+  69:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     IfxApApu_VmRdWr_write
+  70:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** } IfxApApu_VmRdWr;
+  71:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+  72:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \} */
+  73:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+  74:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /******************************************************************************/
+  75:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /*-----------------------------Data Structures--------------------------------*/
+  76:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /******************************************************************************/
+  77:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+  78:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \addtogroup IfxLld_Ap_Std_Apu_Default
+  79:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \{ */
+  80:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \brief Configuration data structure of the APU
+  81:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  */
+  82:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** typedef struct
+  83:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** {
+  84:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     unsigned long wraTagId;
+  85:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     unsigned long wrbTagId;
+  86:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     unsigned long rdaTagId;
+  87:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     unsigned long rdbTagId;
+  88:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     unsigned char vmWrId;
+  89:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     unsigned char vmRdId;
+  90:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     unsigned char prsWrId;
+  91:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     unsigned char prsRdId;
+  92:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** } IfxApApu_ApuConfig;
+  93:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+  94:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \} */
+  95:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+  96:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \addtogroup IfxLld_Ap_Std_Apu_Default
+  97:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \{ */
+  98:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \brief Configuration data structure of the APU with memory
+  99:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  */
+ 100:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** typedef struct
+ 101:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** {
+ 102:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     IfxApApu_ApuConfig *apuConfig;
+ 103:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     unsigned long       rgnlaVal;
+ 104:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     unsigned long       rgnuaVal;
+ 105:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** } IfxApApu_ApuMemoryConfig;
+ 106:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 107:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \} */
+ 108:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 109:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \addtogroup IfxLld_Ap_Std_Apu_Default
+ 110:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \{ */
+ 111:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 112:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /******************************************************************************/
+ 113:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /*-------------------------Inline Function Prototypes-------------------------*/
+ 114:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /******************************************************************************/
+ 115:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 116:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \brief Configure the master tag id for WriteA register
+ 117:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param wraReg pointer to the WriteA register
+ 118:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param configVal the register value to be configured
+ 119:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \return None
+ 120:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  */
+ 121:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_configWriteRegA(volatile Ifx_ACCEN_ACCEN_WRA *wraReg, unsigned long config
+ 122:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 123:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \brief Configure the master tag id for WriteB register
+ 124:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param wrbReg pointer to the WriteB register
+ 125:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param configVal the register value to be configured
+ 126:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \return None
+ 127:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  */
+ 128:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_configWriteRegB(volatile Ifx_ACCEN_ACCEN_WRB_SRI *wrbReg, unsigned long co
+ 129:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 130:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \brief Configure the master tag id for ReadA register
+ 131:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param rdaReg pointer to the ReadA register
+ 132:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param configVal the register value to be configured
+ 133:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \return None
+ 134:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  */
+ 135:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_configReadRegA(volatile Ifx_ACCEN_ACCEN_RDA *rdaReg, unsigned long configV
+ 136:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 137:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \brief Configure the master tag id for ReadB register
+ 138:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param rdbReg pointer to the ReadB register
+ 139:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param configVal the register value to be configured
+ 140:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \return None
+ 141:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  */
+ 142:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_configReadRegB(volatile Ifx_ACCEN_ACCEN_RDB_SRI *rdbReg, unsigned long con
+ 143:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 144:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \brief Enable the master tad id for write access
+ 145:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param accen pointer to the APU register set
+ 146:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param tagId the master tagid
+ 147:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \return None
+ 148:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  */
+ 149:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_enableMasterWrite(volatile Ifx_ACCEN_ACCEN *accen, IfxApProt_TagId tagId);
+ 150:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 151:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \brief Disable the master tad id for write access
+ 152:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param accen pointer to the APU register set
+ 153:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param tagId the master tagid
+ 154:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \return None
+ 155:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  */
+ 156:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_disableMasterWrite(volatile Ifx_ACCEN_ACCEN *accen, IfxApProt_TagId tagId)
+ 157:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 158:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \brief Enable the master tad id for read access
+ 159:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param accen pointer to the APU register set
+ 160:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param tagId the master tagid
+ 161:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \return None
+ 162:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  */
+ 163:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_enableMasterRead(volatile Ifx_ACCEN_ACCEN *accen, IfxApProt_TagId tagId);
+ 164:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 165:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \brief Disable the master tad id for read access
+ 166:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param accen pointer to the APU register set
+ 167:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param tagId the master tagid
+ 168:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \return None
+ 169:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  */
+ 170:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_disableMasterRead(volatile Ifx_ACCEN_ACCEN *accen, IfxApProt_TagId tagId);
+ 171:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 172:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \brief Configure the VMs for Read Access
+ 173:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * This API provides access to all the VMs specified in the configVal
+ 174:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param vmReg pointer to the VM register
+ 175:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param configVal the VM's for which read access is to be provided
+ 176:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \return None
+ 177:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  */
+ 178:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_configVmReadAccess(volatile Ifx_ACCEN_ACCEN_VM *vmReg, unsigned char confi
+ 179:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 180:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \brief Configure the VMs for Write Access
+ 181:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * This API provides access to all the VMs specified in the configVal
+ 182:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param vmReg pointer to the VM register
+ 183:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param configVal the VM's for which write access is to be provided
+ 184:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \return None
+ 185:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  */
+ 186:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_configVmWriteAccess(volatile Ifx_ACCEN_ACCEN_VM *vmReg, unsigned char conf
+ 187:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 188:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \brief Enable the master VM id for write access
+ 189:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param vmReg pointer to the VM register
+ 190:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param readWr write to read or write offset
+ 191:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param vmId the master vmId
+ 192:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \return None
+ 193:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  */
+ 194:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_enableVmMasterWrite(volatile Ifx_ACCEN_ACCEN_VM *vmReg, IfxApApu_VmRdWr re
+ 195:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 196:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \brief Disable the master VM id for write access
+ 197:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param vmReg pointer to the VM register
+ 198:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param readWr write to read or write offset
+ 199:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param vmId the master vmId
+ 200:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \return None
+ 201:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  */
+ 202:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_disableVmMasterWrite(volatile Ifx_ACCEN_ACCEN_VM *vmReg, IfxApApu_VmRdWr r
+ 203:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 204:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \brief Configure the PRS sets for Read Access
+ 205:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * This API provides access to all the PRS sets specified in the configVal
+ 206:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param prsReg pointer to the PRS register
+ 207:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param configVal the PRS's for which read access is to be provided
+ 208:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \return None
+ 209:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  */
+ 210:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_configPrsReadAccess(volatile Ifx_ACCEN_ACCEN_PRS *prsReg, unsigned char co
+ 211:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 212:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \brief Configure the PRS sets for Write Access
+ 213:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * This API provides access to all the PRS sets specified in the configVal
+ 214:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param prsReg pointer to the PRS register
+ 215:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param configVal the PRS's for which write access is to be provided
+ 216:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \return None
+ 217:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  */
+ 218:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_configPrsWriteAccess(volatile Ifx_ACCEN_ACCEN_PRS *prsReg, unsigned char c
+ 219:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 220:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \brief Enable the master Prs id for write access
+ 221:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param prsReg pointer to the PRS register
+ 222:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param readWr write to read or write offset
+ 223:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param PrsId the master PrsId
+ 224:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \return None
+ 225:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  */
+ 226:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_enablePrsMasterWrite(volatile Ifx_ACCEN_ACCEN_PRS *prsReg, IfxApApu_PrsRdW
+ 227:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 228:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \brief Disable the master Prs id for write access
+ 229:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param prsReg pointer to the PRS register
+ 230:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param readWr write to read or write offset
+ 231:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param PrsId the master PrsId
+ 232:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \return None
+ 233:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  */
+ 234:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_disablePrsMasterWrite(volatile Ifx_ACCEN_ACCEN_PRS *prsReg, IfxApApu_PrsRd
+ 235:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 236:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \brief Configure the lower address range
+ 237:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param rgnla pointer to the rgnla register
+ 238:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param lowerAddress the lower address
+ 239:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \return None
+ 240:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  */
+ 241:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_configRegionLowerAddress(volatile Ifx_ACCEN_ACCEN_RGNLA *rgnla, unsigned l
+ 242:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 243:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \brief Configure the upper address range
+ 244:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param rgnua pointer to the rgnua register
+ 245:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param upperAddress the upper address
+ 246:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \return None
+ 247:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  */
+ 248:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_configRegionUpperAddress(volatile Ifx_ACCEN_ACCEN_RGNUA *rgnua, unsigned l
+ 249:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 250:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \brief Sets the VM register with the value provided
+ 251:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param vmReg pointer to the VM register
+ 252:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param value value to be written into register
+ 253:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \return None
+ 254:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  */
+ 255:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_setVmReg(volatile Ifx_ACCEN_ACCEN_VM *vmReg, unsigned long value);
+ 256:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 257:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \brief Sets the PRS register with the value provided
+ 258:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param prsReg pointer to the PRS register
+ 259:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param value value to be written into register
+ 260:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \return None
+ 261:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  */
+ 262:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_setPrsReg(volatile Ifx_ACCEN_ACCEN_PRS *prsReg, unsigned long value);
+ 263:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 264:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /******************************************************************************/
+ 265:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /*-------------------------Global Function Prototypes-------------------------*/
+ 266:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /******************************************************************************/
+ 267:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 268:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \brief Initializes the APU
+ 269:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * Configures the APU with the config value passed.
+ 270:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * It is possible to provide multiple masters the access
+ 271:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * In case of VM and PRS by default all VMs/PRS sets have access,
+ 272:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * The init API will clear this and provide access to only the VMs/PRS sets configured
+ 273:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * This API needs the respective PROT to be in the init or in the config state
+ 274:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param accen pointer to the APU registers
+ 275:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param config config pointer to the default APU configuration structure.
+ 276:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \return None
+ 277:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  */
+ 278:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_EXTERN void IfxApApu_init(volatile Ifx_ACCEN_ACCEN *accen, IfxApApu_ApuConfig *config);
+ 279:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 280:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \brief Initializes the default configuration for the APU
+ 281:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param config config pointer to the default APU configuration structure.
+ 282:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \return None
+ 283:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  */
+ 284:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_EXTERN void IfxApApu_initConfig(IfxApApu_ApuConfig *config);
+ 285:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 286:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \brief Initializes the APU and the memory registers
+ 287:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * Configures the APU with the config value passed.
+ 288:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * This API needs to be used to configure the APU which has shadow registers
+ 289:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * It is possible to provide multiple masters the access
+ 290:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * In case of VM and PRS by default all VMs/PRS sets have access,
+ 291:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * The init API will clear this and provide access to only the VMs/PRS sets configured
+ 292:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * This API needs the respective PROT to be in the init or in the config state
+ 293:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param accen pointer to the APU registers
+ 294:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param config config pointer to the default APU configuration structure.
+ 295:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param protReg PROT Register address pointer
+ 296:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param accenIndex The accen index which needs to be configured
+ 297:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \return None
+ 298:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  */
+ 299:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_EXTERN void IfxApApu_configMemoryAccess(volatile Ifx_ACCEN_ACCEN *accen, IfxApApu_ApuMemoryConf
+ 300:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 301:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** #ifdef IFXAP_NUM_LMU
+ 302:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \brief API to configure access to all masters to all LMUs
+ 303:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \return None
+ 304:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  */
+ 305:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_EXTERN void IfxApApu_configureAccessToLmus(IfxApApu_ApuMemoryConfig *memConfig);
+ 306:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** #endif /* #ifdef IFXAP_NUM_LMU */
+ 307:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 308:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \brief API to configure access to all masters to all DLMUs
+ 309:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \return None
+ 310:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  */
+ 311:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_EXTERN void IfxApApu_configureAccessToDlmus(IfxApApu_ApuMemoryConfig *memConfig);
+ 312:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 313:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \brief API to configure access to all masters to all DSPRs
+ 314:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \return None
+ 315:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  */
+ 316:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_EXTERN void IfxApApu_configureAccessToDsprs(IfxApApu_ApuMemoryConfig *memConfig);
+ 317:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 318:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \brief API to configure access to all masters to all PSPRs
+ 319:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \return None
+ 320:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  */
+ 321:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_EXTERN void IfxApApu_configureAccessToPsprs(IfxApApu_ApuMemoryConfig *memConfig);
+ 322:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 323:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** #ifdef IFXAP_NUM_RMEM
+ 324:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \brief API to configure access to all masters to all RMEMS.
+ 325:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \param memConfig Pointer to the memory configuration structure that contains the settings.
+ 326:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  * \return None
+ 327:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****  */
+ 328:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_EXTERN void IfxApApu_configureAccessToRmems(IfxApApu_ApuMemoryConfig *memConfig);
+ 329:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** #endif /* #ifdef IFXAP_NUM_RMEM */
+ 330:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 331:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /** \} */
+ 332:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 333:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /******************************************************************************/
+ 334:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /*---------------------Inline Function Implementations------------------------*/
+ 335:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** /******************************************************************************/
+ 336:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 337:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_configWriteRegA(volatile Ifx_ACCEN_ACCEN_WRA *wraReg, unsigned long config
+ 338:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** {
+ 339:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     wraReg->U = configVal;
+  22              	 .loc 2 339 5
+  23              	 .loc 2 339 15 is_stmt 0
+  24 0002 5452     	 ld.w %d2,[%a5]0
+  25 0004 7442     	 st.w [%a4]0,%d2
+  26              	.LVL2:
+  27              	.LBE21:
+  28              	.LBE20:
+  42:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     IfxApApu_configWriteRegB(&accen->WRB, config->wrbTagId);
+  29              	 .loc 1 42 5 is_stmt 1
+  30              	.LBB22:
+  31              	.LBB23:
+ 340:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** }
+ 341:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 342:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 343:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_configWriteRegB(volatile Ifx_ACCEN_ACCEN_WRB_SRI *wrbReg, unsigned long co
+ 344:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** {
+ 345:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     wrbReg->U = configVal;
+  32              	 .loc 2 345 5
+  33              	 .loc 2 345 15 is_stmt 0
+  34 0006 19520400 	 ld.w %d2,[%a5]4
+  35 000a 59420400 	 st.w [%a4]4,%d2
+  36              	.LVL3:
+  37              	.LBE23:
+  38              	.LBE22:
+  43:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     IfxApApu_configReadRegA(&accen->RDA, config->rdaTagId);
+  39              	 .loc 1 43 5 is_stmt 1
+  40              	.LBB24:
+  41              	.LBB25:
+ 346:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** }
+ 347:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 348:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 349:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_configReadRegA(volatile Ifx_ACCEN_ACCEN_RDA *rdaReg, unsigned long configV
+ 350:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** {
+ 351:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     rdaReg->U = configVal;
+  42              	 .loc 2 351 5
+  43              	 .loc 2 351 15 is_stmt 0
+  44 000e 19520800 	 ld.w %d2,[%a5]8
+  45 0012 59420800 	 st.w [%a4]8,%d2
+  46              	.LVL4:
+  47              	.LBE25:
+  48              	.LBE24:
+  44:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     IfxApApu_configReadRegB(&accen->RDB, config->rdbTagId);
+  49              	 .loc 1 44 5 is_stmt 1
+  50              	.LBB26:
+  51              	.LBB27:
+ 352:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** }
+ 353:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 354:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 355:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_configReadRegB(volatile Ifx_ACCEN_ACCEN_RDB_SRI *rdbReg, unsigned long con
+ 356:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** {
+ 357:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     rdbReg->U = configVal;
+  52              	 .loc 2 357 5
+  53              	 .loc 2 357 15 is_stmt 0
+  54 0016 19520C00 	 ld.w %d2,[%a5]12
+  55 001a 59420C00 	 st.w [%a4]12,%d2
+  56              	.LVL5:
+  57              	.LBE27:
+  58              	.LBE26:
+  45:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     IfxApApu_setVmReg(&accen->VM, ((config->vmRdId) | ((config->vmWrId) << (IFX_ACCEN_ACCEN_VM_WR00
+  59              	 .loc 1 45 5 is_stmt 1
+  60              	 .loc 1 45 43 is_stmt 0
+  61 001e 39531100 	 ld.bu %d3,[%a5]17
+  62              	 .loc 1 45 63
+  63 0022 39521000 	 ld.bu %d2,[%a5]16
+  64              	 .loc 1 45 73
+  65 0026 8F020120 	 sh %d2,%d2,16
+  66              	 .loc 1 45 53
+  67 002a A632     	 or %d2,%d3
+  68              	.LVL6:
+  69              	.LBB28:
+  70              	.LBB29:
+ 358:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** }
+ 359:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 360:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 361:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_enableMasterWrite(volatile Ifx_ACCEN_ACCEN *accen, IfxApProt_TagId tagId)
+ 362:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** {
+ 363:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     if (tagId < 32)
+ 364:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     {
+ 365:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****         accen->WRA.U |= 1U << tagId;
+ 366:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     }
+ 367:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     else
+ 368:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     {
+ 369:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****         /* In case ID >= 32 write into WRB register */
+ 370:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****         accen->WRB.U |= 1U << (tagId - 32U);
+ 371:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     }
+ 372:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** }
+ 373:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 374:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 375:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_disableMasterWrite(volatile Ifx_ACCEN_ACCEN *accen, IfxApProt_TagId tagId)
+ 376:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** {
+ 377:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     uint32 mask = 0U;
+ 378:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 379:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     if (tagId < 32)
+ 380:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     {
+ 381:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****         mask          = 1U << tagId;
+ 382:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****         accen->WRA.U &= ~(mask);
+ 383:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     }
+ 384:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     else
+ 385:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     {
+ 386:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****         mask          = 1U << (tagId - 32U);
+ 387:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****         accen->WRB.U &= ~(mask);
+ 388:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     }
+ 389:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** }
+ 390:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 391:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 392:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_enableMasterRead(volatile Ifx_ACCEN_ACCEN *accen, IfxApProt_TagId tagId)
+ 393:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** {
+ 394:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     if (tagId < 32)
+ 395:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     {
+ 396:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****         accen->RDA.U |= 1U << tagId;
+ 397:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     }
+ 398:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     else
+ 399:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     {
+ 400:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****         /* In case ID >= 32 write into WRB register */
+ 401:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****         accen->RDB.U |= 1U << (tagId - 32U);
+ 402:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     }
+ 403:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** }
+ 404:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 405:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 406:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_disableMasterRead(volatile Ifx_ACCEN_ACCEN *accen, IfxApProt_TagId tagId)
+ 407:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** {
+ 408:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     uint32 mask = 0U;
+ 409:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 410:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     if (tagId < 32)
+ 411:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     {
+ 412:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****         mask          = 1U << tagId;
+ 413:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****         accen->RDA.U &= ~(mask);
+ 414:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     }
+ 415:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     else
+ 416:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     {
+ 417:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****         mask          = 1U << (tagId - 32U);
+ 418:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****         accen->RDB.U &= ~(mask);
+ 419:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     }
+ 420:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** }
+ 421:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 422:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 423:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_configVmReadAccess(volatile Ifx_ACCEN_ACCEN_VM *vmReg, unsigned char confi
+ 424:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** {
+ 425:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     Ifx_ACCEN_ACCEN_VM tempReg;
+ 426:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 427:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     tempReg.U  = vmReg->U;
+ 428:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     tempReg.U  = tempReg.U & (0xFFFFFF00U);
+ 429:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     tempReg.U |= ((1U << configVal) - 1U);
+ 430:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     vmReg->U   = tempReg.U;
+ 431:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** }
+ 432:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 433:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 434:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_configVmWriteAccess(volatile Ifx_ACCEN_ACCEN_VM *vmReg, unsigned char conf
+ 435:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** {
+ 436:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     Ifx_ACCEN_ACCEN_VM tempReg;
+ 437:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 438:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     tempReg.U  = vmReg->U;
+ 439:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     tempReg.U  = tempReg.U & (0xFF00FFFFU);
+ 440:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     tempReg.U |= ((1U << configVal) - 1U) << IFX_ACCEN_ACCEN_VM_WR00_OFF;
+ 441:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     vmReg->U   = tempReg.U;
+ 442:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** }
+ 443:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 444:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 445:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_enableVmMasterWrite(volatile Ifx_ACCEN_ACCEN_VM *vmReg, IfxApApu_VmRdWr re
+ 446:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** {
+ 447:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     if (readWr == IfxApApu_VmRdWr_read)
+ 448:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     {
+ 449:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****         vmReg->U |= (1U << vmId);
+ 450:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     }
+ 451:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     else
+ 452:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     {
+ 453:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****         vmReg->U |= (1U << vmId) << IFX_ACCEN_ACCEN_VM_WR00_OFF;
+ 454:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     }
+ 455:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** }
+ 456:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 457:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 458:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_disableVmMasterWrite(volatile Ifx_ACCEN_ACCEN_VM *vmReg, IfxApApu_VmRdWr r
+ 459:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** {
+ 460:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     uint32 mask = 0U;
+ 461:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 462:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     if (readWr == IfxApApu_VmRdWr_read)
+ 463:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     {
+ 464:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****         mask = 1U << vmId;
+ 465:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     }
+ 466:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     else
+ 467:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     {
+ 468:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****         mask = (1U << vmId) << IFX_ACCEN_ACCEN_VM_WR00_OFF;
+ 469:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     }
+ 470:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 471:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     vmReg->U &= ~(mask);
+ 472:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** }
+ 473:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 474:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 475:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_configPrsReadAccess(volatile Ifx_ACCEN_ACCEN_PRS *prsReg, unsigned char co
+ 476:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** {
+ 477:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     Ifx_ACCEN_ACCEN_PRS tempReg;
+ 478:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 479:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     tempReg.U  = prsReg->U;
+ 480:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     tempReg.U  = tempReg.U & (0xFFFFFF00U);
+ 481:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     tempReg.U |= ((1U << configVal) - 1U);
+ 482:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     prsReg->U  = tempReg.U;
+ 483:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** }
+ 484:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 485:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 486:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_configPrsWriteAccess(volatile Ifx_ACCEN_ACCEN_PRS *prsReg, unsigned char c
+ 487:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** {
+ 488:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     Ifx_ACCEN_ACCEN_PRS tempReg;
+ 489:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 490:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     tempReg.U  = prsReg->U;
+ 491:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     tempReg.U  = tempReg.U & (0xFF00FFFFU);
+ 492:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     tempReg.U |= ((1U << configVal) - 1U) << IFX_ACCEN_ACCEN_PRS_WR00_OFF;
+ 493:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     prsReg->U  = tempReg.U;
+ 494:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** }
+ 495:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 496:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 497:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_enablePrsMasterWrite(volatile Ifx_ACCEN_ACCEN_PRS *prsReg, IfxApApu_PrsRdW
+ 498:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** {
+ 499:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     if (readWr == IfxApApu_PrsRdWr_read)
+ 500:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     {
+ 501:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****         prsReg->U |= (1U << PrsId);
+ 502:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     }
+ 503:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     else
+ 504:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     {
+ 505:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****         prsReg->U |= (1U << PrsId) << IFX_ACCEN_ACCEN_PRS_WR00_OFF;
+ 506:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     }
+ 507:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** }
+ 508:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 509:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 510:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_disablePrsMasterWrite(volatile Ifx_ACCEN_ACCEN_PRS *prsReg, IfxApApu_PrsRd
+ 511:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** {
+ 512:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     uint32 mask = 0U;
+ 513:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 514:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     if (readWr == IfxApApu_PrsRdWr_read)
+ 515:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     {
+ 516:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****         mask = (1U << PrsId);
+ 517:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     }
+ 518:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     else
+ 519:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     {
+ 520:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****         mask = (1U << PrsId) << IFX_ACCEN_ACCEN_PRS_WR00_OFF;
+ 521:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     }
+ 522:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 523:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     prsReg->U &= ~(mask);
+ 524:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** }
+ 525:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 526:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 527:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_configRegionLowerAddress(volatile Ifx_ACCEN_ACCEN_RGNLA *rgnla, unsigned l
+ 528:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** {
+ 529:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     rgnla->U = lowerAddress;
+ 530:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** }
+ 531:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 532:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 533:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_configRegionUpperAddress(volatile Ifx_ACCEN_ACCEN_RGNUA *rgnua, unsigned l
+ 534:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** {
+ 535:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     rgnua->U = upperAddress;
+ 536:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** }
+ 537:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 538:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 539:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_setVmReg(volatile Ifx_ACCEN_ACCEN_VM *vmReg, unsigned long value)
+ 540:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** {
+ 541:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     vmReg->U = value;
+  71              	 .loc 2 541 5 is_stmt 1
+  72              	 .loc 2 541 14 is_stmt 0
+  73 002c 59421000 	 st.w [%a4]16,%d2
+  74              	.LVL7:
+  75              	.LBE29:
+  76              	.LBE28:
+  46:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     IfxApApu_setPrsReg(&accen->PRS, ((config->prsRdId) | ((config->prsWrId) << (IFX_ACCEN_ACCEN_PRS
+  77              	 .loc 1 46 5 is_stmt 1
+  78              	 .loc 1 46 45 is_stmt 0
+  79 0030 39531300 	 ld.bu %d3,[%a5]19
+  80              	 .loc 1 46 66
+  81 0034 39521200 	 ld.bu %d2,[%a5]18
+  82              	 .loc 1 46 77
+  83 0038 8F020120 	 sh %d2,%d2,16
+  84              	 .loc 1 46 56
+  85 003c A632     	 or %d2,%d3
+  86              	.LVL8:
+  87              	.LBB30:
+  88              	.LBB31:
+ 542:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** }
+ 543:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 544:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** 
+ 545:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** IFX_INLINE void IfxApApu_setPrsReg(volatile Ifx_ACCEN_ACCEN_PRS *prsReg, unsigned long value)
+ 546:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** {
+ 547:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h ****     prsReg->U = value;
+  89              	 .loc 2 547 5 is_stmt 1
+  90              	 .loc 2 547 15 is_stmt 0
+  91 003e 59421400 	 st.w [%a4]20,%d2
+  92              	.LVL9:
+  93              	.LBE31:
+  94              	.LBE30:
+  47:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** }
+  95              	 .loc 1 47 1
+  96 0042 0090     	 ret 
+  97              	.LFE189:
+  99              	 .global IfxApApu_init_end
+ 100              	IfxApApu_init_end:
+ 101              	 .section .text.IfxApApu_initConfig,"ax",@progbits
+ 102              	 .align 1
+ 103              	 .global IfxApApu_initConfig
+ 105              	IfxApApu_initConfig:
+ 106              	.LFB190:
+  48:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** 
+  49:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** 
+  50:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** void IfxApApu_initConfig(IfxApApu_ApuConfig *config)
+  51:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** {
+ 107              	 .loc 1 51 1 is_stmt 1
+ 108              	.LVL10:
+ 109 0000 40AE     	 mov.aa %a14,%SP
+ 110              	.LCFI1:
+  52:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     const IfxApApu_ApuConfig defaultConfig = {
+ 111              	 .loc 1 52 5
+  53:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****         .wraTagId = 0xFFFFFFFFU,
+  54:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****         .wrbTagId = 0xFFFFFFFFU,
+  55:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****         .rdaTagId = 0xFFFFFFFFU,
+  56:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****         .rdbTagId = 0xFFFFFFFFU,
+  57:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****         .vmWrId   = 0xFFU,
+  58:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****         .vmRdId   = 0xFFU,
+  59:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****         .prsWrId  = 0xFFU,
+  60:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****         .prsRdId  = 0xFFU
+  61:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     };
+  62:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** 
+  63:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     *config = defaultConfig;
+ 112              	 .loc 1 63 5
+ 113              	 .loc 1 63 13 is_stmt 0
+ 114 0002 91000020 	 movh.a %a2,hi:defaultConfig.0
+ 115 0006 D9220000 	 lea %a2,[%a2]lo:defaultConfig.0
+ 116              	 
+ 117 000a 09245002 	 ld.dd %q4,[%a2+]16
+ 118 000e 89445002 	 st.dd [%a4+]16,%q4
+ 119 0012 4424     	 ld.w %d4,[%a2+]4
+ 120 0014 6444     	 st.w [%a4+]4,%d4
+ 121              	.LVL11:
+  64:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** }
+ 122              	 .loc 1 64 1
+ 123 0016 0090     	 ret 
+ 124              	.LFE190:
+ 126              	 .global IfxApApu_initConfig_end
+ 127              	IfxApApu_initConfig_end:
+ 128              	 .section .text.IfxApApu_configMemoryAccess,"ax",@progbits
+ 129              	 .align 1
+ 130              	 .global IfxApApu_configMemoryAccess
+ 132              	IfxApApu_configMemoryAccess:
+ 133              	.LFB191:
+  65:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** 
+  66:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** 
+  67:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** void IfxApApu_configMemoryAccess(volatile Ifx_ACCEN_ACCEN *accen, IfxApApu_ApuMemoryConfig *config,
+  68:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** {
+ 134              	 .loc 1 68 1 is_stmt 1
+ 135              	.LVL12:
+ 136 0000 40AE     	 mov.aa %a14,%SP
+ 137              	.LCFI2:
+ 138 0002 404D     	 mov.aa %a13,%a4
+ 139 0004 405C     	 mov.aa %a12,%a5
+  69:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     IfxApProt_setProtectionRegionSelect(protReg, accenIndex);
+ 140              	 .loc 1 69 5
+ 141              	.LVL13:
+ 142              	.LBB32:
+ 143              	.LBB33:
+ 144              	 .file 3 "../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h"
+   1:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /**
+   2:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \file IfxApProt.h
+   3:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \brief AP basic functionality
+   4:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \ingroup IfxLld_Ap
+   5:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  *
+   6:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \version iLLD-TC4-v2.7.0
+   7:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   8:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  *
+   9:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  *
+  10:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  *
+  11:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  *                                 IMPORTANT NOTICE
+  12:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  *
+  13:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  14:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  15:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * this file except in compliance with IFASLL.
+  16:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  *
+  17:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  18:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * Unless required by applicable law or agreed to in writing, software distributed
+  19:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  20:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  21:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * whether express, implied, statutory or otherwise, including but not limited to
+  22:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  23:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * defects in the licensed items, or non-infringement of third parties'
+  24:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * intellectual property rights. See the full license text for the specific
+  25:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * language governing permissions and limitations under IFASLL.
+  26:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  *
+  27:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  *
+  28:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \defgroup IfxLld_Ap_Std_Prot Prot Basic Functionality
+  29:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \ingroup IfxLld_Ap_Std
+  30:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \defgroup IfxLld_Ap_Std_Prot_Default Enumerations
+  31:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \ingroup IfxLld_Ap_Std_Prot
+  32:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \defgroup IfxLld_Ap_Std_Prot_Default Functions
+  33:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \ingroup IfxLld_Ap_Std_Prot
+  34:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \defgroup IfxLld_Ap_Std_Prot_Default Structure
+  35:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \ingroup IfxLld_Ap_Std_Prot
+  36:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  */
+  37:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** 
+  38:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** #ifndef IFXAPPROT_H
+  39:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** #define IFXAPPROT_H 1
+  40:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** 
+  41:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /******************************************************************************/
+  42:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /*----------------------------------Includes----------------------------------*/
+  43:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /******************************************************************************/
+  44:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** 
+  45:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** #include "_Impl/IfxAp_cfg.h"
+  46:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** #include "IfxProt_bf.h"
+  47:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** #include "IfxProt_reg.h"
+  48:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** 
+  49:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /******************************************************************************/
+  50:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /*-----------------------------------Macros-----------------------------------*/
+  51:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /******************************************************************************/
+  52:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** 
+  53:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** #define IFXAPPROT_SEL_OFFSET (8U)
+  54:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** 
+  55:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /******************************************************************************/
+  56:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /*--------------------------------Enumerations--------------------------------*/
+  57:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /******************************************************************************/
+  58:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** 
+  59:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /** \addtogroup IfxLld_Ap_Std_Prot_Default
+  60:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \{ */
+  61:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /** \brief PRS ( Protection set definition ) of the owner
+  62:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  */
+  63:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** typedef enum
+  64:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** {
+  65:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     IfxApProt_PrsId_0 = 0,
+  66:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     IfxApProt_PrsId_1,
+  67:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     IfxApProt_PrsId_2,
+  68:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     IfxApProt_PrsId_3,
+  69:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     IfxApProt_PrsId_4,
+  70:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     IfxApProt_PrsId_5,
+  71:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     IfxApProt_PrsId_6,
+  72:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     IfxApProt_PrsId_7
+  73:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** } IfxApProt_PrsId;
+  74:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** 
+  75:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /** \brief PROT state definition
+  76:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  */
+  77:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** typedef enum
+  78:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** {
+  79:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     IfxApProt_State_init = 0,
+  80:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     IfxApProt_State_config,
+  81:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     IfxApProt_State_configSec,
+  82:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     IfxApProt_State_checkSec,
+  83:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     IfxApProt_State_run,
+  84:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     IfxApProt_State_runSec,
+  85:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     IfxApProt_State_runLock,
+  86:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     IfxApProt_State_runLockAlias
+  87:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** } IfxApProt_State;
+  88:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** 
+  89:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /** \brief PROT status definitions
+  90:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  */
+  91:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** typedef enum
+  92:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** {
+  93:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     IfxApProt_Status_success = 0,
+  94:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     IfxApProt_Status_inValidStateTransition,
+  95:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     IfxApProt_Status_nonInitState,
+  96:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     IfxApProt_Status_initState,
+  97:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     IfxApProt_Status_notOwner
+  98:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** } IfxApProt_Status;
+  99:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** 
+ 100:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /** \brief PROT Virtual Machine Id definition
+ 101:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  */
+ 102:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** typedef enum
+ 103:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** {
+ 104:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     IfxApProt_VmId_0 = 0,
+ 105:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     IfxApProt_VmId_1,
+ 106:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     IfxApProt_VmId_2,
+ 107:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     IfxApProt_VmId_3,
+ 108:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     IfxApProt_VmId_4,
+ 109:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     IfxApProt_VmId_5,
+ 110:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     IfxApProt_VmId_6,
+ 111:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     IfxApProt_VmId_7
+ 112:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** } IfxApProt_VmId;
+ 113:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** 
+ 114:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /** \} */
+ 115:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** 
+ 116:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /******************************************************************************/
+ 117:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /*-----------------------------Data Structures--------------------------------*/
+ 118:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /******************************************************************************/
+ 119:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** 
+ 120:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /** \addtogroup IfxLld_Ap_Std_Prot_Default
+ 121:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \{ */
+ 122:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /** \brief Configuration data structure of the owner
+ 123:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  */
+ 124:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** typedef struct
+ 125:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** {
+ 126:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     IfxApProt_TagId tagId;
+ 127:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     IfxApProt_VmId  vmId;
+ 128:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     IfxApProt_PrsId protectionSet;
+ 129:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     unsigned char   protectionSetEnable;
+ 130:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     unsigned char   ownerDefined;
+ 131:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     unsigned char   vmEnable;
+ 132:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** } IfxApProt_Owner;
+ 133:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** 
+ 134:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /** \} */
+ 135:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** 
+ 136:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /** \addtogroup IfxLld_Ap_Std_Prot_Default
+ 137:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \{ */
+ 138:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /** \brief Configuration data structure of the PROT
+ 139:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  */
+ 140:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** typedef struct
+ 141:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** {
+ 142:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     IfxApProt_Owner protOwner;
+ 143:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     IfxApProt_State protState;
+ 144:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** } IfxApProt_ProtConfig;
+ 145:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** 
+ 146:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /** \} */
+ 147:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** 
+ 148:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /** \addtogroup IfxLld_Ap_Std_Prot_Default
+ 149:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \{ */
+ 150:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** 
+ 151:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /******************************************************************************/
+ 152:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /*-------------------------Inline Function Prototypes-------------------------*/
+ 153:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /******************************************************************************/
+ 154:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** 
+ 155:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /** \brief Returns the current state of the respective PROT module
+ 156:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \param protReg pointer to the PROT register
+ 157:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \return the state of the respective PROT
+ 158:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  */
+ 159:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** IFX_INLINE IfxApProt_State IfxApProt_getState(volatile Ifx_PROT_PROT *protReg);
+ 160:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** 
+ 161:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /** \brief Returns the current owner of the respective PROT module
+ 162:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \param protReg pointer to the PROT register
+ 163:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \param owner Configuration structure of owner
+ 164:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \return None
+ 165:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  */
+ 166:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** IFX_INLINE void IfxApProt_getOwner(volatile Ifx_PROT_PROT *protReg, IfxApProt_Owner *owner);
+ 167:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** 
+ 168:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /** \brief Configures the set of region protected registers to be written from shadow set
+ 169:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \param protReg pointer to the PROT register
+ 170:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \param selVal which set of registers should be written
+ 171:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \return None
+ 172:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  */
+ 173:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** IFX_INLINE void IfxApProt_setProtectionRegionSelect(volatile Ifx_PROT_PROT *protReg, unsigned char 
+ 174:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** 
+ 175:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /** \brief Transitions the state without any valid state checks
+ 176:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \param protReg pointer to the PROT register
+ 177:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \param state the state to be transitioned into for the respective PROT
+ 178:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \return None
+ 179:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  */
+ 180:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** IFX_INLINE void IfxApProt_transitionState(volatile Ifx_PROT_PROT *protReg, IfxApProt_State state);
+ 181:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** 
+ 182:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /******************************************************************************/
+ 183:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /*-------------------------Global Function Prototypes-------------------------*/
+ 184:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /******************************************************************************/
+ 185:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** 
+ 186:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /** \brief Initializes the Owner for the corresponding PROT and transitions the state to RUN or RUN
+ 187:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * This API will return status as not owner in case the wrong owner is trying to modify the state
+ 188:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * This API will return status as invalid Transition in case it is not a valid transition
+ 189:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * This API will return status as success in case it was successful
+ 190:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \param protReg pointer to the PROT register
+ 191:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \param config config pointer to the default Prot configuration structure. This includes the owne
+ 192:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \return the status of the PROT initialization
+ 193:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  */
+ 194:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** IFX_EXTERN IfxApProt_Status IfxApProt_init(volatile Ifx_PROT_PROT *protReg, IfxApProt_ProtConfig *c
+ 195:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** 
+ 196:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /** \brief Initializes the default configuration for the PROT
+ 197:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \param config config pointer to the default Prot configuration structure. This includes the owne
+ 198:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \return None
+ 199:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  */
+ 200:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** IFX_EXTERN void IfxApProt_initConfig(IfxApProt_ProtConfig *config);
+ 201:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** 
+ 202:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /** \brief Configure the state for the corresponding PROT. If the PROT is in Init state, then this 
+ 203:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * This API will return status as not owner in case the wrong owner is trying to modify the state
+ 204:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * This API will return status as invalid Transition in case it is not a valid transition
+ 205:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * This API will return status as success in case it was successful
+ 206:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \param protReg pointer to the PROT register
+ 207:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \param state the state to be transitioned into for the respective PROT
+ 208:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \return The status of the PROT set state API
+ 209:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  */
+ 210:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** IFX_EXTERN IfxApProt_Status IfxApProt_setState(volatile Ifx_PROT_PROT *protReg, IfxApProt_State sta
+ 211:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** 
+ 212:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /** \brief Configure the owner for the corresponding PROT. This API will not transition the state o
+ 213:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * This API will return status as not owner in case the wrong owner is trying to modify the state
+ 214:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * This API will return status as success in case it was successful
+ 215:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \param protReg pointer to the PROT register
+ 216:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \param owner pointer to the owner to be configured for the respective PROT
+ 217:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  * \return The status of the PROT set state API
+ 218:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****  */
+ 219:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** IFX_EXTERN IfxApProt_Status IfxApProt_setOwner(volatile Ifx_PROT_PROT *protReg, IfxApProt_Owner *ow
+ 220:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** 
+ 221:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /** \} */
+ 222:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** 
+ 223:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /******************************************************************************/
+ 224:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /*---------------------Inline Function Implementations------------------------*/
+ 225:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** /******************************************************************************/
+ 226:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** 
+ 227:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** IFX_INLINE IfxApProt_State IfxApProt_getState(volatile Ifx_PROT_PROT *protReg)
+ 228:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** {
+ 229:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     return (IfxApProt_State)(protReg->B.STATE);
+ 230:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** }
+ 231:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** 
+ 232:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** 
+ 233:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** IFX_INLINE void IfxApProt_getOwner(volatile Ifx_PROT_PROT *protReg, IfxApProt_Owner *owner)
+ 234:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** {
+ 235:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     uint32 value;
+ 236:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** 
+ 237:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     value                      = protReg->U;
+ 238:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     owner->tagId               = (IfxApProt_TagId)((value >> IFX_PROT_PROT_TAGID_OFF) & IFX_PROT_PR
+ 239:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     owner->ownerDefined        = ((value >> IFX_PROT_PROT_ODEF_OFF) & IFX_PROT_PROT_ODEF_MSK);
+ 240:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     owner->protectionSet       = (IfxApProt_PrsId)((value >> IFX_PROT_PROT_PRS_OFF) & IFX_PROT_PROT
+ 241:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     owner->protectionSetEnable = ((value >> IFX_PROT_PROT_PRSEN_OFF) & IFX_PROT_PROT_PRSEN_MSK);
+ 242:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     owner->vmId                = (IfxApProt_VmId)((value >> IFX_PROT_PROT_VM_OFF) & IFX_PROT_PROT_V
+ 243:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     owner->vmEnable            = ((value >> IFX_PROT_PROT_VMEN_OFF) & IFX_PROT_PROT_VMEN_MSK);
+ 244:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** }
+ 245:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** 
+ 246:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** 
+ 247:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** IFX_INLINE void IfxApProt_setProtectionRegionSelect(volatile Ifx_PROT_PROT *protReg, unsigned char 
+ 248:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h **** {
+ 249:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h ****     protReg->U = selVal << IFXAPPROT_SEL_OFFSET;
+ 145              	 .loc 3 249 5
+ 146              	 .loc 3 249 25 is_stmt 0
+ 147 0006 8F840040 	 sh %d4,%d4,8
+ 148              	.LVL14:
+ 149              	 .loc 3 249 16
+ 150 000a 7464     	 st.w [%a6]0,%d4
+ 151              	.LVL15:
+ 152              	.LBE33:
+ 153              	.LBE32:
+  70:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     IfxApApu_init(accen, config->apuConfig);
+ 154              	 .loc 1 70 5 is_stmt 1
+ 155 000c D455     	 ld.a %a5,[%a5]0
+ 156              	.LVL16:
+ 157 000e 6D000000 	 call IfxApApu_init
+ 158              	.LVL17:
+  71:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     IfxApApu_configRegionLowerAddress(&accen->RGNLA, config->rgnlaVal);
+ 159              	 .loc 1 71 5
+ 160              	.LBB34:
+ 161              	.LBB35:
+ 529:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** }
+ 162              	 .loc 2 529 5
+ 529:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** }
+ 163              	 .loc 2 529 14 is_stmt 0
+ 164 0012 19C20400 	 ld.w %d2,[%a12]4
+ 165 0016 59D21800 	 st.w [%a13]24,%d2
+ 166              	.LVL18:
+ 167              	.LBE35:
+ 168              	.LBE34:
+  72:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     IfxApApu_configRegionUpperAddress(&accen->RGNUA, config->rgnuaVal);
+ 169              	 .loc 1 72 5 is_stmt 1
+ 170 001a 19C20800 	 ld.w %d2,[%a12]8
+ 171              	.LVL19:
+ 172              	.LBB36:
+ 173              	.LBB37:
+ 535:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** }
+ 174              	 .loc 2 535 5
+ 535:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h **** }
+ 175              	 .loc 2 535 14 is_stmt 0
+ 176 001e 59D21C00 	 st.w [%a13]28,%d2
+ 177              	.LVL20:
+ 178              	.LBE37:
+ 179              	.LBE36:
+  73:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** }
+ 180              	 .loc 1 73 1
+ 181 0022 0090     	 ret 
+ 182              	.LFE191:
+ 184              	 .global IfxApApu_configMemoryAccess_end
+ 185              	IfxApApu_configMemoryAccess_end:
+ 186              	 .section .text.IfxApApu_configureAccessToLmus,"ax",@progbits
+ 187              	 .align 1
+ 188              	 .global IfxApApu_configureAccessToLmus
+ 190              	IfxApApu_configureAccessToLmus:
+ 191              	.LFB192:
+  74:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** 
+  75:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** 
+  76:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** #ifdef IFXAP_NUM_LMU
+  77:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** void IfxApApu_configureAccessToLmus(IfxApApu_ApuMemoryConfig *memConfig)
+  78:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** {
+ 192              	 .loc 1 78 1 is_stmt 1
+ 193              	.LVL21:
+ 194 0000 40AE     	 mov.aa %a14,%SP
+ 195              	.LCFI3:
+ 196 0002 404C     	 mov.aa %a12,%a4
+  79:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     uint8 region;
+ 197              	 .loc 1 79 5
+  80:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** 
+  81:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     for (region = 0; region < sizeof(IfxAp_lmuRegions) / sizeof(IfxAp_memoryRegion); region++)
+ 198              	 .loc 1 81 5
+ 199              	.LVL22:
+ 200              	 .loc 1 81 17 is_stmt 0
+ 201 0004 8208     	 mov %d8,0
+ 202              	 .loc 1 81 5
+ 203 0006 1D000000 	 j .L5
+ 204              	.LVL23:
+ 205              	.L6:
+  82:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     {
+  83:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****         memConfig->rgnlaVal = (uint32)IfxAp_lmuRegions[region].memStartAddress & 0xDFFFFFC0U;
+ 206              	 .loc 1 83 9 is_stmt 1 discriminator 3
+ 207              	 .loc 1 83 63 is_stmt 0 discriminator 3
+ 208 000a 91000020 	 movh.a %a2,hi:IfxAp_lmuRegions
+ 209 000e 8022     	 mov.d %d2,%a2
+ 210 0010 1B020020 	 addi %d2,%d2,lo:IfxAp_lmuRegions
+ 211 0014 13C82022 	 madd %d2,%d2,%d8,12
+ 212 0018 6022     	 mov.a %a2,%d2
+ 213 001a 19230400 	 ld.w %d3,[%a2]4
+ 214              	 .loc 1 83 80 discriminator 3
+ 215 001e 7B00002E 	 movh %d2,57344
+ 216 0022 1B02FC2F 	 addi %d2,%d2,-64
+ 217 0026 2623     	 and %d3,%d2
+ 218              	 .loc 1 83 29 discriminator 3
+ 219 0028 59C30400 	 st.w [%a12]4,%d3
+  84:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****         memConfig->rgnuaVal = (uint32)IfxAp_lmuRegions[region].memEndAddress & 0xDFFFFFC0U;
+ 220              	 .loc 1 84 9 is_stmt 1 discriminator 3
+ 221              	 .loc 1 84 63 is_stmt 0 discriminator 3
+ 222 002c 19230800 	 ld.w %d3,[%a2]8
+ 223              	 .loc 1 84 78 discriminator 3
+ 224 0030 2632     	 and %d2,%d3
+ 225              	 .loc 1 84 29 discriminator 3
+ 226 0032 59C20800 	 st.w [%a12]8,%d2
+  85:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** 
+  86:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****         IfxApApu_configMemoryAccess((Ifx_ACCEN_ACCEN *)&((Ifx_LMU *)IfxAp_lmuRegions[region].module
+ 227              	 .loc 1 86 9 is_stmt 1 discriminator 3
+ 228              	 .loc 1 86 93 is_stmt 0 discriminator 3
+ 229 0036 D424     	 ld.a %a4,[%a2]0
+ 230              	 .loc 1 86 9 discriminator 3
+ 231 0038 8204     	 mov %d4,0
+ 232 003a D9463010 	 lea %a6,[%a4]112
+ 233 003e 40C5     	 mov.aa %a5,%a12
+ 234 0040 D94400C0 	 lea %a4,[%a4]768
+ 235 0044 6D000000 	 call IfxApApu_configMemoryAccess
+ 236              	.LVL24:
+  81:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     {
+ 237              	 .loc 1 81 92 is_stmt 1 discriminator 3
+ 238 0048 C218     	 add %d8,1
+ 239              	.LVL25:
+ 240 004a 8FF80F81 	 and %d8,%d8,255
+ 241              	.LVL26:
+ 242              	.L5:
+  81:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     {
+ 243              	 .loc 1 81 29 discriminator 1
+ 244 004e BFA80080 	 jlt.u %d8,10,.L6
+  87:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****             memConfig,
+  88:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****             (Ifx_PROT_PROT *)&((Ifx_LMU *)IfxAp_lmuRegions[region].moduleAddress)->PROTRGN,
+  89:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****             0);
+  90:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     }
+  91:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** }
+ 245              	 .loc 1 91 1 is_stmt 0
+ 246 0052 0090     	 ret 
+ 247              	.LFE192:
+ 249              	 .global IfxApApu_configureAccessToLmus_end
+ 250              	IfxApApu_configureAccessToLmus_end:
+ 251              	 .section .text.IfxApApu_configureAccessToDlmus,"ax",@progbits
+ 252              	 .align 1
+ 253              	 .global IfxApApu_configureAccessToDlmus
+ 255              	IfxApApu_configureAccessToDlmus:
+ 256              	.LFB193:
+  92:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** #endif /* #ifdef IFXAP_NUM_LMU */
+  93:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** 
+  94:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** 
+  95:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** void IfxApApu_configureAccessToDlmus(IfxApApu_ApuMemoryConfig *memConfig)
+  96:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** {
+ 257              	 .loc 1 96 1 is_stmt 1
+ 258              	.LVL27:
+ 259 0000 40AE     	 mov.aa %a14,%SP
+ 260              	.LCFI4:
+ 261 0002 404C     	 mov.aa %a12,%a4
+  97:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     uint8 region;
+ 262              	 .loc 1 97 5
+  98:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** 
+  99:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     for (region = 0; region < sizeof(IfxAp_dlmuRegions) / sizeof(IfxAp_memoryRegion); region++)
+ 263              	 .loc 1 99 5
+ 264              	.LVL28:
+ 265              	 .loc 1 99 17 is_stmt 0
+ 266 0004 8208     	 mov %d8,0
+ 267              	 .loc 1 99 5
+ 268 0006 1D000000 	 j .L8
+ 269              	.LVL29:
+ 270              	.L9:
+ 100:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     {
+ 101:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****         memConfig->rgnlaVal = (uint32)IfxAp_dlmuRegions[region].memStartAddress & 0xDFFFFFC0U;
+ 271              	 .loc 1 101 9 is_stmt 1 discriminator 3
+ 272              	 .loc 1 101 64 is_stmt 0 discriminator 3
+ 273 000a 91000020 	 movh.a %a2,hi:IfxAp_dlmuRegions
+ 274 000e 8022     	 mov.d %d2,%a2
+ 275 0010 1B020020 	 addi %d2,%d2,lo:IfxAp_dlmuRegions
+ 276 0014 13C82022 	 madd %d2,%d2,%d8,12
+ 277 0018 6022     	 mov.a %a2,%d2
+ 278 001a 19230400 	 ld.w %d3,[%a2]4
+ 279              	 .loc 1 101 81 discriminator 3
+ 280 001e 7B00002E 	 movh %d2,57344
+ 281 0022 1B02FC2F 	 addi %d2,%d2,-64
+ 282 0026 2623     	 and %d3,%d2
+ 283              	 .loc 1 101 29 discriminator 3
+ 284 0028 59C30400 	 st.w [%a12]4,%d3
+ 102:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****         memConfig->rgnuaVal = (uint32)IfxAp_dlmuRegions[region].memEndAddress & 0xDFFFFFC0U;
+ 285              	 .loc 1 102 9 is_stmt 1 discriminator 3
+ 286              	 .loc 1 102 64 is_stmt 0 discriminator 3
+ 287 002c 19230800 	 ld.w %d3,[%a2]8
+ 288              	 .loc 1 102 79 discriminator 3
+ 289 0030 2632     	 and %d2,%d3
+ 290              	 .loc 1 102 29 discriminator 3
+ 291 0032 59C20800 	 st.w [%a12]8,%d2
+ 103:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** 
+ 104:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****         IfxApApu_configMemoryAccess((Ifx_ACCEN_ACCEN *)&((Ifx_CPU *)IfxAp_dlmuRegions[region].modul
+ 292              	 .loc 1 104 9 is_stmt 1 discriminator 3
+ 293              	 .loc 1 104 94 is_stmt 0 discriminator 3
+ 294 0036 5422     	 ld.w %d2,[%a2]0
+ 295              	 .loc 1 104 9 discriminator 3
+ 296 0038 8204     	 mov %d4,0
+ 297 003a 91100060 	 movh.a %a6,1
+ 298 003e D966081E 	 lea %a6,[%a6]-8120
+ 299 0042 01620066 	 addsc.a %a6,%a6,%d2,0
+ 300 0046 40C5     	 mov.aa %a5,%a12
+ 301 0048 91100040 	 movh.a %a4,1
+ 302 004c D944201E 	 lea %a4,[%a4]-8096
+ 303 0050 01420046 	 addsc.a %a4,%a4,%d2,0
+ 304 0054 6D000000 	 call IfxApApu_configMemoryAccess
+ 305              	.LVL30:
+  99:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     {
+ 306              	 .loc 1 99 93 is_stmt 1 discriminator 3
+ 307 0058 C218     	 add %d8,1
+ 308              	.LVL31:
+ 309 005a 8FF80F81 	 and %d8,%d8,255
+ 310              	.LVL32:
+ 311              	.L8:
+  99:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     {
+ 312              	 .loc 1 99 29 discriminator 1
+ 313 005e BF680080 	 jlt.u %d8,6,.L9
+ 105:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****             memConfig,
+ 106:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****             (Ifx_PROT_PROT *)&((Ifx_CPU *)IfxAp_dlmuRegions[region].moduleAddress)->PROTDLMUSE,
+ 107:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****             0);
+ 108:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     }
+ 109:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** }
+ 314              	 .loc 1 109 1 is_stmt 0
+ 315 0062 0090     	 ret 
+ 316              	.LFE193:
+ 318              	 .global IfxApApu_configureAccessToDlmus_end
+ 319              	IfxApApu_configureAccessToDlmus_end:
+ 320              	 .section .text.IfxApApu_configureAccessToDsprs,"ax",@progbits
+ 321              	 .align 1
+ 322              	 .global IfxApApu_configureAccessToDsprs
+ 324              	IfxApApu_configureAccessToDsprs:
+ 325              	.LFB194:
+ 110:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** 
+ 111:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** 
+ 112:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** void IfxApApu_configureAccessToDsprs(IfxApApu_ApuMemoryConfig *memConfig)
+ 113:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** {
+ 326              	 .loc 1 113 1 is_stmt 1
+ 327              	.LVL33:
+ 328 0000 40AE     	 mov.aa %a14,%SP
+ 329              	.LCFI5:
+ 330 0002 404C     	 mov.aa %a12,%a4
+ 114:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     uint8 region;
+ 331              	 .loc 1 114 5
+ 115:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** 
+ 116:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     for (region = 0; region < sizeof(IfxAp_dsprRegions) / sizeof(IfxAp_memoryRegion); region++)
+ 332              	 .loc 1 116 5
+ 333              	.LVL34:
+ 334              	 .loc 1 116 17 is_stmt 0
+ 335 0004 8208     	 mov %d8,0
+ 336              	 .loc 1 116 5
+ 337 0006 1D000000 	 j .L11
+ 338              	.LVL35:
+ 339              	.L12:
+ 117:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     {
+ 118:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****         memConfig->rgnlaVal = (uint32)IfxAp_dsprRegions[region].memStartAddress & 0xFFFFFFC0U;
+ 340              	 .loc 1 118 9 is_stmt 1 discriminator 3
+ 341              	 .loc 1 118 64 is_stmt 0 discriminator 3
+ 342 000a 91000020 	 movh.a %a2,hi:IfxAp_dsprRegions
+ 343 000e 8022     	 mov.d %d2,%a2
+ 344 0010 1B020020 	 addi %d2,%d2,lo:IfxAp_dsprRegions
+ 345 0014 13C82022 	 madd %d2,%d2,%d8,12
+ 346 0018 6022     	 mov.a %a2,%d2
+ 347 001a 19220400 	 ld.w %d2,[%a2]4
+ 348              	 .loc 1 118 81 discriminator 3
+ 349 001e 8FF2C321 	 andn %d2,%d2,~(-64)
+ 350              	 .loc 1 118 29 discriminator 3
+ 351 0022 59C20400 	 st.w [%a12]4,%d2
+ 119:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****         memConfig->rgnuaVal = (uint32)IfxAp_dsprRegions[region].memEndAddress & 0xFFFFFFC0U;
+ 352              	 .loc 1 119 9 is_stmt 1 discriminator 3
+ 353              	 .loc 1 119 64 is_stmt 0 discriminator 3
+ 354 0026 19220800 	 ld.w %d2,[%a2]8
+ 355              	 .loc 1 119 79 discriminator 3
+ 356 002a 8FF2C321 	 andn %d2,%d2,~(-64)
+ 357              	 .loc 1 119 29 discriminator 3
+ 358 002e 59C20800 	 st.w [%a12]8,%d2
+ 120:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** 
+ 121:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****         IfxApApu_configMemoryAccess((Ifx_ACCEN_ACCEN *)&((Ifx_CPU *)IfxAp_dsprRegions[region].modul
+ 359              	 .loc 1 121 9 is_stmt 1 discriminator 3
+ 360              	 .loc 1 121 94 is_stmt 0 discriminator 3
+ 361 0032 5422     	 ld.w %d2,[%a2]0
+ 362              	 .loc 1 121 9 discriminator 3
+ 363 0034 8204     	 mov %d4,0
+ 364 0036 91100060 	 movh.a %a6,1
+ 365 003a D966080E 	 lea %a6,[%a6]-8184
+ 366 003e 01620066 	 addsc.a %a6,%a6,%d2,0
+ 367 0042 40C5     	 mov.aa %a5,%a12
+ 368 0044 91100040 	 movh.a %a4,1
+ 369 0048 D944200E 	 lea %a4,[%a4]-8160
+ 370 004c 01420046 	 addsc.a %a4,%a4,%d2,0
+ 371 0050 6D000000 	 call IfxApApu_configMemoryAccess
+ 372              	.LVL36:
+ 116:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     {
+ 373              	 .loc 1 116 93 is_stmt 1 discriminator 3
+ 374 0054 C218     	 add %d8,1
+ 375              	.LVL37:
+ 376 0056 8FF80F81 	 and %d8,%d8,255
+ 377              	.LVL38:
+ 378              	.L11:
+ 116:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     {
+ 379              	 .loc 1 116 29 discriminator 1
+ 380 005a BF680080 	 jlt.u %d8,6,.L12
+ 122:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****             memConfig,
+ 123:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****             (Ifx_PROT_PROT *)&((Ifx_CPU *)IfxAp_dsprRegions[region].moduleAddress)->PROTSPRSE,
+ 124:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****             0);
+ 125:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     }
+ 126:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** }
+ 381              	 .loc 1 126 1 is_stmt 0
+ 382 005e 0090     	 ret 
+ 383              	.LFE194:
+ 385              	 .global IfxApApu_configureAccessToDsprs_end
+ 386              	IfxApApu_configureAccessToDsprs_end:
+ 387              	 .section .text.IfxApApu_configureAccessToPsprs,"ax",@progbits
+ 388              	 .align 1
+ 389              	 .global IfxApApu_configureAccessToPsprs
+ 391              	IfxApApu_configureAccessToPsprs:
+ 392              	.LFB195:
+ 127:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** 
+ 128:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** 
+ 129:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** void IfxApApu_configureAccessToPsprs(IfxApApu_ApuMemoryConfig *memConfig)
+ 130:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** {
+ 393              	 .loc 1 130 1 is_stmt 1
+ 394              	.LVL39:
+ 395 0000 40AE     	 mov.aa %a14,%SP
+ 396              	.LCFI6:
+ 397 0002 404C     	 mov.aa %a12,%a4
+ 131:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     uint8 region;
+ 398              	 .loc 1 131 5
+ 132:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** 
+ 133:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     for (region = 0; region < sizeof(IfxAp_psprRegions) / sizeof(IfxAp_memoryRegion); region++)
+ 399              	 .loc 1 133 5
+ 400              	.LVL40:
+ 401              	 .loc 1 133 17 is_stmt 0
+ 402 0004 8208     	 mov %d8,0
+ 403              	 .loc 1 133 5
+ 404 0006 1D000000 	 j .L14
+ 405              	.LVL41:
+ 406              	.L15:
+ 134:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     {
+ 135:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****         memConfig->rgnlaVal = (uint32)IfxAp_psprRegions[region].memStartAddress & 0xFFFFFFC0U;
+ 407              	 .loc 1 135 9 is_stmt 1 discriminator 3
+ 408              	 .loc 1 135 64 is_stmt 0 discriminator 3
+ 409 000a 91000020 	 movh.a %a2,hi:IfxAp_psprRegions
+ 410 000e 8022     	 mov.d %d2,%a2
+ 411 0010 1B020020 	 addi %d2,%d2,lo:IfxAp_psprRegions
+ 412 0014 13C82022 	 madd %d2,%d2,%d8,12
+ 413 0018 6022     	 mov.a %a2,%d2
+ 414 001a 19220400 	 ld.w %d2,[%a2]4
+ 415              	 .loc 1 135 81 discriminator 3
+ 416 001e 8FF2C321 	 andn %d2,%d2,~(-64)
+ 417              	 .loc 1 135 29 discriminator 3
+ 418 0022 59C20400 	 st.w [%a12]4,%d2
+ 136:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****         memConfig->rgnuaVal = (uint32)IfxAp_psprRegions[region].memEndAddress & 0xFFFFFFC0U;
+ 419              	 .loc 1 136 9 is_stmt 1 discriminator 3
+ 420              	 .loc 1 136 64 is_stmt 0 discriminator 3
+ 421 0026 19220800 	 ld.w %d2,[%a2]8
+ 422              	 .loc 1 136 79 discriminator 3
+ 423 002a 8FF2C321 	 andn %d2,%d2,~(-64)
+ 424              	 .loc 1 136 29 discriminator 3
+ 425 002e 59C20800 	 st.w [%a12]8,%d2
+ 137:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** 
+ 138:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****         IfxApApu_configMemoryAccess((Ifx_ACCEN_ACCEN *)&((Ifx_CPU *)IfxAp_psprRegions[region].modul
+ 426              	 .loc 1 138 9 is_stmt 1 discriminator 3
+ 427              	 .loc 1 138 94 is_stmt 0 discriminator 3
+ 428 0032 5422     	 ld.w %d2,[%a2]0
+ 429              	 .loc 1 138 9 discriminator 3
+ 430 0034 8214     	 mov %d4,1
+ 431 0036 91100060 	 movh.a %a6,1
+ 432 003a D966080E 	 lea %a6,[%a6]-8184
+ 433 003e 01620066 	 addsc.a %a6,%a6,%d2,0
+ 434 0042 40C5     	 mov.aa %a5,%a12
+ 435 0044 91100040 	 movh.a %a4,1
+ 436 0048 D944200E 	 lea %a4,[%a4]-8160
+ 437 004c 01420046 	 addsc.a %a4,%a4,%d2,0
+ 438 0050 6D000000 	 call IfxApApu_configMemoryAccess
+ 439              	.LVL42:
+ 133:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     {
+ 440              	 .loc 1 133 93 is_stmt 1 discriminator 3
+ 441 0054 C218     	 add %d8,1
+ 442              	.LVL43:
+ 443 0056 8FF80F81 	 and %d8,%d8,255
+ 444              	.LVL44:
+ 445              	.L14:
+ 133:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     {
+ 446              	 .loc 1 133 29 discriminator 1
+ 447 005a BF680080 	 jlt.u %d8,6,.L15
+ 139:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****             memConfig,
+ 140:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****             (Ifx_PROT_PROT *)&((Ifx_CPU *)IfxAp_psprRegions[region].moduleAddress)->PROTSPRSE,
+ 141:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****             1);
+ 142:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c ****     }
+ 143:../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.c **** }
+ 448              	 .loc 1 143 1 is_stmt 0
+ 449 005e 0090     	 ret 
+ 450              	.LFE195:
+ 452              	 .global IfxApApu_configureAccessToPsprs_end
+ 453              	IfxApApu_configureAccessToPsprs_end:
+ 454              	 .section .rodata.defaultConfig.0,"a"
+ 455              	 .align 2
+ 458              	defaultConfig.0:
+ 459 0000 FFFFFFFF 	 .word -1
+ 460 0004 FFFFFFFF 	 .word -1
+ 461 0008 FFFFFFFF 	 .word -1
+ 462 000c FFFFFFFF 	 .word -1
+ 463 0010 FF       	 .byte -1
+ 464 0011 FF       	 .byte -1
+ 465 0012 FF       	 .byte -1
+ 466 0013 FF       	 .byte -1
+ 567              	.Letext0:
+ 568              	 .file 4 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 569              	 .file 5 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 570              	 .file 6 "../Libraries/Infra/Sfr/TC4Dx/IfxCpu_regdef.h"
+ 571              	 .file 7 "../Libraries/Infra/Sfr/TC4Dx/IfxLmu_regdef.h"
+ 572              	 .file 8 "../Libraries/iLLD/TC4xx/CpuGeneric/_Impl/TC4Dx/IfxAp_cfg_TC4Dx.h"
+ 573              	 .file 9 "../Libraries/iLLD/TC4xx/CpuGeneric/Ap/IfxAccen_regdef.h"
+ 574              	 .file 10 "../Libraries/iLLD/TC4xx/CpuGeneric/Ap/IfxProt_regdef.h"
+ 32136 0000 00000000 	 .word IfxApApu_init
+ 32137 0004 00000000 	 .word IfxApApu_init_end
+ 32138 0008 0C003C44 	 .word 0x443c000c
+ 32139 000c 00003000 	 .word 0x00300000
+ 32140 0010 00000000 	 .word 0x00000000
+ 32141 0014 C0000000 	 .word 0x000000c0
+ 32142 0018 00000000 	 .word IfxApApu_initConfig
+ 32143 001c 00000000 	 .word IfxApApu_initConfig_end
+ 32144 0020 F0003C44 	 .word 0x443c00f0
+ 32145 0024 00001000 	 .word 0x00100000
+ 32146 0028 00000000 	 .word 0x00000000
+ 32147 002c C0000000 	 .word 0x000000c0
+ 32148 0030 00000000 	 .word IfxApApu_configMemoryAccess
+ 32149 0034 00000000 	 .word IfxApApu_configMemoryAccess_end
+ 32150 0038 14007C74 	 .word 0x747c0014
+ 32151 003c 10007000 	 .word 0x00700010
+ 32152 0040 00000000 	 .word 0x00000000
+ 32153 0044 40000200 	 .word 0x00020040
+ 32154 0048 00000000 	 .word IfxApApu_configureAccessToLmus
+ 32155 004c 00000000 	 .word IfxApApu_configureAccessToLmus_end
+ 32156 0050 1C017C54 	 .word 0x547c011c
+ 32157 0054 00001000 	 .word 0x00100000
+ 32158 0058 00000000 	 .word 0x00000000
+ 32159 005c 40000200 	 .word 0x00020040
+ 32160 0060 00000000 	 .word IfxApApu_configureAccessToDlmus
+ 32161 0064 00000000 	 .word IfxApApu_configureAccessToDlmus_end
+ 32162 0068 1C017C54 	 .word 0x547c011c
+ 32163 006c 00001000 	 .word 0x00100000
+ 32164 0070 00000000 	 .word 0x00000000
+ 32165 0074 40000200 	 .word 0x00020040
+ 32166 0078 00000000 	 .word IfxApApu_configureAccessToDsprs
+ 32167 007c 00000000 	 .word IfxApApu_configureAccessToDsprs_end
+ 32168 0080 14017C54 	 .word 0x547c0114
+ 32169 0084 00001000 	 .word 0x00100000
+ 32170 0088 00000000 	 .word 0x00000000
+ 32171 008c 40000200 	 .word 0x00020040
+ 32172 0090 00000000 	 .word IfxApApu_configureAccessToPsprs
+ 32173 0094 00000000 	 .word IfxApApu_configureAccessToPsprs_end
+ 32174 0098 14017C54 	 .word 0x547c0114
+ 32175 009c 00001000 	 .word 0x00100000
+ 32176 00a0 00000000 	 .word 0x00000000
+ 32177 00a4 40000200 	 .word 0x00020040
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxApApu.c
+                            *ABS*:00000000 IfxApApu.c
+    {standard input}:10     .text.IfxApApu_init:00000000 IfxApApu_init
+    {standard input}:100    .text.IfxApApu_init:00000044 IfxApApu_init_end
+    {standard input}:105    .text.IfxApApu_initConfig:00000000 IfxApApu_initConfig
+    {standard input}:458    .rodata.defaultConfig.0:00000000 defaultConfig.0
+    {standard input}:127    .text.IfxApApu_initConfig:00000018 IfxApApu_initConfig_end
+    {standard input}:132    .text.IfxApApu_configMemoryAccess:00000000 IfxApApu_configMemoryAccess
+    {standard input}:185    .text.IfxApApu_configMemoryAccess:00000024 IfxApApu_configMemoryAccess_end
+    {standard input}:190    .text.IfxApApu_configureAccessToLmus:00000000 IfxApApu_configureAccessToLmus
+    {standard input}:250    .text.IfxApApu_configureAccessToLmus:00000054 IfxApApu_configureAccessToLmus_end
+    {standard input}:255    .text.IfxApApu_configureAccessToDlmus:00000000 IfxApApu_configureAccessToDlmus
+    {standard input}:319    .text.IfxApApu_configureAccessToDlmus:00000064 IfxApApu_configureAccessToDlmus_end
+    {standard input}:324    .text.IfxApApu_configureAccessToDsprs:00000000 IfxApApu_configureAccessToDsprs
+    {standard input}:386    .text.IfxApApu_configureAccessToDsprs:00000060 IfxApApu_configureAccessToDsprs_end
+    {standard input}:391    .text.IfxApApu_configureAccessToPsprs:00000000 IfxApApu_configureAccessToPsprs
+    {standard input}:453    .text.IfxApApu_configureAccessToPsprs:00000060 IfxApApu_configureAccessToPsprs_end
+
+UNDEFINED SYMBOLS
+IfxAp_lmuRegions
+IfxAp_dlmuRegions
+IfxAp_dsprRegions
+IfxAp_psprRegions

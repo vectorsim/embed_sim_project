@@ -1,0 +1,1677 @@
+   1              	
+   2              	 .file "Ifx_Ssw_Tc4.c"
+   3              	 .file "Ifx_Ssw_Tc4.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.Ifx_Ssw_disableVirtualization_Cpu4,"ax",@progbits
+   7              	 .align 1
+   8              	 .global Ifx_Ssw_disableVirtualization_Cpu4
+  10              	Ifx_Ssw_disableVirtualization_Cpu4:
+  11              	.LFB39:
+  12              	 .file 1 "../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c"
+   1:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** /**
+   2:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****  * \file Ifx_Ssw_Tc4.c
+   3:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****  * \brief Startup Software for Core4
+   4:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****  *
+   5:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****  *
+   8:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****  *
+   9:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****  *                                 IMPORTANT NOTICE
+  10:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****  *
+  11:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  12:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  13:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****  * this file except in compliance with IFASLL.
+  14:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****  *
+  15:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  16:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  17:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  18:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  19:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  20:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  21:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****  * defects in the licensed items, or non-infringement of third parties'
+  22:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****  * intellectual property rights. See the full license text for the specific
+  23:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****  * language governing permissions and limitations under IFASLL.
+  24:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****  *
+  25:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****  */
+  26:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+  27:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** /*******************************************************************************
+  28:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** **                      Includes                                              **
+  29:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** *******************************************************************************/
+  30:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+  31:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #include "Ifx_Cfg.h"
+  32:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #if defined (__TASKING__)
+  33:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #pragma warning 508		/* To suppress empty file warning */
+  34:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #endif
+  35:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #if defined (__ghs__)
+  36:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #pragma diag_suppress 96		/* To suppress empty file warning */
+  37:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #endif
+  38:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+  39:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #if defined(DEVICE_TC4DX) || defined(DEVICE_TC49XN) || defined(DEVICE_TC49XNAA) || defined(DEVICE_T
+  40:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #include "Ifx_Ssw.h"
+  41:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #include "Ifx_Ssw_Infra.h"
+  42:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+  43:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** /******************************************************************************/
+  44:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** /*                          Macros                                            */
+  45:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** /******************************************************************************/
+  46:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+  47:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** /** \brief Configuration for cache enable.
+  48:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****  *
+  49:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****  */
+  50:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #ifndef IFX_CFG_SSW_ENABLE_TRICORE4_PCACHE
+  51:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #   define IFX_CFG_SSW_ENABLE_TRICORE4_PCACHE (1U)  /**< Program Cache enabled by default*/
+  52:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #endif
+  53:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #ifndef IFX_CFG_SSW_ENABLE_TRICORE4_DCACHE
+  54:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #   define IFX_CFG_SSW_ENABLE_TRICORE4_DCACHE (1U)  /**< Data Cache enabled by default*/
+  55:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #endif
+  56:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+  57:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** /*******************************************************************************
+  58:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** **                      Imported Function Declarations                        **
+  59:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** *******************************************************************************/
+  60:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** IFX_SSW_USED IFX_SSW_NOINLINE void Ifx_Ssw_disableVirtualization_Cpu4(void);
+  61:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+  62:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** IFX_SSW_COMMON_LINKER_SYMBOLS();
+  63:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** IFX_SSW_CORE_LINKER_SYMBOLS(4);
+  64:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+  65:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #if defined(__TASKING__)
+  66:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** __asm("\t .extern core4_main");
+  67:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #endif
+  68:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+  69:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** /*******************************************************************************
+  70:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** **                      Prototypes & Externals                                **
+  71:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** *******************************************************************************/
+  72:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+  73:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** IFX_SSW_WEAK void Ifx_Ssw_MultiCore_Sync_Cpu4(void)
+  74:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** {}
+  75:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+  76:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** /*********************************************************************************
+  77:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** * - startup code
+  78:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** *********************************************************************************/
+  79:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+  80:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** void __Core4_start(void)
+  81:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** {
+  82:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     /* By default mapped to empty, skip only if configured */
+  83:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     IFX_CFG_SSW_SKIP_STARTUP_ROUTINE(4);
+  84:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     
+  85:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     #if (IFX_PROT_ENABLED == 1U)
+  86:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         IfxSswProt_setState((Ifx_PROT_PROT *)&(MODULE_CPU4.PROTSFRE), IfxSswProt_State_config);
+  87:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     #endif
+  88:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     /* Load Base Address of Trap Vector Table. */
+  89:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     Ifx_Ssw_MTCR(CPU_BTV, (unsigned int)__TRAPTAB(4));
+  90:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     #if (IFX_PROT_ENABLED == 1U)
+  91:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         IfxSswProt_setState((Ifx_PROT_PROT *)&(MODULE_CPU4.PROTSFRE), IfxSswProt_State_run);
+  92:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     #endif
+  93:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+  94:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     Ifx_Ssw_MTCR(CPU_FCX, IFX_CFG_SSW_CSA_PTR((unsigned int)__CSA(4)));
+  95:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+  96:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     Ifx_Ssw_disableVirtualization_Cpu4();
+  97:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     
+  98:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     #if (IFX_PROT_ENABLED == 1U)
+  99:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         IfxSswProt_setState((Ifx_PROT_PROT *)&(MODULE_CPU4.PROTSFRE), IfxSswProt_State_config);
+ 100:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     #endif
+ 101:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     /* Re-Initialize the BTV to the HRA context post disabling virtualization */
+ 102:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     Ifx_Ssw_MTCR(CPU_BTV, (unsigned int)__TRAPTAB(4));
+ 103:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     #if (IFX_PROT_ENABLED == 1U)
+ 104:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         IfxSswProt_setState((Ifx_PROT_PROT *)&(MODULE_CPU4.PROTSFRE), IfxSswProt_State_run);
+ 105:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     #endif
+ 106:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+ 107:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     /* Set the PSW to its reset value in case of a warm start,clear PSW.IS */
+ 108:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     Ifx_Ssw_MTCR(CPU_PSW, IFX_CFG_SSW_PSW_DEFAULT);
+ 109:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+ 110:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     {
+ 111:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         Ifx_CPU_PCON0 pcon0;
+ 112:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         pcon0.U       = 0;
+ 113:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         pcon0.B.PCBYP = IFX_CFG_SSW_ENABLE_TRICORE4_PCACHE ? 0 : 1; /*depending on the enable bypas
+ 114:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         #if (IFX_PROT_ENABLED == 1U)
+ 115:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****             IfxSswProt_setState((Ifx_PROT_PROT *)&(MODULE_CPU4.PROTSFRE), IfxSswProt_State_config);
+ 116:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         #endif
+ 117:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         Ifx_Ssw_MTCR(CPU_PCON0, pcon0.U);
+ 118:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         #if (IFX_PROT_ENABLED == 1U)
+ 119:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****             IfxSswProt_setState((Ifx_PROT_PROT *)&(MODULE_CPU4.PROTSFRE), IfxSswProt_State_run);
+ 120:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         #endif
+ 121:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     }
+ 122:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+ 123:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     {
+ 124:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         Ifx_CPU_DCON0 dcon0;
+ 125:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         dcon0.U       = 0;
+ 126:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         dcon0.B.DCBYP = IFX_CFG_SSW_ENABLE_TRICORE4_DCACHE ? 0 : 1; /*depending on the enable bypas
+ 127:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         #if (IFX_PROT_ENABLED == 1U)
+ 128:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****             IfxSswProt_setState((Ifx_PROT_PROT *)&(MODULE_CPU4.PROTSFRE), IfxSswProt_State_config);
+ 129:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         #endif
+ 130:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         Ifx_Ssw_MTCR(CPU_DCON0, dcon0.U);
+ 131:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         #if (IFX_PROT_ENABLED == 1U)
+ 132:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****             IfxSswProt_setState((Ifx_PROT_PROT *)&(MODULE_CPU4.PROTSFRE), IfxSswProt_State_run);
+ 133:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         #endif
+ 134:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     }
+ 135:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+ 136:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     #if (IFX_PROT_ENABLED == 1U)
+ 137:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         IfxSswProt_setState((Ifx_PROT_PROT *)&(MODULE_CPU4.PROTSFRE), IfxSswProt_State_config);
+ 138:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     #endif
+ 139:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+ 140:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     /* Load Base Address of Interrupt Vector Table. we will do this later in the program */
+ 141:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     Ifx_Ssw_MTCR(CPU_BIV, (unsigned int)__INTTAB(4));
+ 142:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+ 143:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     /* Load interrupt stack pointer. */
+ 144:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     Ifx_Ssw_MTCR(CPU_ISP, (unsigned int)__ISTACK(4));
+ 145:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     #if (IFX_PROT_ENABLED == 1U)
+ 146:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         IfxSswProt_setState((Ifx_PROT_PROT *)&(MODULE_CPU4.PROTSFRE), IfxSswProt_State_run);
+ 147:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     #endif
+ 148:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     Ifx_Ssw_initCSA((unsigned int *)__CSA(4), (unsigned int *)__CSA_END(4));
+ 149:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+ 150:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     /* initialize SDA base pointers */
+ 151:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     Ifx_Ssw_setAddressReg(a0, __SDATA1(4));
+ 152:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     Ifx_Ssw_setAddressReg(a1, __SDATA2(4));
+ 153:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     Ifx_Ssw_setAddressReg(a8, __SDATA3(4));
+ 154:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     Ifx_Ssw_setAddressReg(a9, __SDATA4(4));
+ 155:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+ 156:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     /*Initialize CPU Private Global Variables*/
+ 157:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     volatile unsigned int tempVar = ((unsigned int)&__ENABLE_INDIVIDUAL_C_INIT_CPU4);
+ 158:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     if (tempVar != 0U)
+ 159:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     {
+ 160:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****       /* Hook functions to initialize application specific HW extensions */
+ 161:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****       hardware_init_hook();
+ 162:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+ 163:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****       /* Initialization of C runtime variables and CPP constructors and destructors */
+ 164:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****       (void)Ifx_Ssw_doCppInit();
+ 165:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 	
+ 166:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****       /* Hook functions to initialize application specific SW extensions */
+ 167:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****       software_init_hook();	
+ 168:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     }
+ 169:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     /* MultiCore synchronization hooks to execute Safety Library tests */
+ 170:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     Ifx_Ssw_MultiCore_Sync_Cpu4();
+ 171:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+ 172:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     /*Call main function of Cpu4 */
+ 173:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #ifdef IFX_CFG_SSW_RETURN_FROM_MAIN
+ 174:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     {
+ 175:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         extern int core4_main(void);
+ 176:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         int status= core4_main();        /* Call main function of CPU4 */
+ 177:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         volatile unsigned int tempVar = ((unsigned int)&__ENABLE_INDIVIDUAL_C_INIT_CPU4);
+ 178:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         if (tempVar != 0U)
+ 179:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         {
+ 180:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****           Ifx_Ssw_doCppExit(status);
+ 181:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         }
+ 182:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         else
+ 183:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         {
+ 184:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****           (void)status;	/* Added to avoid "Unused parameter warning" */
+ 185:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         }
+ 186:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     }
+ 187:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #else /* IFX_CFG_SSW_RETURN_FROM_MAIN */
+ 188:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     extern void core4_main(void);
+ 189:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     Ifx_Ssw_jumpToFunction(core4_main);  /* Jump to main function of CPU2 */
+ 190:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #endif /* IFX_CFG_SSW_RETURN_FROM_MAIN */
+ 191:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+ 192:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     /* Go into infinite loop, normally the code shall not reach here */
+ 193:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     Ifx_Ssw_infiniteLoop();
+ 194:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** }
+ 195:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+ 196:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+ 197:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+ 198:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #if defined(__HIGHTEC__) && !defined(__clang__)
+ 199:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #pragma GCC optimize ("O0")
+ 200:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #elif defined(__GNUC__) && !defined(__HIGHTEC__)
+ 201:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #pragma GCC optimize ("O0")
+ 202:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #endif
+ 203:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** void Ifx_Ssw_disableVirtualization_Cpu4(void)
+ 204:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** {
+  13              	 .loc 1 204 1
+  14 0000 40AE     	 mov.aa %a14,%SP
+  15              	.LCFI0:
+ 205:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     Ifx_Ssw_disableVirtualization()
+  16              	 .loc 1 205 5
+  17 0002 8202     	 mov %d2,0
+  18              	
+  19              	 
+  20 0004 CD02000B 	 mtcr 45056,%d2
+  21 0008 0D00C004 	 isync
+  22              	 
+  23              	 .loc 1 205 5
+  24              	
+  25 000c 3B00B020 	 mov %d2,2816
+  26              	
+  27              	 
+  28 0010 CD42E00F 	 mtcr 65028,%d2
+  29 0014 0D00C004 	 isync
+  30              	 
+  31              	 .loc 1 205 5
+  32              	 
+  33 0018 0D00C005 	 rfh 
+  34              	 
+ 206:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** }
+  35              	 .loc 1 206 1 is_stmt 0
+  36              	
+  37 001c 0000     	 nop
+  38 001e 0090     	 ret 
+  39              	.LFE39:
+  41              	 .global Ifx_Ssw_disableVirtualization_Cpu4_end
+  42              	Ifx_Ssw_disableVirtualization_Cpu4_end:
+  43              	 .section .text.Ifx_Ssw_MultiCore_Sync_Cpu4,"ax",@progbits
+  44              	 .align 1
+  45              	 .weak Ifx_Ssw_MultiCore_Sync_Cpu4
+  47              	Ifx_Ssw_MultiCore_Sync_Cpu4:
+  48              	.LFB37:
+  74:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+  49              	 .loc 1 74 1 is_stmt 1
+  50 0000 40AE     	 mov.aa %a14,%SP
+  51              	.LCFI1:
+  74:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+  52              	 .loc 1 74 2
+  53 0002 0090     	 ret 
+  54              	.LFE37:
+  56              	 .weak Ifx_Ssw_MultiCore_Sync_Cpu4_end
+  57              	Ifx_Ssw_MultiCore_Sync_Cpu4_end:
+  58              	 .section .text.__Core4_start,"ax",@progbits
+  59              	 .align 1
+  60              	 .global __Core4_start
+  62              	__Core4_start:
+  63              	.LFB38:
+  81:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     /* By default mapped to empty, skip only if configured */
+  64              	 .loc 1 81 1
+  65 0000 40AE     	 mov.aa %a14,%SP
+  66              	.LCFI2:
+  67 0002 2008     	 sub.a %SP,8
+  83:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     
+  68              	 .loc 1 83 40
+  89:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     #if (IFX_PROT_ENABLED == 1U)
+  69              	 .loc 1 89 5
+  70 0004 91000020 	 movh.a %a2,hi:__TRAPTAB_CPU4
+  71 0008 8022     	 mov.d %d2,%a2
+  72 000a 1B020090 	 addi %d9,%d2,lo:__TRAPTAB_CPU4
+  73              	
+  74              	 
+  75 000e CD49E20F 	 mtcr 65060,%d9
+  76 0012 0D00C004 	 isync
+  77              	 
+  94:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+  78              	 .loc 1 94 5
+  79              	
+  80 0016 91000020 	 movh.a %a2,hi:__CSA4
+  81 001a 8022     	 mov.d %d2,%a2
+  82 001c 1B020080 	 addi %d8,%d2,lo:__CSA4
+  83 0020 8F481F20 	 sh %d2,%d8,-12
+  84 0024 7BF00030 	 movh %d3,15
+  85 0028 2623     	 and %d3,%d2
+  86 002a 37087023 	 extr.u %d2,%d8,6,16
+  87 002e A632     	 or %d2,%d3
+  88              	
+  89              	 
+  90 0030 CD82E30F 	 mtcr 65080,%d2
+  91 0034 0D00C004 	 isync
+  92              	 
+  96:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     
+  93              	 .loc 1 96 5
+  94              	
+  95 0038 6D000000 	 call Ifx_Ssw_disableVirtualization_Cpu4
+  96              	.LVL0:
+ 102:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     #if (IFX_PROT_ENABLED == 1U)
+  97              	 .loc 1 102 5
+  98              	
+  99              	 
+ 100 003c CD49E20F 	 mtcr 65060,%d9
+ 101 0040 0D00C004 	 isync
+ 102              	 
+ 108:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+ 103              	 .loc 1 108 5
+ 104              	
+ 105 0044 3B009820 	 mov %d2,2432
+ 106              	
+ 107              	 
+ 108 0048 CD42E00F 	 mtcr 65028,%d2
+ 109 004c 0D00C004 	 isync
+ 110              	 
+ 111              	
+ 112              	.LBB14:
+ 111:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         pcon0.U       = 0;
+ 113              	 .loc 1 111 9
+ 112:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         pcon0.B.PCBYP = IFX_CFG_SSW_ENABLE_TRICORE4_PCACHE ? 0 : 1; /*depending on the enable bypas
+ 114              	 .loc 1 112 9
+ 113:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         #if (IFX_PROT_ENABLED == 1U)
+ 115              	 .loc 1 113 9
+ 117:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         #if (IFX_PROT_ENABLED == 1U)
+ 116              	 .loc 1 117 9
+ 117 0050 8202     	 mov %d2,0
+ 118              	
+ 119              	 
+ 120 0052 CDC22009 	 mtcr 37388,%d2
+ 121 0056 0D00C004 	 isync
+ 122              	 
+ 123              	
+ 124              	.LBE14:
+ 125              	.LBB15:
+ 124:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         dcon0.U       = 0;
+ 126              	 .loc 1 124 9
+ 125:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         dcon0.B.DCBYP = IFX_CFG_SSW_ENABLE_TRICORE4_DCACHE ? 0 : 1; /*depending on the enable bypas
+ 127              	 .loc 1 125 9
+ 126:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         #if (IFX_PROT_ENABLED == 1U)
+ 128              	 .loc 1 126 9
+ 130:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****         #if (IFX_PROT_ENABLED == 1U)
+ 129              	 .loc 1 130 9
+ 130              	
+ 131              	 
+ 132 005a CD020409 	 mtcr 36928,%d2
+ 133 005e 0D00C004 	 isync
+ 134              	 
+ 135              	
+ 136              	.LBE15:
+ 141:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+ 137              	 .loc 1 141 5
+ 138 0062 91000020 	 movh.a %a2,hi:__INTTAB_CPU4
+ 139 0066 8022     	 mov.d %d2,%a2
+ 140 0068 1B020020 	 addi %d2,%d2,lo:__INTTAB_CPU4
+ 141              	
+ 142              	 
+ 143 006c CD02E20F 	 mtcr 65056,%d2
+ 144 0070 0D00C004 	 isync
+ 145              	 
+ 144:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     #if (IFX_PROT_ENABLED == 1U)
+ 146              	 .loc 1 144 5
+ 147              	
+ 148 0074 91000020 	 movh.a %a2,hi:__ISTACK4
+ 149 0078 8022     	 mov.d %d2,%a2
+ 150 007a 1B020020 	 addi %d2,%d2,lo:__ISTACK4
+ 151              	
+ 152              	 
+ 153 007e CD82E20F 	 mtcr 65064,%d2
+ 154 0082 0D00C004 	 isync
+ 155              	 
+ 148:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+ 156              	 .loc 1 148 5
+ 157              	.LVL1:
+ 158              	
+ 159              	.LBB16:
+ 160              	.LBB17:
+ 161              	 .file 2 "../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h"
+   1:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /**
+   2:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \file Ifx_Ssw_Infra.h
+   3:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \brief Startup Software support functions.
+   4:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  *
+   5:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  *
+   8:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  *
+   9:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  *                                 IMPORTANT NOTICE
+  10:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  *
+  11:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  12:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  13:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * this file except in compliance with IFASLL.
+  14:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  *
+  15:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  16:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * Unless required by applicable law or agreed to in writing, software distributed
+  17:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  18:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  19:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * whether express, implied, statutory or otherwise, including but not limited to
+  20:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  21:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * defects in the licensed items, or non-infringement of third parties'
+  22:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * intellectual property rights. See the full license text for the specific
+  23:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * language governing permissions and limitations under IFASLL.
+  24:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  *
+  25:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  */
+  26:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+  27:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef IFX_SSW_INFRA_H
+  28:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_SSW_INFRA_H 1
+  29:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+  30:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #include "Ifx_Cfg.h"
+  31:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #include "Ifx_Ssw_Compilers.h"
+  32:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #include "Ifx_Cfg_Ssw.h"
+  33:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #include "IfxCpu_reg.h"
+  34:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #include "IfxCpu_bf.h"
+  35:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #include "IfxWtu_reg.h"
+  36:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #include "IfxWtu_bf.h"
+  37:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #include "IfxSmm_reg.h"
+  38:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #include "IfxSmm_bf.h"
+  39:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #include "IfxClock_reg.h"
+  40:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #include "IfxQspi_reg.h"
+  41:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #include "IfxPort_reg.h"
+  42:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #include "IfxPms_reg.h"
+  43:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #include "IfxVmt_reg.h"
+  44:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #include "IfxVmt_bf.h"
+  45:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #if (IFX_PROT_ENABLED == 1U)
+  46:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #include "IfxProt_reg.h"
+  47:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+  48:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /******************************************************************************/
+  49:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /*-----------------------------------Macros-----------------------------------*/
+  50:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /******************************************************************************/
+  51:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+  52:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief Mask values is used to invert the password value bits */
+  53:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_SSW_WDT_PASSWORD_INVERT_MSK             (0x007FU)
+  54:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+  55:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief Disable write protection  */
+  56:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_SSW_PMIC_DISABLE_PROTECTION             (0x0D02B5CAU)
+  57:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+  58:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief Enable write protection  */
+  59:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_SSW_PMIC_ENABLE_PROTECTION              (0x5502D396U)
+  60:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+  61:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief PMIC core voltage */
+  62:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_SSW_PMIC_CORE_VOLTAGE_0_95V             (0x1800D838U)
+  63:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+  64:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief PMIC core voltage */
+  65:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_SSW_PMIC_CORE_VOLTAGE_1V                (0x6F00D438U)
+  66:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+  67:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief CSA size */
+  68:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_SSW_CSA_SIZE                            16U
+  69:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+  70:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /* \brief CSA START pointer in PSPR0 location */
+  71:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef DEVICE_TC45X
+  72:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef IFX_CFG_SSW_CSA_BOOT_PTR_START
+  73:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_CSA_BOOT_PTR_START              (0x7010EC00)
+  74:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+  75:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #elif defined(DEVICE_TC45X)
+  76:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef IFX_CFG_SSW_CSA_BOOT_PTR_START
+  77:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_CSA_BOOT_PTR_START              (0x70106C00)
+  78:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+  79:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif /* #ifndef DEVICE_TC45X */
+  80:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+  81:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /* \brief CSA END pointer in PSPR0 location */
+  82:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef DEVICE_TC45X
+  83:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef IFX_CFG_SSW_CSA_BOOT_PTR_END
+  84:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_CSA_BOOT_PTR_END                (0x7010FC00)
+  85:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+  86:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #elif defined(DEVICE_TC45X)
+  87:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef IFX_CFG_SSW_CSA_BOOT_PTR_END
+  88:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_CSA_BOOT_PTR_END                (0x70107C00)
+  89:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+  90:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif /* #ifndef DEVICE_TC45X */
+  91:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+  92:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /* \brief USTACK pointer in PSPR0 location */
+  93:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef DEVICE_TC45X
+  94:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef IFX_CFG_SSW_CSA_USTACK_PTR
+  95:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_CSA_USTACK_PTR                  (0x7010EB00)
+  96:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+  97:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #elif defined(DEVICE_TC45X)
+  98:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef IFX_CFG_SSW_CSA_USTACK_PTR
+  99:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_CSA_USTACK_PTR                  (0x70106B00)
+ 100:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+ 101:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif /* #ifndef DEVICE_TC45X */
+ 102:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 103:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef IFX_CFG_SSW_STARTCPU_WAIT_TIME_IN_SECONDS
+ 104:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_STARTCPU_WAIT_TIME_IN_SECONDS   (0.0001)
+ 105:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+ 106:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 107:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef IFX_CFG_SSW_EVR_OSC_FREQUENCY
+ 108:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_EVR_OSC_FREQUENCY               (100000000.0)
+ 109:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+ 110:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 111:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef IFX_CFG_SSW_SYSCLK_PIN_FREQUENCY
+ 112:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_SYSCLK_PIN_FREQUENCY            (20000000.0)
+ 113:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+ 114:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 115:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef IFX_CFG_SSW_XTAL_FREQUENCY
+ 116:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_XTAL_FREQUENCY                  (IFX_CFG_CLOCK_XTAL_FREQUENCY)
+ 117:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+ 118:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 119:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef IFX_CFG_SSW_CCUCON_LCK_BIT_TIMEOUT_COUNT
+ 120:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_CCUCON_LCK_BIT_TIMEOUT_COUNT    (0x1000U)
+ 121:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+ 122:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 123:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef IFX_CFG_SSW_QSPI_KERNEL_RESET_TIMEOUT_COUNT
+ 124:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_QSPI_KERNEL_RESET_TIMEOUT_COUNT (0x1000U)
+ 125:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+ 126:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 127:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef IFX_CFG_SSW_QSPI_FIFO_EMPTY_TIMEOUT_COUNT
+ 128:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_QSPI_FIFO_EMPTY_TIMEOUT_COUNT   (0xC350U)
+ 129:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+ 130:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 131:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef IFX_CFG_SSW_QSPI_CLOCK_ENABLE_TIMEOUT_COUNT
+ 132:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_QSPI_CLOCK_ENABLE_TIMEOUT_COUNT (0x1000U)
+ 133:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+ 134:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 135:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef IFX_CFG_SSW_CLOCK_EXT_CLOCK
+ 136:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_CLOCK_EXT_CLOCK                 (0U)
+ 137:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+ 138:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 139:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef IFX_CFG_SSW_PCXI
+ 140:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_PCXI                            (0x3C0041U)
+ 141:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+ 142:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 143:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef IFX_CFG_SSW_CSA_PTR
+ 144:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_CSA_PTR(val)                                               \
+ 145:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     ((unsigned int)((unsigned int)val & ((unsigned int)0XFU << 28U)) >> 12U) | \
+ 146:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     ((unsigned int)((unsigned int)val & ((unsigned int)0XFFFFU << 6U)) >> 6U)
+ 147:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+ 148:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 149:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_LOOP_TIMEOUT_CHECK(tVar, tErr) \
+ 150:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     {                                              \
+ 151:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         if (((signed int)--tVar) <= 0)             \
+ 152:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         {                                          \
+ 153:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****             tErr = (unsigned char)1;               \
+ 154:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****             break;                                 \
+ 155:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         }                                          \
+ 156:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         else                                       \
+ 157:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         {                                          \
+ 158:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         }                                          \
+ 159:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     }
+ 160:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 161:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /* QSPI module */
+ 162:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef IFX_CFG_SSW_MODULE_QSPI_PMIC
+ 163:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_MODULE_QSPI_PMIC        MODULE_QSPI2
+ 164:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+ 165:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 166:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef IFX_CFG_SSW_MODULE_QSPI_MTSR_PORT
+ 167:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_MODULE_QSPI_MTSR_PORT   MODULE_P15
+ 168:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+ 169:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 170:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef IFX_CFG_SSW_MODULE_QSPI_MTSR_PIN
+ 171:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_MODULE_QSPI_MTSR_PIN    (6U)
+ 172:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+ 173:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 174:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef IFX_CFG_SSW_MODULE_QSPI_MTSR_ALTSEL
+ 175:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_MODULE_QSPI_MTSR_ALTSEL (3U)
+ 176:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+ 177:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 178:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef IFX_CFG_SSW_MODULE_QSPI_MRST_PORT
+ 179:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_MODULE_QSPI_MRST_PORT   MODULE_P15
+ 180:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+ 181:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 182:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef IFX_CFG_SSW_MODULE_QSPI_MRST_PIN
+ 183:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_MODULE_QSPI_MRST_PIN    (7U)
+ 184:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+ 185:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 186:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef IFX_CFG_SSW_MODULE_QSPI_MRST_ALTSEL
+ 187:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_MODULE_QSPI_MRST_ALTSEL (1U)
+ 188:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+ 189:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 190:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef IFX_CFG_SSW_MODULE_QSPI_SCLK_PORT
+ 191:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_MODULE_QSPI_SCLK_PORT   MODULE_P15
+ 192:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+ 193:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 194:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef IFX_CFG_SSW_MODULE_QSPI_SCLK_PIN
+ 195:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_MODULE_QSPI_SCLK_PIN    (8U)
+ 196:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+ 197:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 198:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef IFX_CFG_SSW_MODULE_QSPI_SCLK_ALTSEL
+ 199:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_MODULE_QSPI_SCLK_ALTSEL (3U)
+ 200:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+ 201:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 202:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef IFX_CFG_SSW_MODULE_QSPI_SLSO_PORT
+ 203:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_MODULE_QSPI_SLSO_PORT   MODULE_P15
+ 204:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+ 205:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 206:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef IFX_CFG_SSW_MODULE_QSPI_SLSO_PIN
+ 207:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_MODULE_QSPI_SLSO_PIN    (2U)
+ 208:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+ 209:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 210:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef IFX_CFG_SSW_MODULE_QSPI_SLSO_ALTSEL
+ 211:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_MODULE_QSPI_SLSO_ALTSEL (3U)
+ 212:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+ 213:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 214:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef IFX_CFG_SSW_QSPI_SLSO
+ 215:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_QSPI_SLSO               (0)
+ 216:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+ 217:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 218:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef IFX_CFG_SSW_QSPI_MRIS
+ 219:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_QSPI_MRIS               (0x1) // MRST2B;
+ 220:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+ 221:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 222:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_SET_PORT_MTSR(port, pin, altSel) \
+ 223:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     {                                                \
+ 224:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         Ifx_P_PADCFG_DRVCFG drvCfg;                  \
+ 225:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         drvCfg.B.DIR              = 1u;              \
+ 226:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         drvCfg.B.MODE             = altSel;          \
+ 227:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         drvCfg.B.OD               = 0u;              \
+ 228:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         drvCfg.B.PD               = 0u;              \
+ 229:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         drvCfg.B.PL               = 0u;              \
+ 230:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         port.PADCFG[pin].DRVCFG.U = drvCfg.U;        \
+ 231:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     }
+ 232:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 233:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_SET_PORT_MRST(port, pin, altSel) \
+ 234:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     {                                                \
+ 235:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         Ifx_P_PADCFG_DRVCFG drvCfg;                  \
+ 236:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         drvCfg.B.DIR              = 0u;              \
+ 237:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         drvCfg.B.MODE             = altSel;          \
+ 238:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         drvCfg.B.OD               = 0u;              \
+ 239:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         drvCfg.B.PD               = 0u;              \
+ 240:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         drvCfg.B.PL               = 0u;              \
+ 241:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         port.PADCFG[pin].DRVCFG.U = drvCfg.U;        \
+ 242:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     }
+ 243:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 244:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_SET_PORT_SCLK(port, pin, altSel) \
+ 245:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     {                                                \
+ 246:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         Ifx_P_PADCFG_DRVCFG drvCfg;                  \
+ 247:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         drvCfg.B.DIR              = 1u;              \
+ 248:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         drvCfg.B.MODE             = altSel;          \
+ 249:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         drvCfg.B.OD               = 0u;              \
+ 250:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         drvCfg.B.PD               = 0u;              \
+ 251:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         drvCfg.B.PL               = 0u;              \
+ 252:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         port.PADCFG[pin].DRVCFG.U = drvCfg.U;        \
+ 253:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     }
+ 254:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 255:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_SET_PORT_SLSO(port, pin, altSel) \
+ 256:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     {                                                \
+ 257:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         Ifx_P_PADCFG_DRVCFG drvCfg;                  \
+ 258:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         drvCfg.B.DIR              = 1u;              \
+ 259:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         drvCfg.B.MODE             = altSel;          \
+ 260:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         drvCfg.B.OD               = 0u;              \
+ 261:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         drvCfg.B.PD               = 0u;              \
+ 262:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         drvCfg.B.PL               = 0u;              \
+ 263:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         port.PADCFG[pin].DRVCFG.U = drvCfg.U;        \
+ 264:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     }
+ 265:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 266:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /* \brief Macro to select if the user wants to return from main */
+ 267:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef IFX_CFG_SSW_RETURN_FROM_MAIN
+ 268:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_RETURN_FROM_MAIN (0U)
+ 269:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+ 270:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 271:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /* Workaround done as below to Maintain backward compatibility */
+ 272:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifdef IFX_CFG_SSW_RETURN_FROM_MAIN
+ 273:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #if IFX_CFG_SSW_RETURN_FROM_MAIN == 1
+ 274:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /* Do Nothing */
+ 275:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #elif IFX_CFG_SSW_RETURN_FROM_MAIN == 0
+ 276:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #undef IFX_CFG_SSW_RETURN_FROM_MAIN
+ 277:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #else
+ 278:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /* Do Nothing */
+ 279:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+ 280:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+ 281:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 282:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef DEVICE_TC45X
+ 283:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define Ifx_Ssw_disableVirtualization()                                                    \
+ 284:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     Ifx_Ssw_MTCR(CPU_VCON0, (unsigned int)0U);                                             \
+ 285:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     Ifx_Ssw_MTCR(CPU_PSW, (unsigned int)0xB00U);                                           \
+ 286:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     Ifx_Ssw_RFH();
+ 287:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif /* #ifndef DEVICE_TC45X */
+ 288:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 	
+ 289:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 290:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #ifndef IFX_CFG_SSW_WDG_RELOAD_VALUE
+ 291:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define IFX_CFG_SSW_WDG_RELOAD_VALUE (0xFFC2u)  /*10ms~(62*163.84us), WdgStep=163.84us, Fspb=100MHz
+ 292:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+ 293:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 294:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #define  IFX_CFG_SSW_WDG_INITIAL_VALUE (0xFFFCu)
+ 295:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 296:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /******************************************************************************/
+ 297:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /*--------------------------------Enumerations--------------------------------*/
+ 298:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /******************************************************************************/
+ 299:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 300:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #if (IFX_PROT_ENABLED == 1U)
+ 301:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 	
+ 302:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief PROT state definition
+ 303:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  */
+ 304:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** typedef enum
+ 305:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** {
+ 306:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     IfxSswProt_State_init = 0,
+ 307:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     IfxSswProt_State_config,
+ 308:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     IfxSswProt_State_configSec,
+ 309:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     IfxSswProt_State_checkSec,
+ 310:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     IfxSswProt_State_run,
+ 311:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     IfxSswProt_State_runSec,
+ 312:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     IfxSswProt_State_runLock,
+ 313:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     IfxSswProt_State_runLockAlias
+ 314:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** } IfxSswProt_State;
+ 315:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 316:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief PROT status definitions
+ 317:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  */
+ 318:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** typedef enum
+ 319:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** {
+ 320:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     IfxSswProt_Status_success = 0,
+ 321:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     IfxSswProt_Status_inValidStateTransition,
+ 322:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     IfxSswProt_Status_nonInitState,
+ 323:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     IfxSswProt_Status_initState,
+ 324:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     IfxSswProt_Status_notOwner
+ 325:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** } IfxSswProt_Status;
+ 326:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 327:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+ 328:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 329:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /******************************************************************************/
+ 330:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /*-------------------------Infrastructure Functions---------------------------*/
+ 331:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /******************************************************************************/
+ 332:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 333:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief Fetch current password of CPU Watchdog module.
+ 334:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  *
+ 335:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * This API will fetch current Watchdog password for CPU WDT Hardware module.
+ 336:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * password is needed to be passed with most of the WDT APIs.
+ 337:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \param watchdog pointer to the watchdog register map of CPU WDT hardware instance
+ 338:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \return password Existing (Application specific) password for the Watchdog module.
+ 339:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  */
+ 340:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** extern unsigned short Ifx_Ssw_getCpuWatchdogPassword(Ifx_WTU_WDTCPU *watchdog);
+ 341:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 342:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief Fetch current password of Safety Watchdog module.
+ 343:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  *
+ 344:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * This API will fetch current Watchdog password for Safety WDT Hardware module.
+ 345:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * password is needed to be passed with most of the WDT APIs.
+ 346:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \return password Existing (Application specific) password for the Watchdog module.
+ 347:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  */
+ 348:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** extern unsigned short Ifx_Ssw_getSafetyWatchdogPassword(void);
+ 349:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 350:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief Fetch current password of Security(CSRM) Watchdog module.
+ 351:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  *
+ 352:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * This API will fetch current Watchdog password for Security WDT Hardware module.
+ 353:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * password is needed to be passed with most of the WDT APIs.
+ 354:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \return password Existing (Application specific) password for the Watchdog module.
+ 355:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  */
+ 356:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** extern unsigned short Ifx_Ssw_getSecurityWatchdogPassword(void);
+ 357:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 358:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief Disable CPU Watchdog functionality.
+ 359:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  *
+ 360:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * This API will disable Watchdog functionality of CPU WDT Hardware module. The Watchdog timers wil
+ 361:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * after this API call.
+ 362:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \param watchdog pointer to the watchdog register map of CPU WDT hardware instance
+ 363:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \param password Existing (Application specific) password for the Watchdog module.
+ 364:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \return None
+ 365:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  */
+ 366:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** extern void Ifx_Ssw_disableCpuWatchdog(Ifx_WTU_WDTCPU *watchdog, unsigned int password);
+ 367:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 368:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief API to enable CPU Watchdog functionality.
+ 369:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  *
+ 370:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  *   This API will enable Watchdog functionality of CPU WDT Hardware module. The Watchdog timers ne
+ 371:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  *   periodically after this API call.
+ 372:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \param watchdog pointer to the watchdog register map of CPU WDT hardware instance
+ 373:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \param password Existing (Application specific) password for the Watchdog module.
+ 374:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \return None
+ 375:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  */
+ 376:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** extern void Ifx_Ssw_enableCpuWatchdog(Ifx_WTU_WDTCPU *watchdog, unsigned int password);
+ 377:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 378:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief Disable System Watchdog functionality.
+ 379:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  *
+ 380:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * This API will disable Watchdog functionality of System WDT Hardware module. The Watchdog timers 
+ 381:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * after this API call.
+ 382:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \param password Existing (Application specific) password for the Watchdog module.
+ 383:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \return None
+ 384:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  */
+ 385:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** extern void Ifx_Ssw_disableSystemWatchdog(unsigned int password);
+ 386:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 387:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief Enable System Watchdog functionality.
+ 388:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  *
+ 389:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * This API will enable Watchdog functionality of System WDT Hardware module. The Watchdog timers n
+ 390:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * periodically after this API call.
+ 391:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \param password Existing (Application specific) password for the Watchdog module.
+ 392:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \return None
+ 393:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  */
+ 394:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** extern void Ifx_Ssw_enableSystemWatchdog(unsigned int password);
+ 395:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 396:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief WTU API to change CPU Watchdog timer reload value.
+ 397:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  *
+ 398:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * This API will change Watchdog timer reload value to new one for CPU WDT Hardware module.
+ 399:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * The Watchdog timers will be reloaded with this value after every serice of Watchdog.
+ 400:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * User need to have the password stored locally in the caller function.
+ 401:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \param watchdog pointer to the watchdog register map of CPU WDT hardware instance
+ 402:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \param password Existing (Application specific) password for the Watchdog module.
+ 403:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \param reload Reload value for the timer.
+ 404:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \return None
+ 405:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  */
+ 406:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** extern void Ifx_Ssw_changeCpuWatchdogReload(Ifx_WTU_WDTCPU *watchdog, unsigned int password, unsign
+ 407:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 408:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief WTU API to change System Watchdog timer reload value.
+ 409:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  *
+ 410:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * This API will change Watchdog timer reload value to new one for System WDT Hardware module.
+ 411:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * The Watchdog timers will be reloaded with this value after every serice of Watchdog.
+ 412:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * User need to have the password stored locally in the caller function.
+ 413:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \param password Existing (Application specific) password for the Watchdog module.
+ 414:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \param reload Reload value for the timer.
+ 415:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \return None
+ 416:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  */
+ 417:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** extern void Ifx_Ssw_changeSystemWatchdogReload(unsigned int password, unsigned int reload);
+ 418:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 419:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief Disable Security(CSRM) Watchdog functionality.
+ 420:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  *
+ 421:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * This API will disable Watchdog functionality of Security WDT Hardware module. The Watchdog timer
+ 422:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * after this API call.
+ 423:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \param password Existing (Application specific) password for the Watchdog module.
+ 424:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \return None
+ 425:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  */
+ 426:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** void Ifx_Ssw_disableSecurityWatchdog(unsigned int password);
+ 427:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 428:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief Enable Security(CSRM) Watchdog functionality.
+ 429:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  *
+ 430:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * This API will enable Watchdog functionality of Security WDT Hardware module. The Watchdog timers
+ 431:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * periodically after this API call.
+ 432:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \param password Existing (Application specific) password for the Watchdog module.
+ 433:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \return None
+ 434:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  */
+ 435:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** void Ifx_Ssw_enableSecurityWatchdog(unsigned int password);
+ 436:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 437:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief Set the program counter for the CPU specified and start the CPU
+ 438:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \param cpu Pointer to the CPU HW module (register memory map)
+ 439:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \param programCounter Program counter value to start the CPU
+ 440:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  */
+ 441:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** extern void Ifx_Ssw_startCore(Ifx_CPU *cpu, unsigned int programCounter);
+ 442:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 443:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief Set CPU0 to idle state */
+ 444:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** extern void Ifx_Ssw_setCpu0Idle(void);
+ 445:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 446:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief Initialise the C runtime environment */
+ 447:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** extern void Ifx_Ssw_doCppInit(void);
+ 448:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 449:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief De-initialize the C/Cpp runtime environment */
+ 450:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** extern void Ifx_Ssw_doCppExit(int status);
+ 451:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 452:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief Returns the system timer frequency.
+ 453:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \return the system timer frequency in Hz.
+ 454:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  */
+ 455:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** extern unsigned int Ifx_Ssw_getStmFrequency(void);
+ 456:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 457:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief API to service CPU Watchdog functionality.
+ 458:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  *
+ 459:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  *   This API will service Watchdog functionality corresponding to CPU WDT Hardware module.
+ 460:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  *   User need to use this API call periodically. This API results in reloading of the Watchdog Tim
+ 461:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \param watchdog pointer to the watchdog register map of CPU WDT hardware instance.
+ 462:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \param password Existing (Application specific) password for the Watchdog module.
+ 463:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \return None
+ 464:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  */
+ 465:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** extern void Ifx_Ssw_serviceCpuWatchdog(Ifx_WTU_WDTCPU *watchdog, unsigned int password);
+ 466:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 467:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief API to service System Watchdog functionality.
+ 468:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  *
+ 469:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * This API will service Watchdog functionality corresponding to System WDT Hardware module.
+ 470:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * User need to use this API call periodically. This API results in reloading of the Watchdog Timer
+ 471:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \param password Existing (Application specific) password for the Watchdog module.
+ 472:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \return None
+ 473:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  */
+ 474:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** extern void Ifx_Ssw_serviceSystemWatchdog(unsigned int password);
+ 475:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 476:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief API to provide a delay
+ 477:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  *
+ 478:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * This API will provide the 100us delay required before starting another Core
+ 479:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \return None
+ 480:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  */
+ 481:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** extern void Ifx_Ssw_delay(void);
+ 482:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 483:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief API to set core voltage to 1V.
+ 484:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \return None
+ 485:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  */
+ 486:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** extern void Ifx_Ssw_PmicSetVcore1v(void);
+ 487:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 488:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief API to set core voltage to 0.95V.
+ 489:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \return None
+ 490:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  */
+ 491:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** extern void Ifx_Ssw_PmicSetVcore0_95v(void);
+ 492:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 493:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief API to clear SRAM.
+ 494:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \param vmt Pointer to the VMT module sfr.
+ 495:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \param ssh Instance number(MCi).
+ 496:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \return None
+ 497:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  */
+ 498:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** extern void IfxSsw_clearSram(Ifx_VMT* vmt, unsigned int ssh);
+ 499:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 500:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief Hook for application specific hardware extensions.
+ 501:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \return None
+ 502:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  */
+ 503:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** extern void hardware_init_hook(void);
+ 504:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 505:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief Hook for application specific software extensions.
+ 506:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \return None
+ 507:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  */
+ 508:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** extern void software_init_hook(void);
+ 509:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 510:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** IFX_SSW_INLINE unsigned short Ifx_Ssw_getCpuWatchdogPasswordInline(Ifx_WTU_WDTCPU *watchdog)
+ 511:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** {
+ 512:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     unsigned short password = 0;
+ 513:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     /* Read Password from CTRLA register
+ 514:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****      * When read bottom six bit of password are inverted so we have
+ 515:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****      * to toggle them before returning password */
+ 516:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     password  = watchdog->CTRLA.B.PW;
+ 517:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     password ^= IFX_SSW_WDT_PASSWORD_INVERT_MSK;
+ 518:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     return password;
+ 519:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** }
+ 520:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 521:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 522:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** IFX_SSW_INLINE unsigned short Ifx_Ssw_getSystemWatchdogPasswordInline(void)
+ 523:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** {
+ 524:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     unsigned short  password = 0;
+ 525:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     Ifx_WTU_WDTSYS *watchdog = &MODULE_WTU.WDTSYS;
+ 526:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 527:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     /* Read Password from Safety WDT CTRLA register
+ 528:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****      * When read bottom six bit of password are inverted so we have
+ 529:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****      * to toggle them before returning password */
+ 530:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     password  = watchdog->CTRLA.B.PW;
+ 531:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     password ^= IFX_SSW_WDT_PASSWORD_INVERT_MSK;
+ 532:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     return password;
+ 533:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** }
+ 534:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 535:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 536:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** IFX_SSW_INLINE unsigned short Ifx_Ssw_getSecurityWatchdogPasswordInline(void)
+ 537:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** {
+ 538:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     unsigned short password = 0;
+ 539:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     Ifx_WTU_WDTSEC *watchdog = &MODULE_WTU.WDTSEC;
+ 540:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 541:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     /* Read Password from Safety WDT CTRLA register
+ 542:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****      * !!! NOTE: !!! when read bottom six bit of password are inverted so we have
+ 543:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****      * to toggle them before returning password */
+ 544:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     password  = watchdog->CTRLA.B.PW;
+ 545:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     password ^= IFX_SSW_WDT_PASSWORD_INVERT_MSK;
+ 546:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 547:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     return password;
+ 548:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** }
+ 549:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 550:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 551:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** IFX_SSW_INLINE unsigned char Ifx_Ssw_isApplicationReset(void)
+ 552:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** {
+ 553:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     unsigned char status = 0U;
+ 554:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 555:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     status = SMM_RSTSTATH.B.APPRST;
+ 556:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 557:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     return status;
+ 558:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** }
+ 559:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 560:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 561:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief Set the Key-off marker used by STL in shutdown phase.
+ 562:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \return None
+ 563:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  */
+ 564:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** IFX_SSW_INLINE void Ifx_Ssw_setKeyoffMarker(void)
+ 565:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** {
+ 566:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 	PMS_CLDPORSTUSRINFO.B.DATA = 0x1u;
+ 567:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** }
+ 568:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 569:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 570:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief Clear the Key-off marker used by STL in shutdown phase.
+ 571:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \return None
+ 572:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  */
+ 573:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** IFX_SSW_INLINE void Ifx_Ssw_clearKeyoffMarker(void)
+ 574:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** {
+ 575:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 	PMS_CLDPORSTUSRINFO.B.DATA = 0x0u;
+ 576:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** }
+ 577:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 578:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 579:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief Check whether Key-off marker is set
+ 580:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  * \return None
+ 581:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****  */
+ 582:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** IFX_SSW_INLINE unsigned char Ifx_Ssw_isKeyoffMarkerSet(void)
+ 583:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** {
+ 584:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     unsigned char status = 0u;
+ 585:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 586:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     status = PMS_CLDPORSTUSRINFO.B.DATA;
+ 587:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 588:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     return status;
+ 589:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** }
+ 590:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 591:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #if (IFX_PROT_ENABLED == 1U)
+ 592:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief Get the state for the corresponding PROT. 
+ 593:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** */
+ 594:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** IFX_SSW_INLINE IfxSswProt_State IfxSswProt_getState(volatile Ifx_PROT_PROT *protReg)
+ 595:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** {
+ 596:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     return (IfxSswProt_State)(protReg->B.STATE);
+ 597:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** }
+ 598:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 599:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** /** \brief Configure the state for the corresponding PROT. 
+ 600:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** */
+ 601:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** IFX_SSW_INLINE IfxSswProt_Status IfxSswProt_setState(volatile Ifx_PROT_PROT *protReg, IfxSswProt_St
+ 602:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** {
+ 603:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     IfxSswProt_Status status       = IfxSswProt_Status_success;
+ 604:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     IfxSswProt_State  currentState = IfxSswProt_getState(protReg);
+ 605:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     Ifx_PROT_PROT    prot;
+ 606:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     prot.U = protReg->U;
+ 607:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 608:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     /* TODO Owner check to be implemented */
+ 609:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     switch (currentState)
+ 610:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     {
+ 611:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     case IfxSswProt_State_init:
+ 612:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 613:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         if (((state == IfxSswProt_State_run) || (state == IfxSswProt_State_runLock)) && !(protReg->
+ 614:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         {
+ 615:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****             status = IfxSswProt_Status_initState;
+ 616:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         }
+ 617:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         else if ((state == IfxSswProt_State_config) || (state == IfxSswProt_State_configSec) || (st
+ 618:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         {
+ 619:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****             status = IfxSswProt_Status_inValidStateTransition;
+ 620:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         }
+ 621:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 622:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         break;
+ 623:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     case IfxSswProt_State_config:
+ 624:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 625:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         if (state != IfxSswProt_State_run)
+ 626:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         {
+ 627:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****             status = IfxSswProt_Status_inValidStateTransition;
+ 628:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         }
+ 629:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 630:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         break;
+ 631:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     case IfxSswProt_State_configSec:
+ 632:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 633:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         if (state != IfxSswProt_State_checkSec)
+ 634:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         {
+ 635:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****             status = IfxSswProt_Status_inValidStateTransition;
+ 636:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         }
+ 637:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 638:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         break;
+ 639:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     case IfxSswProt_State_checkSec:
+ 640:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         status = IfxSswProt_Status_inValidStateTransition;
+ 641:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         break;
+ 642:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     case IfxSswProt_State_run:
+ 643:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 644:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         if ((state != IfxSswProt_State_config) && (state != IfxSswProt_State_runLock))
+ 645:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         {
+ 646:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****             status = IfxSswProt_Status_inValidStateTransition;
+ 647:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         }
+ 648:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 649:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         break;
+ 650:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     case IfxSswProt_State_runSec:
+ 651:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 652:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         if ((state != IfxSswProt_State_configSec) && (state != IfxSswProt_State_runLock))
+ 653:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         {
+ 654:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****             status = IfxSswProt_Status_inValidStateTransition;
+ 655:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         }
+ 656:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 657:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         break;
+ 658:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     case IfxSswProt_State_runLock:
+ 659:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         status = IfxSswProt_Status_inValidStateTransition;
+ 660:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         break;
+ 661:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     case IfxSswProt_State_runLockAlias:
+ 662:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         status = IfxSswProt_Status_inValidStateTransition;
+ 663:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         break;
+ 664:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     default:
+ 665:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         status = IfxSswProt_Status_inValidStateTransition;
+ 666:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         break;
+ 667:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     }
+ 668:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 669:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     if (status != IfxSswProt_Status_inValidStateTransition)
+ 670:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     {
+ 671:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         prot.B.SWEN  = 1U;
+ 672:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         prot.B.STATE = state;
+ 673:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         protReg->U   = prot.U;
+ 674:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 		while(protReg->B.STATE != state);
+ 675:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         status       = IfxSswProt_Status_success;
+ 676:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     }
+ 677:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 678:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     return status;
+ 679:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** }
+ 680:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** #endif
+ 681:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 682:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** IFX_SSW_INLINE void Ifx_Ssw_initCSA(unsigned int *csaBegin, unsigned int *csaEnd)
+ 683:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** {
+ 684:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     unsigned int  k;
+ 162              	 .loc 2 684 5
+ 685:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     unsigned int  nxt_cxi_val = 0U;
+ 163              	 .loc 2 685 5
+ 686:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     unsigned int *prvCsa      = 0U;
+ 164              	 .loc 2 686 5
+ 687:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     unsigned int *nxtCsa      = csaBegin;
+ 165              	 .loc 2 687 5
+ 688:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     unsigned int  numOfCsa    = (((unsigned int)csaEnd - (unsigned int)csaBegin) / 64U);
+ 166              	 .loc 2 688 5
+ 167              	 .loc 2 688 35 is_stmt 0
+ 168 0086 91000020 	 movh.a %a2,hi:__CSA4_END
+ 169 008a D9220000 	 lea %a2,[%a2]lo:__CSA4_END
+ 170              	 .loc 2 688 56
+ 171 008e 8026     	 mov.d %d6,%a2
+ 172 0090 A286     	 sub %d6,%d8
+ 173              	 .loc 2 688 19
+ 174 0092 06A6     	 sh %d6,-6
+ 175              	.LVL2:
+ 689:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 690:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     for (k = 0U; k < numOfCsa; k++)
+ 176              	 .loc 2 690 5 is_stmt 1
+ 686:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     unsigned int *nxtCsa      = csaBegin;
+ 177              	 .loc 2 686 19 is_stmt 0
+ 178 0094 A002     	 mov.a %a2,0
+ 179              	 .loc 2 690 12
+ 180 0096 8202     	 mov %d2,0
+ 181              	 .loc 2 690 5
+ 182 0098 1D000000 	 j .L4
+ 183              	.LVL3:
+ 184              	.L12:
+ 691:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     {
+ 692:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         nxt_cxi_val = ((unsigned int)((unsigned int)nxtCsa & ((unsigned int)0XFU << 28U)) >> 12U) |
+ 693:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****                       ((unsigned int)((unsigned int)nxtCsa & ((unsigned int)0XFFFFU << 6U)) >> 6U);
+ 694:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 695:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         if (k == 0U)
+ 696:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         {
+ 697:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****             Ifx_Ssw_MTCR(CPU_FCX, nxt_cxi_val);   /* store the new pcxi value to LCX */
+ 185              	 .loc 2 697 13 is_stmt 1
+ 186              	
+ 187              	 
+ 188 009c CD84E30F 	 mtcr 65080,%d4
+ 189 00a0 0D00C004 	 isync
+ 190              	 
+ 191              	
+ 192              	.L6:
+ 698:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         }
+ 699:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         else
+ 700:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         {
+ 701:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****             *prvCsa = nxt_cxi_val;
+ 702:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         }
+ 703:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 704:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         if (k == (numOfCsa - 3U))
+ 193              	 .loc 2 704 9
+ 194              	 .loc 2 704 28 is_stmt 0
+ 195 00a4 1BD6FF5F 	 addi %d5,%d6,-3
+ 196              	 .loc 2 704 12
+ 197 00a8 5F520000 	 jeq %d2,%d5,.L10
+ 198              	.L7:
+ 705:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         {
+ 706:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****             Ifx_Ssw_MTCR(CPU_LCX, nxt_cxi_val);   /* Last but 2 context save area is pointed in LCX
+ 707:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         }
+ 708:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 709:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         prvCsa  = (unsigned int *)nxtCsa;
+ 199              	 .loc 2 709 9 is_stmt 1
+ 200              	.LVL4:
+ 710:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         nxtCsa += IFX_SSW_CSA_SIZE; /* next CSA */
+ 201              	 .loc 2 710 9
+ 690:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     {
+ 202              	 .loc 2 690 33
+ 203 00ac C212     	 add %d2,1
+ 204              	.LVL5:
+ 709:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         nxtCsa += IFX_SSW_CSA_SIZE; /* next CSA */
+ 205              	 .loc 2 709 17 is_stmt 0
+ 206 00ae 6082     	 mov.a %a2,%d8
+ 207              	 .loc 2 710 16
+ 208 00b0 1B080480 	 addi %d8,%d8,64
+ 209              	.LVL6:
+ 210              	.L4:
+ 690:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     {
+ 211              	 .loc 2 690 20 is_stmt 1
+ 212 00b4 7F620080 	 jge.u %d2,%d6,.L11
+ 692:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****                       ((unsigned int)((unsigned int)nxtCsa & ((unsigned int)0XFFFFU << 6U)) >> 6U);
+ 213              	 .loc 2 692 9
+ 692:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****                       ((unsigned int)((unsigned int)nxtCsa & ((unsigned int)0XFFFFU << 6U)) >> 6U);
+ 214              	 .loc 2 692 91 is_stmt 0
+ 215 00b8 8F481F40 	 sh %d4,%d8,-12
+ 216 00bc 7BF00050 	 movh %d5,15
+ 217 00c0 2645     	 and %d5,%d4
+ 693:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 218              	 .loc 2 693 93
+ 219 00c2 37087043 	 extr.u %d4,%d8,6,16
+ 692:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****                       ((unsigned int)((unsigned int)nxtCsa & ((unsigned int)0XFFFFU << 6U)) >> 6U);
+ 220              	 .loc 2 692 21
+ 221 00c6 A654     	 or %d4,%d5
+ 222              	.LVL7:
+ 695:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         {
+ 223              	 .loc 2 695 9 is_stmt 1
+ 695:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         {
+ 224              	 .loc 2 695 12 is_stmt 0
+ 225 00c8 DF020000 	 jz %d2,.L12
+ 701:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         }
+ 226              	 .loc 2 701 13 is_stmt 1
+ 701:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         }
+ 227              	 .loc 2 701 21 is_stmt 0
+ 228 00cc 7424     	 st.w [%a2]0,%d4
+ 229 00ce 1D000000 	 j .L6
+ 230              	.L10:
+ 706:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****         }
+ 231              	 .loc 2 706 13 is_stmt 1
+ 232              	
+ 233              	 
+ 234 00d2 CDC4E30F 	 mtcr 65084,%d4
+ 235 00d6 0D00C004 	 isync
+ 236              	 
+ 237              	
+ 238 00da 1D000000 	 j .L7
+ 239              	.LVL8:
+ 240              	.L11:
+ 711:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     }
+ 712:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 713:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     *prvCsa = 0U;                   /* Store null pointer in last CSA (= very first time!) */
+ 241              	 .loc 2 713 5
+ 242              	 .loc 2 713 13 is_stmt 0
+ 243 00de 8202     	 mov %d2,0
+ 244              	.LVL9:
+ 245 00e0 7422     	 st.w [%a2]0,%d2
+ 714:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h **** 
+ 715:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Infra.h ****     Ifx_Ssw_DSYNC();
+ 246              	 .loc 2 715 5 is_stmt 1
+ 247              	.LBB18:
+ 248              	.LBB19:
+ 249              	 .file 3 "../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h"
+   1:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** /**
+   2:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****  * \file Ifx_Ssw_CompilersGnuc.h
+   3:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****  * \brief Startup Software for GNU compiler options
+   4:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****  *
+   5:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****  *
+   8:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****  *                                 IMPORTANT NOTICE
+   9:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****  *
+  10:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  11:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  12:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****  * this file except in compliance with IFASLL.
+  13:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****  *
+  14:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  15:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****  * Unless required by applicable law or agreed to in writing, software distributed
+  16:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  17:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  18:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****  * whether express, implied, statutory or otherwise, including but not limited to
+  19:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  20:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****  * defects in the licensed items, or non-infringement of third parties'
+  21:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****  * intellectual property rights. See the full license text for the specific
+  22:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****  * language governing permissions and limitations under IFASLL.
+  23:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****  *
+  24:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****  */
+  25:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+  26:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #ifndef IFX_SSW_COMPILERSGCC_H
+  27:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #define IFX_SSW_COMPILERSGCC_H 1
+  28:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+  29:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** /******************************************************************************/
+  30:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** /*----------------------------------Includes----------------------------------*/
+  31:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** /******************************************************************************/
+  32:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+  33:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #include "machine/intrinsics.h"
+  34:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+  35:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** /******************************************************************************/
+  36:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** /*-----------------------------------Macros-----------------------------------*/
+  37:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** /******************************************************************************/
+  38:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+  39:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** /*Linker definitions which are specific to Gnuc */
+  40:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** /* IFX_CFG_USE_COMPILER_DEFAULT_LINKER shall be defined in Ifx_Cfg.h
+  41:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****  * to use the default compiler linker varaibles and startup */
+  42:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #ifndef IFX_CFG_USE_COMPILER_DEFAULT_LINKER
+  43:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+  44:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** /*Start: Common definitions ********************************************** */
+  45:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #define IFX_SSW_COMMON_LINKER_SYMBOLS()                                                            
+  46:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     extern unsigned int __A0_MEM[];                             /**< center of A0 addressable area 
+  47:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     extern unsigned int __A1_MEM[];                             /**< center of A1 addressable area 
+  48:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     extern unsigned int __A8_MEM[];                             /**< center of A8 addressable area 
+  49:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     extern unsigned int __A9_MEM[];                             /**< center of A9 addressable area 
+  50:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     extern unsigned int __START0[];                              /**< Pointer to the startup code *
+  51:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     extern unsigned int __START1[];                              /**< Pointer to the startup code *
+  52:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     extern unsigned int __START2[];                              /**< Pointer to the startup code *
+  53:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     extern unsigned int __START3[];                              /**< Pointer to the startup code *
+  54:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     extern unsigned int __START4[];                              /**< Pointer to the startup code *
+  55:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     extern unsigned int __START5[];                              /**< Pointer to the startup code *
+  56:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 	extern unsigned int __ENABLE_INDIVIDUAL_C_INIT_CPU0;        /**< Enable Individual C init CPU0 */ 
+  57:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 	extern unsigned int __ENABLE_INDIVIDUAL_C_INIT_CPU1;        /**< Enable Individual C init CPU1 */ 
+  58:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 	extern unsigned int __ENABLE_INDIVIDUAL_C_INIT_CPU2;        /**< Enable Individual C init CPU2 */ 
+  59:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 	extern unsigned int __ENABLE_INDIVIDUAL_C_INIT_CPU3;        /**< Enable Individual C init CPU3 */ 
+  60:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 	extern unsigned int __ENABLE_INDIVIDUAL_C_INIT_CPU4;        /**< Enable Individual C init CPU4 */ 
+  61:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 	extern unsigned int __ENABLE_INDIVIDUAL_C_INIT_CPU5         /**< Enable Individual C init CPU5 */
+  62:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+  63:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** /*End: Common definitions ************************************************ */
+  64:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+  65:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** /*Start: Core 0 definitions ********************************************** */
+  66:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+  67:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** /*C extern defintions */
+  68:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #define IFX_SSW_CORE_LINKER_SYMBOLS(cpu)                                        \
+  69:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     extern unsigned int __USTACK##cpu[];      /**< user stack end */            \
+  70:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     extern unsigned int __ISTACK##cpu[];      /**< interrupt stack end */       \
+  71:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     extern unsigned int __INTTAB_CPU##cpu[];  /**< Interrupt vector table */    \
+  72:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     extern unsigned int __TRAPTAB_CPU##cpu[]; /**< trap table */                \
+  73:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     extern unsigned int __CSA##cpu[];         /**< context save area 1 begin */ \
+  74:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     extern unsigned int __CSA##cpu##_END[];   /**< context save area 1 end */
+  75:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+  76:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #define __USTACK(cpu)      __USTACK##cpu
+  77:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #define __ISTACK(cpu)      __ISTACK##cpu
+  78:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #define __INTTAB_CPU(cpu)  __INTTAB_CPU##cpu
+  79:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #define __TRAPTAB_CPU(cpu) __TRAPTAB_CPU##cpu
+  80:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #define __CSA(cpu)         __CSA##cpu
+  81:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #define __CSA_END(cpu)     __CSA##cpu##_END
+  82:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #define __START(cpu)       __START##cpu
+  83:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+  84:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** /*Wrapper macros for the tool specific definitions */
+  85:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #if defined(IFX_USE_SW_MANAGED_INT)
+  86:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #define __INTTAB(cpu)      ((unsigned int)__INTTAB_CPU##cpu | (unsigned int)0x1FE0)
+  87:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #else
+  88:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #define __INTTAB(cpu)      __INTTAB_CPU##cpu
+  89:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #endif /*defined(IFX_USE_SW_MANAGED_INT) */
+  90:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+  91:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #define __TRAPTAB(cpu)     __TRAPTAB_CPU##cpu
+  92:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+  93:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #define __SDATA1(cpu)      __A0_MEM
+  94:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #define __SDATA2(cpu)      __A1_MEM
+  95:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #define __SDATA3(cpu)      __A8_MEM
+  96:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #define __SDATA4(cpu)      __A9_MEM
+  97:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+  98:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #endif /*#ifndef IFX_CFG_USE_COMPILER_DEFAULT_LINKER*/
+  99:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+ 100:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #define IFX_SSW_INLINE   static inline __attribute__ ((always_inline))
+ 101:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+ 102:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #define IFX_SSW_NULL_PTR ((void *)0x0U)
+ 103:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+ 104:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #define IFX_SSW_WEAK     __attribute__ ((weak))
+ 105:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #define IFX_SSW_NOINLINE __attribute__((noinline))
+ 106:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** /******************************************************************************/
+ 107:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** /*--------------------------------   Typedefs  -------------------------------*/
+ 108:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** /******************************************************************************/
+ 109:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** typedef volatile union
+ 110:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** {
+ 111:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     unsigned char      *ucPtr;
+ 112:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     unsigned short     *usPtr;
+ 113:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     unsigned int       *uiPtr;
+ 114:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     unsigned long long *ullPtr;
+ 115:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** } Ifx_Ssw_CTablePtr;
+ 116:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+ 117:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** /******************************************************************************/
+ 118:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** /*----------------------------   GNU Intrinsics  -----------------------------*/
+ 119:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** /******************************************************************************/
+ 120:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #define STRINGIFY(x)    #x
+ 121:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+ 122:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** /* Assembly function to configure the Stack pointer and jump to core start */
+ 123:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #define Ifx_Ssw_Start(stackPtr, funcPtr) __Ifx_Ssw_Start(stackPtr, funcPtr)
+ 124:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+ 125:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #define __Ifx_Ssw_Start(stackPtr, funcPtr) \
+ 126:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     __asm("movh.a %a10, hi:("STRINGIFY(stackPtr)")\n" \
+ 127:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****           "\tlea %a10, [%a10]lo:("STRINGIFY(stackPtr)")\n " \
+ 128:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****           "\tdsync \n" \
+ 129:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 		  "\tmovh.a %a15,  hi:("STRINGIFY(funcPtr)")\n" \
+ 130:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 		  "\tlea %a15, [%a15]lo:("STRINGIFY(funcPtr)")\n" \
+ 131:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 		  "\tji %a15");
+ 132:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+ 133:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #define Ifx_Ssw_Barrier() __asm__ volatile("":::"memory");
+ 134:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+ 135:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #if (__TRICORE_CORE__ == 0x162)
+ 136:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #define Ifx_Ssw_HVCALL(hvcno) \
+ 137:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** switch (hvcno) \
+ 138:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** { \
+ 139:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** case 1: \
+ 140:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** {__asm volatile (".word 0x004010AD");}\
+ 141:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** break; \
+ 142:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** case 2: \
+ 143:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** {__asm volatile (".word 0x004020AD");}\
+ 144:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** break; \
+ 145:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** case 3: \
+ 146:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** {__asm volatile (".word 0x004030AD");}\
+ 147:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** break; \
+ 148:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** case 4: \
+ 149:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** {__asm volatile (".word 0x004040AD");}\
+ 150:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** break; \
+ 151:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** case 5: \
+ 152:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** {__asm volatile (".word 0x004050AD");}\
+ 153:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** break; \
+ 154:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** case 6: \
+ 155:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** {__asm volatile (".word 0x004060AD");}\
+ 156:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** break; \
+ 157:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** case 7: \
+ 158:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** {__asm volatile (".word 0x004070AD");}\
+ 159:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** break; \
+ 160:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** }
+ 161:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #define Ifx_Ssw_RFH() \
+ 162:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** __asm volatile (".word 0x05C0000D");
+ 163:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #else
+ 164:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #define Ifx_Ssw_HVCALL(hvcno) __asm__ volatile ("hvcall "STRINGIFY(hvcno) : : : "memory")
+ 165:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+ 166:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #define Ifx_Ssw_RFH() __asm__ volatile ("rfh "STRINGIFY() : : : "memory")
+ 167:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #endif
+ 168:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+ 169:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #define Ifx_Ssw_MTCR(regaddr,val) __asm__ volatile ("mtcr %0,%1\n\tisync"::"i"(regaddr),"d"(val):"m
+ 170:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+ 171:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #define Ifx_Ssw_MFCR(regaddr)  \
+ 172:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****  ({ signed int res; __asm__ volatile ("mfcr %0,%1": "=d" (res) :"i"(regaddr): "memory"); res; })
+ 173:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+ 174:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** IFX_SSW_INLINE void Ifx_Ssw_debug(void)
+ 175:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** {
+ 176:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     __asm__ volatile ("debug" : : : "memory");
+ 177:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** }
+ 178:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+ 179:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** IFX_SSW_INLINE void Ifx_Ssw_NOP(void)
+ 180:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** {
+ 181:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     __asm__ volatile ("nop" : : : "memory");
+ 182:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** }
+ 183:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+ 184:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+ 185:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** IFX_SSW_INLINE void Ifx_Ssw_DSYNC(void)
+ 186:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** {
+ 187:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     __asm__ volatile ("dsync" : : : "memory");
+ 250              	 .loc 3 187 5
+ 251              	
+ 252              	 
+ 253 00e2 0D008004 	 dsync
+ 254              	 
+ 255              	.LVL10:
+ 256              	
+ 257              	.LBE19:
+ 258              	.LBE18:
+ 259              	.LBE17:
+ 260              	.LBE16:
+ 151:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     Ifx_Ssw_setAddressReg(a1, __SDATA2(4));
+ 261              	 .loc 1 151 5
+ 262              	
+ 263              	 
+ 264 00e6 91000000 	 movh.a %a0,hi:(__A0_MEM)
+ 265 00ea D9000000 	 lea %a0,[%a0]lo:(__A0_MEM)
+ 266              	 
+ 151:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     Ifx_Ssw_setAddressReg(a1, __SDATA2(4));
+ 267              	 .loc 1 151 43
+ 152:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     Ifx_Ssw_setAddressReg(a8, __SDATA3(4));
+ 268              	 .loc 1 152 5
+ 269              	 
+ 270 00ee 91000010 	 movh.a %a1,hi:(__A1_MEM)
+ 271 00f2 D9110000 	 lea %a1,[%a1]lo:(__A1_MEM)
+ 272              	 
+ 152:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     Ifx_Ssw_setAddressReg(a8, __SDATA3(4));
+ 273              	 .loc 1 152 43
+ 153:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     Ifx_Ssw_setAddressReg(a9, __SDATA4(4));
+ 274              	 .loc 1 153 5
+ 275              	 
+ 276 00f6 91000080 	 movh.a %a8,hi:(__A8_MEM)
+ 277 00fa D9880000 	 lea %a8,[%a8]lo:(__A8_MEM)
+ 278              	 
+ 153:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     Ifx_Ssw_setAddressReg(a9, __SDATA4(4));
+ 279              	 .loc 1 153 43
+ 154:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+ 280              	 .loc 1 154 5
+ 281              	 
+ 282 00fe 91000090 	 movh.a %a9,hi:(__A9_MEM)
+ 283 0102 D9990000 	 lea %a9,[%a9]lo:(__A9_MEM)
+ 284              	 
+ 154:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+ 285              	 .loc 1 154 43
+ 157:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     if (tempVar != 0U)
+ 286              	 .loc 1 157 5
+ 157:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     if (tempVar != 0U)
+ 287              	 .loc 1 157 38 is_stmt 0
+ 288              	
+ 289 0106 91000020 	 movh.a %a2,hi:__ENABLE_INDIVIDUAL_C_INIT_CPU4
+ 290 010a D9220000 	 lea %a2,[%a2]lo:__ENABLE_INDIVIDUAL_C_INIT_CPU4
+ 157:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     if (tempVar != 0U)
+ 291              	 .loc 1 157 27
+ 292 010e B5E2FCFF 	 st.a [%a14]-4,%a2
+ 158:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     {
+ 293              	 .loc 1 158 5 is_stmt 1
+ 158:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     {
+ 294              	 .loc 1 158 17 is_stmt 0
+ 295 0112 19E2FCFF 	 ld.w %d2,[%a14]-4
+ 158:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     {
+ 296              	 .loc 1 158 8
+ 297 0116 DF020080 	 jnz %d2,.L13
+ 298              	.L9:
+ 170:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+ 299              	 .loc 1 170 5 is_stmt 1
+ 300 011a 6D000000 	 call Ifx_Ssw_MultiCore_Sync_Cpu4
+ 301              	.LVL11:
+ 188:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     Ifx_Ssw_jumpToFunction(core4_main);  /* Jump to main function of CPU2 */
+ 302              	 .loc 1 188 5
+ 189:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #endif /* IFX_CFG_SSW_RETURN_FROM_MAIN */
+ 303              	 .loc 1 189 5
+ 304              	.LBB20:
+ 305              	.LBB21:
+ 188:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** }
+ 189:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+ 190:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+ 191:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** IFX_SSW_INLINE void Ifx_Ssw_ISYNC(void)
+ 192:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** {
+ 193:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     __asm__ volatile ("isync" : : : "memory");
+ 194:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** }
+ 195:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+ 196:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+ 197:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** IFX_SSW_INLINE unsigned int Ifx_Ssw_MINU(unsigned int a, unsigned int b)
+ 198:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** {
+ 199:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     unsigned int res;
+ 200:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     __asm__ volatile ("min.u %0, %1, %2" : "=d" (res) : "d" (a), "d" (b));
+ 201:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     return res;
+ 202:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** }
+ 203:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+ 204:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #define Ifx_Ssw_CLZ(a)                     __builtin_clz(a)
+ 205:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+ 206:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #define Ifx_Ssw___setAddressReg(aReg, val) \
+ 207:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     {__asm__ volatile ("movh.a\t %"#aReg ", hi:("#val ")\n\tlea\t %"#aReg ",[%"#aReg "] lo:("#val "
+ 208:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+ 209:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** #define Ifx_Ssw_setAddressReg(regNum, val) Ifx_Ssw___setAddressReg(regNum, val)
+ 210:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+ 211:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** IFX_SSW_INLINE void Ifx_Ssw_moveToDataParam0(unsigned int var)
+ 212:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** {
+ 213:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     __asm__ volatile ("mov\t %%d2, %0" ::"d" (var));
+ 214:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** }
+ 215:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+ 216:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+ 217:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** IFX_SSW_INLINE unsigned int Ifx_Ssw_getDataParam0(void)
+ 218:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** {
+ 219:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     unsigned int var;
+ 220:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     __asm__ volatile (" mov\t %0, %%d2" : "=d" (var));
+ 221:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     return var;
+ 222:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** }
+ 223:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+ 224:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** IFX_SSW_INLINE unsigned int Ifx_Ssw_getD15(void)
+ 225:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** {
+ 226:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     unsigned int var;
+ 227:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     __asm__ volatile (" mov\t %0, %%d15" : "=d" (var));
+ 228:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     return var;
+ 229:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** }
+ 230:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+ 231:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** /* Inline function to set return address*/
+ 232:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** IFX_SSW_INLINE void Ifx_Ssw_setA11(void *Addr)
+ 233:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** {
+ 234:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     __asm__ volatile ("mov.aa %%a11, %0": : "a" (Addr) :"a11");
+ 235:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** }
+ 236:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+ 237:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+ 238:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** IFX_SSW_INLINE void Ifx_Ssw_jumpToFunction(void (*fun)(void))
+ 239:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** {
+ 240:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     __asm__ volatile ("ji %0" ::"a" (fun));
+ 306              	 .loc 3 240 5
+ 307 011e 91000020 	 movh.a %a2,hi:core4_main
+ 308 0122 D9220000 	 lea %a2,[%a2]lo:core4_main
+ 309              	
+ 310              	 
+ 311 0126 DC02     	 ji %a2
+ 312              	 
+ 313              	.LVL12:
+ 314              	
+ 315              	.LBE21:
+ 316              	.LBE20:
+ 193:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** }
+ 317              	 .loc 1 193 5
+ 318              	.LBB22:
+ 319              	.LBB23:
+ 241:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** }
+ 242:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+ 243:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+ 244:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** IFX_SSW_INLINE void Ifx_Ssw_jumpToFunctionWithLink(void *fun)
+ 245:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** {
+ 246:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     __asm__ volatile ("jli %0" ::"a" (fun));
+ 247:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** }
+ 248:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+ 249:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+ 250:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** IFX_SSW_INLINE void Ifx_Ssw_jumpBackToLink(void)
+ 251:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** {
+ 252:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     __asm__ volatile ("ji %a11");
+ 253:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** }
+ 254:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** 
+ 255:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** IFX_SSW_INLINE void Ifx_Ssw_infiniteLoop(void)
+ 256:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h **** {
+ 257:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_CompilersGcc.h ****     __asm("1: loopu\t 1b");
+ 320              	 .loc 3 257 5
+ 321              	
+ 322              	 
+ 323 0128 FD000080 	 1:loopu 1b
+ 324              	 
+ 325              	
+ 326              	.LBE23:
+ 327              	.LBE22:
+ 194:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+ 328              	 .loc 1 194 1 is_stmt 0
+ 329 012c 0090     	 ret 
+ 330              	.L13:
+ 161:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+ 331              	 .loc 1 161 7 is_stmt 1
+ 332 012e 6D000000 	 call hardware_init_hook
+ 333              	.LVL13:
+ 164:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 	
+ 334              	 .loc 1 164 7
+ 335 0132 6D000000 	 call Ifx_Ssw_doCppInit
+ 336              	.LVL14:
+ 167:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     }
+ 337              	 .loc 1 167 7
+ 338 0136 6D000000 	 call software_init_hook
+ 339              	.LVL15:
+ 340 013a 1D000000 	 j .L9
+ 341              	.LFE38:
+ 343              	 .global __Core4_start_end
+ 344              	__Core4_start_end:
+ 345              	 .section .start_cpu4,"ax",@progbits
+ 346              	 .align 1
+ 347              	 .global _START4
+ 349              	_START4:
+ 350              	.LFB40:
+ 207:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #if defined(__HIGHTEC__) && !defined(__clang__)
+ 208:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #pragma GCC reset_options
+ 209:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #elif defined(__GNUC__) && !defined(__HIGHTEC__)
+ 210:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #pragma GCC reset_options
+ 211:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #endif
+ 212:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+ 213:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** /******************************************************************************
+ 214:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****  *                        reset vector address                                *
+ 215:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****  *****************************************************************************/
+ 216:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+ 217:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #if defined(__TASKING__)
+ 218:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #pragma protect on
+ 219:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #pragma section code "start_cpu4"
+ 220:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #elif defined(__HIGHTEC__) && !defined(__clang__)
+ 221:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #pragma section
+ 222:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #pragma section ".start_cpu4" x
+ 223:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #elif defined(__HIGHTEC__) && defined(__clang__)
+ 224:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #pragma clang section text=".start_cpu4"
+ 225:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** void _START4(void);
+ 226:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #elif defined(__GNUC__) && !defined(__HIGHTEC__)
+ 227:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #pragma section
+ 228:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #pragma section ".start_cpu4" x
+ 229:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #elif defined(__DCC__)
+ 230:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #pragma section CODE ".start_cpu4" X
+ 231:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #elif defined(__ghs__)
+ 232:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #pragma ghs section text=".start_cpu4"
+ 233:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** #endif
+ 234:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** 
+ 235:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** IFX_SSW_USED void _START4(void)
+ 236:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** {
+ 351              	 .loc 1 236 1
+ 352 0000 40AE     	 mov.aa %a14,%SP
+ 353              	.LCFI3:
+ 237:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c ****     Ifx_Ssw_Start(__USTACK4, __Core4_start);
+ 354              	 .loc 1 237 5
+ 355              	
+ 356              	 
+ 357 0002 910000A0 	 movh.a %a10,hi:(__USTACK4)
+ 358 0006 D9AA0000 	 lea %a10,[%a10]lo:(__USTACK4)
+ 359 000a 0D008004 	 dsync 
+ 360 000e 910000F0 	 movh.a %a15,hi:(__Core4_start)
+ 361 0012 D9FF0000 	 lea %a15,[%a15]lo:(__Core4_start)
+ 362 0016 DC0F     	 ji %a15
+ 363              	 
+ 364              	 .loc 1 237 44
+ 238:../Libraries/Infra/Ssw/TC4xx/Tricore/Ifx_Ssw_Tc4.c **** }
+ 365              	 .loc 1 238 1 is_stmt 0
+ 366              	
+ 367 0018 0090     	 ret 
+ 368              	.LFE40:
+ 370              	 .global _START4_end
+ 371              	_START4_end:
+ 436              	.Letext0:
+ 437              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 438              	 .file 5 "../Libraries/Infra/Sfr/TC4Dx/IfxCpu_regdef.h"
+ 1664 0000 00000000 	 .word Ifx_Ssw_disableVirtualization_Cpu4
+ 1665 0004 00000000 	 .word Ifx_Ssw_disableVirtualization_Cpu4_end
+ 1666 0008 04000040 	 .word 0x40000004
+ 1667 000c 00000000 	 .word 0x00000000
+ 1668 0010 00000000 	 .word 0x00000000
+ 1669 0014 C0010000 	 .word 0x000001c0
+ 1670 0018 00000000 	 .word __Core4_start
+ 1671 001c 00000000 	 .word __Core4_start_end
+ 1672 0020 7C030444 	 .word 0x4404037c
+ 1673 0024 00000000 	 .word 0x00000000
+ 1674 0028 00000000 	 .word 0x00000000
+ 1675 002c 40810200 	 .word 0x00028140
+ 1676 0030 00000000 	 .word _START4
+ 1677 0034 00000000 	 .word _START4_end
+ 1678 0038 00000044 	 .word 0x44000000
+ 1679 003c 00000000 	 .word 0x00000000
+ 1680 0040 00000000 	 .word 0x00000000
+ 1681 0044 C0000000 	 .word 0x000000c0
+DEFINED SYMBOLS
+                            *ABS*:00000000 Ifx_Ssw_Tc4.c
+                            *ABS*:00000000 Ifx_Ssw_Tc4.c
+    {standard input}:10     .text.Ifx_Ssw_disableVirtualization_Cpu4:00000000 Ifx_Ssw_disableVirtualization_Cpu4
+    {standard input}:42     .text.Ifx_Ssw_disableVirtualization_Cpu4:00000020 Ifx_Ssw_disableVirtualization_Cpu4_end
+    {standard input}:47     .text.Ifx_Ssw_MultiCore_Sync_Cpu4:00000000 Ifx_Ssw_MultiCore_Sync_Cpu4
+    {standard input}:57     .text.Ifx_Ssw_MultiCore_Sync_Cpu4:00000004 Ifx_Ssw_MultiCore_Sync_Cpu4_end
+    {standard input}:62     .text.__Core4_start:00000000 __Core4_start
+    {standard input}:344    .text.__Core4_start:0000013e __Core4_start_end
+    {standard input}:349    .start_cpu4:00000000 _START4
+    {standard input}:371    .start_cpu4:0000001a _START4_end
+
+UNDEFINED SYMBOLS
+__TRAPTAB_CPU4
+__CSA4
+__INTTAB_CPU4
+__ISTACK4
+__CSA4_END
+__A0_MEM
+__A1_MEM
+__A8_MEM
+__A9_MEM
+__ENABLE_INDIVIDUAL_C_INIT_CPU4
+core4_main
+hardware_init_hook
+Ifx_Ssw_doCppInit
+software_init_hook
+__USTACK4

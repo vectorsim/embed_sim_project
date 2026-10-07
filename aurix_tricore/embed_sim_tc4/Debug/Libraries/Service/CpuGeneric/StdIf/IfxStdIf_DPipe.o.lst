@@ -1,0 +1,618 @@
+   1              	
+   2              	 .file "IfxStdIf_DPipe.c"
+   3              	 .file "IfxStdIf_DPipe.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.IfxStdIf_DPipe_print,"ax",@progbits
+   7              	 .align 1
+   8              	 .global IfxStdIf_DPipe_print
+  10              	IfxStdIf_DPipe_print:
+  11              	.LFB541:
+  12              	 .file 1 "../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c"
+   1:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c **** /**
+   2:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****  * \file IfxStdIf_DPipe.c
+   3:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****  * \brief Standard interface: Data Pipe
+   4:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****  * \ingroup IfxStdIf
+   5:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****  *
+   6:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****  * \version iLLD-TC4-v2.7.0
+   7:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   8:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****  *
+   9:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****  *
+  10:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****   *                                 IMPORTANT NOTICE
+  11:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****  *
+  12:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****  *
+  13:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  14:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  15:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****  * this file except in compliance with IFASLL.
+  16:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****  *
+  17:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  18:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  19:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  20:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  21:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  22:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  23:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****  * defects in the licensed items, or non-infringement of third parties'
+  24:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****  * intellectual property rights. See the full license text for the specific
+  25:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****  * language governing permissions and limitations under IFASLL.
+  26:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****  *
+  27:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****  */
+  28:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c **** 
+  29:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c **** #include "IfxStdIf_DPipe.h"
+  30:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c **** #include "_Utilities/Ifx_Assert.h"
+  31:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c **** 
+  32:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c **** #include <string.h>
+  33:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c **** #include <stdio.h>
+  34:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c **** #include <stdarg.h>
+  35:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c **** 
+  36:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c **** void IfxStdIf_DPipe_print(IfxStdIf_DPipe *stdif, pchar format, ...)
+  37:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c **** {
+  13              	 .loc 1 37 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  17 0002 D9AAF8BF 	 lea %SP,[%SP]-264
+  18 0006 404C     	 mov.aa %a12,%a4
+  38:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****     if (!stdif->txDisabled)
+  19              	 .loc 1 38 5
+  20              	 .loc 1 38 15 is_stmt 0
+  21 0008 39420400 	 ld.bu %d2,[%a4]4
+  22              	 .loc 1 38 8
+  23 000c DF020000 	 jz %d2,.L3
+  24              	.LVL1:
+  25              	.L1:
+  39:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****     {
+  40:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****         char      message[STDIF_DPIPE_MAX_PRINT_SIZE + 1];
+  41:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****         Ifx_SizeT count;
+  42:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****         va_list   args;
+  43:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****         va_start(args, format);
+  44:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****         vsprintf((char *)message, format, args);
+  45:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****         va_end(args);
+  46:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****         count = (Ifx_SizeT)strlen(message);
+  47:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****         IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, count < STDIF_DPIPE_MAX_PRINT_SIZE);
+  48:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****         //return
+  49:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****         IfxStdIf_DPipe_write(stdif, (void *)message, &count, TIME_INFINITE);
+  50:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****     }
+  51:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****     else
+  52:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****     {
+  53:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****         //return TRUE;
+  54:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****     }
+  55:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c **** }
+  26              	 .loc 1 55 1
+  27 0010 0090     	 ret 
+  28              	.LVL2:
+  29              	.L3:
+  30              	.LBB5:
+  40:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****         Ifx_SizeT count;
+  31              	 .loc 1 40 9 is_stmt 1
+  41:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****         va_list   args;
+  32              	 .loc 1 41 9
+  42:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****         va_start(args, format);
+  33              	 .loc 1 42 9
+  43:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****         vsprintf((char *)message, format, args);
+  34              	 .loc 1 43 9
+  44:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****         va_end(args);
+  35              	 .loc 1 44 9
+  36 0012 40E6     	 mov.aa %a6,%a14
+  37              	.LVL3:
+  38 0014 D9E4C0CF 	 lea %a4,[%a14]-256
+  39              	.LVL4:
+  40 0018 6D000000 	 call vsprintf
+  41              	.LVL5:
+  45:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****         count = (Ifx_SizeT)strlen(message);
+  42              	 .loc 1 45 9
+  46:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****         IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, count < STDIF_DPIPE_MAX_PRINT_SIZE);
+  43              	 .loc 1 46 9
+  46:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****         IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, count < STDIF_DPIPE_MAX_PRINT_SIZE);
+  44              	 .loc 1 46 28 is_stmt 0
+  45 001c D9E4C0CF 	 lea %a4,[%a14]-256
+  46 0020 6D000000 	 call strlen
+  47              	.LVL6:
+  46:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****         IFX_ASSERT(IFX_VERBOSE_LEVEL_ERROR, count < STDIF_DPIPE_MAX_PRINT_SIZE);
+  48              	 .loc 1 46 15
+  49 0024 F9E2FEBF 	 st.h [%a14]-258,%d2
+  47:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****         //return
+  50              	 .loc 1 47 9 is_stmt 1
+  49:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****     }
+  51              	 .loc 1 49 9
+  52              	.LVL7:
+  53              	.LBB6:
+  54              	.LBB7:
+  55              	 .file 2 "../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h"
+   1:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /**
+   2:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \file IfxStdIf_DPipe.h
+   3:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \brief Standard interface: Data Pipe
+   4:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \ingroup IfxStdIf
+   5:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+   6:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \version iLLD-TC4-v2.7.0
+   7:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   8:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+   9:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  10:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****   *                                 IMPORTANT NOTICE
+  11:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  12:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  13:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  14:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  15:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * this file except in compliance with IFASLL.
+  16:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  17:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  18:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * Unless required by applicable law or agreed to in writing, software distributed
+  19:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  20:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  21:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * whether express, implied, statutory or otherwise, including but not limited to
+  22:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  23:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * defects in the licensed items, or non-infringement of third parties'
+  24:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * intellectual property rights. See the full license text for the specific
+  25:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * language governing permissions and limitations under IFASLL.
+  26:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  27:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  28:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \defgroup library_srvsw_stdif_dpipe Standard interface: Data Pipe
+  29:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \ingroup library_srvsw_stdif
+  30:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  31:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * The standard interafce data pipe (DPipe) abstract the hardware used for data transfer. It provid
+  32:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * and read data to/from as communciation channel.
+  33:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  34:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \par Porting StandardIo to DPipe
+  35:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * replace all
+  36:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *  - StandardIo type with IfxStdIf_DPipe
+  37:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *  - StandardIo_print with IfxStdIf_DPipe_print
+  38:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * delete StandardIo.c and StandardIo.h
+  39:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * Include "StdIf/IfxStdIf_DPipe.h" instead of "SysSe/Bsp/StandardIo.h"
+  40:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  41:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * The following files are already ported: Ifx_Console, Ifx_Shell
+  42:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  43:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+  44:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** #ifndef IFXSTDIF_DPIPE_H
+  45:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** #define IFXSTDIF_DPIPE_H 1
+  46:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+  47:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** #include "IfxStdIf.h"
+  48:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** #include "Asclin/Asc/IfxAsclin_Asc.h"
+  49:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** //----------------------------------------------------------------------------------------
+  50:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** #ifndef ENDL
+  51:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** #    define ENDL       "\r\n"
+  52:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** #endif
+  53:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+  54:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Forward declaration */
+  55:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef struct IfxStdIf_DPipe_ IfxStdIf_DPipe;
+  56:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+  57:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef volatile boolean      *IfxStdIf_DPipe_WriteEvent;
+  58:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef volatile boolean      *IfxStdIf_DPipe_ReadEvent;
+  59:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+  60:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Size of the buffer allocated on the stack for the print function */
+  61:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** #define STDIF_DPIPE_MAX_PRINT_SIZE (255)
+  62:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+  63:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Write binary data into the \ref IfxStdIf_DPipe.
+  64:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  65:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * Initially the parameter 'count' specifies count of data to write.
+  66:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * After execution the data pointed by 'count' specifies the data actually written
+  67:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  68:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+  69:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param data Pointer to the start of data
+  70:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param count Pointer to the count of data (in bytes).
+  71:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param timeout in system timer ticks
+  72:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  73:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \retval TRUE Returns TRUE if all items could be written
+  74:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \retval FALSE Returns FALSE if not all the items could be written
+  75:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+  76:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef boolean (*IfxStdIf_DPipe_Write)(IfxStdIf_InterfaceDriver stdif, void *data, Ifx_SizeT *coun
+  77:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+  78:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Read data from the \ref IfxStdIf_DPipe object
+  79:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  80:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * Initially the parameter 'count' specifies count of data to read.
+  81:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * After execution the data pointed by 'count' specifies the data actually read.
+  82:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  83:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+  84:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param data Pointer to the start of data
+  85:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param count Pointer to the count of data (in bytes).
+  86:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param timeout in system timer ticks
+  87:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  88:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \retval TRUE Returns TRUE if all items could be read
+  89:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \retval FALSE Returns FALSE if not all the items could be read
+  90:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+  91:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef boolean (*IfxStdIf_DPipe_Read)(IfxStdIf_InterfaceDriver stdif, void *data, Ifx_SizeT *count
+  92:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+  93:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Returns the number of bytes in the rx buffer
+  94:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  95:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+  96:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+  97:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \return Returns the number of bytes in the rx buffer
+  98:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+  99:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef sint32 (*IfxStdIf_DPipe_GetReadCount)(IfxStdIf_InterfaceDriver stdif);
+ 100:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 101:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Returns read event object
+ 102:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 103:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+ 104:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 105:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \return Returns read event object
+ 106:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 107:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef IfxStdIf_DPipe_ReadEvent (*IfxStdIf_DPipe_GetReadEvent)(IfxStdIf_InterfaceDriver stdif);
+ 108:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 109:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Returns number of ISR hits
+ 110:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 111:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+ 112:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 113:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \return Returns number of ISR hits
+ 114:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 115:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef uint32 (*IfxStdIf_DPipe_GetIsrCount)(IfxStdIf_InterfaceDriver stdif);
+ 116:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 117:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Returns number of bytes send
+ 118:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 119:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+ 120:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 121:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \return Returns number of bytes send
+ 122:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 123:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef uint32 (*IfxStdIf_DPipe_GetSendCount)(IfxStdIf_InterfaceDriver stdif);
+ 124:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 125:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Returns the time stamp of the last transmit data
+ 126:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 127:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+ 128:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 129:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \return Returns the time stamp of the last transmit data
+ 130:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 131:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef Ifx_TickTime (*IfxStdIf_DPipe_GetTxTimeStamp)(IfxStdIf_InterfaceDriver stdif);
+ 132:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 133:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Returns the number of free bytes (free space) in the tx buffer
+ 134:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 135:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+ 136:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 137:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \return Returns the number of free bytes in the tx buffer
+ 138:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 139:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef sint32 (*IfxStdIf_DPipe_GetWriteCount)(IfxStdIf_InterfaceDriver stdif);
+ 140:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 141:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Returns write event object
+ 142:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 143:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+ 144:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 145:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \return Returns write event object
+ 146:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 147:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef IfxStdIf_DPipe_WriteEvent (*IfxStdIf_DPipe_GetWriteEvent)(IfxStdIf_InterfaceDriver stdif);
+ 148:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 149:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Indicates if the required number of bytes are available for read in the buffer
+ 150:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 151:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+ 152:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param count Pointer to the count of data (in bytes).
+ 153:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param timeout in system timer ticks
+ 154:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 155:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \return Returns TRUE if at least count bytes are available for read in the rx buffer,
+ 156:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * if not the Event is armed to be set when the buffer count is bigger or equal to the requested co
+ 157:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 158:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef boolean (*IfxStdIf_DPipe_CanReadCount)(IfxStdIf_InterfaceDriver stdif, Ifx_SizeT count, Ifx
+ 159:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 160:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief  Indicates if there is enough free space to write the data in the buffer
+ 161:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 162:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+ 163:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param count Pointer to the count of data (in bytes).
+ 164:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param timeout in system timer ticks
+ 165:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 166:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \return Returns TRUE if at least count bytes can be written to the tx buffer,
+ 167:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *  if not the Event is armed to be set when the buffer free count is bigger or equal to the reques
+ 168:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 169:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef boolean (*IfxStdIf_DPipe_CanWriteCount)(IfxStdIf_InterfaceDriver stdif, Ifx_SizeT count, If
+ 170:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 171:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Flush the transmit buffer by transmitting all data
+ 172:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 173:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+ 174:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param timeout timeout for the flush operation
+ 175:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 176:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \return Returns TRUE if the FIFO is empty
+ 177:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 178:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef boolean (*IfxStdIf_DPipe_FlushTx)(IfxStdIf_InterfaceDriver stdif, Ifx_TickTime timeout);
+ 179:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 180:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Clears the RX buffer by removing all data
+ 181:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 182:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+ 183:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \return void
+ 184:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 185:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef void (*IfxStdIf_DPipe_ClearRx)(IfxStdIf_InterfaceDriver stdif);
+ 186:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 187:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Clears the TX buffer by removing all data
+ 188:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 189:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+ 190:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \return void
+ 191:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 192:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef void (*IfxStdIf_DPipe_ClearTx)(IfxStdIf_InterfaceDriver stdif);
+ 193:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 194:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief handler called on reveive event
+ 195:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 196:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+ 197:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 198:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \return none
+ 199:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 200:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef void (*IfxStdIf_DPipe_OnReceive)(IfxStdIf_InterfaceDriver stdif);
+ 201:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 202:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief handler called on transmit event
+ 203:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 204:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+ 205:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 206:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \return none
+ 207:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 208:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef void (*IfxStdIf_DPipe_OnTransmit)(IfxStdIf_InterfaceDriver stdif);
+ 209:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 210:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief handler called on error event
+ 211:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 212:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+ 213:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 214:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \return none
+ 215:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 216:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef void (*IfxStdIf_DPipe_OnError)(IfxStdIf_InterfaceDriver stdif);
+ 217:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 218:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Reset the ISR counter
+ 219:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 220:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+ 221:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 222:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \return none
+ 223:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 224:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef void (*IfxStdIf_DPipe_ResetIsrCount)(IfxStdIf_InterfaceDriver stdif);
+ 225:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 226:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Reset the sendCount counter
+ 227:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 228:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \param stdif Pointer to the interface driver object
+ 229:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  *
+ 230:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \return none
+ 231:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 232:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** typedef void (*IfxStdIf_DPipe_ResetSendCount)(IfxStdIf_InterfaceDriver stdif);
+ 233:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 234:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \brief Standard interface object
+ 235:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 236:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** struct IfxStdIf_DPipe_
+ 237:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** {
+ 238:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_InterfaceDriver driver;              /**< \brief Pointer to the specific driver object
+ 239:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     boolean                  txDisabled;          /**< \brief If disabled is set to TRUE, the outpu
+ 240:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 
+ 241:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     /* Standard interface APIs */
+ 242:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_DPipe_Write          write;          /**< \brief \see IfxStdIf_DPipe_Write */
+ 243:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_DPipe_Read           read;           /**< \brief \see IfxStdIf_DPipe_Read */
+ 244:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_DPipe_GetReadCount   getReadCount;   /**< \brief \see IfxStdIf_DPipe_GetReadCount */
+ 245:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_DPipe_GetReadEvent   getReadEvent;   /**< \brief \see IfxStdIf_DPipe_GetReadEvent */
+ 246:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_DPipe_GetWriteCount  getWriteCount;  /**< \brief \see IfxStdIf_DPipe_GetWriteCount */
+ 247:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_DPipe_GetWriteEvent  getWriteEvent;  /**< \brief \see IfxStdIf_DPipe_GetWriteEvent */
+ 248:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_DPipe_CanReadCount   canReadCount;   /**< \brief \see IfxStdIf_DPipe_CanReadCount */
+ 249:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_DPipe_CanWriteCount  canWriteCount;  /**< \brief \see IfxStdIf_DPipe_CanWriteCount */
+ 250:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_DPipe_FlushTx        flushTx;        /**< \brief \see IfxStdIf_DPipe_FlushTx */
+ 251:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_DPipe_ClearTx        clearTx;        /**< \brief \see IfxStdIf_DPipe_ClearTx */
+ 252:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_DPipe_ClearRx        clearRx;        /**< \brief \see IfxStdIf_DPipe_ClearRx */
+ 253:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_DPipe_OnReceive      onReceive;      /**< \brief \see IfxStdIf_DPipe_OnReceive  */
+ 254:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_DPipe_OnTransmit     onTransmit;     /**< \brief \see IfxStdIf_DPipe_OnTransmit */
+ 255:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_DPipe_OnError        onError;        /**< \brief \see IfxStdIf_DPipe_OnError    */
+ 256:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_DPipe_GetIsrCount    getIsrCount;   /**< \brief \see IfxStdIf_DPipe_GetIsrCount    */
+ 257:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 	IfxStdIf_DPipe_GetSendCount   getSendCount;   /**< \brief \see IfxStdIf_DPipe_GetSendCount    */
+ 258:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_DPipe_GetTxTimeStamp getTxTimeStamp; /**< \brief \see IfxStdIf_DPipe_GetTxTimeStamp   
+ 259:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     IfxStdIf_DPipe_ResetIsrCount  resetIsrCount;  /**< \brief \see IfxStdIf_DPipe_ResetIsrCount    
+ 260:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** 	IfxStdIf_DPipe_ResetSendCount resetSendCount; /**< \brief \see IfxStdIf_DPipe_ResetSendCount    */
+ 261:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** };
+ 262:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \addtogroup library_srvsw_stdif_dpipe
+ 263:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  * \{ */
+ 264:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** /** \copydoc IfxStdIf_DPipe_Write
+ 265:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****  */
+ 266:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** IFX_INLINE boolean IfxStdIf_DPipe_write(IfxStdIf_DPipe *stdif, void *data, Ifx_SizeT *count, Ifx_Ti
+ 267:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h **** {
+ 268:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h ****     return stdif->write(stdif->driver, data, count, timeout);
+  56              	 .loc 2 268 5
+  57              	 .loc 2 268 17 is_stmt 0
+  58 0028 99C20800 	 ld.a %a2,[%a12]8
+  59              	 .loc 2 268 12
+  60 002c 82F4     	 mov %d4,-1
+  61 002e 82F5     	 mov %d5,-1
+  62 0030 06F5     	 sh %d5,-1
+  63 0032 D9E6FEBF 	 lea %a6,[%a14]-258
+  64              	.LVL8:
+  65 0036 D9E5C0CF 	 lea %a5,[%a14]-256
+  66              	.LVL9:
+  67 003a D4C4     	 ld.a %a4,[%a12]0
+  68 003c DC12     	 calli %a2
+  69              	.LVL10:
+  70              	.LBE7:
+  71              	.LBE6:
+  72              	.LBE5:
+  54:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c **** }
+  73              	 .loc 1 54 5 is_stmt 1
+  74              	 .loc 1 55 1 is_stmt 0
+  75 003e 1D000000 	 j .L1
+  76              	.LFE541:
+  78              	 .global IfxStdIf_DPipe_print_end
+  79              	IfxStdIf_DPipe_print_end:
+  80              	 .section .text.IfxStdIf_DPipe_ascInit,"ax",@progbits
+  81              	 .align 1
+  82              	 .global IfxStdIf_DPipe_ascInit
+  84              	IfxStdIf_DPipe_ascInit:
+  85              	.LFB542:
+  56:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c **** 
+  57:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c **** boolean IfxStdIf_DPipe_ascInit(IfxStdIf_DPipe *stdif, IfxAsclin_Asc *asclin)
+  58:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c **** {
+  86              	 .loc 1 58 1 is_stmt 1
+  87              	.LVL11:
+  88 0000 40AE     	 mov.aa %a14,%SP
+  89              	.LCFI1:
+  59:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****     /* Ensure the stdif is reset to zeros */
+  60:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****     memset(stdif, 0, sizeof(IfxStdIf_DPipe));
+  90              	 .loc 1 60 5
+  91 0002 4043     	 mov.aa %a3,%a4
+  92 0004 8202     	 mov %d2,0
+  93 0006 C5021310 	 lea %a2,84-1
+  94              	 0:
+  95 000a 2432     	 st.b [%a3+]1,%d2
+  96 000c FD200000 	 loop %a2,0b
+  61:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c **** 
+  62:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****     /* Set the API link */
+  63:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****     stdif->driver         = asclin;
+  97              	 .loc 1 63 5
+  98              	 .loc 1 63 27 is_stmt 0
+  99 0010 F445     	 st.a [%a4]0,%a5
+  64:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****     stdif->write          = (IfxStdIf_DPipe_Write) & IfxAsclin_Asc_write;
+ 100              	 .loc 1 64 5 is_stmt 1
+ 101              	 .loc 1 64 27 is_stmt 0
+ 102 0012 91000020 	 movh.a %a2,hi:IfxAsclin_Asc_write
+ 103 0016 D9220000 	 lea %a2,[%a2]lo:IfxAsclin_Asc_write
+ 104 001a B5420800 	 st.a [%a4]8,%a2
+  65:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****     stdif->read           = (IfxStdIf_DPipe_Read) & IfxAsclin_Asc_read;
+ 105              	 .loc 1 65 5 is_stmt 1
+ 106              	 .loc 1 65 27 is_stmt 0
+ 107 001e 91000020 	 movh.a %a2,hi:IfxAsclin_Asc_read
+ 108 0022 D9220000 	 lea %a2,[%a2]lo:IfxAsclin_Asc_read
+ 109 0026 B5420C00 	 st.a [%a4]12,%a2
+  66:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****     stdif->getReadCount   = (IfxStdIf_DPipe_GetReadCount) & IfxAsclin_Asc_getReadCount;
+ 110              	 .loc 1 66 5 is_stmt 1
+ 111              	 .loc 1 66 27 is_stmt 0
+ 112 002a 91000020 	 movh.a %a2,hi:IfxAsclin_Asc_getReadCount
+ 113 002e D9220000 	 lea %a2,[%a2]lo:IfxAsclin_Asc_getReadCount
+ 114 0032 B5421000 	 st.a [%a4]16,%a2
+  67:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****     stdif->getReadEvent   = (IfxStdIf_DPipe_GetReadEvent) & IfxAsclin_Asc_getReadEvent;
+ 115              	 .loc 1 67 5 is_stmt 1
+ 116              	 .loc 1 67 27 is_stmt 0
+ 117 0036 91000020 	 movh.a %a2,hi:IfxAsclin_Asc_getReadEvent
+ 118 003a D9220000 	 lea %a2,[%a2]lo:IfxAsclin_Asc_getReadEvent
+ 119 003e B5421400 	 st.a [%a4]20,%a2
+  68:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****     stdif->getWriteCount  = (IfxStdIf_DPipe_GetWriteCount) & IfxAsclin_Asc_getWriteCount;
+ 120              	 .loc 1 68 5 is_stmt 1
+ 121              	 .loc 1 68 27 is_stmt 0
+ 122 0042 91000020 	 movh.a %a2,hi:IfxAsclin_Asc_getWriteCount
+ 123 0046 D9220000 	 lea %a2,[%a2]lo:IfxAsclin_Asc_getWriteCount
+ 124 004a B5421800 	 st.a [%a4]24,%a2
+  69:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****     stdif->getWriteEvent  = (IfxStdIf_DPipe_GetWriteEvent) & IfxAsclin_Asc_getWriteEvent;
+ 125              	 .loc 1 69 5 is_stmt 1
+ 126              	 .loc 1 69 27 is_stmt 0
+ 127 004e 91000020 	 movh.a %a2,hi:IfxAsclin_Asc_getWriteEvent
+ 128 0052 D9220000 	 lea %a2,[%a2]lo:IfxAsclin_Asc_getWriteEvent
+ 129 0056 B5421C00 	 st.a [%a4]28,%a2
+  70:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****     stdif->canReadCount   = (IfxStdIf_DPipe_CanReadCount) & IfxAsclin_Asc_canReadCount;
+ 130              	 .loc 1 70 5 is_stmt 1
+ 131              	 .loc 1 70 27 is_stmt 0
+ 132 005a 91000020 	 movh.a %a2,hi:IfxAsclin_Asc_canReadCount
+ 133 005e D9220000 	 lea %a2,[%a2]lo:IfxAsclin_Asc_canReadCount
+ 134 0062 B5422000 	 st.a [%a4]32,%a2
+  71:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****     stdif->canWriteCount  = (IfxStdIf_DPipe_CanWriteCount) & IfxAsclin_Asc_canWriteCount;
+ 135              	 .loc 1 71 5 is_stmt 1
+ 136              	 .loc 1 71 27 is_stmt 0
+ 137 0066 91000020 	 movh.a %a2,hi:IfxAsclin_Asc_canWriteCount
+ 138 006a D9220000 	 lea %a2,[%a2]lo:IfxAsclin_Asc_canWriteCount
+ 139 006e B5422400 	 st.a [%a4]36,%a2
+  72:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****     stdif->flushTx        = (IfxStdIf_DPipe_FlushTx) & IfxAsclin_Asc_flushTx;
+ 140              	 .loc 1 72 5 is_stmt 1
+ 141              	 .loc 1 72 27 is_stmt 0
+ 142 0072 91000020 	 movh.a %a2,hi:IfxAsclin_Asc_flushTx
+ 143 0076 D9220000 	 lea %a2,[%a2]lo:IfxAsclin_Asc_flushTx
+ 144 007a B5422800 	 st.a [%a4]40,%a2
+  73:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****     stdif->clearTx        = (IfxStdIf_DPipe_ClearTx) & IfxAsclin_Asc_clearTx;
+ 145              	 .loc 1 73 5 is_stmt 1
+ 146              	 .loc 1 73 27 is_stmt 0
+ 147 007e 91000020 	 movh.a %a2,hi:IfxAsclin_Asc_clearTx
+ 148 0082 D9220000 	 lea %a2,[%a2]lo:IfxAsclin_Asc_clearTx
+ 149 0086 B5422C00 	 st.a [%a4]44,%a2
+  74:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****     stdif->clearRx        = (IfxStdIf_DPipe_ClearRx) & IfxAsclin_Asc_clearRx;
+ 150              	 .loc 1 74 5 is_stmt 1
+ 151              	 .loc 1 74 27 is_stmt 0
+ 152 008a 91000020 	 movh.a %a2,hi:IfxAsclin_Asc_clearRx
+ 153 008e D9220000 	 lea %a2,[%a2]lo:IfxAsclin_Asc_clearRx
+ 154 0092 B5423000 	 st.a [%a4]48,%a2
+  75:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****     stdif->onReceive      = (IfxStdIf_DPipe_OnReceive) & IfxAsclin_Asc_isrReceive;
+ 155              	 .loc 1 75 5 is_stmt 1
+ 156              	 .loc 1 75 27 is_stmt 0
+ 157 0096 91000020 	 movh.a %a2,hi:IfxAsclin_Asc_isrReceive
+ 158 009a D9220000 	 lea %a2,[%a2]lo:IfxAsclin_Asc_isrReceive
+ 159 009e B5423400 	 st.a [%a4]52,%a2
+  76:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****     stdif->onTransmit     = (IfxStdIf_DPipe_OnTransmit) & IfxAsclin_Asc_isrTransmit;
+ 160              	 .loc 1 76 5 is_stmt 1
+ 161              	 .loc 1 76 27 is_stmt 0
+ 162 00a2 91000020 	 movh.a %a2,hi:IfxAsclin_Asc_isrTransmit
+ 163 00a6 D9220000 	 lea %a2,[%a2]lo:IfxAsclin_Asc_isrTransmit
+ 164 00aa B5423800 	 st.a [%a4]56,%a2
+  77:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****     stdif->onError        = (IfxStdIf_DPipe_OnError) & IfxAsclin_Asc_isrError;
+ 165              	 .loc 1 77 5 is_stmt 1
+ 166              	 .loc 1 77 27 is_stmt 0
+ 167 00ae 91000020 	 movh.a %a2,hi:IfxAsclin_Asc_isrError
+ 168 00b2 D9220000 	 lea %a2,[%a2]lo:IfxAsclin_Asc_isrError
+ 169 00b6 B5423C00 	 st.a [%a4]60,%a2
+  78:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****     stdif->getIsrCount    = (IfxStdIf_DPipe_GetIsrCount) & IfxAsclin_Asc_getIsrCount;
+ 170              	 .loc 1 78 5 is_stmt 1
+ 171              	 .loc 1 78 27 is_stmt 0
+ 172 00ba 91000020 	 movh.a %a2,hi:IfxAsclin_Asc_getIsrCount
+ 173 00be D9220000 	 lea %a2,[%a2]lo:IfxAsclin_Asc_getIsrCount
+ 174 00c2 B5420010 	 st.a [%a4]64,%a2
+  79:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****     stdif->getSendCount   = (IfxStdIf_DPipe_GetSendCount) & IfxAsclin_Asc_getSendCount;
+ 175              	 .loc 1 79 5 is_stmt 1
+ 176              	 .loc 1 79 27 is_stmt 0
+ 177 00c6 91000020 	 movh.a %a2,hi:IfxAsclin_Asc_getSendCount
+ 178 00ca D9220000 	 lea %a2,[%a2]lo:IfxAsclin_Asc_getSendCount
+ 179 00ce B5420410 	 st.a [%a4]68,%a2
+  80:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****     stdif->getTxTimeStamp = (IfxStdIf_DPipe_GetTxTimeStamp) & IfxAsclin_Asc_getTxTimeStamp;
+ 180              	 .loc 1 80 5 is_stmt 1
+ 181              	 .loc 1 80 27 is_stmt 0
+ 182 00d2 91000020 	 movh.a %a2,hi:IfxAsclin_Asc_getTxTimeStamp
+ 183 00d6 D9220000 	 lea %a2,[%a2]lo:IfxAsclin_Asc_getTxTimeStamp
+ 184 00da B5420810 	 st.a [%a4]72,%a2
+  81:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****     stdif->resetIsrCount  = (IfxStdIf_DPipe_ResetIsrCount) & IfxAsclin_Asc_resetIsrCount;
+ 185              	 .loc 1 81 5 is_stmt 1
+ 186              	 .loc 1 81 27 is_stmt 0
+ 187 00de 91000020 	 movh.a %a2,hi:IfxAsclin_Asc_resetIsrCount
+ 188 00e2 D9220000 	 lea %a2,[%a2]lo:IfxAsclin_Asc_resetIsrCount
+ 189 00e6 B5420C10 	 st.a [%a4]76,%a2
+  82:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****     stdif->resetSendCount = (IfxStdIf_DPipe_ResetSendCount) & IfxAsclin_Asc_resetSendCount;
+ 190              	 .loc 1 82 5 is_stmt 1
+ 191              	 .loc 1 82 27 is_stmt 0
+ 192 00ea 91000020 	 movh.a %a2,hi:IfxAsclin_Asc_resetSendCount
+ 193 00ee D9220000 	 lea %a2,[%a2]lo:IfxAsclin_Asc_resetSendCount
+ 194 00f2 B5421010 	 st.a [%a4]80,%a2
+  83:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****     stdif->txDisabled     = FALSE;
+ 195              	 .loc 1 83 5 is_stmt 1
+  84:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c ****     return TRUE;
+ 196              	 .loc 1 84 5
+  85:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.c **** }
+ 197              	 .loc 1 85 1 is_stmt 0
+ 198 00f6 8212     	 mov %d2,1
+ 199 00f8 0090     	 ret 
+ 200              	.LFE542:
+ 202              	 .global IfxStdIf_DPipe_ascInit_end
+ 203              	IfxStdIf_DPipe_ascInit_end:
+ 244              	.Letext0:
+ 245              	 .file 3 "c:\\infineon\\aurix-configuration-studio-1.0.24\\eclipse\\tricore-gcc11\\lib\\gcc\\tricore-elf\\11.3.1\\include\\stddef.h"
+ 246              	 .file 4 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 247              	 .file 5 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+ 248              	 .file 6 "../Libraries/Service/CpuGeneric/StdIf/IfxStdIf.h"
+ 249              	 .file 7 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 250              	 .file 8 "../Libraries/Infra/Sfr/TC4Dx/IfxAsclin_regdef.h"
+ 251              	 .file 9 "../Libraries/iLLD/TC4xx/CpuGeneric/_Lib/DataHandling/Ifx_Fifo.h"
+ 252              	 .file 10 "../Libraries/iLLD/TC4xx/CpuGeneric/Asclin/Asc/IfxAsclin_Asc.h"
+ 253              	 .file 11 "c:\\infineon\\aurix-configuration-studio-1.0.24\\eclipse\\tricore-gcc11\\lib\\gcc\\tricore-elf\\11.3.1\\include\\stdarg.h"
+ 254              	 .file 12 "c:\\infineon\\aurix-configuration-studio-1.0.24\\eclipse\\tricore-gcc11\\tricore-elf\\include\\stdio.h"
+ 255              	 .file 13 "c:\\infineon\\aurix-configuration-studio-1.0.24\\eclipse\\tricore-gcc11\\tricore-elf\\include\\string.h"
+ 8252 0000 00000000 	 .word IfxStdIf_DPipe_print
+ 8253 0004 00000000 	 .word IfxStdIf_DPipe_print_end
+ 8254 0008 34007454 	 .word 0x54740034
+ 8255 000c 00003000 	 .word 0x00300000
+ 8256 0010 00000000 	 .word 0x00000000
+ 8257 0014 40801200 	 .word 0x00128040
+ 8258 0018 00000000 	 .word IfxStdIf_DPipe_ascInit
+ 8259 001c 00000000 	 .word IfxStdIf_DPipe_ascInit_end
+ 8260 0020 04003C44 	 .word 0x443c0004
+ 8261 0024 00003000 	 .word 0x00300000
+ 8262 0028 04000000 	 .word 0x00000004
+ 8263 002c C0000000 	 .word 0x000000c0
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxStdIf_DPipe.c
+                            *ABS*:00000000 IfxStdIf_DPipe.c
+    {standard input}:10     .text.IfxStdIf_DPipe_print:00000000 IfxStdIf_DPipe_print
+    {standard input}:79     .text.IfxStdIf_DPipe_print:00000042 IfxStdIf_DPipe_print_end
+    {standard input}:84     .text.IfxStdIf_DPipe_ascInit:00000000 IfxStdIf_DPipe_ascInit
+    {standard input}:203    .text.IfxStdIf_DPipe_ascInit:000000fa IfxStdIf_DPipe_ascInit_end
+
+UNDEFINED SYMBOLS
+vsprintf
+strlen
+IfxAsclin_Asc_write
+IfxAsclin_Asc_read
+IfxAsclin_Asc_getReadCount
+IfxAsclin_Asc_getReadEvent
+IfxAsclin_Asc_getWriteCount
+IfxAsclin_Asc_getWriteEvent
+IfxAsclin_Asc_canReadCount
+IfxAsclin_Asc_canWriteCount
+IfxAsclin_Asc_flushTx
+IfxAsclin_Asc_clearTx
+IfxAsclin_Asc_clearRx
+IfxAsclin_Asc_isrReceive
+IfxAsclin_Asc_isrTransmit
+IfxAsclin_Asc_isrError
+IfxAsclin_Asc_getIsrCount
+IfxAsclin_Asc_getSendCount
+IfxAsclin_Asc_getTxTimeStamp
+IfxAsclin_Asc_resetIsrCount
+IfxAsclin_Asc_resetSendCount

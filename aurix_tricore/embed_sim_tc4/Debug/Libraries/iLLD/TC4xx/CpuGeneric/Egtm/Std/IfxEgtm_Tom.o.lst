@@ -1,0 +1,1568 @@
+   1              	
+   2              	 .file "IfxEgtm_Tom.c"
+   3              	 .file "IfxEgtm_Tom.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.IfxEgtm_Tom_Tgc_buildFeature,"ax",@progbits
+   7              	 .align 1
+   8              	 .global IfxEgtm_Tom_Tgc_buildFeature
+  10              	IfxEgtm_Tom_Tgc_buildFeature:
+  11              	.LFB395:
+  12              	 .file 1 "../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c"
+   1:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** /**
+   2:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****  * \file IfxEgtm_Tom.c
+   3:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****  * \brief EGTM  basic functionality
+   4:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****  *
+   5:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****  *
+   8:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****  *
+   9:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****  *
+  10:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****  *                                 IMPORTANT NOTICE
+  11:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****  *
+  12:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****  * this file except in compliance with IFASLL.
+  15:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****  *
+  16:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****  *
+  26:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****  *
+  27:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****  */
+  28:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** 
+  29:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** /******************************************************************************/
+  30:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** /*----------------------------------Includes----------------------------------*/
+  31:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** /******************************************************************************/
+  32:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** 
+  33:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** #include "Ifx_Cfg.h"
+  34:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** #if defined (__TASKING__)
+  35:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** #pragma warning 508 /* To suppress empty file warning */
+  36:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** #endif
+  37:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** #if defined (__ghs__)
+  38:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** #pragma diag_suppress 96 /* To suppress empty file warning */
+  39:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** #endif
+  40:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** 
+  41:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** #if !defined(DEVICE_TC45X)
+  42:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** #include "IfxEgtm_Tom.h"
+  43:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** 
+  44:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** /******************************************************************************/
+  45:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** /*-------------------------Function Implementations---------------------------*/
+  46:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** /******************************************************************************/
+  47:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** 
+  48:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** uint32 IfxEgtm_Tom_Tgc_buildFeature(uint16 enableMask, uint16 disableMask, uint8 bitfieldOffset)
+  49:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** {
+  13              	 .loc 1 49 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  50:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     uint8  i;
+  17              	 .loc 1 50 5
+  51:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     uint32 reg  = 0u;
+  18              	 .loc 1 51 5
+  19              	.LVL1:
+  52:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     uint32 mask = (uint32)((uint32)(enableMask | ((uint32)disableMask << 16u)));
+  20              	 .loc 1 52 5
+  21              	 .loc 1 52 71 is_stmt 0
+  22 0002 8F050150 	 sh %d5,%d5,16
+  23              	.LVL2:
+  24              	 .loc 1 52 12
+  25 0006 A654     	 or %d4,%d5
+  26              	.LVL3:
+  53:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** 
+  54:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     for (i = 0u; i < IFXEGTM_TOM_NUM_TGC_CHANNELS; i++)
+  27              	 .loc 1 54 5 is_stmt 1
+  51:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     uint32 mask = (uint32)((uint32)(enableMask | ((uint32)disableMask << 16u)));
+  28              	 .loc 1 51 12 is_stmt 0
+  29 0008 8202     	 mov %d2,0
+  30              	 .loc 1 54 12
+  31 000a 8203     	 mov %d3,0
+  32              	 .loc 1 54 5
+  33 000c 1D000000 	 j .L2
+  34              	.LVL4:
+  35              	.L4:
+  36              	.LBB8:
+  55:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     {
+  56:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         /* Bitfield length is 2 bits */
+  57:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         uint8 shift = (i << 1u) + bitfieldOffset;
+  58:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** 
+  59:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         if ((mask & 0x1u) == 0x1u)
+  60:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         {
+  61:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****             reg |= (uint32)((uint32)IfxEgtm_FeatureControl_enable << shift);
+  62:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         }
+  63:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** 
+  64:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         if ((mask & 0x10000u) == 0x10000u)
+  65:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         {
+  66:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****             reg |= (uint32)((uint32)IfxEgtm_FeatureControl_disable << shift);
+  67:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         }
+  68:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** 
+  69:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         mask = mask >> 1;
+  37              	 .loc 1 69 9 is_stmt 1 discriminator 2
+  38              	 .loc 1 69 14 is_stmt 0 discriminator 2
+  39 0010 06F4     	 sh %d4,-1
+  40              	.LVL5:
+  41              	.LBE8:
+  54:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     {
+  42              	 .loc 1 54 53 is_stmt 1 discriminator 2
+  43 0012 C213     	 add %d3,1
+  44              	.LVL6:
+  45 0014 8FF30F31 	 and %d3,%d3,255
+  46              	.LVL7:
+  47              	.L2:
+  54:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     {
+  48              	 .loc 1 54 20 discriminator 1
+  49 0018 FF830080 	 jge.u %d3,8,.L6
+  50              	.LBB9:
+  57:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** 
+  51              	 .loc 1 57 9
+  57:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** 
+  52              	 .loc 1 57 26 is_stmt 0
+  53 001c 8F130050 	 sh %d5,%d3,1
+  54 0020 8FF50F51 	 and %d5,%d5,255
+  57:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** 
+  55              	 .loc 1 57 15
+  56 0024 4265     	 add %d5,%d6
+  57 0026 8FF50F51 	 and %d5,%d5,255
+  58              	.LVL8:
+  59:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         {
+  59              	 .loc 1 59 9 is_stmt 1
+  59:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         {
+  60              	 .loc 1 59 12 is_stmt 0
+  61 002a 6F040000 	 jz.t %d4,0,.L3
+  61:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         }
+  62              	 .loc 1 61 13 is_stmt 1
+  61:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         }
+  63              	 .loc 1 61 20 is_stmt 0
+  64 002e 8227     	 mov %d7,2
+  65 0030 0F570070 	 sh %d7,%d7,%d5
+  61:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         }
+  66              	 .loc 1 61 17
+  67 0034 A672     	 or %d2,%d7
+  68              	.LVL9:
+  69              	.L3:
+  64:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         {
+  70              	 .loc 1 64 9 is_stmt 1
+  64:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         {
+  71              	 .loc 1 64 12 is_stmt 0
+  72 0036 EF040000 	 jz.t %d4,16,.L4
+  66:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         }
+  73              	 .loc 1 66 13 is_stmt 1
+  66:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         }
+  74              	 .loc 1 66 20 is_stmt 0
+  75 003a 8217     	 mov %d7,1
+  76 003c 0F570070 	 sh %d7,%d7,%d5
+  66:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         }
+  77              	 .loc 1 66 17
+  78 0040 A672     	 or %d2,%d7
+  79              	.LVL10:
+  80 0042 1D000000 	 j .L4
+  81              	.LVL11:
+  82              	.L6:
+  83              	.LBE9:
+  70:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     }
+  71:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** 
+  72:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     return reg;
+  84              	 .loc 1 72 5 is_stmt 1
+  73:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** }
+  85              	 .loc 1 73 1 is_stmt 0
+  86 0046 0090     	 ret 
+  87              	.LFE395:
+  89              	 .global IfxEgtm_Tom_Tgc_buildFeature_end
+  90              	IfxEgtm_Tom_Tgc_buildFeature_end:
+  91              	 .section .text.IfxEgtm_Tom_Tgc_buildFeatureForChannel,"ax",@progbits
+  92              	 .align 1
+  93              	 .global IfxEgtm_Tom_Tgc_buildFeatureForChannel
+  95              	IfxEgtm_Tom_Tgc_buildFeatureForChannel:
+  96              	.LFB396:
+  74:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** 
+  75:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** 
+  76:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** uint32 IfxEgtm_Tom_Tgc_buildFeatureForChannel(IfxEgtm_Tom_Ch channel, boolean enabled, uint8 bitfie
+  77:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** {
+  97              	 .loc 1 77 1 is_stmt 1
+  98              	.LVL12:
+  99 0000 40AE     	 mov.aa %a14,%SP
+ 100              	.LCFI1:
+  78:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     uint32 reg = 0u;
+ 101              	 .loc 1 78 5
+ 102              	.LVL13:
+  79:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** 
+  80:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     /* Bitfield length is 2 bits */
+  81:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     uint8  shift = (((uint8)channel & 0x7u) << 1u) + bitfieldOffset;
+ 103              	 .loc 1 81 5
+ 104              	 .loc 1 81 22 is_stmt 0
+ 105 0002 8FF40F41 	 and %d4,%d4,255
+ 106              	.LVL14:
+ 107              	 .loc 1 81 45
+ 108 0006 0614     	 sh %d4,1
+ 109 0008 8FE40021 	 and %d2,%d4,14
+ 110              	 .loc 1 81 12
+ 111 000c 4262     	 add %d2,%d6
+ 112 000e 8FF20F61 	 and %d6,%d2,255
+ 113              	.LVL15:
+  82:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** 
+  83:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     if (enabled == TRUE)
+ 114              	 .loc 1 83 5 is_stmt 1
+ 115              	 .loc 1 83 8 is_stmt 0
+ 116 0012 DF150000 	 jeq %d5,1,.L10
+  84:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     {
+  85:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         reg = (uint32)((uint32)IfxEgtm_FeatureControl_enable << shift);
+  86:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     }
+  87:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     else
+  88:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     {
+  89:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         reg = (uint32)((uint32)IfxEgtm_FeatureControl_disable << shift);
+ 117              	 .loc 1 89 9 is_stmt 1
+ 118              	 .loc 1 89 13 is_stmt 0
+ 119 0016 8212     	 mov %d2,1
+ 120 0018 0F620020 	 sh %d2,%d2,%d6
+ 121              	.LVL16:
+  90:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     }
+  91:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** 
+  92:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     return reg;
+ 122              	 .loc 1 92 5 is_stmt 1
+  93:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** }
+ 123              	 .loc 1 93 1 is_stmt 0
+ 124 001c 0090     	 ret 
+ 125              	.LVL17:
+ 126              	.L10:
+  85:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     }
+ 127              	 .loc 1 85 9 is_stmt 1
+  85:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     }
+ 128              	 .loc 1 85 13 is_stmt 0
+ 129 001e 8222     	 mov %d2,2
+ 130 0020 0F620020 	 sh %d2,%d2,%d6
+ 131              	.LVL18:
+ 132 0024 0090     	 ret 
+ 133              	.LFE396:
+ 135              	 .global IfxEgtm_Tom_Tgc_buildFeatureForChannel_end
+ 136              	IfxEgtm_Tom_Tgc_buildFeatureForChannel_end:
+ 137              	.section .data,"aw",@progbits
+ 138              	 .align 2
+ 139              	.LC0:
+ 140 0000 00000000 	 .word 0
+ 141 0004 01000000 	 .word 1
+ 142 0008 02000000 	 .word 2
+ 143 000c 03000000 	 .word 3
+ 144 0010 04000000 	 .word 4
+ 145 0014 00000000 	 .section .text.IfxEgtm_Tom_Ch_getFrequency,"ax",@progbits
+ 146              	 .align 1
+ 147              	 .global IfxEgtm_Tom_Ch_getFrequency
+ 149              	IfxEgtm_Tom_Ch_getFrequency:
+ 150              	.LFB397:
+  94:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** 
+  95:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** 
+  96:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** float32 IfxEgtm_Tom_Ch_getFrequency(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channel)
+  97:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** {
+ 151              	 .loc 1 97 1 is_stmt 1
+ 152              	.LVL19:
+ 153 0000 40AE     	 mov.aa %a14,%SP
+ 154              	.LCFI2:
+ 155 0002 2018     	 sub.a %SP,24
+ 156 0004 8049     	 mov.d %d9,%a4
+ 157 0006 0248     	 mov %d8,%d4
+  98:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     float32                   frequency         = 0.0f, sourceFrequency;
+ 158              	 .loc 1 98 5
+ 159              	.LVL20:
+  99:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     uint32                    periodTicks       = 0u;
+ 160              	 .loc 1 99 5
+ 100:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     IfxEgtm_Tom_Ch_ResetEvent counterResetEvent = (IfxEgtm_Tom_Ch_ResetEvent)tom->CH[channel].CTRL.
+ 161              	 .loc 1 100 5
+ 162              	 .loc 1 100 101 is_stmt 0
+ 163 0008 8F640020 	 sh %d2,%d4,6
+ 164 000c 01420026 	 addsc.a %a2,%a4,%d2,0
+ 165 0010 5422     	 ld.w %d2,[%a2]0
+ 166 0012 3702612A 	 extr.u %d2,%d2,20,1
+ 167              	.LVL21:
+ 101:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** 
+ 102:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     while ((counterResetEvent != IfxEgtm_Tom_Ch_ResetEvent_onCm0) &&
+ 168              	 .loc 1 102 5 is_stmt 1
+ 169              	 .loc 1 102 11 is_stmt 0
+ 170 0016 1D000000 	 j .L12
+ 171              	.LVL22:
+ 172              	.L13:
+ 103:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****            (channel > IfxEgtm_Tom_Ch_0))       /* Counter is reset from previous channel */
+ 104:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     {
+ 105:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         channel           = (IfxEgtm_Tom_Ch)((uint8)channel - 1u);
+ 173              	 .loc 1 105 9 is_stmt 1
+ 174 001a 8FF80F81 	 and %d8,%d8,255
+ 175              	.LVL23:
+ 176              	 .loc 1 105 27 is_stmt 0
+ 177 001e C2F8     	 add %d8,-1
+ 178              	.LVL24:
+ 106:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         counterResetEvent = (IfxEgtm_Tom_Ch_ResetEvent)tom->CH[channel].CTRL.B.RST_CCU0;
+ 179              	 .loc 1 106 9 is_stmt 1
+ 180              	 .loc 1 106 79 is_stmt 0
+ 181 0020 8F680020 	 sh %d2,%d8,6
+ 182              	.LVL25:
+ 183 0024 6092     	 mov.a %a2,%d9
+ 184 0026 01220026 	 addsc.a %a2,%a2,%d2,0
+ 185 002a 5422     	 ld.w %d2,[%a2]0
+ 186 002c 3702612A 	 extr.u %d2,%d2,20,1
+ 187              	.LVL26:
+ 188              	.L12:
+ 102:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****            (channel > IfxEgtm_Tom_Ch_0))       /* Counter is reset from previous channel */
+ 189              	 .loc 1 102 67 is_stmt 1
+ 103:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****            (channel > IfxEgtm_Tom_Ch_0))       /* Counter is reset from previous channel */
+ 190              	 .loc 1 103 21 is_stmt 0
+ 191 0030 8B082032 	 ne %d3,%d8,0
+ 102:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****            (channel > IfxEgtm_Tom_Ch_0))       /* Counter is reset from previous channel */
+ 192              	 .loc 1 102 67
+ 193 0034 2623     	 and %d3,%d2
+ 194 0036 DF030080 	 jnz %d3,.L13
+ 107:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     }
+ 108:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** 
+ 109:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     if (counterResetEvent == IfxEgtm_Tom_Ch_ResetEvent_onCm0)
+ 195              	 .loc 1 109 5 is_stmt 1
+ 196              	 .loc 1 109 8 is_stmt 0
+ 197 003a DF020080 	 jnz %d2,.L18
+ 110:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     {
+ 111:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         /* 1. Gets channel input frequency */
+ 112:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         sourceFrequency = IfxEgtm_Tom_Ch_getClockFrequency(&MODULE_EGTM, tom, channel);
+ 198              	 .loc 1 112 9 is_stmt 1
+ 199              	.LVL27:
+ 200              	.LBB10:
+ 201              	.LBB11:
+ 202              	 .file 2 "../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h"
+   1:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /**
+   2:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \file IfxEgtm_Tom.h
+   3:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \brief EGTM  basic functionality
+   4:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \ingroup IfxLld_Egtm
+   5:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+   6:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \version iLLD-TC4-v2.7.0
+   7:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   8:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+   9:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+  10:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+  11:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                                 IMPORTANT NOTICE
+  12:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+  13:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  14:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  15:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * this file except in compliance with IFASLL.
+  16:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+  17:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  18:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * Unless required by applicable law or agreed to in writing, software distributed
+  19:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  20:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  21:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * whether express, implied, statutory or otherwise, including but not limited to
+  22:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  23:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * defects in the licensed items, or non-infringement of third parties'
+  24:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * intellectual property rights. See the full license text for the specific
+  25:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * language governing permissions and limitations under IFASLL.
+  26:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+  27:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+  28:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+  29:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+  30:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \defgroup IfxLld_Egtm_Std_Tom Tom Basic Functionality
+  31:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \ingroup IfxLld_Egtm_Std
+  32:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \defgroup IfxLld_Egtm_Std_Tom_Enumerations TOM Enumerations
+  33:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \ingroup IfxLld_Egtm_Std_Tom
+  34:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \defgroup IfxLld_Egtm_Std_Tom_Channel_Functions TOM Channel Functions
+  35:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \ingroup IfxLld_Egtm_Std_Tom
+  36:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \defgroup IfxLld_Egtm_Std_Tom_TGC_Functions TOM TGC Functions
+  37:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \ingroup IfxLld_Egtm_Std_Tom
+  38:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \defgroup IfxLld_Egtm_Std_Tom_Module_Functions TOM Module Functions
+  39:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \ingroup IfxLld_Egtm_Std_Tom
+  40:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+  41:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+  42:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** #ifndef IFXEGTM_TOM_H
+  43:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** #define IFXEGTM_TOM_H 1
+  44:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+  45:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /******************************************************************************/
+  46:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /*----------------------------------Includes----------------------------------*/
+  47:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /******************************************************************************/
+  48:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+  49:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** #include "_Impl/IfxEgtm_cfg.h"
+  50:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** #include "IfxEgtm_bf.h"
+  51:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** #include "IfxEgtm.h"
+  52:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** #include "IfxEgtm_Tbu.h"
+  53:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** #include "Src/Std/IfxSrc.h"
+  54:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** #include "IfxEgtm_Cmu.h"
+  55:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+  56:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /******************************************************************************/
+  57:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /*-----------------------------------Macros-----------------------------------*/
+  58:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /******************************************************************************/
+  59:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+  60:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Number of channels per TOM TGC
+  61:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+  62:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** #define IFXEGTM_TOM_NUM_TGC_CHANNELS (8)
+  63:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+  64:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Macro to calculate shift for each channel
+  65:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * Each channel occupies two bits hence multiply by 2 (left shift by 1) and then add offset
+  66:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+  67:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** #define IFXEGTM_TOM_TGC_CHANNEL_SHIFT(channel, offset) ((((uint32)((uint32)channel & 0x7u)) << 1u) 
+  68:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+  69:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Macro to mask one channel bitfield in TGC registers
+  70:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+  71:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** #define IFXEGTM_TOM_TGC_CHANNEL_MASK (3u)
+  72:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+  73:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Macro to calculate channel bitfield value in TGC registers depending on whether it is en
+  74:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+  75:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** #define IFXEGTM_TOM_TGC_CHANNEL_VALUE(enabled)         ((enabled == TRUE) ? IfxEgtm_FeatureControl_
+  76:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+  77:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Number of TGC
+  78:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+  79:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** #define IFXEGTM_TOM_NUM_TGC          (2)
+  80:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+  81:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /******************************************************************************/
+  82:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /*--------------------------------Enumerations--------------------------------*/
+  83:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /******************************************************************************/
+  84:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+  85:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \addtogroup IfxLld_Egtm_Std_Tom_Enumerations
+  86:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \{ */
+  87:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Clock source for the TOM channels
+  88:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * Definition in Ifx_EGTM_CLS_TOM_CH_CTRL.B.CLK_SRC
+  89:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+  90:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** typedef enum
+  91:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** {
+  92:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****     IfxEgtm_Tom_Ch_ClkSrc_cmuFxclk0 = 0,  /**< \brief div 1 */
+  93:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****     IfxEgtm_Tom_Ch_ClkSrc_cmuFxclk1 = 1,  /**< \brief div 16 */
+  94:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****     IfxEgtm_Tom_Ch_ClkSrc_cmuFxclk2 = 2,  /**< \brief div 256 */
+  95:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****     IfxEgtm_Tom_Ch_ClkSrc_cmuFxclk3 = 3,  /**< \brief div 4096 */
+  96:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****     IfxEgtm_Tom_Ch_ClkSrc_cmuFxclk4 = 4,  /**< \brief div 32768 */
+  97:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****     IfxEgtm_Tom_Ch_ClkSrc_noClock   = 5,  /**< \brief no clock */
+  98:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****     IfxEgtm_Tom_Ch_ClkSrc_prevTrig  = 13, /**< \brief TRIG[x-1] trigger from previous channel */
+  99:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****     IfxEgtm_Tom_Ch_ClkSrc_extTrig   = 14  /**< \brief TIM_EXT_CAPTURE */
+ 100:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** } IfxEgtm_Tom_Ch_ClkSrc;
+ 101:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 102:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Reset source for channel counter CN0
+ 103:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * Definition in Ifx_EGTM_CLS_TOM_CH_CTRL.B.TRIGOUT
+ 104:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 105:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** typedef enum
+ 106:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** {
+ 107:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****     IfxEgtm_Tom_Ch_OutputTrigger_forward  = 0, /**< \brief Forward the trigger from the previous ch
+ 108:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****     IfxEgtm_Tom_Ch_OutputTrigger_generate = 1  /**< \brief Generate the trigger from the current ch
+ 109:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** } IfxEgtm_Tom_Ch_OutputTrigger;
+ 110:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 111:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Reset event for channel counter CN0
+ 112:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * Definition in Ifx_EGTM_CLS_TOM_CH_CTRL.B.RST_CCU0
+ 113:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 114:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** typedef enum
+ 115:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** {
+ 116:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****     IfxEgtm_Tom_Ch_ResetEvent_onCm0     = 0,
+ 117:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****     IfxEgtm_Tom_Ch_ResetEvent_onTrigger = 1
+ 118:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** } IfxEgtm_Tom_Ch_ResetEvent;
+ 119:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 120:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \} */
+ 121:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 122:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \addtogroup IfxLld_Egtm_Std_Tom_Channel_Functions
+ 123:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \{ */
+ 124:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 125:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /******************************************************************************/
+ 126:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /*-------------------------Inline Function Prototypes-------------------------*/
+ 127:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /******************************************************************************/
+ 128:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 129:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Clears the channel One notification
+ 130:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 131:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[inout] tom    Pointer to the TOM object
+ 132:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]   channel Channel index
+ 133:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                      Range: \ref: IfxEgtm_Tom_Ch
+ 134:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 135:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 136:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 137:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Ch_clearOneNotification(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channel);
+ 138:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 139:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Clears the channel Zero notification
+ 140:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 141:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[inout] tom     Pointer to the TOM object
+ 142:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    channel Channel index
+ 143:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                       Range: \ref: IfxEgtm_Tom_Ch
+ 144:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 145:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 146:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 147:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Ch_clearZeroNotification(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channel)
+ 148:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 149:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Returns the base addredd of selected Tom channel
+ 150:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 151:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] tom     Pointer to the TOM object
+ 152:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] channel Channel index
+ 153:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                    Range: \ref: IfxEgtm_Tom_Ch
+ 154:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 155:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval Pointer to channel base address
+ 156:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 157:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE Ifx_EGTM_CLS_TOM_CH *IfxEgtm_Tom_Ch_getChannelPointer(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom
+ 158:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 159:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Returns the TOM channel input clock frequency in Hz
+ 160:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 161:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] egtm    Pointer to EGTM module
+ 162:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] tom     Pointer to the TOM object
+ 163:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] channel Channel index
+ 164:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                    Range: \ref: IfxEgtm_Tom_Ch
+ 165:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 166:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval TOM channel input clock frequency in Hz
+ 167:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 168:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE float32 IfxEgtm_Tom_Ch_getClockFrequency(Ifx_EGTM *egtm, Ifx_EGTM_CLS_TOM *tom, IfxEgtm_
+ 169:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 170:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Returns the channel clock source
+ 171:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 172:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] tom     Pointer to the TOM object
+ 173:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] channel Channel index
+ 174:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                    Range: \ref: IfxEgtm_Tom_Ch
+ 175:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 176:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval The clock source
+ 177:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * Range: \ref: IfxEgtm_Tom_Ch_ClkSrc
+ 178:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 179:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE IfxEgtm_Tom_Ch_ClkSrc IfxEgtm_Tom_Ch_getClockSource(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_C
+ 180:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 181:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Returns the compare one value
+ 182:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 183:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] tom     Pointer to the TOM object
+ 184:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] channel Channel index
+ 185:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                    Range: \ref: IfxEgtm_Tom_Ch
+ 186:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 187:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval Compare one value
+ 188:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * Range: 0 to 0xFFFF
+ 189:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 190:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 191:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE uint16 IfxEgtm_Tom_Ch_getCompareOne(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channel);
+ 192:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 193:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Returns the compare zero shadow value
+ 194:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 195:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] tom     Pointer to the TOM object
+ 196:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] channel Channel index
+ 197:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                    Range: \ref: IfxEgtm_Tom_Ch
+ 198:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 199:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval compare zero shadow value
+ 200:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * Range: 0 to 0xFFFF
+ 201:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 202:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE uint16 IfxEgtm_Tom_Ch_getCompareOneShadow(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channel)
+ 203:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 204:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Returns the compare one pointer
+ 205:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 206:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] tom     Pointer to the TOM object
+ 207:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] channel Channel index
+ 208:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                    Range: \ref: IfxEgtm_Tom_Ch
+ 209:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 210:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval compare one pointer
+ 211:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 212:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE volatile uint32 *IfxEgtm_Tom_Ch_getCompareOnePointer(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_
+ 213:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 214:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Returns the compare zero value
+ 215:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 216:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] tom     Pointer to the TOM object
+ 217:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] channel Channel index
+ 218:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                    Range: \ref: IfxEgtm_Tom_Ch
+ 219:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 220:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval compare zero value
+ 221:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * Range: 0 to 0xFFFF
+ 222:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 223:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE uint16 IfxEgtm_Tom_Ch_getCompareZero(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channel);
+ 224:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 225:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Returns the compare zero shadow value
+ 226:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 227:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] tom     Pointer to the TOM object
+ 228:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] channel Channel index
+ 229:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                    Range: \ref: IfxEgtm_Tom_Ch
+ 230:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 231:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval compare zero shadow value
+ 232:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * Range: 0 to 0xFFFF
+ 233:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 234:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE uint16 IfxEgtm_Tom_Ch_getCompareZeroShadow(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channel
+ 235:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 236:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Returns the compare zero pointer
+ 237:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 238:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] tom     Pointer to the TOM object
+ 239:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] channel Channel index
+ 240:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                    Range: \ref: IfxEgtm_Tom_Ch
+ 241:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 242:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval compare zero pointer
+ 243:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * Range: 0 to 0xFFFF
+ 244:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 245:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE volatile uint32 *IfxEgtm_Tom_Ch_getCompareZeroPointer(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom
+ 246:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 247:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Gets the TOM output level
+ 248:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 249:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] tom     Pointer to the TOM object
+ 250:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] channel Channel index
+ 251:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                    Range: \ref: IfxEgtm_Tom_Ch
+ 252:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 253:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval TRUE the output is high, FALSE the output is low
+ 254:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 255:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE boolean IfxEgtm_Tom_Ch_getOutputLevel(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channel);
+ 256:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 257:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Returns a pointer to the TOM channel SRC
+ 258:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 259:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] egtm    Pointer to EGTM module
+ 260:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] cluster Specifies the Cls
+ 261:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                    Range: \ref: IfxEgtm_Cluster
+ 262:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] channel Channel index
+ 263:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                    Range: \ref: IfxEgtm_Tom_Ch
+ 264:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 265:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval Pointer to the TOM channel SRC
+ 266:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 267:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE volatile Ifx_SRC_SRCR *IfxEgtm_Tom_Ch_getSrcPointer(Ifx_EGTM *egtm, IfxEgtm_Cluster clus
+ 268:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 269:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Returns the TGC pointer
+ 270:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 271:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] tom      Pointer to the TOM object
+ 272:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] tgcIndex TGC index
+ 273:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                     Range: 0 to 0xFFFFFFFF
+ 274:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 275:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval TOM TGC object pointer
+ 276:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 277:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE Ifx_EGTM_CLS_TOM_TGC *IfxEgtm_Tom_Ch_getTgcPointer(Ifx_EGTM_CLS_TOM *tom, uint32 tgcInde
+ 278:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 279:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Returns the Timer pointer
+ 280:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 281:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] tom     Pointer to the TOM object
+ 282:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] channel Channel index
+ 283:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                    Range: \ref: IfxEgtm_Tom_Ch
+ 284:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 285:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval Timer pointer
+ 286:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 287:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE volatile uint32 *IfxEgtm_Tom_Ch_getTimerPointer(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch ch
+ 288:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 289:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Returns the status of channel One notification
+ 290:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 291:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] tom     Pointer to the TOM object
+ 292:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] channel Channel index
+ 293:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                    Range: \ref: IfxEgtm_Tom_Ch
+ 294:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 295:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval TRUE If CCU1 Trigger condition interrupt is active for the specified channel.
+ 296:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *         FALSE If CCU1 Trigger condition interrupt is not active for the specified channel.
+ 297:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 298:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE boolean IfxEgtm_Tom_Ch_isOneNotification(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channel);
+ 299:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 300:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Returns the status of channel Zero notification
+ 301:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 302:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] tom     Pointer to the TOM object
+ 303:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] channel Channel index
+ 304:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                    Range: \ref: IfxEgtm_Tom_Ch
+ 305:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 306:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval TRUE If CCU0 Trigger condition interrupt is active for the specified channel.
+ 307:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *         FALSE If CCU0 Trigger condition interrupt is not active for the specified channel.
+ 308:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 309:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE boolean IfxEgtm_Tom_Ch_isZeroNotification(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channel)
+ 310:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 311:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Raises the interrupt for Compare 1
+ 312:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 313:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[inout] tom     Pointer to the TOM object
+ 314:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]   channel  Channel index
+ 315:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                       Range: \ref: IfxEgtm_Tom_Ch
+ 316:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 317:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 318:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 319:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Ch_raiseInterruptOne(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channel);
+ 320:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 321:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Raises the interrupt for Compare 0
+ 322:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 323:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[inout] tom     Pointer to the TOM object
+ 324:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    channel Channel index
+ 325:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                       Range: \ref: IfxEgtm_Tom_Ch
+ 326:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 327:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 328:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 329:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Ch_raiseInterruptZero(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channel);
+ 330:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 331:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Sets the channel clock source
+ 332:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 333:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[inout] tom     Pointer to the TOM object
+ 334:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    channel Channel index
+ 335:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                       Range: \ref: IfxEgtm_Tom_Ch
+ 336:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    clk     Channel clock source
+ 337:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                       Range: \ref: IfxEgtm_Tom_Ch_ClkSrc
+ 338:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 339:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 340:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 341:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Ch_setClockSource(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channel, IfxEgt
+ 342:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 343:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Sets the compare 0 and 1 values
+ 344:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 345:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[inout] tom         Pointer to the TOM object
+ 346:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    channel     Channel index
+ 347:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                           Range: \ref: IfxEgtm_Tom_Ch
+ 348:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    compareZero Compare zero value
+ 349:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                           Range: 0 to 0xFFFF
+ 350:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    compareOne  Compare one value
+ 351:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                           Range: 0 to 0xFFFF
+ 352:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 353:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 354:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 355:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Ch_setCompare(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channel, uint16 com
+ 356:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 357:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Sets the compare 1 value
+ 358:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 359:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[inout] tom        Pointer to the TOM object
+ 360:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    channel    Channel index
+ 361:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                          Range: \ref: IfxEgtm_Tom_Ch
+ 362:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    compareOne Compare one value
+ 363:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                          Range: 0 to 0xFFFF
+ 364:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 365:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 366:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 367:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Ch_setCompareOne(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channel, uint16 
+ 368:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 369:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Sets the compare 1 shadow value
+ 370:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 371:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] tom       Pointer to the TOM object
+ 372:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] channel   Channel index
+ 373:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                      Range: \ref: IfxEgtm_Tom_Ch
+ 374:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] shadowOne Compare one shadow value
+ 375:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                      Range: 0 to 0xFFFF
+ 376:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 377:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 378:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 379:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Ch_setCompareOneShadow(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channel, u
+ 380:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 381:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Sets the compare 0 and 1 shadow values
+ 382:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 383:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[inout] tom        Pointer to the TOM object
+ 384:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    channel    Channel index
+ 385:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                          Range: \ref: IfxEgtm_Tom_Ch
+ 386:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    shadowZero Compare zero shadow value
+ 387:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                          Range: 0 to 0xFFFF
+ 388:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    shadowOne  Compare one shadow value
+ 389:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                          Range: 0 to 0xFFFF
+ 390:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 391:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 392:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 393:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Ch_setCompareShadow(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channel, uint
+ 394:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 395:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Sets the compare 0 value
+ 396:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 397:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[inout] tom         Pointer to the TOM object
+ 398:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    channel     Channel index
+ 399:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                           Range: \ref: IfxEgtm_Tom_Ch
+ 400:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    compareZero Compare zero value
+ 401:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                           Range: 0 to 0xFFFF
+ 402:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 403:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 404:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 405:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Ch_setCompareZero(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channel, uint16
+ 406:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 407:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Sets the compare 0 shadow value
+ 408:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 409:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[inout] tom        Pointer to the TOM object
+ 410:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    channel    Channel index
+ 411:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                          Range: \ref: IfxEgtm_Tom_Ch
+ 412:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    shadowZero Compare zero shadow value
+ 413:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                          Range: 0 to 0xFFFF
+ 414:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 415:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 416:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 417:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Ch_setCompareZeroShadow(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channel, 
+ 418:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 419:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Sets the counter value
+ 420:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 421:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[inout] tom     Pointer to the TOM object
+ 422:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    channel Channel index
+ 423:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                       Range: \ref: IfxEgtm_Tom_Ch
+ 424:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    value   Counter value
+ 425:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                       Range: 0 to 0xFFFF
+ 426:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 427:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 428:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 429:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Ch_setCounterValue(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channel, uint3
+ 430:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 431:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Enable/disable the gated counter mode (channel 0 to 7 only)
+ 432:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 433:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[inout] tom     Pointer to the TOM object
+ 434:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    channel Channel index
+ 435:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                       Range: \ref: IfxEgtm_Tom_Ch
+ 436:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    enabled If TRUE, Gated Counter Mode enabled, If FALSE Gated Counter Mode disabled.
+ 437:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 438:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 439:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 440:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Ch_setGatedCounter(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channel, boole
+ 441:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 442:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Sets the channel notification
+ 443:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 444:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[inout] tom                    Pointer to the TOM object
+ 445:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    channel                Channel index
+ 446:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                                      Range: \ref: IfxEgtm_Tom_Ch
+ 447:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    mode                   Interrupt mode
+ 448:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                                      Range: \ref: IfxEgtm_IrqMode
+ 449:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    interruptOnCompareZero If TRUE, an interrupt is generated on compare 0, else no in
+ 450:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    interruptOnCompareOne  If TRUE, an interrupt is generated on compare 1, else no in
+ 451:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 452:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 453:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 454:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Ch_setNotification(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channel, IfxEg
+ 455:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 456:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Enable/disable the one shot mode
+ 457:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 458:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[inout] tom     Pointer to the TOM object
+ 459:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    channel Channel index
+ 460:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    enabled If TRUE, One-shot mode enabled, FALSE One-shot mode disabled
+ 461:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 462:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 463:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 464:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Ch_setOneShotMode(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channel, boolea
+ 465:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 466:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Enable/disable the PCM mode (channel 15 only)
+ 467:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 468:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[inout] tom     Pointer to the TOM object
+ 469:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    channel Channel index
+ 470:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                       Range: \ref: IfxEgtm_Tom_Ch
+ 471:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    enabled If TRUE, the feature is enabled, else disabled
+ 472:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 473:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 474:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 475:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Ch_setPcm(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channel, boolean enable
+ 476:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 477:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Sets the channel clock source either from local or from previous channel
+ 478:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 479:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[inout] tom     Pointer to the TOM object
+ 480:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    channel Channel index
+ 481:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                       Range: \ref: IfxEgtm_Tom_Ch
+ 482:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    event   Channel reset event
+ 483:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                       Range: \ref: IfxEgtm_Tom_Ch_ResetEvent
+ 484:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 485:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 486:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 487:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Ch_setResetSource(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channel, IfxEgt
+ 488:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 489:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Sets the signal level
+ 490:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 491:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[inout] tom         Pointer to the TOM object
+ 492:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    channel     Channel index
+ 493:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                           Range: \ref: IfxEgtm_Tom_Ch
+ 494:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    activeState Signal level active state. In case the channel is reset, the output is
+ 495:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                           Range: \ref: Ifx_ActiveState
+ 496:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 497:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 498:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 499:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Ch_setSignalLevel(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channel, Ifx_Ac
+ 500:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 501:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Enable/disable the SPE mode (channel 0 to 7 only)
+ 502:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 503:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[inout] tom     Pointer to the TOM object
+ 504:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    channel Channel index
+ 505:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                       Range: \ref: IfxEgtm_Tom_Ch
+ 506:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    enabled If TRUE, SPE output mode enabled: TOM_OUT [x:x] is defined by TOM[i]_SPE_O
+ 507:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                          FALSE, SPE output mode disabled: TOM_OUT [x:x] is defined by TOM[i]_SPE
+ 508:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 509:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 510:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 511:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Ch_setSpe(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channel, boolean enable
+ 512:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 513:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Sets the channel trigger output
+ 514:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 515:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[inout] tom     Pointer to the TOM object
+ 516:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    channel Channel index
+ 517:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                       Range: \ref: IfxEgtm_Tom_Ch
+ 518:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    trigger Channel trigger output mode
+ 519:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                       Range: \ref: IfxEgtm_Tom_Ch_OutputTrigger
+ 520:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 521:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 522:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 523:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Ch_setTriggerOutput(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channel, IfxE
+ 524:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 525:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /******************************************************************************/
+ 526:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /*-------------------------Global Function Prototypes-------------------------*/
+ 527:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /******************************************************************************/
+ 528:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 529:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Get configured frequency of PWM channel
+ 530:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * Note: This API does not work if channel 0 counter is reset by external trigger. API will cause a
+ 531:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 532:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] tom     Pointer to TOM subcluster SFR
+ 533:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] channel TOM channel numer
+ 534:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                    Range: \ref: IfxEgtm_Tom_Ch
+ 535:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 536:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval Channel frequency in Hz
+ 537:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 538:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_EXTERN float32 IfxEgtm_Tom_Ch_getFrequency(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channel);
+ 539:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 540:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Get configured duty of PWM channel
+ 541:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * Note: This API does not work if channel 0 counter is reset by external trigger. API will cause a
+ 542:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 543:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] tom     Pointer to TOM subcluster SFR
+ 544:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] channel TOM channel numer
+ 545:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                    Range: \ref: IfxEgtm_Tom_Ch
+ 546:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 547:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval Channel duty in percentage [0-100%]
+ 548:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 549:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_EXTERN float32 IfxEgtm_Tom_Ch_getDuty(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channel);
+ 550:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 551:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \} */
+ 552:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 553:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \addtogroup IfxLld_Egtm_Std_Tom_TGC_Functions
+ 554:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \{ */
+ 555:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 556:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /******************************************************************************/
+ 557:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /*-------------------------Inline Function Prototypes-------------------------*/
+ 558:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /******************************************************************************/
+ 559:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 560:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Enable/disable one channel (ENDIS)
+ 561:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 562:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[inout] tgc       Pointer to the TGC object
+ 563:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    channel   Channel index
+ 564:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                         Range: \ref: IfxEgtm_Tom_Ch
+ 565:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    enabled   Enable/ Disable choice of the feature
+ 566:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    immediate If TRUE, the action is done immediately else, the action is done on TGC 
+ 567:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 568:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 569:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 570:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Tgc_enableChannel(Ifx_EGTM_CLS_TOM_TGC *tgc, IfxEgtm_Tom_Ch channel, bo
+ 571:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 572:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Enable/disable one channel output (OUTEN)
+ 573:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 574:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[inout] tgc       Pointer to the TGC object
+ 575:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    channel   Channel index
+ 576:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                         Range: \ref: IfxEgtm_Tom_Ch
+ 577:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    enabled   Enable/ Disable choice of the feature
+ 578:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    immediate If TRUE, the action is done immediately else, the action is done on TGC 
+ 579:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 580:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 581:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 582:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Tgc_enableChannelOutput(Ifx_EGTM_CLS_TOM_TGC *tgc, IfxEgtm_Tom_Ch chann
+ 583:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 584:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Enable/disable one channel for update (UPEN)
+ 585:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 586:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[inout] tgc     Pointer to the TGC object
+ 587:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    channel Channel index
+ 588:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                       Range: \ref: IfxEgtm_Tom_Ch
+ 589:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    enabled Enable/ Disable choice of the feature
+ 590:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 591:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 592:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 593:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Tgc_enableChannelUpdate(Ifx_EGTM_CLS_TOM_TGC *tgc, IfxEgtm_Tom_Ch chann
+ 594:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 595:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Enable/disable one or more channels (ENDIS)
+ 596:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 597:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[inout] tgc         Pointer to the TGC object
+ 598:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    enableMask  Mask for the channel feature enable (bit 0: Channel 0, bit 1: channel 
+ 599:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                           Range: 0 to 0xFFFF
+ 600:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    disableMask Mask for the channel feature enable (bit 0: Channel 0, bit 1: channel 
+ 601:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                           Range: 0 to 0xFFFF
+ 602:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    immediate   If TRUE, the action is done immediately else, the action is done on TG
+ 603:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 604:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 605:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 606:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Tgc_enableChannels(Ifx_EGTM_CLS_TOM_TGC *tgc, uint16 enableMask, uint16
+ 607:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 608:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Enable/disable one or more channels output (OUTEN)
+ 609:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 610:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[inout] tgc         Pointer to the TGC object
+ 611:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    enableMask  Mask for the channel feature enable (bit 0: Channel 0, bit 1: channel 
+ 612:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                           Range: 0 to 0xFFFF
+ 613:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    disableMask Mask for the channel feature disable (bit 0: Channel 0, bit 1: channel
+ 614:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                           Range: 0 to 0xFFFF
+ 615:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    immediate   If TRUE, the action is done immediately else, the action is done on TG
+ 616:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 617:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 618:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 619:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Tgc_enableChannelsOutput(Ifx_EGTM_CLS_TOM_TGC *tgc, uint16 enableMask, 
+ 620:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 621:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Enable/disable the TGC channels trigger
+ 622:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 623:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[inout] tgc         Pointer to the TGC object
+ 624:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    enableMask  Mask for the channel feature enable (bit 0: Channel 0, bit 1: channel 
+ 625:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                           Range: 0 to 0xFFFF
+ 626:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    disableMask Mask for the channel feature disable (bit 0: Channel 0, bit 1: channel
+ 627:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                           Range: 0 to 0xFFFF
+ 628:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 629:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 630:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 631:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Tgc_enableChannelsTrigger(Ifx_EGTM_CLS_TOM_TGC *tgc, uint16 enableMask,
+ 632:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 633:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Enable/disable one or more channels for update (UPEN)
+ 634:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 635:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[inout] tgc         Pointer to the TGC object
+ 636:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    enableMask  Mask for the channel feature enable (bit 0: Channel 0, bit 1: channel 
+ 637:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                           Range: 0 to 0xFFFF
+ 638:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    disableMask Mask for the channel feature disable (bit 0: Channel 0, bit 1: channel
+ 639:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                           Range: 0 to 0xFFFF
+ 640:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 641:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 642:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 643:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Tgc_enableChannelsUpdate(Ifx_EGTM_CLS_TOM_TGC *tgc, uint16 enableMask, 
+ 644:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 645:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Enable/disable the time base trigger
+ 646:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 647:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[inout] tgc     Pointer to the TGC object
+ 648:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    enabled If TRUE, the trigger is enabled else disabled
+ 649:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 650:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 651:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 652:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Tgc_enableTimeTrigger(Ifx_EGTM_CLS_TOM_TGC *tgc, boolean enabled);
+ 653:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 654:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Reset one or more channels
+ 655:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 656:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[inout] tgc      Pointer to the TGC object
+ 657:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]   resetMask Mask for the channel reset (bit 0: Channel 0, bit 1: channel 1, ...)
+ 658:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                        Range: 0 to 0xFFFFFFFF
+ 659:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 660:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 661:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 662:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Tgc_resetChannels(Ifx_EGTM_CLS_TOM_TGC *tgc, uint32 resetMask);
+ 663:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 664:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Enable/disable one channel for update (FUPD)
+ 665:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 666:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[inout] tgc          Pointer to the TGC object
+ 667:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    channel      Channel index
+ 668:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                            Range: \ref: IfxEgtm_Tom_Ch
+ 669:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    enabled      Enable/ Disable choice of the feature
+ 670:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    resetEnabled Enable/ Disable reset choice of the feature
+ 671:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 672:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 673:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 674:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Tgc_setChannelForceUpdate(Ifx_EGTM_CLS_TOM_TGC *tgc, IfxEgtm_Tom_Ch cha
+ 675:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 676:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Enable/disable one or more channels for the force update feature (FUPD)
+ 677:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 678:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[inout] tgc              Pointer to the TGC object
+ 679:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    enableMask       Mask for the channel feature enable (bit 0: Channel 0, bit 1: cha
+ 680:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                                Range: 0 to 0xFFFF
+ 681:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    disableMask      Mask for the channel feature disable (bit 0: Channel 0, bit 1: ch
+ 682:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                                Range: 0 to 0xFFFF
+ 683:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    resetEnableMask  Mask for the enabled channels counter reset on force update (bit 
+ 684:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                                Range: 0 to 0xFFFF
+ 685:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    resetDisableMask Mask for the disabled channels with no counter reset on force upd
+ 686:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                                Range: 0 to 0xFFFF
+ 687:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 688:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 689:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 690:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Tgc_setChannelsForceUpdate(Ifx_EGTM_CLS_TOM_TGC *tgc, uint16 enableMask
+ 691:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 692:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Sets the trigger time base and time base value
+ 693:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 694:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[inout] tgc   Pointer to the TGC object
+ 695:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    base  Time base used for comparison
+ 696:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                     Range: \ref: IfxEgtm_Tbu_Ts
+ 697:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]    value Compare value that raise the trigger
+ 698:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                     Range: 0 to 0x00FFFFFF
+ 699:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 700:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 701:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 702:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Tgc_setTimeTrigger(Ifx_EGTM_CLS_TOM_TGC *tgc, IfxEgtm_Tbu_Ts base, uint
+ 703:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 704:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Raise the trigger for the channel enable/disable settings,  output enable settings, and 
+ 705:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 706:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[inout] tgc Pointer to the TGC object
+ 707:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 708:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 709:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 710:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Tgc_trigger(Ifx_EGTM_CLS_TOM_TGC *tgc);
+ 711:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 712:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Sets the tgc global control value
+ 713:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 714:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[inout] tgc    Pointer to the TGC object
+ 715:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in]   control Global control value
+ 716:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                      Range: 0 to 0xFFFFFF01
+ 717:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 718:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 719:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 720:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Tgc_writeGlobalControl(Ifx_EGTM_CLS_TOM_TGC *tgc, uint32 control);
+ 721:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 722:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Enable/disable the TGC channel trigger
+ 723:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 724:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] tgc     Pointer to the TGC object
+ 725:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] channel Channel index
+ 726:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                    Range: \ref: IfxEgtm_Tom_Ch
+ 727:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] enabled Enable/ Disable choice of the feature
+ 728:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 729:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 730:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 731:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Tgc_setInternalTrigger(Ifx_EGTM_CLS_TOM_TGC *tgc, IfxEgtm_Tom_Ch channe
+ 732:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 733:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /******************************************************************************/
+ 734:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /*-------------------------Global Function Prototypes-------------------------*/
+ 735:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /******************************************************************************/
+ 736:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 737:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Builds the register value for the feature enable/disable
+ 738:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 739:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] enableMask     Mask for the channel feature enable (bit 0: Channel 0, bit 1: channel 
+ 740:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                           Range: 0 to 0xFFFF
+ 741:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] disableMask    Mask for the channel feature disable (bit 0: Channel 0, bit 1: channel
+ 742:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                           Range: 0 to 0xFFFF
+ 743:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] bitfieldOffset Offset of the channel 0 bitfield in the register
+ 744:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                           Range: 0 to 0xFF
+ 745:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 746:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval The register value
+ 747:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * Range: 0 to 0xFFFF
+ 748:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 749:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_EXTERN uint32 IfxEgtm_Tom_Tgc_buildFeature(uint16 enableMask, uint16 disableMask, uint8 bitfiel
+ 750:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 751:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Builds the register value for the feature enable/disable for a single channel
+ 752:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 753:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] channel        Channel index
+ 754:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                           Range: \ref: IfxEgtm_Tom_Ch
+ 755:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] enabled        Enable/ Disable choice of the feature
+ 756:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] bitfieldOffset Offset of the channel 0 bitfield in the register
+ 757:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                           Range: 0 to 0xFF
+ 758:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 759:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval The register value
+ 760:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * Range: 0 to 0xFFFF
+ 761:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 762:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_EXTERN uint32 IfxEgtm_Tom_Tgc_buildFeatureForChannel(IfxEgtm_Tom_Ch channel, boolean enabled, u
+ 763:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 764:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \} */
+ 765:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 766:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \addtogroup IfxLld_Egtm_Std_Tom_Module_Functions
+ 767:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \{ */
+ 768:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 769:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /******************************************************************************/
+ 770:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /*-------------------------Inline Function Prototypes-------------------------*/
+ 771:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /******************************************************************************/
+ 772:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 773:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \brief Configures the tout selection
+ 774:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 775:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] toutNum TOUT number
+ 776:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                    Range: 0 to 0xFFFFFFFF
+ 777:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \param[in] toutSel TOUTselection
+ 778:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *                    Range: 0 to 0xFFFFFFFF
+ 779:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  *
+ 780:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  * \retval None
+ 781:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****  */
+ 782:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_setTout(uint32 toutNum, uint32 toutSel);
+ 783:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 784:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /** \} */
+ 785:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 786:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /******************************************************************************/
+ 787:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /*---------------------Inline Function Implementations------------------------*/
+ 788:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** /******************************************************************************/
+ 789:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 790:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Ch_clearOneNotification(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channel)
+ 791:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** {
+ 792:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****     tom->CH[channel].IRQ_NOTIFY.B.CCU1TC = 1u;
+ 793:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** }
+ 794:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 795:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 796:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE void IfxEgtm_Tom_Ch_clearZeroNotification(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channel)
+ 797:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** {
+ 798:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****     tom->CH[channel].IRQ_NOTIFY.B.CCU0TC = 1u;
+ 799:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** }
+ 800:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 801:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 802:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE Ifx_EGTM_CLS_TOM_CH *IfxEgtm_Tom_Ch_getChannelPointer(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom
+ 803:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** {
+ 804:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****     return (Ifx_EGTM_CLS_TOM_CH *)((uint32)&tom->CH[channel].CTRL.U);
+ 805:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** }
+ 806:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 807:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 808:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE float32 IfxEgtm_Tom_Ch_getClockFrequency(Ifx_EGTM *egtm, Ifx_EGTM_CLS_TOM *tom, IfxEgtm_
+ 809:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** {
+ 810:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****     IfxEgtm_Tom_Ch_ClkSrc clk;
+ 203              	 .loc 2 810 5
+ 811:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****     IfxEgtm_Cmu_Fxclk     clkIndex[5] = {
+ 204              	 .loc 2 811 5
+ 205              	 .loc 2 811 27 is_stmt 0
+ 206 003e 91000020 	 movh.a %a2,hi:.LC0
+ 207 0042 D9220000 	 lea %a2,[%a2]lo:.LC0
+ 208 0046 D9E3ECFF 	 lea %a3,[%a14]-20
+ 209              	 
+ 210 004a 09245002 	 ld.dd %q4,[%a2+]16
+ 211 004e 89345002 	 st.dd [%a3+]16,%q4
+ 212 0052 4424     	 ld.w %d4,[%a2+]4
+ 213 0054 6434     	 st.w [%a3+]4,%d4
+ 812:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****         IfxEgtm_Cmu_Fxclk_0,      /*IfxEgtm_Tom_Ch_ClkSrc_cmuFxclk0 */
+ 813:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****         IfxEgtm_Cmu_Fxclk_1,      /*IfxEgtm_Tom_Ch_ClkSrc_cmuFxclk1 */
+ 814:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****         IfxEgtm_Cmu_Fxclk_2,      /*IfxEgtm_Tom_Ch_ClkSrc_cmuFxclk2 */
+ 815:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****         IfxEgtm_Cmu_Fxclk_3,      /*IfxEgtm_Tom_Ch_ClkSrc_cmuFxclk3 */
+ 816:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****         IfxEgtm_Cmu_Fxclk_4       /*IfxEgtm_Tom_Ch_ClkSrc_cmuFxclk4 */
+ 817:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****     };
+ 818:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 819:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****     clk = IfxEgtm_Tom_Ch_getClockSource(tom, channel);
+ 214              	 .loc 2 819 5 is_stmt 1
+ 215              	.LVL28:
+ 216              	.LBB12:
+ 217              	.LBB13:
+ 820:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 821:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****     if (clk == IfxEgtm_Tom_Ch_ClkSrc_noClock)
+ 822:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****     {
+ 823:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****         return (float32)0.0f;
+ 824:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****     }
+ 825:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****     else
+ 826:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****     {
+ 827:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****         return IfxEgtm_Cmu_getFxClkFrequency(egtm, clkIndex[clk], TRUE);
+ 828:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****     }
+ 829:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** }
+ 830:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 831:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 832:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** IFX_INLINE IfxEgtm_Tom_Ch_ClkSrc IfxEgtm_Tom_Ch_getClockSource(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_C
+ 833:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** {
+ 834:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****     IfxEgtm_Tom_Ch_ClkSrc clk = IfxEgtm_Tom_Ch_ClkSrc_noClock;
+ 218              	 .loc 2 834 5
+ 835:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 836:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****     clk = (IfxEgtm_Tom_Ch_ClkSrc)(tom->CH[channel].CTRL.B.CLK_SRC);
+ 219              	 .loc 2 836 5
+ 220              	 .loc 2 836 58 is_stmt 0
+ 221 0056 8F680020 	 sh %d2,%d8,6
+ 222              	.LVL29:
+ 223 005a 6092     	 mov.a %a2,%d9
+ 224 005c 01220026 	 addsc.a %a2,%a2,%d2,0
+ 225 0060 5422     	 ld.w %d2,[%a2]0
+ 226 0062 37026426 	 extr.u %d2,%d2,12,4
+ 227              	.LVL30:
+ 837:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h **** 
+ 838:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****     return clk;
+ 228              	 .loc 2 838 5 is_stmt 1
+ 229              	.LBE13:
+ 230              	.LBE12:
+ 821:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****     {
+ 231              	 .loc 2 821 5
+ 821:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****     {
+ 232              	 .loc 2 821 8 is_stmt 0
+ 233 0066 DF520080 	 jne %d2,5,.L20
+ 823:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****     }
+ 234              	 .loc 2 823 16
+ 235 006a 8202     	 mov %d2,0
+ 236              	.LVL31:
+ 237              	.L15:
+ 238              	.LBE11:
+ 239              	.LBE10:
+ 113:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** 
+ 114:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         /* 2. Calculates Period Ticks */
+ 115:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         if (tom->CH[channel].CTRL.B.UDMODE == 0u)  /* Channel counter running in continuous countin
+ 240              	 .loc 1 115 9 is_stmt 1
+ 241              	 .loc 1 115 36 is_stmt 0
+ 242 006c 8F680030 	 sh %d3,%d8,6
+ 243 0070 6092     	 mov.a %a2,%d9
+ 244 0072 01230026 	 addsc.a %a2,%a2,%d3,0
+ 245 0076 5423     	 ld.w %d3,[%a2]0
+ 246 0078 37036239 	 extr.u %d3,%d3,18,2
+ 247              	 .loc 1 115 12
+ 248 007c DF030080 	 jnz %d3,.L16
+ 116:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         {
+ 117:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****             periodTicks = tom->CH[channel].CM0.U;
+ 249              	 .loc 1 117 13 is_stmt 1
+ 250              	 .loc 1 117 25 is_stmt 0
+ 251 0080 0668     	 sh %d8,6
+ 252              	.LVL32:
+ 253 0082 6092     	 mov.a %a2,%d9
+ 254 0084 01280026 	 addsc.a %a2,%a2,%d8,0
+ 255 0088 19230C00 	 ld.w %d3,[%a2]12
+ 256              	.LVL33:
+ 257              	.L17:
+ 118:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         }
+ 119:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         else /* Channel counter running in continuous counting up and down mode. Therefore, multipl
+ 120:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         {
+ 121:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****             periodTicks = (tom->CH[channel].CM0.U - 1u) << 1u;
+ 122:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         }
+ 123:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** 
+ 124:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         /* 3. Calculates PWM frequency */
+ 125:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         frequency = sourceFrequency / (float32)periodTicks;
+ 258              	 .loc 1 125 9 is_stmt 1
+ 259              	 .loc 1 125 39 is_stmt 0
+ 260 008c 4B036131 	 utof %d3,%d3
+ 261              	.LVL34:
+ 262              	 .loc 1 125 19
+ 263 0090 4B325120 	 div.f %d2,%d2,%d3
+ 264              	.LVL35:
+ 265 0094 0090     	 ret 
+ 266              	.LVL36:
+ 267              	.L20:
+ 268              	.LBB15:
+ 269              	.LBB14:
+ 827:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****     }
+ 270              	 .loc 2 827 9 is_stmt 1
+ 827:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.h ****     }
+ 271              	 .loc 2 827 16 is_stmt 0
+ 272 0096 0622     	 sh %d2,2
+ 273              	.LVL37:
+ 274 0098 01E20026 	 addsc.a %a2,%a14,%d2,0
+ 275 009c 8215     	 mov %d5,1
+ 276 009e 1924ECFF 	 ld.w %d4,[%a2]-20
+ 277 00a2 9180904F 	 movh.a %a4,63752
+ 278 00a6 6D000000 	 call IfxEgtm_Cmu_getFxClkFrequency
+ 279              	.LVL38:
+ 280 00aa 1D000000 	 j .L15
+ 281              	.LVL39:
+ 282              	.L16:
+ 283              	.LBE14:
+ 284              	.LBE15:
+ 121:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         }
+ 285              	 .loc 1 121 13 is_stmt 1
+ 121:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         }
+ 286              	 .loc 1 121 48 is_stmt 0
+ 287 00ae 0668     	 sh %d8,6
+ 288              	.LVL40:
+ 289 00b0 6092     	 mov.a %a2,%d9
+ 290 00b2 01280026 	 addsc.a %a2,%a2,%d8,0
+ 291 00b6 19230C00 	 ld.w %d3,[%a2]12
+ 121:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         }
+ 292              	 .loc 1 121 51
+ 293 00ba C2F3     	 add %d3,-1
+ 121:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         }
+ 294              	 .loc 1 121 25
+ 295 00bc 0613     	 sh %d3,1
+ 296              	.LVL41:
+ 297 00be 1D000000 	 j .L17
+ 298              	.LVL42:
+ 299              	.L18:
+  98:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     uint32                    periodTicks       = 0u;
+ 300              	 .loc 1 98 31
+ 301 00c2 8202     	 mov %d2,0
+ 302              	.LVL43:
+ 126:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     }
+ 127:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** 
+ 128:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     return frequency;
+ 303              	 .loc 1 128 5 is_stmt 1
+ 129:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** }
+ 304              	 .loc 1 129 1 is_stmt 0
+ 305 00c4 0090     	 ret 
+ 306              	.LFE397:
+ 308              	 .global IfxEgtm_Tom_Ch_getFrequency_end
+ 309              	IfxEgtm_Tom_Ch_getFrequency_end:
+ 310              	 .section .text.IfxEgtm_Tom_Ch_getDuty,"ax",@progbits
+ 311              	 .align 1
+ 312              	 .global IfxEgtm_Tom_Ch_getDuty
+ 314              	IfxEgtm_Tom_Ch_getDuty:
+ 315              	.LFB398:
+ 130:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** 
+ 131:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** 
+ 132:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** float32 IfxEgtm_Tom_Ch_getDuty(Ifx_EGTM_CLS_TOM *tom, IfxEgtm_Tom_Ch channel)
+ 133:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** {
+ 316              	 .loc 1 133 1 is_stmt 1
+ 317              	.LVL44:
+ 318 0000 40AE     	 mov.aa %a14,%SP
+ 319              	.LCFI3:
+ 134:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     float32                   duty = 0.0f;
+ 320              	 .loc 1 134 5
+ 321              	.LVL45:
+ 135:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     uint32                    cm0Reg, cm1Reg, periodReg;
+ 322              	 .loc 1 135 5
+ 136:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     IfxEgtm_Tom_Ch_ResetEvent counterResetEvent;
+ 323              	 .loc 1 136 5
+ 137:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** 
+ 138:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     /* 1. Reads counter reset event */
+ 139:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     counterResetEvent = (IfxEgtm_Tom_Ch_ResetEvent)tom->CH[channel].CTRL.B.RST_CCU0;
+ 324              	 .loc 1 139 5
+ 325              	 .loc 1 139 75 is_stmt 0
+ 326 0002 8F640020 	 sh %d2,%d4,6
+ 327 0006 01420026 	 addsc.a %a2,%a4,%d2,0
+ 328 000a 5422     	 ld.w %d2,[%a2]0
+ 329 000c 3702616A 	 extr.u %d6,%d2,20,1
+ 330              	.LVL46:
+ 140:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** 
+ 141:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     /* 2. Reads register content */
+ 142:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     cm0Reg = tom->CH[channel].CM0.U;
+ 331              	 .loc 1 142 5 is_stmt 1
+ 332              	 .loc 1 142 12 is_stmt 0
+ 333 0010 19270C00 	 ld.w %d7,[%a2]12
+ 334              	.LVL47:
+ 143:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     cm1Reg = tom->CH[channel].CM1.U;
+ 335              	 .loc 1 143 5 is_stmt 1
+ 336              	 .loc 1 143 12 is_stmt 0
+ 337 0014 19251000 	 ld.w %d5,[%a2]16
+ 338              	.LVL48:
+ 144:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** 
+ 145:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     /* 3. Find out the period register value */
+ 146:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     if (counterResetEvent == IfxEgtm_Tom_Ch_ResetEvent_onCm0)  /* Period is determined by own chann
+ 339              	 .loc 1 146 5 is_stmt 1
+ 340              	 .loc 1 146 8 is_stmt 0
+ 341 0018 EF420000 	 jz.t %d2,20,.L30
+ 342              	.LBB16:
+ 147:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     {
+ 148:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         periodReg = cm0Reg;
+ 149:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     }
+ 150:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     else    /* Period is determined by some previous channel */
+ 151:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     {
+ 152:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         uint8 tempChannel = (uint8)channel - 1u;
+ 343              	 .loc 1 152 9 is_stmt 1
+ 344              	 .loc 1 152 29 is_stmt 0
+ 345 001c 8FF40F21 	 and %d2,%d4,255
+ 346              	 .loc 1 152 15
+ 347 0020 C2F2     	 add %d2,-1
+ 348 0022 8FF20F21 	 and %d2,%d2,255
+ 349              	.LVL49:
+ 153:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** 
+ 154:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         while ((tempChannel > 0) &&
+ 350              	 .loc 1 154 9 is_stmt 1
+ 351              	 .loc 1 154 15 is_stmt 0
+ 352 0026 1D000000 	 j .L23
+ 353              	.L25:
+ 155:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****                (tom->CH[tempChannel].CTRL.B.RST_CCU0 != (uint8)IfxEgtm_Tom_Ch_ResetEvent_onCm0))
+ 156:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         {
+ 157:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****             tempChannel--;
+ 354              	 .loc 1 157 13 is_stmt 1
+ 355              	 .loc 1 157 24 is_stmt 0
+ 356 002a C2F2     	 add %d2,-1
+ 357              	.LVL50:
+ 358 002c 8FF20F21 	 and %d2,%d2,255
+ 359              	.LVL51:
+ 360              	.L23:
+ 154:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****                (tom->CH[tempChannel].CTRL.B.RST_CCU0 != (uint8)IfxEgtm_Tom_Ch_ResetEvent_onCm0))
+ 361              	 .loc 1 154 34 is_stmt 1
+ 362 0030 DF020000 	 jz %d2,.L24
+ 155:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****                (tom->CH[tempChannel].CTRL.B.RST_CCU0 != (uint8)IfxEgtm_Tom_Ch_ResetEvent_onCm0))
+ 363              	 .loc 1 155 44 is_stmt 0 discriminator 1
+ 364 0034 8F620030 	 sh %d3,%d2,6
+ 365 0038 01430026 	 addsc.a %a2,%a4,%d3,0
+ 366 003c 5423     	 ld.w %d3,[%a2]0
+ 154:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****                (tom->CH[tempChannel].CTRL.B.RST_CCU0 != (uint8)IfxEgtm_Tom_Ch_ResetEvent_onCm0))
+ 367              	 .loc 1 154 34 discriminator 1
+ 368 003e EF430080 	 jnz.t %d3,20,.L25
+ 369              	.L24:
+ 158:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         }
+ 159:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** 
+ 160:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         periodReg = tom->CH[tempChannel].CM0.U;
+ 370              	 .loc 1 160 9 is_stmt 1
+ 371              	 .loc 1 160 19 is_stmt 0
+ 372 0042 0662     	 sh %d2,6
+ 373              	.LVL52:
+ 374 0044 01420026 	 addsc.a %a2,%a4,%d2,0
+ 375 0048 19230C00 	 ld.w %d3,[%a2]12
+ 376              	.LVL53:
+ 377              	.L22:
+ 378              	.LBE16:
+ 161:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     }
+ 162:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** 
+ 163:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     /* 4. Calculates Duty percentage */
+ 164:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     if (tom->CH[channel].CTRL.B.UDMODE == 0u)                     /* Channel counter running in con
+ 379              	 .loc 1 164 5 is_stmt 1
+ 380              	 .loc 1 164 32 is_stmt 0
+ 381 004c 0664     	 sh %d4,6
+ 382              	.LVL54:
+ 383 004e 01440046 	 addsc.a %a4,%a4,%d4,0
+ 384              	.LVL55:
+ 385 0052 5442     	 ld.w %d2,[%a4]0
+ 386 0054 37026229 	 extr.u %d2,%d2,18,2
+ 387              	 .loc 1 164 8
+ 388 0058 DF020080 	 jnz %d2,.L26
+ 165:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     {
+ 166:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         if (counterResetEvent == IfxEgtm_Tom_Ch_ResetEvent_onCm0) /* Duty exists during CN0 = [0, C
+ 389              	 .loc 1 166 9 is_stmt 1
+ 390              	 .loc 1 166 12 is_stmt 0
+ 391 005c DF060080 	 jnz %d6,.L27
+ 167:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         {
+ 168:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****             duty = ((float32)cm1Reg / (float32)periodReg) * 100.0f;
+ 392              	 .loc 1 168 13 is_stmt 1
+ 393              	 .loc 1 168 21 is_stmt 0
+ 394 0060 4B056151 	 utof %d5,%d5
+ 395              	.LVL56:
+ 396              	 .loc 1 168 39
+ 397 0064 4B036121 	 utof %d2,%d3
+ 398              	 .loc 1 168 37
+ 399 0068 4B255120 	 div.f %d2,%d5,%d2
+ 400              	 .loc 1 168 18
+ 401 006c 7B802C34 	 movh %d3,17096
+ 402              	.LVL57:
+ 403 0070 4B324120 	 mul.f %d2,%d2,%d3
+ 404              	.LVL58:
+ 405 0074 0090     	 ret 
+ 406              	.LVL59:
+ 407              	.L30:
+ 148:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     }
+ 408              	 .loc 1 148 19
+ 409 0076 0273     	 mov %d3,%d7
+ 410 0078 1D000000 	 j .L22
+ 411              	.LVL60:
+ 412              	.L27:
+ 169:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         }
+ 170:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         else    /* Duty exists during CN0 = [CM0, CM1] */
+ 171:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         {
+ 172:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****             if (cm1Reg > cm0Reg)
+ 413              	 .loc 1 172 13 is_stmt 1
+ 414              	 .loc 1 172 16 is_stmt 0
+ 415 007c 7F570080 	 jge.u %d7,%d5,.L29
+ 173:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****             {
+ 174:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****                 duty = ((float32)(cm1Reg - cm0Reg) / (float32)periodReg) * 100.0f;
+ 416              	 .loc 1 174 17 is_stmt 1
+ 417              	 .loc 1 174 42 is_stmt 0
+ 418 0080 0B758040 	 sub %d4,%d5,%d7
+ 419              	 .loc 1 174 25
+ 420 0084 4B046141 	 utof %d4,%d4
+ 421              	 .loc 1 174 54
+ 422 0088 4B036121 	 utof %d2,%d3
+ 423              	 .loc 1 174 52
+ 424 008c 4B245120 	 div.f %d2,%d4,%d2
+ 425              	 .loc 1 174 22
+ 426 0090 7B802C34 	 movh %d3,17096
+ 427              	.LVL61:
+ 428 0094 4B324120 	 mul.f %d2,%d2,%d3
+ 429              	.LVL62:
+ 430 0098 0090     	 ret 
+ 431              	.LVL63:
+ 432              	.L29:
+ 175:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****             }
+ 176:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****             else
+ 177:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****             {
+ 178:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****                 duty = ((float32)(cm0Reg - cm1Reg) / (float32)periodReg) * 100.0f;
+ 433              	 .loc 1 178 17 is_stmt 1
+ 434              	 .loc 1 178 42 is_stmt 0
+ 435 009a 0B578040 	 sub %d4,%d7,%d5
+ 436              	 .loc 1 178 25
+ 437 009e 4B046141 	 utof %d4,%d4
+ 438              	 .loc 1 178 54
+ 439 00a2 4B036121 	 utof %d2,%d3
+ 440              	 .loc 1 178 52
+ 441 00a6 4B245120 	 div.f %d2,%d4,%d2
+ 442              	 .loc 1 178 22
+ 443 00aa 7B802C34 	 movh %d3,17096
+ 444              	.LVL64:
+ 445 00ae 4B324120 	 mul.f %d2,%d2,%d3
+ 446              	.LVL65:
+ 447 00b2 0090     	 ret 
+ 448              	.LVL66:
+ 449              	.L26:
+ 179:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****             }
+ 180:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         }
+ 181:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     }
+ 182:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     else  /* Channel counter running in continuous counting up and down mode */
+ 183:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     {
+ 184:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         /* Duty exists during CN0 = [CM1, CM0] */
+ 185:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****         duty = ((float32)(periodReg - cm1Reg) / (float32)periodReg) * 100.0f;
+ 450              	 .loc 1 185 9 is_stmt 1
+ 451              	 .loc 1 185 37 is_stmt 0
+ 452 00b4 0B538040 	 sub %d4,%d3,%d5
+ 453              	 .loc 1 185 17
+ 454 00b8 4B046141 	 utof %d4,%d4
+ 455              	 .loc 1 185 49
+ 456 00bc 4B036121 	 utof %d2,%d3
+ 457              	 .loc 1 185 47
+ 458 00c0 4B245120 	 div.f %d2,%d4,%d2
+ 459              	 .loc 1 185 14
+ 460 00c4 7B802C34 	 movh %d3,17096
+ 461              	.LVL67:
+ 462 00c8 4B324120 	 mul.f %d2,%d2,%d3
+ 463              	.LVL68:
+ 186:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     }
+ 187:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** 
+ 188:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c ****     return duty;
+ 464              	 .loc 1 188 5 is_stmt 1
+ 189:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tom.c **** }
+ 465              	 .loc 1 189 1 is_stmt 0
+ 466 00cc 0090     	 ret 
+ 467              	.LFE398:
+ 469              	 .global IfxEgtm_Tom_Ch_getDuty_end
+ 470              	IfxEgtm_Tom_Ch_getDuty_end:
+ 535              	.Letext0:
+ 536              	 .file 3 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 537              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 538              	 .file 5 "../Libraries/Infra/Sfr/TC4Dx/IfxEgtm_regdef.h"
+ 539              	 .file 6 "../Libraries/iLLD/TC4xx/CpuGeneric/_Impl/TC4Dx/IfxEgtm_cfg_TC4Dx.h"
+ 540              	 .file 7 "../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Cmu.h"
+ 33665 0000 00000000 	 .word IfxEgtm_Tom_Tgc_buildFeature
+ 33666 0004 00000000 	 .word IfxEgtm_Tom_Tgc_buildFeature_end
+ 33667 0008 FC000044 	 .word 0x440000fc
+ 33668 000c 70000000 	 .word 0x00000070
+ 33669 0010 04000000 	 .word 0x00000004
+ 33670 0014 C0000000 	 .word 0x000000c0
+ 33671 0018 00000000 	 .word IfxEgtm_Tom_Tgc_buildFeatureForChannel
+ 33672 001c 00000000 	 .word IfxEgtm_Tom_Tgc_buildFeatureForChannel_end
+ 33673 0020 74000044 	 .word 0x44000074
+ 33674 0024 70000000 	 .word 0x00000070
+ 33675 0028 04000000 	 .word 0x00000004
+ 33676 002c C0000000 	 .word 0x000000c0
+ 33677 0030 00000000 	 .word IfxEgtm_Tom_Ch_getFrequency
+ 33678 0034 00000000 	 .word IfxEgtm_Tom_Ch_getFrequency_end
+ 33679 0038 FC031C44 	 .word 0x441c03fc
+ 33680 003c 10001000 	 .word 0x00100010
+ 33681 0040 04000000 	 .word 0x00000004
+ 33682 0044 40800200 	 .word 0x00028040
+ 33683 0048 00000000 	 .word IfxEgtm_Tom_Ch_getDuty
+ 33684 004c 00000000 	 .word IfxEgtm_Tom_Ch_getDuty_end
+ 33685 0050 FC001C44 	 .word 0x441c00fc
+ 33686 0054 10001000 	 .word 0x00100010
+ 33687 0058 04000000 	 .word 0x00000004
+ 33688 005c C0000000 	 .word 0x000000c0
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxEgtm_Tom.c
+                            *ABS*:00000000 IfxEgtm_Tom.c
+    {standard input}:10     .text.IfxEgtm_Tom_Tgc_buildFeature:00000000 IfxEgtm_Tom_Tgc_buildFeature
+    {standard input}:90     .text.IfxEgtm_Tom_Tgc_buildFeature:00000048 IfxEgtm_Tom_Tgc_buildFeature_end
+    {standard input}:95     .text.IfxEgtm_Tom_Tgc_buildFeatureForChannel:00000000 IfxEgtm_Tom_Tgc_buildFeatureForChannel
+    {standard input}:136    .text.IfxEgtm_Tom_Tgc_buildFeatureForChannel:00000026 IfxEgtm_Tom_Tgc_buildFeatureForChannel_end
+    {standard input}:149    .text.IfxEgtm_Tom_Ch_getFrequency:00000000 IfxEgtm_Tom_Ch_getFrequency
+    {standard input}:309    .text.IfxEgtm_Tom_Ch_getFrequency:000000c6 IfxEgtm_Tom_Ch_getFrequency_end
+    {standard input}:314    .text.IfxEgtm_Tom_Ch_getDuty:00000000 IfxEgtm_Tom_Ch_getDuty
+    {standard input}:470    .text.IfxEgtm_Tom_Ch_getDuty:000000ce IfxEgtm_Tom_Ch_getDuty_end
+
+UNDEFINED SYMBOLS
+IfxEgtm_Cmu_getFxClkFrequency

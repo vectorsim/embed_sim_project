@@ -1,0 +1,209 @@
+   1              	
+   2              	 .file "IfxScuEru.c"
+   3              	 .file "IfxScuEru.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.IfxScuEru_connectTrigger,"ax",@progbits
+   7              	 .align 1
+   8              	 .global IfxScuEru_connectTrigger
+  10              	IfxScuEru_connectTrigger:
+  11              	.LFB337:
+  12              	 .file 1 "../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c"
+   1:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** /**
+   2:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****  * \file IfxScuEru.c
+   3:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****  * \brief SCU  basic functionality
+   4:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****  *
+   5:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****  *
+   8:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****  *
+   9:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****  *
+  10:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****  *                                 IMPORTANT NOTICE
+  11:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****  *
+  12:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****  * this file except in compliance with IFASLL.
+  15:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****  *
+  16:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****  *
+  26:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****  *
+  27:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****  *
+  28:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****  */
+  29:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** 
+  30:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** /******************************************************************************/
+  31:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** /*----------------------------------Includes----------------------------------*/
+  32:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** /******************************************************************************/
+  33:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** 
+  34:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** #include "IfxScuEru.h"
+  35:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** 
+  36:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** /******************************************************************************/
+  37:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** /*-------------------------Function Implementations---------------------------*/
+  38:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** /******************************************************************************/
+  39:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** 
+  40:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** void IfxScuEru_connectTrigger(IfxScuEru_InputChannel inputChannel, IfxScuEru_InputNodePointer trigg
+  41:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** {
+  13              	 .loc 1 41 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  42:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** #if (IFX_PROT_ENABLED == 1U)
+  43:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SCU.PROTSE, IfxApProt_State_config);
+  44:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** #endif
+  45:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****     /* select appropriate EICRi register for the given input channel X ( i = 0 to 7 and X = 0 to 7 
+  46:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** 
+  47:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****     MODULE_SCU.ERU.EICR[inputChannel].B.ONP = triggerSelect;
+  17              	 .loc 1 47 5
+  18              	 .loc 1 47 45 is_stmt 0
+  19 0002 1B540520 	 addi %d2,%d4,85
+  20 0006 0622     	 sh %d2,2
+  21 0008 7B20003F 	 movh %d3,61442
+  22 000c 1B030034 	 addi %d3,%d3,16384
+  23 0010 6032     	 mov.a %a2,%d3
+  24 0012 01220026 	 addsc.a %a2,%a2,%d2,0
+  25 0016 5422     	 ld.w %d2,[%a2]0
+  26 0018 37520326 	 insert %d2,%d2,%d5,12,3
+  27 001c 7422     	 st.w [%a2]0,%d2
+  48:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** #if (IFX_PROT_ENABLED == 1U)
+  49:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SCU.PROTSE, IfxApProt_State_run);
+  50:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** #endif
+  51:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** }
+  28              	 .loc 1 51 1
+  29 001e 0090     	 ret 
+  30              	.LFE337:
+  32              	 .global IfxScuEru_connectTrigger_end
+  33              	IfxScuEru_connectTrigger_end:
+  34              	 .section .text.IfxScuEru_enableFallingEdgeDetection,"ax",@progbits
+  35              	 .align 1
+  36              	 .global IfxScuEru_enableFallingEdgeDetection
+  38              	IfxScuEru_enableFallingEdgeDetection:
+  39              	.LFB338:
+  52:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** 
+  53:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** 
+  54:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** void IfxScuEru_enableFallingEdgeDetection(IfxScuEru_InputChannel inputChannel)
+  55:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** {
+  40              	 .loc 1 55 1 is_stmt 1
+  41              	.LVL1:
+  42 0000 40AE     	 mov.aa %a14,%SP
+  43              	.LCFI1:
+  56:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** #if (IFX_PROT_ENABLED == 1U)
+  57:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SCU.PROTSE, IfxApProt_State_config);
+  58:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** #endif
+  59:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****     /* select appropriate EICRi register for the given input channel X ( i = 0 to 7 and X = 0 to 7 
+  60:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** 
+  61:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****     MODULE_SCU.ERU.EICR[inputChannel].B.FEN = TRUE;
+  44              	 .loc 1 61 5
+  45              	 .loc 1 61 45 is_stmt 0
+  46 0002 1B540520 	 addi %d2,%d4,85
+  47 0006 0622     	 sh %d2,2
+  48 0008 7B20003F 	 movh %d3,61442
+  49 000c 1B030034 	 addi %d3,%d3,16384
+  50 0010 6032     	 mov.a %a2,%d3
+  51 0012 01220026 	 addsc.a %a2,%a2,%d2,0
+  52 0016 5422     	 ld.w %d2,[%a2]0
+  53 0018 B7120124 	 insert %d2,%d2,1,8,1
+  54 001c 7422     	 st.w [%a2]0,%d2
+  62:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** #if (IFX_PROT_ENABLED == 1U)
+  63:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SCU.PROTSE, IfxApProt_State_run);
+  64:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** #endif
+  65:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** }
+  55              	 .loc 1 65 1
+  56 001e 0090     	 ret 
+  57              	.LFE338:
+  59              	 .global IfxScuEru_enableFallingEdgeDetection_end
+  60              	IfxScuEru_enableFallingEdgeDetection_end:
+  61              	 .section .text.IfxScuEru_enableExternalInput,"ax",@progbits
+  62              	 .align 1
+  63              	 .global IfxScuEru_enableExternalInput
+  65              	IfxScuEru_enableExternalInput:
+  66              	.LFB339:
+  66:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** 
+  67:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** 
+  68:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** void IfxScuEru_enableExternalInput(IfxScuEru_InputChannel inputChannel)
+  69:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** {
+  67              	 .loc 1 69 1 is_stmt 1
+  68              	.LVL2:
+  69 0000 40AE     	 mov.aa %a14,%SP
+  70              	.LCFI2:
+  70:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****     Ifx_SCU_ERU_EICR eicr;
+  71              	 .loc 1 70 5
+  71:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****     eicr.U = MODULE_SCU.ERU.EICR[inputChannel].U;
+  72              	 .loc 1 71 5
+  73              	 .loc 1 71 47 is_stmt 0
+  74 0002 1B540520 	 addi %d2,%d4,85
+  75 0006 0622     	 sh %d2,2
+  76 0008 7B20003F 	 movh %d3,61442
+  77 000c 1B030034 	 addi %d3,%d3,16384
+  78 0010 6032     	 mov.a %a2,%d3
+  79 0012 01220026 	 addsc.a %a2,%a2,%d2,0
+  80 0016 5422     	 ld.w %d2,[%a2]0
+  72:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** 
+  73:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****     /* select appropriate EICRi register for the given input channel X ( i = 0 to 7 and X = 0 to 7 
+  74:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****     eicr.B.EIEN   = TRUE;
+  81              	 .loc 1 74 5 is_stmt 1
+  82              	 .loc 1 74 19 is_stmt 0
+  83 0018 B7120120 	 insert %d2,%d2,1,0,1
+  84              	.LVL3:
+  75:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****     eicr.B.EIEN_P = TRUE;
+  85              	 .loc 1 75 5 is_stmt 1
+  86              	 .loc 1 75 19 is_stmt 0
+  87 001c B7128120 	 insert %d2,%d2,1,1,1
+  76:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** 
+  77:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** #if (IFX_PROT_ENABLED == 1U)
+  78:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SCU.PROTSE, IfxApProt_State_config);
+  79:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** #endif
+  80:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** 
+  81:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****     MODULE_SCU.ERU.EICR[inputChannel].U = eicr.U;
+  88              	 .loc 1 81 5 is_stmt 1
+  89              	 .loc 1 81 41 is_stmt 0
+  90 0020 7422     	 st.w [%a2]0,%d2
+  82:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** 
+  83:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** #if (IFX_PROT_ENABLED == 1U)
+  84:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SCU.PROTSE, IfxApProt_State_run);
+  85:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** #endif
+  86:../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.c **** }
+  91              	 .loc 1 86 1
+  92 0022 0090     	 ret 
+  93              	.LFE339:
+  95              	 .global IfxScuEru_enableExternalInput_end
+  96              	IfxScuEru_enableExternalInput_end:
+ 149              	.Letext0:
+ 150              	 .file 2 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 151              	 .file 3 "../Libraries/Infra/Sfr/TC4Dx/IfxScu_regdef.h"
+ 152              	 .file 4 "../Libraries/iLLD/TC4xx/Tricore/Scu/Std/IfxScuEru.h"
+ 6813 0000 00000000 	 .word IfxScuEru_connectTrigger
+ 6814 0004 00000000 	 .word IfxScuEru_connectTrigger_end
+ 6815 0008 3C000444 	 .word 0x4404003c
+ 6816 000c 30000000 	 .word 0x00000030
+ 6817 0010 00000000 	 .word 0x00000000
+ 6818 0014 C0000000 	 .word 0x000000c0
+ 6819 0018 00000000 	 .word IfxScuEru_enableFallingEdgeDetection
+ 6820 001c 00000000 	 .word IfxScuEru_enableFallingEdgeDetection_end
+ 6821 0020 1C000444 	 .word 0x4404001c
+ 6822 0024 10000000 	 .word 0x00000010
+ 6823 0028 00000000 	 .word 0x00000000
+ 6824 002c C0000000 	 .word 0x000000c0
+ 6825 0030 00000000 	 .word IfxScuEru_enableExternalInput
+ 6826 0034 00000000 	 .word IfxScuEru_enableExternalInput_end
+ 6827 0038 1C000444 	 .word 0x4404001c
+ 6828 003c 10000000 	 .word 0x00000010
+ 6829 0040 00000000 	 .word 0x00000000
+ 6830 0044 C0000000 	 .word 0x000000c0
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxScuEru.c
+                            *ABS*:00000000 IfxScuEru.c
+    {standard input}:10     .text.IfxScuEru_connectTrigger:00000000 IfxScuEru_connectTrigger
+    {standard input}:33     .text.IfxScuEru_connectTrigger:00000020 IfxScuEru_connectTrigger_end
+    {standard input}:38     .text.IfxScuEru_enableFallingEdgeDetection:00000000 IfxScuEru_enableFallingEdgeDetection
+    {standard input}:60     .text.IfxScuEru_enableFallingEdgeDetection:00000020 IfxScuEru_enableFallingEdgeDetection_end
+    {standard input}:65     .text.IfxScuEru_enableExternalInput:00000000 IfxScuEru_enableExternalInput
+    {standard input}:96     .text.IfxScuEru_enableExternalInput:00000024 IfxScuEru_enableExternalInput_end
+
+NO UNDEFINED SYMBOLS

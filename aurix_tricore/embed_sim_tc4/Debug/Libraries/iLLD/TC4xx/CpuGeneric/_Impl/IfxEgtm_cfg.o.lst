@@ -1,0 +1,1703 @@
+   1              	
+   2              	 .file "IfxEgtm_cfg.c"
+   3              	 .file "IfxEgtm_cfg.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .global IfxEgtm_Cfg_AdcDtmAuxInputSel
+   7              	 .section .data.IfxEgtm_Cfg_AdcDtmAuxInputSel,"aw"
+   8              	 .align 2
+  11              	IfxEgtm_Cfg_AdcDtmAuxInputSel:
+  12 0000 12000000 	 .word 18
+  13 0004 04000000 	 .word 4
+  14 0008 04010100 	 .word 65796
+  15 000c 04020200 	 .word 131588
+  16 0010 04030300 	 .word 197380
+  17 0014 04020400 	 .word 262660
+  18 0018 04030500 	 .word 328452
+  19 001c 04040001 	 .word 16778244
+  20 0020 04050101 	 .word 16844036
+  21 0024 04060201 	 .word 16909828
+  22 0028 04070301 	 .word 16975620
+  23 002c 04060401 	 .word 17040900
+  24 0030 04070501 	 .word 17106692
+  25 0034 04080002 	 .word 33556484
+  26 0038 04090102 	 .word 33622276
+  27 003c 040A0202 	 .word 33688068
+  28 0040 040B0302 	 .word 33753860
+  29 0044 040A0402 	 .word 33819140
+  30 0048 040B0502 	 .word 33884932
+  31              	 .global IfxEgtm_Cfg_CanxlTimInputSel
+  32              	 .section .data.IfxEgtm_Cfg_CanxlTimInputSel,"aw"
+  33              	 .align 2
+  36              	IfxEgtm_Cfg_CanxlTimInputSel:
+  37 0000 04000000 	 .word 4
+  38 0004 0B000102 	 .word 33619979
+  39 0008 0B010202 	 .word 33685771
+  40 000c 0D020202 	 .word 33686029
+  41 0010 0B030302 	 .word 33751819
+  42              	 .global IfxEgtm_Cfg_LethTimInputSel
+  43              	 .section .data.IfxEgtm_Cfg_LethTimInputSel,"aw"
+  44              	 .align 2
+  47              	IfxEgtm_Cfg_LethTimInputSel:
+  48 0000 04000000 	 .word 4
+  49 0004 0D000201 	 .word 16908301
+  50 0008 0D010301 	 .word 16974093
+  51 000c 0D020401 	 .word 17039885
+  52 0010 0D030102 	 .word 33620749
+  53              	 .global IfxEgtm_Cfg_ErayTimInputSel
+  54              	 .section .data.IfxEgtm_Cfg_ErayTimInputSel,"aw"
+  55              	 .align 2
+  58              	IfxEgtm_Cfg_ErayTimInputSel:
+  59 0000 03000000 	 .word 3
+  60 0004 0F000700 	 .word 458767
+  61 0008 0F010501 	 .word 17105167
+  62 000c 0F000702 	 .word 34013199
+  63              	 .global IfxEgtm_Cfg_GethTimInputSel
+  64              	 .section .data.IfxEgtm_Cfg_GethTimInputSel,"aw"
+  65              	 .align 2
+  68              	IfxEgtm_Cfg_GethTimInputSel:
+  69 0000 05000000 	 .word 5
+  70 0004 0F000500 	 .word 327695
+  71 0008 0F010600 	 .word 393487
+  72 000c 0F020001 	 .word 16777743
+  73 0010 0F030601 	 .word 17171215
+  74 0014 0F000002 	 .word 33554447
+  75              	 .global IfxEgtm_Cfg_CanTimInputSel
+  76              	 .section .data.IfxEgtm_Cfg_CanTimInputSel,"aw"
+  77              	 .align 2
+  80              	IfxEgtm_Cfg_CanTimInputSel:
+  81 0000 1D000000 	 .word 29
+  82 0004 0F600000 	 .word 24591
+  83 0008 0F680100 	 .word 92175
+  84 000c 0F680200 	 .word 157711
+  85 0010 0F700300 	 .word 225295
+  86 0014 0F780400 	 .word 292879
+  87 0018 0E610001 	 .word 16802062
+  88 001c 0E690101 	 .word 16869646
+  89 0020 0F600101 	 .word 16867343
+  90 0024 0E620201 	 .word 16933390
+  91 0028 0F680201 	 .word 16934927
+  92 002c 0E6A0301 	 .word 17000974
+  93 0030 0F700301 	 .word 17002511
+  94 0034 0E630401 	 .word 17064718
+  95 0038 0F780401 	 .word 17070095
+  96 003c 0E6B0501 	 .word 17132302
+  97 0040 0E640601 	 .word 17196046
+  98 0044 0E6C0701 	 .word 17263630
+  99 0048 0E710002 	 .word 33583374
+ 100 004c 0E790102 	 .word 33650958
+ 101 0050 0F600102 	 .word 33644559
+ 102 0054 0E720202 	 .word 33714702
+ 103 0058 0F680202 	 .word 33712143
+ 104 005c 0E7A0302 	 .word 33782286
+ 105 0060 0F700302 	 .word 33779727
+ 106 0064 0E730402 	 .word 33846030
+ 107 0068 0F780402 	 .word 33847311
+ 108 006c 0E7B0502 	 .word 33913614
+ 109 0070 0E740602 	 .word 33977358
+ 110 0074 0E7C0702 	 .word 34044942
+ 111              	 .global IfxEgtm_Cfg_ScuTimInputSel
+ 112              	 .section .data.IfxEgtm_Cfg_ScuTimInputSel,"aw"
+ 113              	 .align 2
+ 116              	IfxEgtm_Cfg_ScuTimInputSel:
+ 117 0000 0A000000 	 .word 10
+ 118 0004 0E000000 	 .word 14
+ 119 0008 0E010100 	 .word 65806
+ 120 000c 0E020200 	 .word 131598
+ 121 0010 0E030300 	 .word 197390
+ 122 0014 0E040400 	 .word 263182
+ 123 0018 0E050500 	 .word 328974
+ 124 001c 0E060600 	 .word 394766
+ 125 0020 0E070700 	 .word 460558
+ 126 0024 0F070701 	 .word 17237775
+ 127 0028 0D070702 	 .word 34014989
+ 128              	 .global IfxEgtm_Cfg_PmsTimInputSel
+ 129              	 .section .data.IfxEgtm_Cfg_PmsTimInputSel,"aw"
+ 130              	 .align 2
+ 133              	IfxEgtm_Cfg_PmsTimInputSel:
+ 134 0000 05000000 	 .word 5
+ 135 0004 0D010000 	 .word 269
+ 136 0008 0D010100 	 .word 65805
+ 137 000c 0B000500 	 .word 327691
+ 138 0010 0B020700 	 .word 459275
+ 139 0014 0B000501 	 .word 17104907
+ 140              	 .global IfxEgtm_Cfg_AdcTimInputSel
+ 141              	 .section .data.IfxEgtm_Cfg_AdcTimInputSel,"aw"
+ 142              	 .align 2
+ 145              	IfxEgtm_Cfg_AdcTimInputSel:
+ 146 0000 1C000000 	 .word 28
+ 147 0004 0C000000 	 .word 12
+ 148 0008 0C000100 	 .word 65548
+ 149 000c 0C010200 	 .word 131340
+ 150 0010 0C010300 	 .word 196876
+ 151 0014 0C020400 	 .word 262668
+ 152 0018 0C020500 	 .word 328204
+ 153 001c 0C030600 	 .word 393996
+ 154 0020 0C030700 	 .word 459532
+ 155 0024 0C040001 	 .word 16778252
+ 156 0028 0C040101 	 .word 16843788
+ 157 002c 0C050201 	 .word 16909580
+ 158 0030 0C050301 	 .word 16975116
+ 159 0034 0C060401 	 .word 17040908
+ 160 0038 0C060501 	 .word 17106444
+ 161 003c 0C070601 	 .word 17172236
+ 162 0040 0C070701 	 .word 17237772
+ 163 0044 0C080002 	 .word 33556492
+ 164 0048 0C080102 	 .word 33622028
+ 165 004c 0C090202 	 .word 33687820
+ 166 0050 0C090302 	 .word 33753356
+ 167 0054 0D0C0302 	 .word 33754125
+ 168 0058 0C0A0402 	 .word 33819148
+ 169 005c 0D0D0402 	 .word 33819917
+ 170 0060 0C0A0502 	 .word 33884684
+ 171 0064 0F0E0502 	 .word 33885711
+ 172 0068 0C0B0602 	 .word 33950476
+ 173 006c 0F0F0602 	 .word 33951503
+ 174 0070 0C0B0702 	 .word 34016012
+ 175              	 .global IfxEgtm_Cfg_MscAltInputTable
+ 176              	 .section .data.IfxEgtm_Cfg_MscAltInputTable,"aw"
+ 177              	 .align 2
+ 180              	IfxEgtm_Cfg_MscAltInputTable:
+ 181 0000 00000000 	 .word IfxEgtm_Cfg_Msc0AltInput
+ 182 0004 00000000 	 .word IfxEgtm_Cfg_Msc1AltInput
+ 183              	 .global IfxEgtm_Cfg_Msc1AltInput
+ 184              	 .section .data.IfxEgtm_Cfg_Msc1AltInput,"aw"
+ 187              	IfxEgtm_Cfg_Msc1AltInput:
+ 188 0000 00       	 .string ""
+ 189 0001 010203   	 .ascii "\001\002\003"
+ 190 0004 00       	 .string ""
+ 191 0005 010203   	 .ascii "\001\002\003"
+ 192 0008 00       	 .string ""
+ 193 0009 010203   	 .ascii "\001\002\003"
+ 194 000c 00       	 .string ""
+ 195 000d 010203   	 .ascii "\001\002\003"
+ 196              	 .global IfxEgtm_Cfg_Msc0AltInput
+ 197              	 .section .data.IfxEgtm_Cfg_Msc0AltInput,"aw"
+ 200              	IfxEgtm_Cfg_Msc0AltInput:
+ 201 0000 00       	 .string ""
+ 202 0001 010203   	 .ascii "\001\002\003"
+ 203 0004 00       	 .string ""
+ 204 0005 010203   	 .ascii "\001\002\003"
+ 205 0008 00       	 .string ""
+ 206 0009 010203   	 .ascii "\001\002\003"
+ 207 000c 00       	 .string ""
+ 208 000d 010203   	 .ascii "\001\002\003"
+ 209              	 .global IfxEgtm_Cfg_MscSetTable
+ 210              	 .section .data.IfxEgtm_Cfg_MscSetTable,"aw"
+ 211              	 .align 2
+ 214              	IfxEgtm_Cfg_MscSetTable:
+ 215 0000 00000000 	 .word IfxEgtm_Cfg_MscSet0
+ 216 0004 00000000 	 .word IfxEgtm_Cfg_MscSet1
+ 217 0008 00000000 	 .word IfxEgtm_Cfg_MscSet2
+ 218 000c 00000000 	 .word IfxEgtm_Cfg_MscSet3
+ 219              	 .global IfxEgtm_Cfg_MscSet3
+ 220              	 .section .data.IfxEgtm_Cfg_MscSet3,"aw"
+ 221              	 .align 1
+ 224              	IfxEgtm_Cfg_MscSet3:
+ 225 0000 1800     	 .short 24
+ 226 0002 0000     	 .short 0
+ 227 0004 0100     	 .short 1
+ 228 0006 0200     	 .short 2
+ 229 0008 0300     	 .short 3
+ 230 000a 0400     	 .short 4
+ 231 000c 0500     	 .short 5
+ 232 000e 0600     	 .short 6
+ 233 0010 0700     	 .short 7
+ 234 0012 0010     	 .short 4096
+ 235 0014 0110     	 .short 4097
+ 236 0016 0210     	 .short 4098
+ 237 0018 0310     	 .short 4099
+ 238 001a 0410     	 .short 4100
+ 239 001c 0510     	 .short 4101
+ 240 001e 0610     	 .short 4102
+ 241 0020 0710     	 .short 4103
+ 242 0022 0020     	 .short 8192
+ 243 0024 0120     	 .short 8193
+ 244 0026 0220     	 .short 8194
+ 245 0028 0320     	 .short 8195
+ 246 002a 0420     	 .short 8196
+ 247 002c 0520     	 .short 8197
+ 248 002e 0620     	 .short 8198
+ 249 0030 0720     	 .short 8199
+ 250              	 .global IfxEgtm_Cfg_MscSet2
+ 251              	 .section .data.IfxEgtm_Cfg_MscSet2,"aw"
+ 252              	 .align 1
+ 255              	IfxEgtm_Cfg_MscSet2:
+ 256 0000 1000     	 .short 16
+ 257 0002 0021     	 .short 8448
+ 258 0004 0121     	 .short 8449
+ 259 0006 0221     	 .short 8450
+ 260 0008 0321     	 .short 8451
+ 261 000a 0421     	 .short 8452
+ 262 000c 0521     	 .short 8453
+ 263 000e 0621     	 .short 8454
+ 264 0010 0721     	 .short 8455
+ 265 0012 0821     	 .short 8456
+ 266 0014 0921     	 .short 8457
+ 267 0016 0A21     	 .short 8458
+ 268 0018 0B21     	 .short 8459
+ 269 001a 0C21     	 .short 8460
+ 270 001c 0D21     	 .short 8461
+ 271 001e 0E21     	 .short 8462
+ 272 0020 0F21     	 .short 8463
+ 273              	 .global IfxEgtm_Cfg_MscSet1
+ 274              	 .section .data.IfxEgtm_Cfg_MscSet1,"aw"
+ 275              	 .align 1
+ 278              	IfxEgtm_Cfg_MscSet1:
+ 279 0000 1800     	 .short 24
+ 280 0002 0011     	 .short 4352
+ 281 0004 0111     	 .short 4353
+ 282 0006 0211     	 .short 4354
+ 283 0008 0311     	 .short 4355
+ 284 000a 0411     	 .short 4356
+ 285 000c 0511     	 .short 4357
+ 286 000e 0611     	 .short 4358
+ 287 0010 0711     	 .short 4359
+ 288 0012 0811     	 .short 4360
+ 289 0014 0911     	 .short 4361
+ 290 0016 0A11     	 .short 4362
+ 291 0018 0B11     	 .short 4363
+ 292 001a 0C11     	 .short 4364
+ 293 001c 0D11     	 .short 4365
+ 294 001e 0E11     	 .short 4366
+ 295 0020 0F11     	 .short 4367
+ 296 0022 0010     	 .short 4096
+ 297 0024 0110     	 .short 4097
+ 298 0026 0210     	 .short 4098
+ 299 0028 0310     	 .short 4099
+ 300 002a 0410     	 .short 4100
+ 301 002c 0510     	 .short 4101
+ 302 002e 0610     	 .short 4102
+ 303 0030 0710     	 .short 4103
+ 304              	 .global IfxEgtm_Cfg_MscSet0
+ 305              	 .section .data.IfxEgtm_Cfg_MscSet0,"aw"
+ 306              	 .align 1
+ 309              	IfxEgtm_Cfg_MscSet0:
+ 310 0000 2000     	 .short 32
+ 311 0002 0001     	 .short 256
+ 312 0004 0101     	 .short 257
+ 313 0006 0201     	 .short 258
+ 314 0008 0301     	 .short 259
+ 315 000a 0401     	 .short 260
+ 316 000c 0501     	 .short 261
+ 317 000e 0601     	 .short 262
+ 318 0010 0701     	 .short 263
+ 319 0012 0801     	 .short 264
+ 320 0014 0901     	 .short 265
+ 321 0016 0A01     	 .short 266
+ 322 0018 0B01     	 .short 267
+ 323 001a 0C01     	 .short 268
+ 324 001c 0D01     	 .short 269
+ 325 001e 0E01     	 .short 270
+ 326 0020 0F01     	 .short 271
+ 327 0022 0000     	 .short 0
+ 328 0024 0100     	 .short 1
+ 329 0026 0200     	 .short 2
+ 330 0028 0300     	 .short 3
+ 331 002a 0400     	 .short 4
+ 332 002c 0500     	 .short 5
+ 333 002e 0600     	 .short 6
+ 334 0030 0700     	 .short 7
+ 335 0032 0020     	 .short 8192
+ 336 0034 0120     	 .short 8193
+ 337 0036 0220     	 .short 8194
+ 338 0038 0320     	 .short 8195
+ 339 003a 0420     	 .short 8196
+ 340 003c 0520     	 .short 8197
+ 341 003e 0620     	 .short 8198
+ 342 0040 0720     	 .short 8199
+ 343              	 .global IfxEgtm_Cfg_CanTriggerTable
+ 344              	 .section .data.IfxEgtm_Cfg_CanTriggerTable,"aw"
+ 345              	 .align 2
+ 348              	IfxEgtm_Cfg_CanTriggerTable:
+ 349 0000 00000000 	 .word IfxEgtm_Cfg_Can0Node0Trigger
+ 350 0004 00000000 	 .word IfxEgtm_Cfg_Can0Node1Trigger
+ 351 0008 00000000 	 .word IfxEgtm_Cfg_Can0Node2Trigger
+ 352 000c 00000000 	 .word IfxEgtm_Cfg_Can0Node3Trigger
+ 353 0010 00000000 	 .word IfxEgtm_Cfg_Can1Node0Trigger
+ 354 0014 00000000 	 .word IfxEgtm_Cfg_Can1Node1Trigger
+ 355 0018 00000000 	 .word IfxEgtm_Cfg_Can1Node2Trigger
+ 356 001c 00000000 	 .word IfxEgtm_Cfg_Can1Node3Trigger
+ 357 0020 00000000 	 .word IfxEgtm_Cfg_Can2Node0Trigger
+ 358 0024 00000000 	 .word IfxEgtm_Cfg_Can2Node1Trigger
+ 359 0028 00000000 	 .word IfxEgtm_Cfg_Can2Node2Trigger
+ 360 002c 00000000 	 .word IfxEgtm_Cfg_Can2Node3Trigger
+ 361 0030 00000000 	 .word IfxEgtm_Cfg_Can3Node0Trigger
+ 362 0034 00000000 	 .word IfxEgtm_Cfg_Can3Node1Trigger
+ 363 0038 00000000 	 .word IfxEgtm_Cfg_Can3Node2Trigger
+ 364 003c 00000000 	 .word IfxEgtm_Cfg_Can3Node3Trigger
+ 365 0040 00000000 	 .word IfxEgtm_Cfg_Can4Node0Trigger
+ 366 0044 00000000 	 .word IfxEgtm_Cfg_Can4Node1Trigger
+ 367 0048 00000000 	 .word IfxEgtm_Cfg_Can4Node2Trigger
+ 368 004c 00000000 	 .word IfxEgtm_Cfg_Can4Node3Trigger
+ 369 0050 00000000 	 .word IfxEgtm_Cfg_Can5Node0Trigger
+ 370 0054 00000000 	 .word IfxEgtm_Cfg_Can5Node1Trigger
+ 371 0058 00000000 	 .word IfxEgtm_Cfg_Can5Node2Trigger
+ 372 005c 00000000 	 .word IfxEgtm_Cfg_Can5Node3Trigger
+ 373              	 .global IfxEgtm_Cfg_Can5Node3Trigger
+ 374              	 .section .data.IfxEgtm_Cfg_Can5Node3Trigger,"aw"
+ 375              	 .align 1
+ 378              	IfxEgtm_Cfg_Can5Node3Trigger:
+ 379 0000 0600     	 .short 6
+ 380 0002 0000     	 .short 0
+ 381 0004 0010     	 .short 4096
+ 382 0006 0020     	 .short 8192
+ 383 0008 0801     	 .short 264
+ 384 000a 0811     	 .short 4360
+ 385 000c 0821     	 .short 8456
+ 386              	 .global IfxEgtm_Cfg_Can5Node2Trigger
+ 387              	 .section .data.IfxEgtm_Cfg_Can5Node2Trigger,"aw"
+ 388              	 .align 1
+ 391              	IfxEgtm_Cfg_Can5Node2Trigger:
+ 392 0000 0600     	 .short 6
+ 393 0002 0100     	 .short 1
+ 394 0004 0110     	 .short 4097
+ 395 0006 0120     	 .short 8193
+ 396 0008 0901     	 .short 265
+ 397 000a 0911     	 .short 4361
+ 398 000c 0921     	 .short 8457
+ 399              	 .global IfxEgtm_Cfg_Can5Node1Trigger
+ 400              	 .section .data.IfxEgtm_Cfg_Can5Node1Trigger,"aw"
+ 401              	 .align 1
+ 404              	IfxEgtm_Cfg_Can5Node1Trigger:
+ 405 0000 0600     	 .short 6
+ 406 0002 0200     	 .short 2
+ 407 0004 0210     	 .short 4098
+ 408 0006 0220     	 .short 8194
+ 409 0008 0A01     	 .short 266
+ 410 000a 0A11     	 .short 4362
+ 411 000c 0A21     	 .short 8458
+ 412              	 .global IfxEgtm_Cfg_Can5Node0Trigger
+ 413              	 .section .data.IfxEgtm_Cfg_Can5Node0Trigger,"aw"
+ 414              	 .align 1
+ 417              	IfxEgtm_Cfg_Can5Node0Trigger:
+ 418 0000 0600     	 .short 6
+ 419 0002 0300     	 .short 3
+ 420 0004 0310     	 .short 4099
+ 421 0006 0320     	 .short 8195
+ 422 0008 0B01     	 .short 267
+ 423 000a 0B11     	 .short 4363
+ 424 000c 0B21     	 .short 8459
+ 425              	 .global IfxEgtm_Cfg_Can4Node3Trigger
+ 426              	 .section .data.IfxEgtm_Cfg_Can4Node3Trigger,"aw"
+ 427              	 .align 1
+ 430              	IfxEgtm_Cfg_Can4Node3Trigger:
+ 431 0000 0600     	 .short 6
+ 432 0002 0400     	 .short 4
+ 433 0004 0410     	 .short 4100
+ 434 0006 0420     	 .short 8196
+ 435 0008 0C01     	 .short 268
+ 436 000a 0C11     	 .short 4364
+ 437 000c 0C21     	 .short 8460
+ 438              	 .global IfxEgtm_Cfg_Can4Node2Trigger
+ 439              	 .section .data.IfxEgtm_Cfg_Can4Node2Trigger,"aw"
+ 440              	 .align 1
+ 443              	IfxEgtm_Cfg_Can4Node2Trigger:
+ 444 0000 0600     	 .short 6
+ 445 0002 0500     	 .short 5
+ 446 0004 0510     	 .short 4101
+ 447 0006 0520     	 .short 8197
+ 448 0008 0D01     	 .short 269
+ 449 000a 0D11     	 .short 4365
+ 450 000c 0D21     	 .short 8461
+ 451              	 .global IfxEgtm_Cfg_Can4Node1Trigger
+ 452              	 .section .data.IfxEgtm_Cfg_Can4Node1Trigger,"aw"
+ 453              	 .align 1
+ 456              	IfxEgtm_Cfg_Can4Node1Trigger:
+ 457 0000 0600     	 .short 6
+ 458 0002 0600     	 .short 6
+ 459 0004 0610     	 .short 4102
+ 460 0006 0620     	 .short 8198
+ 461 0008 0E01     	 .short 270
+ 462 000a 0E11     	 .short 4366
+ 463 000c 0E21     	 .short 8462
+ 464              	 .global IfxEgtm_Cfg_Can4Node0Trigger
+ 465              	 .section .data.IfxEgtm_Cfg_Can4Node0Trigger,"aw"
+ 466              	 .align 1
+ 469              	IfxEgtm_Cfg_Can4Node0Trigger:
+ 470 0000 0600     	 .short 6
+ 471 0002 0700     	 .short 7
+ 472 0004 0710     	 .short 4103
+ 473 0006 0720     	 .short 8199
+ 474 0008 0F01     	 .short 271
+ 475 000a 0F11     	 .short 4367
+ 476 000c 0F21     	 .short 8463
+ 477              	 .global IfxEgtm_Cfg_Can3Node3Trigger
+ 478              	 .section .data.IfxEgtm_Cfg_Can3Node3Trigger,"aw"
+ 479              	 .align 1
+ 482              	IfxEgtm_Cfg_Can3Node3Trigger:
+ 483 0000 0600     	 .short 6
+ 484 0002 0000     	 .short 0
+ 485 0004 0010     	 .short 4096
+ 486 0006 0020     	 .short 8192
+ 487 0008 0801     	 .short 264
+ 488 000a 0811     	 .short 4360
+ 489 000c 0821     	 .short 8456
+ 490              	 .global IfxEgtm_Cfg_Can3Node2Trigger
+ 491              	 .section .data.IfxEgtm_Cfg_Can3Node2Trigger,"aw"
+ 492              	 .align 1
+ 495              	IfxEgtm_Cfg_Can3Node2Trigger:
+ 496 0000 0600     	 .short 6
+ 497 0002 0100     	 .short 1
+ 498 0004 0110     	 .short 4097
+ 499 0006 0120     	 .short 8193
+ 500 0008 0901     	 .short 265
+ 501 000a 0911     	 .short 4361
+ 502 000c 0921     	 .short 8457
+ 503              	 .global IfxEgtm_Cfg_Can3Node1Trigger
+ 504              	 .section .data.IfxEgtm_Cfg_Can3Node1Trigger,"aw"
+ 505              	 .align 1
+ 508              	IfxEgtm_Cfg_Can3Node1Trigger:
+ 509 0000 0600     	 .short 6
+ 510 0002 0200     	 .short 2
+ 511 0004 0210     	 .short 4098
+ 512 0006 0220     	 .short 8194
+ 513 0008 0A01     	 .short 266
+ 514 000a 0A11     	 .short 4362
+ 515 000c 0A21     	 .short 8458
+ 516              	 .global IfxEgtm_Cfg_Can3Node0Trigger
+ 517              	 .section .data.IfxEgtm_Cfg_Can3Node0Trigger,"aw"
+ 518              	 .align 1
+ 521              	IfxEgtm_Cfg_Can3Node0Trigger:
+ 522 0000 0600     	 .short 6
+ 523 0002 0300     	 .short 3
+ 524 0004 0310     	 .short 4099
+ 525 0006 0320     	 .short 8195
+ 526 0008 0B01     	 .short 267
+ 527 000a 0B11     	 .short 4363
+ 528 000c 0B21     	 .short 8459
+ 529              	 .global IfxEgtm_Cfg_Can2Node3Trigger
+ 530              	 .section .data.IfxEgtm_Cfg_Can2Node3Trigger,"aw"
+ 531              	 .align 1
+ 534              	IfxEgtm_Cfg_Can2Node3Trigger:
+ 535 0000 0600     	 .short 6
+ 536 0002 0400     	 .short 4
+ 537 0004 0410     	 .short 4100
+ 538 0006 0420     	 .short 8196
+ 539 0008 0C01     	 .short 268
+ 540 000a 0C11     	 .short 4364
+ 541 000c 0C21     	 .short 8460
+ 542              	 .global IfxEgtm_Cfg_Can2Node2Trigger
+ 543              	 .section .data.IfxEgtm_Cfg_Can2Node2Trigger,"aw"
+ 544              	 .align 1
+ 547              	IfxEgtm_Cfg_Can2Node2Trigger:
+ 548 0000 0600     	 .short 6
+ 549 0002 0500     	 .short 5
+ 550 0004 0510     	 .short 4101
+ 551 0006 0520     	 .short 8197
+ 552 0008 0D01     	 .short 269
+ 553 000a 0D11     	 .short 4365
+ 554 000c 0D21     	 .short 8461
+ 555              	 .global IfxEgtm_Cfg_Can2Node1Trigger
+ 556              	 .section .data.IfxEgtm_Cfg_Can2Node1Trigger,"aw"
+ 557              	 .align 1
+ 560              	IfxEgtm_Cfg_Can2Node1Trigger:
+ 561 0000 0600     	 .short 6
+ 562 0002 0600     	 .short 6
+ 563 0004 0610     	 .short 4102
+ 564 0006 0620     	 .short 8198
+ 565 0008 0E01     	 .short 270
+ 566 000a 0E11     	 .short 4366
+ 567 000c 0E21     	 .short 8462
+ 568              	 .global IfxEgtm_Cfg_Can2Node0Trigger
+ 569              	 .section .data.IfxEgtm_Cfg_Can2Node0Trigger,"aw"
+ 570              	 .align 1
+ 573              	IfxEgtm_Cfg_Can2Node0Trigger:
+ 574 0000 0600     	 .short 6
+ 575 0002 0700     	 .short 7
+ 576 0004 0710     	 .short 4103
+ 577 0006 0720     	 .short 8199
+ 578 0008 0F01     	 .short 271
+ 579 000a 0F11     	 .short 4367
+ 580 000c 0F21     	 .short 8463
+ 581              	 .global IfxEgtm_Cfg_Can1Node3Trigger
+ 582              	 .section .data.IfxEgtm_Cfg_Can1Node3Trigger,"aw"
+ 583              	 .align 1
+ 586              	IfxEgtm_Cfg_Can1Node3Trigger:
+ 587 0000 0600     	 .short 6
+ 588 0002 0000     	 .short 0
+ 589 0004 0010     	 .short 4096
+ 590 0006 0020     	 .short 8192
+ 591 0008 0801     	 .short 264
+ 592 000a 0811     	 .short 4360
+ 593 000c 0821     	 .short 8456
+ 594              	 .global IfxEgtm_Cfg_Can1Node2Trigger
+ 595              	 .section .data.IfxEgtm_Cfg_Can1Node2Trigger,"aw"
+ 596              	 .align 1
+ 599              	IfxEgtm_Cfg_Can1Node2Trigger:
+ 600 0000 0600     	 .short 6
+ 601 0002 0100     	 .short 1
+ 602 0004 0110     	 .short 4097
+ 603 0006 0120     	 .short 8193
+ 604 0008 0901     	 .short 265
+ 605 000a 0911     	 .short 4361
+ 606 000c 0921     	 .short 8457
+ 607              	 .global IfxEgtm_Cfg_Can1Node1Trigger
+ 608              	 .section .data.IfxEgtm_Cfg_Can1Node1Trigger,"aw"
+ 609              	 .align 1
+ 612              	IfxEgtm_Cfg_Can1Node1Trigger:
+ 613 0000 0600     	 .short 6
+ 614 0002 0200     	 .short 2
+ 615 0004 0210     	 .short 4098
+ 616 0006 0220     	 .short 8194
+ 617 0008 0A01     	 .short 266
+ 618 000a 0A11     	 .short 4362
+ 619 000c 0A21     	 .short 8458
+ 620              	 .global IfxEgtm_Cfg_Can1Node0Trigger
+ 621              	 .section .data.IfxEgtm_Cfg_Can1Node0Trigger,"aw"
+ 622              	 .align 1
+ 625              	IfxEgtm_Cfg_Can1Node0Trigger:
+ 626 0000 0600     	 .short 6
+ 627 0002 0300     	 .short 3
+ 628 0004 0310     	 .short 4099
+ 629 0006 0320     	 .short 8195
+ 630 0008 0B01     	 .short 267
+ 631 000a 0B11     	 .short 4363
+ 632 000c 0B21     	 .short 8459
+ 633              	 .global IfxEgtm_Cfg_Can0Node3Trigger
+ 634              	 .section .data.IfxEgtm_Cfg_Can0Node3Trigger,"aw"
+ 635              	 .align 1
+ 638              	IfxEgtm_Cfg_Can0Node3Trigger:
+ 639 0000 0600     	 .short 6
+ 640 0002 0400     	 .short 4
+ 641 0004 0410     	 .short 4100
+ 642 0006 0420     	 .short 8196
+ 643 0008 0C01     	 .short 268
+ 644 000a 0C11     	 .short 4364
+ 645 000c 0C21     	 .short 8460
+ 646              	 .global IfxEgtm_Cfg_Can0Node2Trigger
+ 647              	 .section .data.IfxEgtm_Cfg_Can0Node2Trigger,"aw"
+ 648              	 .align 1
+ 651              	IfxEgtm_Cfg_Can0Node2Trigger:
+ 652 0000 0600     	 .short 6
+ 653 0002 0500     	 .short 5
+ 654 0004 0510     	 .short 4101
+ 655 0006 0520     	 .short 8197
+ 656 0008 0D01     	 .short 269
+ 657 000a 0D11     	 .short 4365
+ 658 000c 0D21     	 .short 8461
+ 659              	 .global IfxEgtm_Cfg_Can0Node1Trigger
+ 660              	 .section .data.IfxEgtm_Cfg_Can0Node1Trigger,"aw"
+ 661              	 .align 1
+ 664              	IfxEgtm_Cfg_Can0Node1Trigger:
+ 665 0000 0600     	 .short 6
+ 666 0002 0600     	 .short 6
+ 667 0004 0610     	 .short 4102
+ 668 0006 0620     	 .short 8198
+ 669 0008 0E01     	 .short 270
+ 670 000a 0E11     	 .short 4366
+ 671 000c 0E21     	 .short 8462
+ 672              	 .global IfxEgtm_Cfg_Can0Node0Trigger
+ 673              	 .section .data.IfxEgtm_Cfg_Can0Node0Trigger,"aw"
+ 674              	 .align 1
+ 677              	IfxEgtm_Cfg_Can0Node0Trigger:
+ 678 0000 0600     	 .short 6
+ 679 0002 0700     	 .short 7
+ 680 0004 0710     	 .short 4103
+ 681 0006 0720     	 .short 8199
+ 682 0008 0F01     	 .short 271
+ 683 000a 0F11     	 .short 4367
+ 684 000c 0F21     	 .short 8463
+ 685              	 .global IfxEgtm_Cfg_AsclinTriggerTable
+ 686              	 .section .data.IfxEgtm_Cfg_AsclinTriggerTable,"aw"
+ 687              	 .align 2
+ 690              	IfxEgtm_Cfg_AsclinTriggerTable:
+ 691 0000 00000000 	 .word IfxEgtm_Cfg_Asclin0Trigger
+ 692 0004 00000000 	 .word IfxEgtm_Cfg_Asclin1Trigger
+ 693 0008 00000000 	 .word IfxEgtm_Cfg_Asclin2Trigger
+ 694 000c 00000000 	 .word IfxEgtm_Cfg_Asclin3Trigger
+ 695 0010 00000000 	 .word IfxEgtm_Cfg_Asclin4Trigger
+ 696 0014 00000000 	 .word IfxEgtm_Cfg_Asclin5Trigger
+ 697 0018 00000000 	 .word IfxEgtm_Cfg_Asclin6Trigger
+ 698 001c 00000000 	 .word IfxEgtm_Cfg_Asclin7Trigger
+ 699 0020 00000000 	 .word IfxEgtm_Cfg_Asclin8Trigger
+ 700 0024 00000000 	 .word IfxEgtm_Cfg_Asclin9Trigger
+ 701 0028 00000000 	 .word IfxEgtm_Cfg_Asclin10Trigger
+ 702 002c 00000000 	 .word IfxEgtm_Cfg_Asclin11Trigger
+ 703 0030 00000000 	 .word IfxEgtm_Cfg_Asclin12Trigger
+ 704 0034 00000000 	 .word IfxEgtm_Cfg_Asclin13Trigger
+ 705 0038 00000000 	 .word IfxEgtm_Cfg_Asclin14Trigger
+ 706 003c 00000000 	 .word IfxEgtm_Cfg_Asclin15Trigger
+ 707 0040 00000000 	 .word IfxEgtm_Cfg_Asclin16Trigger
+ 708 0044 00000000 	 .word IfxEgtm_Cfg_Asclin17Trigger
+ 709 0048 00000000 	 .word IfxEgtm_Cfg_Asclin18Trigger
+ 710 004c 00000000 	 .word IfxEgtm_Cfg_Asclin19Trigger
+ 711 0050 00000000 	 .word IfxEgtm_Cfg_Asclin20Trigger
+ 712 0054 00000000 	 .word IfxEgtm_Cfg_Asclin21Trigger
+ 713 0058 00000000 	 .word IfxEgtm_Cfg_Asclin22Trigger
+ 714 005c 00000000 	 .word IfxEgtm_Cfg_Asclin23Trigger
+ 715 0060 00000000 	 .word IfxEgtm_Cfg_Asclin24Trigger
+ 716 0064 00000000 	 .word IfxEgtm_Cfg_Asclin25Trigger
+ 717 0068 00000000 	 .word IfxEgtm_Cfg_Asclin26Trigger
+ 718 006c 00000000 	 .word IfxEgtm_Cfg_Asclin27Trigger
+ 719              	 .global IfxEgtm_Cfg_Asclin27Trigger
+ 720              	 .section .data.IfxEgtm_Cfg_Asclin27Trigger,"aw"
+ 721              	 .align 1
+ 724              	IfxEgtm_Cfg_Asclin27Trigger:
+ 725 0000 0C00     	 .short 12
+ 726 0002 0400     	 .short 4
+ 727 0004 0410     	 .short 4100
+ 728 0006 0420     	 .short 8196
+ 729 0008 0C01     	 .short 268
+ 730 000a 0C11     	 .short 4364
+ 731 000c 0300     	 .short 3
+ 732 000e 0310     	 .short 4099
+ 733 0010 0320     	 .short 8195
+ 734 0012 0B01     	 .short 267
+ 735 0014 0B11     	 .short 4363
+ 736 0016 0C21     	 .short 8460
+ 737 0018 0B21     	 .short 8459
+ 738              	 .global IfxEgtm_Cfg_Asclin26Trigger
+ 739              	 .section .data.IfxEgtm_Cfg_Asclin26Trigger,"aw"
+ 740              	 .align 1
+ 743              	IfxEgtm_Cfg_Asclin26Trigger:
+ 744 0000 0C00     	 .short 12
+ 745 0002 0500     	 .short 5
+ 746 0004 0510     	 .short 4101
+ 747 0006 0520     	 .short 8197
+ 748 0008 0D01     	 .short 269
+ 749 000a 0D11     	 .short 4365
+ 750 000c 0200     	 .short 2
+ 751 000e 0210     	 .short 4098
+ 752 0010 0220     	 .short 8194
+ 753 0012 0A01     	 .short 266
+ 754 0014 0A11     	 .short 4362
+ 755 0016 0D21     	 .short 8461
+ 756 0018 0A21     	 .short 8458
+ 757              	 .global IfxEgtm_Cfg_Asclin25Trigger
+ 758              	 .section .data.IfxEgtm_Cfg_Asclin25Trigger,"aw"
+ 759              	 .align 1
+ 762              	IfxEgtm_Cfg_Asclin25Trigger:
+ 763 0000 0C00     	 .short 12
+ 764 0002 0600     	 .short 6
+ 765 0004 0610     	 .short 4102
+ 766 0006 0620     	 .short 8198
+ 767 0008 0E01     	 .short 270
+ 768 000a 0E11     	 .short 4366
+ 769 000c 0100     	 .short 1
+ 770 000e 0110     	 .short 4097
+ 771 0010 0120     	 .short 8193
+ 772 0012 0901     	 .short 265
+ 773 0014 0911     	 .short 4361
+ 774 0016 0E21     	 .short 8462
+ 775 0018 0921     	 .short 8457
+ 776              	 .global IfxEgtm_Cfg_Asclin24Trigger
+ 777              	 .section .data.IfxEgtm_Cfg_Asclin24Trigger,"aw"
+ 778              	 .align 1
+ 781              	IfxEgtm_Cfg_Asclin24Trigger:
+ 782 0000 0C00     	 .short 12
+ 783 0002 0700     	 .short 7
+ 784 0004 0710     	 .short 4103
+ 785 0006 0720     	 .short 8199
+ 786 0008 0F01     	 .short 271
+ 787 000a 0F11     	 .short 4367
+ 788 000c 0000     	 .short 0
+ 789 000e 0010     	 .short 4096
+ 790 0010 0020     	 .short 8192
+ 791 0012 0801     	 .short 264
+ 792 0014 0811     	 .short 4360
+ 793 0016 0F21     	 .short 8463
+ 794 0018 0821     	 .short 8456
+ 795              	 .global IfxEgtm_Cfg_Asclin23Trigger
+ 796              	 .section .data.IfxEgtm_Cfg_Asclin23Trigger,"aw"
+ 797              	 .align 1
+ 800              	IfxEgtm_Cfg_Asclin23Trigger:
+ 801 0000 0C00     	 .short 12
+ 802 0002 0000     	 .short 0
+ 803 0004 0010     	 .short 4096
+ 804 0006 0020     	 .short 8192
+ 805 0008 0801     	 .short 264
+ 806 000a 0811     	 .short 4360
+ 807 000c 0700     	 .short 7
+ 808 000e 0710     	 .short 4103
+ 809 0010 0720     	 .short 8199
+ 810 0012 0F01     	 .short 271
+ 811 0014 0F11     	 .short 4367
+ 812 0016 0821     	 .short 8456
+ 813 0018 0F21     	 .short 8463
+ 814              	 .global IfxEgtm_Cfg_Asclin22Trigger
+ 815              	 .section .data.IfxEgtm_Cfg_Asclin22Trigger,"aw"
+ 816              	 .align 1
+ 819              	IfxEgtm_Cfg_Asclin22Trigger:
+ 820 0000 0C00     	 .short 12
+ 821 0002 0100     	 .short 1
+ 822 0004 0110     	 .short 4097
+ 823 0006 0120     	 .short 8193
+ 824 0008 0901     	 .short 265
+ 825 000a 0911     	 .short 4361
+ 826 000c 0600     	 .short 6
+ 827 000e 0610     	 .short 4102
+ 828 0010 0620     	 .short 8198
+ 829 0012 0E01     	 .short 270
+ 830 0014 0E11     	 .short 4366
+ 831 0016 0921     	 .short 8457
+ 832 0018 0E21     	 .short 8462
+ 833              	 .global IfxEgtm_Cfg_Asclin21Trigger
+ 834              	 .section .data.IfxEgtm_Cfg_Asclin21Trigger,"aw"
+ 835              	 .align 1
+ 838              	IfxEgtm_Cfg_Asclin21Trigger:
+ 839 0000 0C00     	 .short 12
+ 840 0002 0200     	 .short 2
+ 841 0004 0210     	 .short 4098
+ 842 0006 0220     	 .short 8194
+ 843 0008 0A01     	 .short 266
+ 844 000a 0A11     	 .short 4362
+ 845 000c 0500     	 .short 5
+ 846 000e 0510     	 .short 4101
+ 847 0010 0520     	 .short 8197
+ 848 0012 0D01     	 .short 269
+ 849 0014 0D11     	 .short 4365
+ 850 0016 0A21     	 .short 8458
+ 851 0018 0D21     	 .short 8461
+ 852              	 .global IfxEgtm_Cfg_Asclin20Trigger
+ 853              	 .section .data.IfxEgtm_Cfg_Asclin20Trigger,"aw"
+ 854              	 .align 1
+ 857              	IfxEgtm_Cfg_Asclin20Trigger:
+ 858 0000 0C00     	 .short 12
+ 859 0002 0300     	 .short 3
+ 860 0004 0310     	 .short 4099
+ 861 0006 0320     	 .short 8195
+ 862 0008 0B01     	 .short 267
+ 863 000a 0B11     	 .short 4363
+ 864 000c 0400     	 .short 4
+ 865 000e 0410     	 .short 4100
+ 866 0010 0420     	 .short 8196
+ 867 0012 0C01     	 .short 268
+ 868 0014 0C11     	 .short 4364
+ 869 0016 0B21     	 .short 8459
+ 870 0018 0C21     	 .short 8460
+ 871              	 .global IfxEgtm_Cfg_Asclin19Trigger
+ 872              	 .section .data.IfxEgtm_Cfg_Asclin19Trigger,"aw"
+ 873              	 .align 1
+ 876              	IfxEgtm_Cfg_Asclin19Trigger:
+ 877 0000 0C00     	 .short 12
+ 878 0002 0400     	 .short 4
+ 879 0004 0410     	 .short 4100
+ 880 0006 0420     	 .short 8196
+ 881 0008 0C01     	 .short 268
+ 882 000a 0C11     	 .short 4364
+ 883 000c 0300     	 .short 3
+ 884 000e 0310     	 .short 4099
+ 885 0010 0320     	 .short 8195
+ 886 0012 0B01     	 .short 267
+ 887 0014 0B11     	 .short 4363
+ 888 0016 0C21     	 .short 8460
+ 889 0018 0B21     	 .short 8459
+ 890              	 .global IfxEgtm_Cfg_Asclin18Trigger
+ 891              	 .section .data.IfxEgtm_Cfg_Asclin18Trigger,"aw"
+ 892              	 .align 1
+ 895              	IfxEgtm_Cfg_Asclin18Trigger:
+ 896 0000 0C00     	 .short 12
+ 897 0002 0500     	 .short 5
+ 898 0004 0510     	 .short 4101
+ 899 0006 0520     	 .short 8197
+ 900 0008 0D01     	 .short 269
+ 901 000a 0D11     	 .short 4365
+ 902 000c 0200     	 .short 2
+ 903 000e 0210     	 .short 4098
+ 904 0010 0220     	 .short 8194
+ 905 0012 0A01     	 .short 266
+ 906 0014 0A11     	 .short 4362
+ 907 0016 0D21     	 .short 8461
+ 908 0018 0A21     	 .short 8458
+ 909              	 .global IfxEgtm_Cfg_Asclin17Trigger
+ 910              	 .section .data.IfxEgtm_Cfg_Asclin17Trigger,"aw"
+ 911              	 .align 1
+ 914              	IfxEgtm_Cfg_Asclin17Trigger:
+ 915 0000 0C00     	 .short 12
+ 916 0002 0600     	 .short 6
+ 917 0004 0610     	 .short 4102
+ 918 0006 0620     	 .short 8198
+ 919 0008 0E01     	 .short 270
+ 920 000a 0E11     	 .short 4366
+ 921 000c 0100     	 .short 1
+ 922 000e 0110     	 .short 4097
+ 923 0010 0120     	 .short 8193
+ 924 0012 0901     	 .short 265
+ 925 0014 0911     	 .short 4361
+ 926 0016 0E21     	 .short 8462
+ 927 0018 0921     	 .short 8457
+ 928              	 .global IfxEgtm_Cfg_Asclin16Trigger
+ 929              	 .section .data.IfxEgtm_Cfg_Asclin16Trigger,"aw"
+ 930              	 .align 1
+ 933              	IfxEgtm_Cfg_Asclin16Trigger:
+ 934 0000 0C00     	 .short 12
+ 935 0002 0700     	 .short 7
+ 936 0004 0710     	 .short 4103
+ 937 0006 0720     	 .short 8199
+ 938 0008 0F01     	 .short 271
+ 939 000a 0F11     	 .short 4367
+ 940 000c 0000     	 .short 0
+ 941 000e 0010     	 .short 4096
+ 942 0010 0020     	 .short 8192
+ 943 0012 0801     	 .short 264
+ 944 0014 0811     	 .short 4360
+ 945 0016 0F21     	 .short 8463
+ 946 0018 0821     	 .short 8456
+ 947              	 .global IfxEgtm_Cfg_Asclin15Trigger
+ 948              	 .section .data.IfxEgtm_Cfg_Asclin15Trigger,"aw"
+ 949              	 .align 1
+ 952              	IfxEgtm_Cfg_Asclin15Trigger:
+ 953 0000 0C00     	 .short 12
+ 954 0002 0000     	 .short 0
+ 955 0004 0010     	 .short 4096
+ 956 0006 0020     	 .short 8192
+ 957 0008 0801     	 .short 264
+ 958 000a 0811     	 .short 4360
+ 959 000c 0700     	 .short 7
+ 960 000e 0710     	 .short 4103
+ 961 0010 0720     	 .short 8199
+ 962 0012 0F01     	 .short 271
+ 963 0014 0F11     	 .short 4367
+ 964 0016 0821     	 .short 8456
+ 965 0018 0F21     	 .short 8463
+ 966              	 .global IfxEgtm_Cfg_Asclin14Trigger
+ 967              	 .section .data.IfxEgtm_Cfg_Asclin14Trigger,"aw"
+ 968              	 .align 1
+ 971              	IfxEgtm_Cfg_Asclin14Trigger:
+ 972 0000 0C00     	 .short 12
+ 973 0002 0100     	 .short 1
+ 974 0004 0110     	 .short 4097
+ 975 0006 0120     	 .short 8193
+ 976 0008 0901     	 .short 265
+ 977 000a 0911     	 .short 4361
+ 978 000c 0600     	 .short 6
+ 979 000e 0610     	 .short 4102
+ 980 0010 0620     	 .short 8198
+ 981 0012 0E01     	 .short 270
+ 982 0014 0E11     	 .short 4366
+ 983 0016 0921     	 .short 8457
+ 984 0018 0E21     	 .short 8462
+ 985              	 .global IfxEgtm_Cfg_Asclin13Trigger
+ 986              	 .section .data.IfxEgtm_Cfg_Asclin13Trigger,"aw"
+ 987              	 .align 1
+ 990              	IfxEgtm_Cfg_Asclin13Trigger:
+ 991 0000 0C00     	 .short 12
+ 992 0002 0200     	 .short 2
+ 993 0004 0210     	 .short 4098
+ 994 0006 0220     	 .short 8194
+ 995 0008 0A01     	 .short 266
+ 996 000a 0A11     	 .short 4362
+ 997 000c 0500     	 .short 5
+ 998 000e 0510     	 .short 4101
+ 999 0010 0520     	 .short 8197
+ 1000 0012 0D01     	 .short 269
+ 1001 0014 0D11     	 .short 4365
+ 1002 0016 0A21     	 .short 8458
+ 1003 0018 0D21     	 .short 8461
+ 1004              	 .global IfxEgtm_Cfg_Asclin12Trigger
+ 1005              	 .section .data.IfxEgtm_Cfg_Asclin12Trigger,"aw"
+ 1006              	 .align 1
+ 1009              	IfxEgtm_Cfg_Asclin12Trigger:
+ 1010 0000 0C00     	 .short 12
+ 1011 0002 0300     	 .short 3
+ 1012 0004 0310     	 .short 4099
+ 1013 0006 0320     	 .short 8195
+ 1014 0008 0B01     	 .short 267
+ 1015 000a 0B11     	 .short 4363
+ 1016 000c 0400     	 .short 4
+ 1017 000e 0410     	 .short 4100
+ 1018 0010 0420     	 .short 8196
+ 1019 0012 0C01     	 .short 268
+ 1020 0014 0C11     	 .short 4364
+ 1021 0016 0B21     	 .short 8459
+ 1022 0018 0C21     	 .short 8460
+ 1023              	 .global IfxEgtm_Cfg_Asclin11Trigger
+ 1024              	 .section .data.IfxEgtm_Cfg_Asclin11Trigger,"aw"
+ 1025              	 .align 1
+ 1028              	IfxEgtm_Cfg_Asclin11Trigger:
+ 1029 0000 0C00     	 .short 12
+ 1030 0002 0400     	 .short 4
+ 1031 0004 0410     	 .short 4100
+ 1032 0006 0420     	 .short 8196
+ 1033 0008 0C01     	 .short 268
+ 1034 000a 0C11     	 .short 4364
+ 1035 000c 0300     	 .short 3
+ 1036 000e 0310     	 .short 4099
+ 1037 0010 0320     	 .short 8195
+ 1038 0012 0B01     	 .short 267
+ 1039 0014 0B11     	 .short 4363
+ 1040 0016 0C21     	 .short 8460
+ 1041 0018 0B21     	 .short 8459
+ 1042              	 .global IfxEgtm_Cfg_Asclin10Trigger
+ 1043              	 .section .data.IfxEgtm_Cfg_Asclin10Trigger,"aw"
+ 1044              	 .align 1
+ 1047              	IfxEgtm_Cfg_Asclin10Trigger:
+ 1048 0000 0C00     	 .short 12
+ 1049 0002 0500     	 .short 5
+ 1050 0004 0510     	 .short 4101
+ 1051 0006 0520     	 .short 8197
+ 1052 0008 0D01     	 .short 269
+ 1053 000a 0D11     	 .short 4365
+ 1054 000c 0200     	 .short 2
+ 1055 000e 0210     	 .short 4098
+ 1056 0010 0220     	 .short 8194
+ 1057 0012 0A01     	 .short 266
+ 1058 0014 0A11     	 .short 4362
+ 1059 0016 0D21     	 .short 8461
+ 1060 0018 0A21     	 .short 8458
+ 1061              	 .global IfxEgtm_Cfg_Asclin9Trigger
+ 1062              	 .section .data.IfxEgtm_Cfg_Asclin9Trigger,"aw"
+ 1063              	 .align 1
+ 1066              	IfxEgtm_Cfg_Asclin9Trigger:
+ 1067 0000 0C00     	 .short 12
+ 1068 0002 0600     	 .short 6
+ 1069 0004 0610     	 .short 4102
+ 1070 0006 0620     	 .short 8198
+ 1071 0008 0E01     	 .short 270
+ 1072 000a 0E11     	 .short 4366
+ 1073 000c 0100     	 .short 1
+ 1074 000e 0110     	 .short 4097
+ 1075 0010 0120     	 .short 8193
+ 1076 0012 0901     	 .short 265
+ 1077 0014 0911     	 .short 4361
+ 1078 0016 0E21     	 .short 8462
+ 1079 0018 0921     	 .short 8457
+ 1080              	 .global IfxEgtm_Cfg_Asclin8Trigger
+ 1081              	 .section .data.IfxEgtm_Cfg_Asclin8Trigger,"aw"
+ 1082              	 .align 1
+ 1085              	IfxEgtm_Cfg_Asclin8Trigger:
+ 1086 0000 0C00     	 .short 12
+ 1087 0002 0700     	 .short 7
+ 1088 0004 0710     	 .short 4103
+ 1089 0006 0720     	 .short 8199
+ 1090 0008 0F01     	 .short 271
+ 1091 000a 0F11     	 .short 4367
+ 1092 000c 0000     	 .short 0
+ 1093 000e 0010     	 .short 4096
+ 1094 0010 0020     	 .short 8192
+ 1095 0012 0801     	 .short 264
+ 1096 0014 0811     	 .short 4360
+ 1097 0016 0F21     	 .short 8463
+ 1098 0018 0821     	 .short 8456
+ 1099              	 .global IfxEgtm_Cfg_Asclin7Trigger
+ 1100              	 .section .data.IfxEgtm_Cfg_Asclin7Trigger,"aw"
+ 1101              	 .align 1
+ 1104              	IfxEgtm_Cfg_Asclin7Trigger:
+ 1105 0000 0C00     	 .short 12
+ 1106 0002 0000     	 .short 0
+ 1107 0004 0010     	 .short 4096
+ 1108 0006 0020     	 .short 8192
+ 1109 0008 0801     	 .short 264
+ 1110 000a 0811     	 .short 4360
+ 1111 000c 0700     	 .short 7
+ 1112 000e 0710     	 .short 4103
+ 1113 0010 0720     	 .short 8199
+ 1114 0012 0F01     	 .short 271
+ 1115 0014 0F11     	 .short 4367
+ 1116 0016 0821     	 .short 8456
+ 1117 0018 0F21     	 .short 8463
+ 1118              	 .global IfxEgtm_Cfg_Asclin6Trigger
+ 1119              	 .section .data.IfxEgtm_Cfg_Asclin6Trigger,"aw"
+ 1120              	 .align 1
+ 1123              	IfxEgtm_Cfg_Asclin6Trigger:
+ 1124 0000 0C00     	 .short 12
+ 1125 0002 0100     	 .short 1
+ 1126 0004 0110     	 .short 4097
+ 1127 0006 0120     	 .short 8193
+ 1128 0008 0901     	 .short 265
+ 1129 000a 0911     	 .short 4361
+ 1130 000c 0600     	 .short 6
+ 1131 000e 0610     	 .short 4102
+ 1132 0010 0620     	 .short 8198
+ 1133 0012 0E01     	 .short 270
+ 1134 0014 0E11     	 .short 4366
+ 1135 0016 0921     	 .short 8457
+ 1136 0018 0E21     	 .short 8462
+ 1137              	 .global IfxEgtm_Cfg_Asclin5Trigger
+ 1138              	 .section .data.IfxEgtm_Cfg_Asclin5Trigger,"aw"
+ 1139              	 .align 1
+ 1142              	IfxEgtm_Cfg_Asclin5Trigger:
+ 1143 0000 0C00     	 .short 12
+ 1144 0002 0200     	 .short 2
+ 1145 0004 0210     	 .short 4098
+ 1146 0006 0220     	 .short 8194
+ 1147 0008 0A01     	 .short 266
+ 1148 000a 0A11     	 .short 4362
+ 1149 000c 0500     	 .short 5
+ 1150 000e 0510     	 .short 4101
+ 1151 0010 0520     	 .short 8197
+ 1152 0012 0D01     	 .short 269
+ 1153 0014 0D11     	 .short 4365
+ 1154 0016 0A21     	 .short 8458
+ 1155 0018 0D21     	 .short 8461
+ 1156              	 .global IfxEgtm_Cfg_Asclin4Trigger
+ 1157              	 .section .data.IfxEgtm_Cfg_Asclin4Trigger,"aw"
+ 1158              	 .align 1
+ 1161              	IfxEgtm_Cfg_Asclin4Trigger:
+ 1162 0000 0C00     	 .short 12
+ 1163 0002 0300     	 .short 3
+ 1164 0004 0310     	 .short 4099
+ 1165 0006 0320     	 .short 8195
+ 1166 0008 0B01     	 .short 267
+ 1167 000a 0B11     	 .short 4363
+ 1168 000c 0400     	 .short 4
+ 1169 000e 0410     	 .short 4100
+ 1170 0010 0420     	 .short 8196
+ 1171 0012 0C01     	 .short 268
+ 1172 0014 0C11     	 .short 4364
+ 1173 0016 0B21     	 .short 8459
+ 1174 0018 0C21     	 .short 8460
+ 1175              	 .global IfxEgtm_Cfg_Asclin3Trigger
+ 1176              	 .section .data.IfxEgtm_Cfg_Asclin3Trigger,"aw"
+ 1177              	 .align 1
+ 1180              	IfxEgtm_Cfg_Asclin3Trigger:
+ 1181 0000 0C00     	 .short 12
+ 1182 0002 0400     	 .short 4
+ 1183 0004 0410     	 .short 4100
+ 1184 0006 0420     	 .short 8196
+ 1185 0008 0C01     	 .short 268
+ 1186 000a 0C11     	 .short 4364
+ 1187 000c 0300     	 .short 3
+ 1188 000e 0310     	 .short 4099
+ 1189 0010 0320     	 .short 8195
+ 1190 0012 0B01     	 .short 267
+ 1191 0014 0B11     	 .short 4363
+ 1192 0016 0C21     	 .short 8460
+ 1193 0018 0B21     	 .short 8459
+ 1194              	 .global IfxEgtm_Cfg_Asclin2Trigger
+ 1195              	 .section .data.IfxEgtm_Cfg_Asclin2Trigger,"aw"
+ 1196              	 .align 1
+ 1199              	IfxEgtm_Cfg_Asclin2Trigger:
+ 1200 0000 0C00     	 .short 12
+ 1201 0002 0500     	 .short 5
+ 1202 0004 0510     	 .short 4101
+ 1203 0006 0520     	 .short 8197
+ 1204 0008 0D01     	 .short 269
+ 1205 000a 0D11     	 .short 4365
+ 1206 000c 0200     	 .short 2
+ 1207 000e 0210     	 .short 4098
+ 1208 0010 0220     	 .short 8194
+ 1209 0012 0A01     	 .short 266
+ 1210 0014 0A11     	 .short 4362
+ 1211 0016 0D21     	 .short 8461
+ 1212 0018 0A21     	 .short 8458
+ 1213              	 .global IfxEgtm_Cfg_Asclin1Trigger
+ 1214              	 .section .data.IfxEgtm_Cfg_Asclin1Trigger,"aw"
+ 1215              	 .align 1
+ 1218              	IfxEgtm_Cfg_Asclin1Trigger:
+ 1219 0000 0C00     	 .short 12
+ 1220 0002 0600     	 .short 6
+ 1221 0004 0610     	 .short 4102
+ 1222 0006 0620     	 .short 8198
+ 1223 0008 0E01     	 .short 270
+ 1224 000a 0E11     	 .short 4366
+ 1225 000c 0100     	 .short 1
+ 1226 000e 0110     	 .short 4097
+ 1227 0010 0120     	 .short 8193
+ 1228 0012 0901     	 .short 265
+ 1229 0014 0911     	 .short 4361
+ 1230 0016 0E21     	 .short 8462
+ 1231 0018 0921     	 .short 8457
+ 1232              	 .global IfxEgtm_Cfg_Asclin0Trigger
+ 1233              	 .section .data.IfxEgtm_Cfg_Asclin0Trigger,"aw"
+ 1234              	 .align 1
+ 1237              	IfxEgtm_Cfg_Asclin0Trigger:
+ 1238 0000 0C00     	 .short 12
+ 1239 0002 0700     	 .short 7
+ 1240 0004 0710     	 .short 4103
+ 1241 0006 0720     	 .short 8199
+ 1242 0008 0F01     	 .short 271
+ 1243 000a 0F11     	 .short 4367
+ 1244 000c 0000     	 .short 0
+ 1245 000e 0010     	 .short 4096
+ 1246 0010 0020     	 .short 8192
+ 1247 0012 0801     	 .short 264
+ 1248 0014 0811     	 .short 4360
+ 1249 0016 0F21     	 .short 8463
+ 1250 0018 0821     	 .short 8456
+ 1251              	 .global IfxEgtm_Cfg_QspiTriggerTable
+ 1252              	 .section .data.IfxEgtm_Cfg_QspiTriggerTable,"aw"
+ 1253              	 .align 2
+ 1256              	IfxEgtm_Cfg_QspiTriggerTable:
+ 1257 0000 00000000 	 .word IfxEgtm_Cfg_Qspi0Trigger
+ 1258 0004 00000000 	 .word IfxEgtm_Cfg_Qspi1Trigger
+ 1259 0008 00000000 	 .word IfxEgtm_Cfg_Qspi2Trigger
+ 1260 000c 00000000 	 .word IfxEgtm_Cfg_Qspi3Trigger
+ 1261 0010 00000000 	 .word IfxEgtm_Cfg_Qspi4Trigger
+ 1262 0014 00000000 	 .word IfxEgtm_Cfg_Qspi5Trigger
+ 1263 0018 00000000 	 .word IfxEgtm_Cfg_Qspi6Trigger
+ 1264 001c 00000000 	 .word IfxEgtm_Cfg_Qspi7Trigger
+ 1265              	 .global IfxEgtm_Cfg_Qspi7Trigger
+ 1266              	 .section .data.IfxEgtm_Cfg_Qspi7Trigger,"aw"
+ 1267              	 .align 1
+ 1270              	IfxEgtm_Cfg_Qspi7Trigger:
+ 1271 0000 0C00     	 .short 12
+ 1272 0002 0000     	 .short 0
+ 1273 0004 0010     	 .short 4096
+ 1274 0006 0020     	 .short 8192
+ 1275 0008 0801     	 .short 264
+ 1276 000a 0811     	 .short 4360
+ 1277 000c 0700     	 .short 7
+ 1278 000e 0710     	 .short 4103
+ 1279 0010 0720     	 .short 8199
+ 1280 0012 0F01     	 .short 271
+ 1281 0014 0F11     	 .short 4367
+ 1282 0016 0821     	 .short 8456
+ 1283 0018 0F21     	 .short 8463
+ 1284              	 .global IfxEgtm_Cfg_Qspi6Trigger
+ 1285              	 .section .data.IfxEgtm_Cfg_Qspi6Trigger,"aw"
+ 1286              	 .align 1
+ 1289              	IfxEgtm_Cfg_Qspi6Trigger:
+ 1290 0000 0C00     	 .short 12
+ 1291 0002 0100     	 .short 1
+ 1292 0004 0110     	 .short 4097
+ 1293 0006 0120     	 .short 8193
+ 1294 0008 0901     	 .short 265
+ 1295 000a 0911     	 .short 4361
+ 1296 000c 0600     	 .short 6
+ 1297 000e 0610     	 .short 4102
+ 1298 0010 0620     	 .short 8198
+ 1299 0012 0E01     	 .short 270
+ 1300 0014 0E11     	 .short 4366
+ 1301 0016 0921     	 .short 8457
+ 1302 0018 0E21     	 .short 8462
+ 1303              	 .global IfxEgtm_Cfg_Qspi5Trigger
+ 1304              	 .section .data.IfxEgtm_Cfg_Qspi5Trigger,"aw"
+ 1305              	 .align 1
+ 1308              	IfxEgtm_Cfg_Qspi5Trigger:
+ 1309 0000 0C00     	 .short 12
+ 1310 0002 0200     	 .short 2
+ 1311 0004 0210     	 .short 4098
+ 1312 0006 0220     	 .short 8194
+ 1313 0008 0A01     	 .short 266
+ 1314 000a 0A11     	 .short 4362
+ 1315 000c 0500     	 .short 5
+ 1316 000e 0510     	 .short 4101
+ 1317 0010 0520     	 .short 8197
+ 1318 0012 0D01     	 .short 269
+ 1319 0014 0D11     	 .short 4365
+ 1320 0016 0A21     	 .short 8458
+ 1321 0018 0D21     	 .short 8461
+ 1322              	 .global IfxEgtm_Cfg_Qspi4Trigger
+ 1323              	 .section .data.IfxEgtm_Cfg_Qspi4Trigger,"aw"
+ 1324              	 .align 1
+ 1327              	IfxEgtm_Cfg_Qspi4Trigger:
+ 1328 0000 0C00     	 .short 12
+ 1329 0002 0300     	 .short 3
+ 1330 0004 0310     	 .short 4099
+ 1331 0006 0320     	 .short 8195
+ 1332 0008 0B01     	 .short 267
+ 1333 000a 0B11     	 .short 4363
+ 1334 000c 0400     	 .short 4
+ 1335 000e 0410     	 .short 4100
+ 1336 0010 0420     	 .short 8196
+ 1337 0012 0C01     	 .short 268
+ 1338 0014 0C11     	 .short 4364
+ 1339 0016 0B21     	 .short 8459
+ 1340 0018 0C21     	 .short 8460
+ 1341              	 .global IfxEgtm_Cfg_Qspi3Trigger
+ 1342              	 .section .data.IfxEgtm_Cfg_Qspi3Trigger,"aw"
+ 1343              	 .align 1
+ 1346              	IfxEgtm_Cfg_Qspi3Trigger:
+ 1347 0000 0C00     	 .short 12
+ 1348 0002 0400     	 .short 4
+ 1349 0004 0410     	 .short 4100
+ 1350 0006 0420     	 .short 8196
+ 1351 0008 0C01     	 .short 268
+ 1352 000a 0C11     	 .short 4364
+ 1353 000c 0300     	 .short 3
+ 1354 000e 0310     	 .short 4099
+ 1355 0010 0320     	 .short 8195
+ 1356 0012 0B01     	 .short 267
+ 1357 0014 0B11     	 .short 4363
+ 1358 0016 0C21     	 .short 8460
+ 1359 0018 0B21     	 .short 8459
+ 1360              	 .global IfxEgtm_Cfg_Qspi2Trigger
+ 1361              	 .section .data.IfxEgtm_Cfg_Qspi2Trigger,"aw"
+ 1362              	 .align 1
+ 1365              	IfxEgtm_Cfg_Qspi2Trigger:
+ 1366 0000 0C00     	 .short 12
+ 1367 0002 0500     	 .short 5
+ 1368 0004 0510     	 .short 4101
+ 1369 0006 0520     	 .short 8197
+ 1370 0008 0D01     	 .short 269
+ 1371 000a 0D11     	 .short 4365
+ 1372 000c 0200     	 .short 2
+ 1373 000e 0210     	 .short 4098
+ 1374 0010 0220     	 .short 8194
+ 1375 0012 0A01     	 .short 266
+ 1376 0014 0A11     	 .short 4362
+ 1377 0016 0D21     	 .short 8461
+ 1378 0018 0A21     	 .short 8458
+ 1379              	 .global IfxEgtm_Cfg_Qspi1Trigger
+ 1380              	 .section .data.IfxEgtm_Cfg_Qspi1Trigger,"aw"
+ 1381              	 .align 1
+ 1384              	IfxEgtm_Cfg_Qspi1Trigger:
+ 1385 0000 0C00     	 .short 12
+ 1386 0002 0600     	 .short 6
+ 1387 0004 0610     	 .short 4102
+ 1388 0006 0620     	 .short 8198
+ 1389 0008 0E01     	 .short 270
+ 1390 000a 0E11     	 .short 4366
+ 1391 000c 0100     	 .short 1
+ 1392 000e 0110     	 .short 4097
+ 1393 0010 0120     	 .short 8193
+ 1394 0012 0901     	 .short 265
+ 1395 0014 0911     	 .short 4361
+ 1396 0016 0E21     	 .short 8462
+ 1397 0018 0921     	 .short 8457
+ 1398              	 .global IfxEgtm_Cfg_Qspi0Trigger
+ 1399              	 .section .data.IfxEgtm_Cfg_Qspi0Trigger,"aw"
+ 1400              	 .align 1
+ 1403              	IfxEgtm_Cfg_Qspi0Trigger:
+ 1404 0000 0C00     	 .short 12
+ 1405 0002 0700     	 .short 7
+ 1406 0004 0710     	 .short 4103
+ 1407 0006 0720     	 .short 8199
+ 1408 0008 0F01     	 .short 271
+ 1409 000a 0F11     	 .short 4367
+ 1410 000c 0000     	 .short 0
+ 1411 000e 0010     	 .short 4096
+ 1412 0010 0020     	 .short 8192
+ 1413 0012 0801     	 .short 264
+ 1414 0014 0811     	 .short 4360
+ 1415 0016 0F21     	 .short 8463
+ 1416 0018 0821     	 .short 8456
+ 1417              	 .global IfxEgtm_Cfg_Psi5sTriggerTable
+ 1418              	 .section .data.IfxEgtm_Cfg_Psi5sTriggerTable,"aw"
+ 1419              	 .align 2
+ 1422              	IfxEgtm_Cfg_Psi5sTriggerTable:
+ 1423 0000 00000000 	 .word IfxEgtm_Cfg_Psi5sTriggerSel0
+ 1424 0004 00000000 	 .word IfxEgtm_Cfg_Psi5sTriggerSel1
+ 1425 0008 00000000 	 .word IfxEgtm_Cfg_Psi5sTriggerSel2
+ 1426 000c 00000000 	 .word IfxEgtm_Cfg_Psi5sTriggerSel3
+ 1427 0010 00000000 	 .word IfxEgtm_Cfg_Psi5sTriggerSel4
+ 1428 0014 00000000 	 .word IfxEgtm_Cfg_Psi5sTriggerSel5
+ 1429 0018 00000000 	 .word IfxEgtm_Cfg_Psi5sTriggerSel6
+ 1430 001c 00000000 	 .word IfxEgtm_Cfg_Psi5sTriggerSel7
+ 1431              	 .global IfxEgtm_Cfg_Psi5sTriggerSel7
+ 1432              	 .section .data.IfxEgtm_Cfg_Psi5sTriggerSel7,"aw"
+ 1433              	 .align 1
+ 1436              	IfxEgtm_Cfg_Psi5sTriggerSel7:
+ 1437 0000 0600     	 .short 6
+ 1438 0002 0700     	 .short 7
+ 1439 0004 0710     	 .short 4103
+ 1440 0006 0720     	 .short 8199
+ 1441 0008 0F01     	 .short 271
+ 1442 000a 0F11     	 .short 4367
+ 1443 000c 0F21     	 .short 8463
+ 1444              	 .global IfxEgtm_Cfg_Psi5sTriggerSel6
+ 1445              	 .section .data.IfxEgtm_Cfg_Psi5sTriggerSel6,"aw"
+ 1446              	 .align 1
+ 1449              	IfxEgtm_Cfg_Psi5sTriggerSel6:
+ 1450 0000 0600     	 .short 6
+ 1451 0002 0600     	 .short 6
+ 1452 0004 0610     	 .short 4102
+ 1453 0006 0620     	 .short 8198
+ 1454 0008 0E01     	 .short 270
+ 1455 000a 0E11     	 .short 4366
+ 1456 000c 0E21     	 .short 8462
+ 1457              	 .global IfxEgtm_Cfg_Psi5sTriggerSel5
+ 1458              	 .section .data.IfxEgtm_Cfg_Psi5sTriggerSel5,"aw"
+ 1459              	 .align 1
+ 1462              	IfxEgtm_Cfg_Psi5sTriggerSel5:
+ 1463 0000 0600     	 .short 6
+ 1464 0002 0500     	 .short 5
+ 1465 0004 0510     	 .short 4101
+ 1466 0006 0520     	 .short 8197
+ 1467 0008 0D01     	 .short 269
+ 1468 000a 0D11     	 .short 4365
+ 1469 000c 0D21     	 .short 8461
+ 1470              	 .global IfxEgtm_Cfg_Psi5sTriggerSel4
+ 1471              	 .section .data.IfxEgtm_Cfg_Psi5sTriggerSel4,"aw"
+ 1472              	 .align 1
+ 1475              	IfxEgtm_Cfg_Psi5sTriggerSel4:
+ 1476 0000 0600     	 .short 6
+ 1477 0002 0400     	 .short 4
+ 1478 0004 0410     	 .short 4100
+ 1479 0006 0420     	 .short 8196
+ 1480 0008 0C01     	 .short 268
+ 1481 000a 0C11     	 .short 4364
+ 1482 000c 0C21     	 .short 8460
+ 1483              	 .global IfxEgtm_Cfg_Psi5sTriggerSel3
+ 1484              	 .section .data.IfxEgtm_Cfg_Psi5sTriggerSel3,"aw"
+ 1485              	 .align 1
+ 1488              	IfxEgtm_Cfg_Psi5sTriggerSel3:
+ 1489 0000 0600     	 .short 6
+ 1490 0002 0700     	 .short 7
+ 1491 0004 0710     	 .short 4103
+ 1492 0006 0720     	 .short 8199
+ 1493 0008 0B01     	 .short 267
+ 1494 000a 0B11     	 .short 4363
+ 1495 000c 0B21     	 .short 8459
+ 1496              	 .global IfxEgtm_Cfg_Psi5sTriggerSel2
+ 1497              	 .section .data.IfxEgtm_Cfg_Psi5sTriggerSel2,"aw"
+ 1498              	 .align 1
+ 1501              	IfxEgtm_Cfg_Psi5sTriggerSel2:
+ 1502 0000 0600     	 .short 6
+ 1503 0002 0600     	 .short 6
+ 1504 0004 0610     	 .short 4102
+ 1505 0006 0620     	 .short 8198
+ 1506 0008 0A01     	 .short 266
+ 1507 000a 0A11     	 .short 4362
+ 1508 000c 0A21     	 .short 8458
+ 1509              	 .global IfxEgtm_Cfg_Psi5sTriggerSel1
+ 1510              	 .section .data.IfxEgtm_Cfg_Psi5sTriggerSel1,"aw"
+ 1511              	 .align 1
+ 1514              	IfxEgtm_Cfg_Psi5sTriggerSel1:
+ 1515 0000 0600     	 .short 6
+ 1516 0002 0500     	 .short 5
+ 1517 0004 0510     	 .short 4101
+ 1518 0006 0520     	 .short 8197
+ 1519 0008 0901     	 .short 265
+ 1520 000a 0911     	 .short 4361
+ 1521 000c 0921     	 .short 8457
+ 1522              	 .global IfxEgtm_Cfg_Psi5sTriggerSel0
+ 1523              	 .section .data.IfxEgtm_Cfg_Psi5sTriggerSel0,"aw"
+ 1524              	 .align 1
+ 1527              	IfxEgtm_Cfg_Psi5sTriggerSel0:
+ 1528 0000 0600     	 .short 6
+ 1529 0002 0400     	 .short 4
+ 1530 0004 0410     	 .short 4100
+ 1531 0006 0420     	 .short 8196
+ 1532 0008 0801     	 .short 264
+ 1533 000a 0811     	 .short 4360
+ 1534 000c 0821     	 .short 8456
+ 1535              	 .global IfxEgtm_Cfg_Psi5TriggerTable
+ 1536              	 .section .data.IfxEgtm_Cfg_Psi5TriggerTable,"aw"
+ 1537              	 .align 2
+ 1540              	IfxEgtm_Cfg_Psi5TriggerTable:
+ 1541 0000 00000000 	 .word IfxEgtm_Cfg_Psi5TriggerSel0to5
+ 1542 0004 00000000 	 .word IfxEgtm_Cfg_Psi5TriggerSel0to5
+ 1543 0008 00000000 	 .word IfxEgtm_Cfg_Psi5TriggerSel0to5
+ 1544 000c 00000000 	 .word IfxEgtm_Cfg_Psi5TriggerSel0to5
+ 1545 0010 00000000 	 .word IfxEgtm_Cfg_Psi5TriggerSel0to5
+ 1546 0014 00000000 	 .word IfxEgtm_Cfg_Psi5TriggerSel0to5
+ 1547              	 .global IfxEgtm_Cfg_Psi5TriggerSel0to5
+ 1548              	 .section .data.IfxEgtm_Cfg_Psi5TriggerSel0to5,"aw"
+ 1549              	 .align 1
+ 1552              	IfxEgtm_Cfg_Psi5TriggerSel0to5:
+ 1553 0000 0C00     	 .short 12
+ 1554 0002 0621     	 .short 8454
+ 1555 0004 0721     	 .short 8455
+ 1556 0006 0D21     	 .short 8461
+ 1557 0008 0E21     	 .short 8462
+ 1558 000a 0420     	 .short 8196
+ 1559 000c 0520     	 .short 8197
+ 1560 000e 0620     	 .short 8198
+ 1561 0010 0720     	 .short 8199
+ 1562 0012 0601     	 .short 262
+ 1563 0014 0701     	 .short 263
+ 1564 0016 0D01     	 .short 269
+ 1565 0018 0E01     	 .short 270
+ 1566              	 .global IfxEgtm_Cfg_SentTriggerTable
+ 1567              	 .section .data.IfxEgtm_Cfg_SentTriggerTable,"aw"
+ 1568              	 .align 2
+ 1571              	IfxEgtm_Cfg_SentTriggerTable:
+ 1572 0000 00000000 	 .word IfxEgtm_Cfg_SentTriggerSel0
+ 1573 0004 00000000 	 .word IfxEgtm_Cfg_SentTriggerSel1
+ 1574 0008 00000000 	 .word IfxEgtm_Cfg_SentTriggerSel2
+ 1575              	 .global IfxEgtm_Cfg_SentTriggerSel2
+ 1576              	 .section .data.IfxEgtm_Cfg_SentTriggerSel2,"aw"
+ 1577              	 .align 1
+ 1580              	IfxEgtm_Cfg_SentTriggerSel2:
+ 1581 0000 1800     	 .short 24
+ 1582 0002 0020     	 .short 8192
+ 1583 0004 0120     	 .short 8193
+ 1584 0006 0220     	 .short 8194
+ 1585 0008 0320     	 .short 8195
+ 1586 000a 0420     	 .short 8196
+ 1587 000c 0520     	 .short 8197
+ 1588 000e 0620     	 .short 8198
+ 1589 0010 0720     	 .short 8199
+ 1590 0012 0021     	 .short 8448
+ 1591 0014 0121     	 .short 8449
+ 1592 0016 0221     	 .short 8450
+ 1593 0018 0321     	 .short 8451
+ 1594 001a 0421     	 .short 8452
+ 1595 001c 0521     	 .short 8453
+ 1596 001e 0621     	 .short 8454
+ 1597 0020 0721     	 .short 8455
+ 1598 0022 0821     	 .short 8456
+ 1599 0024 0921     	 .short 8457
+ 1600 0026 0A21     	 .short 8458
+ 1601 0028 0B21     	 .short 8459
+ 1602 002a 0C21     	 .short 8460
+ 1603 002c 0D21     	 .short 8461
+ 1604 002e 0E21     	 .short 8462
+ 1605 0030 0F21     	 .short 8463
+ 1606              	 .global IfxEgtm_Cfg_SentTriggerSel1
+ 1607              	 .section .data.IfxEgtm_Cfg_SentTriggerSel1,"aw"
+ 1608              	 .align 1
+ 1611              	IfxEgtm_Cfg_SentTriggerSel1:
+ 1612 0000 1800     	 .short 24
+ 1613 0002 0010     	 .short 4096
+ 1614 0004 0110     	 .short 4097
+ 1615 0006 0210     	 .short 4098
+ 1616 0008 0310     	 .short 4099
+ 1617 000a 0410     	 .short 4100
+ 1618 000c 0510     	 .short 4101
+ 1619 000e 0610     	 .short 4102
+ 1620 0010 0710     	 .short 4103
+ 1621 0012 0011     	 .short 4352
+ 1622 0014 0111     	 .short 4353
+ 1623 0016 0211     	 .short 4354
+ 1624 0018 0311     	 .short 4355
+ 1625 001a 0411     	 .short 4356
+ 1626 001c 0511     	 .short 4357
+ 1627 001e 0611     	 .short 4358
+ 1628 0020 0711     	 .short 4359
+ 1629 0022 0811     	 .short 4360
+ 1630 0024 0911     	 .short 4361
+ 1631 0026 0A11     	 .short 4362
+ 1632 0028 0B11     	 .short 4363
+ 1633 002a 0C11     	 .short 4364
+ 1634 002c 0D11     	 .short 4365
+ 1635 002e 0E11     	 .short 4366
+ 1636 0030 0F11     	 .short 4367
+ 1637              	 .global IfxEgtm_Cfg_SentTriggerSel0
+ 1638              	 .section .data.IfxEgtm_Cfg_SentTriggerSel0,"aw"
+ 1639              	 .align 1
+ 1642              	IfxEgtm_Cfg_SentTriggerSel0:
+ 1643 0000 1800     	 .short 24
+ 1644 0002 0000     	 .short 0
+ 1645 0004 0100     	 .short 1
+ 1646 0006 0200     	 .short 2
+ 1647 0008 0300     	 .short 3
+ 1648 000a 0400     	 .short 4
+ 1649 000c 0500     	 .short 5
+ 1650 000e 0600     	 .short 6
+ 1651 0010 0700     	 .short 7
+ 1652 0012 0001     	 .short 256
+ 1653 0014 0101     	 .short 257
+ 1654 0016 0201     	 .short 258
+ 1655 0018 0301     	 .short 259
+ 1656 001a 0401     	 .short 260
+ 1657 001c 0501     	 .short 261
+ 1658 001e 0601     	 .short 262
+ 1659 0020 0701     	 .short 263
+ 1660 0022 0801     	 .short 264
+ 1661 0024 0901     	 .short 265
+ 1662 0026 0A01     	 .short 266
+ 1663 0028 0B01     	 .short 267
+ 1664 002a 0C01     	 .short 268
+ 1665 002c 0D01     	 .short 269
+ 1666 002e 0E01     	 .short 270
+ 1667 0030 0F01     	 .short 271
+ 1668              	 .global IfxEgtm_Cfg_AdcTriggerTable
+ 1669              	 .section .data.IfxEgtm_Cfg_AdcTriggerTable,"aw"
+ 1670              	 .align 2
+ 1673              	IfxEgtm_Cfg_AdcTriggerTable:
+ 1674 0000 00000000 	 .word IfxEgtm_Cfg_AdcTriggerSel0to3
+ 1675 0004 00000000 	 .word IfxEgtm_Cfg_AdcTriggerSel0to3
+ 1676 0008 00000000 	 .word IfxEgtm_Cfg_AdcTriggerSel0to3
+ 1677 000c 00000000 	 .word IfxEgtm_Cfg_AdcTriggerSel0to3
+ 1678 0010 00000000 	 .word IfxEgtm_Cfg_AdcTriggerSel4to7
+ 1679 0014 00000000 	 .word IfxEgtm_Cfg_AdcTriggerSel4to7
+ 1680 0018 00000000 	 .word IfxEgtm_Cfg_AdcTriggerSel4to7
+ 1681 001c 00000000 	 .word IfxEgtm_Cfg_AdcTriggerSel4to7
+ 1682 0020 00000000 	 .word IfxEgtm_Cfg_AdcTriggerSel8to11
+ 1683 0024 00000000 	 .word IfxEgtm_Cfg_AdcTriggerSel8to11
+ 1684 0028 00000000 	 .word IfxEgtm_Cfg_AdcTriggerSel8to11
+ 1685 002c 00000000 	 .word IfxEgtm_Cfg_AdcTriggerSel8to11
+ 1686              	 .global IfxEgtm_Cfg_AdcTriggerSel8to11
+ 1687              	 .section .data.IfxEgtm_Cfg_AdcTriggerSel8to11,"aw"
+ 1688              	 .align 1
+ 1691              	IfxEgtm_Cfg_AdcTriggerSel8to11:
+ 1692 0000 1800     	 .short 24
+ 1693 0002 0020     	 .short 8192
+ 1694 0004 0120     	 .short 8193
+ 1695 0006 0220     	 .short 8194
+ 1696 0008 0320     	 .short 8195
+ 1697 000a 0420     	 .short 8196
+ 1698 000c 0520     	 .short 8197
+ 1699 000e 0620     	 .short 8198
+ 1700 0010 0720     	 .short 8199
+ 1701 0012 0021     	 .short 8448
+ 1702 0014 0121     	 .short 8449
+ 1703 0016 0221     	 .short 8450
+ 1704 0018 0321     	 .short 8451
+ 1705 001a 0421     	 .short 8452
+ 1706 001c 0521     	 .short 8453
+ 1707 001e 0621     	 .short 8454
+ 1708 0020 0721     	 .short 8455
+ 1709 0022 0821     	 .short 8456
+ 1710 0024 0921     	 .short 8457
+ 1711 0026 0A21     	 .short 8458
+ 1712 0028 0B21     	 .short 8459
+ 1713 002a 0C21     	 .short 8460
+ 1714 002c 0D21     	 .short 8461
+ 1715 002e 0E21     	 .short 8462
+ 1716 0030 0F21     	 .short 8463
+ 1717              	 .global IfxEgtm_Cfg_AdcTriggerSel4to7
+ 1718              	 .section .data.IfxEgtm_Cfg_AdcTriggerSel4to7,"aw"
+ 1719              	 .align 1
+ 1722              	IfxEgtm_Cfg_AdcTriggerSel4to7:
+ 1723 0000 1800     	 .short 24
+ 1724 0002 0010     	 .short 4096
+ 1725 0004 0110     	 .short 4097
+ 1726 0006 0210     	 .short 4098
+ 1727 0008 0310     	 .short 4099
+ 1728 000a 0410     	 .short 4100
+ 1729 000c 0510     	 .short 4101
+ 1730 000e 0610     	 .short 4102
+ 1731 0010 0710     	 .short 4103
+ 1732 0012 0011     	 .short 4352
+ 1733 0014 0111     	 .short 4353
+ 1734 0016 0211     	 .short 4354
+ 1735 0018 0311     	 .short 4355
+ 1736 001a 0411     	 .short 4356
+ 1737 001c 0511     	 .short 4357
+ 1738 001e 0611     	 .short 4358
+ 1739 0020 0711     	 .short 4359
+ 1740 0022 0811     	 .short 4360
+ 1741 0024 0911     	 .short 4361
+ 1742 0026 0A11     	 .short 4362
+ 1743 0028 0B11     	 .short 4363
+ 1744 002a 0C11     	 .short 4364
+ 1745 002c 0D11     	 .short 4365
+ 1746 002e 0E11     	 .short 4366
+ 1747 0030 0F11     	 .short 4367
+ 1748              	 .global IfxEgtm_Cfg_AdcTriggerSel0to3
+ 1749              	 .section .data.IfxEgtm_Cfg_AdcTriggerSel0to3,"aw"
+ 1750              	 .align 1
+ 1753              	IfxEgtm_Cfg_AdcTriggerSel0to3:
+ 1754 0000 1800     	 .short 24
+ 1755 0002 0000     	 .short 0
+ 1756 0004 0100     	 .short 1
+ 1757 0006 0200     	 .short 2
+ 1758 0008 0300     	 .short 3
+ 1759 000a 0400     	 .short 4
+ 1760 000c 0500     	 .short 5
+ 1761 000e 0600     	 .short 6
+ 1762 0010 0700     	 .short 7
+ 1763 0012 0001     	 .short 256
+ 1764 0014 0101     	 .short 257
+ 1765 0016 0201     	 .short 258
+ 1766 0018 0301     	 .short 259
+ 1767 001a 0401     	 .short 260
+ 1768 001c 0501     	 .short 261
+ 1769 001e 0601     	 .short 262
+ 1770 0020 0701     	 .short 263
+ 1771 0022 0801     	 .short 264
+ 1772 0024 0901     	 .short 265
+ 1773 0026 0A01     	 .short 266
+ 1774 0028 0B01     	 .short 267
+ 1775 002a 0C01     	 .short 268
+ 1776 002c 0D01     	 .short 269
+ 1777 002e 0E01     	 .short 270
+ 1778 0030 0F01     	 .short 271
+ 1779              	 .global IfxEgtm_spe_indexMap
+ 1780              	 .section .rodata.IfxEgtm_spe_indexMap,"a"
+ 1781              	 .align 2
+ 1784              	IfxEgtm_spe_indexMap:
+ 1785 0000 004C08F9 	 .word -116896768
+ 1786 0004 00000000 	 .word 0
+ 1787 0008 004C0AF9 	 .word -116765696
+ 1788 000c 01000000 	 .word 1
+ 1789 0010 004C0CF9 	 .word -116634624
+ 1790 0014 02000000 	 .word 2
+ 1791              	.section .text,"ax",@progbits
+ 1792              	.Letext0:
+ 1793              	 .file 1 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 1794              	 .file 2 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+ 1795              	 .file 3 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 1796              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/IfxEgtm_regdef.h"
+ 1797              	 .file 5 "../Libraries/iLLD/TC4xx/CpuGeneric/_Impl/TC4Dx/IfxEgtm_cfg_TC4Dx.h"
+ 1798              	 .file 6 "../Libraries/iLLD/TC4xx/CpuGeneric/_Impl/IfxEgtm_cfg.c"
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxEgtm_cfg.c
+                            *ABS*:00000000 IfxEgtm_cfg.c
+    {standard input}:11     .data.IfxEgtm_Cfg_AdcDtmAuxInputSel:00000000 IfxEgtm_Cfg_AdcDtmAuxInputSel
+    {standard input}:36     .data.IfxEgtm_Cfg_CanxlTimInputSel:00000000 IfxEgtm_Cfg_CanxlTimInputSel
+    {standard input}:47     .data.IfxEgtm_Cfg_LethTimInputSel:00000000 IfxEgtm_Cfg_LethTimInputSel
+    {standard input}:58     .data.IfxEgtm_Cfg_ErayTimInputSel:00000000 IfxEgtm_Cfg_ErayTimInputSel
+    {standard input}:68     .data.IfxEgtm_Cfg_GethTimInputSel:00000000 IfxEgtm_Cfg_GethTimInputSel
+    {standard input}:80     .data.IfxEgtm_Cfg_CanTimInputSel:00000000 IfxEgtm_Cfg_CanTimInputSel
+    {standard input}:116    .data.IfxEgtm_Cfg_ScuTimInputSel:00000000 IfxEgtm_Cfg_ScuTimInputSel
+    {standard input}:133    .data.IfxEgtm_Cfg_PmsTimInputSel:00000000 IfxEgtm_Cfg_PmsTimInputSel
+    {standard input}:145    .data.IfxEgtm_Cfg_AdcTimInputSel:00000000 IfxEgtm_Cfg_AdcTimInputSel
+    {standard input}:180    .data.IfxEgtm_Cfg_MscAltInputTable:00000000 IfxEgtm_Cfg_MscAltInputTable
+    {standard input}:200    .data.IfxEgtm_Cfg_Msc0AltInput:00000000 IfxEgtm_Cfg_Msc0AltInput
+    {standard input}:187    .data.IfxEgtm_Cfg_Msc1AltInput:00000000 IfxEgtm_Cfg_Msc1AltInput
+    {standard input}:214    .data.IfxEgtm_Cfg_MscSetTable:00000000 IfxEgtm_Cfg_MscSetTable
+    {standard input}:309    .data.IfxEgtm_Cfg_MscSet0:00000000 IfxEgtm_Cfg_MscSet0
+    {standard input}:278    .data.IfxEgtm_Cfg_MscSet1:00000000 IfxEgtm_Cfg_MscSet1
+    {standard input}:255    .data.IfxEgtm_Cfg_MscSet2:00000000 IfxEgtm_Cfg_MscSet2
+    {standard input}:224    .data.IfxEgtm_Cfg_MscSet3:00000000 IfxEgtm_Cfg_MscSet3
+    {standard input}:348    .data.IfxEgtm_Cfg_CanTriggerTable:00000000 IfxEgtm_Cfg_CanTriggerTable
+    {standard input}:677    .data.IfxEgtm_Cfg_Can0Node0Trigger:00000000 IfxEgtm_Cfg_Can0Node0Trigger
+    {standard input}:664    .data.IfxEgtm_Cfg_Can0Node1Trigger:00000000 IfxEgtm_Cfg_Can0Node1Trigger
+    {standard input}:651    .data.IfxEgtm_Cfg_Can0Node2Trigger:00000000 IfxEgtm_Cfg_Can0Node2Trigger
+    {standard input}:638    .data.IfxEgtm_Cfg_Can0Node3Trigger:00000000 IfxEgtm_Cfg_Can0Node3Trigger
+    {standard input}:625    .data.IfxEgtm_Cfg_Can1Node0Trigger:00000000 IfxEgtm_Cfg_Can1Node0Trigger
+    {standard input}:612    .data.IfxEgtm_Cfg_Can1Node1Trigger:00000000 IfxEgtm_Cfg_Can1Node1Trigger
+    {standard input}:599    .data.IfxEgtm_Cfg_Can1Node2Trigger:00000000 IfxEgtm_Cfg_Can1Node2Trigger
+    {standard input}:586    .data.IfxEgtm_Cfg_Can1Node3Trigger:00000000 IfxEgtm_Cfg_Can1Node3Trigger
+    {standard input}:573    .data.IfxEgtm_Cfg_Can2Node0Trigger:00000000 IfxEgtm_Cfg_Can2Node0Trigger
+    {standard input}:560    .data.IfxEgtm_Cfg_Can2Node1Trigger:00000000 IfxEgtm_Cfg_Can2Node1Trigger
+    {standard input}:547    .data.IfxEgtm_Cfg_Can2Node2Trigger:00000000 IfxEgtm_Cfg_Can2Node2Trigger
+    {standard input}:534    .data.IfxEgtm_Cfg_Can2Node3Trigger:00000000 IfxEgtm_Cfg_Can2Node3Trigger
+    {standard input}:521    .data.IfxEgtm_Cfg_Can3Node0Trigger:00000000 IfxEgtm_Cfg_Can3Node0Trigger
+    {standard input}:508    .data.IfxEgtm_Cfg_Can3Node1Trigger:00000000 IfxEgtm_Cfg_Can3Node1Trigger
+    {standard input}:495    .data.IfxEgtm_Cfg_Can3Node2Trigger:00000000 IfxEgtm_Cfg_Can3Node2Trigger
+    {standard input}:482    .data.IfxEgtm_Cfg_Can3Node3Trigger:00000000 IfxEgtm_Cfg_Can3Node3Trigger
+    {standard input}:469    .data.IfxEgtm_Cfg_Can4Node0Trigger:00000000 IfxEgtm_Cfg_Can4Node0Trigger
+    {standard input}:456    .data.IfxEgtm_Cfg_Can4Node1Trigger:00000000 IfxEgtm_Cfg_Can4Node1Trigger
+    {standard input}:443    .data.IfxEgtm_Cfg_Can4Node2Trigger:00000000 IfxEgtm_Cfg_Can4Node2Trigger
+    {standard input}:430    .data.IfxEgtm_Cfg_Can4Node3Trigger:00000000 IfxEgtm_Cfg_Can4Node3Trigger
+    {standard input}:417    .data.IfxEgtm_Cfg_Can5Node0Trigger:00000000 IfxEgtm_Cfg_Can5Node0Trigger
+    {standard input}:404    .data.IfxEgtm_Cfg_Can5Node1Trigger:00000000 IfxEgtm_Cfg_Can5Node1Trigger
+    {standard input}:391    .data.IfxEgtm_Cfg_Can5Node2Trigger:00000000 IfxEgtm_Cfg_Can5Node2Trigger
+    {standard input}:378    .data.IfxEgtm_Cfg_Can5Node3Trigger:00000000 IfxEgtm_Cfg_Can5Node3Trigger
+    {standard input}:690    .data.IfxEgtm_Cfg_AsclinTriggerTable:00000000 IfxEgtm_Cfg_AsclinTriggerTable
+    {standard input}:1237   .data.IfxEgtm_Cfg_Asclin0Trigger:00000000 IfxEgtm_Cfg_Asclin0Trigger
+    {standard input}:1218   .data.IfxEgtm_Cfg_Asclin1Trigger:00000000 IfxEgtm_Cfg_Asclin1Trigger
+    {standard input}:1199   .data.IfxEgtm_Cfg_Asclin2Trigger:00000000 IfxEgtm_Cfg_Asclin2Trigger
+    {standard input}:1180   .data.IfxEgtm_Cfg_Asclin3Trigger:00000000 IfxEgtm_Cfg_Asclin3Trigger
+    {standard input}:1161   .data.IfxEgtm_Cfg_Asclin4Trigger:00000000 IfxEgtm_Cfg_Asclin4Trigger
+    {standard input}:1142   .data.IfxEgtm_Cfg_Asclin5Trigger:00000000 IfxEgtm_Cfg_Asclin5Trigger
+    {standard input}:1123   .data.IfxEgtm_Cfg_Asclin6Trigger:00000000 IfxEgtm_Cfg_Asclin6Trigger
+    {standard input}:1104   .data.IfxEgtm_Cfg_Asclin7Trigger:00000000 IfxEgtm_Cfg_Asclin7Trigger
+    {standard input}:1085   .data.IfxEgtm_Cfg_Asclin8Trigger:00000000 IfxEgtm_Cfg_Asclin8Trigger
+    {standard input}:1066   .data.IfxEgtm_Cfg_Asclin9Trigger:00000000 IfxEgtm_Cfg_Asclin9Trigger
+    {standard input}:1047   .data.IfxEgtm_Cfg_Asclin10Trigger:00000000 IfxEgtm_Cfg_Asclin10Trigger
+    {standard input}:1028   .data.IfxEgtm_Cfg_Asclin11Trigger:00000000 IfxEgtm_Cfg_Asclin11Trigger
+    {standard input}:1009   .data.IfxEgtm_Cfg_Asclin12Trigger:00000000 IfxEgtm_Cfg_Asclin12Trigger
+    {standard input}:990    .data.IfxEgtm_Cfg_Asclin13Trigger:00000000 IfxEgtm_Cfg_Asclin13Trigger
+    {standard input}:971    .data.IfxEgtm_Cfg_Asclin14Trigger:00000000 IfxEgtm_Cfg_Asclin14Trigger
+    {standard input}:952    .data.IfxEgtm_Cfg_Asclin15Trigger:00000000 IfxEgtm_Cfg_Asclin15Trigger
+    {standard input}:933    .data.IfxEgtm_Cfg_Asclin16Trigger:00000000 IfxEgtm_Cfg_Asclin16Trigger
+    {standard input}:914    .data.IfxEgtm_Cfg_Asclin17Trigger:00000000 IfxEgtm_Cfg_Asclin17Trigger
+    {standard input}:895    .data.IfxEgtm_Cfg_Asclin18Trigger:00000000 IfxEgtm_Cfg_Asclin18Trigger
+    {standard input}:876    .data.IfxEgtm_Cfg_Asclin19Trigger:00000000 IfxEgtm_Cfg_Asclin19Trigger
+    {standard input}:857    .data.IfxEgtm_Cfg_Asclin20Trigger:00000000 IfxEgtm_Cfg_Asclin20Trigger
+    {standard input}:838    .data.IfxEgtm_Cfg_Asclin21Trigger:00000000 IfxEgtm_Cfg_Asclin21Trigger
+    {standard input}:819    .data.IfxEgtm_Cfg_Asclin22Trigger:00000000 IfxEgtm_Cfg_Asclin22Trigger
+    {standard input}:800    .data.IfxEgtm_Cfg_Asclin23Trigger:00000000 IfxEgtm_Cfg_Asclin23Trigger
+    {standard input}:781    .data.IfxEgtm_Cfg_Asclin24Trigger:00000000 IfxEgtm_Cfg_Asclin24Trigger
+    {standard input}:762    .data.IfxEgtm_Cfg_Asclin25Trigger:00000000 IfxEgtm_Cfg_Asclin25Trigger
+    {standard input}:743    .data.IfxEgtm_Cfg_Asclin26Trigger:00000000 IfxEgtm_Cfg_Asclin26Trigger
+    {standard input}:724    .data.IfxEgtm_Cfg_Asclin27Trigger:00000000 IfxEgtm_Cfg_Asclin27Trigger
+    {standard input}:1256   .data.IfxEgtm_Cfg_QspiTriggerTable:00000000 IfxEgtm_Cfg_QspiTriggerTable
+    {standard input}:1403   .data.IfxEgtm_Cfg_Qspi0Trigger:00000000 IfxEgtm_Cfg_Qspi0Trigger
+    {standard input}:1384   .data.IfxEgtm_Cfg_Qspi1Trigger:00000000 IfxEgtm_Cfg_Qspi1Trigger
+    {standard input}:1365   .data.IfxEgtm_Cfg_Qspi2Trigger:00000000 IfxEgtm_Cfg_Qspi2Trigger
+    {standard input}:1346   .data.IfxEgtm_Cfg_Qspi3Trigger:00000000 IfxEgtm_Cfg_Qspi3Trigger
+    {standard input}:1327   .data.IfxEgtm_Cfg_Qspi4Trigger:00000000 IfxEgtm_Cfg_Qspi4Trigger
+    {standard input}:1308   .data.IfxEgtm_Cfg_Qspi5Trigger:00000000 IfxEgtm_Cfg_Qspi5Trigger
+    {standard input}:1289   .data.IfxEgtm_Cfg_Qspi6Trigger:00000000 IfxEgtm_Cfg_Qspi6Trigger
+    {standard input}:1270   .data.IfxEgtm_Cfg_Qspi7Trigger:00000000 IfxEgtm_Cfg_Qspi7Trigger
+    {standard input}:1422   .data.IfxEgtm_Cfg_Psi5sTriggerTable:00000000 IfxEgtm_Cfg_Psi5sTriggerTable
+    {standard input}:1527   .data.IfxEgtm_Cfg_Psi5sTriggerSel0:00000000 IfxEgtm_Cfg_Psi5sTriggerSel0
+    {standard input}:1514   .data.IfxEgtm_Cfg_Psi5sTriggerSel1:00000000 IfxEgtm_Cfg_Psi5sTriggerSel1
+    {standard input}:1501   .data.IfxEgtm_Cfg_Psi5sTriggerSel2:00000000 IfxEgtm_Cfg_Psi5sTriggerSel2
+    {standard input}:1488   .data.IfxEgtm_Cfg_Psi5sTriggerSel3:00000000 IfxEgtm_Cfg_Psi5sTriggerSel3
+    {standard input}:1475   .data.IfxEgtm_Cfg_Psi5sTriggerSel4:00000000 IfxEgtm_Cfg_Psi5sTriggerSel4
+    {standard input}:1462   .data.IfxEgtm_Cfg_Psi5sTriggerSel5:00000000 IfxEgtm_Cfg_Psi5sTriggerSel5
+    {standard input}:1449   .data.IfxEgtm_Cfg_Psi5sTriggerSel6:00000000 IfxEgtm_Cfg_Psi5sTriggerSel6
+    {standard input}:1436   .data.IfxEgtm_Cfg_Psi5sTriggerSel7:00000000 IfxEgtm_Cfg_Psi5sTriggerSel7
+    {standard input}:1540   .data.IfxEgtm_Cfg_Psi5TriggerTable:00000000 IfxEgtm_Cfg_Psi5TriggerTable
+    {standard input}:1552   .data.IfxEgtm_Cfg_Psi5TriggerSel0to5:00000000 IfxEgtm_Cfg_Psi5TriggerSel0to5
+    {standard input}:1571   .data.IfxEgtm_Cfg_SentTriggerTable:00000000 IfxEgtm_Cfg_SentTriggerTable
+    {standard input}:1642   .data.IfxEgtm_Cfg_SentTriggerSel0:00000000 IfxEgtm_Cfg_SentTriggerSel0
+    {standard input}:1611   .data.IfxEgtm_Cfg_SentTriggerSel1:00000000 IfxEgtm_Cfg_SentTriggerSel1
+    {standard input}:1580   .data.IfxEgtm_Cfg_SentTriggerSel2:00000000 IfxEgtm_Cfg_SentTriggerSel2
+    {standard input}:1673   .data.IfxEgtm_Cfg_AdcTriggerTable:00000000 IfxEgtm_Cfg_AdcTriggerTable
+    {standard input}:1753   .data.IfxEgtm_Cfg_AdcTriggerSel0to3:00000000 IfxEgtm_Cfg_AdcTriggerSel0to3
+    {standard input}:1722   .data.IfxEgtm_Cfg_AdcTriggerSel4to7:00000000 IfxEgtm_Cfg_AdcTriggerSel4to7
+    {standard input}:1691   .data.IfxEgtm_Cfg_AdcTriggerSel8to11:00000000 IfxEgtm_Cfg_AdcTriggerSel8to11
+    {standard input}:1784   .rodata.IfxEgtm_spe_indexMap:00000000 IfxEgtm_spe_indexMap
+
+NO UNDEFINED SYMBOLS

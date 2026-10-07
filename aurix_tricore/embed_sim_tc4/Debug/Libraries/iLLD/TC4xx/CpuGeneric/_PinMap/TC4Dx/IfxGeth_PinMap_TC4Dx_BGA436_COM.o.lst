@@ -1,0 +1,1943 @@
+   1              	
+   2              	 .file "IfxGeth_PinMap_TC4Dx_BGA436_COM.c"
+   3              	 .file "IfxGeth_PinMap_TC4Dx_BGA436_COM.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .global IfxGeth_Txer_Out_pinTable
+   7              	 .section .data.IfxGeth_Txer_Out_pinTable,"aw"
+   8              	 .align 2
+  11              	IfxGeth_Txer_Out_pinTable:
+  12 0000 00000000 	 .word IfxGeth0_P0_TXER_P16_12_OUT
+  13 0004 00000000 	 .word IfxGeth0_P0_TXER_P20_6_OUT
+  14 0008 00000000 	 .word 0
+  15 000c 00000000 	 .word IfxGeth0_P1_TXER_P23_0_OUT
+  16 0010 00000000 	 .word IfxGeth0_P1_TXER_P25_1_OUT
+  17 0014 00000000 	 .word IfxGeth0_P1_TXER_P30_8_OUT
+  18              	 .global IfxGeth_Txen_Out_pinTable
+  19              	 .section .data.IfxGeth_Txen_Out_pinTable,"aw"
+  20              	 .align 2
+  23              	IfxGeth_Txen_Out_pinTable:
+  24 0000 00000000 	 .word IfxGeth0_P0_RMIIC_TXEN_P16_12_OUT
+  25 0004 00000000 	 .word IfxGeth0_P0_MII_TXEN_P16_13_OUT
+  26 0008 00000000 	 .word IfxGeth0_P0_RMIIC_TXEN_P16_13_OUT
+  27 000c 00000000 	 .word IfxGeth0_P0_RMIIRC_TXEN_P16_13_OUT
+  28 0010 00000000 	 .word IfxGeth0_P0_MII_TXEN_P21_5_OUT
+  29 0014 00000000 	 .word IfxGeth0_P0_RMIIB_TXEN_P21_5_OUT
+  30 0018 00000000 	 .word 0
+  31 001c 00000000 	 .word IfxGeth0_P1_MII_TXEN_P22_2_OUT
+  32 0020 00000000 	 .word IfxGeth0_P1_RMIIA_TXEN_P22_2_OUT
+  33 0024 00000000 	 .word IfxGeth0_P1_RMIIB_TXEN_P22_2_OUT
+  34 0028 00000000 	 .word IfxGeth0_P1_MII_TXEN_P22_11_OUT
+  35 002c 00000000 	 .word IfxGeth0_P1_RMIIC_TXEN_P22_11_OUT
+  36 0030 00000000 	 .word IfxGeth0_P1_MII_TXEN_P30_11_OUT
+  37 0034 00000000 	 .word IfxGeth0_P1_RMIID_TXEN_P30_11_OUT
+  38              	 .global IfxGeth_Txd_Out_pinTable
+  39              	 .section .data.IfxGeth_Txd_Out_pinTable,"aw"
+  40              	 .align 2
+  43              	IfxGeth_Txd_Out_pinTable:
+  44 0000 00000000 	 .word IfxGeth0_P0_MII_TXD0_P16_6_OUT
+  45 0004 00000000 	 .word IfxGeth0_P0_RGMII_TXD0_P16_6_OUT
+  46 0008 00000000 	 .word IfxGeth0_P0_RMIIC_TXD0_P16_6_OUT
+  47 000c 00000000 	 .word IfxGeth0_P0_RMIIRC_TXD0_P16_6_OUT
+  48 0010 00000000 	 .word IfxGeth0_P0_MII_TXD1_P16_8_OUT
+  49 0014 00000000 	 .word IfxGeth0_P0_RGMII_TXD1_P16_8_OUT
+  50 0018 00000000 	 .word IfxGeth0_P0_RMIIC_TXD1_P16_8_OUT
+  51 001c 00000000 	 .word IfxGeth0_P0_RMIIRC_TXD1_P16_8_OUT
+  52 0020 00000000 	 .word IfxGeth0_P0_MII_TXD2_P16_9_OUT
+  53 0024 00000000 	 .word IfxGeth0_P0_RGMII_TXD2_P16_9_OUT
+  54 0028 00000000 	 .word IfxGeth0_P0_RMIIC_TXD0_P16_9_OUT
+  55 002c 00000000 	 .word IfxGeth0_P0_MII_TXD3_P16_10_OUT
+  56 0030 00000000 	 .word IfxGeth0_P0_RGMII_TXD3_P16_10_OUT
+  57 0034 00000000 	 .word IfxGeth0_P0_MII_TXD2_P20_0_OUT
+  58 0038 00000000 	 .word IfxGeth0_P0_MII_TXD3_P20_7_OUT
+  59 003c 00000000 	 .word IfxGeth0_P0_MII_TXD1_P20_9_OUT
+  60 0040 00000000 	 .word IfxGeth0_P0_RMIIB_TXD1_P20_9_OUT
+  61 0044 00000000 	 .word IfxGeth0_P0_MII_TXD0_P20_10_OUT
+  62 0048 00000000 	 .word IfxGeth0_P0_RMIIB_TXD0_P20_10_OUT
+  63 004c 00000000 	 .word IfxGeth0_P1_MII_TXD1_P22_9_OUT
+  64 0050 00000000 	 .word IfxGeth0_P1_RMIIC_TXD1_P22_9_OUT
+  65 0054 00000000 	 .word IfxGeth0_P1_MII_TXD0_P22_10_OUT
+  66 0058 00000000 	 .word IfxGeth0_P1_RMIIC_TXD0_P22_10_OUT
+  67 005c 00000000 	 .word IfxGeth0_P1_MII_TXD3_P23_2_OUT
+  68 0060 00000000 	 .word IfxGeth0_P1_MII_TXD2_P23_3_OUT
+  69 0064 00000000 	 .word IfxGeth0_P1_MII_TXD1_P23_4_OUT
+  70 0068 00000000 	 .word IfxGeth0_P1_RMIIA_TXD1_P23_4_OUT
+  71 006c 00000000 	 .word IfxGeth0_P1_RMIIB_TXD1_P23_4_OUT
+  72 0070 00000000 	 .word IfxGeth0_P1_MII_TXD0_P23_5_OUT
+  73 0074 00000000 	 .word IfxGeth0_P1_RMIIA_TXD0_P23_5_OUT
+  74 0078 00000000 	 .word IfxGeth0_P1_RMIIB_TXD0_P23_5_OUT
+  75 007c 00000000 	 .word IfxGeth0_P1_MII_TXD2_P30_6_OUT
+  76 0080 00000000 	 .word IfxGeth0_P1_MII_TXD3_P30_7_OUT
+  77 0084 00000000 	 .word IfxGeth0_P1_MII_TXD0_P30_9_OUT
+  78 0088 00000000 	 .word IfxGeth0_P1_RMIID_TXD0_P30_9_OUT
+  79 008c 00000000 	 .word IfxGeth0_P1_MII_TXD1_P30_10_OUT
+  80 0090 00000000 	 .word IfxGeth0_P1_RMIID_TXD1_P30_10_OUT
+  81 0094 00000000 	 .word 0
+  82              	 .global IfxGeth_Txctl_Out_pinTable
+  83              	 .section .data.IfxGeth_Txctl_Out_pinTable,"aw"
+  84              	 .align 2
+  87              	IfxGeth_Txctl_Out_pinTable:
+  88 0000 00000000 	 .word IfxGeth0_P0_RGMII_TXCTL_P16_13_OUT
+  89 0004 00000000 	 .word 0
+  90              	 .global IfxGeth_Txclk_Out_pinTable
+  91              	 .section .data.IfxGeth_Txclk_Out_pinTable,"aw"
+  92              	 .align 2
+  95              	IfxGeth_Txclk_Out_pinTable:
+  96 0000 00000000 	 .word IfxGeth0_P0_RGMII_TXCLK_P16_12_OUT
+  97 0004 00000000 	 .word 0
+  98              	 .global IfxGeth_Txclk_In_pinTable
+  99              	 .section .data.IfxGeth_Txclk_In_pinTable,"aw"
+ 100              	 .align 2
+ 103              	IfxGeth_Txclk_In_pinTable:
+ 104 0000 00000000 	 .word 0
+ 105 0004 00000000 	 .word 0
+ 106 0008 00000000 	 .word IfxGeth0_P0_TXCLKC_P16_0_IN
+ 107 000c 00000000 	 .word IfxGeth0_P0_TXCLKD_P20_3_IN
+ 108 0010 00000000 	 .word IfxGeth0_P1_TXCLKA_P22_7_IN
+ 109 0014 00000000 	 .word IfxGeth0_P1_TXCLKB_P22_5_IN
+ 110 0018 00000000 	 .word 0
+ 111 001c 00000000 	 .word IfxGeth0_P1_TXCLKD_P31_7_IN
+ 112              	 .global IfxGeth_Rxer_In_pinTable
+ 113              	 .section .data.IfxGeth_Rxer_In_pinTable,"aw"
+ 114              	 .align 2
+ 117              	IfxGeth_Rxer_In_pinTable:
+ 118 0000 00000000 	 .word 0
+ 119 0004 00000000 	 .word IfxGeth0_P0_RXERB_P21_7_IN
+ 120 0008 00000000 	 .word IfxGeth0_P0_RXERC_P10_0_IN
+ 121 000c 00000000 	 .word IfxGeth0_P0_RXERD_P22_1_IN
+ 122 0010 00000000 	 .word IfxGeth0_P1_RXERA_P22_1_IN
+ 123 0014 00000000 	 .word IfxGeth0_P1_RXERB_P32_7_IN
+ 124 0018 00000000 	 .word IfxGeth0_P1_RXERC_P20_0_IN
+ 125 001c 00000000 	 .word IfxGeth0_P1_RXERD_P31_6_IN
+ 126              	 .global IfxGeth_Rxdv_In_pinTable
+ 127              	 .section .data.IfxGeth_Rxdv_In_pinTable,"aw"
+ 128              	 .align 2
+ 131              	IfxGeth_Rxdv_In_pinTable:
+ 132 0000 00000000 	 .word 0
+ 133 0004 00000000 	 .word IfxGeth0_P0_RXDVB_P16_10_IN
+ 134 0008 00000000 	 .word IfxGeth0_P0_RXDVC_P16_1_IN
+ 135 000c 00000000 	 .word IfxGeth0_P0_RXDVD_P20_8_IN
+ 136 0010 00000000 	 .word IfxGeth0_P1_RXDVA_P22_6_IN
+ 137 0014 00000000 	 .word IfxGeth0_P1_RXDVB_P22_0_IN
+ 138 0018 00000000 	 .word 0
+ 139 001c 00000000 	 .word IfxGeth0_P1_RXDVD_P30_1_IN
+ 140              	 .global IfxGeth_Rxd_In_pinTable
+ 141              	 .section .data.IfxGeth_Rxd_In_pinTable,"aw"
+ 142              	 .align 2
+ 145              	IfxGeth_Rxd_In_pinTable:
+ 146 0000 00000000 	 .word IfxGeth0_P0_RGMII_RXD1_P16_3_IN
+ 147 0004 00000000 	 .word IfxGeth0_P0_RGMII_RXD0_P16_4_IN
+ 148 0008 00000000 	 .word IfxGeth0_P0_RGMII_RXD2_P16_5_IN
+ 149 000c 00000000 	 .word IfxGeth0_P0_RGMII_RXD3_P16_7_IN
+ 150 0010 00000000 	 .word IfxGeth0_P0_RXD1B_P16_3_IN
+ 151 0014 00000000 	 .word IfxGeth0_P0_RXD0B_P16_4_IN
+ 152 0018 00000000 	 .word IfxGeth0_P0_RXD2B_P16_5_IN
+ 153 001c 00000000 	 .word IfxGeth0_P0_RXD3B_P16_7_IN
+ 154 0020 00000000 	 .word IfxGeth0_P0_RXD1C_P20_11_IN
+ 155 0024 00000000 	 .word IfxGeth0_P0_RXD0C_P20_12_IN
+ 156 0028 00000000 	 .word IfxGeth0_P0_RXD2C_P20_13_IN
+ 157 002c 00000000 	 .word IfxGeth0_P0_RXD3C_P20_14_IN
+ 158 0030 00000000 	 .word IfxGeth0_P0_RXD1D_P16_0_IN
+ 159 0034 00000000 	 .word IfxGeth0_P0_RXD0D_P16_4_IN
+ 160 0038 00000000 	 .word IfxGeth0_P0_RXD2D_P16_5_IN
+ 161 003c 00000000 	 .word IfxGeth0_P0_RXD3D_P16_7_IN
+ 162 0040 00000000 	 .word IfxGeth0_P1_RXD0A_P22_4_IN
+ 163 0044 00000000 	 .word IfxGeth0_P1_RXD3A_P22_11_IN
+ 164 0048 00000000 	 .word IfxGeth0_P1_RXD2A_P23_6_IN
+ 165 004c 00000000 	 .word IfxGeth0_P1_RXD1A_P23_7_IN
+ 166 0050 00000000 	 .word IfxGeth0_P1_RXD0B_P22_3_IN
+ 167 0054 00000000 	 .word IfxGeth0_P1_RXD3B_P22_11_IN
+ 168 0058 00000000 	 .word IfxGeth0_P1_RXD1B_P23_1_IN
+ 169 005c 00000000 	 .word IfxGeth0_P1_RXD2B_P23_6_IN
+ 170 0060 00000000 	 .word IfxGeth0_P1_RXD0C_P22_4_IN
+ 171 0064 00000000 	 .word IfxGeth0_P1_RXD3C_P23_5_IN
+ 172 0068 00000000 	 .word IfxGeth0_P1_RXD2C_P23_6_IN
+ 173 006c 00000000 	 .word IfxGeth0_P1_RXD1C_P23_7_IN
+ 174 0070 00000000 	 .word IfxGeth0_P1_RXD3D_P30_2_IN
+ 175 0074 00000000 	 .word IfxGeth0_P1_RXD2D_P30_3_IN
+ 176 0078 00000000 	 .word IfxGeth0_P1_RXD1D_P30_4_IN
+ 177 007c 00000000 	 .word IfxGeth0_P1_RXD0D_P30_5_IN
+ 178              	 .global IfxGeth_Rxctl_In_pinTable
+ 179              	 .section .data.IfxGeth_Rxctl_In_pinTable,"aw"
+ 180              	 .align 2
+ 183              	IfxGeth_Rxctl_In_pinTable:
+ 184 0000 00000000 	 .word IfxGeth0_P0_RGMII_RXCTL_P16_1_IN
+ 185 0004 00000000 	 .word 0
+ 186              	 .global IfxGeth_Rxclk_In_pinTable
+ 187              	 .section .data.IfxGeth_Rxclk_In_pinTable,"aw"
+ 188              	 .align 2
+ 191              	IfxGeth_Rxclk_In_pinTable:
+ 192 0000 00000000 	 .word IfxGeth0_P0_RGMII_RXCLK_P16_2_IN
+ 193 0004 00000000 	 .word IfxGeth0_P0_RXCLKB_P21_4_IN
+ 194 0008 00000000 	 .word 0
+ 195 000c 00000000 	 .word IfxGeth0_P0_RXCLKD_P16_2_IN
+ 196 0010 00000000 	 .word IfxGeth0_P1_RXCLKA_P22_5_IN
+ 197 0014 00000000 	 .word IfxGeth0_P1_RXCLKB_P22_1_IN
+ 198 0018 00000000 	 .word IfxGeth0_P1_RXCLKC_P22_3_IN
+ 199 001c 00000000 	 .word IfxGeth0_P1_RXCLKD_P30_0_IN
+ 200              	 .global IfxGeth_Refclk_In_pinTable
+ 201              	 .section .data.IfxGeth_Refclk_In_pinTable,"aw"
+ 202              	 .align 2
+ 205              	IfxGeth_Refclk_In_pinTable:
+ 206 0000 00000000 	 .word 0
+ 207 0004 00000000 	 .word IfxGeth0_P0_REFCLKB_P21_4_IN
+ 208 0008 00000000 	 .word 0
+ 209 000c 00000000 	 .word IfxGeth0_P0_REFCLKD_P16_2_IN
+ 210 0010 00000000 	 .word IfxGeth0_P1_REFCLKA_P22_5_IN
+ 211 0014 00000000 	 .word IfxGeth0_P1_REFCLKB_P22_1_IN
+ 212 0018 00000000 	 .word IfxGeth0_P1_REFCLKC_P22_3_IN
+ 213 001c 00000000 	 .word IfxGeth0_P1_REFCLKD_P30_0_IN
+ 214              	 .global IfxGeth_Pps_Out_pinTable
+ 215              	 .section .data.IfxGeth_Pps_Out_pinTable,"aw"
+ 216              	 .align 2
+ 219              	IfxGeth_Pps_Out_pinTable:
+ 220 0000 00000000 	 .word IfxGeth0_P0_PPS_P14_2_OUT
+ 221 0004 00000000 	 .word IfxGeth0_P0_PPS_P14_3_OUT
+ 222 0008 00000000 	 .word IfxGeth0_P1_PPS_P14_4_OUT
+ 223 000c 00000000 	 .word IfxGeth0_P1_PPS_P14_8_OUT
+ 224              	 .global IfxGeth_Mdio_InOut_pinTable
+ 225              	 .section .data.IfxGeth_Mdio_InOut_pinTable,"aw"
+ 226              	 .align 2
+ 229              	IfxGeth_Mdio_InOut_pinTable:
+ 230 0000 00000000 	 .word IfxGeth0_PX_MDIO_P00_0_INOUT
+ 231 0004 00000000 	 .word IfxGeth0_PX_MDIO_P16_14_INOUT
+ 232 0008 00000000 	 .word 0
+ 233 000c 00000000 	 .word IfxGeth0_PX_MDIO_P21_3_INOUT
+ 234              	 .global IfxGeth_Mdc_Out_pinTable
+ 235              	 .section .data.IfxGeth_Mdc_Out_pinTable,"aw"
+ 236              	 .align 2
+ 239              	IfxGeth_Mdc_Out_pinTable:
+ 240 0000 00000000 	 .word IfxGeth0_P0_MDC_P02_8_OUT
+ 241 0004 00000000 	 .word IfxGeth0_P0_MDC_P16_11_OUT
+ 242 0008 00000000 	 .word IfxGeth0_P0_MDC_P21_2_OUT
+ 243 000c 00000000 	 .word IfxGeth0_P1_MDC_P02_8_OUT
+ 244 0010 00000000 	 .word IfxGeth0_P1_MDC_P16_11_OUT
+ 245 0014 00000000 	 .word IfxGeth0_P1_MDC_P21_2_OUT
+ 246              	 .global IfxGeth_Grefclk_In_pinTable
+ 247              	 .section .data.IfxGeth_Grefclk_In_pinTable,"aw"
+ 248              	 .align 2
+ 251              	IfxGeth_Grefclk_In_pinTable:
+ 252 0000 00000000 	 .word IfxGeth0_P0_RGMII_GREFCLK_P16_0_IN
+ 253 0004 00000000 	 .word 0
+ 254              	 .global IfxGeth_Crsdv_In_pinTable
+ 255              	 .section .data.IfxGeth_Crsdv_In_pinTable,"aw"
+ 256              	 .align 2
+ 259              	IfxGeth_Crsdv_In_pinTable:
+ 260 0000 00000000 	 .word 0
+ 261 0004 00000000 	 .word IfxGeth0_P0_CRSDVB_P16_10_IN
+ 262 0008 00000000 	 .word IfxGeth0_P0_CRSDVC_P16_1_IN
+ 263 000c 00000000 	 .word IfxGeth0_P0_CRSDVD_P20_8_IN
+ 264 0010 00000000 	 .word IfxGeth0_P1_CRSDVA_P22_6_IN
+ 265 0014 00000000 	 .word IfxGeth0_P1_CRSDVB_P22_0_IN
+ 266 0018 00000000 	 .word 0
+ 267 001c 00000000 	 .word IfxGeth0_P1_CRSDVD_P30_1_IN
+ 268              	 .global IfxGeth_Crs_In_pinTable
+ 269              	 .section .data.IfxGeth_Crs_In_pinTable,"aw"
+ 270              	 .align 2
+ 273              	IfxGeth_Crs_In_pinTable:
+ 274 0000 00000000 	 .word 0
+ 275 0004 00000000 	 .word 0
+ 276 0008 00000000 	 .word IfxGeth0_P0_CRSC_P16_10_IN
+ 277 000c 00000000 	 .word IfxGeth0_P0_CRSD_P20_1_IN
+ 278 0010 00000000 	 .word IfxGeth0_P1_CRSA_P22_6_IN
+ 279 0014 00000000 	 .word IfxGeth0_P1_CRSB_P22_0_IN
+ 280 0018 00000000 	 .word 0
+ 281 001c 00000000 	 .word 0
+ 282              	 .global IfxGeth_Col_In_pinTable
+ 283              	 .section .data.IfxGeth_Col_In_pinTable,"aw"
+ 284              	 .align 2
+ 287              	IfxGeth_Col_In_pinTable:
+ 288 0000 00000000 	 .word 0
+ 289 0004 00000000 	 .word IfxGeth0_P0_COL_P15_8_IN
+ 290 0008 00000000 	 .word IfxGeth0_P0_COL_P21_6_IN
+ 291 000c 00000000 	 .word IfxGeth0_P1_COL_P22_2_IN
+ 292 0010 00000000 	 .word IfxGeth0_P1_COL_P22_3_IN
+ 293 0014 00000000 	 .word IfxGeth0_P1_COL_P32_7_IN
+ 294              	 .global IfxGeth0_PX_MDIO_P21_3_INOUT
+ 295              	 .section .rodata.IfxGeth0_PX_MDIO_P21_3_INOUT,"a"
+ 296              	 .align 2
+ 299              	IfxGeth0_PX_MDIO_P21_3_INOUT:
+ 300 0000 000000F9 	 .word -117440512
+ 301 0004 00F403F0 	 .word -268176384
+ 302 0008 03       	 .byte 3
+ 303 0009 000000   	 .zero 3
+ 304 000c 03000000 	 .word 3
+ 305 0010 01000000 	 .word 1
+ 306              	 .global IfxGeth0_PX_MDIO_P16_14_INOUT
+ 307              	 .section .rodata.IfxGeth0_PX_MDIO_P16_14_INOUT,"a"
+ 308              	 .align 2
+ 311              	IfxGeth0_PX_MDIO_P16_14_INOUT:
+ 312 0000 000000F9 	 .word -117440512
+ 313 0004 00E003F0 	 .word -268181504
+ 314 0008 0E       	 .byte 14
+ 315 0009 000000   	 .zero 3
+ 316 000c 01000000 	 .word 1
+ 317 0010 01000000 	 .word 1
+ 318              	 .global IfxGeth0_PX_MDIO_P00_0_INOUT
+ 319              	 .section .rodata.IfxGeth0_PX_MDIO_P00_0_INOUT,"a"
+ 320              	 .align 2
+ 323              	IfxGeth0_PX_MDIO_P00_0_INOUT:
+ 324 0000 000000F9 	 .word -117440512
+ 325 0004 00A003F0 	 .word -268197888
+ 326 0008 00       	 .byte 0
+ 327 0009 000000   	 .zero 3
+ 328 000c 00000000 	 .word 0
+ 329 0010 01000000 	 .word 1
+ 330              	 .global IfxGeth0_P1_TXER_P30_8_OUT
+ 331              	 .section .rodata.IfxGeth0_P1_TXER_P30_8_OUT,"a"
+ 332              	 .align 2
+ 335              	IfxGeth0_P1_TXER_P30_8_OUT:
+ 336 0000 000000F9 	 .word -117440512
+ 337 0004 01000000 	 .word 1
+ 338 0008 001804F0 	 .word -268167168
+ 339 000c 08       	 .byte 8
+ 340 000d 000000   	 .zero 3
+ 341 0010 A1000000 	 .word 161
+ 342              	 .global IfxGeth0_P1_TXER_P25_1_OUT
+ 343              	 .section .rodata.IfxGeth0_P1_TXER_P25_1_OUT,"a"
+ 344              	 .align 2
+ 347              	IfxGeth0_P1_TXER_P25_1_OUT:
+ 348 0000 000000F9 	 .word -117440512
+ 349 0004 01000000 	 .word 1
+ 350 0008 000404F0 	 .word -268172288
+ 351 000c 01       	 .byte 1
+ 352 000d 000000   	 .zero 3
+ 353 0010 B1000000 	 .word 177
+ 354              	 .global IfxGeth0_P1_TXER_P23_0_OUT
+ 355              	 .section .rodata.IfxGeth0_P1_TXER_P23_0_OUT,"a"
+ 356              	 .align 2
+ 359              	IfxGeth0_P1_TXER_P23_0_OUT:
+ 360 0000 000000F9 	 .word -117440512
+ 361 0004 01000000 	 .word 1
+ 362 0008 00FC03F0 	 .word -268174336
+ 363 000c 00       	 .byte 0
+ 364 000d 000000   	 .zero 3
+ 365 0010 A1000000 	 .word 161
+ 366              	 .global IfxGeth0_P1_TXCLKD_P31_7_IN
+ 367              	 .section .rodata.IfxGeth0_P1_TXCLKD_P31_7_IN,"a"
+ 368              	 .align 2
+ 371              	IfxGeth0_P1_TXCLKD_P31_7_IN:
+ 372 0000 000000F9 	 .word -117440512
+ 373 0004 01000000 	 .word 1
+ 374 0008 001C04F0 	 .word -268166144
+ 375 000c 07       	 .byte 7
+ 376 000d 000000   	 .zero 3
+ 377 0010 03000000 	 .word 3
+ 378              	 .global IfxGeth0_P1_TXCLKB_P22_5_IN
+ 379              	 .section .rodata.IfxGeth0_P1_TXCLKB_P22_5_IN,"a"
+ 380              	 .align 2
+ 383              	IfxGeth0_P1_TXCLKB_P22_5_IN:
+ 384 0000 000000F9 	 .word -117440512
+ 385 0004 01000000 	 .word 1
+ 386 0008 00F803F0 	 .word -268175360
+ 387 000c 05       	 .byte 5
+ 388 000d 000000   	 .zero 3
+ 389 0010 01000000 	 .word 1
+ 390              	 .global IfxGeth0_P1_TXCLKA_P22_7_IN
+ 391              	 .section .rodata.IfxGeth0_P1_TXCLKA_P22_7_IN,"a"
+ 392              	 .align 2
+ 395              	IfxGeth0_P1_TXCLKA_P22_7_IN:
+ 396 0000 000000F9 	 .word -117440512
+ 397 0004 01000000 	 .word 1
+ 398 0008 00F803F0 	 .word -268175360
+ 399 000c 07       	 .byte 7
+ 400 000d 000000   	 .zero 3
+ 401 0010 00000000 	 .word 0
+ 402              	 .global IfxGeth0_P1_RXERD_P31_6_IN
+ 403              	 .section .rodata.IfxGeth0_P1_RXERD_P31_6_IN,"a"
+ 404              	 .align 2
+ 407              	IfxGeth0_P1_RXERD_P31_6_IN:
+ 408 0000 000000F9 	 .word -117440512
+ 409 0004 01000000 	 .word 1
+ 410 0008 001C04F0 	 .word -268166144
+ 411 000c 06       	 .byte 6
+ 412 000d 000000   	 .zero 3
+ 413 0010 03000000 	 .word 3
+ 414              	 .global IfxGeth0_P1_RXERC_P20_0_IN
+ 415              	 .section .rodata.IfxGeth0_P1_RXERC_P20_0_IN,"a"
+ 416              	 .align 2
+ 419              	IfxGeth0_P1_RXERC_P20_0_IN:
+ 420 0000 000000F9 	 .word -117440512
+ 421 0004 01000000 	 .word 1
+ 422 0008 00F003F0 	 .word -268177408
+ 423 000c 00       	 .byte 0
+ 424 000d 000000   	 .zero 3
+ 425 0010 02000000 	 .word 2
+ 426              	 .global IfxGeth0_P1_RXERB_P32_7_IN
+ 427              	 .section .rodata.IfxGeth0_P1_RXERB_P32_7_IN,"a"
+ 428              	 .align 2
+ 431              	IfxGeth0_P1_RXERB_P32_7_IN:
+ 432 0000 000000F9 	 .word -117440512
+ 433 0004 01000000 	 .word 1
+ 434 0008 002004F0 	 .word -268165120
+ 435 000c 07       	 .byte 7
+ 436 000d 000000   	 .zero 3
+ 437 0010 01000000 	 .word 1
+ 438              	 .global IfxGeth0_P1_RXERA_P22_1_IN
+ 439              	 .section .rodata.IfxGeth0_P1_RXERA_P22_1_IN,"a"
+ 440              	 .align 2
+ 443              	IfxGeth0_P1_RXERA_P22_1_IN:
+ 444 0000 000000F9 	 .word -117440512
+ 445 0004 01000000 	 .word 1
+ 446 0008 00F803F0 	 .word -268175360
+ 447 000c 01       	 .byte 1
+ 448 000d 000000   	 .zero 3
+ 449 0010 00000000 	 .word 0
+ 450              	 .global IfxGeth0_P1_RXDVD_P30_1_IN
+ 451              	 .section .rodata.IfxGeth0_P1_RXDVD_P30_1_IN,"a"
+ 452              	 .align 2
+ 455              	IfxGeth0_P1_RXDVD_P30_1_IN:
+ 456 0000 000000F9 	 .word -117440512
+ 457 0004 01000000 	 .word 1
+ 458 0008 001804F0 	 .word -268167168
+ 459 000c 01       	 .byte 1
+ 460 000d 000000   	 .zero 3
+ 461 0010 03000000 	 .word 3
+ 462              	 .global IfxGeth0_P1_RXDVB_P22_0_IN
+ 463              	 .section .rodata.IfxGeth0_P1_RXDVB_P22_0_IN,"a"
+ 464              	 .align 2
+ 467              	IfxGeth0_P1_RXDVB_P22_0_IN:
+ 468 0000 000000F9 	 .word -117440512
+ 469 0004 01000000 	 .word 1
+ 470 0008 00F803F0 	 .word -268175360
+ 471 000c 00       	 .byte 0
+ 472 000d 000000   	 .zero 3
+ 473 0010 01000000 	 .word 1
+ 474              	 .global IfxGeth0_P1_RXDVA_P22_6_IN
+ 475              	 .section .rodata.IfxGeth0_P1_RXDVA_P22_6_IN,"a"
+ 476              	 .align 2
+ 479              	IfxGeth0_P1_RXDVA_P22_6_IN:
+ 480 0000 000000F9 	 .word -117440512
+ 481 0004 01000000 	 .word 1
+ 482 0008 00F803F0 	 .word -268175360
+ 483 000c 06       	 .byte 6
+ 484 000d 000000   	 .zero 3
+ 485 0010 00000000 	 .word 0
+ 486              	 .global IfxGeth0_P1_RXD3D_P30_2_IN
+ 487              	 .section .rodata.IfxGeth0_P1_RXD3D_P30_2_IN,"a"
+ 488              	 .align 2
+ 491              	IfxGeth0_P1_RXD3D_P30_2_IN:
+ 492 0000 000000F9 	 .word -117440512
+ 493 0004 01000000 	 .word 1
+ 494 0008 001804F0 	 .word -268167168
+ 495 000c 02       	 .byte 2
+ 496 000d 000000   	 .zero 3
+ 497 0010 03000000 	 .word 3
+ 498              	 .global IfxGeth0_P1_RXD3C_P23_5_IN
+ 499              	 .section .rodata.IfxGeth0_P1_RXD3C_P23_5_IN,"a"
+ 500              	 .align 2
+ 503              	IfxGeth0_P1_RXD3C_P23_5_IN:
+ 504 0000 000000F9 	 .word -117440512
+ 505 0004 01000000 	 .word 1
+ 506 0008 00FC03F0 	 .word -268174336
+ 507 000c 05       	 .byte 5
+ 508 000d 000000   	 .zero 3
+ 509 0010 02000000 	 .word 2
+ 510              	 .global IfxGeth0_P1_RXD3B_P22_11_IN
+ 511              	 .section .rodata.IfxGeth0_P1_RXD3B_P22_11_IN,"a"
+ 512              	 .align 2
+ 515              	IfxGeth0_P1_RXD3B_P22_11_IN:
+ 516 0000 000000F9 	 .word -117440512
+ 517 0004 01000000 	 .word 1
+ 518 0008 00F803F0 	 .word -268175360
+ 519 000c 0B       	 .byte 11
+ 520 000d 000000   	 .zero 3
+ 521 0010 01000000 	 .word 1
+ 522              	 .global IfxGeth0_P1_RXD3A_P22_11_IN
+ 523              	 .section .rodata.IfxGeth0_P1_RXD3A_P22_11_IN,"a"
+ 524              	 .align 2
+ 527              	IfxGeth0_P1_RXD3A_P22_11_IN:
+ 528 0000 000000F9 	 .word -117440512
+ 529 0004 01000000 	 .word 1
+ 530 0008 00F803F0 	 .word -268175360
+ 531 000c 0B       	 .byte 11
+ 532 000d 000000   	 .zero 3
+ 533 0010 00000000 	 .word 0
+ 534              	 .global IfxGeth0_P1_RXD2D_P30_3_IN
+ 535              	 .section .rodata.IfxGeth0_P1_RXD2D_P30_3_IN,"a"
+ 536              	 .align 2
+ 539              	IfxGeth0_P1_RXD2D_P30_3_IN:
+ 540 0000 000000F9 	 .word -117440512
+ 541 0004 01000000 	 .word 1
+ 542 0008 001804F0 	 .word -268167168
+ 543 000c 03       	 .byte 3
+ 544 000d 000000   	 .zero 3
+ 545 0010 03000000 	 .word 3
+ 546              	 .global IfxGeth0_P1_RXD2C_P23_6_IN
+ 547              	 .section .rodata.IfxGeth0_P1_RXD2C_P23_6_IN,"a"
+ 548              	 .align 2
+ 551              	IfxGeth0_P1_RXD2C_P23_6_IN:
+ 552 0000 000000F9 	 .word -117440512
+ 553 0004 01000000 	 .word 1
+ 554 0008 00FC03F0 	 .word -268174336
+ 555 000c 06       	 .byte 6
+ 556 000d 000000   	 .zero 3
+ 557 0010 02000000 	 .word 2
+ 558              	 .global IfxGeth0_P1_RXD2B_P23_6_IN
+ 559              	 .section .rodata.IfxGeth0_P1_RXD2B_P23_6_IN,"a"
+ 560              	 .align 2
+ 563              	IfxGeth0_P1_RXD2B_P23_6_IN:
+ 564 0000 000000F9 	 .word -117440512
+ 565 0004 01000000 	 .word 1
+ 566 0008 00FC03F0 	 .word -268174336
+ 567 000c 06       	 .byte 6
+ 568 000d 000000   	 .zero 3
+ 569 0010 01000000 	 .word 1
+ 570              	 .global IfxGeth0_P1_RXD2A_P23_6_IN
+ 571              	 .section .rodata.IfxGeth0_P1_RXD2A_P23_6_IN,"a"
+ 572              	 .align 2
+ 575              	IfxGeth0_P1_RXD2A_P23_6_IN:
+ 576 0000 000000F9 	 .word -117440512
+ 577 0004 01000000 	 .word 1
+ 578 0008 00FC03F0 	 .word -268174336
+ 579 000c 06       	 .byte 6
+ 580 000d 000000   	 .zero 3
+ 581 0010 00000000 	 .word 0
+ 582              	 .global IfxGeth0_P1_RXD1D_P30_4_IN
+ 583              	 .section .rodata.IfxGeth0_P1_RXD1D_P30_4_IN,"a"
+ 584              	 .align 2
+ 587              	IfxGeth0_P1_RXD1D_P30_4_IN:
+ 588 0000 000000F9 	 .word -117440512
+ 589 0004 01000000 	 .word 1
+ 590 0008 001804F0 	 .word -268167168
+ 591 000c 04       	 .byte 4
+ 592 000d 000000   	 .zero 3
+ 593 0010 03000000 	 .word 3
+ 594              	 .global IfxGeth0_P1_RXD1C_P23_7_IN
+ 595              	 .section .rodata.IfxGeth0_P1_RXD1C_P23_7_IN,"a"
+ 596              	 .align 2
+ 599              	IfxGeth0_P1_RXD1C_P23_7_IN:
+ 600 0000 000000F9 	 .word -117440512
+ 601 0004 01000000 	 .word 1
+ 602 0008 00FC03F0 	 .word -268174336
+ 603 000c 07       	 .byte 7
+ 604 000d 000000   	 .zero 3
+ 605 0010 02000000 	 .word 2
+ 606              	 .global IfxGeth0_P1_RXD1B_P23_1_IN
+ 607              	 .section .rodata.IfxGeth0_P1_RXD1B_P23_1_IN,"a"
+ 608              	 .align 2
+ 611              	IfxGeth0_P1_RXD1B_P23_1_IN:
+ 612 0000 000000F9 	 .word -117440512
+ 613 0004 01000000 	 .word 1
+ 614 0008 00FC03F0 	 .word -268174336
+ 615 000c 01       	 .byte 1
+ 616 000d 000000   	 .zero 3
+ 617 0010 01000000 	 .word 1
+ 618              	 .global IfxGeth0_P1_RXD1A_P23_7_IN
+ 619              	 .section .rodata.IfxGeth0_P1_RXD1A_P23_7_IN,"a"
+ 620              	 .align 2
+ 623              	IfxGeth0_P1_RXD1A_P23_7_IN:
+ 624 0000 000000F9 	 .word -117440512
+ 625 0004 01000000 	 .word 1
+ 626 0008 00FC03F0 	 .word -268174336
+ 627 000c 07       	 .byte 7
+ 628 000d 000000   	 .zero 3
+ 629 0010 00000000 	 .word 0
+ 630              	 .global IfxGeth0_P1_RXD0D_P30_5_IN
+ 631              	 .section .rodata.IfxGeth0_P1_RXD0D_P30_5_IN,"a"
+ 632              	 .align 2
+ 635              	IfxGeth0_P1_RXD0D_P30_5_IN:
+ 636 0000 000000F9 	 .word -117440512
+ 637 0004 01000000 	 .word 1
+ 638 0008 001804F0 	 .word -268167168
+ 639 000c 05       	 .byte 5
+ 640 000d 000000   	 .zero 3
+ 641 0010 03000000 	 .word 3
+ 642              	 .global IfxGeth0_P1_RXD0C_P22_4_IN
+ 643              	 .section .rodata.IfxGeth0_P1_RXD0C_P22_4_IN,"a"
+ 644              	 .align 2
+ 647              	IfxGeth0_P1_RXD0C_P22_4_IN:
+ 648 0000 000000F9 	 .word -117440512
+ 649 0004 01000000 	 .word 1
+ 650 0008 00F803F0 	 .word -268175360
+ 651 000c 04       	 .byte 4
+ 652 000d 000000   	 .zero 3
+ 653 0010 02000000 	 .word 2
+ 654              	 .global IfxGeth0_P1_RXD0B_P22_3_IN
+ 655              	 .section .rodata.IfxGeth0_P1_RXD0B_P22_3_IN,"a"
+ 656              	 .align 2
+ 659              	IfxGeth0_P1_RXD0B_P22_3_IN:
+ 660 0000 000000F9 	 .word -117440512
+ 661 0004 01000000 	 .word 1
+ 662 0008 00F803F0 	 .word -268175360
+ 663 000c 03       	 .byte 3
+ 664 000d 000000   	 .zero 3
+ 665 0010 01000000 	 .word 1
+ 666              	 .global IfxGeth0_P1_RXD0A_P22_4_IN
+ 667              	 .section .rodata.IfxGeth0_P1_RXD0A_P22_4_IN,"a"
+ 668              	 .align 2
+ 671              	IfxGeth0_P1_RXD0A_P22_4_IN:
+ 672 0000 000000F9 	 .word -117440512
+ 673 0004 01000000 	 .word 1
+ 674 0008 00F803F0 	 .word -268175360
+ 675 000c 04       	 .byte 4
+ 676 000d 000000   	 .zero 3
+ 677 0010 00000000 	 .word 0
+ 678              	 .global IfxGeth0_P1_RXCLKD_P30_0_IN
+ 679              	 .section .rodata.IfxGeth0_P1_RXCLKD_P30_0_IN,"a"
+ 680              	 .align 2
+ 683              	IfxGeth0_P1_RXCLKD_P30_0_IN:
+ 684 0000 000000F9 	 .word -117440512
+ 685 0004 01000000 	 .word 1
+ 686 0008 001804F0 	 .word -268167168
+ 687 000c 00       	 .byte 0
+ 688 000d 000000   	 .zero 3
+ 689 0010 03000000 	 .word 3
+ 690              	 .global IfxGeth0_P1_RXCLKC_P22_3_IN
+ 691              	 .section .rodata.IfxGeth0_P1_RXCLKC_P22_3_IN,"a"
+ 692              	 .align 2
+ 695              	IfxGeth0_P1_RXCLKC_P22_3_IN:
+ 696 0000 000000F9 	 .word -117440512
+ 697 0004 01000000 	 .word 1
+ 698 0008 00F803F0 	 .word -268175360
+ 699 000c 03       	 .byte 3
+ 700 000d 000000   	 .zero 3
+ 701 0010 02000000 	 .word 2
+ 702              	 .global IfxGeth0_P1_RXCLKB_P22_1_IN
+ 703              	 .section .rodata.IfxGeth0_P1_RXCLKB_P22_1_IN,"a"
+ 704              	 .align 2
+ 707              	IfxGeth0_P1_RXCLKB_P22_1_IN:
+ 708 0000 000000F9 	 .word -117440512
+ 709 0004 01000000 	 .word 1
+ 710 0008 00F803F0 	 .word -268175360
+ 711 000c 01       	 .byte 1
+ 712 000d 000000   	 .zero 3
+ 713 0010 01000000 	 .word 1
+ 714              	 .global IfxGeth0_P1_RXCLKA_P22_5_IN
+ 715              	 .section .rodata.IfxGeth0_P1_RXCLKA_P22_5_IN,"a"
+ 716              	 .align 2
+ 719              	IfxGeth0_P1_RXCLKA_P22_5_IN:
+ 720 0000 000000F9 	 .word -117440512
+ 721 0004 01000000 	 .word 1
+ 722 0008 00F803F0 	 .word -268175360
+ 723 000c 05       	 .byte 5
+ 724 000d 000000   	 .zero 3
+ 725 0010 00000000 	 .word 0
+ 726              	 .global IfxGeth0_P1_RMIID_TXEN_P30_11_OUT
+ 727              	 .section .rodata.IfxGeth0_P1_RMIID_TXEN_P30_11_OUT,"a"
+ 728              	 .align 2
+ 731              	IfxGeth0_P1_RMIID_TXEN_P30_11_OUT:
+ 732 0000 000000F9 	 .word -117440512
+ 733 0004 01000000 	 .word 1
+ 734 0008 001804F0 	 .word -268167168
+ 735 000c 0B       	 .byte 11
+ 736 000d 000000   	 .zero 3
+ 737 0010 A1000000 	 .word 161
+ 738              	 .global IfxGeth0_P1_RMIID_TXD1_P30_10_OUT
+ 739              	 .section .rodata.IfxGeth0_P1_RMIID_TXD1_P30_10_OUT,"a"
+ 740              	 .align 2
+ 743              	IfxGeth0_P1_RMIID_TXD1_P30_10_OUT:
+ 744 0000 000000F9 	 .word -117440512
+ 745 0004 01000000 	 .word 1
+ 746 0008 001804F0 	 .word -268167168
+ 747 000c 0A       	 .byte 10
+ 748 000d 000000   	 .zero 3
+ 749 0010 A1000000 	 .word 161
+ 750              	 .global IfxGeth0_P1_RMIID_TXD0_P30_9_OUT
+ 751              	 .section .rodata.IfxGeth0_P1_RMIID_TXD0_P30_9_OUT,"a"
+ 752              	 .align 2
+ 755              	IfxGeth0_P1_RMIID_TXD0_P30_9_OUT:
+ 756 0000 000000F9 	 .word -117440512
+ 757 0004 01000000 	 .word 1
+ 758 0008 001804F0 	 .word -268167168
+ 759 000c 09       	 .byte 9
+ 760 000d 000000   	 .zero 3
+ 761 0010 A1000000 	 .word 161
+ 762              	 .global IfxGeth0_P1_RMIIC_TXEN_P22_11_OUT
+ 763              	 .section .rodata.IfxGeth0_P1_RMIIC_TXEN_P22_11_OUT,"a"
+ 764              	 .align 2
+ 767              	IfxGeth0_P1_RMIIC_TXEN_P22_11_OUT:
+ 768 0000 000000F9 	 .word -117440512
+ 769 0004 01000000 	 .word 1
+ 770 0008 00F803F0 	 .word -268175360
+ 771 000c 0B       	 .byte 11
+ 772 000d 000000   	 .zero 3
+ 773 0010 A1000000 	 .word 161
+ 774              	 .global IfxGeth0_P1_RMIIC_TXD1_P22_9_OUT
+ 775              	 .section .rodata.IfxGeth0_P1_RMIIC_TXD1_P22_9_OUT,"a"
+ 776              	 .align 2
+ 779              	IfxGeth0_P1_RMIIC_TXD1_P22_9_OUT:
+ 780 0000 000000F9 	 .word -117440512
+ 781 0004 01000000 	 .word 1
+ 782 0008 00F803F0 	 .word -268175360
+ 783 000c 09       	 .byte 9
+ 784 000d 000000   	 .zero 3
+ 785 0010 A1000000 	 .word 161
+ 786              	 .global IfxGeth0_P1_RMIIC_TXD0_P22_10_OUT
+ 787              	 .section .rodata.IfxGeth0_P1_RMIIC_TXD0_P22_10_OUT,"a"
+ 788              	 .align 2
+ 791              	IfxGeth0_P1_RMIIC_TXD0_P22_10_OUT:
+ 792 0000 000000F9 	 .word -117440512
+ 793 0004 01000000 	 .word 1
+ 794 0008 00F803F0 	 .word -268175360
+ 795 000c 0A       	 .byte 10
+ 796 000d 000000   	 .zero 3
+ 797 0010 A1000000 	 .word 161
+ 798              	 .global IfxGeth0_P1_RMIIB_TXEN_P22_2_OUT
+ 799              	 .section .rodata.IfxGeth0_P1_RMIIB_TXEN_P22_2_OUT,"a"
+ 800              	 .align 2
+ 803              	IfxGeth0_P1_RMIIB_TXEN_P22_2_OUT:
+ 804 0000 000000F9 	 .word -117440512
+ 805 0004 01000000 	 .word 1
+ 806 0008 00F803F0 	 .word -268175360
+ 807 000c 02       	 .byte 2
+ 808 000d 000000   	 .zero 3
+ 809 0010 B1000000 	 .word 177
+ 810              	 .global IfxGeth0_P1_RMIIB_TXD1_P23_4_OUT
+ 811              	 .section .rodata.IfxGeth0_P1_RMIIB_TXD1_P23_4_OUT,"a"
+ 812              	 .align 2
+ 815              	IfxGeth0_P1_RMIIB_TXD1_P23_4_OUT:
+ 816 0000 000000F9 	 .word -117440512
+ 817 0004 01000000 	 .word 1
+ 818 0008 00FC03F0 	 .word -268174336
+ 819 000c 04       	 .byte 4
+ 820 000d 000000   	 .zero 3
+ 821 0010 A1000000 	 .word 161
+ 822              	 .global IfxGeth0_P1_RMIIB_TXD0_P23_5_OUT
+ 823              	 .section .rodata.IfxGeth0_P1_RMIIB_TXD0_P23_5_OUT,"a"
+ 824              	 .align 2
+ 827              	IfxGeth0_P1_RMIIB_TXD0_P23_5_OUT:
+ 828 0000 000000F9 	 .word -117440512
+ 829 0004 01000000 	 .word 1
+ 830 0008 00FC03F0 	 .word -268174336
+ 831 000c 05       	 .byte 5
+ 832 000d 000000   	 .zero 3
+ 833 0010 A1000000 	 .word 161
+ 834              	 .global IfxGeth0_P1_RMIIA_TXEN_P22_2_OUT
+ 835              	 .section .rodata.IfxGeth0_P1_RMIIA_TXEN_P22_2_OUT,"a"
+ 836              	 .align 2
+ 839              	IfxGeth0_P1_RMIIA_TXEN_P22_2_OUT:
+ 840 0000 000000F9 	 .word -117440512
+ 841 0004 01000000 	 .word 1
+ 842 0008 00F803F0 	 .word -268175360
+ 843 000c 02       	 .byte 2
+ 844 000d 000000   	 .zero 3
+ 845 0010 A1000000 	 .word 161
+ 846              	 .global IfxGeth0_P1_RMIIA_TXD1_P23_4_OUT
+ 847              	 .section .rodata.IfxGeth0_P1_RMIIA_TXD1_P23_4_OUT,"a"
+ 848              	 .align 2
+ 851              	IfxGeth0_P1_RMIIA_TXD1_P23_4_OUT:
+ 852 0000 000000F9 	 .word -117440512
+ 853 0004 01000000 	 .word 1
+ 854 0008 00FC03F0 	 .word -268174336
+ 855 000c 04       	 .byte 4
+ 856 000d 000000   	 .zero 3
+ 857 0010 71000000 	 .word 113
+ 858              	 .global IfxGeth0_P1_RMIIA_TXD0_P23_5_OUT
+ 859              	 .section .rodata.IfxGeth0_P1_RMIIA_TXD0_P23_5_OUT,"a"
+ 860              	 .align 2
+ 863              	IfxGeth0_P1_RMIIA_TXD0_P23_5_OUT:
+ 864 0000 000000F9 	 .word -117440512
+ 865 0004 01000000 	 .word 1
+ 866 0008 00FC03F0 	 .word -268174336
+ 867 000c 05       	 .byte 5
+ 868 000d 000000   	 .zero 3
+ 869 0010 71000000 	 .word 113
+ 870              	 .global IfxGeth0_P1_REFCLKD_P30_0_IN
+ 871              	 .section .rodata.IfxGeth0_P1_REFCLKD_P30_0_IN,"a"
+ 872              	 .align 2
+ 875              	IfxGeth0_P1_REFCLKD_P30_0_IN:
+ 876 0000 000000F9 	 .word -117440512
+ 877 0004 01000000 	 .word 1
+ 878 0008 001804F0 	 .word -268167168
+ 879 000c 00       	 .byte 0
+ 880 000d 000000   	 .zero 3
+ 881 0010 03000000 	 .word 3
+ 882              	 .global IfxGeth0_P1_REFCLKC_P22_3_IN
+ 883              	 .section .rodata.IfxGeth0_P1_REFCLKC_P22_3_IN,"a"
+ 884              	 .align 2
+ 887              	IfxGeth0_P1_REFCLKC_P22_3_IN:
+ 888 0000 000000F9 	 .word -117440512
+ 889 0004 01000000 	 .word 1
+ 890 0008 00F803F0 	 .word -268175360
+ 891 000c 03       	 .byte 3
+ 892 000d 000000   	 .zero 3
+ 893 0010 02000000 	 .word 2
+ 894              	 .global IfxGeth0_P1_REFCLKB_P22_1_IN
+ 895              	 .section .rodata.IfxGeth0_P1_REFCLKB_P22_1_IN,"a"
+ 896              	 .align 2
+ 899              	IfxGeth0_P1_REFCLKB_P22_1_IN:
+ 900 0000 000000F9 	 .word -117440512
+ 901 0004 01000000 	 .word 1
+ 902 0008 00F803F0 	 .word -268175360
+ 903 000c 01       	 .byte 1
+ 904 000d 000000   	 .zero 3
+ 905 0010 01000000 	 .word 1
+ 906              	 .global IfxGeth0_P1_REFCLKA_P22_5_IN
+ 907              	 .section .rodata.IfxGeth0_P1_REFCLKA_P22_5_IN,"a"
+ 908              	 .align 2
+ 911              	IfxGeth0_P1_REFCLKA_P22_5_IN:
+ 912 0000 000000F9 	 .word -117440512
+ 913 0004 01000000 	 .word 1
+ 914 0008 00F803F0 	 .word -268175360
+ 915 000c 05       	 .byte 5
+ 916 000d 000000   	 .zero 3
+ 917 0010 00000000 	 .word 0
+ 918              	 .global IfxGeth0_P1_PPS_P14_8_OUT
+ 919              	 .section .rodata.IfxGeth0_P1_PPS_P14_8_OUT,"a"
+ 920              	 .align 2
+ 923              	IfxGeth0_P1_PPS_P14_8_OUT:
+ 924 0000 000000F9 	 .word -117440512
+ 925 0004 01000000 	 .word 1
+ 926 0008 00D803F0 	 .word -268183552
+ 927 000c 08       	 .byte 8
+ 928 000d 000000   	 .zero 3
+ 929 0010 81000000 	 .word 129
+ 930              	 .global IfxGeth0_P1_PPS_P14_4_OUT
+ 931              	 .section .rodata.IfxGeth0_P1_PPS_P14_4_OUT,"a"
+ 932              	 .align 2
+ 935              	IfxGeth0_P1_PPS_P14_4_OUT:
+ 936 0000 000000F9 	 .word -117440512
+ 937 0004 01000000 	 .word 1
+ 938 0008 00D803F0 	 .word -268183552
+ 939 000c 04       	 .byte 4
+ 940 000d 000000   	 .zero 3
+ 941 0010 81000000 	 .word 129
+ 942              	 .global IfxGeth0_P1_MII_TXEN_P30_11_OUT
+ 943              	 .section .rodata.IfxGeth0_P1_MII_TXEN_P30_11_OUT,"a"
+ 944              	 .align 2
+ 947              	IfxGeth0_P1_MII_TXEN_P30_11_OUT:
+ 948 0000 000000F9 	 .word -117440512
+ 949 0004 01000000 	 .word 1
+ 950 0008 001804F0 	 .word -268167168
+ 951 000c 0B       	 .byte 11
+ 952 000d 000000   	 .zero 3
+ 953 0010 81000000 	 .word 129
+ 954              	 .global IfxGeth0_P1_MII_TXEN_P22_2_OUT
+ 955              	 .section .rodata.IfxGeth0_P1_MII_TXEN_P22_2_OUT,"a"
+ 956              	 .align 2
+ 959              	IfxGeth0_P1_MII_TXEN_P22_2_OUT:
+ 960 0000 000000F9 	 .word -117440512
+ 961 0004 01000000 	 .word 1
+ 962 0008 00F803F0 	 .word -268175360
+ 963 000c 02       	 .byte 2
+ 964 000d 000000   	 .zero 3
+ 965 0010 81000000 	 .word 129
+ 966              	 .global IfxGeth0_P1_MII_TXEN_P22_11_OUT
+ 967              	 .section .rodata.IfxGeth0_P1_MII_TXEN_P22_11_OUT,"a"
+ 968              	 .align 2
+ 971              	IfxGeth0_P1_MII_TXEN_P22_11_OUT:
+ 972 0000 000000F9 	 .word -117440512
+ 973 0004 01000000 	 .word 1
+ 974 0008 00F803F0 	 .word -268175360
+ 975 000c 0B       	 .byte 11
+ 976 000d 000000   	 .zero 3
+ 977 0010 71000000 	 .word 113
+ 978              	 .global IfxGeth0_P1_MII_TXD3_P30_7_OUT
+ 979              	 .section .rodata.IfxGeth0_P1_MII_TXD3_P30_7_OUT,"a"
+ 980              	 .align 2
+ 983              	IfxGeth0_P1_MII_TXD3_P30_7_OUT:
+ 984 0000 000000F9 	 .word -117440512
+ 985 0004 01000000 	 .word 1
+ 986 0008 001804F0 	 .word -268167168
+ 987 000c 07       	 .byte 7
+ 988 000d 000000   	 .zero 3
+ 989 0010 81000000 	 .word 129
+ 990              	 .global IfxGeth0_P1_MII_TXD3_P23_2_OUT
+ 991              	 .section .rodata.IfxGeth0_P1_MII_TXD3_P23_2_OUT,"a"
+ 992              	 .align 2
+ 995              	IfxGeth0_P1_MII_TXD3_P23_2_OUT:
+ 996 0000 000000F9 	 .word -117440512
+ 997 0004 01000000 	 .word 1
+ 998 0008 00FC03F0 	 .word -268174336
+ 999 000c 02       	 .byte 2
+ 1000 000d 000000   	 .zero 3
+ 1001 0010 A1000000 	 .word 161
+ 1002              	 .global IfxGeth0_P1_MII_TXD2_P30_6_OUT
+ 1003              	 .section .rodata.IfxGeth0_P1_MII_TXD2_P30_6_OUT,"a"
+ 1004              	 .align 2
+ 1007              	IfxGeth0_P1_MII_TXD2_P30_6_OUT:
+ 1008 0000 000000F9 	 .word -117440512
+ 1009 0004 01000000 	 .word 1
+ 1010 0008 001804F0 	 .word -268167168
+ 1011 000c 06       	 .byte 6
+ 1012 000d 000000   	 .zero 3
+ 1013 0010 81000000 	 .word 129
+ 1014              	 .global IfxGeth0_P1_MII_TXD2_P23_3_OUT
+ 1015              	 .section .rodata.IfxGeth0_P1_MII_TXD2_P23_3_OUT,"a"
+ 1016              	 .align 2
+ 1019              	IfxGeth0_P1_MII_TXD2_P23_3_OUT:
+ 1020 0000 000000F9 	 .word -117440512
+ 1021 0004 01000000 	 .word 1
+ 1022 0008 00FC03F0 	 .word -268174336
+ 1023 000c 03       	 .byte 3
+ 1024 000d 000000   	 .zero 3
+ 1025 0010 A1000000 	 .word 161
+ 1026              	 .global IfxGeth0_P1_MII_TXD1_P30_10_OUT
+ 1027              	 .section .rodata.IfxGeth0_P1_MII_TXD1_P30_10_OUT,"a"
+ 1028              	 .align 2
+ 1031              	IfxGeth0_P1_MII_TXD1_P30_10_OUT:
+ 1032 0000 000000F9 	 .word -117440512
+ 1033 0004 01000000 	 .word 1
+ 1034 0008 001804F0 	 .word -268167168
+ 1035 000c 0A       	 .byte 10
+ 1036 000d 000000   	 .zero 3
+ 1037 0010 81000000 	 .word 129
+ 1038              	 .global IfxGeth0_P1_MII_TXD1_P23_4_OUT
+ 1039              	 .section .rodata.IfxGeth0_P1_MII_TXD1_P23_4_OUT,"a"
+ 1040              	 .align 2
+ 1043              	IfxGeth0_P1_MII_TXD1_P23_4_OUT:
+ 1044 0000 000000F9 	 .word -117440512
+ 1045 0004 01000000 	 .word 1
+ 1046 0008 00FC03F0 	 .word -268174336
+ 1047 000c 04       	 .byte 4
+ 1048 000d 000000   	 .zero 3
+ 1049 0010 41000000 	 .word 65
+ 1050              	 .global IfxGeth0_P1_MII_TXD1_P22_9_OUT
+ 1051              	 .section .rodata.IfxGeth0_P1_MII_TXD1_P22_9_OUT,"a"
+ 1052              	 .align 2
+ 1055              	IfxGeth0_P1_MII_TXD1_P22_9_OUT:
+ 1056 0000 000000F9 	 .word -117440512
+ 1057 0004 01000000 	 .word 1
+ 1058 0008 00F803F0 	 .word -268175360
+ 1059 000c 09       	 .byte 9
+ 1060 000d 000000   	 .zero 3
+ 1061 0010 71000000 	 .word 113
+ 1062              	 .global IfxGeth0_P1_MII_TXD0_P30_9_OUT
+ 1063              	 .section .rodata.IfxGeth0_P1_MII_TXD0_P30_9_OUT,"a"
+ 1064              	 .align 2
+ 1067              	IfxGeth0_P1_MII_TXD0_P30_9_OUT:
+ 1068 0000 000000F9 	 .word -117440512
+ 1069 0004 01000000 	 .word 1
+ 1070 0008 001804F0 	 .word -268167168
+ 1071 000c 09       	 .byte 9
+ 1072 000d 000000   	 .zero 3
+ 1073 0010 81000000 	 .word 129
+ 1074              	 .global IfxGeth0_P1_MII_TXD0_P23_5_OUT
+ 1075              	 .section .rodata.IfxGeth0_P1_MII_TXD0_P23_5_OUT,"a"
+ 1076              	 .align 2
+ 1079              	IfxGeth0_P1_MII_TXD0_P23_5_OUT:
+ 1080 0000 000000F9 	 .word -117440512
+ 1081 0004 01000000 	 .word 1
+ 1082 0008 00FC03F0 	 .word -268174336
+ 1083 000c 05       	 .byte 5
+ 1084 000d 000000   	 .zero 3
+ 1085 0010 41000000 	 .word 65
+ 1086              	 .global IfxGeth0_P1_MII_TXD0_P22_10_OUT
+ 1087              	 .section .rodata.IfxGeth0_P1_MII_TXD0_P22_10_OUT,"a"
+ 1088              	 .align 2
+ 1091              	IfxGeth0_P1_MII_TXD0_P22_10_OUT:
+ 1092 0000 000000F9 	 .word -117440512
+ 1093 0004 01000000 	 .word 1
+ 1094 0008 00F803F0 	 .word -268175360
+ 1095 000c 0A       	 .byte 10
+ 1096 000d 000000   	 .zero 3
+ 1097 0010 71000000 	 .word 113
+ 1098              	 .global IfxGeth0_P1_MDC_P21_2_OUT
+ 1099              	 .section .rodata.IfxGeth0_P1_MDC_P21_2_OUT,"a"
+ 1100              	 .align 2
+ 1103              	IfxGeth0_P1_MDC_P21_2_OUT:
+ 1104 0000 000000F9 	 .word -117440512
+ 1105 0004 01000000 	 .word 1
+ 1106 0008 00F403F0 	 .word -268176384
+ 1107 000c 02       	 .byte 2
+ 1108 000d 000000   	 .zero 3
+ 1109 0010 71000000 	 .word 113
+ 1110              	 .global IfxGeth0_P1_MDC_P16_11_OUT
+ 1111              	 .section .rodata.IfxGeth0_P1_MDC_P16_11_OUT,"a"
+ 1112              	 .align 2
+ 1115              	IfxGeth0_P1_MDC_P16_11_OUT:
+ 1116 0000 000000F9 	 .word -117440512
+ 1117 0004 01000000 	 .word 1
+ 1118 0008 00E003F0 	 .word -268181504
+ 1119 000c 0B       	 .byte 11
+ 1120 000d 000000   	 .zero 3
+ 1121 0010 81000000 	 .word 129
+ 1122              	 .global IfxGeth0_P1_MDC_P02_8_OUT
+ 1123              	 .section .rodata.IfxGeth0_P1_MDC_P02_8_OUT,"a"
+ 1124              	 .align 2
+ 1127              	IfxGeth0_P1_MDC_P02_8_OUT:
+ 1128 0000 000000F9 	 .word -117440512
+ 1129 0004 01000000 	 .word 1
+ 1130 0008 00A803F0 	 .word -268195840
+ 1131 000c 08       	 .byte 8
+ 1132 000d 000000   	 .zero 3
+ 1133 0010 81000000 	 .word 129
+ 1134              	 .global IfxGeth0_P1_CRSDVD_P30_1_IN
+ 1135              	 .section .rodata.IfxGeth0_P1_CRSDVD_P30_1_IN,"a"
+ 1136              	 .align 2
+ 1139              	IfxGeth0_P1_CRSDVD_P30_1_IN:
+ 1140 0000 000000F9 	 .word -117440512
+ 1141 0004 01000000 	 .word 1
+ 1142 0008 001804F0 	 .word -268167168
+ 1143 000c 01       	 .byte 1
+ 1144 000d 000000   	 .zero 3
+ 1145 0010 03000000 	 .word 3
+ 1146              	 .global IfxGeth0_P1_CRSDVB_P22_0_IN
+ 1147              	 .section .rodata.IfxGeth0_P1_CRSDVB_P22_0_IN,"a"
+ 1148              	 .align 2
+ 1151              	IfxGeth0_P1_CRSDVB_P22_0_IN:
+ 1152 0000 000000F9 	 .word -117440512
+ 1153 0004 01000000 	 .word 1
+ 1154 0008 00F803F0 	 .word -268175360
+ 1155 000c 00       	 .byte 0
+ 1156 000d 000000   	 .zero 3
+ 1157 0010 01000000 	 .word 1
+ 1158              	 .global IfxGeth0_P1_CRSDVA_P22_6_IN
+ 1159              	 .section .rodata.IfxGeth0_P1_CRSDVA_P22_6_IN,"a"
+ 1160              	 .align 2
+ 1163              	IfxGeth0_P1_CRSDVA_P22_6_IN:
+ 1164 0000 000000F9 	 .word -117440512
+ 1165 0004 01000000 	 .word 1
+ 1166 0008 00F803F0 	 .word -268175360
+ 1167 000c 06       	 .byte 6
+ 1168 000d 000000   	 .zero 3
+ 1169 0010 00000000 	 .word 0
+ 1170              	 .global IfxGeth0_P1_CRSB_P22_0_IN
+ 1171              	 .section .rodata.IfxGeth0_P1_CRSB_P22_0_IN,"a"
+ 1172              	 .align 2
+ 1175              	IfxGeth0_P1_CRSB_P22_0_IN:
+ 1176 0000 000000F9 	 .word -117440512
+ 1177 0004 01000000 	 .word 1
+ 1178 0008 00F803F0 	 .word -268175360
+ 1179 000c 00       	 .byte 0
+ 1180 000d 000000   	 .zero 3
+ 1181 0010 01000000 	 .word 1
+ 1182              	 .global IfxGeth0_P1_CRSA_P22_6_IN
+ 1183              	 .section .rodata.IfxGeth0_P1_CRSA_P22_6_IN,"a"
+ 1184              	 .align 2
+ 1187              	IfxGeth0_P1_CRSA_P22_6_IN:
+ 1188 0000 000000F9 	 .word -117440512
+ 1189 0004 01000000 	 .word 1
+ 1190 0008 00F803F0 	 .word -268175360
+ 1191 000c 06       	 .byte 6
+ 1192 000d 000000   	 .zero 3
+ 1193 0010 00000000 	 .word 0
+ 1194              	 .global IfxGeth0_P1_COL_P32_7_IN
+ 1195              	 .section .rodata.IfxGeth0_P1_COL_P32_7_IN,"a"
+ 1196              	 .align 2
+ 1199              	IfxGeth0_P1_COL_P32_7_IN:
+ 1200 0000 000000F9 	 .word -117440512
+ 1201 0004 01000000 	 .word 1
+ 1202 0008 002004F0 	 .word -268165120
+ 1203 000c 07       	 .byte 7
+ 1204 000d 000000   	 .zero 3
+ 1205 0010 02000000 	 .word 2
+ 1206              	 .global IfxGeth0_P1_COL_P22_3_IN
+ 1207              	 .section .rodata.IfxGeth0_P1_COL_P22_3_IN,"a"
+ 1208              	 .align 2
+ 1211              	IfxGeth0_P1_COL_P22_3_IN:
+ 1212 0000 000000F9 	 .word -117440512
+ 1213 0004 01000000 	 .word 1
+ 1214 0008 00F803F0 	 .word -268175360
+ 1215 000c 03       	 .byte 3
+ 1216 000d 000000   	 .zero 3
+ 1217 0010 01000000 	 .word 1
+ 1218              	 .global IfxGeth0_P1_COL_P22_2_IN
+ 1219              	 .section .rodata.IfxGeth0_P1_COL_P22_2_IN,"a"
+ 1220              	 .align 2
+ 1223              	IfxGeth0_P1_COL_P22_2_IN:
+ 1224 0000 000000F9 	 .word -117440512
+ 1225 0004 01000000 	 .word 1
+ 1226 0008 00F803F0 	 .word -268175360
+ 1227 000c 02       	 .byte 2
+ 1228 000d 000000   	 .zero 3
+ 1229 0010 00000000 	 .word 0
+ 1230              	 .global IfxGeth0_P0_TXER_P20_6_OUT
+ 1231              	 .section .rodata.IfxGeth0_P0_TXER_P20_6_OUT,"a"
+ 1232              	 .align 2
+ 1235              	IfxGeth0_P0_TXER_P20_6_OUT:
+ 1236 0000 000000F9 	 .word -117440512
+ 1237 0004 00000000 	 .word 0
+ 1238 0008 00F003F0 	 .word -268177408
+ 1239 000c 06       	 .byte 6
+ 1240 000d 000000   	 .zero 3
+ 1241 0010 81000000 	 .word 129
+ 1242              	 .global IfxGeth0_P0_TXER_P16_12_OUT
+ 1243              	 .section .rodata.IfxGeth0_P0_TXER_P16_12_OUT,"a"
+ 1244              	 .align 2
+ 1247              	IfxGeth0_P0_TXER_P16_12_OUT:
+ 1248 0000 000000F9 	 .word -117440512
+ 1249 0004 00000000 	 .word 0
+ 1250 0008 00E003F0 	 .word -268181504
+ 1251 000c 0C       	 .byte 12
+ 1252 000d 000000   	 .zero 3
+ 1253 0010 81000000 	 .word 129
+ 1254              	 .global IfxGeth0_P0_TXCLKD_P20_3_IN
+ 1255              	 .section .rodata.IfxGeth0_P0_TXCLKD_P20_3_IN,"a"
+ 1256              	 .align 2
+ 1259              	IfxGeth0_P0_TXCLKD_P20_3_IN:
+ 1260 0000 000000F9 	 .word -117440512
+ 1261 0004 00000000 	 .word 0
+ 1262 0008 00F003F0 	 .word -268177408
+ 1263 000c 03       	 .byte 3
+ 1264 000d 000000   	 .zero 3
+ 1265 0010 03000000 	 .word 3
+ 1266              	 .global IfxGeth0_P0_TXCLKC_P16_0_IN
+ 1267              	 .section .rodata.IfxGeth0_P0_TXCLKC_P16_0_IN,"a"
+ 1268              	 .align 2
+ 1271              	IfxGeth0_P0_TXCLKC_P16_0_IN:
+ 1272 0000 000000F9 	 .word -117440512
+ 1273 0004 00000000 	 .word 0
+ 1274 0008 00E003F0 	 .word -268181504
+ 1275 000c 00       	 .byte 0
+ 1276 000d 000000   	 .zero 3
+ 1277 0010 02000000 	 .word 2
+ 1278              	 .global IfxGeth0_P0_RXERD_P22_1_IN
+ 1279              	 .section .rodata.IfxGeth0_P0_RXERD_P22_1_IN,"a"
+ 1280              	 .align 2
+ 1283              	IfxGeth0_P0_RXERD_P22_1_IN:
+ 1284 0000 000000F9 	 .word -117440512
+ 1285 0004 00000000 	 .word 0
+ 1286 0008 00F803F0 	 .word -268175360
+ 1287 000c 01       	 .byte 1
+ 1288 000d 000000   	 .zero 3
+ 1289 0010 03000000 	 .word 3
+ 1290              	 .global IfxGeth0_P0_RXERC_P10_0_IN
+ 1291              	 .section .rodata.IfxGeth0_P0_RXERC_P10_0_IN,"a"
+ 1292              	 .align 2
+ 1295              	IfxGeth0_P0_RXERC_P10_0_IN:
+ 1296 0000 000000F9 	 .word -117440512
+ 1297 0004 00000000 	 .word 0
+ 1298 0008 00C803F0 	 .word -268187648
+ 1299 000c 00       	 .byte 0
+ 1300 000d 000000   	 .zero 3
+ 1301 0010 02000000 	 .word 2
+ 1302              	 .global IfxGeth0_P0_RXERB_P21_7_IN
+ 1303              	 .section .rodata.IfxGeth0_P0_RXERB_P21_7_IN,"a"
+ 1304              	 .align 2
+ 1307              	IfxGeth0_P0_RXERB_P21_7_IN:
+ 1308 0000 000000F9 	 .word -117440512
+ 1309 0004 00000000 	 .word 0
+ 1310 0008 00F403F0 	 .word -268176384
+ 1311 000c 07       	 .byte 7
+ 1312 000d 000000   	 .zero 3
+ 1313 0010 01000000 	 .word 1
+ 1314              	 .global IfxGeth0_P0_RXDVD_P20_8_IN
+ 1315              	 .section .rodata.IfxGeth0_P0_RXDVD_P20_8_IN,"a"
+ 1316              	 .align 2
+ 1319              	IfxGeth0_P0_RXDVD_P20_8_IN:
+ 1320 0000 000000F9 	 .word -117440512
+ 1321 0004 00000000 	 .word 0
+ 1322 0008 00F003F0 	 .word -268177408
+ 1323 000c 08       	 .byte 8
+ 1324 000d 000000   	 .zero 3
+ 1325 0010 03000000 	 .word 3
+ 1326              	 .global IfxGeth0_P0_RXDVC_P16_1_IN
+ 1327              	 .section .rodata.IfxGeth0_P0_RXDVC_P16_1_IN,"a"
+ 1328              	 .align 2
+ 1331              	IfxGeth0_P0_RXDVC_P16_1_IN:
+ 1332 0000 000000F9 	 .word -117440512
+ 1333 0004 00000000 	 .word 0
+ 1334 0008 00E003F0 	 .word -268181504
+ 1335 000c 01       	 .byte 1
+ 1336 000d 000000   	 .zero 3
+ 1337 0010 02000000 	 .word 2
+ 1338              	 .global IfxGeth0_P0_RXDVB_P16_10_IN
+ 1339              	 .section .rodata.IfxGeth0_P0_RXDVB_P16_10_IN,"a"
+ 1340              	 .align 2
+ 1343              	IfxGeth0_P0_RXDVB_P16_10_IN:
+ 1344 0000 000000F9 	 .word -117440512
+ 1345 0004 00000000 	 .word 0
+ 1346 0008 00E003F0 	 .word -268181504
+ 1347 000c 0A       	 .byte 10
+ 1348 000d 000000   	 .zero 3
+ 1349 0010 01000000 	 .word 1
+ 1350              	 .global IfxGeth0_P0_RXD3D_P16_7_IN
+ 1351              	 .section .rodata.IfxGeth0_P0_RXD3D_P16_7_IN,"a"
+ 1352              	 .align 2
+ 1355              	IfxGeth0_P0_RXD3D_P16_7_IN:
+ 1356 0000 000000F9 	 .word -117440512
+ 1357 0004 00000000 	 .word 0
+ 1358 0008 00E003F0 	 .word -268181504
+ 1359 000c 07       	 .byte 7
+ 1360 000d 000000   	 .zero 3
+ 1361 0010 03000000 	 .word 3
+ 1362              	 .global IfxGeth0_P0_RXD3C_P20_14_IN
+ 1363              	 .section .rodata.IfxGeth0_P0_RXD3C_P20_14_IN,"a"
+ 1364              	 .align 2
+ 1367              	IfxGeth0_P0_RXD3C_P20_14_IN:
+ 1368 0000 000000F9 	 .word -117440512
+ 1369 0004 00000000 	 .word 0
+ 1370 0008 00F003F0 	 .word -268177408
+ 1371 000c 0E       	 .byte 14
+ 1372 000d 000000   	 .zero 3
+ 1373 0010 02000000 	 .word 2
+ 1374              	 .global IfxGeth0_P0_RXD3B_P16_7_IN
+ 1375              	 .section .rodata.IfxGeth0_P0_RXD3B_P16_7_IN,"a"
+ 1376              	 .align 2
+ 1379              	IfxGeth0_P0_RXD3B_P16_7_IN:
+ 1380 0000 000000F9 	 .word -117440512
+ 1381 0004 00000000 	 .word 0
+ 1382 0008 00E003F0 	 .word -268181504
+ 1383 000c 07       	 .byte 7
+ 1384 000d 000000   	 .zero 3
+ 1385 0010 01000000 	 .word 1
+ 1386              	 .global IfxGeth0_P0_RXD2D_P16_5_IN
+ 1387              	 .section .rodata.IfxGeth0_P0_RXD2D_P16_5_IN,"a"
+ 1388              	 .align 2
+ 1391              	IfxGeth0_P0_RXD2D_P16_5_IN:
+ 1392 0000 000000F9 	 .word -117440512
+ 1393 0004 00000000 	 .word 0
+ 1394 0008 00E003F0 	 .word -268181504
+ 1395 000c 05       	 .byte 5
+ 1396 000d 000000   	 .zero 3
+ 1397 0010 03000000 	 .word 3
+ 1398              	 .global IfxGeth0_P0_RXD2C_P20_13_IN
+ 1399              	 .section .rodata.IfxGeth0_P0_RXD2C_P20_13_IN,"a"
+ 1400              	 .align 2
+ 1403              	IfxGeth0_P0_RXD2C_P20_13_IN:
+ 1404 0000 000000F9 	 .word -117440512
+ 1405 0004 00000000 	 .word 0
+ 1406 0008 00F003F0 	 .word -268177408
+ 1407 000c 0D       	 .byte 13
+ 1408 000d 000000   	 .zero 3
+ 1409 0010 02000000 	 .word 2
+ 1410              	 .global IfxGeth0_P0_RXD2B_P16_5_IN
+ 1411              	 .section .rodata.IfxGeth0_P0_RXD2B_P16_5_IN,"a"
+ 1412              	 .align 2
+ 1415              	IfxGeth0_P0_RXD2B_P16_5_IN:
+ 1416 0000 000000F9 	 .word -117440512
+ 1417 0004 00000000 	 .word 0
+ 1418 0008 00E003F0 	 .word -268181504
+ 1419 000c 05       	 .byte 5
+ 1420 000d 000000   	 .zero 3
+ 1421 0010 01000000 	 .word 1
+ 1422              	 .global IfxGeth0_P0_RXD1D_P16_0_IN
+ 1423              	 .section .rodata.IfxGeth0_P0_RXD1D_P16_0_IN,"a"
+ 1424              	 .align 2
+ 1427              	IfxGeth0_P0_RXD1D_P16_0_IN:
+ 1428 0000 000000F9 	 .word -117440512
+ 1429 0004 00000000 	 .word 0
+ 1430 0008 00E003F0 	 .word -268181504
+ 1431 000c 00       	 .byte 0
+ 1432 000d 000000   	 .zero 3
+ 1433 0010 03000000 	 .word 3
+ 1434              	 .global IfxGeth0_P0_RXD1C_P20_11_IN
+ 1435              	 .section .rodata.IfxGeth0_P0_RXD1C_P20_11_IN,"a"
+ 1436              	 .align 2
+ 1439              	IfxGeth0_P0_RXD1C_P20_11_IN:
+ 1440 0000 000000F9 	 .word -117440512
+ 1441 0004 00000000 	 .word 0
+ 1442 0008 00F003F0 	 .word -268177408
+ 1443 000c 0B       	 .byte 11
+ 1444 000d 000000   	 .zero 3
+ 1445 0010 02000000 	 .word 2
+ 1446              	 .global IfxGeth0_P0_RXD1B_P16_3_IN
+ 1447              	 .section .rodata.IfxGeth0_P0_RXD1B_P16_3_IN,"a"
+ 1448              	 .align 2
+ 1451              	IfxGeth0_P0_RXD1B_P16_3_IN:
+ 1452 0000 000000F9 	 .word -117440512
+ 1453 0004 00000000 	 .word 0
+ 1454 0008 00E003F0 	 .word -268181504
+ 1455 000c 03       	 .byte 3
+ 1456 000d 000000   	 .zero 3
+ 1457 0010 01000000 	 .word 1
+ 1458              	 .global IfxGeth0_P0_RXD0D_P16_4_IN
+ 1459              	 .section .rodata.IfxGeth0_P0_RXD0D_P16_4_IN,"a"
+ 1460              	 .align 2
+ 1463              	IfxGeth0_P0_RXD0D_P16_4_IN:
+ 1464 0000 000000F9 	 .word -117440512
+ 1465 0004 00000000 	 .word 0
+ 1466 0008 00E003F0 	 .word -268181504
+ 1467 000c 04       	 .byte 4
+ 1468 000d 000000   	 .zero 3
+ 1469 0010 03000000 	 .word 3
+ 1470              	 .global IfxGeth0_P0_RXD0C_P20_12_IN
+ 1471              	 .section .rodata.IfxGeth0_P0_RXD0C_P20_12_IN,"a"
+ 1472              	 .align 2
+ 1475              	IfxGeth0_P0_RXD0C_P20_12_IN:
+ 1476 0000 000000F9 	 .word -117440512
+ 1477 0004 00000000 	 .word 0
+ 1478 0008 00F003F0 	 .word -268177408
+ 1479 000c 0C       	 .byte 12
+ 1480 000d 000000   	 .zero 3
+ 1481 0010 02000000 	 .word 2
+ 1482              	 .global IfxGeth0_P0_RXD0B_P16_4_IN
+ 1483              	 .section .rodata.IfxGeth0_P0_RXD0B_P16_4_IN,"a"
+ 1484              	 .align 2
+ 1487              	IfxGeth0_P0_RXD0B_P16_4_IN:
+ 1488 0000 000000F9 	 .word -117440512
+ 1489 0004 00000000 	 .word 0
+ 1490 0008 00E003F0 	 .word -268181504
+ 1491 000c 04       	 .byte 4
+ 1492 000d 000000   	 .zero 3
+ 1493 0010 01000000 	 .word 1
+ 1494              	 .global IfxGeth0_P0_RXCLKD_P16_2_IN
+ 1495              	 .section .rodata.IfxGeth0_P0_RXCLKD_P16_2_IN,"a"
+ 1496              	 .align 2
+ 1499              	IfxGeth0_P0_RXCLKD_P16_2_IN:
+ 1500 0000 000000F9 	 .word -117440512
+ 1501 0004 00000000 	 .word 0
+ 1502 0008 00E003F0 	 .word -268181504
+ 1503 000c 02       	 .byte 2
+ 1504 000d 000000   	 .zero 3
+ 1505 0010 03000000 	 .word 3
+ 1506              	 .global IfxGeth0_P0_RXCLKB_P21_4_IN
+ 1507              	 .section .rodata.IfxGeth0_P0_RXCLKB_P21_4_IN,"a"
+ 1508              	 .align 2
+ 1511              	IfxGeth0_P0_RXCLKB_P21_4_IN:
+ 1512 0000 000000F9 	 .word -117440512
+ 1513 0004 00000000 	 .word 0
+ 1514 0008 00F403F0 	 .word -268176384
+ 1515 000c 04       	 .byte 4
+ 1516 000d 000000   	 .zero 3
+ 1517 0010 01000000 	 .word 1
+ 1518              	 .global IfxGeth0_P0_RMIIRC_TXEN_P16_13_OUT
+ 1519              	 .section .rodata.IfxGeth0_P0_RMIIRC_TXEN_P16_13_OUT,"a"
+ 1520              	 .align 2
+ 1523              	IfxGeth0_P0_RMIIRC_TXEN_P16_13_OUT:
+ 1524 0000 000000F9 	 .word -117440512
+ 1525 0004 00000000 	 .word 0
+ 1526 0008 00E003F0 	 .word -268181504
+ 1527 000c 0D       	 .byte 13
+ 1528 000d 000000   	 .zero 3
+ 1529 0010 01000000 	 .word 1
+ 1530              	 .global IfxGeth0_P0_RMIIRC_TXD1_P16_8_OUT
+ 1531              	 .section .rodata.IfxGeth0_P0_RMIIRC_TXD1_P16_8_OUT,"a"
+ 1532              	 .align 2
+ 1535              	IfxGeth0_P0_RMIIRC_TXD1_P16_8_OUT:
+ 1536 0000 000000F9 	 .word -117440512
+ 1537 0004 00000000 	 .word 0
+ 1538 0008 00E003F0 	 .word -268181504
+ 1539 000c 08       	 .byte 8
+ 1540 000d 000000   	 .zero 3
+ 1541 0010 01000000 	 .word 1
+ 1542              	 .global IfxGeth0_P0_RMIIRC_TXD0_P16_6_OUT
+ 1543              	 .section .rodata.IfxGeth0_P0_RMIIRC_TXD0_P16_6_OUT,"a"
+ 1544              	 .align 2
+ 1547              	IfxGeth0_P0_RMIIRC_TXD0_P16_6_OUT:
+ 1548 0000 000000F9 	 .word -117440512
+ 1549 0004 00000000 	 .word 0
+ 1550 0008 00E003F0 	 .word -268181504
+ 1551 000c 06       	 .byte 6
+ 1552 000d 000000   	 .zero 3
+ 1553 0010 01000000 	 .word 1
+ 1554              	 .global IfxGeth0_P0_RMIIC_TXEN_P16_13_OUT
+ 1555              	 .section .rodata.IfxGeth0_P0_RMIIC_TXEN_P16_13_OUT,"a"
+ 1556              	 .align 2
+ 1559              	IfxGeth0_P0_RMIIC_TXEN_P16_13_OUT:
+ 1560 0000 000000F9 	 .word -117440512
+ 1561 0004 00000000 	 .word 0
+ 1562 0008 00E003F0 	 .word -268181504
+ 1563 000c 0D       	 .byte 13
+ 1564 000d 000000   	 .zero 3
+ 1565 0010 A1000000 	 .word 161
+ 1566              	 .global IfxGeth0_P0_RMIIC_TXEN_P16_12_OUT
+ 1567              	 .section .rodata.IfxGeth0_P0_RMIIC_TXEN_P16_12_OUT,"a"
+ 1568              	 .align 2
+ 1571              	IfxGeth0_P0_RMIIC_TXEN_P16_12_OUT:
+ 1572 0000 000000F9 	 .word -117440512
+ 1573 0004 00000000 	 .word 0
+ 1574 0008 00E003F0 	 .word -268181504
+ 1575 000c 0C       	 .byte 12
+ 1576 000d 000000   	 .zero 3
+ 1577 0010 B1000000 	 .word 177
+ 1578              	 .global IfxGeth0_P0_RMIIC_TXD1_P16_8_OUT
+ 1579              	 .section .rodata.IfxGeth0_P0_RMIIC_TXD1_P16_8_OUT,"a"
+ 1580              	 .align 2
+ 1583              	IfxGeth0_P0_RMIIC_TXD1_P16_8_OUT:
+ 1584 0000 000000F9 	 .word -117440512
+ 1585 0004 00000000 	 .word 0
+ 1586 0008 00E003F0 	 .word -268181504
+ 1587 000c 08       	 .byte 8
+ 1588 000d 000000   	 .zero 3
+ 1589 0010 A1000000 	 .word 161
+ 1590              	 .global IfxGeth0_P0_RMIIC_TXD0_P16_9_OUT
+ 1591              	 .section .rodata.IfxGeth0_P0_RMIIC_TXD0_P16_9_OUT,"a"
+ 1592              	 .align 2
+ 1595              	IfxGeth0_P0_RMIIC_TXD0_P16_9_OUT:
+ 1596 0000 000000F9 	 .word -117440512
+ 1597 0004 00000000 	 .word 0
+ 1598 0008 00E003F0 	 .word -268181504
+ 1599 000c 09       	 .byte 9
+ 1600 000d 000000   	 .zero 3
+ 1601 0010 A1000000 	 .word 161
+ 1602              	 .global IfxGeth0_P0_RMIIC_TXD0_P16_6_OUT
+ 1603              	 .section .rodata.IfxGeth0_P0_RMIIC_TXD0_P16_6_OUT,"a"
+ 1604              	 .align 2
+ 1607              	IfxGeth0_P0_RMIIC_TXD0_P16_6_OUT:
+ 1608 0000 000000F9 	 .word -117440512
+ 1609 0004 00000000 	 .word 0
+ 1610 0008 00E003F0 	 .word -268181504
+ 1611 000c 06       	 .byte 6
+ 1612 000d 000000   	 .zero 3
+ 1613 0010 A1000000 	 .word 161
+ 1614              	 .global IfxGeth0_P0_RMIIB_TXEN_P21_5_OUT
+ 1615              	 .section .rodata.IfxGeth0_P0_RMIIB_TXEN_P21_5_OUT,"a"
+ 1616              	 .align 2
+ 1619              	IfxGeth0_P0_RMIIB_TXEN_P21_5_OUT:
+ 1620 0000 000000F9 	 .word -117440512
+ 1621 0004 00000000 	 .word 0
+ 1622 0008 00F403F0 	 .word -268176384
+ 1623 000c 05       	 .byte 5
+ 1624 000d 000000   	 .zero 3
+ 1625 0010 D1000000 	 .word 209
+ 1626              	 .global IfxGeth0_P0_RMIIB_TXD1_P20_9_OUT
+ 1627              	 .section .rodata.IfxGeth0_P0_RMIIB_TXD1_P20_9_OUT,"a"
+ 1628              	 .align 2
+ 1631              	IfxGeth0_P0_RMIIB_TXD1_P20_9_OUT:
+ 1632 0000 000000F9 	 .word -117440512
+ 1633 0004 00000000 	 .word 0
+ 1634 0008 00F003F0 	 .word -268177408
+ 1635 000c 09       	 .byte 9
+ 1636 000d 000000   	 .zero 3
+ 1637 0010 71000000 	 .word 113
+ 1638              	 .global IfxGeth0_P0_RMIIB_TXD0_P20_10_OUT
+ 1639              	 .section .rodata.IfxGeth0_P0_RMIIB_TXD0_P20_10_OUT,"a"
+ 1640              	 .align 2
+ 1643              	IfxGeth0_P0_RMIIB_TXD0_P20_10_OUT:
+ 1644 0000 000000F9 	 .word -117440512
+ 1645 0004 00000000 	 .word 0
+ 1646 0008 00F003F0 	 .word -268177408
+ 1647 000c 0A       	 .byte 10
+ 1648 000d 000000   	 .zero 3
+ 1649 0010 71000000 	 .word 113
+ 1650              	 .global IfxGeth0_P0_RGMII_TXD3_P16_10_OUT
+ 1651              	 .section .rodata.IfxGeth0_P0_RGMII_TXD3_P16_10_OUT,"a"
+ 1652              	 .align 2
+ 1655              	IfxGeth0_P0_RGMII_TXD3_P16_10_OUT:
+ 1656 0000 000000F9 	 .word -117440512
+ 1657 0004 00000000 	 .word 0
+ 1658 0008 00E003F0 	 .word -268181504
+ 1659 000c 0A       	 .byte 10
+ 1660 000d 000000   	 .zero 3
+ 1661 0010 01000000 	 .word 1
+ 1662              	 .global IfxGeth0_P0_RGMII_TXD2_P16_9_OUT
+ 1663              	 .section .rodata.IfxGeth0_P0_RGMII_TXD2_P16_9_OUT,"a"
+ 1664              	 .align 2
+ 1667              	IfxGeth0_P0_RGMII_TXD2_P16_9_OUT:
+ 1668 0000 000000F9 	 .word -117440512
+ 1669 0004 00000000 	 .word 0
+ 1670 0008 00E003F0 	 .word -268181504
+ 1671 000c 09       	 .byte 9
+ 1672 000d 000000   	 .zero 3
+ 1673 0010 01000000 	 .word 1
+ 1674              	 .global IfxGeth0_P0_RGMII_TXD1_P16_8_OUT
+ 1675              	 .section .rodata.IfxGeth0_P0_RGMII_TXD1_P16_8_OUT,"a"
+ 1676              	 .align 2
+ 1679              	IfxGeth0_P0_RGMII_TXD1_P16_8_OUT:
+ 1680 0000 000000F9 	 .word -117440512
+ 1681 0004 00000000 	 .word 0
+ 1682 0008 00E003F0 	 .word -268181504
+ 1683 000c 08       	 .byte 8
+ 1684 000d 000000   	 .zero 3
+ 1685 0010 01000000 	 .word 1
+ 1686              	 .global IfxGeth0_P0_RGMII_TXD0_P16_6_OUT
+ 1687              	 .section .rodata.IfxGeth0_P0_RGMII_TXD0_P16_6_OUT,"a"
+ 1688              	 .align 2
+ 1691              	IfxGeth0_P0_RGMII_TXD0_P16_6_OUT:
+ 1692 0000 000000F9 	 .word -117440512
+ 1693 0004 00000000 	 .word 0
+ 1694 0008 00E003F0 	 .word -268181504
+ 1695 000c 06       	 .byte 6
+ 1696 000d 000000   	 .zero 3
+ 1697 0010 01000000 	 .word 1
+ 1698              	 .global IfxGeth0_P0_RGMII_TXCTL_P16_13_OUT
+ 1699              	 .section .rodata.IfxGeth0_P0_RGMII_TXCTL_P16_13_OUT,"a"
+ 1700              	 .align 2
+ 1703              	IfxGeth0_P0_RGMII_TXCTL_P16_13_OUT:
+ 1704 0000 000000F9 	 .word -117440512
+ 1705 0004 00000000 	 .word 0
+ 1706 0008 00E003F0 	 .word -268181504
+ 1707 000c 0D       	 .byte 13
+ 1708 000d 000000   	 .zero 3
+ 1709 0010 01000000 	 .word 1
+ 1710              	 .global IfxGeth0_P0_RGMII_TXCLK_P16_12_OUT
+ 1711              	 .section .rodata.IfxGeth0_P0_RGMII_TXCLK_P16_12_OUT,"a"
+ 1712              	 .align 2
+ 1715              	IfxGeth0_P0_RGMII_TXCLK_P16_12_OUT:
+ 1716 0000 000000F9 	 .word -117440512
+ 1717 0004 00000000 	 .word 0
+ 1718 0008 00E003F0 	 .word -268181504
+ 1719 000c 0C       	 .byte 12
+ 1720 000d 000000   	 .zero 3
+ 1721 0010 01000000 	 .word 1
+ 1722              	 .global IfxGeth0_P0_RGMII_RXD3_P16_7_IN
+ 1723              	 .section .rodata.IfxGeth0_P0_RGMII_RXD3_P16_7_IN,"a"
+ 1724              	 .align 2
+ 1727              	IfxGeth0_P0_RGMII_RXD3_P16_7_IN:
+ 1728 0000 000000F9 	 .word -117440512
+ 1729 0004 00000000 	 .word 0
+ 1730 0008 00E003F0 	 .word -268181504
+ 1731 000c 07       	 .byte 7
+ 1732 000d 000000   	 .zero 3
+ 1733 0010 00000000 	 .word 0
+ 1734              	 .global IfxGeth0_P0_RGMII_RXD2_P16_5_IN
+ 1735              	 .section .rodata.IfxGeth0_P0_RGMII_RXD2_P16_5_IN,"a"
+ 1736              	 .align 2
+ 1739              	IfxGeth0_P0_RGMII_RXD2_P16_5_IN:
+ 1740 0000 000000F9 	 .word -117440512
+ 1741 0004 00000000 	 .word 0
+ 1742 0008 00E003F0 	 .word -268181504
+ 1743 000c 05       	 .byte 5
+ 1744 000d 000000   	 .zero 3
+ 1745 0010 00000000 	 .word 0
+ 1746              	 .global IfxGeth0_P0_RGMII_RXD1_P16_3_IN
+ 1747              	 .section .rodata.IfxGeth0_P0_RGMII_RXD1_P16_3_IN,"a"
+ 1748              	 .align 2
+ 1751              	IfxGeth0_P0_RGMII_RXD1_P16_3_IN:
+ 1752 0000 000000F9 	 .word -117440512
+ 1753 0004 00000000 	 .word 0
+ 1754 0008 00E003F0 	 .word -268181504
+ 1755 000c 03       	 .byte 3
+ 1756 000d 000000   	 .zero 3
+ 1757 0010 00000000 	 .word 0
+ 1758              	 .global IfxGeth0_P0_RGMII_RXD0_P16_4_IN
+ 1759              	 .section .rodata.IfxGeth0_P0_RGMII_RXD0_P16_4_IN,"a"
+ 1760              	 .align 2
+ 1763              	IfxGeth0_P0_RGMII_RXD0_P16_4_IN:
+ 1764 0000 000000F9 	 .word -117440512
+ 1765 0004 00000000 	 .word 0
+ 1766 0008 00E003F0 	 .word -268181504
+ 1767 000c 04       	 .byte 4
+ 1768 000d 000000   	 .zero 3
+ 1769 0010 00000000 	 .word 0
+ 1770              	 .global IfxGeth0_P0_RGMII_RXCTL_P16_1_IN
+ 1771              	 .section .rodata.IfxGeth0_P0_RGMII_RXCTL_P16_1_IN,"a"
+ 1772              	 .align 2
+ 1775              	IfxGeth0_P0_RGMII_RXCTL_P16_1_IN:
+ 1776 0000 000000F9 	 .word -117440512
+ 1777 0004 00000000 	 .word 0
+ 1778 0008 00E003F0 	 .word -268181504
+ 1779 000c 01       	 .byte 1
+ 1780 000d 000000   	 .zero 3
+ 1781 0010 00000000 	 .word 0
+ 1782              	 .global IfxGeth0_P0_RGMII_RXCLK_P16_2_IN
+ 1783              	 .section .rodata.IfxGeth0_P0_RGMII_RXCLK_P16_2_IN,"a"
+ 1784              	 .align 2
+ 1787              	IfxGeth0_P0_RGMII_RXCLK_P16_2_IN:
+ 1788 0000 000000F9 	 .word -117440512
+ 1789 0004 00000000 	 .word 0
+ 1790 0008 00E003F0 	 .word -268181504
+ 1791 000c 02       	 .byte 2
+ 1792 000d 000000   	 .zero 3
+ 1793 0010 00000000 	 .word 0
+ 1794              	 .global IfxGeth0_P0_RGMII_GREFCLK_P16_0_IN
+ 1795              	 .section .rodata.IfxGeth0_P0_RGMII_GREFCLK_P16_0_IN,"a"
+ 1796              	 .align 2
+ 1799              	IfxGeth0_P0_RGMII_GREFCLK_P16_0_IN:
+ 1800 0000 000000F9 	 .word -117440512
+ 1801 0004 00000000 	 .word 0
+ 1802 0008 00E003F0 	 .word -268181504
+ 1803 000c 00       	 .byte 0
+ 1804 000d 000000   	 .zero 3
+ 1805 0010 00000000 	 .word 0
+ 1806              	 .global IfxGeth0_P0_REFCLKD_P16_2_IN
+ 1807              	 .section .rodata.IfxGeth0_P0_REFCLKD_P16_2_IN,"a"
+ 1808              	 .align 2
+ 1811              	IfxGeth0_P0_REFCLKD_P16_2_IN:
+ 1812 0000 000000F9 	 .word -117440512
+ 1813 0004 00000000 	 .word 0
+ 1814 0008 00E003F0 	 .word -268181504
+ 1815 000c 02       	 .byte 2
+ 1816 000d 000000   	 .zero 3
+ 1817 0010 03000000 	 .word 3
+ 1818              	 .global IfxGeth0_P0_REFCLKB_P21_4_IN
+ 1819              	 .section .rodata.IfxGeth0_P0_REFCLKB_P21_4_IN,"a"
+ 1820              	 .align 2
+ 1823              	IfxGeth0_P0_REFCLKB_P21_4_IN:
+ 1824 0000 000000F9 	 .word -117440512
+ 1825 0004 00000000 	 .word 0
+ 1826 0008 00F403F0 	 .word -268176384
+ 1827 000c 04       	 .byte 4
+ 1828 000d 000000   	 .zero 3
+ 1829 0010 01000000 	 .word 1
+ 1830              	 .global IfxGeth0_P0_PPS_P14_3_OUT
+ 1831              	 .section .rodata.IfxGeth0_P0_PPS_P14_3_OUT,"a"
+ 1832              	 .align 2
+ 1835              	IfxGeth0_P0_PPS_P14_3_OUT:
+ 1836 0000 000000F9 	 .word -117440512
+ 1837 0004 00000000 	 .word 0
+ 1838 0008 00D803F0 	 .word -268183552
+ 1839 000c 03       	 .byte 3
+ 1840 000d 000000   	 .zero 3
+ 1841 0010 81000000 	 .word 129
+ 1842              	 .global IfxGeth0_P0_PPS_P14_2_OUT
+ 1843              	 .section .rodata.IfxGeth0_P0_PPS_P14_2_OUT,"a"
+ 1844              	 .align 2
+ 1847              	IfxGeth0_P0_PPS_P14_2_OUT:
+ 1848 0000 000000F9 	 .word -117440512
+ 1849 0004 00000000 	 .word 0
+ 1850 0008 00D803F0 	 .word -268183552
+ 1851 000c 02       	 .byte 2
+ 1852 000d 000000   	 .zero 3
+ 1853 0010 81000000 	 .word 129
+ 1854              	 .global IfxGeth0_P0_MII_TXEN_P21_5_OUT
+ 1855              	 .section .rodata.IfxGeth0_P0_MII_TXEN_P21_5_OUT,"a"
+ 1856              	 .align 2
+ 1859              	IfxGeth0_P0_MII_TXEN_P21_5_OUT:
+ 1860 0000 000000F9 	 .word -117440512
+ 1861 0004 00000000 	 .word 0
+ 1862 0008 00F403F0 	 .word -268176384
+ 1863 000c 05       	 .byte 5
+ 1864 000d 000000   	 .zero 3
+ 1865 0010 C1000000 	 .word 193
+ 1866              	 .global IfxGeth0_P0_MII_TXEN_P16_13_OUT
+ 1867              	 .section .rodata.IfxGeth0_P0_MII_TXEN_P16_13_OUT,"a"
+ 1868              	 .align 2
+ 1871              	IfxGeth0_P0_MII_TXEN_P16_13_OUT:
+ 1872 0000 000000F9 	 .word -117440512
+ 1873 0004 00000000 	 .word 0
+ 1874 0008 00E003F0 	 .word -268181504
+ 1875 000c 0D       	 .byte 13
+ 1876 000d 000000   	 .zero 3
+ 1877 0010 61000000 	 .word 97
+ 1878              	 .global IfxGeth0_P0_MII_TXD3_P20_7_OUT
+ 1879              	 .section .rodata.IfxGeth0_P0_MII_TXD3_P20_7_OUT,"a"
+ 1880              	 .align 2
+ 1883              	IfxGeth0_P0_MII_TXD3_P20_7_OUT:
+ 1884 0000 000000F9 	 .word -117440512
+ 1885 0004 00000000 	 .word 0
+ 1886 0008 00F003F0 	 .word -268177408
+ 1887 000c 07       	 .byte 7
+ 1888 000d 000000   	 .zero 3
+ 1889 0010 81000000 	 .word 129
+ 1890              	 .global IfxGeth0_P0_MII_TXD3_P16_10_OUT
+ 1891              	 .section .rodata.IfxGeth0_P0_MII_TXD3_P16_10_OUT,"a"
+ 1892              	 .align 2
+ 1895              	IfxGeth0_P0_MII_TXD3_P16_10_OUT:
+ 1896 0000 000000F9 	 .word -117440512
+ 1897 0004 00000000 	 .word 0
+ 1898 0008 00E003F0 	 .word -268181504
+ 1899 000c 0A       	 .byte 10
+ 1900 000d 000000   	 .zero 3
+ 1901 0010 81000000 	 .word 129
+ 1902              	 .global IfxGeth0_P0_MII_TXD2_P20_0_OUT
+ 1903              	 .section .rodata.IfxGeth0_P0_MII_TXD2_P20_0_OUT,"a"
+ 1904              	 .align 2
+ 1907              	IfxGeth0_P0_MII_TXD2_P20_0_OUT:
+ 1908 0000 000000F9 	 .word -117440512
+ 1909 0004 00000000 	 .word 0
+ 1910 0008 00F003F0 	 .word -268177408
+ 1911 000c 00       	 .byte 0
+ 1912 000d 000000   	 .zero 3
+ 1913 0010 81000000 	 .word 129
+ 1914              	 .global IfxGeth0_P0_MII_TXD2_P16_9_OUT
+ 1915              	 .section .rodata.IfxGeth0_P0_MII_TXD2_P16_9_OUT,"a"
+ 1916              	 .align 2
+ 1919              	IfxGeth0_P0_MII_TXD2_P16_9_OUT:
+ 1920 0000 000000F9 	 .word -117440512
+ 1921 0004 00000000 	 .word 0
+ 1922 0008 00E003F0 	 .word -268181504
+ 1923 000c 09       	 .byte 9
+ 1924 000d 000000   	 .zero 3
+ 1925 0010 81000000 	 .word 129
+ 1926              	 .global IfxGeth0_P0_MII_TXD1_P20_9_OUT
+ 1927              	 .section .rodata.IfxGeth0_P0_MII_TXD1_P20_9_OUT,"a"
+ 1928              	 .align 2
+ 1931              	IfxGeth0_P0_MII_TXD1_P20_9_OUT:
+ 1932 0000 000000F9 	 .word -117440512
+ 1933 0004 00000000 	 .word 0
+ 1934 0008 00F003F0 	 .word -268177408
+ 1935 000c 09       	 .byte 9
+ 1936 000d 000000   	 .zero 3
+ 1937 0010 81000000 	 .word 129
+ 1938              	 .global IfxGeth0_P0_MII_TXD1_P16_8_OUT
+ 1939              	 .section .rodata.IfxGeth0_P0_MII_TXD1_P16_8_OUT,"a"
+ 1940              	 .align 2
+ 1943              	IfxGeth0_P0_MII_TXD1_P16_8_OUT:
+ 1944 0000 000000F9 	 .word -117440512
+ 1945 0004 00000000 	 .word 0
+ 1946 0008 00E003F0 	 .word -268181504
+ 1947 000c 08       	 .byte 8
+ 1948 000d 000000   	 .zero 3
+ 1949 0010 81000000 	 .word 129
+ 1950              	 .global IfxGeth0_P0_MII_TXD0_P20_10_OUT
+ 1951              	 .section .rodata.IfxGeth0_P0_MII_TXD0_P20_10_OUT,"a"
+ 1952              	 .align 2
+ 1955              	IfxGeth0_P0_MII_TXD0_P20_10_OUT:
+ 1956 0000 000000F9 	 .word -117440512
+ 1957 0004 00000000 	 .word 0
+ 1958 0008 00F003F0 	 .word -268177408
+ 1959 000c 0A       	 .byte 10
+ 1960 000d 000000   	 .zero 3
+ 1961 0010 81000000 	 .word 129
+ 1962              	 .global IfxGeth0_P0_MII_TXD0_P16_6_OUT
+ 1963              	 .section .rodata.IfxGeth0_P0_MII_TXD0_P16_6_OUT,"a"
+ 1964              	 .align 2
+ 1967              	IfxGeth0_P0_MII_TXD0_P16_6_OUT:
+ 1968 0000 000000F9 	 .word -117440512
+ 1969 0004 00000000 	 .word 0
+ 1970 0008 00E003F0 	 .word -268181504
+ 1971 000c 06       	 .byte 6
+ 1972 000d 000000   	 .zero 3
+ 1973 0010 81000000 	 .word 129
+ 1974              	 .global IfxGeth0_P0_MDC_P21_2_OUT
+ 1975              	 .section .rodata.IfxGeth0_P0_MDC_P21_2_OUT,"a"
+ 1976              	 .align 2
+ 1979              	IfxGeth0_P0_MDC_P21_2_OUT:
+ 1980 0000 000000F9 	 .word -117440512
+ 1981 0004 00000000 	 .word 0
+ 1982 0008 00F403F0 	 .word -268176384
+ 1983 000c 02       	 .byte 2
+ 1984 000d 000000   	 .zero 3
+ 1985 0010 81000000 	 .word 129
+ 1986              	 .global IfxGeth0_P0_MDC_P16_11_OUT
+ 1987              	 .section .rodata.IfxGeth0_P0_MDC_P16_11_OUT,"a"
+ 1988              	 .align 2
+ 1991              	IfxGeth0_P0_MDC_P16_11_OUT:
+ 1992 0000 000000F9 	 .word -117440512
+ 1993 0004 00000000 	 .word 0
+ 1994 0008 00E003F0 	 .word -268181504
+ 1995 000c 0B       	 .byte 11
+ 1996 000d 000000   	 .zero 3
+ 1997 0010 71000000 	 .word 113
+ 1998              	 .global IfxGeth0_P0_MDC_P02_8_OUT
+ 1999              	 .section .rodata.IfxGeth0_P0_MDC_P02_8_OUT,"a"
+ 2000              	 .align 2
+ 2003              	IfxGeth0_P0_MDC_P02_8_OUT:
+ 2004 0000 000000F9 	 .word -117440512
+ 2005 0004 00000000 	 .word 0
+ 2006 0008 00A803F0 	 .word -268195840
+ 2007 000c 08       	 .byte 8
+ 2008 000d 000000   	 .zero 3
+ 2009 0010 61000000 	 .word 97
+ 2010              	 .global IfxGeth0_P0_CRSD_P20_1_IN
+ 2011              	 .section .rodata.IfxGeth0_P0_CRSD_P20_1_IN,"a"
+ 2012              	 .align 2
+ 2015              	IfxGeth0_P0_CRSD_P20_1_IN:
+ 2016 0000 000000F9 	 .word -117440512
+ 2017 0004 00000000 	 .word 0
+ 2018 0008 00F003F0 	 .word -268177408
+ 2019 000c 01       	 .byte 1
+ 2020 000d 000000   	 .zero 3
+ 2021 0010 03000000 	 .word 3
+ 2022              	 .global IfxGeth0_P0_CRSDVD_P20_8_IN
+ 2023              	 .section .rodata.IfxGeth0_P0_CRSDVD_P20_8_IN,"a"
+ 2024              	 .align 2
+ 2027              	IfxGeth0_P0_CRSDVD_P20_8_IN:
+ 2028 0000 000000F9 	 .word -117440512
+ 2029 0004 00000000 	 .word 0
+ 2030 0008 00F003F0 	 .word -268177408
+ 2031 000c 08       	 .byte 8
+ 2032 000d 000000   	 .zero 3
+ 2033 0010 03000000 	 .word 3
+ 2034              	 .global IfxGeth0_P0_CRSDVC_P16_1_IN
+ 2035              	 .section .rodata.IfxGeth0_P0_CRSDVC_P16_1_IN,"a"
+ 2036              	 .align 2
+ 2039              	IfxGeth0_P0_CRSDVC_P16_1_IN:
+ 2040 0000 000000F9 	 .word -117440512
+ 2041 0004 00000000 	 .word 0
+ 2042 0008 00E003F0 	 .word -268181504
+ 2043 000c 01       	 .byte 1
+ 2044 000d 000000   	 .zero 3
+ 2045 0010 02000000 	 .word 2
+ 2046              	 .global IfxGeth0_P0_CRSDVB_P16_10_IN
+ 2047              	 .section .rodata.IfxGeth0_P0_CRSDVB_P16_10_IN,"a"
+ 2048              	 .align 2
+ 2051              	IfxGeth0_P0_CRSDVB_P16_10_IN:
+ 2052 0000 000000F9 	 .word -117440512
+ 2053 0004 00000000 	 .word 0
+ 2054 0008 00E003F0 	 .word -268181504
+ 2055 000c 0A       	 .byte 10
+ 2056 000d 000000   	 .zero 3
+ 2057 0010 01000000 	 .word 1
+ 2058              	 .global IfxGeth0_P0_CRSC_P16_10_IN
+ 2059              	 .section .rodata.IfxGeth0_P0_CRSC_P16_10_IN,"a"
+ 2060              	 .align 2
+ 2063              	IfxGeth0_P0_CRSC_P16_10_IN:
+ 2064 0000 000000F9 	 .word -117440512
+ 2065 0004 00000000 	 .word 0
+ 2066 0008 00E003F0 	 .word -268181504
+ 2067 000c 0A       	 .byte 10
+ 2068 000d 000000   	 .zero 3
+ 2069 0010 02000000 	 .word 2
+ 2070              	 .global IfxGeth0_P0_COL_P21_6_IN
+ 2071              	 .section .rodata.IfxGeth0_P0_COL_P21_6_IN,"a"
+ 2072              	 .align 2
+ 2075              	IfxGeth0_P0_COL_P21_6_IN:
+ 2076 0000 000000F9 	 .word -117440512
+ 2077 0004 00000000 	 .word 0
+ 2078 0008 00F403F0 	 .word -268176384
+ 2079 000c 06       	 .byte 6
+ 2080 000d 000000   	 .zero 3
+ 2081 0010 02000000 	 .word 2
+ 2082              	 .global IfxGeth0_P0_COL_P15_8_IN
+ 2083              	 .section .rodata.IfxGeth0_P0_COL_P15_8_IN,"a"
+ 2084              	 .align 2
+ 2087              	IfxGeth0_P0_COL_P15_8_IN:
+ 2088 0000 000000F9 	 .word -117440512
+ 2089 0004 00000000 	 .word 0
+ 2090 0008 00DC03F0 	 .word -268182528
+ 2091 000c 08       	 .byte 8
+ 2092 000d 000000   	 .zero 3
+ 2093 0010 01000000 	 .word 1
+ 2094              	.section .text,"ax",@progbits
+ 2095              	.Letext0:
+ 2096              	 .file 1 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 2097              	 .file 2 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+ 2098              	 .file 3 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 2099              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/IfxGeth_regdef.h"
+ 2100              	 .file 5 "../Libraries/iLLD/TC4xx/Tricore/_Impl/TC4Dx/IfxCpu_cfg_TC4Dx.h"
+ 2101              	 .file 6 "../Libraries/iLLD/TC4xx/CpuGeneric/Clock/Std/IfxClock.h"
+ 2102              	 .file 7 "../Libraries/iLLD/TC4xx/CpuGeneric/Geth/Std/IfxGeth.h"
+ 2103              	 .file 8 "../Libraries/Infra/Sfr/TC4Dx/IfxPort_regdef.h"
+ 2104              	 .file 9 "../Libraries/iLLD/TC4xx/CpuGeneric/Port/Std/IfxPort.h"
+ 2105              	 .file 10 "../Libraries/iLLD/TC4xx/CpuGeneric/_PinMap/IfxGeth_PinMap.h"
+ 2106              	 .file 11 "../Libraries/iLLD/TC4xx/CpuGeneric/_PinMap/TC4Dx/IfxGeth_PinMap_TC4Dx_BGA436_COM.h"
+ 2107              	 .file 12 "../Libraries/iLLD/TC4xx/CpuGeneric/_PinMap/TC4Dx/IfxGeth_PinMap_TC4Dx_BGA436_COM.c"
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxGeth_PinMap_TC4Dx_BGA436_COM.c
+                            *ABS*:00000000 IfxGeth_PinMap_TC4Dx_BGA436_COM.c
+    {standard input}:11     .data.IfxGeth_Txer_Out_pinTable:00000000 IfxGeth_Txer_Out_pinTable
+    {standard input}:1247   .rodata.IfxGeth0_P0_TXER_P16_12_OUT:00000000 IfxGeth0_P0_TXER_P16_12_OUT
+    {standard input}:1235   .rodata.IfxGeth0_P0_TXER_P20_6_OUT:00000000 IfxGeth0_P0_TXER_P20_6_OUT
+    {standard input}:359    .rodata.IfxGeth0_P1_TXER_P23_0_OUT:00000000 IfxGeth0_P1_TXER_P23_0_OUT
+    {standard input}:347    .rodata.IfxGeth0_P1_TXER_P25_1_OUT:00000000 IfxGeth0_P1_TXER_P25_1_OUT
+    {standard input}:335    .rodata.IfxGeth0_P1_TXER_P30_8_OUT:00000000 IfxGeth0_P1_TXER_P30_8_OUT
+    {standard input}:23     .data.IfxGeth_Txen_Out_pinTable:00000000 IfxGeth_Txen_Out_pinTable
+    {standard input}:1571   .rodata.IfxGeth0_P0_RMIIC_TXEN_P16_12_OUT:00000000 IfxGeth0_P0_RMIIC_TXEN_P16_12_OUT
+    {standard input}:1871   .rodata.IfxGeth0_P0_MII_TXEN_P16_13_OUT:00000000 IfxGeth0_P0_MII_TXEN_P16_13_OUT
+    {standard input}:1559   .rodata.IfxGeth0_P0_RMIIC_TXEN_P16_13_OUT:00000000 IfxGeth0_P0_RMIIC_TXEN_P16_13_OUT
+    {standard input}:1523   .rodata.IfxGeth0_P0_RMIIRC_TXEN_P16_13_OUT:00000000 IfxGeth0_P0_RMIIRC_TXEN_P16_13_OUT
+    {standard input}:1859   .rodata.IfxGeth0_P0_MII_TXEN_P21_5_OUT:00000000 IfxGeth0_P0_MII_TXEN_P21_5_OUT
+    {standard input}:1619   .rodata.IfxGeth0_P0_RMIIB_TXEN_P21_5_OUT:00000000 IfxGeth0_P0_RMIIB_TXEN_P21_5_OUT
+    {standard input}:959    .rodata.IfxGeth0_P1_MII_TXEN_P22_2_OUT:00000000 IfxGeth0_P1_MII_TXEN_P22_2_OUT
+    {standard input}:839    .rodata.IfxGeth0_P1_RMIIA_TXEN_P22_2_OUT:00000000 IfxGeth0_P1_RMIIA_TXEN_P22_2_OUT
+    {standard input}:803    .rodata.IfxGeth0_P1_RMIIB_TXEN_P22_2_OUT:00000000 IfxGeth0_P1_RMIIB_TXEN_P22_2_OUT
+    {standard input}:971    .rodata.IfxGeth0_P1_MII_TXEN_P22_11_OUT:00000000 IfxGeth0_P1_MII_TXEN_P22_11_OUT
+    {standard input}:767    .rodata.IfxGeth0_P1_RMIIC_TXEN_P22_11_OUT:00000000 IfxGeth0_P1_RMIIC_TXEN_P22_11_OUT
+    {standard input}:947    .rodata.IfxGeth0_P1_MII_TXEN_P30_11_OUT:00000000 IfxGeth0_P1_MII_TXEN_P30_11_OUT
+    {standard input}:731    .rodata.IfxGeth0_P1_RMIID_TXEN_P30_11_OUT:00000000 IfxGeth0_P1_RMIID_TXEN_P30_11_OUT
+    {standard input}:43     .data.IfxGeth_Txd_Out_pinTable:00000000 IfxGeth_Txd_Out_pinTable
+    {standard input}:1967   .rodata.IfxGeth0_P0_MII_TXD0_P16_6_OUT:00000000 IfxGeth0_P0_MII_TXD0_P16_6_OUT
+    {standard input}:1691   .rodata.IfxGeth0_P0_RGMII_TXD0_P16_6_OUT:00000000 IfxGeth0_P0_RGMII_TXD0_P16_6_OUT
+    {standard input}:1607   .rodata.IfxGeth0_P0_RMIIC_TXD0_P16_6_OUT:00000000 IfxGeth0_P0_RMIIC_TXD0_P16_6_OUT
+    {standard input}:1547   .rodata.IfxGeth0_P0_RMIIRC_TXD0_P16_6_OUT:00000000 IfxGeth0_P0_RMIIRC_TXD0_P16_6_OUT
+    {standard input}:1943   .rodata.IfxGeth0_P0_MII_TXD1_P16_8_OUT:00000000 IfxGeth0_P0_MII_TXD1_P16_8_OUT
+    {standard input}:1679   .rodata.IfxGeth0_P0_RGMII_TXD1_P16_8_OUT:00000000 IfxGeth0_P0_RGMII_TXD1_P16_8_OUT
+    {standard input}:1583   .rodata.IfxGeth0_P0_RMIIC_TXD1_P16_8_OUT:00000000 IfxGeth0_P0_RMIIC_TXD1_P16_8_OUT
+    {standard input}:1535   .rodata.IfxGeth0_P0_RMIIRC_TXD1_P16_8_OUT:00000000 IfxGeth0_P0_RMIIRC_TXD1_P16_8_OUT
+    {standard input}:1919   .rodata.IfxGeth0_P0_MII_TXD2_P16_9_OUT:00000000 IfxGeth0_P0_MII_TXD2_P16_9_OUT
+    {standard input}:1667   .rodata.IfxGeth0_P0_RGMII_TXD2_P16_9_OUT:00000000 IfxGeth0_P0_RGMII_TXD2_P16_9_OUT
+    {standard input}:1595   .rodata.IfxGeth0_P0_RMIIC_TXD0_P16_9_OUT:00000000 IfxGeth0_P0_RMIIC_TXD0_P16_9_OUT
+    {standard input}:1895   .rodata.IfxGeth0_P0_MII_TXD3_P16_10_OUT:00000000 IfxGeth0_P0_MII_TXD3_P16_10_OUT
+    {standard input}:1655   .rodata.IfxGeth0_P0_RGMII_TXD3_P16_10_OUT:00000000 IfxGeth0_P0_RGMII_TXD3_P16_10_OUT
+    {standard input}:1907   .rodata.IfxGeth0_P0_MII_TXD2_P20_0_OUT:00000000 IfxGeth0_P0_MII_TXD2_P20_0_OUT
+    {standard input}:1883   .rodata.IfxGeth0_P0_MII_TXD3_P20_7_OUT:00000000 IfxGeth0_P0_MII_TXD3_P20_7_OUT
+    {standard input}:1931   .rodata.IfxGeth0_P0_MII_TXD1_P20_9_OUT:00000000 IfxGeth0_P0_MII_TXD1_P20_9_OUT
+    {standard input}:1631   .rodata.IfxGeth0_P0_RMIIB_TXD1_P20_9_OUT:00000000 IfxGeth0_P0_RMIIB_TXD1_P20_9_OUT
+    {standard input}:1955   .rodata.IfxGeth0_P0_MII_TXD0_P20_10_OUT:00000000 IfxGeth0_P0_MII_TXD0_P20_10_OUT
+    {standard input}:1643   .rodata.IfxGeth0_P0_RMIIB_TXD0_P20_10_OUT:00000000 IfxGeth0_P0_RMIIB_TXD0_P20_10_OUT
+    {standard input}:1055   .rodata.IfxGeth0_P1_MII_TXD1_P22_9_OUT:00000000 IfxGeth0_P1_MII_TXD1_P22_9_OUT
+    {standard input}:779    .rodata.IfxGeth0_P1_RMIIC_TXD1_P22_9_OUT:00000000 IfxGeth0_P1_RMIIC_TXD1_P22_9_OUT
+    {standard input}:1091   .rodata.IfxGeth0_P1_MII_TXD0_P22_10_OUT:00000000 IfxGeth0_P1_MII_TXD0_P22_10_OUT
+    {standard input}:791    .rodata.IfxGeth0_P1_RMIIC_TXD0_P22_10_OUT:00000000 IfxGeth0_P1_RMIIC_TXD0_P22_10_OUT
+    {standard input}:995    .rodata.IfxGeth0_P1_MII_TXD3_P23_2_OUT:00000000 IfxGeth0_P1_MII_TXD3_P23_2_OUT
+    {standard input}:1019   .rodata.IfxGeth0_P1_MII_TXD2_P23_3_OUT:00000000 IfxGeth0_P1_MII_TXD2_P23_3_OUT
+    {standard input}:1043   .rodata.IfxGeth0_P1_MII_TXD1_P23_4_OUT:00000000 IfxGeth0_P1_MII_TXD1_P23_4_OUT
+    {standard input}:851    .rodata.IfxGeth0_P1_RMIIA_TXD1_P23_4_OUT:00000000 IfxGeth0_P1_RMIIA_TXD1_P23_4_OUT
+    {standard input}:815    .rodata.IfxGeth0_P1_RMIIB_TXD1_P23_4_OUT:00000000 IfxGeth0_P1_RMIIB_TXD1_P23_4_OUT
+    {standard input}:1079   .rodata.IfxGeth0_P1_MII_TXD0_P23_5_OUT:00000000 IfxGeth0_P1_MII_TXD0_P23_5_OUT
+    {standard input}:863    .rodata.IfxGeth0_P1_RMIIA_TXD0_P23_5_OUT:00000000 IfxGeth0_P1_RMIIA_TXD0_P23_5_OUT
+    {standard input}:827    .rodata.IfxGeth0_P1_RMIIB_TXD0_P23_5_OUT:00000000 IfxGeth0_P1_RMIIB_TXD0_P23_5_OUT
+    {standard input}:1007   .rodata.IfxGeth0_P1_MII_TXD2_P30_6_OUT:00000000 IfxGeth0_P1_MII_TXD2_P30_6_OUT
+    {standard input}:983    .rodata.IfxGeth0_P1_MII_TXD3_P30_7_OUT:00000000 IfxGeth0_P1_MII_TXD3_P30_7_OUT
+    {standard input}:1067   .rodata.IfxGeth0_P1_MII_TXD0_P30_9_OUT:00000000 IfxGeth0_P1_MII_TXD0_P30_9_OUT
+    {standard input}:755    .rodata.IfxGeth0_P1_RMIID_TXD0_P30_9_OUT:00000000 IfxGeth0_P1_RMIID_TXD0_P30_9_OUT
+    {standard input}:1031   .rodata.IfxGeth0_P1_MII_TXD1_P30_10_OUT:00000000 IfxGeth0_P1_MII_TXD1_P30_10_OUT
+    {standard input}:743    .rodata.IfxGeth0_P1_RMIID_TXD1_P30_10_OUT:00000000 IfxGeth0_P1_RMIID_TXD1_P30_10_OUT
+    {standard input}:87     .data.IfxGeth_Txctl_Out_pinTable:00000000 IfxGeth_Txctl_Out_pinTable
+    {standard input}:1703   .rodata.IfxGeth0_P0_RGMII_TXCTL_P16_13_OUT:00000000 IfxGeth0_P0_RGMII_TXCTL_P16_13_OUT
+    {standard input}:95     .data.IfxGeth_Txclk_Out_pinTable:00000000 IfxGeth_Txclk_Out_pinTable
+    {standard input}:1715   .rodata.IfxGeth0_P0_RGMII_TXCLK_P16_12_OUT:00000000 IfxGeth0_P0_RGMII_TXCLK_P16_12_OUT
+    {standard input}:103    .data.IfxGeth_Txclk_In_pinTable:00000000 IfxGeth_Txclk_In_pinTable
+    {standard input}:1271   .rodata.IfxGeth0_P0_TXCLKC_P16_0_IN:00000000 IfxGeth0_P0_TXCLKC_P16_0_IN
+    {standard input}:1259   .rodata.IfxGeth0_P0_TXCLKD_P20_3_IN:00000000 IfxGeth0_P0_TXCLKD_P20_3_IN
+    {standard input}:395    .rodata.IfxGeth0_P1_TXCLKA_P22_7_IN:00000000 IfxGeth0_P1_TXCLKA_P22_7_IN
+    {standard input}:383    .rodata.IfxGeth0_P1_TXCLKB_P22_5_IN:00000000 IfxGeth0_P1_TXCLKB_P22_5_IN
+    {standard input}:371    .rodata.IfxGeth0_P1_TXCLKD_P31_7_IN:00000000 IfxGeth0_P1_TXCLKD_P31_7_IN
+    {standard input}:117    .data.IfxGeth_Rxer_In_pinTable:00000000 IfxGeth_Rxer_In_pinTable
+    {standard input}:1307   .rodata.IfxGeth0_P0_RXERB_P21_7_IN:00000000 IfxGeth0_P0_RXERB_P21_7_IN
+    {standard input}:1295   .rodata.IfxGeth0_P0_RXERC_P10_0_IN:00000000 IfxGeth0_P0_RXERC_P10_0_IN
+    {standard input}:1283   .rodata.IfxGeth0_P0_RXERD_P22_1_IN:00000000 IfxGeth0_P0_RXERD_P22_1_IN
+    {standard input}:443    .rodata.IfxGeth0_P1_RXERA_P22_1_IN:00000000 IfxGeth0_P1_RXERA_P22_1_IN
+    {standard input}:431    .rodata.IfxGeth0_P1_RXERB_P32_7_IN:00000000 IfxGeth0_P1_RXERB_P32_7_IN
+    {standard input}:419    .rodata.IfxGeth0_P1_RXERC_P20_0_IN:00000000 IfxGeth0_P1_RXERC_P20_0_IN
+    {standard input}:407    .rodata.IfxGeth0_P1_RXERD_P31_6_IN:00000000 IfxGeth0_P1_RXERD_P31_6_IN
+    {standard input}:131    .data.IfxGeth_Rxdv_In_pinTable:00000000 IfxGeth_Rxdv_In_pinTable
+    {standard input}:1343   .rodata.IfxGeth0_P0_RXDVB_P16_10_IN:00000000 IfxGeth0_P0_RXDVB_P16_10_IN
+    {standard input}:1331   .rodata.IfxGeth0_P0_RXDVC_P16_1_IN:00000000 IfxGeth0_P0_RXDVC_P16_1_IN
+    {standard input}:1319   .rodata.IfxGeth0_P0_RXDVD_P20_8_IN:00000000 IfxGeth0_P0_RXDVD_P20_8_IN
+    {standard input}:479    .rodata.IfxGeth0_P1_RXDVA_P22_6_IN:00000000 IfxGeth0_P1_RXDVA_P22_6_IN
+    {standard input}:467    .rodata.IfxGeth0_P1_RXDVB_P22_0_IN:00000000 IfxGeth0_P1_RXDVB_P22_0_IN
+    {standard input}:455    .rodata.IfxGeth0_P1_RXDVD_P30_1_IN:00000000 IfxGeth0_P1_RXDVD_P30_1_IN
+    {standard input}:145    .data.IfxGeth_Rxd_In_pinTable:00000000 IfxGeth_Rxd_In_pinTable
+    {standard input}:1751   .rodata.IfxGeth0_P0_RGMII_RXD1_P16_3_IN:00000000 IfxGeth0_P0_RGMII_RXD1_P16_3_IN
+    {standard input}:1763   .rodata.IfxGeth0_P0_RGMII_RXD0_P16_4_IN:00000000 IfxGeth0_P0_RGMII_RXD0_P16_4_IN
+    {standard input}:1739   .rodata.IfxGeth0_P0_RGMII_RXD2_P16_5_IN:00000000 IfxGeth0_P0_RGMII_RXD2_P16_5_IN
+    {standard input}:1727   .rodata.IfxGeth0_P0_RGMII_RXD3_P16_7_IN:00000000 IfxGeth0_P0_RGMII_RXD3_P16_7_IN
+    {standard input}:1451   .rodata.IfxGeth0_P0_RXD1B_P16_3_IN:00000000 IfxGeth0_P0_RXD1B_P16_3_IN
+    {standard input}:1487   .rodata.IfxGeth0_P0_RXD0B_P16_4_IN:00000000 IfxGeth0_P0_RXD0B_P16_4_IN
+    {standard input}:1415   .rodata.IfxGeth0_P0_RXD2B_P16_5_IN:00000000 IfxGeth0_P0_RXD2B_P16_5_IN
+    {standard input}:1379   .rodata.IfxGeth0_P0_RXD3B_P16_7_IN:00000000 IfxGeth0_P0_RXD3B_P16_7_IN
+    {standard input}:1439   .rodata.IfxGeth0_P0_RXD1C_P20_11_IN:00000000 IfxGeth0_P0_RXD1C_P20_11_IN
+    {standard input}:1475   .rodata.IfxGeth0_P0_RXD0C_P20_12_IN:00000000 IfxGeth0_P0_RXD0C_P20_12_IN
+    {standard input}:1403   .rodata.IfxGeth0_P0_RXD2C_P20_13_IN:00000000 IfxGeth0_P0_RXD2C_P20_13_IN
+    {standard input}:1367   .rodata.IfxGeth0_P0_RXD3C_P20_14_IN:00000000 IfxGeth0_P0_RXD3C_P20_14_IN
+    {standard input}:1427   .rodata.IfxGeth0_P0_RXD1D_P16_0_IN:00000000 IfxGeth0_P0_RXD1D_P16_0_IN
+    {standard input}:1463   .rodata.IfxGeth0_P0_RXD0D_P16_4_IN:00000000 IfxGeth0_P0_RXD0D_P16_4_IN
+    {standard input}:1391   .rodata.IfxGeth0_P0_RXD2D_P16_5_IN:00000000 IfxGeth0_P0_RXD2D_P16_5_IN
+    {standard input}:1355   .rodata.IfxGeth0_P0_RXD3D_P16_7_IN:00000000 IfxGeth0_P0_RXD3D_P16_7_IN
+    {standard input}:671    .rodata.IfxGeth0_P1_RXD0A_P22_4_IN:00000000 IfxGeth0_P1_RXD0A_P22_4_IN
+    {standard input}:527    .rodata.IfxGeth0_P1_RXD3A_P22_11_IN:00000000 IfxGeth0_P1_RXD3A_P22_11_IN
+    {standard input}:575    .rodata.IfxGeth0_P1_RXD2A_P23_6_IN:00000000 IfxGeth0_P1_RXD2A_P23_6_IN
+    {standard input}:623    .rodata.IfxGeth0_P1_RXD1A_P23_7_IN:00000000 IfxGeth0_P1_RXD1A_P23_7_IN
+    {standard input}:659    .rodata.IfxGeth0_P1_RXD0B_P22_3_IN:00000000 IfxGeth0_P1_RXD0B_P22_3_IN
+    {standard input}:515    .rodata.IfxGeth0_P1_RXD3B_P22_11_IN:00000000 IfxGeth0_P1_RXD3B_P22_11_IN
+    {standard input}:611    .rodata.IfxGeth0_P1_RXD1B_P23_1_IN:00000000 IfxGeth0_P1_RXD1B_P23_1_IN
+    {standard input}:563    .rodata.IfxGeth0_P1_RXD2B_P23_6_IN:00000000 IfxGeth0_P1_RXD2B_P23_6_IN
+    {standard input}:647    .rodata.IfxGeth0_P1_RXD0C_P22_4_IN:00000000 IfxGeth0_P1_RXD0C_P22_4_IN
+    {standard input}:503    .rodata.IfxGeth0_P1_RXD3C_P23_5_IN:00000000 IfxGeth0_P1_RXD3C_P23_5_IN
+    {standard input}:551    .rodata.IfxGeth0_P1_RXD2C_P23_6_IN:00000000 IfxGeth0_P1_RXD2C_P23_6_IN
+    {standard input}:599    .rodata.IfxGeth0_P1_RXD1C_P23_7_IN:00000000 IfxGeth0_P1_RXD1C_P23_7_IN
+    {standard input}:491    .rodata.IfxGeth0_P1_RXD3D_P30_2_IN:00000000 IfxGeth0_P1_RXD3D_P30_2_IN
+    {standard input}:539    .rodata.IfxGeth0_P1_RXD2D_P30_3_IN:00000000 IfxGeth0_P1_RXD2D_P30_3_IN
+    {standard input}:587    .rodata.IfxGeth0_P1_RXD1D_P30_4_IN:00000000 IfxGeth0_P1_RXD1D_P30_4_IN
+    {standard input}:635    .rodata.IfxGeth0_P1_RXD0D_P30_5_IN:00000000 IfxGeth0_P1_RXD0D_P30_5_IN
+    {standard input}:183    .data.IfxGeth_Rxctl_In_pinTable:00000000 IfxGeth_Rxctl_In_pinTable
+    {standard input}:1775   .rodata.IfxGeth0_P0_RGMII_RXCTL_P16_1_IN:00000000 IfxGeth0_P0_RGMII_RXCTL_P16_1_IN
+    {standard input}:191    .data.IfxGeth_Rxclk_In_pinTable:00000000 IfxGeth_Rxclk_In_pinTable
+    {standard input}:1787   .rodata.IfxGeth0_P0_RGMII_RXCLK_P16_2_IN:00000000 IfxGeth0_P0_RGMII_RXCLK_P16_2_IN
+    {standard input}:1511   .rodata.IfxGeth0_P0_RXCLKB_P21_4_IN:00000000 IfxGeth0_P0_RXCLKB_P21_4_IN
+    {standard input}:1499   .rodata.IfxGeth0_P0_RXCLKD_P16_2_IN:00000000 IfxGeth0_P0_RXCLKD_P16_2_IN
+    {standard input}:719    .rodata.IfxGeth0_P1_RXCLKA_P22_5_IN:00000000 IfxGeth0_P1_RXCLKA_P22_5_IN
+    {standard input}:707    .rodata.IfxGeth0_P1_RXCLKB_P22_1_IN:00000000 IfxGeth0_P1_RXCLKB_P22_1_IN
+    {standard input}:695    .rodata.IfxGeth0_P1_RXCLKC_P22_3_IN:00000000 IfxGeth0_P1_RXCLKC_P22_3_IN
+    {standard input}:683    .rodata.IfxGeth0_P1_RXCLKD_P30_0_IN:00000000 IfxGeth0_P1_RXCLKD_P30_0_IN
+    {standard input}:205    .data.IfxGeth_Refclk_In_pinTable:00000000 IfxGeth_Refclk_In_pinTable
+    {standard input}:1823   .rodata.IfxGeth0_P0_REFCLKB_P21_4_IN:00000000 IfxGeth0_P0_REFCLKB_P21_4_IN
+    {standard input}:1811   .rodata.IfxGeth0_P0_REFCLKD_P16_2_IN:00000000 IfxGeth0_P0_REFCLKD_P16_2_IN
+    {standard input}:911    .rodata.IfxGeth0_P1_REFCLKA_P22_5_IN:00000000 IfxGeth0_P1_REFCLKA_P22_5_IN
+    {standard input}:899    .rodata.IfxGeth0_P1_REFCLKB_P22_1_IN:00000000 IfxGeth0_P1_REFCLKB_P22_1_IN
+    {standard input}:887    .rodata.IfxGeth0_P1_REFCLKC_P22_3_IN:00000000 IfxGeth0_P1_REFCLKC_P22_3_IN
+    {standard input}:875    .rodata.IfxGeth0_P1_REFCLKD_P30_0_IN:00000000 IfxGeth0_P1_REFCLKD_P30_0_IN
+    {standard input}:219    .data.IfxGeth_Pps_Out_pinTable:00000000 IfxGeth_Pps_Out_pinTable
+    {standard input}:1847   .rodata.IfxGeth0_P0_PPS_P14_2_OUT:00000000 IfxGeth0_P0_PPS_P14_2_OUT
+    {standard input}:1835   .rodata.IfxGeth0_P0_PPS_P14_3_OUT:00000000 IfxGeth0_P0_PPS_P14_3_OUT
+    {standard input}:935    .rodata.IfxGeth0_P1_PPS_P14_4_OUT:00000000 IfxGeth0_P1_PPS_P14_4_OUT
+    {standard input}:923    .rodata.IfxGeth0_P1_PPS_P14_8_OUT:00000000 IfxGeth0_P1_PPS_P14_8_OUT
+    {standard input}:229    .data.IfxGeth_Mdio_InOut_pinTable:00000000 IfxGeth_Mdio_InOut_pinTable
+    {standard input}:323    .rodata.IfxGeth0_PX_MDIO_P00_0_INOUT:00000000 IfxGeth0_PX_MDIO_P00_0_INOUT
+    {standard input}:311    .rodata.IfxGeth0_PX_MDIO_P16_14_INOUT:00000000 IfxGeth0_PX_MDIO_P16_14_INOUT
+    {standard input}:299    .rodata.IfxGeth0_PX_MDIO_P21_3_INOUT:00000000 IfxGeth0_PX_MDIO_P21_3_INOUT
+    {standard input}:239    .data.IfxGeth_Mdc_Out_pinTable:00000000 IfxGeth_Mdc_Out_pinTable
+    {standard input}:2003   .rodata.IfxGeth0_P0_MDC_P02_8_OUT:00000000 IfxGeth0_P0_MDC_P02_8_OUT
+    {standard input}:1991   .rodata.IfxGeth0_P0_MDC_P16_11_OUT:00000000 IfxGeth0_P0_MDC_P16_11_OUT
+    {standard input}:1979   .rodata.IfxGeth0_P0_MDC_P21_2_OUT:00000000 IfxGeth0_P0_MDC_P21_2_OUT
+    {standard input}:1127   .rodata.IfxGeth0_P1_MDC_P02_8_OUT:00000000 IfxGeth0_P1_MDC_P02_8_OUT
+    {standard input}:1115   .rodata.IfxGeth0_P1_MDC_P16_11_OUT:00000000 IfxGeth0_P1_MDC_P16_11_OUT
+    {standard input}:1103   .rodata.IfxGeth0_P1_MDC_P21_2_OUT:00000000 IfxGeth0_P1_MDC_P21_2_OUT
+    {standard input}:251    .data.IfxGeth_Grefclk_In_pinTable:00000000 IfxGeth_Grefclk_In_pinTable
+    {standard input}:1799   .rodata.IfxGeth0_P0_RGMII_GREFCLK_P16_0_IN:00000000 IfxGeth0_P0_RGMII_GREFCLK_P16_0_IN
+    {standard input}:259    .data.IfxGeth_Crsdv_In_pinTable:00000000 IfxGeth_Crsdv_In_pinTable
+    {standard input}:2051   .rodata.IfxGeth0_P0_CRSDVB_P16_10_IN:00000000 IfxGeth0_P0_CRSDVB_P16_10_IN
+    {standard input}:2039   .rodata.IfxGeth0_P0_CRSDVC_P16_1_IN:00000000 IfxGeth0_P0_CRSDVC_P16_1_IN
+    {standard input}:2027   .rodata.IfxGeth0_P0_CRSDVD_P20_8_IN:00000000 IfxGeth0_P0_CRSDVD_P20_8_IN
+    {standard input}:1163   .rodata.IfxGeth0_P1_CRSDVA_P22_6_IN:00000000 IfxGeth0_P1_CRSDVA_P22_6_IN
+    {standard input}:1151   .rodata.IfxGeth0_P1_CRSDVB_P22_0_IN:00000000 IfxGeth0_P1_CRSDVB_P22_0_IN
+    {standard input}:1139   .rodata.IfxGeth0_P1_CRSDVD_P30_1_IN:00000000 IfxGeth0_P1_CRSDVD_P30_1_IN
+    {standard input}:273    .data.IfxGeth_Crs_In_pinTable:00000000 IfxGeth_Crs_In_pinTable
+    {standard input}:2063   .rodata.IfxGeth0_P0_CRSC_P16_10_IN:00000000 IfxGeth0_P0_CRSC_P16_10_IN
+    {standard input}:2015   .rodata.IfxGeth0_P0_CRSD_P20_1_IN:00000000 IfxGeth0_P0_CRSD_P20_1_IN
+    {standard input}:1187   .rodata.IfxGeth0_P1_CRSA_P22_6_IN:00000000 IfxGeth0_P1_CRSA_P22_6_IN
+    {standard input}:1175   .rodata.IfxGeth0_P1_CRSB_P22_0_IN:00000000 IfxGeth0_P1_CRSB_P22_0_IN
+    {standard input}:287    .data.IfxGeth_Col_In_pinTable:00000000 IfxGeth_Col_In_pinTable
+    {standard input}:2087   .rodata.IfxGeth0_P0_COL_P15_8_IN:00000000 IfxGeth0_P0_COL_P15_8_IN
+    {standard input}:2075   .rodata.IfxGeth0_P0_COL_P21_6_IN:00000000 IfxGeth0_P0_COL_P21_6_IN
+    {standard input}:1223   .rodata.IfxGeth0_P1_COL_P22_2_IN:00000000 IfxGeth0_P1_COL_P22_2_IN
+    {standard input}:1211   .rodata.IfxGeth0_P1_COL_P22_3_IN:00000000 IfxGeth0_P1_COL_P22_3_IN
+    {standard input}:1199   .rodata.IfxGeth0_P1_COL_P32_7_IN:00000000 IfxGeth0_P1_COL_P32_7_IN
+
+NO UNDEFINED SYMBOLS

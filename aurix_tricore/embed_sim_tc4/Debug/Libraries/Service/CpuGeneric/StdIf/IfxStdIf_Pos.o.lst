@@ -1,0 +1,332 @@
+   1              	
+   2              	 .file "IfxStdIf_Pos.c"
+   3              	 .file "IfxStdIf_Pos.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.IfxStdIf_Pos_initConfig,"ax",@progbits
+   7              	 .align 1
+   8              	 .global IfxStdIf_Pos_initConfig
+  10              	IfxStdIf_Pos_initConfig:
+  11              	.LFB566:
+  12              	 .file 1 "../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c"
+   1:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c **** /**
+   2:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****  * \file IfxStdIf_Pos.c
+   3:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****  * \brief Standard interface: Position interface
+   4:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****  * \ingroup IfxStdIf
+   5:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****  *
+   6:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****  * \version iLLD-TC4-v2.7.0
+   7:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   8:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****  *
+   9:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****  *
+  10:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****   *                                 IMPORTANT NOTICE
+  11:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****  *
+  12:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****  *
+  13:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  14:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  15:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****  * this file except in compliance with IFASLL.
+  16:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****  *
+  17:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  18:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  19:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  20:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  21:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  22:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  23:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****  * defects in the licensed items, or non-infringement of third parties'
+  24:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****  * intellectual property rights. See the full license text for the specific
+  25:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****  * language governing permissions and limitations under IFASLL.
+  26:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****  *
+  27:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****  */
+  28:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c **** 
+  29:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c **** #include "IfxStdIf_Pos.h"
+  30:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c **** 
+  31:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c **** void IfxStdIf_Pos_initConfig (IfxStdIf_Pos_Config * config)
+  32:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c **** {
+  13              	 .loc 1 32 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  33:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****     config->offset = 0;
+  17              	 .loc 1 33 5
+  18              	 .loc 1 33 20 is_stmt 0
+  19 0002 8203     	 mov %d3,0
+  20 0004 7443     	 st.w [%a4]0,%d3
+  34:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****     config->reversed = FALSE;
+  21              	 .loc 1 34 5 is_stmt 1
+  22              	 .loc 1 34 22 is_stmt 0
+  23 0006 E9430400 	 st.b [%a4]4,%d3
+  35:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****     config->resolution = 0;
+  24              	 .loc 1 35 5 is_stmt 1
+  25              	 .loc 1 35 24 is_stmt 0
+  26 000a 59430800 	 st.w [%a4]8,%d3
+  36:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****     config->periodPerRotation = 1;
+  27              	 .loc 1 36 5 is_stmt 1
+  28              	 .loc 1 36 31 is_stmt 0
+  29 000e 8212     	 mov %d2,1
+  30 0010 F9420C00 	 st.h [%a4]12,%d2
+  37:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****     config->resolutionFactor = IfxStdIf_Pos_ResolutionFactor_oneFold;
+  31              	 .loc 1 37 5 is_stmt 1
+  32              	 .loc 1 37 30 is_stmt 0
+  33 0014 8212     	 mov %d2,1
+  34 0016 59421000 	 st.w [%a4]16,%d2
+  38:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****     config->updatePeriod = 0.001;
+  35              	 .loc 1 38 5 is_stmt 1
+  36              	 .loc 1 38 26 is_stmt 0
+  37 001a 7B30A823 	 movh %d2,14979
+  38 001e 1BF22621 	 addi %d2,%d2,4719
+  39 0022 59421400 	 st.w [%a4]20,%d2
+  39:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****     config->speedModeThreshold = 0;
+  40              	 .loc 1 39 5 is_stmt 1
+  41              	 .loc 1 39 32 is_stmt 0
+  42 0026 8202     	 mov %d2,0
+  43 0028 59421800 	 st.w [%a4]24,%d2
+  40:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****     config->minSpeed = 0;       // 0 rpm
+  44              	 .loc 1 40 5 is_stmt 1
+  45              	 .loc 1 40 22 is_stmt 0
+  46 002c 59421C00 	 st.w [%a4]28,%d2
+  41:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****     config->maxSpeed = 20000.0 / 60.0 * (2 * IFX_PI);   // 20000 rpm
+  47              	 .loc 1 41 5 is_stmt 1
+  48              	 .loc 1 41 22 is_stmt 0
+  49 0030 7B305044 	 movh %d4,17667
+  50 0034 1B34654E 	 addi %d4,%d4,-6573
+  51 0038 59442000 	 st.w [%a4]32,%d4
+  42:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****     config->speedFilterEnabled = FALSE;
+  52              	 .loc 1 42 5 is_stmt 1
+  53              	 .loc 1 42 32 is_stmt 0
+  54 003c E9432400 	 st.b [%a4]36,%d3
+  43:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****     config->speedFilerCutOffFrequency = 0;
+  55              	 .loc 1 43 5 is_stmt 1
+  56              	 .loc 1 43 39 is_stmt 0
+  57 0040 59422800 	 st.w [%a4]40,%d2
+  44:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c **** 
+  45:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c **** }
+  58              	 .loc 1 45 1
+  59 0044 0090     	 ret 
+  60              	.LFE566:
+  62              	 .global IfxStdIf_Pos_initConfig_end
+  63              	IfxStdIf_Pos_initConfig_end:
+  64              	.section .rodata,"a",@progbits
+  65              	.LC0:
+  66 0000 506F7369 	 .string "Position sensor status:\r\n"
+  66      74696F6E 
+  66      2073656E 
+  66      736F7220 
+  66      73746174 
+  67              	.LC1:
+  68 001a 2D20436F 	 .string "- Communication error\r\n"
+  68      6D6D756E 
+  68      69636174 
+  68      696F6E20 
+  68      6572726F 
+  69              	.LC2:
+  70 0032 2D20436F 	 .string "- Communication error threshold reached\r\n"
+  70      6D6D756E 
+  70      69636174 
+  70      696F6E20 
+  70      6572726F 
+  71              	.LC3:
+  72 005c 2D205379 	 .string "- Synchronization error\r\n"
+  72      6E636872 
+  72      6F6E697A 
+  72      6174696F 
+  72      6E206572 
+  73              	.LC4:
+  74 0076 2D205369 	 .string "- Signal degradation error\r\n"
+  74      676E616C 
+  74      20646567 
+  74      72616461 
+  74      74696F6E 
+  75              	.LC5:
+  76 0093 2D205369 	 .string "- Signal loss error\r\n"
+  76      676E616C 
+  76      206C6F73 
+  76      73206572 
+  76      726F720D 
+  77              	.LC6:
+  78 00a9 2D205472 	 .string "- Tracking error\r\n"
+  78      61636B69 
+  78      6E672065 
+  78      72726F72 
+  78      0D0A00
+  79              	.LC7:
+  80 00bc 2D205265 	 .string "- Ready\r\n"
+  80      6164790D 
+  80      0A00
+  81              	 .section .text.IfxStdIf_Pos_printStatus,"ax",@progbits
+  82              	 .align 1
+  83              	 .global IfxStdIf_Pos_printStatus
+  85              	IfxStdIf_Pos_printStatus:
+  86              	.LFB567:
+  46:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c **** 
+  47:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c **** void IfxStdIf_Pos_printStatus(IfxStdIf_Pos_Status status, IfxStdIf_DPipe *io)
+  48:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c **** {
+  87              	 .loc 1 48 1 is_stmt 1
+  88              	.LVL1:
+  89 0000 40AE     	 mov.aa %a14,%SP
+  90              	.LCFI1:
+  91 0002 024A     	 mov %d10,%d4
+  92              	.LVL2:
+  93 0004 8049     	 mov.d %d9,%a4
+  49:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****     IfxStdIf_DPipe_print(io, "Position sensor status:"ENDL);
+  94              	 .loc 1 49 5
+  95 0006 91000050 	 movh.a %a5,hi:.LC0
+  96 000a D9550000 	 lea %a5,[%a5]lo:.LC0
+  97 000e 6D000000 	 call IfxStdIf_DPipe_print
+  98              	.LVL3:
+  50:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****     if (status.status != 0)
+  99              	 .loc 1 50 5
+ 100              	 .loc 1 50 8 is_stmt 0
+ 101 0012 DF0A0000 	 jz %d10,.L3
+  51:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****     {
+  52:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****         if (status.B.commError)
+ 102              	 .loc 1 52 9 is_stmt 1
+ 103              	 .loc 1 52 13 is_stmt 0
+ 104 0016 8FFA0F81 	 and %d8,%d10,255
+ 105              	 .loc 1 52 12
+ 106 001a 6F4A0080 	 jnz.t %d10,4,.L10
+ 107              	.L4:
+  53:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****         {
+  54:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****         	IfxStdIf_DPipe_print(io, "- Communication error"ENDL);
+  55:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****         }
+  56:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****         if (status.B.commErrorThresholdReached)
+ 108              	 .loc 1 56 9 is_stmt 1
+ 109              	 .loc 1 56 12 is_stmt 0
+ 110 001e 6F580080 	 jnz.t %d8,5,.L11
+ 111              	.L5:
+  57:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****         {
+  58:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****         	IfxStdIf_DPipe_print(io, "- Communication error threshold reached"ENDL);
+  59:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****         }
+  60:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****         if (status.B.notSynchronised)
+ 112              	 .loc 1 60 9 is_stmt 1
+ 113              	 .loc 1 60 12 is_stmt 0
+ 114 0022 6F080080 	 jnz.t %d8,0,.L12
+ 115              	.L6:
+  61:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****         {
+  62:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****         	IfxStdIf_DPipe_print(io, "- Synchronization error"ENDL);
+  63:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****         }
+  64:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****         if (status.B.signalDegradation)
+ 116              	 .loc 1 64 9 is_stmt 1
+ 117              	 .loc 1 64 12 is_stmt 0
+ 118 0026 6F280080 	 jnz.t %d8,2,.L13
+ 119              	.L7:
+  65:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****         {
+  66:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****         	IfxStdIf_DPipe_print(io, "- Signal degradation error"ENDL);
+  67:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****         }
+  68:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****         if (status.B.signalLoss)
+ 120              	 .loc 1 68 9 is_stmt 1
+ 121              	 .loc 1 68 12 is_stmt 0
+ 122 002a 6F180080 	 jnz.t %d8,1,.L14
+ 123              	.L8:
+  69:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****         {
+  70:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****         	IfxStdIf_DPipe_print(io, "- Signal loss error"ENDL);
+  71:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****         }
+  72:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****         if (status.B.trackingLoss)
+ 124              	 .loc 1 72 9 is_stmt 1
+ 125              	 .loc 1 72 12 is_stmt 0
+ 126 002e 6F380080 	 jnz.t %d8,3,.L15
+ 127              	.L2:
+  73:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****         {
+  74:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****         	IfxStdIf_DPipe_print(io, "- Tracking error"ENDL);
+  75:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****         }
+  76:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****     }
+  77:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****     else
+  78:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****     {
+  79:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****     	IfxStdIf_DPipe_print(io, "- Ready"ENDL);
+  80:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****     }
+  81:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c **** }
+ 128              	 .loc 1 81 1
+ 129 0032 0090     	 ret 
+ 130              	.L10:
+  54:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****         }
+ 131              	 .loc 1 54 10 is_stmt 1
+ 132 0034 91000050 	 movh.a %a5,hi:.LC1
+ 133 0038 D9550000 	 lea %a5,[%a5]lo:.LC1
+ 134 003c 6094     	 mov.a %a4,%d9
+ 135 003e 6D000000 	 call IfxStdIf_DPipe_print
+ 136              	.LVL4:
+ 137 0042 1D000000 	 j .L4
+ 138              	.L11:
+  58:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****         }
+ 139              	 .loc 1 58 10
+ 140 0046 91000050 	 movh.a %a5,hi:.LC2
+ 141 004a D9550000 	 lea %a5,[%a5]lo:.LC2
+ 142 004e 6094     	 mov.a %a4,%d9
+ 143 0050 6D000000 	 call IfxStdIf_DPipe_print
+ 144              	.LVL5:
+ 145 0054 1D000000 	 j .L5
+ 146              	.L12:
+  62:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****         }
+ 147              	 .loc 1 62 10
+ 148 0058 91000050 	 movh.a %a5,hi:.LC3
+ 149 005c D9550000 	 lea %a5,[%a5]lo:.LC3
+ 150 0060 6094     	 mov.a %a4,%d9
+ 151 0062 6D000000 	 call IfxStdIf_DPipe_print
+ 152              	.LVL6:
+ 153 0066 1D000000 	 j .L6
+ 154              	.L13:
+  66:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****         }
+ 155              	 .loc 1 66 10
+ 156 006a 91000050 	 movh.a %a5,hi:.LC4
+ 157 006e D9550000 	 lea %a5,[%a5]lo:.LC4
+ 158 0072 6094     	 mov.a %a4,%d9
+ 159 0074 6D000000 	 call IfxStdIf_DPipe_print
+ 160              	.LVL7:
+ 161 0078 1D000000 	 j .L7
+ 162              	.L14:
+  70:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****         }
+ 163              	 .loc 1 70 10
+ 164 007c 91000050 	 movh.a %a5,hi:.LC5
+ 165 0080 D9550000 	 lea %a5,[%a5]lo:.LC5
+ 166 0084 6094     	 mov.a %a4,%d9
+ 167 0086 6D000000 	 call IfxStdIf_DPipe_print
+ 168              	.LVL8:
+ 169 008a 1D000000 	 j .L8
+ 170              	.L15:
+  74:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****         }
+ 171              	 .loc 1 74 10
+ 172 008e 91000050 	 movh.a %a5,hi:.LC6
+ 173 0092 D9550000 	 lea %a5,[%a5]lo:.LC6
+ 174 0096 6094     	 mov.a %a4,%d9
+ 175 0098 6D000000 	 call IfxStdIf_DPipe_print
+ 176              	.LVL9:
+ 177 009c 0090     	 ret 
+ 178              	.L3:
+  79:../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.c ****     }
+ 179              	 .loc 1 79 6
+ 180 009e 91000050 	 movh.a %a5,hi:.LC7
+ 181 00a2 D9550000 	 lea %a5,[%a5]lo:.LC7
+ 182 00a6 6094     	 mov.a %a4,%d9
+ 183 00a8 6D000000 	 call IfxStdIf_DPipe_print
+ 184              	.LVL10:
+ 185              	 .loc 1 81 1 is_stmt 0
+ 186 00ac 1D000000 	 j .L2
+ 187              	.LFE567:
+ 189              	 .global IfxStdIf_Pos_printStatus_end
+ 190              	IfxStdIf_Pos_printStatus_end:
+ 231              	.Letext0:
+ 232              	 .file 2 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 233              	 .file 3 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+ 234              	 .file 4 "../Libraries/Service/CpuGeneric/StdIf/IfxStdIf.h"
+ 235              	 .file 5 "../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_DPipe.h"
+ 236              	 .file 6 "../Libraries/Service/CpuGeneric/StdIf/IfxStdIf_Pos.h"
+ 1738 0000 00000000 	 .word IfxStdIf_Pos_initConfig
+ 1739 0004 00000000 	 .word IfxStdIf_Pos_initConfig_end
+ 1740 0008 1C001444 	 .word 0x4414001c
+ 1741 000c 00001000 	 .word 0x00100000
+ 1742 0010 00000000 	 .word 0x00000000
+ 1743 0014 C0000000 	 .word 0x000000c0
+ 1744 0018 00000000 	 .word IfxStdIf_Pos_printStatus
+ 1745 001c 00000000 	 .word IfxStdIf_Pos_printStatus_end
+ 1746 0020 10073044 	 .word 0x44300710
+ 1747 0024 10001000 	 .word 0x00100010
+ 1748 0028 00000000 	 .word 0x00000000
+ 1749 002c 40000200 	 .word 0x00020040
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxStdIf_Pos.c
+                            *ABS*:00000000 IfxStdIf_Pos.c
+    {standard input}:10     .text.IfxStdIf_Pos_initConfig:00000000 IfxStdIf_Pos_initConfig
+    {standard input}:63     .text.IfxStdIf_Pos_initConfig:00000046 IfxStdIf_Pos_initConfig_end
+    {standard input}:85     .text.IfxStdIf_Pos_printStatus:00000000 IfxStdIf_Pos_printStatus
+    {standard input}:190    .text.IfxStdIf_Pos_printStatus:000000b0 IfxStdIf_Pos_printStatus_end
+
+UNDEFINED SYMBOLS
+IfxStdIf_DPipe_print

@@ -1,0 +1,162 @@
+   1              	
+   2              	 .file "cdd_app.c"
+   3              	 .file "cdd_app.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.Cdd_Init,"ax",@progbits
+   7              	 .align 1
+   8              	 .global Cdd_Init
+  10              	Cdd_Init:
+  11              	.LFB6:
+  12              	 .file 1 "../complex_device_driver/cdd_app.c"
+   1:../complex_device_driver/cdd_app.c **** /**************************************************************************************************
+   2:../complex_device_driver/cdd_app.c ****  * \file      cdd_app.c
+   3:../complex_device_driver/cdd_app.c ****  * \brief     Public interface for the CddSys low-level system utility module.
+   4:../complex_device_driver/cdd_app.c ****  *
+   5:../complex_device_driver/cdd_app.c ****  * \details   Declares the CddSys function API used across the CDD layer for
+   6:../complex_device_driver/cdd_app.c ****  *            TriCore-specific primitives:
+   7:../complex_device_driver/cdd_app.c ****  *              - Atomic bit-field load-modify-store (LDMST instruction).
+   8:../complex_device_driver/cdd_app.c ****  *              - Binary semaphore via compare-and-swap (CMPSWAP.W instruction).
+   9:../complex_device_driver/cdd_app.c ****  *              - Single and multi-instruction NOP delays.
+  10:../complex_device_driver/cdd_app.c ****  *              - Interrupt-enable intrinsic.
+  11:../complex_device_driver/cdd_app.c ****  *
+  12:../complex_device_driver/cdd_app.c ****  *
+  13:../complex_device_driver/cdd_app.c ****  * \note      EmbedSim naming convention:
+  14:../complex_device_driver/cdd_app.c ****  *              - Functions      : Pascal_Snake_Case
+  15:../complex_device_driver/cdd_app.c ****  *              - Parameters     : PascalCase  (single-letter → Uppercase)
+  16:../complex_device_driver/cdd_app.c ****  *              - Output pointers: PascalCasePtr
+  17:../complex_device_driver/cdd_app.c ****  *              - Local variables: lowerPascalCase
+  18:../complex_device_driver/cdd_app.c ****  *              - Struct members : PascalCase
+  19:../complex_device_driver/cdd_app.c ****  *              - Macros         : UPPER_SNAKE_CASE
+  20:../complex_device_driver/cdd_app.c ****  *              - Typedefs       : Pascal_Snake_Case_T
+  21:../complex_device_driver/cdd_app.c ****  *
+  22:../complex_device_driver/cdd_app.c ****  * \version   1.0.0
+  23:../complex_device_driver/cdd_app.c ****  * \date      2026-10-04
+  24:../complex_device_driver/cdd_app.c ****  * \author   Paul Abraham
+  25:../complex_device_driver/cdd_app.c ****  *             EmbedSim / EV Light Vehicle Foundation
+  26:../complex_device_driver/cdd_app.c ****  *
+  27:../complex_device_driver/cdd_app.c ****  * \copyright Copyright (C) EmbedSim Project / Paul Abraham 2024
+  28:../complex_device_driver/cdd_app.c ****  *            https://github.com/vectorsim/embed_sim_project
+  29:../complex_device_driver/cdd_app.c ****  *            SPDX-License-Identifier: MIT
+  30:../complex_device_driver/cdd_app.c ****  **************************************************************************************************
+  31:../complex_device_driver/cdd_app.c **** 
+  32:../complex_device_driver/cdd_app.c **** 
+  33:../complex_device_driver/cdd_app.c **** /**************************************************************************************************
+  34:../complex_device_driver/cdd_app.c **** /*-----------------------------------------------------Includes------------------------------------
+  35:../complex_device_driver/cdd_app.c **** /**************************************************************************************************
+  36:../complex_device_driver/cdd_app.c **** #include "cdd_app.h"
+  37:../complex_device_driver/cdd_app.c **** #include "cdd_sys_util.h"
+  38:../complex_device_driver/cdd_app.c **** #include "cdd_egtm_app.h"
+  39:../complex_device_driver/cdd_app.c **** 
+  40:../complex_device_driver/cdd_app.c **** /**************************************************************************************************
+  41:../complex_device_driver/cdd_app.c **** /*------------------------------------------------------Macros-------------------------------------
+  42:../complex_device_driver/cdd_app.c **** /**************************************************************************************************
+  43:../complex_device_driver/cdd_app.c **** 
+  44:../complex_device_driver/cdd_app.c **** /**************************************************************************************************
+  45:../complex_device_driver/cdd_app.c **** /*-------------------------------------------------Global variables--------------------------------
+  46:../complex_device_driver/cdd_app.c **** /**************************************************************************************************
+  47:../complex_device_driver/cdd_app.c **** 
+  48:../complex_device_driver/cdd_app.c **** /**
+  49:../complex_device_driver/cdd_app.c ****  * \brief   Central runtime state of the inverter control application.
+  50:../complex_device_driver/cdd_app.c ****  *
+  51:../complex_device_driver/cdd_app.c ****  * \details Single global instance shared between the control-loop ISR
+  52:../complex_device_driver/cdd_app.c ****  *          (ControlLoop_ISR), the fast shut-off ISR (TIM0_CH4_ISR), and the
+  53:../complex_device_driver/cdd_app.c ****  *          application layer. Declared extern in cdd_app.h; defined here so
+  54:../complex_device_driver/cdd_app.c ****  *          that exactly one translation unit owns the storage.
+  55:../complex_device_driver/cdd_app.c ****  *
+  56:../complex_device_driver/cdd_app.c ****  * \note    See CddInverterCtrl_T in cdd_app.h for the per-member semantics,
+  57:../complex_device_driver/cdd_app.c ****  *          valid ranges, and the functions that read or write each field.
+  58:../complex_device_driver/cdd_app.c ****  *
+  59:../complex_device_driver/cdd_app.c ****  * \see     CddInverterCtrl_T
+  60:../complex_device_driver/cdd_app.c ****  */
+  61:../complex_device_driver/cdd_app.c ****  CddInverterCtrl_T  Inv_G;
+  62:../complex_device_driver/cdd_app.c **** 
+  63:../complex_device_driver/cdd_app.c **** /**************************************************************************************************
+  64:../complex_device_driver/cdd_app.c **** /*--------------------------------------------Private Variables/Constants--------------------------
+  65:../complex_device_driver/cdd_app.c **** /**************************************************************************************************
+  66:../complex_device_driver/cdd_app.c **** 
+  67:../complex_device_driver/cdd_app.c **** /**************************************************************************************************
+  68:../complex_device_driver/cdd_app.c **** /*------------------------------------------------Function Prototypes------------------------------
+  69:../complex_device_driver/cdd_app.c **** /**************************************************************************************************
+  70:../complex_device_driver/cdd_app.c **** 
+  71:../complex_device_driver/cdd_app.c **** /**************************************************************************************************
+  72:../complex_device_driver/cdd_app.c **** /*---------------------------------------------Function Implementations----------------------------
+  73:../complex_device_driver/cdd_app.c **** /**************************************************************************************************
+  74:../complex_device_driver/cdd_app.c **** 
+  75:../complex_device_driver/cdd_app.c ****  void Cdd_Init(void)
+  76:../complex_device_driver/cdd_app.c ****  {
+  13              	 .loc 1 76 2
+  14 0000 40AE     	 mov.aa %a14,%SP
+  15              	.LCFI0:
+  77:../complex_device_driver/cdd_app.c ****      /* Init EGTM Module*/
+  78:../complex_device_driver/cdd_app.c ****      CddEgtm_InitModule();
+  16              	 .loc 1 78 6
+  17 0002 6D000000 	 call CddEgtm_InitModule
+  18              	.LVL0:
+  79:../complex_device_driver/cdd_app.c **** 
+  80:../complex_device_driver/cdd_app.c ****  }
+  19              	 .loc 1 80 2 is_stmt 0
+  20 0006 0090     	 ret 
+  21              	.LFE6:
+  23              	 .global Cdd_Init_end
+  24              	Cdd_Init_end:
+  25              	 .section .text.Cdd_Start,"ax",@progbits
+  26              	 .align 1
+  27              	 .global Cdd_Start
+  29              	Cdd_Start:
+  30              	.LFB7:
+  81:../complex_device_driver/cdd_app.c **** 
+  82:../complex_device_driver/cdd_app.c **** 
+  83:../complex_device_driver/cdd_app.c ****  void Cdd_Start(void)
+  84:../complex_device_driver/cdd_app.c ****  {
+  31              	 .loc 1 84 2 is_stmt 1
+  32 0000 40AE     	 mov.aa %a14,%SP
+  33              	.LCFI1:
+  85:../complex_device_driver/cdd_app.c ****      CddEgtm_Start();
+  34              	 .loc 1 85 6
+  35 0002 6D000000 	 call CddEgtm_Start
+  36              	.LVL1:
+  86:../complex_device_driver/cdd_app.c **** 
+  87:../complex_device_driver/cdd_app.c ****  }
+  37              	 .loc 1 87 2 is_stmt 0
+  38 0006 0090     	 ret 
+  39              	.LFE7:
+  41              	 .global Cdd_Start_end
+  42              	Cdd_Start_end:
+  43              	 .global Inv_G
+  44              	 .section .bss.Inv_G,"aw",@nobits
+  45              	 .align 2
+  48              	Inv_G:
+  49 0000 00000000 	 .zero 48
+  49      00000000 
+  49      00000000 
+  49      00000000 
+  49      00000000 
+  90              	.Letext0:
+  91              	 .file 2 "../complex_device_driver/embed_sim_sys_types.h"
+  92              	 .file 3 "../complex_device_driver/cdd_app.h"
+  93              	 .file 4 "../complex_device_driver/cdd_egtm_app.h"
+ 608 0000 00000000 	 .word Cdd_Init
+ 609 0004 00000000 	 .word Cdd_Init_end
+ 610 0008 00000044 	 .word 0x44000000
+ 611 000c 00000000 	 .word 0x00000000
+ 612 0010 00000000 	 .word 0x00000000
+ 613 0014 40000200 	 .word 0x00020040
+ 614 0018 00000000 	 .word Cdd_Start
+ 615 001c 00000000 	 .word Cdd_Start_end
+ 616 0020 00000044 	 .word 0x44000000
+ 617 0024 00000000 	 .word 0x00000000
+ 618 0028 00000000 	 .word 0x00000000
+ 619 002c 40000200 	 .word 0x00020040
+DEFINED SYMBOLS
+                            *ABS*:00000000 cdd_app.c
+                            *ABS*:00000000 cdd_app.c
+    {standard input}:10     .text.Cdd_Init:00000000 Cdd_Init
+    {standard input}:24     .text.Cdd_Init:00000008 Cdd_Init_end
+    {standard input}:29     .text.Cdd_Start:00000000 Cdd_Start
+    {standard input}:42     .text.Cdd_Start:00000008 Cdd_Start_end
+    {standard input}:48     .bss.Inv_G:00000000 Inv_G
+
+UNDEFINED SYMBOLS
+CddEgtm_InitModule
+CddEgtm_Start

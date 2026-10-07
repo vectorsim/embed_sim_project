@@ -1,0 +1,1629 @@
+   1              	
+   2              	 .file "IfxSmu_Smu.c"
+   3              	 .file "IfxSmu_Smu.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.IfxSmu_Smu_initSafetyModuleConfig,"ax",@progbits
+   7              	 .align 1
+   8              	 .global IfxSmu_Smu_initSafetyModuleConfig
+  10              	IfxSmu_Smu_initSafetyModuleConfig:
+  11              	.LFB205:
+  12              	 .file 1 "../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c"
+   1:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** /**
+   2:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****  * \file IfxSmu_Smu.c
+   3:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****  * \brief SMU SMU details
+   4:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****  *
+   5:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****  *
+   8:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****  *
+   9:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****  *
+  10:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****  *                                 IMPORTANT NOTICE
+  11:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****  *
+  12:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****  * this file except in compliance with IFASLL.
+  15:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****  *
+  16:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****  *
+  26:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****  *
+  27:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****  */
+  28:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+  29:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** /******************************************************************************/
+  30:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** /*----------------------------------Includes----------------------------------*/
+  31:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** /******************************************************************************/
+  32:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+  33:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** #include "IfxSmu_Smu.h"
+  34:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+  35:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** /******************************************************************************/
+  36:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** /*-------------------------Function Implementations---------------------------*/
+  37:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** /******************************************************************************/
+  38:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+  39:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** void IfxSmu_Smu_initSafetyModuleConfig(IfxSmu_Smu_SafetyConfig *config)
+  40:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** {
+  13              	 .loc 1 40 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  17 0002 404C     	 mov.aa %a12,%a4
+  41:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     const IfxSmu_Smu_SafetyConfig IfxSmu_Smu_defaultConfig = {
+  18              	 .loc 1 41 5
+  42:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .fsp                                 = {
+  43:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****             {
+  44:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 .prescalar1             = IfxSmu_FspPrescalar1_referenceClockDiv2,
+  45:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 .prescalar2             = IfxSmu_FspPrescalar2_referenceClockDiv512,
+  46:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 .mode                   = IfxSmu_FspMode_BiStableProtocol,
+  47:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 .faultStateDurationHigh = 0,
+  48:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 .faultStateDurationLow  = 0
+  49:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****             },
+  50:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****             {
+  51:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 .prescalar1             = IfxSmu_FspPrescalar1_referenceClockDiv2,
+  52:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 .prescalar2             = IfxSmu_FspPrescalar2_referenceClockDiv512,
+  53:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 .mode                   = IfxSmu_FspMode_BiStableProtocol,
+  54:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 .faultStateDurationHigh = 0,
+  55:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 .faultStateDurationLow  = 0
+  56:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****             }
+  57:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         },
+  58:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .globalConfig                        = {
+  59:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****             .alarmGlobalConfig               = {
+  60:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 .igcs0                       = 0,
+  61:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 .igcs1                       = 0,
+  62:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 .igcs2                       = 0,
+  63:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 .resetConfigSet0             = 0,
+  64:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 .resetConfigSet1             = 0,
+  65:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 .enableFaultToRunTransition0 = FALSE,
+  66:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 .enableFaultToRunTransition1 = FALSE,
+  67:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 .enableStartToRunState       = FALSE
+  68:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****             },
+  69:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****             .safetyRecoveryTimerConfig       = {
+  70:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 .enableRecoveryTimer0        = FALSE,
+  71:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 .enableRecoveryTimer1        = FALSE,
+  72:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 .PrescalarRecoveryTimerClock = 0,
+  73:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 .recoveryTimerDuration       = 0
+  74:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****             },
+  75:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****             .recoveryTimerAlarmConfig        = {
+  76:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 {
+  77:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                     .groupIndex0 = 0,
+  78:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                     .alarmId0    = 0,
+  79:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                     .groupIndex1 = 0,
+  80:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                     .alarmId1    = 0,
+  81:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                     .groupIndex2 = 0,
+  82:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                     .alarmId2    = 0,
+  83:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                     .groupIndex3 = 0,
+  84:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                     .alarmId3    = 0
+  85:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 },
+  86:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 {
+  87:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                     .groupIndex0 = 0,
+  88:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                     .alarmId0    = 0,
+  89:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                     .groupIndex1 = 0,
+  90:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                     .alarmId1    = 0,
+  91:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                     .groupIndex2 = 0,
+  92:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                     .alarmId2    = 0,
+  93:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                     .groupIndex3 = 0,
+  94:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                     .alarmId3    = 0
+  95:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 },
+  96:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****             },
+  97:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         },
+  98:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[0][0]  = 0,
+  99:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[0][1]  = 0,
+ 100:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[0][2]  = 0,
+ 101:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[0][3]  = 0,
+ 102:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[1][0]  = 0,
+ 103:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[1][1]  = 0,
+ 104:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[1][2]  = 0,
+ 105:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[1][3]  = 0,
+ 106:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[2][0]  = 0,
+ 107:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[2][1]  = 0,
+ 108:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[2][2]  = 0,
+ 109:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[2][3]  = 0,
+ 110:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[3][0]  = 0,
+ 111:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[3][1]  = 0,
+ 112:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[3][2]  = 0,
+ 113:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[3][3]  = 0,
+ 114:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[4][0]  = 0,
+ 115:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[4][1]  = 0,
+ 116:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[4][2]  = 0,
+ 117:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[4][3]  = 0,
+ 118:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[5][0]  = 0,
+ 119:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[5][1]  = 0,
+ 120:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[5][2]  = 0,
+ 121:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[5][3]  = 0,
+ 122:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[6][0]  = 0,
+ 123:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[6][1]  = 0,
+ 124:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[6][2]  = 0,
+ 125:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[6][3]  = 0,
+ 126:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[7][0]  = 0,
+ 127:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[7][1]  = 0,
+ 128:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[7][2]  = 0,
+ 129:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[7][3]  = 0,
+ 130:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[8][0]  = 0,
+ 131:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[8][1]  = 0,
+ 132:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[8][2]  = 0,
+ 133:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[8][3]  = 0,
+ 134:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[9][0]  = 0,
+ 135:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[9][1]  = 0,
+ 136:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[9][2]  = 0,
+ 137:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[9][3]  = 0,
+ 138:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[10][0] = 0,
+ 139:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[10][1] = 0,
+ 140:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[10][2] = 0,
+ 141:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[10][3] = 0,
+ 142:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[11][0] = 0,
+ 143:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[11][1] = 0,
+ 144:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[11][2] = 0,
+ 145:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[11][3] = 0,
+ 146:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[12][0] = 0,
+ 147:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[12][1] = 0,
+ 148:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[12][2] = 0,
+ 149:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[12][3] = 0,
+ 150:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[13][0] = 0,
+ 151:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[13][1] = 0,
+ 152:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[13][2] = 0,
+ 153:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[13][3] = 0,
+ 154:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 155:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .fspConfigRegister[0][0]    = 0,
+ 156:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .fspConfigRegister[0][1]    = 0,
+ 157:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .fspConfigRegister[1][0]    = 0,
+ 158:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .fspConfigRegister[1][1]    = 0,
+ 159:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .fspConfigRegister[2][0]    = 0,
+ 160:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .fspConfigRegister[2][1]    = 0,
+ 161:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .fspConfigRegister[3][0]    = 0,
+ 162:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .fspConfigRegister[3][1]    = 0,
+ 163:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .fspConfigRegister[4][0]    = 0,
+ 164:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .fspConfigRegister[4][1]    = 0,
+ 165:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .fspConfigRegister[5][0]    = 0,
+ 166:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .fspConfigRegister[5][1]    = 0,
+ 167:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .fspConfigRegister[6][0]    = 0,
+ 168:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .fspConfigRegister[6][1]    = 0,
+ 169:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .fspConfigRegister[7][0]    = 0,
+ 170:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .fspConfigRegister[7][1]    = 0,
+ 171:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .fspConfigRegister[8][0]    = 0,
+ 172:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .fspConfigRegister[8][1]    = 0,
+ 173:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .fspConfigRegister[9][0]    = 0,
+ 174:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .fspConfigRegister[9][1]    = 0,
+ 175:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .fspConfigRegister[10][0]   = 0,
+ 176:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .fspConfigRegister[10][1]   = 0,
+ 177:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .fspConfigRegister[11][0]   = 0,
+ 178:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .fspConfigRegister[11][1]   = 0,
+ 179:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .fspConfigRegister[12][0]   = 0,
+ 180:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .fspConfigRegister[12][1]   = 0,
+ 181:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .fspConfigRegister[13][0]   = 0,
+ 182:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .fspConfigRegister[13][1]   = 0,
+ 183:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     };
+ 184:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 185:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     *config = IfxSmu_Smu_defaultConfig;
+  19              	 .loc 1 185 5
+  20              	 .loc 1 185 13 is_stmt 0
+  21 0004 3B001C50 	 mov %d5,448
+  22 0008 8204     	 mov %d4,0
+  23 000a 6D000000 	 call memset
+  24              	.LVL1:
+  25 000e 8242     	 mov %d2,4
+  26 0010 01C20026 	 addsc.a %a2,%a12,%d2,0
+  27 0014 7422     	 st.w [%a2]0,%d2
+  28 0016 59C21400 	 st.w [%a12]20,%d2
+ 186:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** }
+  29              	 .loc 1 186 1
+  30 001a 0090     	 ret 
+  31              	.LFE205:
+  33              	 .global IfxSmu_Smu_initSafetyModuleConfig_end
+  34              	IfxSmu_Smu_initSafetyModuleConfig_end:
+  35              	 .section .text.IfxSmu_Smu_isSafetyAlarmTriggered,"ax",@progbits
+  36              	 .align 1
+  37              	 .global IfxSmu_Smu_isSafetyAlarmTriggered
+  39              	IfxSmu_Smu_isSafetyAlarmTriggered:
+  40              	.LFB207:
+ 187:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 188:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 189:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** void IfxSmu_Smu_initSafetyModule(IfxSmu_Smu_SafetyConfig *config, boolean smuSafeIndex)
+ 190:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** {
+ 191:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     uint8                alarmGroupIndex = 0U;
+ 192:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     Ifx_SMU_SAFE_FSP_CON fspSfr0;
+ 193:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     Ifx_SMU_SAFE_FSP_CON fspSfr1;
+ 194:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 195:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     /* Configure SMU module register as per the requested configuration */
+ 196:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr0.U           = MODULE_SMU.SAFE[smuSafeIndex].FSP[0].CON.U;
+ 197:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr0.B.PRE1      = config->fsp[0].prescalar1;
+ 198:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr0.B.PRE2      = config->fsp[0].prescalar2;
+ 199:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr0.B.MODE      = config->fsp[0].mode;
+ 200:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr0.B.TFSP_LOW  = config->fsp[0].faultStateDurationLow;
+ 201:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr0.B.TFSP_HIGH = config->fsp[0].faultStateDurationHigh;
+ 202:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 203:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr1.U           = MODULE_SMU.SAFE[smuSafeIndex].FSP[1].CON.U;
+ 204:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr1.B.PRE1      = config->fsp[1].prescalar1;
+ 205:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr1.B.PRE2      = config->fsp[1].prescalar2;
+ 206:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr1.B.MODE      = config->fsp[1].mode;
+ 207:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr1.B.TFSP_LOW  = config->fsp[1].faultStateDurationLow;
+ 208:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr1.B.TFSP_HIGH = config->fsp[1].faultStateDurationHigh;
+ 209:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 210:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     /* Initialize the Global SMU SAFE configurations */
+ 211:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     IfxSmu_Smu_initSafetyGlobal(&config->globalConfig, smuSafeIndex);
+ 212:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 213:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** #if (IFX_PROT_ENABLED == 1U)
+ 214:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMU.SAFE[smuSafeIndex].PROTSSE, IfxApProt_State_con
+ 215:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** #endif
+ 216:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 217:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     /* Write Config key to configure the SMU registers. */
+ 218:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     MODULE_SMU.SAFE[smuSafeIndex].KEYS.U       = (uint32)0x000000bc;
+ 219:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 220:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     MODULE_SMU.SAFE[smuSafeIndex].FSP[0].CON.U = fspSfr0.U;
+ 221:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     MODULE_SMU.SAFE[smuSafeIndex].FSP[1].CON.U = fspSfr1.U;
+ 222:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 223:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     for (alarmGroupIndex = 0U; alarmGroupIndex < IFXSMU_NUM_OF_SAFETY_ALARM_GROUPS; alarmGroupIndex
+ 224:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     {
+ 225:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         /* Configure the alarms */
+ 226:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         MODULE_SMU.SAFE[smuSafeIndex].AGSF[alarmGroupIndex].CON[0].U = config->alarmConfigRegister[
+ 227:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         MODULE_SMU.SAFE[smuSafeIndex].AGSF[alarmGroupIndex].CON[1].U = config->alarmConfigRegister[
+ 228:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         MODULE_SMU.SAFE[smuSafeIndex].AGSF[alarmGroupIndex].CON[2].U = config->alarmConfigRegister[
+ 229:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         MODULE_SMU.SAFE[smuSafeIndex].AGSF[alarmGroupIndex].CON[3].U = config->alarmConfigRegister[
+ 230:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 231:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         /* Configure the FSP Enable registers */
+ 232:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         MODULE_SMU.SAFE[smuSafeIndex].AGSF[alarmGroupIndex].FSP[0].U = config->fspConfigRegister[al
+ 233:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         MODULE_SMU.SAFE[smuSafeIndex].AGSF[alarmGroupIndex].FSP[1].U = config->fspConfigRegister[al
+ 234:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     }
+ 235:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 236:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     /* After configuration set temporary lock of SMU configuration */
+ 237:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     MODULE_SMU.SAFE[smuSafeIndex].KEYS.U = 0;
+ 238:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 239:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     /* Write SMU_ASCE(0) in CMD register */
+ 240:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     MODULE_SMU.SAFE[smuSafeIndex].CMD.U = IfxSmu_Command_alarmStatusClear;
+ 241:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 242:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     /* Clear all SAFE SMU Alarms */
+ 243:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     for (alarmGroupIndex = 0U; alarmGroupIndex < IFXSMU_NUM_OF_SAFETY_ALARM_GROUPS; alarmGroupIndex
+ 244:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     {
+ 245:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         /* Write 1 in AGSF bit to clear alarm */
+ 246:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         MODULE_SMU.SAFE[smuSafeIndex].AGSF[alarmGroupIndex].STS.U = 0xFFFFFFFFU;
+ 247:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     }
+ 248:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 249:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** #if (IFX_PROT_ENABLED == 1U)
+ 250:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMU.SAFE[smuSafeIndex].PROTSSE, IfxApProt_State_run
+ 251:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** #endif
+ 252:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** }
+ 253:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 254:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 255:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** boolean IfxSmu_Smu_isSafetyAlarmTriggered(boolean smuSafeIndex, uint8 groupNo)
+ 256:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** {
+  41              	 .loc 1 256 1 is_stmt 1
+  42              	.LVL2:
+  43 0000 40AE     	 mov.aa %a14,%SP
+  44              	.LCFI1:
+ 257:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     boolean result = FALSE;
+  45              	 .loc 1 257 5
+  46              	.LVL3:
+ 258:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 259:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     if ((MODULE_SMU.SAFE[smuSafeIndex].AGSF[groupNo].STS.U != 0))
+  47              	 .loc 1 259 5
+  48              	 .loc 1 259 57 is_stmt 0
+  49 0002 3B005020 	 mov %d2,1280
+  50 0006 E224     	 mul %d4,%d2
+  51              	.LVL4:
+  52 0008 13452254 	 madd %d5,%d4,%d5,36
+  53              	.LVL5:
+  54 000c 7B30002F 	 movh %d2,61443
+  55 0010 1B020028 	 addi %d2,%d2,-32768
+  56 0014 6022     	 mov.a %a2,%d2
+  57 0016 01250026 	 addsc.a %a2,%a2,%d5,0
+  58 001a 19221821 	 ld.w %d2,[%a2]4248
+  59              	 .loc 1 259 8
+  60 001e DF020000 	 jz %d2,.L4
+ 260:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     {
+ 261:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         result = TRUE;
+  61              	 .loc 1 261 16
+  62 0022 8212     	 mov %d2,1
+  63 0024 0090     	 ret 
+  64              	.L4:
+ 262:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     }
+ 263:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     else
+ 264:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     {
+ 265:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         result = FALSE;
+  65              	 .loc 1 265 16
+  66 0026 8202     	 mov %d2,0
+  67              	.LVL6:
+ 266:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     }
+ 267:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 268:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     return result;
+  68              	 .loc 1 268 5 is_stmt 1
+ 269:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** }
+  69              	 .loc 1 269 1 is_stmt 0
+  70 0028 0090     	 ret 
+  71              	.LFE207:
+  73              	 .global IfxSmu_Smu_isSafetyAlarmTriggered_end
+  74              	IfxSmu_Smu_isSafetyAlarmTriggered_end:
+  75              	 .section .text.IfxSmu_Smu_initSecurityModuleConfig,"ax",@progbits
+  76              	 .align 1
+  77              	 .global IfxSmu_Smu_initSecurityModuleConfig
+  79              	IfxSmu_Smu_initSecurityModuleConfig:
+  80              	.LFB208:
+ 270:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 271:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 272:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** void IfxSmu_Smu_initSecurityModuleConfig(IfxSmu_Smu_SecurityConfig *config)
+ 273:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** {
+  81              	 .loc 1 273 1 is_stmt 1
+  82              	.LVL7:
+  83 0000 40AE     	 mov.aa %a14,%SP
+  84              	.LCFI2:
+  85 0002 2028     	 sub.a %SP,40
+  86 0004 8049     	 mov.d %d9,%a4
+ 274:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     const IfxSmu_Smu_SecurityConfig IfxSmu_Smu_defaultConfig = {
+  87              	 .loc 1 274 5
+  88              	 .loc 1 274 37 is_stmt 0
+  89 0006 3B800280 	 mov %d8,40
+  90 000a 0285     	 mov %d5,%d8
+  91 000c 8204     	 mov %d4,0
+  92 000e D9E4D8FF 	 lea %a4,[%a14]-40
+  93              	.LVL8:
+  94 0012 6D000000 	 call memset
+  95              	.LVL9:
+ 275:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .globalConfig                        = {
+ 276:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****             .securityRecoveryTimerConfig     = {
+ 277:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 .enableRecoveryTimer0        = FALSE,
+ 278:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 .PrescalarRecoveryTimerClock = 0,
+ 279:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 .recoveryTimerDuration       = 0
+ 280:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****             },
+ 281:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****             .recoveryTimerAlarmConfig        = {
+ 282:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 .groupIndex0 = 0,
+ 283:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 .alarmId0    = 0,
+ 284:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 .groupIndex1 = 0,
+ 285:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 .alarmId1    = 0,
+ 286:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 .groupIndex2 = 0,
+ 287:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 .alarmId2    = 0,
+ 288:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 .groupIndex3 = 0,
+ 289:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****                 .alarmId3    = 0
+ 290:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****             },
+ 291:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         },
+ 292:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[0][0] = 0,
+ 293:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[0][1] = 0,
+ 294:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[0][2] = 0,
+ 295:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[1][0] = 0,
+ 296:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[1][1] = 0,
+ 297:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         .alarmConfigRegister[1][2] = 0,
+ 298:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     };
+ 299:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 300:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     *config = IfxSmu_Smu_defaultConfig;
+  96              	 .loc 1 300 5 is_stmt 1
+  97              	 .loc 1 300 13 is_stmt 0
+  98 0016 0285     	 mov %d5,%d8
+  99 0018 8204     	 mov %d4,0
+ 100 001a 6094     	 mov.a %a4,%d9
+ 101 001c 6D000000 	 call memset
+ 102              	.LVL10:
+ 301:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** }
+ 103              	 .loc 1 301 1
+ 104 0020 0090     	 ret 
+ 105              	.LFE208:
+ 107              	 .global IfxSmu_Smu_initSecurityModuleConfig_end
+ 108              	IfxSmu_Smu_initSecurityModuleConfig_end:
+ 109              	 .section .text.IfxSmu_Smu_isSecurityAlarmTriggered,"ax",@progbits
+ 110              	 .align 1
+ 111              	 .global IfxSmu_Smu_isSecurityAlarmTriggered
+ 113              	IfxSmu_Smu_isSecurityAlarmTriggered:
+ 114              	.LFB210:
+ 302:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 303:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 304:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** void IfxSmu_Smu_initSecurityModule(IfxSmu_Smu_SecurityConfig *config)
+ 305:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** {
+ 306:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     uint8 alarmGroupIndex = 0U;
+ 307:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 308:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     /* Initialize the Global SMU SECURE configurations */
+ 309:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     IfxSmu_Smu_initSecurityGlobal(&config->globalConfig);
+ 310:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 311:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     /* Write Config key to configure the SMU registers. */
+ 312:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     MODULE_SMU.CS.KEYS.U = (uint32)0x000000bc;
+ 313:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 314:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     for (alarmGroupIndex = 0U; alarmGroupIndex < IFXSMU_NUM_OF_SECURITY_ALARM_GROUPS; alarmGroupInd
+ 315:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     {
+ 316:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         MODULE_SMU.CS.AGCS[alarmGroupIndex].CON[0].U = config->alarmConfigRegister[alarmGroupIndex]
+ 317:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         MODULE_SMU.CS.AGCS[alarmGroupIndex].CON[1].U = config->alarmConfigRegister[alarmGroupIndex]
+ 318:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         MODULE_SMU.CS.AGCS[alarmGroupIndex].CON[2].U = config->alarmConfigRegister[alarmGroupIndex]
+ 319:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     }
+ 320:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 321:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     /* After configuration set temporary lock of SMU configuration */
+ 322:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     MODULE_SMU.CS.KEYS.U = 0;
+ 323:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 324:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     /* Write SMU_ASCE(0) in CSCMD register */
+ 325:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     MODULE_SMU.CS.CMD.U = IfxSmu_Command_alarmStatusClear;
+ 326:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 327:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     /* Disable the write-protection for registers */
+ 328:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 329:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     /* Clear all SECURE SMU Alarms */
+ 330:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     for (alarmGroupIndex = 0U; alarmGroupIndex < IFXSMU_NUM_OF_SECURITY_ALARM_GROUPS; alarmGroupInd
+ 331:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     {
+ 332:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         /* Write 1 in AGCS bit to clear alarm */
+ 333:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         MODULE_SMU.CS.AGCS[alarmGroupIndex].STS.U = 0xFFFFFFFFU;
+ 334:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     }
+ 335:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** }
+ 336:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 337:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 338:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** boolean IfxSmu_Smu_isSecurityAlarmTriggered(uint8 groupNo)
+ 339:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** {
+ 115              	 .loc 1 339 1 is_stmt 1
+ 116              	.LVL11:
+ 117 0000 40AE     	 mov.aa %a14,%SP
+ 118              	.LCFI3:
+ 340:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     boolean result = FALSE;
+ 119              	 .loc 1 340 5
+ 120              	.LVL12:
+ 341:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 342:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     if ((MODULE_SMU.CS.AGCS[groupNo].STS.U != 0))
+ 121              	 .loc 1 342 5
+ 122              	 .loc 1 342 41 is_stmt 0
+ 123 0002 7B30002F 	 movh %d2,61443
+ 124 0006 1B020028 	 addi %d2,%d2,-32768
+ 125 000a 13842142 	 madd %d4,%d2,%d4,24
+ 126              	.LVL13:
+ 127 000e 6042     	 mov.a %a2,%d4
+ 128 0010 19223880 	 ld.w %d2,[%a2]568
+ 129              	 .loc 1 342 8
+ 130 0014 DF020000 	 jz %d2,.L8
+ 343:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     {
+ 344:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         result = TRUE;
+ 131              	 .loc 1 344 16
+ 132 0018 8212     	 mov %d2,1
+ 133 001a 0090     	 ret 
+ 134              	.L8:
+ 345:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     }
+ 346:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     else
+ 347:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     {
+ 348:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         result = FALSE;
+ 135              	 .loc 1 348 16
+ 136 001c 8202     	 mov %d2,0
+ 137              	.LVL14:
+ 349:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     }
+ 350:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 351:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     return result;
+ 138              	 .loc 1 351 5 is_stmt 1
+ 352:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** }
+ 139              	 .loc 1 352 1 is_stmt 0
+ 140 001e 0090     	 ret 
+ 141              	.LFE210:
+ 143              	 .global IfxSmu_Smu_isSecurityAlarmTriggered_end
+ 144              	IfxSmu_Smu_isSecurityAlarmTriggered_end:
+ 145              	 .section .text.IfxSmu_Smu_isSharedAlarmTriggered,"ax",@progbits
+ 146              	 .align 1
+ 147              	 .global IfxSmu_Smu_isSharedAlarmTriggered
+ 149              	IfxSmu_Smu_isSharedAlarmTriggered:
+ 150              	.LFB211:
+ 353:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 354:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 355:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** boolean IfxSmu_Smu_isSharedAlarmTriggered(IfxSmu_SharedType SharedType, boolean smuSafeIndex, uint8
+ 356:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** {
+ 151              	 .loc 1 356 1 is_stmt 1
+ 152              	.LVL15:
+ 153 0000 40AE     	 mov.aa %a14,%SP
+ 154              	.LCFI4:
+ 155 0002 0242     	 mov %d2,%d4
+ 156 0004 8FF50F41 	 and %d4,%d5,255
+ 157              	.LVL16:
+ 158 0008 8FF60F51 	 and %d5,%d6,255
+ 159              	.LVL17:
+ 357:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     boolean result = FALSE;
+ 160              	 .loc 1 357 5
+ 358:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 359:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     if (SharedType == IfxSmu_SharedType_safety)
+ 161              	 .loc 1 359 5
+ 162              	 .loc 1 359 8 is_stmt 0
+ 163 000c DF020080 	 jnz %d2,.L10
+ 360:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     {
+ 361:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         result = IfxSmu_Smu_isSafetyAlarmTriggered(smuSafeIndex, groupNo);
+ 164              	 .loc 1 361 9 is_stmt 1
+ 165              	 .loc 1 361 18 is_stmt 0
+ 166 0010 6D000000 	 call IfxSmu_Smu_isSafetyAlarmTriggered
+ 167              	.LVL18:
+ 168 0014 0090     	 ret 
+ 169              	.LVL19:
+ 170              	.L10:
+ 362:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     }
+ 363:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     else
+ 364:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     {
+ 365:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         result = IfxSmu_Smu_isSecurityAlarmTriggered(groupNo);
+ 171              	 .loc 1 365 9 is_stmt 1
+ 172              	 .loc 1 365 18 is_stmt 0
+ 173 0016 0254     	 mov %d4,%d5
+ 174 0018 6D000000 	 call IfxSmu_Smu_isSecurityAlarmTriggered
+ 175              	.LVL20:
+ 366:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     }
+ 367:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 368:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     return result;
+ 176              	 .loc 1 368 5 is_stmt 1
+ 369:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** }
+ 177              	 .loc 1 369 1 is_stmt 0
+ 178 001c 0090     	 ret 
+ 179              	.LFE211:
+ 181              	 .global IfxSmu_Smu_isSharedAlarmTriggered_end
+ 182              	IfxSmu_Smu_isSharedAlarmTriggered_end:
+ 183              	 .section .text.IfxSmu_Smu_initSafetyGlobal,"ax",@progbits
+ 184              	 .align 1
+ 185              	 .global IfxSmu_Smu_initSafetyGlobal
+ 187              	IfxSmu_Smu_initSafetyGlobal:
+ 188              	.LFB212:
+ 370:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 371:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 372:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** void IfxSmu_Smu_initSafetyGlobal(IfxSmu_Smu_SafetyGlobalConfig *config, boolean smuSafeIndex)
+ 373:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** {
+ 189              	 .loc 1 373 1 is_stmt 1
+ 190              	.LVL21:
+ 191 0000 40AE     	 mov.aa %a14,%SP
+ 192              	.LCFI5:
+ 374:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     Ifx_SMU_SAFE_AGC    agcSfr;
+ 193              	 .loc 1 374 5
+ 375:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     Ifx_SMU_SAFE_RTC    rtcSfr;
+ 194              	 .loc 1 375 5
+ 376:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 377:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     Ifx_SMU_SAFE_RT0ACA rtacSfr0A;
+ 195              	 .loc 1 377 5
+ 378:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     Ifx_SMU_SAFE_RT0ACB rtacSfr0B;
+ 196              	 .loc 1 378 5
+ 379:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     Ifx_SMU_SAFE_RT1ACA rtacSfr1A;
+ 197              	 .loc 1 379 5
+ 380:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     Ifx_SMU_SAFE_RT1ACB rtacSfr1B;
+ 198              	 .loc 1 380 5
+ 381:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 382:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     agcSfr.U        = MODULE_SMU.SAFE[smuSafeIndex].AGC.U;
+ 199              	 .loc 1 382 5
+ 200              	 .loc 1 382 56 is_stmt 0
+ 201 0002 7B30002F 	 movh %d2,61443
+ 202 0006 1B020028 	 addi %d2,%d2,-32768
+ 203 000a 3B005030 	 mov %d3,1280
+ 204 000e 03340A22 	 madd %d2,%d2,%d4,%d3
+ 205 0012 6022     	 mov.a %a2,%d2
+ 206 0014 19221401 	 ld.w %d2,[%a2]4116
+ 383:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     agcSfr.B.IGCS0  = config->alarmGlobalConfig.igcs0;
+ 207              	 .loc 1 383 5 is_stmt 1
+ 208              	 .loc 1 383 48 is_stmt 0
+ 209 0018 1443     	 ld.bu %d3,[%a4]0
+ 210              	 .loc 1 383 21
+ 211 001a 37320320 	 insert %d2,%d2,%d3,0,3
+ 212              	.LVL22:
+ 384:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     agcSfr.B.IGCS1  = config->alarmGlobalConfig.igcs1;
+ 213              	 .loc 1 384 5 is_stmt 1
+ 214              	 .loc 1 384 48 is_stmt 0
+ 215 001e 39430100 	 ld.bu %d3,[%a4]1
+ 216              	 .loc 1 384 21
+ 217 0022 37320322 	 insert %d2,%d2,%d3,4,3
+ 385:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     agcSfr.B.IGCS2  = config->alarmGlobalConfig.igcs2;
+ 218              	 .loc 1 385 5 is_stmt 1
+ 219              	 .loc 1 385 48 is_stmt 0
+ 220 0026 39430200 	 ld.bu %d3,[%a4]2
+ 221              	 .loc 1 385 21
+ 222 002a 37320324 	 insert %d2,%d2,%d3,8,3
+ 386:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     agcSfr.B.RCS0   = config->alarmGlobalConfig.resetConfigSet0;
+ 223              	 .loc 1 386 5 is_stmt 1
+ 224              	 .loc 1 386 48 is_stmt 0
+ 225 002e 39430300 	 ld.bu %d3,[%a4]3
+ 226              	 .loc 1 386 21
+ 227 0032 37328526 	 insert %d2,%d2,%d3,13,5
+ 387:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     agcSfr.B.RCS1   = config->alarmGlobalConfig.resetConfigSet1;
+ 228              	 .loc 1 387 5 is_stmt 1
+ 229              	 .loc 1 387 48 is_stmt 0
+ 230 0036 39430400 	 ld.bu %d3,[%a4]4
+ 231              	 .loc 1 387 21
+ 232 003a 37328529 	 insert %d2,%d2,%d3,19,5
+ 388:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     agcSfr.B.EFRST0 = config->alarmGlobalConfig.enableFaultToRunTransition0;
+ 233              	 .loc 1 388 5 is_stmt 1
+ 234              	 .loc 1 388 48 is_stmt 0
+ 235 003e 39430500 	 ld.bu %d3,[%a4]5
+ 236              	 .loc 1 388 21
+ 237 0042 67321D20 	 ins.t %d2,%d2,29,%d3,0
+ 389:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     agcSfr.B.EFRST1 = config->alarmGlobalConfig.enableFaultToRunTransition1;
+ 238              	 .loc 1 389 5 is_stmt 1
+ 239              	 .loc 1 389 48 is_stmt 0
+ 240 0046 39430600 	 ld.bu %d3,[%a4]6
+ 241              	 .loc 1 389 21
+ 242 004a 67321E20 	 ins.t %d2,%d2,30,%d3,0
+ 390:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     agcSfr.B.ESSM1  = config->alarmGlobalConfig.enableStartToRunState;
+ 243              	 .loc 1 390 5 is_stmt 1
+ 244              	 .loc 1 390 48 is_stmt 0
+ 245 004e 39430700 	 ld.bu %d3,[%a4]7
+ 246              	 .loc 1 390 21
+ 247 0052 67321F20 	 ins.t %d2,%d2,31,%d3,0
+ 391:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 392:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtcSfr.U        = MODULE_SMU.SAFE[smuSafeIndex].RTC.U;
+ 248              	 .loc 1 392 5 is_stmt 1
+ 249              	 .loc 1 392 56 is_stmt 0
+ 250 0056 19231801 	 ld.w %d3,[%a2]4120
+ 251              	 .loc 1 392 21
+ 252 005a 0237     	 mov %d7,%d3
+ 253              	.LVL23:
+ 393:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtcSfr.B.RT0E   = config->safetyRecoveryTimerConfig.enableRecoveryTimer0;
+ 254              	 .loc 1 393 5 is_stmt 1
+ 255              	 .loc 1 393 56 is_stmt 0
+ 256 005c 39430800 	 ld.bu %d3,[%a4]8
+ 257              	 .loc 1 393 21
+ 258 0060 67370070 	 ins.t %d7,%d7,0,%d3,0
+ 259              	.LVL24:
+ 394:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtcSfr.B.RT1E   = config->safetyRecoveryTimerConfig.enableRecoveryTimer1;
+ 260              	 .loc 1 394 5 is_stmt 1
+ 261              	 .loc 1 394 56 is_stmt 0
+ 262 0064 39430900 	 ld.bu %d3,[%a4]9
+ 263              	 .loc 1 394 21
+ 264 0068 67370170 	 ins.t %d7,%d7,1,%d3,0
+ 395:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtcSfr.B.PRE    = config->safetyRecoveryTimerConfig.PrescalarRecoveryTimerClock;
+ 265              	 .loc 1 395 5 is_stmt 1
+ 266              	 .loc 1 395 56 is_stmt 0
+ 267 006c 39430A00 	 ld.bu %d3,[%a4]10
+ 268              	 .loc 1 395 21
+ 269 0070 37370371 	 insert %d7,%d7,%d3,2,3
+ 396:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtcSfr.B.RTD    = config->safetyRecoveryTimerConfig.recoveryTimerDuration;
+ 270              	 .loc 1 396 5 is_stmt 1
+ 271              	 .loc 1 396 56 is_stmt 0
+ 272 0074 19430C00 	 ld.w %d3,[%a4]12
+ 273              	 .loc 1 396 21
+ 274 0078 37371874 	 insert %d7,%d7,%d3,8,24
+ 397:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 398:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     /* Recovery Timer 0 Alarm Configuration 0 */
+ 399:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtacSfr0A.U       = MODULE_SMU.SAFE[smuSafeIndex].RT0ACA.U;
+ 275              	 .loc 1 399 5 is_stmt 1
+ 276              	 .loc 1 399 61 is_stmt 0
+ 277 007c 19233001 	 ld.w %d3,[%a2]4144
+ 278              	 .loc 1 399 23
+ 279 0080 0236     	 mov %d6,%d3
+ 280              	.LVL25:
+ 400:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 401:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtacSfr0A.B.GID0  = config->recoveryTimerAlarmConfig[0].groupIndex0;
+ 281              	 .loc 1 401 5 is_stmt 1
+ 282              	 .loc 1 401 60 is_stmt 0
+ 283 0082 39431000 	 ld.bu %d3,[%a4]16
+ 284              	 .loc 1 401 23
+ 285 0086 37360560 	 insert %d6,%d6,%d3,0,5
+ 286              	.LVL26:
+ 402:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtacSfr0A.B.ALID0 = config->recoveryTimerAlarmConfig[0].alarmId0;
+ 287              	 .loc 1 402 5 is_stmt 1
+ 288              	 .loc 1 402 60 is_stmt 0
+ 289 008a 39431100 	 ld.bu %d3,[%a4]17
+ 290              	 .loc 1 402 23
+ 291 008e 37368562 	 insert %d6,%d6,%d3,5,5
+ 403:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtacSfr0A.B.GID1  = config->recoveryTimerAlarmConfig[0].groupIndex1;
+ 292              	 .loc 1 403 5 is_stmt 1
+ 293              	 .loc 1 403 60 is_stmt 0
+ 294 0092 39431200 	 ld.bu %d3,[%a4]18
+ 295              	 .loc 1 403 23
+ 296 0096 37360568 	 insert %d6,%d6,%d3,16,5
+ 404:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtacSfr0A.B.ALID1 = config->recoveryTimerAlarmConfig[0].alarmId1;
+ 297              	 .loc 1 404 5 is_stmt 1
+ 298              	 .loc 1 404 60 is_stmt 0
+ 299 009a 39431300 	 ld.bu %d3,[%a4]19
+ 300              	 .loc 1 404 23
+ 301 009e 3736856A 	 insert %d6,%d6,%d3,21,5
+ 405:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 406:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     /* Recovery Timer 0 Alarm Configuration 1 */
+ 407:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtacSfr0B.U       = MODULE_SMU.SAFE[smuSafeIndex].RT0ACB.U;
+ 302              	 .loc 1 407 5 is_stmt 1
+ 303              	 .loc 1 407 61 is_stmt 0
+ 304 00a2 19233401 	 ld.w %d3,[%a2]4148
+ 305              	 .loc 1 407 23
+ 306 00a6 0235     	 mov %d5,%d3
+ 307              	.LVL27:
+ 408:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 409:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtacSfr0B.B.GID2  = config->recoveryTimerAlarmConfig[0].groupIndex2;
+ 308              	 .loc 1 409 5 is_stmt 1
+ 309              	 .loc 1 409 60 is_stmt 0
+ 310 00a8 39431400 	 ld.bu %d3,[%a4]20
+ 311              	 .loc 1 409 23
+ 312 00ac 37350550 	 insert %d5,%d5,%d3,0,5
+ 313              	.LVL28:
+ 410:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtacSfr0B.B.ALID2 = config->recoveryTimerAlarmConfig[0].alarmId2;
+ 314              	 .loc 1 410 5 is_stmt 1
+ 315              	 .loc 1 410 60 is_stmt 0
+ 316 00b0 39431500 	 ld.bu %d3,[%a4]21
+ 317              	 .loc 1 410 23
+ 318 00b4 37358552 	 insert %d5,%d5,%d3,5,5
+ 411:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtacSfr0B.B.GID3  = config->recoveryTimerAlarmConfig[0].groupIndex3;
+ 319              	 .loc 1 411 5 is_stmt 1
+ 320              	 .loc 1 411 60 is_stmt 0
+ 321 00b8 39431600 	 ld.bu %d3,[%a4]22
+ 322              	 .loc 1 411 23
+ 323 00bc 37350558 	 insert %d5,%d5,%d3,16,5
+ 412:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtacSfr0B.B.ALID3 = config->recoveryTimerAlarmConfig[0].alarmId3;
+ 324              	 .loc 1 412 5 is_stmt 1
+ 325              	 .loc 1 412 60 is_stmt 0
+ 326 00c0 39431700 	 ld.bu %d3,[%a4]23
+ 327              	 .loc 1 412 23
+ 328 00c4 3735855A 	 insert %d5,%d5,%d3,21,5
+ 413:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 414:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     /* Recovery Timer 1 Alarm Configuration 0 */
+ 415:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtacSfr1A.U       = MODULE_SMU.SAFE[smuSafeIndex].RT1ACA.U;
+ 329              	 .loc 1 415 5 is_stmt 1
+ 330              	 .loc 1 415 61 is_stmt 0
+ 331 00c8 19233801 	 ld.w %d3,[%a2]4152
+ 332              	 .loc 1 415 23
+ 333 00cc 0234     	 mov %d4,%d3
+ 334              	.LVL29:
+ 416:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 417:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtacSfr1A.B.GID0  = config->recoveryTimerAlarmConfig[1].groupIndex0;
+ 335              	 .loc 1 417 5 is_stmt 1
+ 336              	 .loc 1 417 60 is_stmt 0
+ 337 00ce 39431800 	 ld.bu %d3,[%a4]24
+ 338              	 .loc 1 417 23
+ 339 00d2 37340540 	 insert %d4,%d4,%d3,0,5
+ 340              	.LVL30:
+ 418:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtacSfr1A.B.ALID0 = config->recoveryTimerAlarmConfig[1].alarmId0;
+ 341              	 .loc 1 418 5 is_stmt 1
+ 342              	 .loc 1 418 60 is_stmt 0
+ 343 00d6 39431900 	 ld.bu %d3,[%a4]25
+ 344              	 .loc 1 418 23
+ 345 00da 37348542 	 insert %d4,%d4,%d3,5,5
+ 419:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtacSfr1A.B.GID1  = config->recoveryTimerAlarmConfig[1].groupIndex1;
+ 346              	 .loc 1 419 5 is_stmt 1
+ 347              	 .loc 1 419 60 is_stmt 0
+ 348 00de 39431A00 	 ld.bu %d3,[%a4]26
+ 349              	 .loc 1 419 23
+ 350 00e2 37340548 	 insert %d4,%d4,%d3,16,5
+ 420:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtacSfr1A.B.ALID1 = config->recoveryTimerAlarmConfig[1].alarmId1;
+ 351              	 .loc 1 420 5 is_stmt 1
+ 352              	 .loc 1 420 60 is_stmt 0
+ 353 00e6 39431B00 	 ld.bu %d3,[%a4]27
+ 354              	 .loc 1 420 23
+ 355 00ea 3734854A 	 insert %d4,%d4,%d3,21,5
+ 421:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 422:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     /* Recovery Timer 1 Alarm Configuration 1 */
+ 423:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtacSfr1B.U       = MODULE_SMU.SAFE[smuSafeIndex].RT1ACB.U;
+ 356              	 .loc 1 423 5 is_stmt 1
+ 357              	 .loc 1 423 61 is_stmt 0
+ 358 00ee 19233C01 	 ld.w %d3,[%a2]4156
+ 424:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 425:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtacSfr1B.B.GID2  = config->recoveryTimerAlarmConfig[1].groupIndex2;
+ 359              	 .loc 1 425 5 is_stmt 1
+ 360              	 .loc 1 425 60 is_stmt 0
+ 361 00f2 39401C00 	 ld.bu %d0,[%a4]28
+ 362              	 .loc 1 425 23
+ 363 00f6 37030530 	 insert %d3,%d3,%d0,0,5
+ 364              	.LVL31:
+ 426:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtacSfr1B.B.ALID2 = config->recoveryTimerAlarmConfig[1].alarmId2;
+ 365              	 .loc 1 426 5 is_stmt 1
+ 366              	 .loc 1 426 60 is_stmt 0
+ 367 00fa 39401D00 	 ld.bu %d0,[%a4]29
+ 368              	 .loc 1 426 23
+ 369 00fe 37038532 	 insert %d3,%d3,%d0,5,5
+ 427:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtacSfr1B.B.GID3  = config->recoveryTimerAlarmConfig[1].groupIndex3;
+ 370              	 .loc 1 427 5 is_stmt 1
+ 371              	 .loc 1 427 60 is_stmt 0
+ 372 0102 39401E00 	 ld.bu %d0,[%a4]30
+ 373              	 .loc 1 427 23
+ 374 0106 37030538 	 insert %d3,%d3,%d0,16,5
+ 428:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtacSfr1B.B.ALID3 = config->recoveryTimerAlarmConfig[1].alarmId3;
+ 375              	 .loc 1 428 5 is_stmt 1
+ 376              	 .loc 1 428 60 is_stmt 0
+ 377 010a 39401F00 	 ld.bu %d0,[%a4]31
+ 378              	 .loc 1 428 23
+ 379 010e 3703853A 	 insert %d3,%d3,%d0,21,5
+ 429:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 430:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** #if (IFX_PROT_ENABLED == 1U)
+ 431:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMU.SAFE[smuSafeIndex].PROTSSE, IfxApProt_State_con
+ 432:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** #endif
+ 433:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 434:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     /* Write Config key to configure the SMU registers. */
+ 435:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     MODULE_SMU.SAFE[smuSafeIndex].KEYS.U   = (uint32)0x000000bc;
+ 380              	 .loc 1 435 5 is_stmt 1
+ 381              	 .loc 1 435 44 is_stmt 0
+ 382 0112 3BC00B00 	 mov %d0,188
+ 383 0116 59201C01 	 st.w [%a2]4124,%d0
+ 436:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 437:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     MODULE_SMU.SAFE[smuSafeIndex].AGC.U    = agcSfr.U;
+ 384              	 .loc 1 437 5 is_stmt 1
+ 385              	 .loc 1 437 44 is_stmt 0
+ 386 011a 59221401 	 st.w [%a2]4116,%d2
+ 438:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     MODULE_SMU.SAFE[smuSafeIndex].RTC.U    = rtcSfr.U;
+ 387              	 .loc 1 438 5 is_stmt 1
+ 388              	 .loc 1 438 44 is_stmt 0
+ 389 011e 59271801 	 st.w [%a2]4120,%d7
+ 439:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     MODULE_SMU.SAFE[smuSafeIndex].RT0ACA.U = rtacSfr0A.U;
+ 390              	 .loc 1 439 5 is_stmt 1
+ 391              	 .loc 1 439 44 is_stmt 0
+ 392 0122 59263001 	 st.w [%a2]4144,%d6
+ 440:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     MODULE_SMU.SAFE[smuSafeIndex].RT0ACB.U = rtacSfr0B.U;
+ 393              	 .loc 1 440 5 is_stmt 1
+ 394              	 .loc 1 440 44 is_stmt 0
+ 395 0126 59253401 	 st.w [%a2]4148,%d5
+ 441:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     MODULE_SMU.SAFE[smuSafeIndex].RT1ACA.U = rtacSfr1A.U;
+ 396              	 .loc 1 441 5 is_stmt 1
+ 397              	 .loc 1 441 44 is_stmt 0
+ 398 012a 59243801 	 st.w [%a2]4152,%d4
+ 442:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     MODULE_SMU.SAFE[smuSafeIndex].RT1ACB.U = rtacSfr1B.U;
+ 399              	 .loc 1 442 5 is_stmt 1
+ 400              	 .loc 1 442 44 is_stmt 0
+ 401 012e 59233C01 	 st.w [%a2]4156,%d3
+ 443:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 444:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     /* After configuration set temporary lock of SMU configuration */
+ 445:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     MODULE_SMU.SAFE[smuSafeIndex].KEYS.U = 0;
+ 402              	 .loc 1 445 5 is_stmt 1
+ 403              	 .loc 1 445 42 is_stmt 0
+ 404 0132 8202     	 mov %d2,0
+ 405              	.LVL32:
+ 406 0134 59221C01 	 st.w [%a2]4124,%d2
+ 446:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 447:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** #if (IFX_PROT_ENABLED == 1U)
+ 448:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&MODULE_SMU.SAFE[smuSafeIndex].PROTSSE, IfxApProt_State_run
+ 449:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** #endif
+ 450:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** }
+ 407              	 .loc 1 450 1
+ 408 0138 0090     	 ret 
+ 409              	.LFE212:
+ 411              	 .global IfxSmu_Smu_initSafetyGlobal_end
+ 412              	IfxSmu_Smu_initSafetyGlobal_end:
+ 413              	 .section .text.IfxSmu_Smu_initSafetyModule,"ax",@progbits
+ 414              	 .align 1
+ 415              	 .global IfxSmu_Smu_initSafetyModule
+ 417              	IfxSmu_Smu_initSafetyModule:
+ 418              	.LFB206:
+ 190:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     uint8                alarmGroupIndex = 0U;
+ 419              	 .loc 1 190 1 is_stmt 1
+ 420              	.LVL33:
+ 421 0000 40AE     	 mov.aa %a14,%SP
+ 422              	.LCFI6:
+ 423 0002 404C     	 mov.aa %a12,%a4
+ 424 0004 8FF40F81 	 and %d8,%d4,255
+ 191:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     Ifx_SMU_SAFE_FSP_CON fspSfr0;
+ 425              	 .loc 1 191 5
+ 426              	.LVL34:
+ 192:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     Ifx_SMU_SAFE_FSP_CON fspSfr1;
+ 427              	 .loc 1 192 5
+ 193:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 428              	 .loc 1 193 5
+ 196:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr0.B.PRE1      = config->fsp[0].prescalar1;
+ 429              	 .loc 1 196 5
+ 196:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr0.B.PRE1      = config->fsp[0].prescalar1;
+ 430              	 .loc 1 196 67 is_stmt 0
+ 431 0008 7B30002F 	 movh %d2,61443
+ 432 000c 1B020028 	 addi %d2,%d2,-32768
+ 433 0010 3B005030 	 mov %d3,1280
+ 434 0014 03380A22 	 madd %d2,%d2,%d8,%d3
+ 435 0018 602D     	 mov.a %a13,%d2
+ 436 001a 19D20801 	 ld.w %d2,[%a13]4104
+ 196:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr0.B.PRE1      = config->fsp[0].prescalar1;
+ 437              	 .loc 1 196 25
+ 438 001e 022A     	 mov %d10,%d2
+ 439              	.LVL35:
+ 197:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr0.B.PRE2      = config->fsp[0].prescalar2;
+ 440              	 .loc 1 197 5 is_stmt 1
+ 197:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr0.B.PRE2      = config->fsp[0].prescalar2;
+ 441              	 .loc 1 197 41 is_stmt 0
+ 442 0020 5442     	 ld.w %d2,[%a4]0
+ 197:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr0.B.PRE2      = config->fsp[0].prescalar2;
+ 443              	 .loc 1 197 25
+ 444 0022 372A03A0 	 insert %d10,%d10,%d2,0,3
+ 445              	.LVL36:
+ 198:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr0.B.MODE      = config->fsp[0].mode;
+ 446              	 .loc 1 198 5 is_stmt 1
+ 198:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr0.B.MODE      = config->fsp[0].mode;
+ 447              	 .loc 1 198 41 is_stmt 0
+ 448 0026 19420400 	 ld.w %d2,[%a4]4
+ 198:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr0.B.MODE      = config->fsp[0].mode;
+ 449              	 .loc 1 198 25
+ 450 002a 372A83A1 	 insert %d10,%d10,%d2,3,3
+ 199:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr0.B.TFSP_LOW  = config->fsp[0].faultStateDurationLow;
+ 451              	 .loc 1 199 5 is_stmt 1
+ 199:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr0.B.TFSP_LOW  = config->fsp[0].faultStateDurationLow;
+ 452              	 .loc 1 199 41 is_stmt 0
+ 453 002e 19420800 	 ld.w %d2,[%a4]8
+ 199:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr0.B.TFSP_LOW  = config->fsp[0].faultStateDurationLow;
+ 454              	 .loc 1 199 25
+ 455 0032 372A02A3 	 insert %d10,%d10,%d2,6,2
+ 200:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr0.B.TFSP_HIGH = config->fsp[0].faultStateDurationHigh;
+ 456              	 .loc 1 200 5 is_stmt 1
+ 200:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr0.B.TFSP_HIGH = config->fsp[0].faultStateDurationHigh;
+ 457              	 .loc 1 200 41 is_stmt 0
+ 458 0036 C9420E00 	 ld.h %d2,[%a4]14
+ 200:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr0.B.TFSP_HIGH = config->fsp[0].faultStateDurationHigh;
+ 459              	 .loc 1 200 25
+ 460 003a 372A0EA4 	 insert %d10,%d10,%d2,8,14
+ 201:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 461              	 .loc 1 201 5 is_stmt 1
+ 201:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 462              	 .loc 1 201 41 is_stmt 0
+ 463 003e C9420C00 	 ld.h %d2,[%a4]12
+ 201:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 464              	 .loc 1 201 25
+ 465 0042 372A0AAB 	 insert %d10,%d10,%d2,22,10
+ 203:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr1.B.PRE1      = config->fsp[1].prescalar1;
+ 466              	 .loc 1 203 5 is_stmt 1
+ 203:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr1.B.PRE1      = config->fsp[1].prescalar1;
+ 467              	 .loc 1 203 67 is_stmt 0
+ 468 0046 19D20C01 	 ld.w %d2,[%a13]4108
+ 203:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr1.B.PRE1      = config->fsp[1].prescalar1;
+ 469              	 .loc 1 203 25
+ 470 004a 0229     	 mov %d9,%d2
+ 471              	.LVL37:
+ 204:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr1.B.PRE2      = config->fsp[1].prescalar2;
+ 472              	 .loc 1 204 5 is_stmt 1
+ 204:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr1.B.PRE2      = config->fsp[1].prescalar2;
+ 473              	 .loc 1 204 41 is_stmt 0
+ 474 004c 19421000 	 ld.w %d2,[%a4]16
+ 204:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr1.B.PRE2      = config->fsp[1].prescalar2;
+ 475              	 .loc 1 204 25
+ 476 0050 37290390 	 insert %d9,%d9,%d2,0,3
+ 477              	.LVL38:
+ 205:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr1.B.MODE      = config->fsp[1].mode;
+ 478              	 .loc 1 205 5 is_stmt 1
+ 205:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr1.B.MODE      = config->fsp[1].mode;
+ 479              	 .loc 1 205 41 is_stmt 0
+ 480 0054 19421400 	 ld.w %d2,[%a4]20
+ 205:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr1.B.MODE      = config->fsp[1].mode;
+ 481              	 .loc 1 205 25
+ 482 0058 37298391 	 insert %d9,%d9,%d2,3,3
+ 206:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr1.B.TFSP_LOW  = config->fsp[1].faultStateDurationLow;
+ 483              	 .loc 1 206 5 is_stmt 1
+ 206:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr1.B.TFSP_LOW  = config->fsp[1].faultStateDurationLow;
+ 484              	 .loc 1 206 41 is_stmt 0
+ 485 005c 19421800 	 ld.w %d2,[%a4]24
+ 206:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr1.B.TFSP_LOW  = config->fsp[1].faultStateDurationLow;
+ 486              	 .loc 1 206 25
+ 487 0060 37290293 	 insert %d9,%d9,%d2,6,2
+ 207:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr1.B.TFSP_HIGH = config->fsp[1].faultStateDurationHigh;
+ 488              	 .loc 1 207 5 is_stmt 1
+ 207:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr1.B.TFSP_HIGH = config->fsp[1].faultStateDurationHigh;
+ 489              	 .loc 1 207 41 is_stmt 0
+ 490 0064 C9421E00 	 ld.h %d2,[%a4]30
+ 207:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     fspSfr1.B.TFSP_HIGH = config->fsp[1].faultStateDurationHigh;
+ 491              	 .loc 1 207 25
+ 492 0068 37290E94 	 insert %d9,%d9,%d2,8,14
+ 208:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 493              	 .loc 1 208 5 is_stmt 1
+ 208:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 494              	 .loc 1 208 41 is_stmt 0
+ 495 006c C9421C00 	 ld.h %d2,[%a4]28
+ 208:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 496              	 .loc 1 208 25
+ 497 0070 37290A9B 	 insert %d9,%d9,%d2,22,10
+ 211:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 498              	 .loc 1 211 5 is_stmt 1
+ 499 0074 0284     	 mov %d4,%d8
+ 500 0076 D9442000 	 lea %a4,[%a4]32
+ 501              	.LVL39:
+ 502 007a 6D000000 	 call IfxSmu_Smu_initSafetyGlobal
+ 503              	.LVL40:
+ 218:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 504              	 .loc 1 218 5
+ 218:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 505              	 .loc 1 218 48 is_stmt 0
+ 506 007e 3BC00B20 	 mov %d2,188
+ 507 0082 59D21C01 	 st.w [%a13]4124,%d2
+ 220:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     MODULE_SMU.SAFE[smuSafeIndex].FSP[1].CON.U = fspSfr1.U;
+ 508              	 .loc 1 220 5 is_stmt 1
+ 220:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     MODULE_SMU.SAFE[smuSafeIndex].FSP[1].CON.U = fspSfr1.U;
+ 509              	 .loc 1 220 48 is_stmt 0
+ 510 0086 59DA0801 	 st.w [%a13]4104,%d10
+ 221:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 511              	 .loc 1 221 5 is_stmt 1
+ 221:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 512              	 .loc 1 221 48 is_stmt 0
+ 513 008a 59D90C01 	 st.w [%a13]4108,%d9
+ 223:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     {
+ 514              	 .loc 1 223 5 is_stmt 1
+ 223:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     {
+ 515              	 .loc 1 223 26 is_stmt 0
+ 516 008e 8202     	 mov %d2,0
+ 223:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     {
+ 517              	 .loc 1 223 5
+ 518 0090 1D000000 	 j .L14
+ 519              	.LVL41:
+ 520              	.L15:
+ 226:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         MODULE_SMU.SAFE[smuSafeIndex].AGSF[alarmGroupIndex].CON[1].U = config->alarmConfigRegister[
+ 521              	 .loc 1 226 9 is_stmt 1 discriminator 3
+ 226:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         MODULE_SMU.SAFE[smuSafeIndex].AGSF[alarmGroupIndex].CON[1].U = config->alarmConfigRegister[
+ 522              	 .loc 1 226 116 is_stmt 0 discriminator 3
+ 523 0094 1B420030 	 addi %d3,%d2,4
+ 524 0098 0643     	 sh %d3,4
+ 525 009a 01C30026 	 addsc.a %a2,%a12,%d3,0
+ 526 009e 5424     	 ld.w %d4,[%a2]0
+ 226:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         MODULE_SMU.SAFE[smuSafeIndex].AGSF[alarmGroupIndex].CON[1].U = config->alarmConfigRegister[
+ 527              	 .loc 1 226 70 discriminator 3
+ 528 00a0 3B005030 	 mov %d3,1280
+ 529 00a4 E283     	 mul %d3,%d8
+ 530 00a6 13422233 	 madd %d3,%d3,%d2,36
+ 531 00aa 7B30005F 	 movh %d5,61443
+ 532 00ae 1B050058 	 addi %d5,%d5,-32768
+ 533 00b2 6052     	 mov.a %a2,%d5
+ 534 00b4 01230026 	 addsc.a %a2,%a2,%d3,0
+ 535 00b8 59240021 	 st.w [%a2]4224,%d4
+ 227:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         MODULE_SMU.SAFE[smuSafeIndex].AGSF[alarmGroupIndex].CON[2].U = config->alarmConfigRegister[
+ 536              	 .loc 1 227 9 is_stmt 1 discriminator 3
+ 227:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         MODULE_SMU.SAFE[smuSafeIndex].AGSF[alarmGroupIndex].CON[2].U = config->alarmConfigRegister[
+ 537              	 .loc 1 227 116 is_stmt 0 discriminator 3
+ 538 00bc 8F420030 	 sh %d3,%d2,4
+ 539 00c0 01C30036 	 addsc.a %a3,%a12,%d3,0
+ 227:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         MODULE_SMU.SAFE[smuSafeIndex].AGSF[alarmGroupIndex].CON[2].U = config->alarmConfigRegister[
+ 540              	 .loc 1 227 70 discriminator 3
+ 541 00c4 19330410 	 ld.w %d3,[%a3]68
+ 542 00c8 59230421 	 st.w [%a2]4228,%d3
+ 228:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         MODULE_SMU.SAFE[smuSafeIndex].AGSF[alarmGroupIndex].CON[3].U = config->alarmConfigRegister[
+ 543              	 .loc 1 228 9 is_stmt 1 discriminator 3
+ 228:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         MODULE_SMU.SAFE[smuSafeIndex].AGSF[alarmGroupIndex].CON[3].U = config->alarmConfigRegister[
+ 544              	 .loc 1 228 70 is_stmt 0 discriminator 3
+ 545 00cc 19330810 	 ld.w %d3,[%a3]72
+ 546 00d0 59230821 	 st.w [%a2]4232,%d3
+ 229:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 547              	 .loc 1 229 9 is_stmt 1 discriminator 3
+ 229:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 548              	 .loc 1 229 116 is_stmt 0 discriminator 3
+ 549 00d4 19330C10 	 ld.w %d3,[%a3]76
+ 229:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 550              	 .loc 1 229 70 discriminator 3
+ 551 00d8 59230C21 	 st.w [%a2]4236,%d3
+ 232:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         MODULE_SMU.SAFE[smuSafeIndex].AGSF[alarmGroupIndex].FSP[1].U = config->fspConfigRegister[al
+ 552              	 .loc 1 232 9 is_stmt 1 discriminator 3
+ 232:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         MODULE_SMU.SAFE[smuSafeIndex].AGSF[alarmGroupIndex].FSP[1].U = config->fspConfigRegister[al
+ 553              	 .loc 1 232 114 is_stmt 0 discriminator 3
+ 554 00dc 1B820230 	 addi %d3,%d2,40
+ 555 00e0 0633     	 sh %d3,3
+ 556 00e2 01C30036 	 addsc.a %a3,%a12,%d3,0
+ 557 00e6 5433     	 ld.w %d3,[%a3]0
+ 232:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         MODULE_SMU.SAFE[smuSafeIndex].AGSF[alarmGroupIndex].FSP[1].U = config->fspConfigRegister[al
+ 558              	 .loc 1 232 70 discriminator 3
+ 559 00e8 59231021 	 st.w [%a2]4240,%d3
+ 233:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     }
+ 560              	 .loc 1 233 9 is_stmt 1 discriminator 3
+ 233:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     }
+ 561              	 .loc 1 233 114 is_stmt 0 discriminator 3
+ 562 00ec 8F320030 	 sh %d3,%d2,3
+ 563 00f0 01C30036 	 addsc.a %a3,%a12,%d3,0
+ 564 00f4 19330450 	 ld.w %d3,[%a3]324
+ 233:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     }
+ 565              	 .loc 1 233 70 discriminator 3
+ 566 00f8 59231421 	 st.w [%a2]4244,%d3
+ 223:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     {
+ 567              	 .loc 1 223 100 is_stmt 1 discriminator 3
+ 568 00fc C212     	 add %d2,1
+ 569              	.LVL42:
+ 570 00fe 8FF20F21 	 and %d2,%d2,255
+ 571              	.LVL43:
+ 572              	.L14:
+ 223:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     {
+ 573              	 .loc 1 223 48 discriminator 1
+ 574 0102 3BF00030 	 mov %d3,15
+ 575 0106 7F230080 	 jge.u %d3,%d2,.L15
+ 237:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 576              	 .loc 1 237 5
+ 237:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 577              	 .loc 1 237 42 is_stmt 0
+ 578 010a 7B30002F 	 movh %d2,61443
+ 579              	.LVL44:
+ 580 010e 1B020028 	 addi %d2,%d2,-32768
+ 581 0112 3B005030 	 mov %d3,1280
+ 582 0116 03380A22 	 madd %d2,%d2,%d8,%d3
+ 583 011a 6022     	 mov.a %a2,%d2
+ 584 011c 8202     	 mov %d2,0
+ 585 011e 59221C01 	 st.w [%a2]4124,%d2
+ 240:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 586              	 .loc 1 240 5 is_stmt 1
+ 240:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 587              	 .loc 1 240 41 is_stmt 0
+ 588 0122 8252     	 mov %d2,5
+ 589 0124 59220001 	 st.w [%a2]4096,%d2
+ 243:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     {
+ 590              	 .loc 1 243 5 is_stmt 1
+ 591              	.LVL45:
+ 243:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     {
+ 592              	 .loc 1 243 26 is_stmt 0
+ 593 0128 8202     	 mov %d2,0
+ 243:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     {
+ 594              	 .loc 1 243 5
+ 595 012a 1D000000 	 j .L16
+ 596              	.LVL46:
+ 597              	.L17:
+ 246:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     }
+ 598              	 .loc 1 246 9 is_stmt 1 discriminator 3
+ 246:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     }
+ 599              	 .loc 1 246 67 is_stmt 0 discriminator 3
+ 600 012e 3B005030 	 mov %d3,1280
+ 601 0132 E283     	 mul %d3,%d8
+ 602 0134 13422233 	 madd %d3,%d3,%d2,36
+ 603 0138 7B30004F 	 movh %d4,61443
+ 604 013c 1B040048 	 addi %d4,%d4,-32768
+ 605 0140 6042     	 mov.a %a2,%d4
+ 606 0142 01230026 	 addsc.a %a2,%a2,%d3,0
+ 607 0146 82F3     	 mov %d3,-1
+ 608 0148 59231821 	 st.w [%a2]4248,%d3
+ 243:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     {
+ 609              	 .loc 1 243 100 is_stmt 1 discriminator 3
+ 610 014c C212     	 add %d2,1
+ 611              	.LVL47:
+ 612 014e 8FF20F21 	 and %d2,%d2,255
+ 613              	.LVL48:
+ 614              	.L16:
+ 243:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     {
+ 615              	 .loc 1 243 48 discriminator 1
+ 616 0152 3BF00030 	 mov %d3,15
+ 617 0156 7F230080 	 jge.u %d3,%d2,.L17
+ 252:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 618              	 .loc 1 252 1 is_stmt 0
+ 619 015a 0090     	 ret 
+ 620              	.LFE206:
+ 622              	 .global IfxSmu_Smu_initSafetyModule_end
+ 623              	IfxSmu_Smu_initSafetyModule_end:
+ 624              	 .section .text.IfxSmu_Smu_initSecurityGlobal,"ax",@progbits
+ 625              	 .align 1
+ 626              	 .global IfxSmu_Smu_initSecurityGlobal
+ 628              	IfxSmu_Smu_initSecurityGlobal:
+ 629              	.LFB213:
+ 451:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 452:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 453:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** void IfxSmu_Smu_initSecurityGlobal(IfxSmu_Smu_SecurityGlobalConfig *config)
+ 454:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** {
+ 630              	 .loc 1 454 1 is_stmt 1
+ 631              	.LVL49:
+ 632 0000 40AE     	 mov.aa %a14,%SP
+ 633              	.LCFI7:
+ 455:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     Ifx_SMU_CS_RTC    rtcSfr;
+ 634              	 .loc 1 455 5
+ 456:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 457:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     Ifx_SMU_CS_RT0ACA rtacSfr0A;
+ 635              	 .loc 1 457 5
+ 458:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     Ifx_SMU_CS_RT0ACB rtacSfr0B;
+ 636              	 .loc 1 458 5
+ 459:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 460:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     /* Configure SMU module register as per the requested configuration */
+ 461:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtcSfr.U      = MODULE_SMU.CS.RTC.U;
+ 637              	 .loc 1 461 5
+ 638              	 .loc 1 461 38 is_stmt 0
+ 639 0002 C5F20A04 	 lha %a2,-268271616
+ 640 0006 19220880 	 ld.w %d2,[%a2]520
+ 641              	 .loc 1 461 19
+ 642 000a 0224     	 mov %d4,%d2
+ 643              	.LVL50:
+ 462:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtcSfr.B.RT0E = config->securityRecoveryTimerConfig.enableRecoveryTimer0;
+ 644              	 .loc 1 462 5 is_stmt 1
+ 645              	 .loc 1 462 56 is_stmt 0
+ 646 000c 1442     	 ld.bu %d2,[%a4]0
+ 647              	 .loc 1 462 19
+ 648 000e 67240040 	 ins.t %d4,%d4,0,%d2,0
+ 649              	.LVL51:
+ 463:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtcSfr.B.PRE  = config->securityRecoveryTimerConfig.PrescalarRecoveryTimerClock;
+ 650              	 .loc 1 463 5 is_stmt 1
+ 651              	 .loc 1 463 56 is_stmt 0
+ 652 0012 39420100 	 ld.bu %d2,[%a4]1
+ 653              	 .loc 1 463 19
+ 654 0016 37240341 	 insert %d4,%d4,%d2,2,3
+ 464:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtcSfr.B.RTD  = config->securityRecoveryTimerConfig.recoveryTimerDuration;
+ 655              	 .loc 1 464 5 is_stmt 1
+ 656              	 .loc 1 464 56 is_stmt 0
+ 657 001a 19420400 	 ld.w %d2,[%a4]4
+ 658              	 .loc 1 464 19
+ 659 001e 37241844 	 insert %d4,%d4,%d2,8,24
+ 465:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 466:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     /* Recovery Timer 0 Alarm Configuration 0 */
+ 467:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtacSfr0A.U       = MODULE_SMU.CS.RT0ACA.U;
+ 660              	 .loc 1 467 5 is_stmt 1
+ 661              	 .loc 1 467 45 is_stmt 0
+ 662 0022 19221880 	 ld.w %d2,[%a2]536
+ 663              	 .loc 1 467 23
+ 664 0026 0223     	 mov %d3,%d2
+ 665              	.LVL52:
+ 468:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 469:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtacSfr0A.B.GID0  = config->recoveryTimerAlarmConfig.groupIndex0;
+ 666              	 .loc 1 469 5 is_stmt 1
+ 667              	 .loc 1 469 57 is_stmt 0
+ 668 0028 39420800 	 ld.bu %d2,[%a4]8
+ 669              	 .loc 1 469 23
+ 670 002c 37230330 	 insert %d3,%d3,%d2,0,3
+ 671              	.LVL53:
+ 470:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtacSfr0A.B.ALID0 = config->recoveryTimerAlarmConfig.alarmId0;
+ 672              	 .loc 1 470 5 is_stmt 1
+ 673              	 .loc 1 470 57 is_stmt 0
+ 674 0030 39420900 	 ld.bu %d2,[%a4]9
+ 675              	 .loc 1 470 23
+ 676 0034 37238532 	 insert %d3,%d3,%d2,5,5
+ 471:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtacSfr0A.B.GID1  = config->recoveryTimerAlarmConfig.groupIndex1;
+ 677              	 .loc 1 471 5 is_stmt 1
+ 678              	 .loc 1 471 57 is_stmt 0
+ 679 0038 39420A00 	 ld.bu %d2,[%a4]10
+ 680              	 .loc 1 471 23
+ 681 003c 37230338 	 insert %d3,%d3,%d2,16,3
+ 472:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtacSfr0A.B.ALID1 = config->recoveryTimerAlarmConfig.alarmId1;
+ 682              	 .loc 1 472 5 is_stmt 1
+ 683              	 .loc 1 472 57 is_stmt 0
+ 684 0040 39420B00 	 ld.bu %d2,[%a4]11
+ 685              	 .loc 1 472 23
+ 686 0044 3723853A 	 insert %d3,%d3,%d2,21,5
+ 473:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 474:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     /* Recovery Timer 0 Alarm Configuration 1 */
+ 475:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtacSfr0B.U       = MODULE_SMU.CS.RT0ACB.U;
+ 687              	 .loc 1 475 5 is_stmt 1
+ 688              	 .loc 1 475 45 is_stmt 0
+ 689 0048 19221C80 	 ld.w %d2,[%a2]540
+ 476:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 477:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtacSfr0B.B.GID2  = config->recoveryTimerAlarmConfig.groupIndex2;
+ 690              	 .loc 1 477 5 is_stmt 1
+ 691              	 .loc 1 477 57 is_stmt 0
+ 692 004c 39450C00 	 ld.bu %d5,[%a4]12
+ 693              	 .loc 1 477 23
+ 694 0050 37520320 	 insert %d2,%d2,%d5,0,3
+ 695              	.LVL54:
+ 478:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtacSfr0B.B.ALID2 = config->recoveryTimerAlarmConfig.alarmId2;
+ 696              	 .loc 1 478 5 is_stmt 1
+ 697              	 .loc 1 478 57 is_stmt 0
+ 698 0054 39450D00 	 ld.bu %d5,[%a4]13
+ 699              	 .loc 1 478 23
+ 700 0058 37528522 	 insert %d2,%d2,%d5,5,5
+ 479:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtacSfr0B.B.GID3  = config->recoveryTimerAlarmConfig.groupIndex3;
+ 701              	 .loc 1 479 5 is_stmt 1
+ 702              	 .loc 1 479 57 is_stmt 0
+ 703 005c 39450E00 	 ld.bu %d5,[%a4]14
+ 704              	 .loc 1 479 23
+ 705 0060 37520328 	 insert %d2,%d2,%d5,16,3
+ 480:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     rtacSfr0B.B.ALID3 = config->recoveryTimerAlarmConfig.alarmId3;
+ 706              	 .loc 1 480 5 is_stmt 1
+ 707              	 .loc 1 480 57 is_stmt 0
+ 708 0064 39450F00 	 ld.bu %d5,[%a4]15
+ 709              	 .loc 1 480 23
+ 710 0068 3752852A 	 insert %d2,%d2,%d5,21,5
+ 481:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 482:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     /* Write Config key to configure the SMU registers. */
+ 483:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     MODULE_SMU.CS.KEYS.U   = (uint32)0x000000bc;
+ 711              	 .loc 1 483 5 is_stmt 1
+ 712              	 .loc 1 483 28 is_stmt 0
+ 713 006c 3BC00B50 	 mov %d5,188
+ 714 0070 59250C80 	 st.w [%a2]524,%d5
+ 484:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 485:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     MODULE_SMU.CS.RTC.U    = rtcSfr.U;
+ 715              	 .loc 1 485 5 is_stmt 1
+ 716              	 .loc 1 485 28 is_stmt 0
+ 717 0074 59240880 	 st.w [%a2]520,%d4
+ 486:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     MODULE_SMU.CS.RT0ACA.U = rtacSfr0A.U;
+ 718              	 .loc 1 486 5 is_stmt 1
+ 719              	 .loc 1 486 28 is_stmt 0
+ 720 0078 59231880 	 st.w [%a2]536,%d3
+ 487:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     MODULE_SMU.CS.RT0ACB.U = rtacSfr0B.U;
+ 721              	 .loc 1 487 5 is_stmt 1
+ 722              	 .loc 1 487 28 is_stmt 0
+ 723 007c 59221C80 	 st.w [%a2]540,%d2
+ 488:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 489:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     /* After configuration set temporary lock of SMU configuration */
+ 490:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     MODULE_SMU.CS.KEYS.U = 0;
+ 724              	 .loc 1 490 5 is_stmt 1
+ 725              	 .loc 1 490 26 is_stmt 0
+ 726 0080 8202     	 mov %d2,0
+ 727              	.LVL55:
+ 728 0082 59220C80 	 st.w [%a2]524,%d2
+ 491:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** }
+ 729              	 .loc 1 491 1
+ 730 0086 0090     	 ret 
+ 731              	.LFE213:
+ 733              	 .global IfxSmu_Smu_initSecurityGlobal_end
+ 734              	IfxSmu_Smu_initSecurityGlobal_end:
+ 735              	 .section .text.IfxSmu_Smu_initSecurityModule,"ax",@progbits
+ 736              	 .align 1
+ 737              	 .global IfxSmu_Smu_initSecurityModule
+ 739              	IfxSmu_Smu_initSecurityModule:
+ 740              	.LFB209:
+ 305:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     uint8 alarmGroupIndex = 0U;
+ 741              	 .loc 1 305 1 is_stmt 1
+ 742              	.LVL56:
+ 743 0000 40AE     	 mov.aa %a14,%SP
+ 744              	.LCFI8:
+ 745 0002 8048     	 mov.d %d8,%a4
+ 306:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 746              	 .loc 1 306 5
+ 747              	.LVL57:
+ 309:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 748              	 .loc 1 309 5
+ 749 0004 6D000000 	 call IfxSmu_Smu_initSecurityGlobal
+ 750              	.LVL58:
+ 312:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 751              	 .loc 1 312 5
+ 312:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 752              	 .loc 1 312 26 is_stmt 0
+ 753 0008 C5F20A04 	 lha %a2,-268271616
+ 754 000c 3BC00B20 	 mov %d2,188
+ 755 0010 59220C80 	 st.w [%a2]524,%d2
+ 314:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     {
+ 756              	 .loc 1 314 5 is_stmt 1
+ 314:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     {
+ 757              	 .loc 1 314 26 is_stmt 0
+ 758 0014 8202     	 mov %d2,0
+ 314:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     {
+ 759              	 .loc 1 314 5
+ 760 0016 1D000000 	 j .L20
+ 761              	.LVL59:
+ 762              	.L21:
+ 316:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         MODULE_SMU.CS.AGCS[alarmGroupIndex].CON[1].U = config->alarmConfigRegister[alarmGroupIndex]
+ 763              	 .loc 1 316 9 is_stmt 1 discriminator 3
+ 316:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         MODULE_SMU.CS.AGCS[alarmGroupIndex].CON[1].U = config->alarmConfigRegister[alarmGroupIndex]
+ 764              	 .loc 1 316 100 is_stmt 0 discriminator 3
+ 765 001a 13C22038 	 madd %d3,%d8,%d2,12
+ 766 001e 6032     	 mov.a %a2,%d3
+ 316:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         MODULE_SMU.CS.AGCS[alarmGroupIndex].CON[1].U = config->alarmConfigRegister[alarmGroupIndex]
+ 767              	 .loc 1 316 54 discriminator 3
+ 768 0020 7B30003F 	 movh %d3,61443
+ 769 0024 1B030038 	 addi %d3,%d3,-32768
+ 770 0028 13822133 	 madd %d3,%d3,%d2,24
+ 771 002c 6033     	 mov.a %a3,%d3
+ 772 002e 19231000 	 ld.w %d3,[%a2]16
+ 773 0032 59332C80 	 st.w [%a3]556,%d3
+ 317:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         MODULE_SMU.CS.AGCS[alarmGroupIndex].CON[2].U = config->alarmConfigRegister[alarmGroupIndex]
+ 774              	 .loc 1 317 9 is_stmt 1 discriminator 3
+ 317:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         MODULE_SMU.CS.AGCS[alarmGroupIndex].CON[2].U = config->alarmConfigRegister[alarmGroupIndex]
+ 775              	 .loc 1 317 54 is_stmt 0 discriminator 3
+ 776 0036 19231400 	 ld.w %d3,[%a2]20
+ 777 003a 59333080 	 st.w [%a3]560,%d3
+ 318:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     }
+ 778              	 .loc 1 318 9 is_stmt 1 discriminator 3
+ 318:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     }
+ 779              	 .loc 1 318 100 is_stmt 0 discriminator 3
+ 780 003e 19231800 	 ld.w %d3,[%a2]24
+ 318:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     }
+ 781              	 .loc 1 318 54 discriminator 3
+ 782 0042 59333480 	 st.w [%a3]564,%d3
+ 314:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     {
+ 783              	 .loc 1 314 102 is_stmt 1 discriminator 3
+ 784 0046 C212     	 add %d2,1
+ 785              	.LVL60:
+ 786 0048 8FF20F21 	 and %d2,%d2,255
+ 787              	.LVL61:
+ 788              	.L20:
+ 314:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     {
+ 789              	 .loc 1 314 48 discriminator 1
+ 790 004c BF220080 	 jlt.u %d2,2,.L21
+ 322:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 791              	 .loc 1 322 5
+ 322:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 792              	 .loc 1 322 26 is_stmt 0
+ 793 0050 C5F20A04 	 lha %a2,-268271616
+ 794 0054 8202     	 mov %d2,0
+ 795              	.LVL62:
+ 796 0056 59220C80 	 st.w [%a2]524,%d2
+ 325:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 797              	 .loc 1 325 5 is_stmt 1
+ 325:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 798              	 .loc 1 325 25 is_stmt 0
+ 799 005a 8252     	 mov %d2,5
+ 800 005c 59220080 	 st.w [%a2]512,%d2
+ 330:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     {
+ 801              	 .loc 1 330 5 is_stmt 1
+ 802              	.LVL63:
+ 330:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     {
+ 803              	 .loc 1 330 26 is_stmt 0
+ 804 0060 8202     	 mov %d2,0
+ 330:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     {
+ 805              	 .loc 1 330 5
+ 806 0062 1D000000 	 j .L22
+ 807              	.LVL64:
+ 808              	.L23:
+ 333:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     }
+ 809              	 .loc 1 333 9 is_stmt 1 discriminator 3
+ 333:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     }
+ 810              	 .loc 1 333 51 is_stmt 0 discriminator 3
+ 811 0066 7B30003F 	 movh %d3,61443
+ 812 006a 1B030038 	 addi %d3,%d3,-32768
+ 813 006e 13822133 	 madd %d3,%d3,%d2,24
+ 814 0072 82F4     	 mov %d4,-1
+ 815 0074 6032     	 mov.a %a2,%d3
+ 816 0076 59243880 	 st.w [%a2]568,%d4
+ 330:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     {
+ 817              	 .loc 1 330 102 is_stmt 1 discriminator 3
+ 818 007a C212     	 add %d2,1
+ 819              	.LVL65:
+ 820 007c 8FF20F21 	 and %d2,%d2,255
+ 821              	.LVL66:
+ 822              	.L22:
+ 330:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     {
+ 823              	 .loc 1 330 48 discriminator 1
+ 824 0080 BF220080 	 jlt.u %d2,2,.L23
+ 335:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 825              	 .loc 1 335 1 is_stmt 0
+ 826 0084 0090     	 ret 
+ 827              	.LFE209:
+ 829              	 .global IfxSmu_Smu_initSecurityModule_end
+ 830              	IfxSmu_Smu_initSecurityModule_end:
+ 831              	 .section .text.IfxSmu_Smu_setSharedSelectionRegister,"ax",@progbits
+ 832              	 .align 1
+ 833              	 .global IfxSmu_Smu_setSharedSelectionRegister
+ 835              	IfxSmu_Smu_setSharedSelectionRegister:
+ 836              	.LFB214:
+ 492:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 493:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 494:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** void IfxSmu_Smu_setSharedSelectionRegister(IfxSmu_SharedType SharedType, IfxSmu_Alarm alarm)
+ 495:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** {
+ 837              	 .loc 1 495 1 is_stmt 1
+ 838              	.LVL67:
+ 839 0000 40AE     	 mov.aa %a14,%SP
+ 840              	.LCFI9:
+ 496:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     uint16 alarmGroup = ((int)alarm >> 5);
+ 841              	 .loc 1 496 5
+ 842              	 .loc 1 496 37 is_stmt 0
+ 843 0002 8FB53F20 	 sha %d2,%d5,-5
+ 844              	.LVL68:
+ 497:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     uint8  alarmPos   = (int)alarm & 0x1F;
+ 845              	 .loc 1 497 5 is_stmt 1
+ 846              	 .loc 1 497 12 is_stmt 0
+ 847 0006 8FF50151 	 and %d5,%d5,31
+ 848              	.LVL69:
+ 498:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     uint32 mask       = 0U;
+ 849              	 .loc 1 498 5 is_stmt 1
+ 499:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 500:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     if (SharedType == IfxSmu_SharedType_safety)
+ 850              	 .loc 1 500 5
+ 851              	 .loc 1 500 8 is_stmt 0
+ 852 000a DF040080 	 jnz %d4,.L25
+ 501:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     {
+ 502:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         MODULE_SMU.GCC.AGSH[alarmGroup].SEL.U |= (uint32)(1 << alarmPos);
+ 853              	 .loc 1 502 9 is_stmt 1
+ 854 000e 37027020 	 extr.u %d2,%d2,0,16
+ 855              	 .loc 1 502 47 is_stmt 0
+ 856 0012 1BA20020 	 addi %d2,%d2,10
+ 857              	.LVL70:
+ 858 0016 0632     	 sh %d2,3
+ 859              	.LVL71:
+ 860 0018 7B30003F 	 movh %d3,61443
+ 861 001c 1B030038 	 addi %d3,%d3,-32768
+ 862 0020 6032     	 mov.a %a2,%d3
+ 863 0022 01220026 	 addsc.a %a2,%a2,%d2,0
+ 864 0026 D9230C00 	 lea %a3,[%a2]12
+ 865 002a 19220C00 	 ld.w %d2,[%a2]12
+ 866 002e D7120125 	 insert %d2,%d2,1,%d5,1
+ 867 0032 7432     	 st.w [%a3]0,%d2
+ 868 0034 0090     	 ret 
+ 869              	.LVL72:
+ 870              	.L25:
+ 503:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     }
+ 504:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     else
+ 505:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     {
+ 506:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         /* If Alarm mapped to safety and user trying to re-configure to secure
+ 507:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****          * then reset the bit in GCC and proceed with configuration
+ 508:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****          */
+ 509:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         if (((MODULE_SMU.GCC.AGSH[alarmGroup].SEL.U & (uint32)(1 << alarmPos)) >> alarmPos) != 0U)
+ 871              	 .loc 1 509 9 is_stmt 1
+ 872 0036 37027030 	 extr.u %d3,%d2,0,16
+ 873              	 .loc 1 509 50 is_stmt 0
+ 874 003a 1BA30020 	 addi %d2,%d3,10
+ 875              	.LVL73:
+ 876 003e 0632     	 sh %d2,3
+ 877 0040 7B30004F 	 movh %d4,61443
+ 878              	.LVL74:
+ 879 0044 1B040048 	 addi %d4,%d4,-32768
+ 880 0048 6042     	 mov.a %a2,%d4
+ 881 004a 01220026 	 addsc.a %a2,%a2,%d2,0
+ 882 004e 19260C00 	 ld.w %d6,[%a2]12
+ 883              	 .loc 1 509 66
+ 884 0052 8212     	 mov %d2,1
+ 885 0054 0F520020 	 sh %d2,%d2,%d5
+ 886              	 .loc 1 509 53
+ 887 0058 2626     	 and %d6,%d2
+ 888              	 .loc 1 509 80
+ 889 005a 8B050041 	 rsub %d4,%d5,0
+ 890 005e 0F460040 	 sh %d4,%d6,%d4
+ 891              	 .loc 1 509 12
+ 892 0062 DF040000 	 jz %d4,.L27
+ 510:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         {
+ 511:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****             mask                                   = (uint32)(1 << alarmPos);
+ 893              	 .loc 1 511 13 is_stmt 1
+ 894              	.LVL75:
+ 512:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****             MODULE_SMU.GCC.AGSH[alarmGroup].SEL.U &= ~(mask);
+ 895              	 .loc 1 512 13
+ 896              	 .loc 1 512 51 is_stmt 0
+ 897 0066 1BA30040 	 addi %d4,%d3,10
+ 898 006a 0634     	 sh %d4,3
+ 899 006c 7B30005F 	 movh %d5,61443
+ 900              	.LVL76:
+ 901 0070 1B050058 	 addi %d5,%d5,-32768
+ 902 0074 6052     	 mov.a %a2,%d5
+ 903 0076 01240026 	 addsc.a %a2,%a2,%d4,0
+ 904 007a D9230C00 	 lea %a3,[%a2]12
+ 905 007e 19240C00 	 ld.w %d4,[%a2]12
+ 906 0082 0F24E040 	 andn %d4,%d4,%d2
+ 907 0086 7434     	 st.w [%a3]0,%d4
+ 908              	.LVL77:
+ 909              	.L27:
+ 513:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         }
+ 514:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** 
+ 515:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****         MODULE_SMU.CS.AGSH[alarmGroup].SEL.U |= (uint32)(1 << alarmPos);
+ 910              	 .loc 1 515 9 is_stmt 1
+ 911              	 .loc 1 515 46 is_stmt 0
+ 912 0088 0653     	 sh %d3,5
+ 913              	.LVL78:
+ 914 008a 7B30004F 	 movh %d4,61443
+ 915 008e 1B040048 	 addi %d4,%d4,-32768
+ 916 0092 6042     	 mov.a %a2,%d4
+ 917 0094 01230026 	 addsc.a %a2,%a2,%d3,0
+ 918 0098 D92318C0 	 lea %a3,[%a2]792
+ 919 009c 192318C0 	 ld.w %d3,[%a2]792
+ 920 00a0 A632     	 or %d2,%d3
+ 921 00a2 7432     	 st.w [%a3]0,%d2
+ 516:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c ****     }
+ 517:../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.c **** }
+ 922              	 .loc 1 517 1
+ 923 00a4 0090     	 ret 
+ 924              	.LFE214:
+ 926              	 .global IfxSmu_Smu_setSharedSelectionRegister_end
+ 927              	IfxSmu_Smu_setSharedSelectionRegister_end:
+ 1064              	.Letext0:
+ 1065              	 .file 2 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 1066              	 .file 3 "../Libraries/iLLD/TC4xx/Tricore/_Impl/TC4Dx/IfxSmu_cfg_TC4Dx.h"
+ 1067              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 1068              	 .file 5 "../Libraries/Infra/Sfr/TC4Dx/IfxSmu_regdef.h"
+ 1069              	 .file 6 "../Libraries/iLLD/TC4xx/Tricore/Smu/Std/IfxSmu.h"
+ 1070              	 .file 7 "../Libraries/iLLD/TC4xx/Tricore/Smu/Smu/IfxSmu_Smu.h"
+ 1071              	 .file 8 "<built-in>"
+ 25091 0000 00000000 	 .word IfxSmu_Smu_initSafetyModuleConfig
+ 25092 0004 00000000 	 .word IfxSmu_Smu_initSafetyModuleConfig_end
+ 25093 0008 34001454 	 .word 0x54140034
+ 25094 000c 00001000 	 .word 0x00100000
+ 25095 0010 00000000 	 .word 0x00000000
+ 25096 0014 40000200 	 .word 0x00020040
+ 25097 0018 00000000 	 .word IfxSmu_Smu_isSafetyAlarmTriggered
+ 25098 001c 00000000 	 .word IfxSmu_Smu_isSafetyAlarmTriggered_end
+ 25099 0020 34000444 	 .word 0x44040034
+ 25100 0024 30000000 	 .word 0x00000030
+ 25101 0028 04000000 	 .word 0x00000004
+ 25102 002c C0000000 	 .word 0x000000c0
+ 25103 0030 00000000 	 .word IfxSmu_Smu_initSecurityModuleConfig
+ 25104 0034 00000000 	 .word IfxSmu_Smu_initSecurityModuleConfig_end
+ 25105 0038 30031444 	 .word 0x44140330
+ 25106 003c 00001000 	 .word 0x00100000
+ 25107 0040 00000000 	 .word 0x00000000
+ 25108 0044 40800200 	 .word 0x00028040
+ 25109 0048 00000000 	 .word IfxSmu_Smu_isSecurityAlarmTriggered
+ 25110 004c 00000000 	 .word IfxSmu_Smu_isSecurityAlarmTriggered_end
+ 25111 0050 14000444 	 .word 0x44040014
+ 25112 0054 10000000 	 .word 0x00000010
+ 25113 0058 04000000 	 .word 0x00000004
+ 25114 005c C0000000 	 .word 0x000000c0
+ 25115 0060 00000000 	 .word IfxSmu_Smu_isSharedAlarmTriggered
+ 25116 0064 00000000 	 .word IfxSmu_Smu_isSharedAlarmTriggered_end
+ 25117 0068 74000044 	 .word 0x44000074
+ 25118 006c 70000000 	 .word 0x00000070
+ 25119 0070 04000000 	 .word 0x00000004
+ 25120 0074 40000200 	 .word 0x00020040
+ 25121 0078 00000000 	 .word IfxSmu_Smu_initSafetyGlobal
+ 25122 007c 00000000 	 .word IfxSmu_Smu_initSafetyGlobal_end
+ 25123 0080 FD001C44 	 .word 0x441c00fd
+ 25124 0084 10001000 	 .word 0x00100010
+ 25125 0088 00000000 	 .word 0x00000000
+ 25126 008c C0000000 	 .word 0x000000c0
+ 25127 0090 00000000 	 .word IfxSmu_Smu_initSafetyModule
+ 25128 0094 00000000 	 .word IfxSmu_Smu_initSafetyModule_end
+ 25129 0098 3C073C74 	 .word 0x743c073c
+ 25130 009c 10001000 	 .word 0x00100010
+ 25131 00a0 00000000 	 .word 0x00000000
+ 25132 00a4 40000200 	 .word 0x00020040
+ 25133 00a8 00000000 	 .word IfxSmu_Smu_initSecurityGlobal
+ 25134 00ac 00000000 	 .word IfxSmu_Smu_initSecurityGlobal_end
+ 25135 00b0 3C001C44 	 .word 0x441c003c
+ 25136 00b4 00001000 	 .word 0x00100000
+ 25137 00b8 00000000 	 .word 0x00000000
+ 25138 00bc C0000000 	 .word 0x000000c0
+ 25139 00c0 00000000 	 .word IfxSmu_Smu_initSecurityModule
+ 25140 00c4 00000000 	 .word IfxSmu_Smu_initSecurityModule_end
+ 25141 00c8 1C013C44 	 .word 0x443c011c
+ 25142 00cc 00001000 	 .word 0x00100000
+ 25143 00d0 00000000 	 .word 0x00000000
+ 25144 00d4 40000200 	 .word 0x00020040
+ 25145 00d8 00000000 	 .word IfxSmu_Smu_setSharedSelectionRegister
+ 25146 00dc 00000000 	 .word IfxSmu_Smu_setSharedSelectionRegister_end
+ 25147 00e0 7C000C44 	 .word 0x440c007c
+ 25148 00e4 30000000 	 .word 0x00000030
+ 25149 00e8 00000000 	 .word 0x00000000
+ 25150 00ec C0000000 	 .word 0x000000c0
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxSmu_Smu.c
+                            *ABS*:00000000 IfxSmu_Smu.c
+    {standard input}:10     .text.IfxSmu_Smu_initSafetyModuleConfig:00000000 IfxSmu_Smu_initSafetyModuleConfig
+    {standard input}:34     .text.IfxSmu_Smu_initSafetyModuleConfig:0000001c IfxSmu_Smu_initSafetyModuleConfig_end
+    {standard input}:39     .text.IfxSmu_Smu_isSafetyAlarmTriggered:00000000 IfxSmu_Smu_isSafetyAlarmTriggered
+    {standard input}:74     .text.IfxSmu_Smu_isSafetyAlarmTriggered:0000002a IfxSmu_Smu_isSafetyAlarmTriggered_end
+    {standard input}:79     .text.IfxSmu_Smu_initSecurityModuleConfig:00000000 IfxSmu_Smu_initSecurityModuleConfig
+    {standard input}:108    .text.IfxSmu_Smu_initSecurityModuleConfig:00000022 IfxSmu_Smu_initSecurityModuleConfig_end
+    {standard input}:113    .text.IfxSmu_Smu_isSecurityAlarmTriggered:00000000 IfxSmu_Smu_isSecurityAlarmTriggered
+    {standard input}:144    .text.IfxSmu_Smu_isSecurityAlarmTriggered:00000020 IfxSmu_Smu_isSecurityAlarmTriggered_end
+    {standard input}:149    .text.IfxSmu_Smu_isSharedAlarmTriggered:00000000 IfxSmu_Smu_isSharedAlarmTriggered
+    {standard input}:182    .text.IfxSmu_Smu_isSharedAlarmTriggered:0000001e IfxSmu_Smu_isSharedAlarmTriggered_end
+    {standard input}:187    .text.IfxSmu_Smu_initSafetyGlobal:00000000 IfxSmu_Smu_initSafetyGlobal
+    {standard input}:412    .text.IfxSmu_Smu_initSafetyGlobal:0000013a IfxSmu_Smu_initSafetyGlobal_end
+    {standard input}:417    .text.IfxSmu_Smu_initSafetyModule:00000000 IfxSmu_Smu_initSafetyModule
+    {standard input}:623    .text.IfxSmu_Smu_initSafetyModule:0000015c IfxSmu_Smu_initSafetyModule_end
+    {standard input}:628    .text.IfxSmu_Smu_initSecurityGlobal:00000000 IfxSmu_Smu_initSecurityGlobal
+    {standard input}:734    .text.IfxSmu_Smu_initSecurityGlobal:00000088 IfxSmu_Smu_initSecurityGlobal_end
+    {standard input}:739    .text.IfxSmu_Smu_initSecurityModule:00000000 IfxSmu_Smu_initSecurityModule
+    {standard input}:830    .text.IfxSmu_Smu_initSecurityModule:00000086 IfxSmu_Smu_initSecurityModule_end
+    {standard input}:835    .text.IfxSmu_Smu_setSharedSelectionRegister:00000000 IfxSmu_Smu_setSharedSelectionRegister
+    {standard input}:927    .text.IfxSmu_Smu_setSharedSelectionRegister:000000a6 IfxSmu_Smu_setSharedSelectionRegister_end
+
+UNDEFINED SYMBOLS
+memset

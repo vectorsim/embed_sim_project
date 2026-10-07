@@ -1,0 +1,37 @@
+   1              	
+   2              	 .file "IfxDmu_PinMap_TC4Dx_BGA436_COM.c"
+   3              	 .file "IfxDmu_PinMap_TC4Dx_BGA436_COM.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .global IfxDmu_Fdest_In_pinTable
+   7              	 .section .data.IfxDmu_Fdest_In_pinTable,"aw"
+   8              	 .align 2
+  11              	IfxDmu_Fdest_In_pinTable:
+  12 0000 00000000 	 .word IfxDmu_FDEST_P21_0_IN
+  13              	 .global IfxDmu_FDEST_P21_0_IN
+  14              	 .section .rodata.IfxDmu_FDEST_P21_0_IN,"a"
+  15              	 .align 2
+  18              	IfxDmu_FDEST_P21_0_IN:
+  19 0000 000004F8 	 .word -133955584
+  20 0004 00F403F0 	 .word -268176384
+  21 0008 00       	 .byte 0
+  22 0009 000000   	 .zero 3
+  23 000c 00000000 	 .word 0
+  24              	.section .text,"ax",@progbits
+  25              	.Letext0:
+  26              	 .file 1 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+  27              	 .file 2 "../Libraries/Infra/Sfr/TC4Dx/IfxDmu_regdef.h"
+  28              	 .file 3 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+  29              	 .file 4 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+  30              	 .file 5 "../Libraries/Infra/Sfr/TC4Dx/IfxPort_regdef.h"
+  31              	 .file 6 "../Libraries/iLLD/TC4xx/CpuGeneric/Port/Std/IfxPort.h"
+  32              	 .file 7 "../Libraries/iLLD/TC4xx/Tricore/_PinMap/IfxDmu_PinMap.h"
+  33              	 .file 8 "../Libraries/iLLD/TC4xx/Tricore/_PinMap/TC4Dx/IfxDmu_PinMap_TC4Dx_BGA436_COM.h"
+  34              	 .file 9 "../Libraries/iLLD/TC4xx/Tricore/_PinMap/TC4Dx/IfxDmu_PinMap_TC4Dx_BGA436_COM.c"
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxDmu_PinMap_TC4Dx_BGA436_COM.c
+                            *ABS*:00000000 IfxDmu_PinMap_TC4Dx_BGA436_COM.c
+    {standard input}:11     .data.IfxDmu_Fdest_In_pinTable:00000000 IfxDmu_Fdest_In_pinTable
+    {standard input}:18     .rodata.IfxDmu_FDEST_P21_0_IN:00000000 IfxDmu_FDEST_P21_0_IN
+
+NO UNDEFINED SYMBOLS

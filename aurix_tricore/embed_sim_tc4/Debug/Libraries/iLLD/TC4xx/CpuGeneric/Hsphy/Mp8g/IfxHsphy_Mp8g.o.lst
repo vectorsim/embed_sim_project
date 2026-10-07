@@ -1,0 +1,876 @@
+   1              	
+   2              	 .file "IfxHsphy_Mp8g.c"
+   3              	 .file "IfxHsphy_Mp8g.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.IfxHsphy_Mp8g_resetModule,"ax",@progbits
+   7              	 .align 1
+   8              	 .global IfxHsphy_Mp8g_resetModule
+  10              	IfxHsphy_Mp8g_resetModule:
+  11              	.LFB331:
+  12              	 .file 1 "../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c"
+   1:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** /**
+   2:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****  * \file IfxHsphy_Mp8g.c
+   3:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****  * \brief HSPHY MP8G details
+   4:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****  *
+   5:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****  *
+   8:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****  *
+   9:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****  *
+  10:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****  *                                 IMPORTANT NOTICE
+  11:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****  *
+  12:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****  * this file except in compliance with IFASLL.
+  15:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****  *
+  16:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****  *
+  26:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****  *
+  27:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****  */
+  28:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+  29:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** /******************************************************************************/
+  30:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** /*----------------------------------Includes----------------------------------*/
+  31:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** /******************************************************************************/
+  32:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+  33:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #include "Ifx_Cfg.h"
+  34:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #if defined (__TASKING__)
+  35:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #pragma warning 508			/* To suppress empty file warning */
+  36:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #endif
+  37:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #if defined (__ghs__)
+  38:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #pragma diag_suppress 96	/* To suppress empty file warning */
+  39:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #endif
+  40:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+  41:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #if !defined(DEVICE_TC4EX)  && !defined(DEVICE_TC4PX)
+  42:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #include "IfxHsphy_Mp8g.h"
+  43:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+  44:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** /******************************************************************************/
+  45:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** /*-------------------------Function Implementations---------------------------*/
+  46:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** /******************************************************************************/
+  47:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+  48:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** boolean IfxHsphy_Mp8g_resetModule(Ifx_HSPHY *hsphyRegPtr)
+  49:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** {
+  13              	 .loc 1 49 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  50:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     uint32 timeoutCycleCount = IFXHSPHY_MAX_TIMEOUT;
+  17              	 .loc 1 50 5
+  18              	.LVL1:
+  51:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     uint8  timeOutError      = 0U;
+  19              	 .loc 1 51 5
+  52:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #if (IFX_PROT_ENABLED == 1U)
+  53:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&(hsphyRegPtr->PROTE), IfxApProt_State_config);
+  54:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #endif
+  55:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+  56:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     hsphyRegPtr->RST.CTRLA.B.KRST = 1;
+  20              	 .loc 1 56 5
+  21              	 .loc 1 56 35 is_stmt 0
+  22 0002 D9420C00 	 lea %a2,[%a4]12
+  23 0006 19420C00 	 ld.w %d2,[%a4]12
+  24 000a B7120120 	 insert %d2,%d2,1,0,1
+  25 000e 7422     	 st.w [%a2]0,%d2
+  57:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     hsphyRegPtr->RST.CTRLB.B.KRST = 1;
+  26              	 .loc 1 57 5 is_stmt 1
+  27              	 .loc 1 57 35 is_stmt 0
+  28 0010 D9421000 	 lea %a2,[%a4]16
+  29 0014 19421000 	 ld.w %d2,[%a4]16
+  30 0018 B7120120 	 insert %d2,%d2,1,0,1
+  31 001c 7422     	 st.w [%a2]0,%d2
+  58:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+  59:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     while (0 == hsphyRegPtr->RST.STAT.B.KRST)    /* Wait until reset is executed */
+  32              	 .loc 1 59 5 is_stmt 1
+  50:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     uint8  timeOutError      = 0U;
+  33              	 .loc 1 50 12 is_stmt 0
+  34 001e 7BF00030 	 movh %d3,15
+  35 0022 1B032434 	 addi %d3,%d3,16960
+  36              	.LVL2:
+  37              	.L2:
+  60:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     {
+  61:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         IFXHSPHY_LOOP_TIMEOUT_CHECK(timeoutCycleCount, timeOutError);
+  38              	 .loc 1 61 9 is_stmt 1 discriminator 2
+  39              	 .loc 1 61 69 discriminator 2
+  59:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     {
+  40              	 .loc 1 59 14 discriminator 2
+  59:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     {
+  41              	 .loc 1 59 40 is_stmt 0 discriminator 2
+  42 0026 19421400 	 ld.w %d2,[%a4]20
+  59:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     {
+  43              	 .loc 1 59 14 discriminator 2
+  44 002a 6F020080 	 jnz.t %d2,0,.L11
+  45              	 .loc 1 61 9 is_stmt 1
+  46 002e C2F3     	 add %d3,-1
+  47              	.LVL3:
+  48 0030 DF030080 	 jnz %d3,.L2
+  49 0034 8212     	 mov %d2,1
+  50 0036 1D000000 	 j .L3
+  51              	.L11:
+  51:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #if (IFX_PROT_ENABLED == 1U)
+  52              	 .loc 1 51 12 is_stmt 0
+  53 003a 8202     	 mov %d2,0
+  54              	.L3:
+  55              	.LVL4:
+  62:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     }
+  63:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+  64:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     if (timeOutError == TRUE)
+  56              	 .loc 1 64 5 is_stmt 1
+  57              	 .loc 1 64 8 is_stmt 0
+  58 003c DF020080 	 jnz %d2,.L5
+  65:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     {
+  66:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         return TRUE;
+  67:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     }
+  68:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+  69:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     hsphyRegPtr->RST.CTRLB.B.STATCLR = 1;       /* Clear Kernel reset status bit */
+  59              	 .loc 1 69 5 is_stmt 1
+  60              	 .loc 1 69 38 is_stmt 0
+  61 0040 D9421000 	 lea %a2,[%a4]16
+  62 0044 19441000 	 ld.w %d4,[%a4]16
+  63 0048 B714814F 	 insert %d4,%d4,1,31,1
+  64 004c 7424     	 st.w [%a2]0,%d4
+  70:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+  71:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     while (hsphyRegPtr->RST.STAT.B.KRST == 1)   /* Wait until reset is released */
+  65              	 .loc 1 71 5 is_stmt 1
+  66              	.L6:
+  72:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     {
+  73:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         IFXHSPHY_LOOP_TIMEOUT_CHECK(timeoutCycleCount, timeOutError);
+  67              	 .loc 1 73 9 discriminator 2
+  68              	 .loc 1 73 69 discriminator 2
+  71:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     {
+  69              	 .loc 1 71 41 discriminator 2
+  71:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     {
+  70              	 .loc 1 71 35 is_stmt 0 discriminator 2
+  71 004e 19441400 	 ld.w %d4,[%a4]20
+  71:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     {
+  72              	 .loc 1 71 41 discriminator 2
+  73 0052 6F040000 	 jz.t %d4,0,.L12
+  74              	 .loc 1 73 9 is_stmt 1
+  75 0056 C2F3     	 add %d3,-1
+  76              	.LVL5:
+  77 0058 DF030080 	 jnz %d3,.L6
+  78 005c 8212     	 mov %d2,1
+  79              	.LVL6:
+  74:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     }
+  75:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+  76:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     if (timeOutError == TRUE)
+  80              	 .loc 1 76 5
+  81              	.L5:
+  77:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     {
+  78:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         return TRUE;
+  79:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     }
+  80:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+  81:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #if (IFX_PROT_ENABLED == 1U)
+  82:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&(hsphyRegPtr->PROTE), IfxApProt_State_run);
+  83:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #endif
+  84:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     return (boolean)timeOutError;
+  85:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** }
+  82              	 .loc 1 85 1 is_stmt 0
+  83 005e 0090     	 ret 
+  84              	.LVL7:
+  85              	.L12:
+  86 0060 0090     	 ret 
+  87              	.LFE331:
+  89              	 .global IfxHsphy_Mp8g_resetModule_end
+  90              	IfxHsphy_Mp8g_resetModule_end:
+  91              	 .section .text.IfxHsphy_Mp8g_setPhyRefClockSel,"ax",@progbits
+  92              	 .align 1
+  93              	 .global IfxHsphy_Mp8g_setPhyRefClockSel
+  95              	IfxHsphy_Mp8g_setPhyRefClockSel:
+  96              	.LFB332:
+  86:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+  87:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+  88:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** boolean IfxHsphy_Mp8g_setPhyRefClockSel(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_PhyIndex phyIndex, IfxHsph
+  89:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** {
+  97              	 .loc 1 89 1 is_stmt 1
+  98              	.LVL8:
+  99 0000 40AE     	 mov.aa %a14,%SP
+ 100              	.LCFI1:
+ 101 0002 8046     	 mov.d %d6,%a4
+  90:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     boolean ret = TRUE;
+ 102              	 .loc 1 90 5
+ 103              	.LVL9:
+  91:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+  92:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #if IFXHSPHY_IS_PHY0_AVAILABLE
+  93:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     if (phyIndex == IfxHsphy_PhyIndex_0)
+ 104              	 .loc 1 93 5
+ 105              	 .loc 1 93 8 is_stmt 0
+ 106 0004 DF040080 	 jnz %d4,.L19
+  94:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     {
+  95:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #if IFXHSPHY_IS_TRGTDEVICE_PCIE
+  96:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         if (device == IfxHsphy_TrgtDevice_pcie)
+ 107              	 .loc 1 96 9 is_stmt 1
+ 108              	 .loc 1 96 12 is_stmt 0
+ 109 0008 DF150000 	 jeq %d5,1,.L23
+ 110              	.L15:
+  97:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         {
+  98:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****             /* PCIE */
+  99:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****             hsphyRegPtr->PHY[phyIndex].CTRL1.B.PRS = 1; /* 0b1, IFXHSPHY_PHY0_REFCLKSEL_PAD */
+ 100:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 101:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #endif /* #if IFXHSPHY_IS_TRGTDEVICE_PCIE */
+ 102:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         if (device == IfxHsphy_TrgtDevice_xgmac)
+ 111              	 .loc 1 102 9 is_stmt 1
+ 112              	 .loc 1 102 12 is_stmt 0
+ 113 000c DF050080 	 jnz %d5,.L20
+ 103:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         {
+ 104:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****             /* XGMAC */
+ 105:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****             hsphyRegPtr->PHY[phyIndex].CTRL1.B.PRS = 0; /* 0b0, IFXHSPHY_PHY0_REFCLKSEL_ALT */
+ 114              	 .loc 1 105 13 is_stmt 1
+ 115              	 .loc 1 105 52 is_stmt 0
+ 116 0010 8F340020 	 sh %d2,%d4,3
+ 117 0014 6062     	 mov.a %a2,%d6
+ 118 0016 01220026 	 addsc.a %a2,%a2,%d2,0
+ 119 001a D9231480 	 lea %a3,[%a2]532
+ 120 001e 19221480 	 ld.w %d2,[%a2]532
+ 121 0022 8F12C021 	 andn %d2,%d2,~(-2)
+ 122 0026 7432     	 st.w [%a3]0,%d2
+  90:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+ 123              	 .loc 1 90 13
+ 124 0028 8212     	 mov %d2,1
+ 125 002a 1D000000 	 j .L14
+ 126              	.LVL10:
+ 127              	.L23:
+  99:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 128              	 .loc 1 99 13 is_stmt 1
+  99:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 129              	 .loc 1 99 52 is_stmt 0
+ 130 002e 8F340020 	 sh %d2,%d4,3
+ 131 0032 01420026 	 addsc.a %a2,%a4,%d2,0
+ 132 0036 D9231480 	 lea %a3,[%a2]532
+ 133 003a 19221480 	 ld.w %d2,[%a2]532
+ 134 003e B7120120 	 insert %d2,%d2,1,0,1
+ 135 0042 7432     	 st.w [%a3]0,%d2
+ 136 0044 1D000000 	 j .L15
+ 137              	.L19:
+  90:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+ 138              	 .loc 1 90 13
+ 139 0048 8212     	 mov %d2,1
+ 140              	.L14:
+ 141              	.LVL11:
+ 106:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 107:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         else
+ 108:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         {
+ 109:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****             ret = FALSE;
+ 110:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 111:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     }
+ 112:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #endif /* #if IFXHSPHY_IS_PHY0_AVAILABLE */
+ 113:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+ 114:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     if (phyIndex == IfxHsphy_PhyIndex_1)
+ 142              	 .loc 1 114 5 is_stmt 1
+ 143              	 .loc 1 114 8 is_stmt 0
+ 144 004a DF140000 	 jeq %d4,1,.L24
+ 145              	.LVL12:
+ 146              	.L16:
+ 115:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     {
+ 116:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #if IFXHSPHY_IS_TRGTDEVICE_XGMAC	
+ 117:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         if ((device == IfxHsphy_TrgtDevice_xgmac) || (device == IfxHsphy_TrgtDevice_trace))	
+ 118:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #else
+ 119:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         if ((device == IfxHsphy_TrgtDevice_eth) || (device == IfxHsphy_TrgtDevice_trace))
+ 120:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #endif /* #if IFXHSPHY_IS_TRGTDEVICE_XGMAC */
+ 121:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         {
+ 122:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****             /* XGMAC/ETH or TRACE */
+ 123:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****             /* 0b0, IFXHSPHY_PHY1_REFCLKSEL_ALT */
+ 124:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****             hsphyRegPtr->PHY[phyIndex].CTRL1.B.PRS = 0;     
+ 125:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 126:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         else
+ 127:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         {
+ 128:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****             ret = FALSE;
+ 129:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 130:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     }
+ 131:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+ 132:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #if IFXHSPHY_IS_PHY2_AVAILABLE	
+ 133:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 	if (phyIndex == IfxHsphy_PhyIndex_2)
+ 147              	 .loc 1 133 2 is_stmt 1
+ 148              	 .loc 1 133 5 is_stmt 0
+ 149 004e DF240000 	 jeq %d4,2,.L25
+ 150              	.LVL13:
+ 151              	.L17:
+ 134:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     {
+ 135:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         if (device == IfxHsphy_TrgtDevice_pcie)
+ 136:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         {
+ 137:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****             /* PCIE */
+ 138:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****             /* 0b1, IFXHSPHY_PHY2_REFCLKSEL_PAD */
+ 139:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****             hsphyRegPtr->PHY[phyIndex].CTRL1.B.PRS = 1;
+ 140:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 141:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         else if (device == IfxHsphy_TrgtDevice_trace)
+ 142:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         {
+ 143:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****             /* TPCS */
+ 144:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****             /* 0b0, IFXHSPHY_PHY2_REFCLKSEL_ALT */
+ 145:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****             hsphyRegPtr->PHY[phyIndex].CTRL1.B.PRS = 0; 
+ 146:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 147:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         else
+ 148:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         {
+ 149:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****             ret = FALSE;
+ 150:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 151:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     }
+ 152:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #endif /* #if IFXHSPHY_IS_PHY2_AVAILABLE */
+ 153:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+ 154:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     return ret;
+ 152              	 .loc 1 154 5 is_stmt 1
+ 155:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** }
+ 153              	 .loc 1 155 1 is_stmt 0
+ 154 0052 0090     	 ret 
+ 155              	.LVL14:
+ 156              	.L20:
+ 109:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 157              	 .loc 1 109 17
+ 158 0054 8202     	 mov %d2,0
+ 159 0056 1D000000 	 j .L14
+ 160              	.LVL15:
+ 161              	.L24:
+ 117:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #else
+ 162              	 .loc 1 117 9 is_stmt 1
+ 117:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #else
+ 163              	 .loc 1 117 51 is_stmt 0
+ 164 005a 8B050032 	 eq %d3,%d5,0
+ 165 005e 8B35E034 	 or.eq %d3,%d5,3
+ 117:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #else
+ 166              	 .loc 1 117 12
+ 167 0062 DF030000 	 jz %d3,.L21
+ 124:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 168              	 .loc 1 124 13 is_stmt 1
+ 124:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 169              	 .loc 1 124 52 is_stmt 0
+ 170 0066 8F340030 	 sh %d3,%d4,3
+ 171 006a 6062     	 mov.a %a2,%d6
+ 172 006c 01230026 	 addsc.a %a2,%a2,%d3,0
+ 173 0070 D9231480 	 lea %a3,[%a2]532
+ 174 0074 19231480 	 ld.w %d3,[%a2]532
+ 175 0078 8F13C031 	 andn %d3,%d3,~(-2)
+ 176 007c 7433     	 st.w [%a3]0,%d3
+ 177 007e 1D000000 	 j .L16
+ 178              	.L21:
+ 128:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 179              	 .loc 1 128 17
+ 180 0082 8202     	 mov %d2,0
+ 181              	.LVL16:
+ 182 0084 1D000000 	 j .L16
+ 183              	.LVL17:
+ 184              	.L25:
+ 135:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         {
+ 185              	 .loc 1 135 9 is_stmt 1
+ 135:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         {
+ 186              	 .loc 1 135 12 is_stmt 0
+ 187 0088 DF150000 	 jeq %d5,1,.L26
+ 141:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         {
+ 188              	 .loc 1 141 14 is_stmt 1
+ 141:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         {
+ 189              	 .loc 1 141 17 is_stmt 0
+ 190 008c DF350000 	 jeq %d5,3,.L27
+ 149:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 191              	 .loc 1 149 17
+ 192 0090 8202     	 mov %d2,0
+ 193              	.LVL18:
+ 194 0092 1D000000 	 j .L17
+ 195              	.LVL19:
+ 196              	.L26:
+ 139:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 197              	 .loc 1 139 13 is_stmt 1
+ 139:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 198              	 .loc 1 139 52 is_stmt 0
+ 199 0096 0634     	 sh %d4,3
+ 200              	.LVL20:
+ 201 0098 6062     	 mov.a %a2,%d6
+ 202 009a 01240026 	 addsc.a %a2,%a2,%d4,0
+ 203 009e D9231480 	 lea %a3,[%a2]532
+ 204 00a2 19231480 	 ld.w %d3,[%a2]532
+ 205 00a6 B7130130 	 insert %d3,%d3,1,0,1
+ 206 00aa 7433     	 st.w [%a3]0,%d3
+ 207 00ac 0090     	 ret 
+ 208              	.LVL21:
+ 209              	.L27:
+ 145:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 210              	 .loc 1 145 13 is_stmt 1
+ 145:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 211              	 .loc 1 145 52 is_stmt 0
+ 212 00ae 0634     	 sh %d4,3
+ 213              	.LVL22:
+ 214 00b0 6062     	 mov.a %a2,%d6
+ 215 00b2 01240026 	 addsc.a %a2,%a2,%d4,0
+ 216 00b6 D9231480 	 lea %a3,[%a2]532
+ 217 00ba 19231480 	 ld.w %d3,[%a2]532
+ 218 00be 8F13C031 	 andn %d3,%d3,~(-2)
+ 219 00c2 7433     	 st.w [%a3]0,%d3
+ 220 00c4 0090     	 ret 
+ 221              	.LFE332:
+ 223              	 .global IfxHsphy_Mp8g_setPhyRefClockSel_end
+ 224              	IfxHsphy_Mp8g_setPhyRefClockSel_end:
+ 225              	 .section .text.IfxHsphy_Mp8g_selFunction,"ax",@progbits
+ 226              	 .align 1
+ 227              	 .global IfxHsphy_Mp8g_selFunction
+ 229              	IfxHsphy_Mp8g_selFunction:
+ 230              	.LFB333:
+ 156:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+ 157:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+ 158:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** boolean IfxHsphy_Mp8g_selFunction(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_PhyIndex phyIndex, IfxHsphy_Trgt
+ 159:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** {
+ 231              	 .loc 1 159 1 is_stmt 1
+ 232              	.LVL23:
+ 233 0000 40AE     	 mov.aa %a14,%SP
+ 234              	.LCFI2:
+ 235 0002 8046     	 mov.d %d6,%a4
+ 160:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     boolean ret = TRUE;
+ 236              	 .loc 1 160 5
+ 237              	.LVL24:
+ 161:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+ 162:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #if IFXHSPHY_IS_PHY0_AVAILABLE
+ 163:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     if (phyIndex == IfxHsphy_PhyIndex_0)
+ 238              	 .loc 1 163 5
+ 239              	 .loc 1 163 8 is_stmt 0
+ 240 0004 DF040080 	 jnz %d4,.L35
+ 164:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     {
+ 165:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #if IFXHSPHY_IS_TRGTDEVICE_PCIE
+ 166:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         if (device == IfxHsphy_TrgtDevice_pcie)
+ 241              	 .loc 1 166 9 is_stmt 1
+ 242              	 .loc 1 166 12 is_stmt 0
+ 243 0008 DF150000 	 jeq %d5,1,.L39
+ 244              	.L30:
+ 167:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         {
+ 168:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****             /* PCIE */
+ 169:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****             hsphyRegPtr->PHY[phyIndex].CTRL1.B.FSP = 1;
+ 170:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 171:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #endif /* #if IFXHSPHY_IS_TRGTDEVICE_PCIE */
+ 172:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         if (device == IfxHsphy_TrgtDevice_xgmac)
+ 245              	 .loc 1 172 9 is_stmt 1
+ 246              	 .loc 1 172 12 is_stmt 0
+ 247 000c DF050080 	 jnz %d5,.L36
+ 173:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         {
+ 174:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****             /* XGMAC */
+ 175:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****             hsphyRegPtr->PHY[phyIndex].CTRL1.B.FSP = 0;
+ 248              	 .loc 1 175 13 is_stmt 1
+ 249              	 .loc 1 175 52 is_stmt 0
+ 250 0010 8F340020 	 sh %d2,%d4,3
+ 251 0014 6062     	 mov.a %a2,%d6
+ 252 0016 01220026 	 addsc.a %a2,%a2,%d2,0
+ 253 001a D9231480 	 lea %a3,[%a2]532
+ 254 001e 19221480 	 ld.w %d2,[%a2]532
+ 255 0022 8F22C021 	 andn %d2,%d2,~(-3)
+ 256 0026 7432     	 st.w [%a3]0,%d2
+ 160:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+ 257              	 .loc 1 160 13
+ 258 0028 8212     	 mov %d2,1
+ 259 002a 1D000000 	 j .L29
+ 260              	.LVL25:
+ 261              	.L39:
+ 169:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 262              	 .loc 1 169 13 is_stmt 1
+ 169:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 263              	 .loc 1 169 52 is_stmt 0
+ 264 002e 8F340020 	 sh %d2,%d4,3
+ 265 0032 01420026 	 addsc.a %a2,%a4,%d2,0
+ 266 0036 D9231480 	 lea %a3,[%a2]532
+ 267 003a 19221480 	 ld.w %d2,[%a2]532
+ 268 003e B7128120 	 insert %d2,%d2,1,1,1
+ 269 0042 7432     	 st.w [%a3]0,%d2
+ 270 0044 1D000000 	 j .L30
+ 271              	.L35:
+ 160:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+ 272              	 .loc 1 160 13
+ 273 0048 8212     	 mov %d2,1
+ 274              	.L29:
+ 275              	.LVL26:
+ 176:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 177:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         else
+ 178:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         {
+ 179:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****             ret = FALSE;
+ 180:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 181:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     }
+ 182:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #endif /* #if IFXHSPHY_IS_PHY0_AVAILABLE */
+ 183:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+ 184:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     if (phyIndex == IfxHsphy_PhyIndex_1)
+ 276              	 .loc 1 184 5 is_stmt 1
+ 277              	 .loc 1 184 8 is_stmt 0
+ 278 004a DF140000 	 jeq %d4,1,.L40
+ 279              	.LVL27:
+ 280              	.L31:
+ 185:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     {
+ 186:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #if IFXHSPHY_IS_TRGTDEVICE_XGMAC	
+ 187:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         if (device == IfxHsphy_TrgtDevice_xgmac)	
+ 188:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #else	
+ 189:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         if (device == IfxHsphy_TrgtDevice_eth)
+ 190:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #endif /* #if IFXHSPHY_IS_TRGTDEVICE_XGMAC */		
+ 191:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         {
+ 192:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****             /* XGMAC/ETH */
+ 193:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****             hsphyRegPtr->PHY[phyIndex].CTRL1.B.FSP = 0;
+ 194:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 195:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         else if (device == IfxHsphy_TrgtDevice_trace)
+ 196:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         {
+ 197:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****             /* TPCS */
+ 198:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****             hsphyRegPtr->PHY[phyIndex].CTRL1.B.FSP = 1;
+ 199:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 200:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         else
+ 201:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         {
+ 202:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****             ret = FALSE;
+ 203:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 204:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     }
+ 205:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+ 206:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #if IFXHSPHY_IS_PHY2_AVAILABLE
+ 207:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 	if (phyIndex == IfxHsphy_PhyIndex_2)
+ 281              	 .loc 1 207 2 is_stmt 1
+ 282              	 .loc 1 207 5 is_stmt 0
+ 283 004e DF240000 	 jeq %d4,2,.L41
+ 284              	.LVL28:
+ 285              	.L33:
+ 208:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     {
+ 209:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         if (device == IfxHsphy_TrgtDevice_pcie)
+ 210:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         {
+ 211:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****             /* PCIE */
+ 212:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****             hsphyRegPtr->PHY[phyIndex].CTRL1.B.FSP = 0;
+ 213:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 214:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         else if (device == IfxHsphy_TrgtDevice_trace)
+ 215:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         {
+ 216:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****             /* TPCS */
+ 217:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****             hsphyRegPtr->PHY[phyIndex].CTRL1.B.FSP = 1;
+ 218:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 219:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         else
+ 220:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         {
+ 221:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****             ret = FALSE;
+ 222:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 223:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     }
+ 224:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #endif /* #if IFXHSPHY_IS_PHY2_AVAILABLE */
+ 225:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+ 226:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     return ret;
+ 286              	 .loc 1 226 5 is_stmt 1
+ 227:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** }
+ 287              	 .loc 1 227 1 is_stmt 0
+ 288 0052 0090     	 ret 
+ 289              	.LVL29:
+ 290              	.L36:
+ 179:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 291              	 .loc 1 179 17
+ 292 0054 8202     	 mov %d2,0
+ 293 0056 1D000000 	 j .L29
+ 294              	.LVL30:
+ 295              	.L40:
+ 187:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #else	
+ 296              	 .loc 1 187 9 is_stmt 1
+ 187:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #else	
+ 297              	 .loc 1 187 12 is_stmt 0
+ 298 005a DF050080 	 jnz %d5,.L32
+ 193:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 299              	 .loc 1 193 13 is_stmt 1
+ 193:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 300              	 .loc 1 193 52 is_stmt 0
+ 301 005e 8F340030 	 sh %d3,%d4,3
+ 302 0062 6062     	 mov.a %a2,%d6
+ 303 0064 01230026 	 addsc.a %a2,%a2,%d3,0
+ 304 0068 D9231480 	 lea %a3,[%a2]532
+ 305 006c 19231480 	 ld.w %d3,[%a2]532
+ 306 0070 8F23C031 	 andn %d3,%d3,~(-3)
+ 307 0074 7433     	 st.w [%a3]0,%d3
+ 308 0076 1D000000 	 j .L31
+ 309              	.L32:
+ 195:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         {
+ 310              	 .loc 1 195 14 is_stmt 1
+ 195:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         {
+ 311              	 .loc 1 195 17 is_stmt 0
+ 312 007a DF350000 	 jeq %d5,3,.L42
+ 202:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 313              	 .loc 1 202 17
+ 314 007e 8202     	 mov %d2,0
+ 315              	.LVL31:
+ 316 0080 1D000000 	 j .L31
+ 317              	.LVL32:
+ 318              	.L42:
+ 198:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 319              	 .loc 1 198 13 is_stmt 1
+ 198:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 320              	 .loc 1 198 52 is_stmt 0
+ 321 0084 8F340030 	 sh %d3,%d4,3
+ 322 0088 6062     	 mov.a %a2,%d6
+ 323 008a 01230026 	 addsc.a %a2,%a2,%d3,0
+ 324 008e D9231480 	 lea %a3,[%a2]532
+ 325 0092 19231480 	 ld.w %d3,[%a2]532
+ 326 0096 B7138130 	 insert %d3,%d3,1,1,1
+ 327 009a 7433     	 st.w [%a3]0,%d3
+ 328 009c 1D000000 	 j .L31
+ 329              	.L41:
+ 209:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         {
+ 330              	 .loc 1 209 9 is_stmt 1
+ 209:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         {
+ 331              	 .loc 1 209 12 is_stmt 0
+ 332 00a0 DF150000 	 jeq %d5,1,.L43
+ 214:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         {
+ 333              	 .loc 1 214 14 is_stmt 1
+ 214:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         {
+ 334              	 .loc 1 214 17 is_stmt 0
+ 335 00a4 DF350000 	 jeq %d5,3,.L44
+ 221:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 336              	 .loc 1 221 17
+ 337 00a8 8202     	 mov %d2,0
+ 338              	.LVL33:
+ 339 00aa 1D000000 	 j .L33
+ 340              	.LVL34:
+ 341              	.L43:
+ 212:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 342              	 .loc 1 212 13 is_stmt 1
+ 212:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 343              	 .loc 1 212 52 is_stmt 0
+ 344 00ae 0634     	 sh %d4,3
+ 345              	.LVL35:
+ 346 00b0 6062     	 mov.a %a2,%d6
+ 347 00b2 01240026 	 addsc.a %a2,%a2,%d4,0
+ 348 00b6 D9231480 	 lea %a3,[%a2]532
+ 349 00ba 19231480 	 ld.w %d3,[%a2]532
+ 350 00be 8F23C031 	 andn %d3,%d3,~(-3)
+ 351 00c2 7433     	 st.w [%a3]0,%d3
+ 352 00c4 0090     	 ret 
+ 353              	.LVL36:
+ 354              	.L44:
+ 217:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 355              	 .loc 1 217 13 is_stmt 1
+ 217:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 356              	 .loc 1 217 52 is_stmt 0
+ 357 00c6 0634     	 sh %d4,3
+ 358              	.LVL37:
+ 359 00c8 6062     	 mov.a %a2,%d6
+ 360 00ca 01240026 	 addsc.a %a2,%a2,%d4,0
+ 361 00ce D9231480 	 lea %a3,[%a2]532
+ 362 00d2 19231480 	 ld.w %d3,[%a2]532
+ 363 00d6 B7138130 	 insert %d3,%d3,1,1,1
+ 364 00da 7433     	 st.w [%a3]0,%d3
+ 365 00dc 0090     	 ret 
+ 366              	.LFE333:
+ 368              	 .global IfxHsphy_Mp8g_selFunction_end
+ 369              	IfxHsphy_Mp8g_selFunction_end:
+ 370              	 .section .text.IfxHsphy_Mp8g_isPhyReady,"ax",@progbits
+ 371              	 .align 1
+ 372              	 .global IfxHsphy_Mp8g_isPhyReady
+ 374              	IfxHsphy_Mp8g_isPhyReady:
+ 375              	.LFB334:
+ 228:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+ 229:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+ 230:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** boolean IfxHsphy_Mp8g_isPhyReady(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_PhyIndex phyIndex)
+ 231:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** {
+ 376              	 .loc 1 231 1 is_stmt 1
+ 377              	.LVL38:
+ 378 0000 40AE     	 mov.aa %a14,%SP
+ 379              	.LCFI3:
+ 232:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     boolean ret = TRUE;
+ 380              	 .loc 1 232 5
+ 381              	.LVL39:
+ 233:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+ 234:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #if IFXHSPHY_IS_PHY0_AVAILABLE && IFXHSPHY_IS_PHY2_AVAILABLE
+ 235:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     if ((phyIndex == IfxHsphy_PhyIndex_0) || (phyIndex == IfxHsphy_PhyIndex_1) || (phyIndex == IfxH
+ 382              	 .loc 1 235 5
+ 383              	 .loc 1 235 8 is_stmt 0
+ 384 0002 FF340080 	 jge.u %d4,3,.L47
+ 236:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #elif IFXHSPHY_IS_PHY2_AVAILABLE
+ 237:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     if ((phyIndex == IfxHsphy_PhyIndex_1) || (phyIndex == IfxHsphy_PhyIndex_2))
+ 238:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #elif IFXHSPHY_IS_PHY0_AVAILABLE
+ 239:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 	if ((phyIndex == IfxHsphy_PhyIndex_0) || (phyIndex == IfxHsphy_PhyIndex_1))
+ 240:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #else
+ 241:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     if (phyIndex == IfxHsphy_PhyIndex_1)
+ 242:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #endif	/* #if IFXHSPHY_IS_PHY0_AVAILABLE && IFXHSPHY_IS_PHY2_AVAILABLE */
+ 243:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     {
+ 244:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         /* Check if the PHY is ready by checking if SRAM loading start. */
+ 245:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         ret = (hsphyRegPtr->PHY[phyIndex].CTRL1.B.INITDONE == 1);
+ 385              	 .loc 1 245 9 is_stmt 1
+ 386              	 .loc 1 245 50 is_stmt 0
+ 387 0006 0634     	 sh %d4,3
+ 388              	.LVL40:
+ 389 0008 01440026 	 addsc.a %a2,%a4,%d4,0
+ 390 000c 19221480 	 ld.w %d2,[%a2]532
+ 391 0010 3702E121 	 extr.u %d2,%d2,3,1
+ 392              	.LVL41:
+ 393 0014 0090     	 ret 
+ 394              	.LVL42:
+ 395              	.L47:
+ 246:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     }
+ 247:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     else
+ 248:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     {
+ 249:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         ret = FALSE;
+ 396              	 .loc 1 249 13
+ 397 0016 8202     	 mov %d2,0
+ 398              	.LVL43:
+ 250:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     }
+ 251:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+ 252:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     return ret;
+ 399              	 .loc 1 252 5 is_stmt 1
+ 253:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** }
+ 400              	 .loc 1 253 1 is_stmt 0
+ 401 0018 0090     	 ret 
+ 402              	.LFE334:
+ 404              	 .global IfxHsphy_Mp8g_isPhyReady_end
+ 405              	IfxHsphy_Mp8g_isPhyReady_end:
+ 406              	 .section .text.IfxHsphy_Mp8g_setExtLdDone,"ax",@progbits
+ 407              	 .align 1
+ 408              	 .global IfxHsphy_Mp8g_setExtLdDone
+ 410              	IfxHsphy_Mp8g_setExtLdDone:
+ 411              	.LFB335:
+ 254:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+ 255:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+ 256:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** boolean IfxHsphy_Mp8g_setExtLdDone(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_PhyIndex phyIndex)
+ 257:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** {
+ 412              	 .loc 1 257 1 is_stmt 1
+ 413              	.LVL44:
+ 414 0000 40AE     	 mov.aa %a14,%SP
+ 415              	.LCFI4:
+ 258:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     boolean ret = TRUE;
+ 416              	 .loc 1 258 5
+ 417              	.LVL45:
+ 259:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+ 260:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #if IFXHSPHY_IS_PHY0_AVAILABLE && IFXHSPHY_IS_PHY2_AVAILABLE
+ 261:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     if ((phyIndex == IfxHsphy_PhyIndex_0) || (phyIndex == IfxHsphy_PhyIndex_1) || (phyIndex == IfxH
+ 418              	 .loc 1 261 5
+ 419              	 .loc 1 261 8 is_stmt 0
+ 420 0002 FF340080 	 jge.u %d4,3,.L50
+ 262:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #elif IFXHSPHY_IS_PHY2_AVAILABLE
+ 263:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     if ((phyIndex == IfxHsphy_PhyIndex_1) || (phyIndex == IfxHsphy_PhyIndex_2))
+ 264:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #elif IFXHSPHY_IS_PHY0_AVAILABLE
+ 265:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 	if ((phyIndex == IfxHsphy_PhyIndex_0) || (phyIndex == IfxHsphy_PhyIndex_1))
+ 266:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #else
+ 267:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     if (phyIndex == IfxHsphy_PhyIndex_1)
+ 268:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** #endif /* #if IFXHSPHY_IS_PHY0_AVAILABLE && IFXHSPHY_IS_PHY2_AVAILABLE */
+ 269:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     {
+ 270:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         /* Check if the PHY is ready by checking if SRAM loading start. */
+ 271:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         if (hsphyRegPtr->PHY[phyIndex].CTRL1.B.EXTLDDONE != 1)
+ 421              	 .loc 1 271 9 is_stmt 1
+ 422              	 .loc 1 271 47 is_stmt 0
+ 423 0006 8F340020 	 sh %d2,%d4,3
+ 424 000a 01420026 	 addsc.a %a2,%a4,%d2,0
+ 425 000e 19221480 	 ld.w %d2,[%a2]532
+ 426              	 .loc 1 271 12
+ 427 0012 6F420080 	 jnz.t %d2,4,.L51
+ 272:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         {
+ 273:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****             hsphyRegPtr->PHY[phyIndex].CTRL1.B.EXTLDDONE = 1;
+ 428              	 .loc 1 273 13 is_stmt 1
+ 429              	 .loc 1 273 58 is_stmt 0
+ 430 0016 0634     	 sh %d4,3
+ 431              	.LVL46:
+ 432 0018 01440026 	 addsc.a %a2,%a4,%d4,0
+ 433 001c D9231480 	 lea %a3,[%a2]532
+ 434 0020 19221480 	 ld.w %d2,[%a2]532
+ 435 0024 B7120122 	 insert %d2,%d2,1,4,1
+ 436 0028 7432     	 st.w [%a3]0,%d2
+ 274:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         }
+ 275:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+ 276:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         ret = TRUE;
+ 437              	 .loc 1 276 13
+ 438 002a 8212     	 mov %d2,1
+ 439 002c 0090     	 ret 
+ 440              	.LVL47:
+ 441              	.L50:
+ 277:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     }
+ 278:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     else
+ 279:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     {
+ 280:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****         ret = FALSE;
+ 442              	 .loc 1 280 13
+ 443 002e 8202     	 mov %d2,0
+ 444 0030 0090     	 ret 
+ 445              	.L51:
+ 276:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     }
+ 446              	 .loc 1 276 13
+ 447 0032 8212     	 mov %d2,1
+ 448              	.LVL48:
+ 281:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     }
+ 282:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+ 283:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     return ret;
+ 449              	 .loc 1 283 5 is_stmt 1
+ 284:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** }
+ 450              	 .loc 1 284 1 is_stmt 0
+ 451 0034 0090     	 ret 
+ 452              	.LFE335:
+ 454              	 .global IfxHsphy_Mp8g_setExtLdDone_end
+ 455              	IfxHsphy_Mp8g_setExtLdDone_end:
+ 456              	 .section .text.IfxHsphy_Mp8g_PowerDownReset,"ax",@progbits
+ 457              	 .align 1
+ 458              	 .global IfxHsphy_Mp8g_PowerDownReset
+ 460              	IfxHsphy_Mp8g_PowerDownReset:
+ 461              	.LFB336:
+ 285:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+ 286:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** 
+ 287:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** void IfxHsphy_Mp8g_PowerDownReset(Ifx_HSPHY *hsphySFR, IfxHsphy_PhyIndex phyIndex, IfxHsphy_PhyPowe
+ 288:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** {
+ 462              	 .loc 1 288 1 is_stmt 1
+ 463              	.LVL49:
+ 464 0000 40AE     	 mov.aa %a14,%SP
+ 465              	.LCFI5:
+ 289:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     hsphySFR->PHY[phyIndex].CTRL1.B.PWRDWN = phyPowerMode;
+ 466              	 .loc 1 289 5
+ 467              	 .loc 1 289 44 is_stmt 0
+ 468 0002 0634     	 sh %d4,3
+ 469              	.LVL50:
+ 470 0004 01440046 	 addsc.a %a4,%a4,%d4,0
+ 471              	.LVL51:
+ 472 0008 D9421480 	 lea %a2,[%a4]532
+ 473 000c 19421480 	 ld.w %d2,[%a4]532
+ 474 0010 67520820 	 ins.t %d2,%d2,8,%d5,0
+ 475 0014 7422     	 st.w [%a2]0,%d2
+ 290:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c ****     hsphySFR->PHY[phyIndex].CTRL1.B.RST    = 0;
+ 476              	 .loc 1 290 5 is_stmt 1
+ 477              	 .loc 1 290 44 is_stmt 0
+ 478 0016 5422     	 ld.w %d2,[%a2]0
+ 479 0018 8F02C821 	 andn %d2,%d2,~(-129)
+ 480 001c 7422     	 st.w [%a2]0,%d2
+ 291:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Mp8g/IfxHsphy_Mp8g.c **** }
+ 481              	 .loc 1 291 1
+ 482 001e 0090     	 ret 
+ 483              	.LFE336:
+ 485              	 .global IfxHsphy_Mp8g_PowerDownReset_end
+ 486              	IfxHsphy_Mp8g_PowerDownReset_end:
+ 575              	.Letext0:
+ 576              	 .file 2 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 577              	 .file 3 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 578              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/IfxHsphy_regdef.h"
+ 579              	 .file 5 "../Libraries/iLLD/TC4xx/CpuGeneric/_Impl/TC4Dx/IfxHsphy_cfg_TC4Dx.h"
+ 580              	 .file 6 "../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Std/IfxHsphy.h"
+ 21123 0000 00000000 	 .word IfxHsphy_Mp8g_resetModule
+ 21124 0004 00000000 	 .word IfxHsphy_Mp8g_resetModule_end
+ 21125 0008 1C001444 	 .word 0x4414001c
+ 21126 000c 00001000 	 .word 0x00100000
+ 21127 0010 04000000 	 .word 0x00000004
+ 21128 0014 C0000000 	 .word 0x000000c0
+ 21129 0018 00000000 	 .word IfxHsphy_Mp8g_setPhyRefClockSel
+ 21130 001c 00000000 	 .word IfxHsphy_Mp8g_setPhyRefClockSel_end
+ 21131 0020 7C001C44 	 .word 0x441c007c
+ 21132 0024 30001000 	 .word 0x00100030
+ 21133 0028 04000000 	 .word 0x00000004
+ 21134 002c C0000000 	 .word 0x000000c0
+ 21135 0030 00000000 	 .word IfxHsphy_Mp8g_selFunction
+ 21136 0034 00000000 	 .word IfxHsphy_Mp8g_selFunction_end
+ 21137 0038 7C001C44 	 .word 0x441c007c
+ 21138 003c 30001000 	 .word 0x00100030
+ 21139 0040 04000000 	 .word 0x00000004
+ 21140 0044 C0000000 	 .word 0x000000c0
+ 21141 0048 00000000 	 .word IfxHsphy_Mp8g_isPhyReady
+ 21142 004c 00000000 	 .word IfxHsphy_Mp8g_isPhyReady_end
+ 21143 0050 1C001444 	 .word 0x4414001c
+ 21144 0054 10001000 	 .word 0x00100010
+ 21145 0058 04000000 	 .word 0x00000004
+ 21146 005c C0000000 	 .word 0x000000c0
+ 21147 0060 00000000 	 .word IfxHsphy_Mp8g_setExtLdDone
+ 21148 0064 00000000 	 .word IfxHsphy_Mp8g_setExtLdDone_end
+ 21149 0068 1C001C44 	 .word 0x441c001c
+ 21150 006c 10001000 	 .word 0x00100010
+ 21151 0070 04000000 	 .word 0x00000004
+ 21152 0074 C0000000 	 .word 0x000000c0
+ 21153 0078 00000000 	 .word IfxHsphy_Mp8g_PowerDownReset
+ 21154 007c 00000000 	 .word IfxHsphy_Mp8g_PowerDownReset_end
+ 21155 0080 34001444 	 .word 0x44140034
+ 21156 0084 30001000 	 .word 0x00100030
+ 21157 0088 00000000 	 .word 0x00000000
+ 21158 008c C0000000 	 .word 0x000000c0
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxHsphy_Mp8g.c
+                            *ABS*:00000000 IfxHsphy_Mp8g.c
+    {standard input}:10     .text.IfxHsphy_Mp8g_resetModule:00000000 IfxHsphy_Mp8g_resetModule
+    {standard input}:90     .text.IfxHsphy_Mp8g_resetModule:00000062 IfxHsphy_Mp8g_resetModule_end
+    {standard input}:95     .text.IfxHsphy_Mp8g_setPhyRefClockSel:00000000 IfxHsphy_Mp8g_setPhyRefClockSel
+    {standard input}:224    .text.IfxHsphy_Mp8g_setPhyRefClockSel:000000c6 IfxHsphy_Mp8g_setPhyRefClockSel_end
+    {standard input}:229    .text.IfxHsphy_Mp8g_selFunction:00000000 IfxHsphy_Mp8g_selFunction
+    {standard input}:369    .text.IfxHsphy_Mp8g_selFunction:000000de IfxHsphy_Mp8g_selFunction_end
+    {standard input}:374    .text.IfxHsphy_Mp8g_isPhyReady:00000000 IfxHsphy_Mp8g_isPhyReady
+    {standard input}:405    .text.IfxHsphy_Mp8g_isPhyReady:0000001a IfxHsphy_Mp8g_isPhyReady_end
+    {standard input}:410    .text.IfxHsphy_Mp8g_setExtLdDone:00000000 IfxHsphy_Mp8g_setExtLdDone
+    {standard input}:455    .text.IfxHsphy_Mp8g_setExtLdDone:00000036 IfxHsphy_Mp8g_setExtLdDone_end
+    {standard input}:460    .text.IfxHsphy_Mp8g_PowerDownReset:00000000 IfxHsphy_Mp8g_PowerDownReset
+    {standard input}:486    .text.IfxHsphy_Mp8g_PowerDownReset:00000020 IfxHsphy_Mp8g_PowerDownReset_end
+
+NO UNDEFINED SYMBOLS

@@ -1,0 +1,838 @@
+   1              	
+   2              	 .file "IfxPsi5s.c"
+   3              	 .file "IfxPsi5s.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.IfxPsi5s_disableAscReceiver,"ax",@progbits
+   7              	 .align 1
+   8              	 .global IfxPsi5s_disableAscReceiver
+  10              	IfxPsi5s_disableAscReceiver:
+  11              	.LFB360:
+  12              	 .file 1 "../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c"
+   1:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** /**
+   2:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****  * \file IfxPsi5s.c
+   3:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****  * \brief PSI5S  basic functionality
+   4:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****  *
+   5:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****  *
+   8:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****  *
+   9:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****  *
+  10:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****  *                                 IMPORTANT NOTICE
+  11:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****  *
+  12:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****  * this file except in compliance with IFASLL.
+  15:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****  *
+  16:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****  *
+  26:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****  *
+  27:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****  */
+  28:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+  29:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** /******************************************************************************/
+  30:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** /*----------------------------------Includes----------------------------------*/
+  31:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** /******************************************************************************/
+  32:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** #include "Ifx_Cfg.h"
+  33:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** #if defined (__TASKING__)
+  34:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** #pragma warning 508		/* To suppress empty file warning */
+  35:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** #endif
+  36:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** #if defined (__ghs__)
+  37:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** #pragma diag_suppress 96		/* To suppress empty file warning */
+  38:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** #endif
+  39:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+  40:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** #if !defined(DEVICE_TC44X) && !defined(DEVICE_TC45X) && !defined(DEVICE_TC4EX) && !defined(DEVICE_T
+  41:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** #include "IfxPsi5s.h"
+  42:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+  43:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** /******************************************************************************/
+  44:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** /*-------------------------Function Implementations---------------------------*/
+  45:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** /******************************************************************************/
+  46:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+  47:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** void IfxPsi5s_disableAscReceiver(Ifx_PSI5S *psi5s)
+  48:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** {
+  13              	 .loc 1 48 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  49:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     psi5s->WHBCON.B.CLRREN = 1;
+  17              	 .loc 1 49 5
+  18              	 .loc 1 49 28 is_stmt 0
+  19 0002 D9423060 	 lea %a2,[%a4]432
+  20 0006 19423060 	 ld.w %d2,[%a4]432
+  21 000a B7120122 	 insert %d2,%d2,1,4,1
+  22 000e 7422     	 st.w [%a2]0,%d2
+  50:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** }
+  23              	 .loc 1 50 1
+  24 0010 0090     	 ret 
+  25              	.LFE360:
+  27              	 .global IfxPsi5s_disableAscReceiver_end
+  28              	IfxPsi5s_disableAscReceiver_end:
+  29              	 .section .text.IfxPsi5s_disableModule,"ax",@progbits
+  30              	 .align 1
+  31              	 .global IfxPsi5s_disableModule
+  33              	IfxPsi5s_disableModule:
+  34              	.LFB361:
+  51:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+  52:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+  53:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** void IfxPsi5s_disableModule(Ifx_PSI5S *psi5s)
+  54:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** {
+  35              	 .loc 1 54 1 is_stmt 1
+  36              	.LVL1:
+  37 0000 40AE     	 mov.aa %a14,%SP
+  38              	.LCFI1:
+  55:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** #if (IFX_PROT_ENABLED == 1U)
+  56:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&psi5s->PROTE, IfxApProt_State_config);
+  57:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** #endif
+  58:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     psi5s->CLC.B.DISR = 1;
+  39              	 .loc 1 58 5
+  40              	 .loc 1 58 23 is_stmt 0
+  41 0002 5442     	 ld.w %d2,[%a4]0
+  42 0004 B7120120 	 insert %d2,%d2,1,0,1
+  43 0008 7442     	 st.w [%a4]0,%d2
+  59:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** #if (IFX_PROT_ENABLED == 1U)
+  60:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&psi5s->PROTE, IfxApProt_State_run);
+  61:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** #endif
+  62:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** }
+  44              	 .loc 1 62 1
+  45 000a 0090     	 ret 
+  46              	.LFE361:
+  48              	 .global IfxPsi5s_disableModule_end
+  49              	IfxPsi5s_disableModule_end:
+  50              	 .section .text.IfxPsi5s_enableAscReceiver,"ax",@progbits
+  51              	 .align 1
+  52              	 .global IfxPsi5s_enableAscReceiver
+  54              	IfxPsi5s_enableAscReceiver:
+  55              	.LFB362:
+  63:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+  64:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+  65:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** void IfxPsi5s_enableAscReceiver(Ifx_PSI5S *psi5s)
+  66:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** {
+  56              	 .loc 1 66 1 is_stmt 1
+  57              	.LVL2:
+  58 0000 40AE     	 mov.aa %a14,%SP
+  59              	.LCFI2:
+  67:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     psi5s->WHBCON.B.SETREN = 1;
+  60              	 .loc 1 67 5
+  61              	 .loc 1 67 28 is_stmt 0
+  62 0002 D9423060 	 lea %a2,[%a4]432
+  63 0006 19423060 	 ld.w %d2,[%a4]432
+  64 000a B7128122 	 insert %d2,%d2,1,5,1
+  65 000e 7422     	 st.w [%a2]0,%d2
+  68:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** }
+  66              	 .loc 1 68 1
+  67 0010 0090     	 ret 
+  68              	.LFE362:
+  70              	 .global IfxPsi5s_enableAscReceiver_end
+  71              	IfxPsi5s_enableAscReceiver_end:
+  72              	 .section .text.IfxPsi5s_enableDisableChannelTriggerCounters,"ax",@progbits
+  73              	 .align 1
+  74              	 .global IfxPsi5s_enableDisableChannelTriggerCounters
+  76              	IfxPsi5s_enableDisableChannelTriggerCounters:
+  77              	.LFB363:
+  69:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+  70:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+  71:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** void IfxPsi5s_enableDisableChannelTriggerCounters(Ifx_PSI5S *psi5s, uint32 channels, uint32 mask)
+  72:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** {
+  78              	 .loc 1 72 1 is_stmt 1
+  79              	.LVL3:
+  80 0000 40AE     	 mov.aa %a14,%SP
+  81              	.LCFI3:
+  73:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     uint32 enableChannels = ((((psi5s->GCR.U >> IFX_PSI5S_GCR_ETC0_OFF) & ~mask) | channels) << IFX
+  82              	 .loc 1 73 5
+  83              	 .loc 1 73 43 is_stmt 0
+  84 0002 D9423010 	 lea %a2,[%a4]112
+  85 0006 19423010 	 ld.w %d2,[%a4]112
+  86              	 .loc 1 73 46
+  87 000a 0682     	 sh %d2,-8
+  88              	 .loc 1 73 73
+  89 000c 0F52E020 	 andn %d2,%d2,%d5
+  90              	 .loc 1 73 82
+  91 0010 A642     	 or %d2,%d4
+  92              	 .loc 1 73 12
+  93 0012 8F820020 	 sh %d2,%d2,8
+  94              	.LVL4:
+  74:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+  75:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     psi5s->GCR.U = (psi5s->GCR.U & ~(IFXPSI5S_GCR_CHANNEL_TRIGGER_COUNTERS_ENABLE_MASK)) | enableCh
+  95              	 .loc 1 75 5 is_stmt 1
+  96              	 .loc 1 75 31 is_stmt 0
+  97 0016 5423     	 ld.w %d3,[%a2]0
+  98              	 .loc 1 75 34
+  99 0018 B7030834 	 insert %d3,%d3,0,8,8
+ 100              	 .loc 1 75 90
+ 101 001c A632     	 or %d2,%d3
+ 102              	.LVL5:
+ 103              	 .loc 1 75 18
+ 104 001e 7422     	 st.w [%a2]0,%d2
+  76:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** }
+ 105              	 .loc 1 76 1
+ 106 0020 0090     	 ret 
+ 107              	.LFE363:
+ 109              	 .global IfxPsi5s_enableDisableChannelTriggerCounters_end
+ 110              	IfxPsi5s_enableDisableChannelTriggerCounters_end:
+ 111              	 .section .text.IfxPsi5s_enableDisableChannels,"ax",@progbits
+ 112              	 .align 1
+ 113              	 .global IfxPsi5s_enableDisableChannels
+ 115              	IfxPsi5s_enableDisableChannels:
+ 116              	.LFB364:
+  77:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+  78:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+  79:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** void IfxPsi5s_enableDisableChannels(Ifx_PSI5S *psi5s, uint32 channels, uint32 mask)
+  80:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** {
+ 117              	 .loc 1 80 1 is_stmt 1
+ 118              	.LVL6:
+ 119 0000 40AE     	 mov.aa %a14,%SP
+ 120              	.LCFI4:
+  81:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     uint32 enableChannels = ((((psi5s->GCR.U >> IFX_PSI5S_GCR_CEN0_OFF) & ~mask) | channels) << IFX
+ 121              	 .loc 1 81 5
+ 122              	 .loc 1 81 43 is_stmt 0
+ 123 0002 D9423010 	 lea %a2,[%a4]112
+ 124 0006 19423010 	 ld.w %d2,[%a4]112
+ 125              	 .loc 1 81 46
+ 126 000a 8F021F20 	 sh %d2,%d2,-16
+ 127              	 .loc 1 81 73
+ 128 000e 0F52E020 	 andn %d2,%d2,%d5
+ 129              	 .loc 1 81 82
+ 130 0012 A642     	 or %d2,%d4
+ 131              	 .loc 1 81 12
+ 132 0014 8F020120 	 sh %d2,%d2,16
+ 133              	.LVL7:
+  82:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+  83:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     psi5s->GCR.U = (psi5s->GCR.U & ~(IFXPSI5S_GCR_CHANNELS_ENABLE_MASK)) | enableChannels;
+ 134              	 .loc 1 83 5 is_stmt 1
+ 135              	 .loc 1 83 31 is_stmt 0
+ 136 0018 5423     	 ld.w %d3,[%a2]0
+ 137              	 .loc 1 83 34
+ 138 001a B7030838 	 insert %d3,%d3,0,16,8
+ 139              	 .loc 1 83 74
+ 140 001e A632     	 or %d2,%d3
+ 141              	.LVL8:
+ 142              	 .loc 1 83 18
+ 143 0020 7422     	 st.w [%a2]0,%d2
+  84:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** }
+ 144              	 .loc 1 84 1
+ 145 0022 0090     	 ret 
+ 146              	.LFE364:
+ 148              	 .global IfxPsi5s_enableDisableChannels_end
+ 149              	IfxPsi5s_enableDisableChannels_end:
+ 150              	 .section .text.IfxPsi5s_getBaudrate,"ax",@progbits
+ 151              	 .align 1
+ 152              	 .global IfxPsi5s_getBaudrate
+ 154              	IfxPsi5s_getBaudrate:
+ 155              	.LFB365:
+  85:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+  86:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+  87:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** float32 IfxPsi5s_getBaudrate(Ifx_PSI5S *psi5s, boolean synchMode, boolean divMode, IfxPsi5s_AscBaud
+  88:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** {
+ 156              	 .loc 1 88 1 is_stmt 1
+ 157              	.LVL9:
+ 158 0000 40AE     	 mov.aa %a14,%SP
+ 159              	.LCFI5:
+ 160 0002 404C     	 mov.aa %a12,%a4
+ 161 0004 026A     	 mov %d10,%d6
+ 162 0006 8FF40F81 	 and %d8,%d4,255
+ 163 000a 8FF50F91 	 and %d9,%d5,255
+  89:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     float32 baudrate;
+ 164              	 .loc 1 89 5
+  90:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     uint32  fInput = 2 * IfxClock_getSpbFrequency();
+ 165              	 .loc 1 90 5
+ 166              	 .loc 1 90 26 is_stmt 0
+ 167 000e 6D000000 	 call IfxClock_getSpbFrequency
+ 168              	.LVL10:
+ 169              	 .loc 1 90 13
+ 170 0012 0612     	 sh %d2,1
+ 171              	.LVL11:
+  91:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+  92:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     if (synchMode)
+ 172              	 .loc 1 92 5 is_stmt 1
+ 173              	 .loc 1 92 8 is_stmt 0
+ 174 0014 DF080000 	 jz %d8,.L7
+  93:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     {
+  94:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****         baudrate = (float32)fInput / ((baudrateSelection + 2) * 16 * (psi5s->BG.U + 1));
+ 175              	 .loc 1 94 9 is_stmt 1
+ 176              	 .loc 1 94 20 is_stmt 0
+ 177 0018 4B026131 	 utof %d3,%d2
+ 178              	 .loc 1 94 58
+ 179 001c C22A     	 add %d10,2
+ 180              	.LVL12:
+ 181              	 .loc 1 94 80
+ 182 001e 19C21C60 	 ld.w %d2,[%a12]412
+ 183              	.LVL13:
+ 184              	 .loc 1 94 68
+ 185 0022 03A20A2A 	 madd %d2,%d10,%d2,%d10
+ 186 0026 0642     	 sh %d2,4
+ 187              	 .loc 1 94 36
+ 188 0028 4B026121 	 utof %d2,%d2
+ 189              	 .loc 1 94 18
+ 190 002c 4B235120 	 div.f %d2,%d3,%d2
+ 191              	.LVL14:
+ 192 0030 0090     	 ret 
+ 193              	.LVL15:
+ 194              	.L7:
+  95:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     }
+  96:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     else if (divMode)
+ 195              	 .loc 1 96 10 is_stmt 1
+ 196              	 .loc 1 96 13 is_stmt 0
+ 197 0032 DF090000 	 jz %d9,.L9
+  97:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     {
+  98:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****         baudrate = (float32)fInput / ((baudrateSelection + 2) * 16 * (psi5s->BG.U + 1));
+ 198              	 .loc 1 98 9 is_stmt 1
+ 199              	 .loc 1 98 20 is_stmt 0
+ 200 0036 4B026131 	 utof %d3,%d2
+ 201              	 .loc 1 98 58
+ 202 003a 1B2A0020 	 addi %d2,%d10,2
+ 203              	.LVL16:
+ 204              	 .loc 1 98 80
+ 205 003e 19C41C60 	 ld.w %d4,[%a12]412
+ 206              	 .loc 1 98 68
+ 207 0042 03240A22 	 madd %d2,%d2,%d4,%d2
+ 208 0046 0642     	 sh %d2,4
+ 209              	 .loc 1 98 36
+ 210 0048 4B026121 	 utof %d2,%d2
+ 211              	 .loc 1 98 18
+ 212 004c 4B235120 	 div.f %d2,%d3,%d2
+ 213              	.LVL17:
+ 214 0050 0090     	 ret 
+ 215              	.LVL18:
+ 216              	.L9:
+  99:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     }
+ 100:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     else
+ 101:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     {
+ 102:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****         baudrate = (float32)(psi5s->FDV.U / IFXPSI5S_FDV_RANGE) * (fInput / (16 * (psi5s->BG.U + 1)
+ 217              	 .loc 1 102 9 is_stmt 1
+ 218              	 .loc 1 102 40 is_stmt 0
+ 219 0052 19C32060 	 ld.w %d3,[%a12]416
+ 220              	 .loc 1 102 43
+ 221 0056 8F531F30 	 sh %d3,%d3,-11
+ 222              	 .loc 1 102 20
+ 223 005a 4B036141 	 utof %d4,%d3
+ 224              	 .loc 1 102 93
+ 225 005e 19C31C60 	 ld.w %d3,[%a12]412
+ 226              	 .loc 1 102 96
+ 227 0062 C213     	 add %d3,1
+ 228              	 .loc 1 102 81
+ 229 0064 0643     	 sh %d3,4
+ 230              	 .loc 1 102 75
+ 231 0066 4B321122 	 div.u %e2,%d2,%d3
+ 232              	.LVL19:
+ 233              	 .loc 1 102 65
+ 234 006a 4B026121 	 utof %d2,%d2
+ 235              	 .loc 1 102 18
+ 236 006e 4B244120 	 mul.f %d2,%d4,%d2
+ 237              	.LVL20:
+ 103:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     }
+ 104:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+ 105:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     return baudrate;
+ 238              	 .loc 1 105 5 is_stmt 1
+ 106:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** }
+ 239              	 .loc 1 106 1 is_stmt 0
+ 240 0072 0090     	 ret 
+ 241              	.LFE365:
+ 243              	 .global IfxPsi5s_getBaudrate_end
+ 244              	IfxPsi5s_getBaudrate_end:
+ 245              	 .section .text.IfxPsi5s_getReadFrameStatus,"ax",@progbits
+ 246              	 .align 1
+ 247              	 .global IfxPsi5s_getReadFrameStatus
+ 249              	IfxPsi5s_getReadFrameStatus:
+ 250              	.LFB366:
+ 107:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+ 108:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+ 109:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** boolean IfxPsi5s_getReadFrameStatus(Ifx_PSI5S *psi5s, IfxPsi5s_ChannelId channelId)
+ 110:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** {
+ 251              	 .loc 1 110 1 is_stmt 1
+ 252              	.LVL21:
+ 253 0000 40AE     	 mov.aa %a14,%SP
+ 254              	.LCFI6:
+ 111:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     return psi5s->INTSTAT[channelId].B.RDI;
+ 255              	 .loc 1 111 5
+ 256              	 .loc 1 111 39 is_stmt 0
+ 257 0002 1BD40620 	 addi %d2,%d4,109
+ 258 0006 0622     	 sh %d2,2
+ 259 0008 01420046 	 addsc.a %a4,%a4,%d2,0
+ 260              	.LVL22:
+ 261 000c 5442     	 ld.w %d2,[%a4]0
+ 112:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** }
+ 262              	 .loc 1 112 1
+ 263 000e 3702E120 	 extr.u %d2,%d2,1,1
+ 264 0012 0090     	 ret 
+ 265              	.LFE366:
+ 267              	 .global IfxPsi5s_getReadFrameStatus_end
+ 268              	IfxPsi5s_getReadFrameStatus_end:
+ 269              	 .section .text.IfxPsi5s_getSuccessfullyReceivedFrameStatus,"ax",@progbits
+ 270              	 .align 1
+ 271              	 .global IfxPsi5s_getSuccessfullyReceivedFrameStatus
+ 273              	IfxPsi5s_getSuccessfullyReceivedFrameStatus:
+ 274              	.LFB367:
+ 113:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+ 114:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+ 115:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** boolean IfxPsi5s_getSuccessfullyReceivedFrameStatus(Ifx_PSI5S *psi5s, IfxPsi5s_ChannelId channelId)
+ 116:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** {
+ 275              	 .loc 1 116 1 is_stmt 1
+ 276              	.LVL23:
+ 277 0000 40AE     	 mov.aa %a14,%SP
+ 278              	.LCFI7:
+ 117:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     return psi5s->INTSTAT[channelId].B.RSI;
+ 279              	 .loc 1 117 5
+ 280              	 .loc 1 117 39 is_stmt 0
+ 281 0002 1BD40620 	 addi %d2,%d4,109
+ 282 0006 0622     	 sh %d2,2
+ 283 0008 01420046 	 addsc.a %a4,%a4,%d2,0
+ 284              	.LVL24:
+ 285 000c 5442     	 ld.w %d2,[%a4]0
+ 118:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** }
+ 286              	 .loc 1 118 1
+ 287 000e 8F120021 	 and %d2,%d2,1
+ 288 0012 0090     	 ret 
+ 289              	.LFE367:
+ 291              	 .global IfxPsi5s_getSuccessfullyReceivedFrameStatus_end
+ 292              	IfxPsi5s_getSuccessfullyReceivedFrameStatus_end:
+ 293              	 .section .text.IfxPsi5s_resetModule,"ax",@progbits
+ 294              	 .align 1
+ 295              	 .global IfxPsi5s_resetModule
+ 297              	IfxPsi5s_resetModule:
+ 298              	.LFB368:
+ 119:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+ 120:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+ 121:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** void IfxPsi5s_resetModule(Ifx_PSI5S *psi5s)
+ 122:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** {
+ 299              	 .loc 1 122 1 is_stmt 1
+ 300              	.LVL25:
+ 301 0000 40AE     	 mov.aa %a14,%SP
+ 302              	.LCFI8:
+ 123:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** #if (IFX_PROT_ENABLED == 1U)
+ 124:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&psi5s->PROTE, IfxApProt_State_config);
+ 125:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** #endif
+ 126:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     psi5s->RST.CTRLA.B.KRST = 1;         /* Only if both Kernel reset bits are set a reset is execu
+ 303              	 .loc 1 126 5
+ 304              	 .loc 1 126 29 is_stmt 0
+ 305 0002 D9420C00 	 lea %a2,[%a4]12
+ 306 0006 19420C00 	 ld.w %d2,[%a4]12
+ 307 000a B7120120 	 insert %d2,%d2,1,0,1
+ 308 000e 7422     	 st.w [%a2]0,%d2
+ 127:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     psi5s->RST.CTRLB.B.KRST = 1;
+ 309              	 .loc 1 127 5 is_stmt 1
+ 310              	 .loc 1 127 29 is_stmt 0
+ 311 0010 D9421000 	 lea %a2,[%a4]16
+ 312 0014 19421000 	 ld.w %d2,[%a4]16
+ 313 0018 B7120120 	 insert %d2,%d2,1,0,1
+ 314 001c 7422     	 st.w [%a2]0,%d2
+ 128:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** #if (IFX_PROT_ENABLED == 1U)
+ 129:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&psi5s->PROTE, IfxApProt_State_run);
+ 130:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** #endif
+ 131:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+ 132:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     while (0 == psi5s->RST.STAT.B.KRST)     /* Wait until reset is executed */
+ 315              	 .loc 1 132 5 is_stmt 1
+ 316              	.L13:
+ 133:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+ 134:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     {}
+ 317              	 .loc 1 134 6 discriminator 1
+ 132:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+ 318              	 .loc 1 132 14 discriminator 1
+ 132:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+ 319              	 .loc 1 132 34 is_stmt 0 discriminator 1
+ 320 001e 19421400 	 ld.w %d2,[%a4]20
+ 132:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+ 321              	 .loc 1 132 14 discriminator 1
+ 322 0022 6F020000 	 jz.t %d2,0,.L13
+ 135:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+ 136:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** #if (IFX_PROT_ENABLED == 1U)
+ 137:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&psi5s->PROTE, IfxApProt_State_config);
+ 138:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** #endif
+ 139:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     psi5s->RST.CTRLB.B.STATCLR = 1;       /* Clear Kernel reset status bit */
+ 323              	 .loc 1 139 5 is_stmt 1
+ 324              	 .loc 1 139 32 is_stmt 0
+ 325 0026 D9421000 	 lea %a2,[%a4]16
+ 326 002a 19421000 	 ld.w %d2,[%a4]16
+ 327 002e B712812F 	 insert %d2,%d2,1,31,1
+ 328 0032 7422     	 st.w [%a2]0,%d2
+ 140:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+ 141:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     while (psi5s->RST.STAT.B.KRST == 1)   /* Wait until KRST is cleared, only after this reset sequ
+ 329              	 .loc 1 141 5 is_stmt 1
+ 330              	.L14:
+ 142:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     {}
+ 331              	 .loc 1 142 6 discriminator 1
+ 141:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     {}
+ 332              	 .loc 1 141 35 discriminator 1
+ 141:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     {}
+ 333              	 .loc 1 141 29 is_stmt 0 discriminator 1
+ 334 0034 19421400 	 ld.w %d2,[%a4]20
+ 141:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     {}
+ 335              	 .loc 1 141 35 discriminator 1
+ 336 0038 6F020080 	 jnz.t %d2,0,.L14
+ 143:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+ 144:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** #if (IFX_PROT_ENABLED == 1U)
+ 145:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&psi5s->PROTE, IfxApProt_State_run);
+ 146:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** #endif
+ 147:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** }
+ 337              	 .loc 1 147 1
+ 338 003c 0090     	 ret 
+ 339              	.LFE368:
+ 341              	 .global IfxPsi5s_resetModule_end
+ 342              	IfxPsi5s_resetModule_end:
+ 343              	 .section .text.IfxPsi5s_startAscTransactions,"ax",@progbits
+ 344              	 .align 1
+ 345              	 .global IfxPsi5s_startAscTransactions
+ 347              	IfxPsi5s_startAscTransactions:
+ 348              	.LFB369:
+ 148:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+ 149:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+ 150:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** void IfxPsi5s_startAscTransactions(Ifx_PSI5S *psi5s)
+ 151:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** {
+ 349              	 .loc 1 151 1 is_stmt 1
+ 350              	.LVL26:
+ 351 0000 40AE     	 mov.aa %a14,%SP
+ 352              	.LCFI9:
+ 152:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     psi5s->CON.B.R = 1;
+ 353              	 .loc 1 152 5
+ 354              	 .loc 1 152 20 is_stmt 0
+ 355 0002 D9421860 	 lea %a2,[%a4]408
+ 356 0006 19421860 	 ld.w %d2,[%a4]408
+ 357 000a B7128127 	 insert %d2,%d2,1,15,1
+ 358 000e 7422     	 st.w [%a2]0,%d2
+ 153:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** }
+ 359              	 .loc 1 153 1
+ 360 0010 0090     	 ret 
+ 361              	.LFE369:
+ 363              	 .global IfxPsi5s_startAscTransactions_end
+ 364              	IfxPsi5s_startAscTransactions_end:
+ 365              	 .section .text.IfxPsi5s_stopAscTransactions,"ax",@progbits
+ 366              	 .align 1
+ 367              	 .global IfxPsi5s_stopAscTransactions
+ 369              	IfxPsi5s_stopAscTransactions:
+ 370              	.LFB370:
+ 154:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+ 155:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+ 156:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** void IfxPsi5s_stopAscTransactions(Ifx_PSI5S *psi5s)
+ 157:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** {
+ 371              	 .loc 1 157 1 is_stmt 1
+ 372              	.LVL27:
+ 373 0000 40AE     	 mov.aa %a14,%SP
+ 374              	.LCFI10:
+ 158:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     psi5s->CON.B.R = 0;
+ 375              	 .loc 1 158 5
+ 376              	 .loc 1 158 20 is_stmt 0
+ 377 0002 D9421860 	 lea %a2,[%a4]408
+ 378 0006 19421860 	 ld.w %d2,[%a4]408
+ 379 000a B7028127 	 insert %d2,%d2,0,15,1
+ 380 000e 7422     	 st.w [%a2]0,%d2
+ 159:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** }
+ 381              	 .loc 1 159 1
+ 382 0010 0090     	 ret 
+ 383              	.LFE370:
+ 385              	 .global IfxPsi5s_stopAscTransactions_end
+ 386              	IfxPsi5s_stopAscTransactions_end:
+ 387              	 .section .text.IfxPsi5s_getSrcAddress,"ax",@progbits
+ 388              	 .align 1
+ 389              	 .global IfxPsi5s_getSrcAddress
+ 391              	IfxPsi5s_getSrcAddress:
+ 392              	.LFB371:
+ 160:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+ 161:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+ 162:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** volatile Ifx_SRC_SRCR *IfxPsi5s_getSrcAddress(Ifx_PSI5S *psi5s, IfxPsi5s_ChannelId channel)
+ 163:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** {
+ 393              	 .loc 1 163 1 is_stmt 1
+ 394              	.LVL28:
+ 395 0000 40AE     	 mov.aa %a14,%SP
+ 396              	.LCFI11:
+ 164:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     IFX_UNUSED_PARAMETER(psi5s);
+ 397              	 .loc 1 164 5
+ 398              	 .loc 1 164 5
+ 399              	 .loc 1 164 32
+ 165:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     volatile Ifx_SRC_SRCR *src;
+ 400              	 .loc 1 165 5
+ 166:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     src = &MODULE_SRC.PSI5S[0].SR[channel];
+ 401              	 .loc 1 166 5
+ 402              	 .loc 1 166 11 is_stmt 0
+ 403 0002 0624     	 sh %d4,2
+ 404              	.LVL29:
+ 167:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     return src;
+ 405              	 .loc 1 167 5 is_stmt 1
+ 168:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** }
+ 406              	 .loc 1 168 1 is_stmt 0
+ 407 0004 9130442F 	 movh.a %a2,62531
+ 408 0008 D92200D3 	 lea %a2,[%a2]13120
+ 409 000c 01240026 	 addsc.a %a2,%a2,%d4,0
+ 410 0010 0090     	 ret 
+ 411              	.LFE371:
+ 413              	 .global IfxPsi5s_getSrcAddress_end
+ 414              	IfxPsi5s_getSrcAddress_end:
+ 415              	 .section .text.IfxPsi5s_initApConfig,"ax",@progbits
+ 416              	 .align 1
+ 417              	 .global IfxPsi5s_initApConfig
+ 419              	IfxPsi5s_initApConfig:
+ 420              	.LFB372:
+ 169:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+ 170:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+ 171:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** void IfxPsi5s_initApConfig(IfxPsi5s_ApConfig *config)
+ 172:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** {
+ 421              	 .loc 1 172 1 is_stmt 1
+ 422              	.LVL30:
+ 423 0000 40AE     	 mov.aa %a14,%SP
+ 424              	.LCFI12:
+ 425 0002 404C     	 mov.aa %a12,%a4
+ 173:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     IfxApProt_initConfig(&config->proteConfig);
+ 426              	 .loc 1 173 5
+ 427 0004 6D000000 	 call IfxApProt_initConfig
+ 428              	.LVL31:
+ 174:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     IfxApProt_initConfig(&config->protseConfig);
+ 429              	 .loc 1 174 5
+ 430 0008 D9C41400 	 lea %a4,[%a12]20
+ 431 000c 6D000000 	 call IfxApProt_initConfig
+ 432              	.LVL32:
+ 175:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     IfxApApu_initConfig(&config->apuConfig);
+ 433              	 .loc 1 175 5
+ 434 0010 D9C42800 	 lea %a4,[%a12]40
+ 435 0014 6D000000 	 call IfxApApu_initConfig
+ 436              	.LVL33:
+ 176:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** }
+ 437              	 .loc 1 176 1 is_stmt 0
+ 438 0018 0090     	 ret 
+ 439              	.LFE372:
+ 441              	 .global IfxPsi5s_initApConfig_end
+ 442              	IfxPsi5s_initApConfig_end:
+ 443              	 .section .text.IfxPsi5s_initAp,"ax",@progbits
+ 444              	 .align 1
+ 445              	 .global IfxPsi5s_initAp
+ 447              	IfxPsi5s_initAp:
+ 448              	.LFB373:
+ 177:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+ 178:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+ 179:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** void IfxPsi5s_initAp(Ifx_PSI5S *psi5s, IfxPsi5s_ApConfig *config)
+ 180:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** {
+ 449              	 .loc 1 180 1 is_stmt 1
+ 450              	.LVL34:
+ 451 0000 40AE     	 mov.aa %a14,%SP
+ 452              	.LCFI13:
+ 453 0002 404C     	 mov.aa %a12,%a4
+ 454 0004 405D     	 mov.aa %a13,%a5
+ 181:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     /* Initialize the PROTs */
+ 182:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     IfxApProt_init((Ifx_PROT_PROT *)&psi5s->PROTE, &config->proteConfig);
+ 455              	 .loc 1 182 5
+ 456 0006 D9442000 	 lea %a4,[%a4]32
+ 457              	.LVL35:
+ 458 000a 6D000000 	 call IfxApProt_init
+ 459              	.LVL36:
+ 183:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     IfxApProt_init((Ifx_PROT_PROT *)&psi5s->PROTSE, &config->protseConfig);
+ 460              	 .loc 1 183 5
+ 461              	 .loc 1 183 37 is_stmt 0
+ 462 000e 80C2     	 mov.d %d2,%a12
+ 463 0010 1B420280 	 addi %d8,%d2,36
+ 464              	 .loc 1 183 5
+ 465 0014 D9D51400 	 lea %a5,[%a13]20
+ 466 0018 6084     	 mov.a %a4,%d8
+ 467 001a 6D000000 	 call IfxApProt_init
+ 468              	.LVL37:
+ 184:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+ 185:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     /* Change the state to CONFIG, Configure APU and set PROT state back to RUN */
+ 186:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     /* Initialize the APU */
+ 187:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&psi5s->PROTSE, IfxApProt_State_config);
+ 469              	 .loc 1 187 5 is_stmt 1
+ 470 001e 8214     	 mov %d4,1
+ 471 0020 6084     	 mov.a %a4,%d8
+ 472 0022 6D000000 	 call IfxApProt_setState
+ 473              	.LVL38:
+ 188:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     IfxApApu_init((Ifx_ACCEN_ACCEN *)&psi5s->ACCEN, &config->apuConfig);
+ 474              	 .loc 1 188 5
+ 475 0026 D9D52800 	 lea %a5,[%a13]40
+ 476 002a D9C40010 	 lea %a4,[%a12]64
+ 477 002e 6D000000 	 call IfxApApu_init
+ 478              	.LVL39:
+ 189:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&psi5s->PROTSE, IfxApProt_State_run);
+ 479              	 .loc 1 189 5
+ 480 0032 8244     	 mov %d4,4
+ 481 0034 6084     	 mov.a %a4,%d8
+ 482 0036 6D000000 	 call IfxApProt_setState
+ 483              	.LVL40:
+ 190:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** }
+ 484              	 .loc 1 190 1 is_stmt 0
+ 485 003a 0090     	 ret 
+ 486              	.LFE373:
+ 488              	 .global IfxPsi5s_initAp_end
+ 489              	IfxPsi5s_initAp_end:
+ 490              	 .section .text.IfxPsi5s_configureAccessToAllPsi5s,"ax",@progbits
+ 491              	 .align 1
+ 492              	 .global IfxPsi5s_configureAccessToAllPsi5s
+ 494              	IfxPsi5s_configureAccessToAllPsi5s:
+ 495              	.LFB374:
+ 191:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+ 192:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+ 193:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** void IfxPsi5s_configureAccessToAllPsi5s(IfxApApu_ApuConfig *apConfig)
+ 194:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** {
+ 496              	 .loc 1 194 1 is_stmt 1
+ 497              	.LVL41:
+ 498 0000 40AE     	 mov.aa %a14,%SP
+ 499              	.LCFI14:
+ 195:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** #if (IFXPSI5S_NUM_MODULES == 1)
+ 196:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_PSI5S0.ACCEN, apConfig);
+ 500              	 .loc 1 196 5
+ 501 0002 4045     	 mov.aa %a5,%a4
+ 502 0004 9100444F 	 movh.a %a4,62528
+ 503              	.LVL42:
+ 504 0008 D9440017 	 lea %a4,[%a4]28736
+ 505 000c 6D000000 	 call IfxApApu_init
+ 506              	.LVL43:
+ 197:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** #else	
+ 198:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     uint8 index;
+ 199:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** 
+ 200:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     for (index = 0; index < IFXPSI5S_NUM_MODULES; index++)
+ 201:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     {
+ 202:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****         /* Loop through all the instance */
+ 203:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****         Ifx_PSI5S *psi5s = (Ifx_PSI5S *)(((uint32)&MODULE_PSI5S0) + index * ((uint32)&MODULE_PSI5S1
+ 204:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****         IfxApApu_init((Ifx_ACCEN_ACCEN *)&psi5s->ACCEN, apConfig);
+ 205:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c ****     }
+ 206:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** #endif	
+ 207:../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.c **** }
+ 507              	 .loc 1 207 1 is_stmt 0
+ 508 0010 0090     	 ret 
+ 509              	.LFE374:
+ 511              	 .global IfxPsi5s_configureAccessToAllPsi5s_end
+ 512              	IfxPsi5s_configureAccessToAllPsi5s_end:
+ 709              	.Letext0:
+ 710              	 .file 2 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 711              	 .file 3 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 712              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/IfxPsi5s_regdef.h"
+ 713              	 .file 5 "../Libraries/iLLD/TC4xx/CpuGeneric/_Impl/TC4Dx/IfxAp_cfg_TC4Dx.h"
+ 714              	 .file 6 "../Libraries/iLLD/TC4xx/CpuGeneric/Ap/IfxProt_regdef.h"
+ 715              	 .file 7 "../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h"
+ 716              	 .file 8 "../Libraries/iLLD/TC4xx/CpuGeneric/Ap/IfxAccen_regdef.h"
+ 717              	 .file 9 "../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h"
+ 718              	 .file 10 "../Libraries/Infra/Sfr/TC4Dx/IfxSrc_regdef.h"
+ 719              	 .file 11 "../Libraries/iLLD/TC4xx/Tricore/Psi5s/Std/IfxPsi5s.h"
+ 720              	 .file 12 "../Libraries/iLLD/TC4xx/CpuGeneric/Clock/Std/IfxClock.h"
+ 17785 0000 00000000 	 .word IfxPsi5s_disableAscReceiver
+ 17786 0004 00000000 	 .word IfxPsi5s_disableAscReceiver_end
+ 17787 0008 04001444 	 .word 0x44140004
+ 17788 000c 00001000 	 .word 0x00100000
+ 17789 0010 00000000 	 .word 0x00000000
+ 17790 0014 C0000000 	 .word 0x000000c0
+ 17791 0018 00000000 	 .word IfxPsi5s_disableModule
+ 17792 001c 00000000 	 .word IfxPsi5s_disableModule_end
+ 17793 0020 04001044 	 .word 0x44100004
+ 17794 0024 00001000 	 .word 0x00100000
+ 17795 0028 00000000 	 .word 0x00000000
+ 17796 002c C0000000 	 .word 0x000000c0
+ 17797 0030 00000000 	 .word IfxPsi5s_enableAscReceiver
+ 17798 0034 00000000 	 .word IfxPsi5s_enableAscReceiver_end
+ 17799 0038 04001444 	 .word 0x44140004
+ 17800 003c 00001000 	 .word 0x00100000
+ 17801 0040 00000000 	 .word 0x00000000
+ 17802 0044 C0000000 	 .word 0x000000c0
+ 17803 0048 00000000 	 .word IfxPsi5s_enableDisableChannelTriggerCounters
+ 17804 004c 00000000 	 .word IfxPsi5s_enableDisableChannelTriggerCounters_end
+ 17805 0050 3C001444 	 .word 0x4414003c
+ 17806 0054 30001000 	 .word 0x00100030
+ 17807 0058 00000000 	 .word 0x00000000
+ 17808 005c C0000000 	 .word 0x000000c0
+ 17809 0060 00000000 	 .word IfxPsi5s_enableDisableChannels
+ 17810 0064 00000000 	 .word IfxPsi5s_enableDisableChannels_end
+ 17811 0068 3C001444 	 .word 0x4414003c
+ 17812 006c 30001000 	 .word 0x00100030
+ 17813 0070 00000000 	 .word 0x00000000
+ 17814 0074 C0000000 	 .word 0x000000c0
+ 17815 0078 00000000 	 .word IfxPsi5s_getBaudrate
+ 17816 007c 00000000 	 .word IfxPsi5s_getBaudrate_end
+ 17817 0080 7C071454 	 .word 0x5414077c
+ 17818 0084 70001000 	 .word 0x00100070
+ 17819 0088 04000000 	 .word 0x00000004
+ 17820 008c 40000200 	 .word 0x00020040
+ 17821 0090 00000000 	 .word IfxPsi5s_getReadFrameStatus
+ 17822 0094 00000000 	 .word IfxPsi5s_getReadFrameStatus_end
+ 17823 0098 14001044 	 .word 0x44100014
+ 17824 009c 10001000 	 .word 0x00100010
+ 17825 00a0 04000000 	 .word 0x00000004
+ 17826 00a4 C0000000 	 .word 0x000000c0
+ 17827 00a8 00000000 	 .word IfxPsi5s_getSuccessfullyReceivedFrameStatus
+ 17828 00ac 00000000 	 .word IfxPsi5s_getSuccessfullyReceivedFrameStatus_end
+ 17829 00b0 14001044 	 .word 0x44100014
+ 17830 00b4 10001000 	 .word 0x00100010
+ 17831 00b8 04000000 	 .word 0x00000004
+ 17832 00bc C0000000 	 .word 0x000000c0
+ 17833 00c0 00000000 	 .word IfxPsi5s_resetModule
+ 17834 00c4 00000000 	 .word IfxPsi5s_resetModule_end
+ 17835 00c8 04001444 	 .word 0x44140004
+ 17836 00cc 00001000 	 .word 0x00100000
+ 17837 00d0 00000000 	 .word 0x00000000
+ 17838 00d4 C0000000 	 .word 0x000000c0
+ 17839 00d8 00000000 	 .word IfxPsi5s_startAscTransactions
+ 17840 00dc 00000000 	 .word IfxPsi5s_startAscTransactions_end
+ 17841 00e0 04001444 	 .word 0x44140004
+ 17842 00e4 00001000 	 .word 0x00100000
+ 17843 00e8 00000000 	 .word 0x00000000
+ 17844 00ec C0000000 	 .word 0x000000c0
+ 17845 00f0 00000000 	 .word IfxPsi5s_stopAscTransactions
+ 17846 00f4 00000000 	 .word IfxPsi5s_stopAscTransactions_end
+ 17847 00f8 04001444 	 .word 0x44140004
+ 17848 00fc 00001000 	 .word 0x00100000
+ 17849 0100 00000000 	 .word 0x00000000
+ 17850 0104 C0000000 	 .word 0x000000c0
+ 17851 0108 00000000 	 .word IfxPsi5s_getSrcAddress
+ 17852 010c 00000000 	 .word IfxPsi5s_getSrcAddress_end
+ 17853 0110 10000444 	 .word 0x44040010
+ 17854 0114 10001000 	 .word 0x00100010
+ 17855 0118 00000400 	 .word 0x00040000
+ 17856 011c C0000000 	 .word 0x000000c0
+ 17857 0120 00000000 	 .word IfxPsi5s_initApConfig
+ 17858 0124 00000000 	 .word IfxPsi5s_initApConfig_end
+ 17859 0128 00001054 	 .word 0x54100000
+ 17860 012c 00001000 	 .word 0x00100000
+ 17861 0130 00000000 	 .word 0x00000000
+ 17862 0134 40000200 	 .word 0x00020040
+ 17863 0138 00000000 	 .word IfxPsi5s_initAp
+ 17864 013c 00000000 	 .word IfxPsi5s_initAp_end
+ 17865 0140 14013074 	 .word 0x74300114
+ 17866 0144 00003000 	 .word 0x00300000
+ 17867 0148 00000000 	 .word 0x00000000
+ 17868 014c 40000200 	 .word 0x00020040
+ 17869 0150 00000000 	 .word IfxPsi5s_configureAccessToAllPsi5s
+ 17870 0154 00000000 	 .word IfxPsi5s_configureAccessToAllPsi5s_end
+ 17871 0158 00003044 	 .word 0x44300000
+ 17872 015c 00001000 	 .word 0x00100000
+ 17873 0160 00000000 	 .word 0x00000000
+ 17874 0164 40000200 	 .word 0x00020040
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxPsi5s.c
+                            *ABS*:00000000 IfxPsi5s.c
+    {standard input}:10     .text.IfxPsi5s_disableAscReceiver:00000000 IfxPsi5s_disableAscReceiver
+    {standard input}:28     .text.IfxPsi5s_disableAscReceiver:00000012 IfxPsi5s_disableAscReceiver_end
+    {standard input}:33     .text.IfxPsi5s_disableModule:00000000 IfxPsi5s_disableModule
+    {standard input}:49     .text.IfxPsi5s_disableModule:0000000c IfxPsi5s_disableModule_end
+    {standard input}:54     .text.IfxPsi5s_enableAscReceiver:00000000 IfxPsi5s_enableAscReceiver
+    {standard input}:71     .text.IfxPsi5s_enableAscReceiver:00000012 IfxPsi5s_enableAscReceiver_end
+    {standard input}:76     .text.IfxPsi5s_enableDisableChannelTriggerCounters:00000000 IfxPsi5s_enableDisableChannelTriggerCounters
+    {standard input}:110    .text.IfxPsi5s_enableDisableChannelTriggerCounters:00000022 IfxPsi5s_enableDisableChannelTriggerCounters_end
+    {standard input}:115    .text.IfxPsi5s_enableDisableChannels:00000000 IfxPsi5s_enableDisableChannels
+    {standard input}:149    .text.IfxPsi5s_enableDisableChannels:00000024 IfxPsi5s_enableDisableChannels_end
+    {standard input}:154    .text.IfxPsi5s_getBaudrate:00000000 IfxPsi5s_getBaudrate
+    {standard input}:244    .text.IfxPsi5s_getBaudrate:00000074 IfxPsi5s_getBaudrate_end
+    {standard input}:249    .text.IfxPsi5s_getReadFrameStatus:00000000 IfxPsi5s_getReadFrameStatus
+    {standard input}:268    .text.IfxPsi5s_getReadFrameStatus:00000014 IfxPsi5s_getReadFrameStatus_end
+    {standard input}:273    .text.IfxPsi5s_getSuccessfullyReceivedFrameStatus:00000000 IfxPsi5s_getSuccessfullyReceivedFrameStatus
+    {standard input}:292    .text.IfxPsi5s_getSuccessfullyReceivedFrameStatus:00000014 IfxPsi5s_getSuccessfullyReceivedFrameStatus_end
+    {standard input}:297    .text.IfxPsi5s_resetModule:00000000 IfxPsi5s_resetModule
+    {standard input}:342    .text.IfxPsi5s_resetModule:0000003e IfxPsi5s_resetModule_end
+    {standard input}:347    .text.IfxPsi5s_startAscTransactions:00000000 IfxPsi5s_startAscTransactions
+    {standard input}:364    .text.IfxPsi5s_startAscTransactions:00000012 IfxPsi5s_startAscTransactions_end
+    {standard input}:369    .text.IfxPsi5s_stopAscTransactions:00000000 IfxPsi5s_stopAscTransactions
+    {standard input}:386    .text.IfxPsi5s_stopAscTransactions:00000012 IfxPsi5s_stopAscTransactions_end
+    {standard input}:391    .text.IfxPsi5s_getSrcAddress:00000000 IfxPsi5s_getSrcAddress
+    {standard input}:414    .text.IfxPsi5s_getSrcAddress:00000012 IfxPsi5s_getSrcAddress_end
+    {standard input}:419    .text.IfxPsi5s_initApConfig:00000000 IfxPsi5s_initApConfig
+    {standard input}:442    .text.IfxPsi5s_initApConfig:0000001a IfxPsi5s_initApConfig_end
+    {standard input}:447    .text.IfxPsi5s_initAp:00000000 IfxPsi5s_initAp
+    {standard input}:489    .text.IfxPsi5s_initAp:0000003c IfxPsi5s_initAp_end
+    {standard input}:494    .text.IfxPsi5s_configureAccessToAllPsi5s:00000000 IfxPsi5s_configureAccessToAllPsi5s
+    {standard input}:512    .text.IfxPsi5s_configureAccessToAllPsi5s:00000012 IfxPsi5s_configureAccessToAllPsi5s_end
+
+UNDEFINED SYMBOLS
+IfxClock_getSpbFrequency
+IfxApProt_initConfig
+IfxApApu_initConfig
+IfxApProt_init
+IfxApProt_setState
+IfxApApu_init

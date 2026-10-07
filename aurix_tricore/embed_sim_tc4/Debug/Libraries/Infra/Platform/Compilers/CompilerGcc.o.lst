@@ -1,0 +1,452 @@
+   1              	
+   2              	 .file "CompilerGcc.c"
+   3              	 .file "CompilerGcc.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.Ifx_C_Init,"ax",@progbits
+   7              	 .align 1
+   8              	 .global Ifx_C_Init
+  10              	Ifx_C_Init:
+  11              	.LFB0:
+  12              	 .file 1 "../Libraries/Infra/Platform/Compilers/CompilerGcc.c"
+   1:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** /**
+   2:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****  * \file CompilerGnuc.c
+   3:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****  *
+   4:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****  * \version iLLD-TC4-v2.7.0
+   5:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   6:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****  *
+   7:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****  *
+   8:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****  *                                 IMPORTANT NOTICE
+   9:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****  *
+  10:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****  *
+  11:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  12:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  13:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****  * this file except in compliance with IFASLL.
+  14:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****  *
+  15:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  16:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  17:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  18:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  19:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  20:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  21:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****  * defects in the licensed items, or non-infringement of third parties'
+  22:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****  * intellectual property rights. See the full license text for the specific
+  23:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****  * language governing permissions and limitations under IFASLL.
+  24:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****  *
+  25:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****  */
+  26:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** 
+  27:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** #include "Ifx_Types.h"
+  28:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** #include "Compilers.h"
+  29:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** 
+  30:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** #if defined(__GNUC__) && !defined(__HIGHTEC__) && !defined(__CCAC__)
+  31:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** /*!
+  32:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****  * \brief Data s C variables.
+  33:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****  */
+  34:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** extern uint32 __clear_table[];  /**< clear table entry */
+  35:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** extern uint32 __copy_table[];   /**< copy table entry */
+  36:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** 
+  37:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** typedef volatile union
+  38:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** {
+  39:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****     uint8              *ucPtr;
+  40:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****     uint16             *usPtr;
+  41:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****     uint32             *uiPtr;
+  42:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****     unsigned long long *ullPtr;
+  43:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** } IfxStart_CTablePtr;
+  44:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** 
+  45:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** /*!
+  46:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****  * \brief Initializes C variables.
+  47:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****  *
+  48:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****  * This function is called in the startup. This function initialize the all variables in .data sect
+  49:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****  * and clears the .bss section
+  50:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****  *
+  51:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****  * Parameters: Nil
+  52:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****  * Return: Nil
+  53:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****  */
+  54:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** void Ifx_C_Init(void)
+  55:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** {
+  13              	 .loc 1 55 1
+  14 0000 40AE     	 mov.aa %a14,%SP
+  15              	.LCFI0:
+  16 0002 2008     	 sub.a %SP,8
+  56:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****     IfxStart_CTablePtr pBlockDest, pBlockSrc;
+  17              	 .loc 1 56 5
+  57:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****     uint32             uiLength, uiCnt;
+  18              	 .loc 1 57 5
+  58:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****     uint32            *pTable;
+  19              	 .loc 1 58 5
+  59:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****     /* clear table */
+  60:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****     pTable = (uint32 *)&__clear_table;
+  20              	 .loc 1 60 5
+  21              	.LVL0:
+  61:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** 
+  62:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****     while (pTable)
+  22              	 .loc 1 62 5
+  60:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** 
+  23              	 .loc 1 60 12 is_stmt 0
+  24 0004 91000020 	 movh.a %a2,hi:__clear_table
+  25 0008 D9220000 	 lea %a2,[%a2]lo:__clear_table
+  26              	 .loc 1 62 11
+  27 000c 1D000000 	 j .L2
+  28              	.LVL1:
+  29              	.L11:
+  63:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****     {
+  64:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         pBlockDest.uiPtr = (uint32 *)*pTable++;
+  65:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         uiLength         = *pTable++;
+  66:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** 
+  67:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         /* we are finished when length == -1 */
+  68:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         if (uiLength == 0xFFFFFFFF)
+  69:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         {
+  70:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****             break;
+  71:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         }
+  72:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** 
+  73:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         uiCnt = uiLength / 8;
+  74:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** 
+  75:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         while (uiCnt--)
+  76:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         {
+  77:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****             *pBlockDest.ullPtr++ = 0;
+  78:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         }
+  79:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** 
+  80:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         if (uiLength & 0x4)
+  81:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         {
+  82:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****             *pBlockDest.uiPtr++ = 0;
+  83:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         }
+  84:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** 
+  85:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         if (uiLength & 0x2)
+  86:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         {
+  87:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****             *pBlockDest.usPtr++ = 0;
+  88:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         }
+  89:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** 
+  90:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         if (uiLength & 0x1)
+  91:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         {
+  92:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****             *pBlockDest.ucPtr = 0;
+  93:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         }
+  94:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****     }
+  95:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** 
+  96:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****     /* copy table */
+  97:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****     pTable = (uint32 *)&__copy_table;
+  98:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** 
+  99:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****     while (pTable)
+ 100:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****     {
+ 101:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         pBlockSrc.uiPtr  = (uint32 *)*pTable++;
+ 102:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         pBlockDest.uiPtr = (uint32 *)*pTable++;
+ 103:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         uiLength         = *pTable++;
+ 104:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** 
+ 105:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         /* we are finished when length == -1 */
+ 106:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         if (uiLength == 0xFFFFFFFF)
+ 107:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         {
+ 108:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****             break;
+ 109:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         }
+ 110:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** 
+ 111:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         uiCnt = uiLength / 8;
+ 112:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** 
+ 113:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         while (uiCnt--)
+  30              	 .loc 1 113 21
+  31 0010 91000020 	 movh.a %a2,hi:__copy_table
+  32 0014 D9220000 	 lea %a2,[%a2]lo:__copy_table
+  33 0018 1D000000 	 j .L4
+  34              	.LVL2:
+  35              	.L6:
+  77:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         }
+  36              	 .loc 1 77 13 is_stmt 1
+  77:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         }
+  37              	 .loc 1 77 24 is_stmt 0
+  38 001c 99E2FCFF 	 ld.a %a2,[%a14]-4
+  77:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         }
+  39              	 .loc 1 77 31
+  40 0020 8022     	 mov.d %d2,%a2
+  41 0022 1B820020 	 addi %d2,%d2,8
+  42 0026 59E2FCFF 	 st.w [%a14]-4,%d2
+  77:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         }
+  43              	 .loc 1 77 34
+  44 002a D202     	 mov %e2,0
+  45 002c 89224009 	 st.d [%a2]0,%e2
+  75:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         {
+  46              	 .loc 1 75 21
+  47 0030 0252     	 mov %d2,%d5
+  48              	.LVL3:
+  49              	.L5:
+  75:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         {
+  50              	 .loc 1 75 16 is_stmt 1
+  75:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         {
+  51              	 .loc 1 75 21 is_stmt 0
+  52 0032 1BF2FF5F 	 addi %d5,%d2,-1
+  53              	.LVL4:
+  75:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         {
+  54              	 .loc 1 75 16
+  55 0036 DF020080 	 jnz %d2,.L6
+  80:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         {
+  56              	 .loc 1 80 9 is_stmt 1
+  80:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         {
+  57              	 .loc 1 80 12 is_stmt 0
+  58 003a 6F240000 	 jz.t %d4,2,.L7
+  82:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         }
+  59              	 .loc 1 82 13 is_stmt 1
+  82:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         }
+  60              	 .loc 1 82 24 is_stmt 0
+  61 003e 99E2FCFF 	 ld.a %a2,[%a14]-4
+  82:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         }
+  62              	 .loc 1 82 30
+  63 0042 8022     	 mov.d %d2,%a2
+  64 0044 C242     	 add %d2,4
+  65 0046 59E2FCFF 	 st.w [%a14]-4,%d2
+  82:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         }
+  66              	 .loc 1 82 33
+  67 004a 8202     	 mov %d2,0
+  68 004c 7422     	 st.w [%a2]0,%d2
+  69              	.L7:
+  85:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         {
+  70              	 .loc 1 85 9 is_stmt 1
+  85:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         {
+  71              	 .loc 1 85 12 is_stmt 0
+  72 004e 6F140000 	 jz.t %d4,1,.L8
+  87:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         }
+  73              	 .loc 1 87 13 is_stmt 1
+  87:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         }
+  74              	 .loc 1 87 24 is_stmt 0
+  75 0052 99E2FCFF 	 ld.a %a2,[%a14]-4
+  87:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         }
+  76              	 .loc 1 87 30
+  77 0056 8022     	 mov.d %d2,%a2
+  78 0058 C222     	 add %d2,2
+  79 005a 59E2FCFF 	 st.w [%a14]-4,%d2
+  87:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         }
+  80              	 .loc 1 87 33
+  81 005e 8202     	 mov %d2,0
+  82 0060 B422     	 st.h [%a2]0,%d2
+  83              	.L8:
+  90:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         {
+  84              	 .loc 1 90 9 is_stmt 1
+  90:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         {
+  85              	 .loc 1 90 12 is_stmt 0
+  86 0062 6F040000 	 jz.t %d4,0,.L9
+  92:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         }
+  87              	 .loc 1 92 13 is_stmt 1
+  92:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         }
+  88              	 .loc 1 92 24 is_stmt 0
+  89 0066 99E2FCFF 	 ld.a %a2,[%a14]-4
+  92:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         }
+  90              	 .loc 1 92 31
+  91 006a 8202     	 mov %d2,0
+  92 006c 3422     	 st.b [%a2]0,%d2
+  93              	.L9:
+  75:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         {
+  94              	 .loc 1 75 21
+  95 006e 4032     	 mov.aa %a2,%a3
+  96              	.LVL5:
+  97              	.L2:
+  62:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****     {
+  98              	 .loc 1 62 12 is_stmt 1
+  99 0070 BD020000 	 jz.a %a2,.L11
+  64:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         uiLength         = *pTable++;
+ 100              	 .loc 1 64 9
+ 101              	.LVL6:
+  64:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         uiLength         = *pTable++;
+ 102              	 .loc 1 64 38 is_stmt 0
+ 103 0074 D9230800 	 lea %a3,[%a2]8
+ 104 0078 5422     	 ld.w %d2,[%a2]0
+  64:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         uiLength         = *pTable++;
+ 105              	 .loc 1 64 26
+ 106 007a 59E2FCFF 	 st.w [%a14]-4,%d2
+  65:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** 
+ 107              	 .loc 1 65 9 is_stmt 1
+ 108              	.LVL7:
+  65:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** 
+ 109              	 .loc 1 65 26 is_stmt 0
+ 110 007e 19240400 	 ld.w %d4,[%a2]4
+ 111              	.LVL8:
+  68:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         {
+ 112              	 .loc 1 68 9 is_stmt 1
+  68:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         {
+ 113              	 .loc 1 68 12 is_stmt 0
+ 114 0082 DFF40000 	 jeq %d4,-1,.L11
+  73:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** 
+ 115              	 .loc 1 73 9 is_stmt 1
+  73:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** 
+ 116              	 .loc 1 73 15 is_stmt 0
+ 117 0086 8FD41F20 	 sh %d2,%d4,-3
+ 118              	.LVL9:
+  75:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         {
+ 119              	 .loc 1 75 9 is_stmt 1
+  75:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         {
+ 120              	 .loc 1 75 15 is_stmt 0
+ 121 008a 1D000000 	 j .L5
+ 122              	.LVL10:
+ 123              	.L14:
+ 114:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         {
+ 115:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****             *pBlockDest.ullPtr++ = *pBlockSrc.ullPtr++;
+ 124              	 .loc 1 115 13 is_stmt 1
+ 125              	 .loc 1 115 46 is_stmt 0
+ 126 008e 99E2F8FF 	 ld.a %a2,[%a14]-8
+ 127              	 .loc 1 115 53
+ 128 0092 8022     	 mov.d %d2,%a2
+ 129 0094 1B820020 	 addi %d2,%d2,8
+ 130 0098 59E2F8FF 	 st.w [%a14]-8,%d2
+ 131              	 .loc 1 115 24
+ 132 009c 99E3FCFF 	 ld.a %a3,[%a14]-4
+ 133              	 .loc 1 115 31
+ 134 00a0 8032     	 mov.d %d2,%a3
+ 135 00a2 1B820020 	 addi %d2,%d2,8
+ 136 00a6 59E2FCFF 	 st.w [%a14]-4,%d2
+ 137              	 .loc 1 115 36
+ 138 00aa 09264009 	 ld.d %e6,[%a2]0
+ 139              	 .loc 1 115 34
+ 140 00ae 89364009 	 st.d [%a3]0,%e6
+ 113:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         {
+ 141              	 .loc 1 113 21
+ 142 00b2 0242     	 mov %d2,%d4
+ 143              	.LVL11:
+ 144              	.L13:
+ 113:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         {
+ 145              	 .loc 1 113 16 is_stmt 1
+ 113:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         {
+ 146              	 .loc 1 113 21 is_stmt 0
+ 147 00b4 1BF2FF4F 	 addi %d4,%d2,-1
+ 148              	.LVL12:
+ 113:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         {
+ 149              	 .loc 1 113 16
+ 150 00b8 DF020080 	 jnz %d2,.L14
+ 116:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         }
+ 117:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** 
+ 118:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         if (uiLength & 0x4)
+ 151              	 .loc 1 118 9 is_stmt 1
+ 152              	 .loc 1 118 12 is_stmt 0
+ 153 00bc 6F230000 	 jz.t %d3,2,.L15
+ 119:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         {
+ 120:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****             *pBlockDest.uiPtr++ = *pBlockSrc.uiPtr++;
+ 154              	 .loc 1 120 13 is_stmt 1
+ 155              	 .loc 1 120 45 is_stmt 0
+ 156 00c0 99E2F8FF 	 ld.a %a2,[%a14]-8
+ 157              	 .loc 1 120 51
+ 158 00c4 8022     	 mov.d %d2,%a2
+ 159 00c6 C242     	 add %d2,4
+ 160 00c8 59E2F8FF 	 st.w [%a14]-8,%d2
+ 161              	 .loc 1 120 24
+ 162 00cc 99E3FCFF 	 ld.a %a3,[%a14]-4
+ 163              	 .loc 1 120 30
+ 164 00d0 8032     	 mov.d %d2,%a3
+ 165 00d2 C242     	 add %d2,4
+ 166 00d4 59E2FCFF 	 st.w [%a14]-4,%d2
+ 167              	 .loc 1 120 35
+ 168 00d8 5422     	 ld.w %d2,[%a2]0
+ 169 00da 7432     	 st.w [%a3]0,%d2
+ 170              	.L15:
+ 121:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         }
+ 122:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** 
+ 123:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         if (uiLength & 0x2)
+ 171              	 .loc 1 123 9 is_stmt 1
+ 172              	 .loc 1 123 12 is_stmt 0
+ 173 00dc 6F130000 	 jz.t %d3,1,.L16
+ 124:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         {
+ 125:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****             *pBlockDest.usPtr++ = *pBlockSrc.usPtr++;
+ 174              	 .loc 1 125 13 is_stmt 1
+ 175              	 .loc 1 125 45 is_stmt 0
+ 176 00e0 99E3F8FF 	 ld.a %a3,[%a14]-8
+ 177              	 .loc 1 125 51
+ 178 00e4 8032     	 mov.d %d2,%a3
+ 179 00e6 C222     	 add %d2,2
+ 180 00e8 59E2F8FF 	 st.w [%a14]-8,%d2
+ 181              	 .loc 1 125 24
+ 182 00ec 99E2FCFF 	 ld.a %a2,[%a14]-4
+ 183              	 .loc 1 125 30
+ 184 00f0 8022     	 mov.d %d2,%a2
+ 185 00f2 C222     	 add %d2,2
+ 186 00f4 59E2FCFF 	 st.w [%a14]-4,%d2
+ 187              	 .loc 1 125 35
+ 188 00f8 B9320000 	 ld.hu %d2,[%a3]0
+ 189              	 .loc 1 125 33
+ 190 00fc B422     	 st.h [%a2]0,%d2
+ 191              	.L16:
+ 126:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         }
+ 127:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** 
+ 128:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         if (uiLength & 0x1)
+ 192              	 .loc 1 128 9 is_stmt 1
+ 193              	 .loc 1 128 12 is_stmt 0
+ 194 00fe 6F030000 	 jz.t %d3,0,.L17
+ 129:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         {
+ 130:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****             *pBlockDest.ucPtr = *pBlockSrc.ucPtr;
+ 195              	 .loc 1 130 13 is_stmt 1
+ 196              	 .loc 1 130 43 is_stmt 0
+ 197 0102 99E3F8FF 	 ld.a %a3,[%a14]-8
+ 198              	 .loc 1 130 24
+ 199 0106 99E2FCFF 	 ld.a %a2,[%a14]-4
+ 200              	 .loc 1 130 33
+ 201 010a 1432     	 ld.bu %d2,[%a3]0
+ 202              	 .loc 1 130 31
+ 203 010c 3422     	 st.b [%a2]0,%d2
+ 204              	.L17:
+ 113:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         {
+ 205              	 .loc 1 113 21
+ 206 010e 6052     	 mov.a %a2,%d5
+ 207              	.LVL13:
+ 208              	.L4:
+  99:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****     {
+ 209              	 .loc 1 99 12 is_stmt 1
+ 210 0110 BD020000 	 jz.a %a2,.L1
+ 101:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         pBlockDest.uiPtr = (uint32 *)*pTable++;
+ 211              	 .loc 1 101 9
+ 212              	.LVL14:
+ 101:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         pBlockDest.uiPtr = (uint32 *)*pTable++;
+ 213              	 .loc 1 101 26 is_stmt 0
+ 214 0114 5422     	 ld.w %d2,[%a2]0
+ 215 0116 59E2F8FF 	 st.w [%a14]-8,%d2
+ 102:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         uiLength         = *pTable++;
+ 216              	 .loc 1 102 9 is_stmt 1
+ 217              	.LVL15:
+ 102:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         uiLength         = *pTable++;
+ 218              	 .loc 1 102 26 is_stmt 0
+ 219 011a 19220400 	 ld.w %d2,[%a2]4
+ 220 011e 59E2FCFF 	 st.w [%a14]-4,%d2
+ 103:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** 
+ 221              	 .loc 1 103 9 is_stmt 1
+ 103:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** 
+ 222              	 .loc 1 103 35 is_stmt 0
+ 223 0122 8022     	 mov.d %d2,%a2
+ 224 0124 1BC20050 	 addi %d5,%d2,12
+ 225              	.LVL16:
+ 103:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** 
+ 226              	 .loc 1 103 26
+ 227 0128 19230800 	 ld.w %d3,[%a2]8
+ 228              	.LVL17:
+ 106:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         {
+ 229              	 .loc 1 106 9 is_stmt 1
+ 106:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         {
+ 230              	 .loc 1 106 12 is_stmt 0
+ 231 012c DFF30000 	 jeq %d3,-1,.L1
+ 111:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** 
+ 232              	 .loc 1 111 9 is_stmt 1
+ 111:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** 
+ 233              	 .loc 1 111 15 is_stmt 0
+ 234 0130 8FD31F20 	 sh %d2,%d3,-3
+ 235              	.LVL18:
+ 113:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         {
+ 236              	 .loc 1 113 9 is_stmt 1
+ 113:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         {
+ 237              	 .loc 1 113 15 is_stmt 0
+ 238 0134 1D000000 	 j .L13
+ 239              	.LVL19:
+ 240              	.L1:
+ 131:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****         }
+ 132:../Libraries/Infra/Platform/Compilers/CompilerGcc.c ****     }
+ 133:../Libraries/Infra/Platform/Compilers/CompilerGcc.c **** }
+ 241              	 .loc 1 133 1
+ 242 0138 0090     	 ret 
+ 243              	.LFE0:
+ 245              	 .global Ifx_C_Init_end
+ 246              	Ifx_C_Init_end:
+ 275              	.Letext0:
+ 276              	 .file 2 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 813 0000 00000000 	 .word Ifx_C_Init
+ 814 0004 00000000 	 .word Ifx_C_Init_end
+ 815 0008 FC001C44 	 .word 0x441c00fc
+ 816 000c 00000000 	 .word 0x00000000
+ 817 0010 00000000 	 .word 0x00000000
+ 818 0014 C0800000 	 .word 0x000080c0
+DEFINED SYMBOLS
+                            *ABS*:00000000 CompilerGcc.c
+                            *ABS*:00000000 CompilerGcc.c
+    {standard input}:10     .text.Ifx_C_Init:00000000 Ifx_C_Init
+    {standard input}:246    .text.Ifx_C_Init:0000013a Ifx_C_Init_end
+
+UNDEFINED SYMBOLS
+__clear_table
+__copy_table

@@ -1,0 +1,11 @@
+   1              	
+   2              	 .file "IfxPort_PinMap_TC4Dx_BGA292_COM.c"
+   3              	 .file "IfxPort_PinMap_TC4Dx_BGA292_COM.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxPort_PinMap_TC4Dx_BGA292_COM.c
+                            *ABS*:00000000 IfxPort_PinMap_TC4Dx_BGA292_COM.c
+
+NO UNDEFINED SYMBOLS

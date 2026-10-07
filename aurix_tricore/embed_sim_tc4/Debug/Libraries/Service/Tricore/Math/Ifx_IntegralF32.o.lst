@@ -1,0 +1,317 @@
+   1              	
+   2              	 .file "Ifx_IntegralF32.c"
+   3              	 .file "Ifx_IntegralF32.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.Ifx_IntegralF32_reset,"ax",@progbits
+   7              	 .align 1
+   8              	 .global Ifx_IntegralF32_reset
+  10              	Ifx_IntegralF32_reset:
+  11              	.LFB176:
+  12              	 .file 1 "../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c"
+   1:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c **** /**
+   2:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****  * \file Ifx_IntegralF32.c
+   3:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****  * \brief Discrete integral approximation
+   4:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****  *
+   5:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****  *
+   6:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****  * \version iLLD-TC4-v2.7.0
+   7:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   8:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****  *
+   9:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****  *
+  10:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****   *                                 IMPORTANT NOTICE
+  11:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****  *
+  12:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****  *
+  13:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  14:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  15:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****  * this file except in compliance with IFASLL.
+  16:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****  *
+  17:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  18:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  19:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  20:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  21:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  22:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  23:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****  * defects in the licensed items, or non-infringement of third parties'
+  24:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****  * intellectual property rights. See the full license text for the specific
+  25:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****  * language governing permissions and limitations under IFASLL.
+  26:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****  *
+  27:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****  */
+  28:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c **** #include "Ifx_IntegralF32.h"
+  29:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c **** 
+  30:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c **** void Ifx_IntegralF32_reset(Ifx_IntegralF32 *ci)
+  31:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c **** {
+  13              	 .loc 1 31 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  32:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****     ci->uk = 0;
+  17              	 .loc 1 32 5
+  18              	 .loc 1 32 12 is_stmt 0
+  19 0002 8202     	 mov %d2,0
+  20 0004 7442     	 st.w [%a4]0,%d2
+  33:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****     ci->ik = 0;
+  21              	 .loc 1 33 5 is_stmt 1
+  22              	 .loc 1 33 12 is_stmt 0
+  23 0006 59420400 	 st.w [%a4]4,%d2
+  34:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c **** }
+  24              	 .loc 1 34 1
+  25 000a 0090     	 ret 
+  26              	.LFE176:
+  28              	 .global Ifx_IntegralF32_reset_end
+  29              	Ifx_IntegralF32_reset_end:
+  30              	 .section .text.Ifx_IntegralF32_init,"ax",@progbits
+  31              	 .align 1
+  32              	 .global Ifx_IntegralF32_init
+  34              	Ifx_IntegralF32_init:
+  35              	.LFB177:
+  35:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c **** 
+  36:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c **** 
+  37:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c **** void Ifx_IntegralF32_init(Ifx_IntegralF32 *ci, float32 gain, float32 Ts)
+  38:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c **** {
+  36              	 .loc 1 38 1 is_stmt 1
+  37              	.LVL1:
+  38 0000 40AE     	 mov.aa %a14,%SP
+  39              	.LCFI1:
+  39:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****     ci->delta = gain * Ts / 2;
+  40              	 .loc 1 39 5
+  41              	 .loc 1 39 22 is_stmt 0
+  42 0002 4B544120 	 mul.f %d2,%d4,%d5
+  43              	 .loc 1 39 27
+  44 0006 7B00F033 	 movh %d3,16128
+  45 000a 4B324120 	 mul.f %d2,%d2,%d3
+  46              	 .loc 1 39 15
+  47 000e 59420800 	 st.w [%a4]8,%d2
+  40:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c **** }
+  48              	 .loc 1 40 1
+  49 0012 0090     	 ret 
+  50              	.LFE177:
+  52              	 .global Ifx_IntegralF32_init_end
+  53              	Ifx_IntegralF32_init_end:
+  54              	 .section .text.Ifx_IntegralF32_step,"ax",@progbits
+  55              	 .align 1
+  56              	 .global Ifx_IntegralF32_step
+  58              	Ifx_IntegralF32_step:
+  59              	.LFB178:
+  41:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c **** 
+  42:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c **** 
+  43:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c **** float32 Ifx_IntegralF32_step(Ifx_IntegralF32 *ci, float32 ik)
+  44:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c **** {
+  60              	 .loc 1 44 1 is_stmt 1
+  61              	.LVL2:
+  62 0000 40AE     	 mov.aa %a14,%SP
+  63              	.LCFI2:
+  45:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****     ci->uk = ci->uk + (ik + ci->ik) * ci->delta;
+  64              	 .loc 1 45 5
+  65              	 .loc 1 45 16 is_stmt 0
+  66 0002 5443     	 ld.w %d3,[%a4]0
+  67              	 .loc 1 45 31
+  68 0004 19420400 	 ld.w %d2,[%a4]4
+  69              	 .loc 1 45 27
+  70 0008 6B042122 	 add.f %d2,%d2,%d4
+  71              	 .loc 1 45 41
+  72 000c 19450800 	 ld.w %d5,[%a4]8
+  73              	 .loc 1 45 37
+  74 0010 4B524120 	 mul.f %d2,%d2,%d5
+  75              	 .loc 1 45 21
+  76 0014 6B022123 	 add.f %d2,%d3,%d2
+  77              	 .loc 1 45 12
+  78 0018 7442     	 st.w [%a4]0,%d2
+  46:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****     ci->ik = ik;
+  79              	 .loc 1 46 5 is_stmt 1
+  80              	 .loc 1 46 12 is_stmt 0
+  81 001a 59440400 	 st.w [%a4]4,%d4
+  47:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c **** 
+  48:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****     return ci->uk;
+  82              	 .loc 1 48 5 is_stmt 1
+  49:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c **** }
+  83              	 .loc 1 49 1 is_stmt 0
+  84 001e 0090     	 ret 
+  85              	.LFE178:
+  87              	 .global Ifx_IntegralF32_step_end
+  88              	Ifx_IntegralF32_step_end:
+  89              	 .section .text.Ifx_ClpxFloat32_Integral_reset,"ax",@progbits
+  90              	 .align 1
+  91              	 .global Ifx_ClpxFloat32_Integral_reset
+  93              	Ifx_ClpxFloat32_Integral_reset:
+  94              	.LFB179:
+  50:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c **** 
+  51:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c **** 
+  52:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c **** void Ifx_ClpxFloat32_Integral_reset(Ifx_ClpxFloat32_Integral *ci)
+  53:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c **** {
+  95              	 .loc 1 53 1 is_stmt 1
+  96              	.LVL3:
+  97 0000 40AE     	 mov.aa %a14,%SP
+  98              	.LCFI3:
+  54:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****     ci->uk.real = 0;
+  99              	 .loc 1 54 5
+ 100              	 .loc 1 54 17 is_stmt 0
+ 101 0002 8202     	 mov %d2,0
+ 102 0004 7442     	 st.w [%a4]0,%d2
+  55:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****     ci->uk.imag = 0;
+ 103              	 .loc 1 55 5 is_stmt 1
+ 104              	 .loc 1 55 17 is_stmt 0
+ 105 0006 59420400 	 st.w [%a4]4,%d2
+  56:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****     ci->ik.real = 0;
+ 106              	 .loc 1 56 5 is_stmt 1
+ 107              	 .loc 1 56 17 is_stmt 0
+ 108 000a 59420800 	 st.w [%a4]8,%d2
+  57:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****     ci->ik.imag = 0;
+ 109              	 .loc 1 57 5 is_stmt 1
+ 110              	 .loc 1 57 17 is_stmt 0
+ 111 000e 59420C00 	 st.w [%a4]12,%d2
+  58:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c **** }
+ 112              	 .loc 1 58 1
+ 113 0012 0090     	 ret 
+ 114              	.LFE179:
+ 116              	 .global Ifx_ClpxFloat32_Integral_reset_end
+ 117              	Ifx_ClpxFloat32_Integral_reset_end:
+ 118              	 .section .text.Ifx_ClpxFloat32_Integral_init,"ax",@progbits
+ 119              	 .align 1
+ 120              	 .global Ifx_ClpxFloat32_Integral_init
+ 122              	Ifx_ClpxFloat32_Integral_init:
+ 123              	.LFB180:
+  59:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c **** 
+  60:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c **** 
+  61:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c **** void Ifx_ClpxFloat32_Integral_init(Ifx_ClpxFloat32_Integral *ci, float32 gain, float32 Ts)
+  62:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c **** {
+ 124              	 .loc 1 62 1 is_stmt 1
+ 125              	.LVL4:
+ 126 0000 40AE     	 mov.aa %a14,%SP
+ 127              	.LCFI4:
+ 128 0002 404C     	 mov.aa %a12,%a4
+ 129 0004 0249     	 mov %d9,%d4
+ 130 0006 0258     	 mov %d8,%d5
+  63:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****     Ifx_ClpxFloat32_Integral_reset(ci);
+ 131              	 .loc 1 63 5
+ 132 0008 6D000000 	 call Ifx_ClpxFloat32_Integral_reset
+ 133              	.LVL5:
+  64:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****     ci->delta = gain * Ts / 2;
+ 134              	 .loc 1 64 5
+ 135              	 .loc 1 64 22 is_stmt 0
+ 136 000c 4B894140 	 mul.f %d4,%d9,%d8
+ 137              	 .loc 1 64 27
+ 138 0010 7B00F023 	 movh %d2,16128
+ 139 0014 4B244140 	 mul.f %d4,%d4,%d2
+ 140              	 .loc 1 64 15
+ 141 0018 59C41000 	 st.w [%a12]16,%d4
+  65:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c **** }
+ 142              	 .loc 1 65 1
+ 143 001c 0090     	 ret 
+ 144              	.LFE180:
+ 146              	 .global Ifx_ClpxFloat32_Integral_init_end
+ 147              	Ifx_ClpxFloat32_Integral_init_end:
+ 148              	 .section .text.Ifx_ClpxFloat32_Integral_step,"ax",@progbits
+ 149              	 .align 1
+ 150              	 .global Ifx_ClpxFloat32_Integral_step
+ 152              	Ifx_ClpxFloat32_Integral_step:
+ 153              	.LFB181:
+  66:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c **** 
+  67:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c **** 
+  68:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c **** cfloat32 Ifx_ClpxFloat32_Integral_step(Ifx_ClpxFloat32_Integral *ci, cfloat32 ik)
+  69:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c **** {
+ 154              	 .loc 1 69 1 is_stmt 1
+ 155              	.LVL6:
+ 156 0000 40AE     	 mov.aa %a14,%SP
+ 157              	.LCFI5:
+  70:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****     ci->uk.real = ci->uk.real + (ik.real + ci->ik.real) * ci->delta;
+ 158              	 .loc 1 70 5
+ 159              	 .loc 1 70 25 is_stmt 0
+ 160 0002 5446     	 ld.w %d6,[%a4]0
+ 161              	 .loc 1 70 50
+ 162 0004 19420800 	 ld.w %d2,[%a4]8
+ 163              	 .loc 1 70 42
+ 164 0008 6B042122 	 add.f %d2,%d2,%d4
+ 165              	 .loc 1 70 61
+ 166 000c 19431000 	 ld.w %d3,[%a4]16
+ 167              	 .loc 1 70 57
+ 168 0010 4B324120 	 mul.f %d2,%d2,%d3
+ 169              	 .loc 1 70 31
+ 170 0014 6B022126 	 add.f %d2,%d6,%d2
+ 171              	 .loc 1 70 17
+ 172 0018 7442     	 st.w [%a4]0,%d2
+  71:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****     ci->uk.imag = ci->uk.imag + (ik.imag + ci->ik.imag) * ci->delta;
+ 173              	 .loc 1 71 5 is_stmt 1
+ 174              	 .loc 1 71 25 is_stmt 0
+ 175 001a 19460400 	 ld.w %d6,[%a4]4
+ 176              	 .loc 1 71 50
+ 177 001e 19420C00 	 ld.w %d2,[%a4]12
+ 178              	 .loc 1 71 42
+ 179 0022 6B052122 	 add.f %d2,%d2,%d5
+ 180              	 .loc 1 71 57
+ 181 0026 4B234120 	 mul.f %d2,%d3,%d2
+ 182              	 .loc 1 71 31
+ 183 002a 6B022126 	 add.f %d2,%d6,%d2
+ 184              	 .loc 1 71 17
+ 185 002e 59420400 	 st.w [%a4]4,%d2
+  72:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****     ci->ik      = ik;
+ 186              	 .loc 1 72 5 is_stmt 1
+ 187              	 .loc 1 72 17 is_stmt 0
+ 188 0032 59440800 	 st.w [%a4]8,%d4
+ 189 0036 59450C00 	 st.w [%a4]12,%d5
+  73:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c **** 
+  74:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c ****     return ci->uk;
+ 190              	 .loc 1 74 5 is_stmt 1
+  75:../Libraries/Service/Tricore/Math/Ifx_IntegralF32.c **** }
+ 191              	 .loc 1 75 1 is_stmt 0
+ 192 003a 09424009 	 ld.d %e2,[%a4]0
+ 193 003e 0090     	 ret 
+ 194              	.LFE181:
+ 196              	 .global Ifx_ClpxFloat32_Integral_step_end
+ 197              	Ifx_ClpxFloat32_Integral_step_end:
+ 286              	.Letext0:
+ 287              	 .file 2 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+ 288              	 .file 3 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 289              	 .file 4 "../Libraries/Service/Tricore/Math/Ifx_IntegralF32.h"
+ 1048 0000 00000000 	 .word Ifx_IntegralF32_reset
+ 1049 0004 00000000 	 .word Ifx_IntegralF32_reset_end
+ 1050 0008 04001444 	 .word 0x44140004
+ 1051 000c 00001000 	 .word 0x00100000
+ 1052 0010 00000000 	 .word 0x00000000
+ 1053 0014 C0000000 	 .word 0x000000c0
+ 1054 0018 00000000 	 .word Ifx_IntegralF32_init
+ 1055 001c 00000000 	 .word Ifx_IntegralF32_init_end
+ 1056 0020 3C001444 	 .word 0x4414003c
+ 1057 0024 30001000 	 .word 0x00100030
+ 1058 0028 00000000 	 .word 0x00000000
+ 1059 002c C0000000 	 .word 0x000000c0
+ 1060 0030 00000000 	 .word Ifx_IntegralF32_step
+ 1061 0034 00000000 	 .word Ifx_IntegralF32_step_end
+ 1062 0038 3C001444 	 .word 0x4414003c
+ 1063 003c 10001000 	 .word 0x00100010
+ 1064 0040 04000000 	 .word 0x00000004
+ 1065 0044 C0000000 	 .word 0x000000c0
+ 1066 0048 00000000 	 .word Ifx_ClpxFloat32_Integral_reset
+ 1067 004c 00000000 	 .word Ifx_ClpxFloat32_Integral_reset_end
+ 1068 0050 04001444 	 .word 0x44140004
+ 1069 0054 00001000 	 .word 0x00100000
+ 1070 0058 00000000 	 .word 0x00000000
+ 1071 005c C0000000 	 .word 0x000000c0
+ 1072 0060 00000000 	 .word Ifx_ClpxFloat32_Integral_init
+ 1073 0064 00000000 	 .word Ifx_ClpxFloat32_Integral_init_end
+ 1074 0068 34031454 	 .word 0x54140334
+ 1075 006c 30001000 	 .word 0x00100030
+ 1076 0070 00000000 	 .word 0x00000000
+ 1077 0074 40000200 	 .word 0x00020040
+ 1078 0078 00000000 	 .word Ifx_ClpxFloat32_Integral_step
+ 1079 007c 00000000 	 .word Ifx_ClpxFloat32_Integral_step_end
+ 1080 0080 7C001444 	 .word 0x4414007c
+ 1081 0084 30001000 	 .word 0x00100030
+ 1082 0088 0C000000 	 .word 0x0000000c
+ 1083 008c C0000000 	 .word 0x000000c0
+DEFINED SYMBOLS
+                            *ABS*:00000000 Ifx_IntegralF32.c
+                            *ABS*:00000000 Ifx_IntegralF32.c
+    {standard input}:10     .text.Ifx_IntegralF32_reset:00000000 Ifx_IntegralF32_reset
+    {standard input}:29     .text.Ifx_IntegralF32_reset:0000000c Ifx_IntegralF32_reset_end
+    {standard input}:34     .text.Ifx_IntegralF32_init:00000000 Ifx_IntegralF32_init
+    {standard input}:53     .text.Ifx_IntegralF32_init:00000014 Ifx_IntegralF32_init_end
+    {standard input}:58     .text.Ifx_IntegralF32_step:00000000 Ifx_IntegralF32_step
+    {standard input}:88     .text.Ifx_IntegralF32_step:00000020 Ifx_IntegralF32_step_end
+    {standard input}:93     .text.Ifx_ClpxFloat32_Integral_reset:00000000 Ifx_ClpxFloat32_Integral_reset
+    {standard input}:117    .text.Ifx_ClpxFloat32_Integral_reset:00000014 Ifx_ClpxFloat32_Integral_reset_end
+    {standard input}:122    .text.Ifx_ClpxFloat32_Integral_init:00000000 Ifx_ClpxFloat32_Integral_init
+    {standard input}:147    .text.Ifx_ClpxFloat32_Integral_init:0000001e Ifx_ClpxFloat32_Integral_init_end
+    {standard input}:152    .text.Ifx_ClpxFloat32_Integral_step:00000000 Ifx_ClpxFloat32_Integral_step
+    {standard input}:197    .text.Ifx_ClpxFloat32_Integral_step:00000040 Ifx_ClpxFloat32_Integral_step_end
+
+NO UNDEFINED SYMBOLS

@@ -1,0 +1,2022 @@
+   1              	
+   2              	 .file "IfxPcieEp.c"
+   3              	 .file "IfxPcieEp.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.IfxPcieEp_initApConfig,"ax",@progbits
+   7              	 .align 1
+   8              	 .global IfxPcieEp_initApConfig
+  10              	IfxPcieEp_initApConfig:
+  11              	.LFB350:
+  12              	 .file 1 "../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c"
+   1:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** /**
+   2:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****  * \file IfxPcieEp.c
+   3:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****  * \brief PCIE  basic functionality
+   4:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****  *
+   5:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****  *
+   8:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****  *
+   9:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****  *
+  10:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****  *                                 IMPORTANT NOTICE
+  11:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****  *
+  12:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****  * this file except in compliance with IFASLL.
+  15:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****  *
+  16:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****  *
+  26:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****  *
+  27:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****  */
+  28:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+  29:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** /******************************************************************************/
+  30:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** /*----------------------------------Includes----------------------------------*/
+  31:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** /******************************************************************************/
+  32:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+  33:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** #include "Ifx_Cfg.h"
+  34:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** #if defined (__TASKING__)
+  35:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** #pragma warning 508		/* To suppress empty file warning */
+  36:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** #endif
+  37:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** #if defined (__ghs__)
+  38:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** #pragma diag_suppress 96		/* To suppress empty file warning */
+  39:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** #endif
+  40:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+  41:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** #if defined(DEVICE_TC4DX) || defined(DEVICE_TC45X)
+  42:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** #include "IfxPcieEp.h"
+  43:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+  44:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** /******************************************************************************/
+  45:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** /*-------------------------Function Implementations---------------------------*/
+  46:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** /******************************************************************************/
+  47:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+  48:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** void IfxPcieEp_initApConfig(IfxPcieEp_ApConfig *config)
+  49:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** {
+  13              	 .loc 1 49 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  17 0002 404C     	 mov.aa %a12,%a4
+  50:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     IfxApProt_initConfig(&config->proteConfig);
+  18              	 .loc 1 50 5
+  19 0004 6D000000 	 call IfxApProt_initConfig
+  20              	.LVL1:
+  51:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     IfxApProt_initConfig(&config->protseConfig);
+  21              	 .loc 1 51 5
+  22 0008 D9C41400 	 lea %a4,[%a12]20
+  23 000c 6D000000 	 call IfxApProt_initConfig
+  24              	.LVL2:
+  52:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     IfxApApu_initConfig(&config->apuConfig);
+  25              	 .loc 1 52 5
+  26 0010 D9C42800 	 lea %a4,[%a12]40
+  27 0014 6D000000 	 call IfxApApu_initConfig
+  28              	.LVL3:
+  53:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** }
+  29              	 .loc 1 53 1 is_stmt 0
+  30 0018 0090     	 ret 
+  31              	.LFE350:
+  33              	 .global IfxPcieEp_initApConfig_end
+  34              	IfxPcieEp_initApConfig_end:
+  35              	 .section .text.IfxPcieEp_initAp,"ax",@progbits
+  36              	 .align 1
+  37              	 .global IfxPcieEp_initAp
+  39              	IfxPcieEp_initAp:
+  40              	.LFB351:
+  54:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+  55:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+  56:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** void IfxPcieEp_initAp(Ifx_PCIE_USP *pcieEpSFR, IfxPcieEp_ApConfig *config)
+  57:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** {
+  41              	 .loc 1 57 1 is_stmt 1
+  42              	.LVL4:
+  43 0000 40AE     	 mov.aa %a14,%SP
+  44              	.LCFI1:
+  45 0002 404C     	 mov.aa %a12,%a4
+  46 0004 405D     	 mov.aa %a13,%a5
+  58:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     /* Initialize the PROTs */
+  59:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     IfxApProt_init((Ifx_PROT_PROT *)&pcieEpSFR->PROTE, &config->proteConfig);
+  47              	 .loc 1 59 5
+  48 0006 D9442000 	 lea %a4,[%a4]32
+  49              	.LVL5:
+  50 000a 6D000000 	 call IfxApProt_init
+  51              	.LVL6:
+  60:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     IfxApProt_init((Ifx_PROT_PROT *)&pcieEpSFR->PROTSE, &config->protseConfig);
+  52              	 .loc 1 60 5
+  53              	 .loc 1 60 37 is_stmt 0
+  54 000e 80C2     	 mov.d %d2,%a12
+  55 0010 1B420280 	 addi %d8,%d2,36
+  56              	 .loc 1 60 5
+  57 0014 D9D51400 	 lea %a5,[%a13]20
+  58 0018 6084     	 mov.a %a4,%d8
+  59 001a 6D000000 	 call IfxApProt_init
+  60              	.LVL7:
+  61:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+  62:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     /* Change the state to CONFIG, Configure APU and set PROT state back to RUN */
+  63:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     /* Initialize the APU */
+  64:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&pcieEpSFR->PROTSE, IfxApProt_State_config);
+  61              	 .loc 1 64 5 is_stmt 1
+  62 001e 8214     	 mov %d4,1
+  63 0020 6084     	 mov.a %a4,%d8
+  64 0022 6D000000 	 call IfxApProt_setState
+  65              	.LVL8:
+  65:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     IfxApApu_init((Ifx_ACCEN_ACCEN *)&pcieEpSFR->ACCEN, &config->apuConfig);
+  66              	 .loc 1 65 5
+  67 0026 D9D52800 	 lea %a5,[%a13]40
+  68 002a D9C40010 	 lea %a4,[%a12]64
+  69 002e 6D000000 	 call IfxApApu_init
+  70              	.LVL9:
+  66:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     IfxApProt_setState((Ifx_PROT_PROT *)&pcieEpSFR->PROTSE, IfxApProt_State_run);
+  71              	 .loc 1 66 5
+  72 0032 8244     	 mov %d4,4
+  73 0034 6084     	 mov.a %a4,%d8
+  74 0036 6D000000 	 call IfxApProt_setState
+  75              	.LVL10:
+  67:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** }
+  76              	 .loc 1 67 1 is_stmt 0
+  77 003a 0090     	 ret 
+  78              	.LFE351:
+  80              	 .global IfxPcieEp_initAp_end
+  81              	IfxPcieEp_initAp_end:
+  82              	 .section .text.IfxPcieEp_setBarMask,"ax",@progbits
+  83              	 .align 1
+  84              	 .global IfxPcieEp_setBarMask
+  86              	IfxPcieEp_setBarMask:
+  87              	.LFB352:
+  68:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+  69:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+  70:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** IfxPcie_Status IfxPcieEp_setBarMask(Ifx_PCIE_USP *pcieSFR, IfxPcie_BarNum barIndex, uint64 barSize,
+  71:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** {
+  88              	 .loc 1 71 1 is_stmt 1
+  89              	.LVL11:
+  90 0000 40AE     	 mov.aa %a14,%SP
+  91              	.LCFI2:
+  92 0002 8040     	 mov.d %d0,%a4
+  93 0004 14E2     	 ld.bu %d2,[%a14]0
+  72:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     IfxPcie_Status                                 status          = IfxPcie_Status_success;
+  94              	 .loc 1 72 5
+  95              	.LVL12:
+  73:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     volatile Ifx_PCIE_USP_TYPE0HDRDBI_BARMASK_REG *barMaskPtr      = &(pcieSFR->TYPE0HDRDBI.BARMASK
+  96              	 .loc 1 73 5
+  74:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     volatile Ifx_PCIE_USP_TYPE0HDRDBI_BARMASK_REG *barMaskUpperPtr = NULL_PTR;
+  97              	 .loc 1 74 5
+  75:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     uint64                                         barMaskVal      = 0x0u;
+  98              	 .loc 1 75 5
+  76:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     boolean                                        doubleWord      = (addressWidth == IfxPcie_Addre
+  99              	 .loc 1 76 5
+ 100              	 .loc 1 76 52 is_stmt 0
+ 101 0006 DF250000 	 jeq %d5,2,.L14
+ 102 000a 8203     	 mov %d3,0
+ 103              	.L4:
+ 104              	.LVL13:
+  77:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+  78:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     if (enabled == FALSE)
+ 105              	 .loc 1 78 5 is_stmt 1 discriminator 4
+ 106              	 .loc 1 78 8 is_stmt 0 discriminator 4
+ 107 000c DF020080 	 jnz %d2,.L5
+  79:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     {
+  80:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****         barMaskPtr->U = 0x0u;                                           /* Disable BAR */
+ 108              	 .loc 1 80 9 is_stmt 1
+ 109              	 .loc 1 80 23 is_stmt 0
+ 110 0010 1B448021 	 addi %d2,%d4,6148
+ 111 0014 0622     	 sh %d2,2
+ 112 0016 6002     	 mov.a %a2,%d0
+ 113 0018 01220026 	 addsc.a %a2,%a2,%d2,0
+ 114 001c 8202     	 mov %d2,0
+ 115 001e 7422     	 st.w [%a2]0,%d2
+ 116 0020 0090     	 ret 
+ 117              	.LVL14:
+ 118              	.L14:
+  76:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+ 119              	 .loc 1 76 52
+ 120 0022 8213     	 mov %d3,1
+ 121 0024 1D000000 	 j .L4
+ 122              	.LVL15:
+ 123              	.L5:
+  81:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     }
+  82:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     else
+  83:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     {
+  84:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****         if (doubleWord == TRUE)
+ 124              	 .loc 1 84 9 is_stmt 1
+ 125              	 .loc 1 84 12 is_stmt 0
+ 126 0028 DF030080 	 jnz %d3,.L15
+  74:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     uint64                                         barMaskVal      = 0x0u;
+ 127              	 .loc 1 74 52
+ 128 002c A003     	 mov.a %a3,0
+ 129              	.LVL16:
+ 130              	.L7:
+  85:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****         {
+  86:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****             if (barIndex < IfxPcie_BarNum_5)
+  87:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****             {
+  88:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****                 barMaskUpperPtr = &(pcieSFR->TYPE0HDRDBI.BARMASK_REG[barIndex + 1]);
+  89:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****             }
+  90:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****             else
+  91:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****             {
+  92:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****                 status = IfxPcie_Status_failure;
+  93:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****             }
+  94:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****         }
+  95:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+  96:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****         if (status == IfxPcie_Status_success)
+  97:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****         {
+  98:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****             if (IFXPCIE_GET_NEXT_4KB_BOUNDARY(barSize) == barSize)      /* Bar Size is aligned */
+ 131              	 .loc 1 98 13 is_stmt 1
+ 132              	 .loc 1 98 17 is_stmt 0
+ 133 002e B7061456 	 insert %d5,%d6,0,12,20
+ 134              	.LVL17:
+ 135              	 .loc 1 98 16
+ 136 0032 8212     	 mov %d2,1
+ 137 0034 8B050024 	 and.eq %d2,%d5,0
+ 138 0038 DF020080 	 jnz %d2,.L8
+ 139              	 .loc 1 98 17 discriminator 1
+ 140 003c 3B000021 	 mov %d2,4096
+ 141 0040 0B264020 	 addx %d2,%d6,%d2
+ 142 0044 B7020C50 	 insert %d5,%d2,0,0,12
+ 143              	 .loc 1 98 56 discriminator 1
+ 144 0048 0B651021 	 ne %d2,%d5,%d6
+ 145 004c 8B070025 	 or.ne %d2,%d7,0
+ 146 0050 DF020000 	 jz %d2,.L8
+  99:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****             {
+ 100:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****                 barMaskVal    = barSize - 1u;                           /* Mask value is 1 less tha
+ 101:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****                 barMaskPtr->U = (uint32)barMaskVal;                     /* Write MASK value */
+ 102:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+ 103:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****                 if (doubleWord == TRUE)
+ 104:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****                 {
+ 105:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****                     barMaskUpperPtr->U = (uint32)(barMaskVal >> 32U);   /* Write upper BAR MASK val
+ 106:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****                 }
+ 107:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****             }
+ 108:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****             else
+ 109:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****             {
+ 110:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****                 status = IfxPcie_Status_failure;                        /* Illegal Bar Size */
+ 147              	 .loc 1 110 24
+ 148 0054 8212     	 mov %d2,1
+ 149 0056 0090     	 ret 
+ 150              	.LVL18:
+ 151              	.L15:
+  86:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****             {
+ 152              	 .loc 1 86 13 is_stmt 1
+  86:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****             {
+ 153              	 .loc 1 86 16 is_stmt 0
+ 154 0058 FF540080 	 jge.u %d4,5,.L11
+  88:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****             }
+ 155              	 .loc 1 88 17 is_stmt 1
+  88:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****             }
+ 156              	 .loc 1 88 33 is_stmt 0
+ 157 005c 1B548021 	 addi %d2,%d4,6149
+ 158 0060 0622     	 sh %d2,2
+ 159 0062 6002     	 mov.a %a2,%d0
+ 160 0064 01220036 	 addsc.a %a3,%a2,%d2,0
+ 161              	.LVL19:
+  96:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****         {
+ 162              	 .loc 1 96 9 is_stmt 1
+ 163 0068 1D000000 	 j .L7
+ 164              	.LVL20:
+ 165              	.L8:
+ 100:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****                 barMaskPtr->U = (uint32)barMaskVal;                     /* Write MASK value */
+ 166              	 .loc 1 100 17
+ 100:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****                 barMaskPtr->U = (uint32)barMaskVal;                     /* Write MASK value */
+ 167              	 .loc 1 100 31 is_stmt 0
+ 168 006c 8BF69F60 	 addx %d6,%d6,-1
+ 169              	.LVL21:
+ 170 0070 8BF7BF70 	 addc %d7,%d7,-1
+ 171              	.LVL22:
+ 101:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+ 172              	 .loc 1 101 17 is_stmt 1
+ 101:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+ 173              	 .loc 1 101 31 is_stmt 0
+ 174 0074 1B448021 	 addi %d2,%d4,6148
+ 175 0078 0622     	 sh %d2,2
+ 176 007a 6002     	 mov.a %a2,%d0
+ 177 007c 01220026 	 addsc.a %a2,%a2,%d2,0
+ 178 0080 7426     	 st.w [%a2]0,%d6
+ 103:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****                 {
+ 179              	 .loc 1 103 17 is_stmt 1
+ 103:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****                 {
+ 180              	 .loc 1 103 20 is_stmt 0
+ 181 0082 DF030080 	 jnz %d3,.L16
+ 182 0086 8202     	 mov %d2,0
+ 183              	.LVL23:
+ 111:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****             }
+ 112:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****         }
+ 113:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     }
+ 114:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+ 115:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     return status;
+ 184              	 .loc 1 115 5 is_stmt 1
+ 116:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** }
+ 185              	 .loc 1 116 1 is_stmt 0
+ 186 0088 0090     	 ret 
+ 187              	.LVL24:
+ 188              	.L16:
+ 105:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****                 }
+ 189              	 .loc 1 105 21 is_stmt 1
+ 105:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****                 }
+ 190              	 .loc 1 105 40 is_stmt 0
+ 191 008a 7437     	 st.w [%a3]0,%d7
+ 192 008c 8202     	 mov %d2,0
+ 193 008e 0090     	 ret 
+ 194              	.LVL25:
+ 195              	.L11:
+  92:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****             }
+ 196              	 .loc 1 92 24
+ 197 0090 8212     	 mov %d2,1
+ 198 0092 0090     	 ret 
+ 199              	.LFE352:
+ 201              	 .global IfxPcieEp_setBarMask_end
+ 202              	IfxPcieEp_setBarMask_end:
+ 203              	 .section .text.IfxPcieEp_setBarParameters,"ax",@progbits
+ 204              	 .align 1
+ 205              	 .global IfxPcieEp_setBarParameters
+ 207              	IfxPcieEp_setBarParameters:
+ 208              	.LFB353:
+ 117:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+ 118:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+ 119:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** void IfxPcieEp_setBarParameters(Ifx_PCIE_USP *pcieSFR, IfxPcie_BarNum barIndex, IfxPcie_AddressWidt
+ 120:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** {
+ 209              	 .loc 1 120 1 is_stmt 1
+ 210              	.LVL26:
+ 211 0000 40AE     	 mov.aa %a14,%SP
+ 212              	.LCFI3:
+ 213 0002 8040     	 mov.d %d0,%a4
+ 214 0004 0247     	 mov %d7,%d4
+ 121:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     volatile Ifx_PCIE_USP_TYPE0HDR_BAR *barRegPtr = &(pcieSFR->TYPE0HDR.BAR[barIndex]);
+ 215              	 .loc 1 121 5
+ 216              	.LVL27:
+ 122:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     Ifx_PCIE_USP_TYPE0HDR_BAR           barReg;
+ 217              	 .loc 1 122 5
+ 123:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     barReg.U               = barRegPtr->U; /* Read Word */
+ 218              	 .loc 1 123 5
+ 219              	 .loc 1 123 39 is_stmt 0
+ 220 0006 1B440021 	 addi %d2,%d4,4100
+ 221 000a 0622     	 sh %d2,2
+ 222 000c 01420026 	 addsc.a %a2,%a4,%d2,0
+ 223              	.LVL28:
+ 224 0010 5422     	 ld.w %d2,[%a2]0
+ 225              	.LVL29:
+ 124:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+ 125:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     barReg.B.BAR0_MEM_IO   = 0x0u;         /* always Memory */
+ 226              	 .loc 1 125 5 is_stmt 1
+ 227              	 .loc 1 125 28 is_stmt 0
+ 228 0012 8F12C021 	 andn %d2,%d2,~(-2)
+ 229              	.LVL30:
+ 126:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     barReg.B.BAR0_PREFETCH = (prefetch == TRUE) ? 1u : 0u;
+ 230              	 .loc 1 126 5 is_stmt 1
+ 231              	 .loc 1 126 54 is_stmt 0
+ 232 0016 DF160000 	 jeq %d6,1,.L20
+ 233 001a 8203     	 mov %d3,0
+ 234              	.L18:
+ 235              	 .loc 1 126 28 discriminator 4
+ 236 001c 67320320 	 ins.t %d2,%d2,3,%d3,0
+ 237              	.LVL31:
+ 127:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     barReg.B.BAR0_TYPE     = (uint32)addressWidth;
+ 238              	 .loc 1 127 5 is_stmt 1 discriminator 4
+ 239              	 .loc 1 127 28 is_stmt 0 discriminator 4
+ 240 0020 37528220 	 insert %d2,%d2,%d5,1,2
+ 128:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+ 129:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     barRegPtr->U           = barReg.U; /* Write Back */
+ 241              	 .loc 1 129 5 is_stmt 1 discriminator 4
+ 242              	 .loc 1 129 28 is_stmt 0 discriminator 4
+ 243 0024 1B470041 	 addi %d4,%d7,4100
+ 244              	.LVL32:
+ 245 0028 8F240030 	 sh %d3,%d4,2
+ 246 002c 6002     	 mov.a %a2,%d0
+ 247              	.LVL33:
+ 248 002e 01230046 	 addsc.a %a4,%a2,%d3,0
+ 249              	.LVL34:
+ 250 0032 7442     	 st.w [%a4]0,%d2
+ 130:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** }
+ 251              	 .loc 1 130 1 discriminator 4
+ 252 0034 0090     	 ret 
+ 253              	.LVL35:
+ 254              	.L20:
+ 126:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     barReg.B.BAR0_TYPE     = (uint32)addressWidth;
+ 255              	 .loc 1 126 54
+ 256 0036 8213     	 mov %d3,1
+ 257 0038 1D000000 	 j .L18
+ 258              	.LFE353:
+ 260              	 .global IfxPcieEp_setBarParameters_end
+ 261              	IfxPcieEp_setBarParameters_end:
+ 262              	 .section .text.IfxPcieEp_resetLinkTraining,"ax",@progbits
+ 263              	 .align 1
+ 264              	 .global IfxPcieEp_resetLinkTraining
+ 266              	IfxPcieEp_resetLinkTraining:
+ 267              	.LFB354:
+ 131:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+ 132:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+ 133:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** void IfxPcieEp_resetLinkTraining(Ifx_PCIE_USP *pcieEpSFR)
+ 134:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** {
+ 268              	 .loc 1 134 1 is_stmt 1
+ 269              	.LVL36:
+ 270 0000 40AE     	 mov.aa %a14,%SP
+ 271              	.LCFI4:
+ 135:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     pcieEpSFR->LNK.CORECTRL.B.LTSSMEN = 0;
+ 272              	 .loc 1 135 5
+ 273              	 .loc 1 135 39 is_stmt 0
+ 274 0002 D94238D0 	 lea %a2,[%a4]888
+ 275 0006 194238D0 	 ld.w %d2,[%a4]888
+ 276 000a 8F22C021 	 andn %d2,%d2,~(-3)
+ 277 000e 7422     	 st.w [%a2]0,%d2
+ 136:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** }
+ 278              	 .loc 1 136 1
+ 279 0010 0090     	 ret 
+ 280              	.LFE354:
+ 282              	 .global IfxPcieEp_resetLinkTraining_end
+ 283              	IfxPcieEp_resetLinkTraining_end:
+ 284              	 .section .text.IfxPcieEp_isLinkUp,"ax",@progbits
+ 285              	 .align 1
+ 286              	 .global IfxPcieEp_isLinkUp
+ 288              	IfxPcieEp_isLinkUp:
+ 289              	.LFB355:
+ 137:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+ 138:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+ 139:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** boolean IfxPcieEp_isLinkUp(Ifx_PCIE_USP *pcieEpSFR)
+ 140:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** {
+ 290              	 .loc 1 140 1 is_stmt 1
+ 291              	.LVL37:
+ 292 0000 40AE     	 mov.aa %a14,%SP
+ 293              	.LCFI5:
+ 141:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     return pcieEpSFR->LNK.STAT.U & (IFX_PCIE_USP_LNK_STAT_LINKUP_MSK << IFX_PCIE_USP_LNK_STAT_LINKU
+ 294              	 .loc 1 141 5
+ 295              	 .loc 1 141 31 is_stmt 0
+ 296 0002 194234D0 	 ld.w %d2,[%a4]884
+ 142:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** }
+ 297              	 .loc 1 142 1
+ 298 0006 8F120021 	 and %d2,%d2,1
+ 299 000a 0090     	 ret 
+ 300              	.LFE355:
+ 302              	 .global IfxPcieEp_isLinkUp_end
+ 303              	IfxPcieEp_isLinkUp_end:
+ 304              	 .section .text.IfxPcieEp_isLinkStateL0,"ax",@progbits
+ 305              	 .align 1
+ 306              	 .global IfxPcieEp_isLinkStateL0
+ 308              	IfxPcieEp_isLinkStateL0:
+ 309              	.LFB356:
+ 143:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+ 144:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+ 145:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** boolean IfxPcieEp_isLinkStateL0(Ifx_PCIE_USP *pcieEpSFR)
+ 146:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** {
+ 310              	 .loc 1 146 1 is_stmt 1
+ 311              	.LVL38:
+ 312 0000 40AE     	 mov.aa %a14,%SP
+ 313              	.LCFI6:
+ 147:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     return (pcieEpSFR->PORTLOGIC.PL_DEBUG0_OFF.U & 0x1F) == 0x11;
+ 314              	 .loc 1 147 5
+ 315              	 .loc 1 147 47 is_stmt 0
+ 316 0002 194268C4 	 ld.w %d2,[%a4]18216
+ 317              	 .loc 1 147 50
+ 318 0006 8FF20121 	 and %d2,%d2,31
+ 148:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** }
+ 319              	 .loc 1 148 1
+ 320 000a 8B120122 	 eq %d2,%d2,17
+ 321 000e 0090     	 ret 
+ 322              	.LFE356:
+ 324              	 .global IfxPcieEp_isLinkStateL0_end
+ 325              	IfxPcieEp_isLinkStateL0_end:
+ 326              	 .section .text.IfxPcieEp_enterLocalLoopback,"ax",@progbits
+ 327              	 .align 1
+ 328              	 .global IfxPcieEp_enterLocalLoopback
+ 330              	IfxPcieEp_enterLocalLoopback:
+ 331              	.LFB357:
+ 149:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+ 150:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+ 151:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** void IfxPcieEp_enterLocalLoopback(Ifx_PCIE_USP *pcieEpSFR)
+ 152:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** {
+ 332              	 .loc 1 152 1 is_stmt 1
+ 333              	.LVL39:
+ 334 0000 40AE     	 mov.aa %a14,%SP
+ 335              	.LCFI7:
+ 153:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     IfxPcie_setDbiRoAccess((IfxPcie *)pcieEpSFR, TRUE);
+ 336              	 .loc 1 153 5
+ 337              	.LVL40:
+ 338              	.LBB10:
+ 339              	.LBB11:
+ 340              	 .file 2 "../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h"
+   1:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /**
+   2:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \file IfxPcie.h
+   3:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \brief PCIE  basic functionality
+   4:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \ingroup IfxLld_Pcie
+   5:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *
+   6:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \version iLLD-TC4-v2.7.0
+   7:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   8:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *
+   9:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *
+  10:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *
+  11:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *                                 IMPORTANT NOTICE
+  12:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *
+  13:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  14:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  15:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * this file except in compliance with IFASLL.
+  16:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *
+  17:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  18:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * Unless required by applicable law or agreed to in writing, software distributed
+  19:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  20:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  21:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * whether express, implied, statutory or otherwise, including but not limited to
+  22:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  23:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * defects in the licensed items, or non-infringement of third parties'
+  24:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * intellectual property rights. See the full license text for the specific
+  25:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * language governing permissions and limitations under IFASLL.
+  26:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *
+  27:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *
+  28:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \defgroup IfxLld_Pcie_Architecture PCIe Driver Architecture
+  29:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \ingroup IfxLld_Pcie
+  30:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *
+  31:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * <table>
+  32:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * <caption id="multi_row">PCIe Driver Architecture</caption>
+  33:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * <tr>
+  34:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *     <th colspan = "5">Pcie
+  35:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * <tr>
+  36:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *     <td rowspan="2"><b>Rc</b><BR>Pcie/Rc/IfxPcie_Rc.*
+  37:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *     <td rowspan = "2"><b>Ep</b><BR>Pcie/Ep/IfxPcie_Ep.*
+  38:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *     <td colspan = "3"><b>Lib</b><BR>
+  39:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * <tr>
+  40:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *     <td><b>Dma</b><BR>Pcie/Lib/Dma/IfxPcieLib_Dma.*
+  41:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *     <td><b>Device</b><BR>Pcie/Lib/Device/IfxPcieLib_Device.*
+  42:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *     <td><b>Cap</b><BR>Pcie/Lib/Cap/IfxPcieLib_Cap.*
+  43:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * <tr>
+  44:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *     <td colspan = "5"><b>Std</b><BR>Pcie/Std/IfxPcie*
+  45:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * </table>
+  46:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *
+  47:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \section IfxLld_Pcie_Architecture_Desc File Description
+  48:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *
+  49:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \subsection IfxLld_Pcie_Architecture_Desc_Rc Rc
+  50:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * Pcie/Rc/IfxPcie_Rc.*\n
+  51:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * These files contain APIs for configuring and initializing Aurix as RC
+  52:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *
+  53:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \subsection IfxLld_Pcie_Architecture_Desc_Ep Ep
+  54:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * Pcie/Ep/IfxPcie_Ep.*\n
+  55:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * These files contain APIs for configuring and initializing Aurix as EP
+  56:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *
+  57:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \subsection IfxLld_Pcie_Architecture_Desc_Lib Lib
+  58:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * This folder contains file libraries needed for both EP and RC
+  59:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *
+  60:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *     - Dma
+  61:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *       Pcie/Lib/Dma/IfxPcieLib_Dma.*
+  62:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *       These files contain APIs for configuring, initializing, and using PCIe DMA controller
+  63:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *
+  64:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *     - Device
+  65:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *       Pcie/Lib/Device/IfxPcieLib_Device.*
+  66:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *       These files contain APIs for using ATU and initializing SRC nodes.
+  67:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *
+  68:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *     - Cap
+  69:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *       Pcie/Lib/Cap/IfxPcieLib_Cap.*
+  70:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *       These files contain APIs for probing and configuring device capabilities
+  71:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *
+  72:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \subsection IfxLld_Pcie_Architecture_Desc_Std Std
+  73:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * This folder contains standard layer files of PCIe
+  74:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *
+  75:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *     - Pcie/Std/IfxPcie.*
+  76:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *       These files contain low level APIs and data structures common to RC and EP mode
+  77:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *       Example: enabling link training, setting device mode, enabling/disabling module, etc.
+  78:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *
+  79:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *     - Pcie/Std/IfxPcieRc.*
+  80:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *       These files contain low level APIs and data structures used in RC mode
+  81:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *       Example: setting number of lanes, writing msi address, enabling interrupts, etc.
+  82:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *
+  83:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *     - Pcie/Std/IfxPcieEp.*
+  84:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *       These files contain low level APIs and data structures used in EP mode
+  85:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *       Example: setting bar mask, enabling local loopback, checking link state, etc.
+  86:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *
+  87:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *     - Pcie/Std/IfxPcieDma.*
+  88:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *       These files contain low level APIs and data structures for using DMA
+  89:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *       Data Structure Examples: Channel enum list, data element and link structures
+  90:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *       API Examples: enabling/disabling/starting dma channels
+  91:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *
+  92:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *     - Pcie/Std/IfxPcieCap.*
+  93:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *       These files contain APIs for accessing capability registers
+  94:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *
+  95:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *     - Pcie/Std/IfxPcieDevice.*
+  96:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *       These files contain data structures such as config headers and APIs for setting device id,
+  97:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  *
+  98:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \defgroup IfxLld_Pcie_Std_Enumerations Enumerations
+  99:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \ingroup IfxLld_Pcie_Std
+ 100:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \defgroup IfxLld_Pcie_Std_Structures Structures
+ 101:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \ingroup IfxLld_Pcie_Std
+ 102:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \defgroup IfxLld_Pcie_Std_Functions Functions
+ 103:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \ingroup IfxLld_Pcie_Std
+ 104:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 105:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 106:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** #ifndef IFXPCIE_H
+ 107:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** #define IFXPCIE_H 1
+ 108:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 109:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /******************************************************************************/
+ 110:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /*----------------------------------Includes----------------------------------*/
+ 111:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /******************************************************************************/
+ 112:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 113:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** #include "_Impl/IfxPcie_cfg.h"
+ 114:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** #if !defined(IFX_ILLD_PPU_USAGE)
+ 115:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** #include "Cpu/Std/IfxCpu_Intrinsics.h"
+ 116:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** #endif
+ 117:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** #if defined(IFX_ILLD_PPU_USAGE)
+ 118:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** #include "Ppu/Std/IfxPpu_Intrinsics.h"
+ 119:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** #endif
+ 120:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** #include "Src/Std/IfxSrc.h"
+ 121:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** #include "Hsphy/Std/IfxHsphy.h"
+ 122:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 123:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /******************************************************************************/
+ 124:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /*-----------------------------------Macros-----------------------------------*/
+ 125:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /******************************************************************************/
+ 126:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 127:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Interrupt Request Trigger Offset
+ 128:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 129:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** #define IFXPCIE_INTREQTRIG_BAR0_WORD_OFFSET   ((uint32)(0x0u))
+ 130:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 131:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Interrupt Request Trigger Status
+ 132:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 133:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** #define IFXPCIE_INTREQSTATUS_BAR0_WORD_OFFSET ((uint32)(0x1u))
+ 134:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 135:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief PCI Capability list offset for Bridges, EP and RC
+ 136:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 137:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** #define IFXPCIE_PCI_CAPABILITY_LIST_OFFSET    (0x34)
+ 138:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 139:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Get word size from size in bytes
+ 140:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 141:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** #define IFXPCIE_GET_WORDSIZE(x)                               (uint32)(x >> 2u)
+ 142:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 143:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Get BAR mem size from BAR registers
+ 144:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 145:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** #define IFXPCIE_GET_BAR_MEMSIZE(x)                            (uint64)(x >> 4u)
+ 146:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 147:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Get new wire memory from BAR memory size
+ 148:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 149:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** #define IFXPCIE_GET_WIREADDR_FROMBAR(wireMemBase, barMemSize) (((uint64)(wireMemBase % barMemSize) 
+ 150:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 151:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Get number of MSI interrupts from enum
+ 152:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 153:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** #define IFXPCIE_GET_NUM_MSI_INTERRUPTS(msiInt)                ((uint16)(0x1u << (uint16)msiInt))
+ 154:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 155:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Get the next 1 MB boundary
+ 156:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 157:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** #define IFXPCIE_GET_NEXT_1MB_BOUNDARY(x)                      ((((x) & 0x000FFFFFu) == 0u) ? (x) : 
+ 158:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 159:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Get the next 4KB boundary
+ 160:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 161:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** #define IFXPCIE_GET_NEXT_4KB_BOUNDARY(x)                      ((((x) & 0x00000FFFu) == 0u) ? (x) : 
+ 162:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 163:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Get PHY Index for selected PCIE module index
+ 164:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * TC49x: PCIE0 is connected to PHY0
+ 165:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * TC4Dx: PCIE0 is connected to PHY0 and PCIE1 is connected to PHY2
+ 166:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 167:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** #if (IFXPCIE_CFG_NUM_MODULES >1)
+ 168:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** #define IFXPCIE_GET_PHY_INDEX(pcieIndex)                      ((IfxHsphy_PhyIndex)((IfxPcie_Index)(
+ 169:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** #else
+ 170:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** #define IFXPCIE_GET_PHY_INDEX(pcieIndex)                      (IfxHsphy_PhyIndex_2)
+ 171:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** #endif /* #if (IFXPCIE_CFG_NUM_MODULES >1) */
+ 172:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 173:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief In TC49x, CFG Write is posted and CFG Read is non-posted. Sometimes, the Read can overta
+ 174:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * Hence, we need to wait for write to complete to avoid reading old values from same register.
+ 175:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 176:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** #define IFXPCIE_CONFIGWRITE_DELAY(loopCount)       \
+ 177:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     {                                              \
+ 178:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****         volatile uint32 idx;                       \
+ 179:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****         for (idx = 0; idx < loopCount; idx++) {; } \
+ 180:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     }                                              \
+ 181:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 182:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 183:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /******************************************************************************/
+ 184:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /*------------------------------Type Definitions------------------------------*/
+ 185:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /******************************************************************************/
+ 186:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 187:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Call back for PCIE Interrupts
+ 188:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 189:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** typedef void (*IfxPcie_IntrCallBack)();
+ 190:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 191:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /******************************************************************************/
+ 192:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /*--------------------------------Enumerations--------------------------------*/
+ 193:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /******************************************************************************/
+ 194:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 195:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \addtogroup IfxLld_Pcie_Std_Enumerations
+ 196:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \{ */
+ 197:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Address Width
+ 198:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 199:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** typedef enum
+ 200:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+ 201:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_AddressWidth_32 = 0,  /**< \brief Bar width 32 bit */
+ 202:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_AddressWidth_64 = 2   /**< \brief Bar width 64bit */
+ 203:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** } IfxPcie_AddressWidth;
+ 204:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 205:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief ATU Region Direction
+ 206:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 207:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** typedef enum
+ 208:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+ 209:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_AtuDirection_inBound,  /**< \brief Inbound ATU Region */
+ 210:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_AtuDirection_outBound  /**< \brief Outbound ATU Region */
+ 211:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** } IfxPcie_AtuDirection;
+ 212:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 213:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief ATU Region Lock Status
+ 214:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 215:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** typedef enum
+ 216:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+ 217:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_AtuLock_unlocked = 0xAA,  /**< \brief ATU Region is unlocked */
+ 218:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_AtuLock_locked   = 0x55   /**< \brief ATU Region is locked */
+ 219:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** } IfxPcie_AtuLock;
+ 220:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 221:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief ATU outbound region (TODO: LEGACY - remove)
+ 222:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 223:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** typedef enum
+ 224:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+ 225:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_AtuOutBoundRegion_none = -1,  /**< \brief no ATU outbound */
+ 226:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_AtuOutBoundRegion_0,          /**< \brief iATU Region 0 */
+ 227:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_AtuOutBoundRegion_1,          /**< \brief iATU Region 1 */
+ 228:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_AtuOutBoundRegion_2,          /**< \brief iATU Region 2 */
+ 229:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_AtuOutBoundRegion_3,          /**< \brief iATU Region 3 */
+ 230:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_AtuOutBoundRegion_4,          /**< \brief iATU Region 4 */
+ 231:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_AtuOutBoundRegion_5,          /**< \brief iATU Region 5 */
+ 232:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_AtuOutBoundRegion_6,          /**< \brief iATU Region 6 */
+ 233:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_AtuOutBoundRegion_7           /**< \brief iATU Region 7 */
+ 234:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** } IfxPcie_AtuOutBoundRegion;
+ 235:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 236:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief ATU Region
+ 237:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 238:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** typedef enum
+ 239:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+ 240:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_AtuRegion_none = -1,  /**< \brief no ATU Region */
+ 241:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_AtuRegion_0,          /**< \brief iATU Region 0 */
+ 242:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_AtuRegion_1,          /**< \brief iATU Region 1 */
+ 243:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_AtuRegion_2,          /**< \brief iATU Region 2 */
+ 244:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_AtuRegion_3,          /**< \brief iATU Region 3 */
+ 245:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_AtuRegion_4,          /**< \brief iATU Region 4 */
+ 246:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_AtuRegion_5,          /**< \brief iATU Region 5 */
+ 247:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_AtuRegion_6,          /**< \brief iATU Region 6 */
+ 248:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_AtuRegion_7,          /**< \brief iATU Region 7 */
+ 249:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_AtuRegion_max         /**< \brief MAX ATU Region */
+ 250:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** } IfxPcie_AtuRegion;
+ 251:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 252:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief BAR number
+ 253:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 254:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** typedef enum
+ 255:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+ 256:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_BarNum_0 = 0,  /**< \brief BAR number0 */
+ 257:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_BarNum_1,      /**< \brief BAR number1 */
+ 258:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_BarNum_2,      /**< \brief BAR number2 */
+ 259:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_BarNum_3,      /**< \brief BAR number3 */
+ 260:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_BarNum_4,      /**< \brief BAR number4 */
+ 261:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_BarNum_5       /**< \brief BAR number5 */
+ 262:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** } IfxPcie_BarNum;
+ 263:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 264:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Device ID
+ 265:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 266:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** typedef enum
+ 267:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+ 268:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceId_0,     /**< \brief PCIE device 0 */
+ 269:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceId_1,     /**< \brief PCIE device 1 */
+ 270:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceId_2,     /**< \brief PCIE device 2 */
+ 271:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceId_3,     /**< \brief PCIE device 3 */
+ 272:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceId_4,     /**< \brief PCIE device 4 */
+ 273:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceId_5,     /**< \brief PCIE device 5 */
+ 274:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceId_6,     /**< \brief PCIE device 6 */
+ 275:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceId_7,     /**< \brief PCIE device 7 */
+ 276:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceId_8,     /**< \brief PCIE device 8 */
+ 277:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceId_9,     /**< \brief PCIE device 9 */
+ 278:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceId_10,    /**< \brief PCIE device 10 */
+ 279:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceId_11,    /**< \brief PCIE device 11 */
+ 280:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceId_12,    /**< \brief PCIE device 12 */
+ 281:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceId_13,    /**< \brief PCIE device 13 */
+ 282:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceId_14,    /**< \brief PCIE device 14 */
+ 283:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceId_15,    /**< \brief PCIE device 15 */
+ 284:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceId_16,    /**< \brief PCIE device 16 */
+ 285:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceId_17,    /**< \brief PCIE device 17 */
+ 286:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceId_18,    /**< \brief PCIE device 18 */
+ 287:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceId_19,    /**< \brief PCIE device 19 */
+ 288:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceId_20,    /**< \brief PCIE device 20 */
+ 289:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceId_21,    /**< \brief PCIE device 21 */
+ 290:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceId_22,    /**< \brief PCIE device 22 */
+ 291:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceId_23,    /**< \brief PCIE device 23 */
+ 292:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceId_24,    /**< \brief PCIE device 24 */
+ 293:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceId_25,    /**< \brief PCIE device 25 */
+ 294:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceId_26,    /**< \brief PCIE device 26 */
+ 295:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceId_27,    /**< \brief PCIE device 27 */
+ 296:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceId_28,    /**< \brief PCIE device 28 */
+ 297:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceId_29,    /**< \brief PCIE device 29 */
+ 298:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceId_30,    /**< \brief PCIE device 30 */
+ 299:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceId_31,    /**< \brief PCIE device 31 */
+ 300:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceId_Count  /**< \brief Max Number of PCIE devices per Bus */
+ 301:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** } IfxPcie_DeviceId;
+ 302:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 303:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Device mode indicating if it is EP or RC
+ 304:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 305:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** typedef enum
+ 306:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+ 307:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceMode_unknown  = -1, /**< \brief Unknown device */
+ 308:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceMode_ep       = 0,  /**< \brief EP device */
+ 309:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceMode_legacyEp = 1,  /**< \brief Legacy EP type */
+ 310:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceMode_rc       = 4   /**< \brief Root complex device */
+ 311:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** } IfxPcie_DeviceMode;
+ 312:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 313:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Device Type
+ 314:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 315:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** typedef enum
+ 316:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+ 317:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceType_ep,     /**< \brief End Point */
+ 318:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_DeviceType_bridge  /**< \brief Bridge */
+ 319:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** } IfxPcie_DeviceType;
+ 320:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 321:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Error Events
+ 322:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 323:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** typedef enum
+ 324:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+ 325:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_ErrorEvent_none = -1,  /**< \brief No PME event */
+ 326:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_ErrorEvent_corr,       /**< \brief Correctable Error Message */
+ 327:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_ErrorEvent_nonFatal,   /**< \brief non Fatal error message */
+ 328:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_ErrorEvent_fatal,      /**< \brief fatal error message */
+ 329:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_ErrorEvent_count       /**< \brief Count of PME Events */
+ 330:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** } IfxPcie_ErrorEvent;
+ 331:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 332:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Function ID
+ 333:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 334:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** typedef enum
+ 335:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+ 336:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_FunctionId_0,     /**< \brief PCIE device 0 */
+ 337:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_FunctionId_1,     /**< \brief PCIE device 1 */
+ 338:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_FunctionId_2,     /**< \brief PCIE device 2 */
+ 339:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_FunctionId_3,     /**< \brief PCIE device 3 */
+ 340:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_FunctionId_4,     /**< \brief PCIE device 4 */
+ 341:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_FunctionId_5,     /**< \brief PCIE device 5 */
+ 342:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_FunctionId_6,     /**< \brief PCIE device 6 */
+ 343:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_FunctionId_7,     /**< \brief PCIE device 7 */
+ 344:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_FunctionId_Count  /**< \brief Max number of PCIE functions per device */
+ 345:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** } IfxPcie_FunctionId;
+ 346:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 347:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Interrupt Vectors
+ 348:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 349:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** typedef enum
+ 350:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+ 351:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_IntVector_none = -1,       /**< \brief no Interrupt Vector */
+ 352:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_IntVector_remote0Msi,      /**< \brief Remote Interrupt 0 : MSI, MSIX */
+ 353:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_IntVector_remote1Msi,      /**< \brief Remote Interrupt 1 : MSI, MSIX */
+ 354:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_IntVector_remote2Msi,      /**< \brief Remote Interrupt 2 : MSI, MSIX */
+ 355:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_IntVector_remote3Msi,      /**< \brief Remote Interrupt 3 : MSI, MSIX */
+ 356:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_IntVector_remote4MsiIntA,  /**< \brief Remote Interrupt 4 : MSI, MSIX, INTA */
+ 357:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_IntVector_remote5MsiIntB,  /**< \brief Remote Interrupt 5 : MSI, MSIX, INTB */
+ 358:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_IntVector_remote6MsiIntC,  /**< \brief Remote Interrupt 6 : MSI, MSIX, INTC */
+ 359:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_IntVector_remote7MsiIntD,  /**< \brief Remote Interrupt 7 : MSI, MSIX, INTD */
+ 360:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_IntVector_dmaWrInt0,       /**< \brief DMA Interrupt 0 */
+ 361:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_IntVector_dmaWrInt1,       /**< \brief DMA Interrupt 1 */
+ 362:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_IntVector_dmaWrInt2,       /**< \brief DMA Interrupt 2 */
+ 363:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_IntVector_dmaWrInt3,       /**< \brief DMA Interrupt 3 */
+ 364:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_IntVector_dmaRdInt0,       /**< \brief DMA Interrupt 4 */
+ 365:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_IntVector_dmaRdInt1,       /**< \brief DMA Interrupt 5 */
+ 366:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_IntVector_dmaRdInt2,       /**< \brief DMA Interrupt 6 */
+ 367:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_IntVector_dmaRdInt3,       /**< \brief DMA Interrupt 7 */
+ 368:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_IntVector_genError,        /**< \brief General Error Interrupt */
+ 369:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_IntVector_aerError,        /**< \brief AER Error Interrupt */
+ 370:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_IntVector_pmRequest,       /**< \brief Power Management Interrupt */
+ 371:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_IntVector_link,            /**< \brief Link State Management */
+ 372:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_IntVector_message,         /**< \brief Message Interrupt */
+ 373:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_IntVector_misc,            /**< \brief Miscellaneous Interrupt */
+ 374:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_IntVector_count            /**< \brief MAX number of interrupt Vectors */
+ 375:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** } IfxPcie_IntVector;
+ 376:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 377:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Interrupt Type
+ 378:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 379:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** typedef enum
+ 380:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+ 381:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_InterruptType_none,    /**< \brief no interrupts */
+ 382:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_InterruptType_legacy,  /**< \brief legacy INTX messages */
+ 383:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_InterruptType_msi,     /**< \brief MSI Interrupt */
+ 384:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_InterruptType_msix     /**< \brief MSIX Interrupt */
+ 385:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** } IfxPcie_InterruptType;
+ 386:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 387:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief List of LTSSM states
+ 388:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 389:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** typedef enum
+ 390:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+ 391:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_detectQuiet,      /**< \brief detectQuiet */
+ 392:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_detectAct,        /**< \brief detectAct */
+ 393:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_pollActive,       /**< \brief pollActive */
+ 394:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_pollCompliance,   /**< \brief pollCompliance */
+ 395:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_pollConfig,       /**< \brief pollConfig */
+ 396:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_preDetectQuiet,   /**< \brief preDetectQuiet */
+ 397:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_detectWait,       /**< \brief detectWait */
+ 398:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_cfgLinkwdStart,   /**< \brief cfgLinkwdStart */
+ 399:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_cfgLinkwdAcept,   /**< \brief cfgLinkwdAcept */
+ 400:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_cfgLanenumWai,    /**< \brief cfgLanenumWai */
+ 401:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_cfgLanenumAcept,  /**< \brief cfgLanenumAcept */
+ 402:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_cfgComplete,      /**< \brief cfgComplete */
+ 403:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_cfgIdle,          /**< \brief cfgIdle */
+ 404:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_rcvryLock,        /**< \brief rcvryLock */
+ 405:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_rcvrySpeed,       /**< \brief rcvrySpeed */
+ 406:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_rcvryRcvrcfg,     /**< \brief rcvryRcvrcfg */
+ 407:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_rcvryIdle,        /**< \brief rcvryIdle */
+ 408:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_l0,               /**< \brief l0 */
+ 409:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_l0s,              /**< \brief l0s */
+ 410:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_l123SendEidle,    /**< \brief l123SendEidle */
+ 411:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_l1Idle,           /**< \brief l1Idle */
+ 412:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_l2Idle,           /**< \brief l2Idle */
+ 413:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_l2Wake,           /**< \brief l2Wake */
+ 414:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_disabledEntry,    /**< \brief disabledEntry */
+ 415:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_disabledIdle,     /**< \brief disabledIdle */
+ 416:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_disabled,         /**< \brief disabled */
+ 417:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_lpbkEntry,        /**< \brief lpbkEntry */
+ 418:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_lpbkActive,       /**< \brief lpbkActive */
+ 419:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_lpbkExit,         /**< \brief lpbkExit */
+ 420:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_lpbkExitTimeout,  /**< \brief lpbkExitTimeout */
+ 421:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_hotResetEntry,    /**< \brief hotResetEntry */
+ 422:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_hotReset,         /**< \brief hotReset */
+ 423:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_rcvryEq0,         /**< \brief rcvryEq0 */
+ 424:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_rcvryEq1,         /**< \brief rcvryEq1 */
+ 425:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_rcvryEq2,         /**< \brief rcvryEq2 */
+ 426:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_LtssmState_rcvryEq3          /**< \brief rcvryEq3 */
+ 427:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** } IfxPcie_LtssmState;
+ 428:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 429:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Memory Type
+ 430:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 431:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** typedef enum
+ 432:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+ 433:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_MemType_memNoPrefetch = 0,  /**< \brief non prefetch memory */
+ 434:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_MemType_memPrefetch   = 1,  /**< \brief prefetch memory */
+ 435:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_MemType_io            = 2   /**< \brief IO memory */
+ 436:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** } IfxPcie_MemType;
+ 437:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 438:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief MSI Interrupts
+ 439:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 440:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** typedef enum
+ 441:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+ 442:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_MsiInterrupt_none = -1,  /**< \brief none */
+ 443:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_MsiInterrupt_1,          /**< \brief 1 Interrupts from Device */
+ 444:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_MsiInterrupt_2,          /**< \brief 2 Interrupts from Device */
+ 445:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_MsiInterrupt_4,          /**< \brief 4 Interrupts from Device */
+ 446:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_MsiInterrupt_8,          /**< \brief 8 Interrupts from Device */
+ 447:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_MsiInterrupt_16,         /**< \brief 16 Interrupts from Device */
+ 448:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_MsiInterrupt_32          /**< \brief 32 Interrupts from Device */
+ 449:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** } IfxPcie_MsiInterrupt;
+ 450:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 451:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief OBFF Event
+ 452:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 453:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** typedef enum
+ 454:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+ 455:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_ObffEvent_none = -1,  /**< \brief No Event */
+ 456:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_ObffEvent_idle,       /**< \brief Idle Event */
+ 457:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_ObffEvent_obff,       /**< \brief OBFF Event */
+ 458:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_ObffEvent_cpuActive,  /**< \brief CPU Active Event */
+ 459:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_ObffEvent_wakeError   /**< \brief WAKE signal error Event */
+ 460:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** } IfxPcie_ObffEvent;
+ 461:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 462:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief OBFF Type
+ 463:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 464:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** typedef enum
+ 465:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+ 466:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_ObffType_None,  /**< \brief Disable OBFF */
+ 467:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_ObffType_Msg,   /**< \brief OBFF using Message */
+ 468:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_ObffType_Wake   /**< \brief OBFF using WAKE signalling */
+ 469:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** } IfxPcie_ObffType;
+ 470:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 471:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief PME Events
+ 472:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 473:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** typedef enum
+ 474:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+ 475:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_PmeEvent_none = -1,   /**< \brief No PME event */
+ 476:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_PmeEvent_pmEvent,     /**< \brief PM State Event */
+ 477:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_PmeEvent_message,     /**< \brief PME Message received */
+ 478:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_PmeEvent_turnOffAck,  /**< \brief PM Turn Off Acknowledge Event */
+ 479:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_PmeEvent_turnOff,     /**< \brief PM Turn Off Request Received */
+ 480:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_PmeEvent_wakeUp,      /**< \brief PME Wake-up Interrupt Received */
+ 481:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_PmeEvent_count        /**< \brief Count of PME Events */
+ 482:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** } IfxPcie_PmeEvent;
+ 483:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 484:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Status of Operations
+ 485:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 486:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** typedef enum
+ 487:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+ 488:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_Status_success = 0u,  /**< \brief success */
+ 489:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_Status_failure = 1u   /**< \brief failure */
+ 490:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** } IfxPcie_Status;
+ 491:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 492:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief TLP FMT
+ 493:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 494:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** typedef enum
+ 495:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+ 496:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_TlpFormat_3DWnoData   = 0,  /**< \brief 3 data words, no data */
+ 497:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_TlpFormat_4DWnoData   = 1,  /**< \brief 4 data words, no data */
+ 498:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_TlpFormat_3DWwithData = 2,  /**< \brief 3 data words, with data */
+ 499:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_TlpFormat_4DWwithData = 3,  /**< \brief 4 data words, with data */
+ 500:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_TlpFormat_tlpPrefix   = 4   /**< \brief TLP Prefix */
+ 501:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** } IfxPcie_TlpFormat;
+ 502:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 503:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief TLP Message Format
+ 504:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 505:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** typedef enum
+ 506:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+ 507:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_TlpMsgFormat_MsgNoData   = 1, /**< \brief 4 data words, no data */
+ 508:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_TlpMsgFormat_MsgWithData = 3  /**< \brief 4 data words, with data */
+ 509:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** } IfxPcie_TlpMsgFormat;
+ 510:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 511:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief TLP Message Routing
+ 512:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 513:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** typedef enum
+ 514:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+ 515:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_TlpMsgRoute_toRootComplex,       /**< \brief Message to Root Complex */
+ 516:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_TlpMsgRoute_byAddress,           /**< \brief Message Route by Address */
+ 517:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_TlpMsgRoute_byID,                /**< \brief Message Route by ID */
+ 518:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_TlpMsgRoute_broadcastFromRc,     /**< \brief Message Broadcast from RC */
+ 519:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_TlpMsgRoute_terimateAtReceiver,  /**< \brief Message Terminate at the immediate receive
+ 520:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_TlpMsgRoute_gatherToRootComplex  /**< \brief Message Gather and Route to Root Complex *
+ 521:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** } IfxPcie_TlpMsgRoute;
+ 522:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 523:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief TLP Ordering Attributes
+ 524:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 525:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** typedef enum
+ 526:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+ 527:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_TlpOrdering_default,  /**< \brief Default Ordering */
+ 528:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_TlpOrdering_relaxed   /**< \brief Relaxed Ordering */
+ 529:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** } IfxPcie_TlpOrdering;
+ 530:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 531:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief TLP Traffic Class
+ 532:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 533:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** typedef enum
+ 534:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+ 535:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_TlpTrafficClass_0,  /**< \brief TC0 - best effort */
+ 536:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_TlpTrafficClass_1,  /**< \brief TC1 - Differentiated class */
+ 537:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_TlpTrafficClass_2,  /**< \brief TC2 - Differentiated class */
+ 538:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_TlpTrafficClass_3,  /**< \brief TC3 - Differentiated class */
+ 539:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_TlpTrafficClass_4,  /**< \brief TC4 - Differentiated class */
+ 540:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_TlpTrafficClass_5,  /**< \brief TC5 - Differentiated class */
+ 541:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_TlpTrafficClass_6,  /**< \brief TC6 - Differentiated class */
+ 542:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_TlpTrafficClass_7   /**< \brief TC7 - Differentiated class */
+ 543:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** } IfxPcie_TlpTrafficClass;
+ 544:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 545:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief TLP Types
+ 546:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 547:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** typedef enum
+ 548:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+ 549:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_TlpType_memRequest         = 0,   /**< \brief memory Request */
+ 550:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_TlpType_memLockRequest     = 1,   /**< \brief mem Lock Request */
+ 551:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_TlpType_ioRequest          = 2,   /**< \brief IO Request */
+ 552:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_TlpType_configType0        = 4,   /**< \brief Config Type 0 Request */
+ 553:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_TlpType_configType1        = 5,   /**< \brief Config Type 1 Request */
+ 554:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_TlpType_completion         = 10,  /**< \brief Completion */
+ 555:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_TlpType_completionLocked   = 11,  /**< \brief Completion locked */
+ 556:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_TlpType_fetchAddRequest    = 12,  /**< \brief Fetch Add Operation */
+ 557:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_TlpType_swapRequest        = 13,  /**< \brief Swap Operation */
+ 558:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_TlpType_compareSwapRequest = 14,  /**< \brief Compare and Swap Operation */
+ 559:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_TlpType_msg                = 32   /**< \brief Messages */
+ 560:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** } IfxPcie_TlpType;
+ 561:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 562:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Vendor Defined Message type
+ 563:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 564:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** typedef enum
+ 565:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+ 566:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_VendorMsgType_0 = 126,  /**< \brief Vendor Message Type 0 */
+ 567:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_VendorMsgType_1 = 127   /**< \brief Vendor Message Type 1 */
+ 568:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** } IfxPcie_VendorMsgType;
+ 569:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 570:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Link power state
+ 571:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 572:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** typedef enum
+ 573:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+ 574:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_lnkPowerState_l0,   /**< \brief L0 State */
+ 575:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_lnkPowerState_l0s,  /**< \brief L0s state */
+ 576:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_lnkPowerState_l1,   /**< \brief L1 State */
+ 577:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_lnkPowerState_l2,   /**< \brief L2 state */
+ 578:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_lnkPowerState_l3    /**< \brief L3 State */
+ 579:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** } IfxPcie_lnkPowerState;
+ 580:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 581:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \} */
+ 582:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 583:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /******************************************************************************/
+ 584:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /*-----------------------------Data Structures--------------------------------*/
+ 585:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /******************************************************************************/
+ 586:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 587:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \addtogroup IfxLld_Pcie_Std_Structures
+ 588:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \{ */
+ 589:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Error Interrupt Configuration Bits
+ 590:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 591:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** typedef struct
+ 592:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+ 593:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     uint32 corr : 1;
+ 594:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     uint32 nonFatal : 1;
+ 595:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     uint32 fatal : 1;
+ 596:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     uint32 reserved_3 : 29;
+ 597:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** } IfxPcie_ErrorInterruptBits;
+ 598:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 599:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief PME Interrupt Configuration Bits
+ 600:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 601:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** typedef struct
+ 602:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+ 603:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     uint32 pmeEvent : 1;                /**< \brief PM State Event */
+ 604:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     uint32 pmeMessage : 1;              /**< \brief PME Message received */
+ 605:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     uint32 turnOffAcknowledge : 1;      /**< \brief PM Turn Off Acknowledge Event */
+ 606:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     uint32 turnOff : 1;                 /**< \brief PM Turn Off Event */
+ 607:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     uint32 wakeUp : 1;                  /**< \brief PME Wake-up Event */
+ 608:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     uint32 reserved_5 : 27;
+ 609:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** } IfxPcie_PmeInterruptBits;
+ 610:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 611:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \} */
+ 612:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 613:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \addtogroup IfxLld_Pcie_Std_Structures
+ 614:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \{ */
+ 615:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief This union is needed for common functionality implementations
+ 616:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 617:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** typedef union
+ 618:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+ 619:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     Ifx_PCIE_DSP DSP;
+ 620:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     Ifx_PCIE_USP USP;
+ 621:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** } IfxPcie;
+ 622:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 623:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Error Interrupt Configuration
+ 624:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 625:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** typedef union
+ 626:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+ 627:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     uint32                     U;       /**< \brief Word Access */
+ 628:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_ErrorInterruptBits B;       /**< \brief Bits Access */
+ 629:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** } IfxPcie_ErrorInterrupt;
+ 630:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 631:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief PME Interrupt Configuration
+ 632:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 633:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** typedef union
+ 634:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+ 635:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     uint32                   U;       /**< \brief Word Access */
+ 636:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     IfxPcie_PmeInterruptBits B;       /**< \brief Bits Access */
+ 637:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** } IfxPcie_PmeInterrupt;
+ 638:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 639:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \} */
+ 640:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 641:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \addtogroup IfxLld_Pcie_Std_Functions
+ 642:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \{ */
+ 643:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 644:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /******************************************************************************/
+ 645:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /*-------------------------Inline Function Prototypes-------------------------*/
+ 646:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /******************************************************************************/
+ 647:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 648:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Enable the PCIE module
+ 649:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pcieSFR pointer (union type to allow DSP, USP)
+ 650:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return None
+ 651:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 652:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_INLINE void IfxPcie_enableModule(IfxPcie *pcieSFR);
+ 653:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 654:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Reset the PCIE module
+ 655:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pcieSFR pointer (union type to allow DSP, USP)
+ 656:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return None
+ 657:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 658:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_INLINE void IfxPcie_resetModule(IfxPcie *pcieSFR);
+ 659:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 660:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Set the Device Mode
+ 661:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pcieSFR pointer (union type to allow DSP, USP)
+ 662:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param mode (ep, legacyEP, RC)
+ 663:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return None
+ 664:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 665:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_INLINE void IfxPcie_setDeviceMode(IfxPcie *pcieSFR, IfxPcie_DeviceMode mode);
+ 666:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 667:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Get the Device Mode
+ 668:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pcieSFR pointer (union type to allow DSP, USP)
+ 669:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return mode (ep, legacyEP, RC)
+ 670:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 671:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_INLINE IfxPcie_DeviceMode IfxPcie_getDeviceMode(IfxPcie *pcieSFR);
+ 672:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 673:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Check if DBI RO write access is enabled
+ 674:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pcieSFR pointer (union type to allow DSP, USP)
+ 675:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return TRUE: DBI access enabled.
+ 676:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * FALSE: No DBI Access
+ 677:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 678:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_INLINE boolean IfxPcie_isDbiRoAccessEnabled(IfxPcie *pcieSFR);
+ 679:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 680:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Set the DBI RO write access
+ 681:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pcieSFR pointer (union type to allow DSP, USP)
+ 682:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param enable (TRUE, FALSE)
+ 683:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return None
+ 684:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 685:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_INLINE void IfxPcie_setDbiRoAccess(IfxPcie *pcieSFR, boolean enable);
+ 686:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 687:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Get the SRC pointer from interrupt vector line
+ 688:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param index Pcie index
+ 689:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param intVector Interrupt Vector line from PCIE
+ 690:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return Address of SRC node register
+ 691:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 692:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_INLINE Ifx_SRC_SRCR *IfxPcie_getSrcPointer(IfxPcie_Index index, IfxPcie_IntVector intVector);
+ 693:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 694:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Check if the link is up
+ 695:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pcieSFR Pointer to the PCIE SFR
+ 696:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return TRUE: Link is up
+ 697:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * FALSE: Link is not up
+ 698:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 699:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_INLINE boolean IfxPcie_isLinkUp(IfxPcie *pcieSFR);
+ 700:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 701:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Enable Link Training
+ 702:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pcieSFR Pointer to the PCIE SFR
+ 703:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return None
+ 704:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 705:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_INLINE void IfxPcie_enableLtssm(IfxPcie *pcieSFR);
+ 706:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 707:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Indicates the current Link state. Intended for debugging purposes, not for system operat
+ 708:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pcieSFR Pointer to module register
+ 709:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return Link power state
+ 710:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 711:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_INLINE IfxPcie_lnkPowerState IfxPcie_getLinkState(IfxPcie *pcieSFR);
+ 712:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 713:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Current state of the LTSSM.
+ 714:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pcieSFR Pointer to module register
+ 715:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return LTSSM state
+ 716:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 717:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_INLINE IfxPcie_LtssmState IfxPcie_getLtssmState(IfxPcie *pcieSFR);
+ 718:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 719:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /******************************************************************************/
+ 720:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /*-------------------------Global Function Prototypes-------------------------*/
+ 721:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /******************************************************************************/
+ 722:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 723:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Configuration read in bytes
+ 724:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param PcieRcReg Ptr to RC register
+ 725:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param CfgstartAddr Configuration start address
+ 726:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param offset Offset
+ 727:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param val Read value
+ 728:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return None
+ 729:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 730:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN void IfxPcie_CfgRdb(Ifx_PCIE_DSP *PcieRcReg, uint32 CfgstartAddr, uint32 offset, uint8 *
+ 731:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 732:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Configuration read in 32bit
+ 733:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param CfgstartAddr Configuration start address
+ 734:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param offset offset
+ 735:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param val read value
+ 736:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return None
+ 737:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 738:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN void IfxPcie_CfgRdl(uint32 CfgstartAddr, uint32 offset, uint32 *val);
+ 739:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 740:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Configuration read in 16bit
+ 741:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param PcieRcReg Ptr to RC register
+ 742:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param CfgstartAddr Configuration start address
+ 743:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param offset offset
+ 744:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param val read value
+ 745:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return None
+ 746:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 747:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN void IfxPcie_CfgRdw(Ifx_PCIE_DSP *PcieRcReg, uint32 CfgstartAddr, uint32 offset, uint16 
+ 748:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 749:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Config space write byte
+ 750:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param PcieRcReg Ptr to RC register
+ 751:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param CfgstartAddr Configuration start address
+ 752:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param offset Offset value
+ 753:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param val Value to be written
+ 754:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return None
+ 755:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 756:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN void IfxPcie_CfgWrb(Ifx_PCIE_DSP *PcieRcReg, uint32 CfgstartAddr, uint32 offset, uint8 v
+ 757:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 758:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Config space write word
+ 759:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param PcieRcReg Ptr to RC register
+ 760:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param CfgstartAddr Configuration start address
+ 761:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param offset Offset value
+ 762:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param val value to be written
+ 763:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return None
+ 764:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 765:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN void IfxPcie_CfgWrw(Ifx_PCIE_DSP *PcieRcReg, uint32 CfgstartAddr, uint32 offset, uint16 
+ 766:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 767:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Config space write long
+ 768:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param CfgstartAddr Configuration start address
+ 769:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param offset offset value
+ 770:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param val Value to be written
+ 771:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return None
+ 772:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 773:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN void IfxPcie_CfgWrl(uint32 CfgstartAddr, uint32 offset, uint32 val);
+ 774:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 775:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Memory write long
+ 776:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param PcieRcReg Ptr to RC register
+ 777:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param MemstartAddr Memory start address
+ 778:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param offset Offset value
+ 779:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param val value to be read
+ 780:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return None
+ 781:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 782:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN void IfxPcie_MemRdl(Ifx_PCIE_DSP *PcieRcReg, uint32 MemstartAddr, uint32 offset, uint32 
+ 783:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 784:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /**
+ 785:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param PcieRcReg Ptr to RC register
+ 786:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param MemstartAddr Memory start address
+ 787:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param offset Offset value
+ 788:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param val value to be written
+ 789:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return None
+ 790:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 791:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN void IfxPcie_MemWrl(Ifx_PCIE_DSP *PcieRcReg, uint32 MemstartAddr, uint32 offset, uint32 
+ 792:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 793:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief CPU memory read long
+ 794:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param MemstartAddr Memory start address
+ 795:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param offset Offset
+ 796:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param val Value read
+ 797:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return None
+ 798:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 799:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN void IfxPcie_CpuMemRdl(uint32 MemstartAddr, uint32 offset, uint32 *val);
+ 800:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 801:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief CPU memory read long
+ 802:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param MemstartAddr Memory start address
+ 803:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param offset Offset
+ 804:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param val Value to be written
+ 805:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return None
+ 806:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 807:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN void IfxPcie_CpuMemWrl(uint32 MemstartAddr, uint32 offset, uint32 val);
+ 808:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 809:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Get Bar Memory size from bar register
+ 810:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param barReg double word pointer to BAR register
+ 811:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param doubleWord if TRUE, BAR is 64 bit decoded
+ 812:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return bar memory size.
+ 813:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 814:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN uint64 IfxPcie_getBarMemSize(volatile uint32 *barReg, boolean doubleWord);
+ 815:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 816:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Get the Status of PME Event
+ 817:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pcieSFR pointer to the PCIE SFR
+ 818:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pmeEvent type of event
+ 819:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return TRUE: Event has occurred
+ 820:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * FALSE: Event has not occurred
+ 821:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 822:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN boolean IfxPcie_getPmeEventStatus(IfxPcie *pcieSFR, IfxPcie_PmeEvent pmeEvent);
+ 823:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 824:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Get the Pending PME Interrupt Event
+ 825:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pcieSFR pointer to the PCIE SFR
+ 826:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pmeInterrupt Pointer to the PME Interrupt Status
+ 827:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return TRUE: A PME EVent has occurred.
+ 828:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * FALSE: No PME EVents have occurred
+ 829:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 830:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN boolean IfxPcie_getPendingPmeInterrupts(IfxPcie *pcieSFR, IfxPcie_PmeInterrupt *pmeInter
+ 831:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 832:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Enable PME Interrupt
+ 833:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pcieSFR pointer to the PCIE SFR
+ 834:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param enableMask ENABLE Bits ( 1 << "POS" means that "POS" Interrupt is enabled
+ 835:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return None
+ 836:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 837:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN void IfxPcie_enablePmeInterrupts(IfxPcie *pcieSFR, uint32 enableMask);
+ 838:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 839:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Disable PME Interrupt
+ 840:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pcieSFR pointer to the PCIE SFR
+ 841:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param disableMask Disable Bits ( 1 << "POS" means that "POS" Interrupt is disabled
+ 842:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return None
+ 843:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 844:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN void IfxPcie_disablePmeInterrupts(IfxPcie *pcieSFR, uint32 disableMask);
+ 845:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 846:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Clear PME Interrupt
+ 847:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pcieSFR pointer to the PCIE SFR
+ 848:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param clearMask Mask for clear. (1 << POS : means that "POS" will be cleared)
+ 849:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return None
+ 850:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 851:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN void IfxPcie_clearPmeInterrupts(IfxPcie *pcieSFR, uint32 clearMask);
+ 852:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 853:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Get the Status of Error Event
+ 854:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pcieSFR pointer to the PCIE SFR
+ 855:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param errorEvent type of event
+ 856:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return TRUE: Event has occurred
+ 857:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * FALSE: Event has not occurred
+ 858:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 859:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN boolean IfxPcie_getErrorEventStatus(IfxPcie *pcieSFR, IfxPcie_ErrorEvent errorEvent);
+ 860:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 861:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Get the Pending Error Interrupt Event
+ 862:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pcieSFR pointer to the PCIE SFR
+ 863:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param errorInterrupt Pointer to the PME Interrupt Status
+ 864:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return TRUE: A PME EVent has occurred.
+ 865:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * FALSE: No PME EVents have occurred
+ 866:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 867:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN boolean IfxPcie_getPendingErrorInterrupts(IfxPcie *pcieSFR, IfxPcie_ErrorInterrupt *erro
+ 868:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 869:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Enable Error Interrupt
+ 870:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pcieSFR pointer to the PCIE SFR
+ 871:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param enableMask ENABLE Bits ( 1 << "POS" means that "POS" Interrupt is enabled
+ 872:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return None
+ 873:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 874:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN void IfxPcie_enableErrorInterrupts(IfxPcie *pcieSFR, uint32 enableMask);
+ 875:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 876:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Disable Error Interrupt
+ 877:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pcieSFR pointer to the PCIE SFR
+ 878:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param disableMask Disable Bits ( 1 << "POS" means that "POS" Interrupt is disabled
+ 879:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return None
+ 880:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 881:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN void IfxPcie_disableErrorInterrupts(IfxPcie *pcieSFR, uint32 disableMask);
+ 882:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 883:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Clear Error Interrupt
+ 884:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pcieSFR pointer to the PCIE SFR
+ 885:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param clearMask Mask for clear. (1 << POS : means that "POS" will be cleared)
+ 886:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return None
+ 887:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 888:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN void IfxPcie_clearErrorInterrupts(IfxPcie *pcieSFR, uint32 clearMask);
+ 889:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 890:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Send a Turn OFF message
+ 891:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pcieSFR pointer to the PCIE SFR
+ 892:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return None
+ 893:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 894:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN void IfxPcie_sendPmeTurnOffMessage(IfxPcie *pcieSFR);
+ 895:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 896:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Wait for HSPHY complete
+ 897:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param hsphySFR pointer to the HSPHY SFR
+ 898:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param phyIndex PHY Index to wait for
+ 899:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return None
+ 900:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 901:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN void IfxPcie_waitForHsphy(Ifx_HSPHY *hsphySFR, IfxHsphy_PhyIndex phyIndex);
+ 902:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 903:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Enable LTR Interrupt
+ 904:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pcieSFR pointer to the PCIE SFR
+ 905:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return None
+ 906:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 907:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN void IfxPcie_enableLtrInterrupt(IfxPcie *pcieSFR);
+ 908:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 909:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Disable LTR Interrupt
+ 910:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pcieSFR pointer to the PCIE SFR
+ 911:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return None
+ 912:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 913:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN void IfxPcie_disableLtrInterrupt(IfxPcie *pcieSFR);
+ 914:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 915:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Check if there is an LTR Event Pending
+ 916:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pcieSFR pointer to the PCIE SFR
+ 917:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return TRUE: LTR Event is pending
+ 918:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 919:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN boolean IfxPcie_isLtrEventPending(IfxPcie *pcieSFR);
+ 920:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 921:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Clear LTR Event
+ 922:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pcieSFR pointer to the PCIE SFR
+ 923:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return None
+ 924:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 925:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN void IfxPcie_clearLtrEvent(IfxPcie *pcieSFR);
+ 926:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 927:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Get LTR message Payload
+ 928:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pcieSFR pointer to the PCIE SFR
+ 929:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return uint32 LTR message payload
+ 930:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 931:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN uint32 IfxPcie_getLtrMessagePayload(IfxPcie *pcieSFR);
+ 932:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 933:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Trigger an LTR message to RC
+ 934:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pcieSFR pointer to the PCIE SFR
+ 935:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return None
+ 936:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 937:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN void IfxPcie_triggerLtrMessage(IfxPcie *pcieSFR);
+ 938:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 939:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Enable OBFF Event Interrupt
+ 940:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pcieSFR pointer to the PCIE SFR
+ 941:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param obffType Type of OBFF
+ 942:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param obffEvent State of OBFF event
+ 943:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return None
+ 944:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 945:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN void IfxPcie_enableObffEventInterrupt(IfxPcie *pcieSFR, IfxPcie_ObffType obffType, IfxPc
+ 946:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 947:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Disable OBFF Event Interrupt
+ 948:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pcieSFR pointer to the PCIE SFR
+ 949:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param obffType Type of OBFF
+ 950:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param obffEvent State of OBFF event
+ 951:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return None
+ 952:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 953:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN void IfxPcie_disableObffEventInterrupt(IfxPcie *pcieSFR, IfxPcie_ObffType obffType, IfxP
+ 954:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 955:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Enable all OBFF Interrupts
+ 956:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pcieSFR pointer to the PCIE SFR
+ 957:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param obffType Type of OBFF
+ 958:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return None
+ 959:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 960:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN void IfxPcie_enableObffInterrupts(IfxPcie *pcieSFR, IfxPcie_ObffType obffType);
+ 961:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 962:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Disable all OBFF Event Interrupt
+ 963:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pcieSFR pointer to the PCIE SFR
+ 964:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param obffType Type of OBFF
+ 965:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return None
+ 966:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 967:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN void IfxPcie_disableObffInterrupts(IfxPcie *pcieSFR, IfxPcie_ObffType obffType);
+ 968:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 969:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Get the pending OBFF Event Interrupt
+ 970:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pcieSFR pointer to the PCIE SFR
+ 971:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param obffType Type of OBFF
+ 972:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return IfxPcie_ObffEvent OBFF event
+ 973:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 974:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN IfxPcie_ObffEvent IfxPcie_getPendingObffEvent(IfxPcie *pcieSFR, IfxPcie_ObffType obffTyp
+ 975:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 976:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Clears pending OBFF events
+ 977:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pcieSFR pointer to the PCIE SFR
+ 978:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param obffType Type of OBFF
+ 979:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param obffEvent State of OBFF event
+ 980:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return None
+ 981:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 982:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN void IfxPcie_clearPendingObffEvent(IfxPcie *pcieSFR, IfxPcie_ObffType obffType, IfxPcie_
+ 983:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 984:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Clears pending OBFF events
+ 985:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param pcieSFR pointer to the PCIE SFR
+ 986:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param obffType Type of OBFF
+ 987:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param obffEvent State of the OBFF event
+ 988:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return None
+ 989:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 990:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN void IfxPcie_triggerObff(IfxPcie *pcieSFR, IfxPcie_ObffType obffType, IfxPcie_ObffEvent 
+ 991:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 992:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \brief Configures access to all masters to all the PCIEs in the device
+ 993:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \param apConfig pointer to configuration structure
+ 994:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  * \return None
+ 995:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****  */
+ 996:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_EXTERN void IfxPcie_configureAccessToPcies(IfxApApu_ApuConfig *apConfig);
+ 997:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+ 998:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /** \} */
+ 999:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+1000:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /******************************************************************************/
+1001:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /*---------------------Inline Function Implementations------------------------*/
+1002:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** /******************************************************************************/
+1003:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+1004:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_INLINE void IfxPcie_enableModule(IfxPcie *pcieSFR)
+1005:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+1006:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     Ifx_PCIE_DSP *pcie = (Ifx_PCIE_DSP *)pcieSFR;
+1007:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+1008:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     pcie->CLC.B.DISR = 0u;
+1009:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+1010:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     while (pcie->CLC.B.DISS != 0u)
+1011:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     {
+1012:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****         /* wait here until the module is enabled */
+1013:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****         /* TODO: disable warning : this is needed */
+1014:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     }
+1015:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** }
+1016:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+1017:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+1018:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_INLINE void IfxPcie_resetModule(IfxPcie *pcieSFR)
+1019:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+1020:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     Ifx_PCIE_DSP_RST *pcieRst = &(pcieSFR->DSP.RST);
+1021:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+1022:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     /* Request a new Reset */
+1023:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     pcieRst->CTRLA.B.KRST = 1u;
+1024:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     pcieRst->CTRLB.B.KRST = 1u;
+1025:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+1026:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     /* Ensure Reset occurred */
+1027:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     while (pcieRst->STAT.B.KRST == 0u)
+1028:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     {
+1029:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****         /* Wait here until Reset happens */
+1030:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     }
+1031:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+1032:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     /* Clear the Reset Status */
+1033:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     pcieRst->CTRLB.B.STATCLR = 1u;
+1034:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+1035:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     /* Wait until KRST is cleared, only after this reset sequence is completed */
+1036:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     while (pcieRst->STAT.B.KRST == 1u)
+1037:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     {}
+1038:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** }
+1039:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+1040:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+1041:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_INLINE void IfxPcie_setDeviceMode(IfxPcie *pcieSFR, IfxPcie_DeviceMode mode)
+1042:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+1043:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     pcieSFR->DSP.LNK.DVCTYP.B.TYP = (uint32)mode;
+1044:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** }
+1045:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+1046:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+1047:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_INLINE IfxPcie_DeviceMode IfxPcie_getDeviceMode(IfxPcie *pcieSFR)
+1048:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+1049:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     return (IfxPcie_DeviceMode)(pcieSFR->DSP.LNK.DVCTYP.B.TYP);
+1050:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** }
+1051:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+1052:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+1053:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_INLINE boolean IfxPcie_isDbiRoAccessEnabled(IfxPcie *pcieSFR)
+1054:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+1055:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     return (pcieSFR->DSP.PORTLOGIC.MISC_CONTROL_1_OFF.B.DBI_RO_WR_EN == (uint32)1) ? TRUE : FALSE;
+1056:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** }
+1057:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+1058:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** 
+1059:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** IFX_INLINE void IfxPcie_setDbiRoAccess(IfxPcie *pcieSFR, boolean enable)
+1060:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h **** {
+1061:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcie.h ****     pcieSFR->DSP.PORTLOGIC.MISC_CONTROL_1_OFF.B.DBI_RO_WR_EN = (uint32)enable;
+ 341              	 .loc 2 1061 5
+ 342              	 .loc 2 1061 62 is_stmt 0
+ 343 0002 D942BC24 	 lea %a2,[%a4]18620
+ 344 0006 1942BC24 	 ld.w %d2,[%a4]18620
+ 345 000a B7120120 	 insert %d2,%d2,1,0,1
+ 346 000e 7422     	 st.w [%a2]0,%d2
+ 347              	.LVL41:
+ 348              	.LBE11:
+ 349              	.LBE10:
+ 154:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     /* ASPM must be disabled before moving to loopback mode */
+ 155:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     pcieEpSFR->PCIECAP.LINK_CAPABILITIES_REG.B.PCIE_CAP_ACTIVE_STATE_LINK_PM_SUPPORT = 0;
+ 350              	 .loc 1 155 5 is_stmt 1
+ 351              	 .loc 1 155 86 is_stmt 0
+ 352 0010 D9423C14 	 lea %a2,[%a4]16508
+ 353 0014 19423C14 	 ld.w %d2,[%a4]16508
+ 354 0018 B7020225 	 insert %d2,%d2,0,10,2
+ 355 001c 7422     	 st.w [%a2]0,%d2
+ 156:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     /* Disable Equalisation */
+ 157:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     pcieEpSFR->PORTLOGIC.GEN3_RELATED_OFF.B.GEN3_EQUALIZATION_DISABLE                = 1;
+ 356              	 .loc 1 157 5 is_stmt 1
+ 357              	 .loc 1 157 86 is_stmt 0
+ 358 001e D9429024 	 lea %a2,[%a4]18576
+ 359 0022 19429024 	 ld.w %d2,[%a4]18576
+ 360 0026 B7120128 	 insert %d2,%d2,1,16,1
+ 361 002a 7422     	 st.w [%a2]0,%d2
+ 158:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     /* Set Pipe Loopback bit */
+ 159:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     pcieEpSFR->PORTLOGIC.PIPE_LOOPBACK_CONTROL_OFF.B.PIPE_LOOPBACK                   = 1;
+ 362              	 .loc 1 159 5 is_stmt 1
+ 363              	 .loc 1 159 86 is_stmt 0
+ 364 002c D942B824 	 lea %a2,[%a4]18616
+ 365 0030 1942B824 	 ld.w %d2,[%a4]18616
+ 366 0034 B712812F 	 insert %d2,%d2,1,31,1
+ 367 0038 7422     	 st.w [%a2]0,%d2
+ 160:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     pcieEpSFR->PORTLOGIC.PORT_LINK_CTRL_OFF.B.LOOPBACK_ENABLE                        = 1;
+ 368              	 .loc 1 160 5 is_stmt 1
+ 369              	 .loc 1 160 86 is_stmt 0
+ 370 003a D94250C4 	 lea %a2,[%a4]18192
+ 371 003e 194250C4 	 ld.w %d2,[%a4]18192
+ 372 0042 B7120121 	 insert %d2,%d2,1,2,1
+ 373 0046 7422     	 st.w [%a2]0,%d2
+ 161:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     IfxPcie_setDbiRoAccess((IfxPcie *)pcieEpSFR, FALSE);
+ 374              	 .loc 1 161 5 is_stmt 1
+ 375              	.LVL42:
+ 376              	.LBB12:
+ 377              	.LBB13:
+ 378              	 .loc 2 1061 5
+ 379              	 .loc 2 1061 62 is_stmt 0
+ 380 0048 D942BC24 	 lea %a2,[%a4]18620
+ 381 004c 1942BC24 	 ld.w %d2,[%a4]18620
+ 382 0050 8F12C021 	 andn %d2,%d2,~(-2)
+ 383 0054 7422     	 st.w [%a2]0,%d2
+ 384              	.LVL43:
+ 385              	.LBE13:
+ 386              	.LBE12:
+ 162:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** }
+ 387              	 .loc 1 162 1
+ 388 0056 0090     	 ret 
+ 389              	.LFE357:
+ 391              	 .global IfxPcieEp_enterLocalLoopback_end
+ 392              	IfxPcieEp_enterLocalLoopback_end:
+ 393              	 .section .text.IfxPcieEp_setSrisOperatingMode,"ax",@progbits
+ 394              	 .align 1
+ 395              	 .global IfxPcieEp_setSrisOperatingMode
+ 397              	IfxPcieEp_setSrisOperatingMode:
+ 398              	.LFB358:
+ 163:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+ 164:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+ 165:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** void IfxPcieEp_setSrisOperatingMode(Ifx_PCIE_USP *pcieEpSFR)
+ 166:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** {
+ 399              	 .loc 1 166 1 is_stmt 1
+ 400              	.LVL44:
+ 401 0000 40AE     	 mov.aa %a14,%SP
+ 402              	.LCFI8:
+ 167:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     IfxPcie_setDbiRoAccess((IfxPcie *)pcieEpSFR, TRUE);
+ 403              	 .loc 1 167 5
+ 404              	.LVL45:
+ 405              	.LBB14:
+ 406              	.LBB15:
+ 407              	 .loc 2 1061 5
+ 408              	 .loc 2 1061 62 is_stmt 0
+ 409 0002 D942BC24 	 lea %a2,[%a4]18620
+ 410 0006 1942BC24 	 ld.w %d2,[%a4]18620
+ 411 000a B7120120 	 insert %d2,%d2,1,0,1
+ 412 000e 7422     	 st.w [%a2]0,%d2
+ 413              	.LVL46:
+ 414              	.LBE15:
+ 415              	.LBE14:
+ 168:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+ 169:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     /* L0s should not be supported if SRIS is enabled and hence check if L0s is supported if yes di
+ 170:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     if ((pcieEpSFR->PCIECAP.LINK_CAPABILITIES_REG.B.PCIE_CAP_ACTIVE_STATE_LINK_PM_SUPPORT & 0x1) ==
+ 416              	 .loc 1 170 5 is_stmt 1
+ 417              	 .loc 1 170 52 is_stmt 0
+ 418 0010 D9423C14 	 lea %a2,[%a4]16508
+ 419 0014 19423C14 	 ld.w %d2,[%a4]16508
+ 420              	 .loc 1 170 8
+ 421 0018 6FA20000 	 jz.t %d2,10,.L26
+ 171:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     {
+ 172:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****         pcieEpSFR->PCIECAP.LINK_CAPABILITIES_REG.B.PCIE_CAP_ACTIVE_STATE_LINK_PM_SUPPORT = 0x2;
+ 422              	 .loc 1 172 9 is_stmt 1
+ 423              	 .loc 1 172 90 is_stmt 0
+ 424 001c 5422     	 ld.w %d2,[%a2]0
+ 425 001e B7220225 	 insert %d2,%d2,2,10,2
+ 426 0022 7422     	 st.w [%a2]0,%d2
+ 427              	.L26:
+ 173:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     }
+ 174:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+ 175:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     pcieEpSFR->LNK.CORECTRL.B.SRISMD = 1;
+ 428              	 .loc 1 175 5 is_stmt 1
+ 429              	 .loc 1 175 38 is_stmt 0
+ 430 0024 D94238D0 	 lea %a2,[%a4]888
+ 431 0028 194238D0 	 ld.w %d2,[%a4]888
+ 432 002c B7120120 	 insert %d2,%d2,1,0,1
+ 433 0030 7422     	 st.w [%a2]0,%d2
+ 176:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     IfxPcie_setDbiRoAccess((IfxPcie *)pcieEpSFR, FALSE);
+ 434              	 .loc 1 176 5 is_stmt 1
+ 435              	.LVL47:
+ 436              	.LBB16:
+ 437              	.LBB17:
+ 438              	 .loc 2 1061 5
+ 439              	 .loc 2 1061 62 is_stmt 0
+ 440 0032 D942BC24 	 lea %a2,[%a4]18620
+ 441 0036 1942BC24 	 ld.w %d2,[%a4]18620
+ 442 003a 8F12C021 	 andn %d2,%d2,~(-2)
+ 443 003e 7422     	 st.w [%a2]0,%d2
+ 444              	.LVL48:
+ 445              	.LBE17:
+ 446              	.LBE16:
+ 177:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** }
+ 447              	 .loc 1 177 1
+ 448 0040 0090     	 ret 
+ 449              	.LFE358:
+ 451              	 .global IfxPcieEp_setSrisOperatingMode_end
+ 452              	IfxPcieEp_setSrisOperatingMode_end:
+ 453              	 .section .text.IfxPcieEp_exitLocalLoopback,"ax",@progbits
+ 454              	 .align 1
+ 455              	 .global IfxPcieEp_exitLocalLoopback
+ 457              	IfxPcieEp_exitLocalLoopback:
+ 458              	.LFB359:
+ 178:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+ 179:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+ 180:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** void IfxPcieEp_exitLocalLoopback(Ifx_PCIE_USP *pcieEpSFR)
+ 181:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** {
+ 459              	 .loc 1 181 1 is_stmt 1
+ 460              	.LVL49:
+ 461 0000 40AE     	 mov.aa %a14,%SP
+ 462              	.LCFI9:
+ 182:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     /* reset Pipe Loopback bit */
+ 183:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     pcieEpSFR->PORTLOGIC.PIPE_LOOPBACK_CONTROL_OFF.B.PIPE_LOOPBACK = 0;
+ 463              	 .loc 1 183 5
+ 464              	 .loc 1 183 68 is_stmt 0
+ 465 0002 D942B824 	 lea %a2,[%a4]18616
+ 466 0006 1942B824 	 ld.w %d2,[%a4]18616
+ 467 000a B702812F 	 insert %d2,%d2,0,31,1
+ 468 000e 7422     	 st.w [%a2]0,%d2
+ 184:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     pcieEpSFR->PORTLOGIC.PORT_LINK_CTRL_OFF.B.LOOPBACK_ENABLE      = 0;
+ 469              	 .loc 1 184 5 is_stmt 1
+ 470              	 .loc 1 184 68 is_stmt 0
+ 471 0010 D94250C4 	 lea %a2,[%a4]18192
+ 472 0014 194250C4 	 ld.w %d2,[%a4]18192
+ 473 0018 8F42C021 	 andn %d2,%d2,~(-5)
+ 474 001c 7422     	 st.w [%a2]0,%d2
+ 185:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** }
+ 475              	 .loc 1 185 1
+ 476 001e 0090     	 ret 
+ 477              	.LFE359:
+ 479              	 .global IfxPcieEp_exitLocalLoopback_end
+ 480              	IfxPcieEp_exitLocalLoopback_end:
+ 481              	 .section .text.IfxPcieEp_setAckNackScheduler,"ax",@progbits
+ 482              	 .align 1
+ 483              	 .global IfxPcieEp_setAckNackScheduler
+ 485              	IfxPcieEp_setAckNackScheduler:
+ 486              	.LFB360:
+ 186:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+ 187:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+ 188:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** void IfxPcieEp_setAckNackScheduler(Ifx_PCIE_USP *pcieEpSFR, IfxPcieEp_ackNackConfig ackNackConfig)
+ 189:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** {
+ 487              	 .loc 1 189 1 is_stmt 1
+ 488              	.LVL50:
+ 489 0000 40AE     	 mov.aa %a14,%SP
+ 490              	.LCFI10:
+ 491 0002 2008     	 sub.a %SP,8
+ 492 0004 59E4FCFF 	 st.w [%a14]-4,%d4
+ 190:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     /* Set the ACK frequency of L0-L1 ASPM behaviour */
+ 191:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     /* Number of pending ACKs */
+ 192:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     pcieEpSFR->PORTLOGIC.ACK_F_ASPM_CTRL_OFF.B.ACK_FREQ                        = ackNackConfig.ackF
+ 493              	 .loc 1 192 5
+ 494              	 .loc 1 192 95 is_stmt 0
+ 495 0008 39E3FCFF 	 ld.bu %d3,[%a14]-4
+ 496              	 .loc 1 192 80
+ 497 000c D9424CC4 	 lea %a2,[%a4]18188
+ 498 0010 19424CC4 	 ld.w %d2,[%a4]18188
+ 499 0014 37320820 	 insert %d2,%d2,%d3,0,8
+ 500 0018 7422     	 st.w [%a2]0,%d2
+ 193:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     pcieEpSFR->PORTLOGIC.ACK_LATENCY_TIMER_OFF.B.ROUND_TRIP_LATENCY_TIME_LIMIT = ackNackConfig.ackL
+ 501              	 .loc 1 193 5 is_stmt 1
+ 502              	 .loc 1 193 95 is_stmt 0
+ 503 001a B9E3FEFF 	 ld.hu %d3,[%a14]-2
+ 504              	 .loc 1 193 80
+ 505 001e D94240C4 	 lea %a2,[%a4]18176
+ 506 0022 194240C4 	 ld.w %d2,[%a4]18176
+ 507 0026 37321020 	 insert %d2,%d2,%d3,0,16
+ 508 002a 7422     	 st.w [%a2]0,%d2
+ 194:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     pcieEpSFR->PORTLOGIC.TIMER_CTRL_MAX_FUNC_NUM_OFF.B.TIMER_MOD_ACK_NAK       = ackNackConfig.ackL
+ 509              	 .loc 1 194 5 is_stmt 1
+ 510              	 .loc 1 194 95 is_stmt 0
+ 511 002c 39E3FDFF 	 ld.bu %d3,[%a14]-3
+ 512              	 .loc 1 194 80
+ 513 0030 D94258C4 	 lea %a2,[%a4]18200
+ 514 0034 194258C4 	 ld.w %d2,[%a4]18200
+ 515 0038 37328529 	 insert %d2,%d2,%d3,19,5
+ 516 003c 7422     	 st.w [%a2]0,%d2
+ 195:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** }
+ 517              	 .loc 1 195 1
+ 518 003e 0090     	 ret 
+ 519              	.LFE360:
+ 521              	 .global IfxPcieEp_setAckNackScheduler_end
+ 522              	IfxPcieEp_setAckNackScheduler_end:
+ 523              	 .section .text.IfxPcieEp_setReplayTimerLimit,"ax",@progbits
+ 524              	 .align 1
+ 525              	 .global IfxPcieEp_setReplayTimerLimit
+ 527              	IfxPcieEp_setReplayTimerLimit:
+ 528              	.LFB361:
+ 196:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+ 197:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+ 198:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** void IfxPcieEp_setReplayTimerLimit(Ifx_PCIE_USP *pcieEpSFR, IfxPcieEp_replayTimerConfig replayTimer
+ 199:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** {
+ 529              	 .loc 1 199 1 is_stmt 1
+ 530              	.LVL51:
+ 531 0000 40AE     	 mov.aa %a14,%SP
+ 532              	.LCFI11:
+ 533 0002 2008     	 sub.a %SP,8
+ 534 0004 59E4FCFF 	 st.w [%a14]-4,%d4
+ 200:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     pcieEpSFR->PORTLOGIC.ACK_LATENCY_TIMER_OFF.B.REPLAY_TIME_LIMIT            = replayTimerConfig.r
+ 535              	 .loc 1 200 5
+ 536              	 .loc 1 200 98 is_stmt 0
+ 537 0008 B9E3FEFF 	 ld.hu %d3,[%a14]-2
+ 538              	 .loc 1 200 79
+ 539 000c D94240C4 	 lea %a2,[%a4]18176
+ 540 0010 194240C4 	 ld.w %d2,[%a4]18176
+ 541 0014 37321028 	 insert %d2,%d2,%d3,16,32-16
+ 542 0018 7422     	 st.w [%a2]0,%d2
+ 201:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     pcieEpSFR->PORTLOGIC.TIMER_CTRL_MAX_FUNC_NUM_OFF.B.TIMER_MOD_REPLAY_TIMER = replayTimerConfig.r
+ 543              	 .loc 1 201 5 is_stmt 1
+ 544              	 .loc 1 201 98 is_stmt 0
+ 545 001a 39E3FCFF 	 ld.bu %d3,[%a14]-4
+ 546              	 .loc 1 201 79
+ 547 001e D94258C4 	 lea %a2,[%a4]18200
+ 548 0022 194258C4 	 ld.w %d2,[%a4]18200
+ 549 0026 37320527 	 insert %d2,%d2,%d3,14,5
+ 550 002a 7422     	 st.w [%a2]0,%d2
+ 202:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** }
+ 551              	 .loc 1 202 1
+ 552 002c 0090     	 ret 
+ 553              	.LFE361:
+ 555              	 .global IfxPcieEp_setReplayTimerLimit_end
+ 556              	IfxPcieEp_setReplayTimerLimit_end:
+ 557              	 .section .text.IfxPcieEp_setIntrTriggerMsk,"ax",@progbits
+ 558              	 .align 1
+ 559              	 .global IfxPcieEp_setIntrTriggerMsk
+ 561              	IfxPcieEp_setIntrTriggerMsk:
+ 562              	.LFB362:
+ 203:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+ 204:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+ 205:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** void IfxPcieEp_setIntrTriggerMsk(Ifx_PCIE_USP *pcieEpSFR, uint32 value)
+ 206:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** {
+ 563              	 .loc 1 206 1 is_stmt 1
+ 564              	.LVL52:
+ 565 0000 40AE     	 mov.aa %a14,%SP
+ 566              	.LCFI12:
+ 207:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     pcieEpSFR->INT.TRIGEN.U = value;
+ 567              	 .loc 1 207 5
+ 568              	 .loc 1 207 29 is_stmt 0
+ 569 0002 594420D0 	 st.w [%a4]864,%d4
+ 208:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** }
+ 570              	 .loc 1 208 1
+ 571 0006 0090     	 ret 
+ 572              	.LFE362:
+ 574              	 .global IfxPcieEp_setIntrTriggerMsk_end
+ 575              	IfxPcieEp_setIntrTriggerMsk_end:
+ 576              	 .section .text.IfxPcieEp_getIntrTriggerStatus,"ax",@progbits
+ 577              	 .align 1
+ 578              	 .global IfxPcieEp_getIntrTriggerStatus
+ 580              	IfxPcieEp_getIntrTriggerStatus:
+ 581              	.LFB363:
+ 209:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+ 210:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+ 211:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** uint32 IfxPcieEp_getIntrTriggerStatus(Ifx_PCIE_USP *pcieEpSFR)
+ 212:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** {
+ 582              	 .loc 1 212 1 is_stmt 1
+ 583              	.LVL53:
+ 584 0000 40AE     	 mov.aa %a14,%SP
+ 585              	.LCFI13:
+ 213:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     return pcieEpSFR->INT.TRIGSTAT.U;
+ 586              	 .loc 1 213 5
+ 587              	 .loc 1 213 35 is_stmt 0
+ 588 0002 194218D0 	 ld.w %d2,[%a4]856
+ 214:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** }
+ 589              	 .loc 1 214 1
+ 590 0006 0090     	 ret 
+ 591              	.LFE363:
+ 593              	 .global IfxPcieEp_getIntrTriggerStatus_end
+ 594              	IfxPcieEp_getIntrTriggerStatus_end:
+ 595              	 .section .text.IfxPcieEp_clearIntrTriggerStatus,"ax",@progbits
+ 596              	 .align 1
+ 597              	 .global IfxPcieEp_clearIntrTriggerStatus
+ 599              	IfxPcieEp_clearIntrTriggerStatus:
+ 600              	.LFB364:
+ 215:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+ 216:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** 
+ 217:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** void IfxPcieEp_clearIntrTriggerStatus(Ifx_PCIE_USP *pcieEpSFR, uint32 value)
+ 218:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** {
+ 601              	 .loc 1 218 1 is_stmt 1
+ 602              	.LVL54:
+ 603 0000 40AE     	 mov.aa %a14,%SP
+ 604              	.LCFI14:
+ 219:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c ****     pcieEpSFR->INT.TRIGCLR.U = value;
+ 605              	 .loc 1 219 5
+ 606              	 .loc 1 219 30 is_stmt 0
+ 607 0002 59441CD0 	 st.w [%a4]860,%d4
+ 220:../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.c **** }
+ 608              	 .loc 1 220 1
+ 609 0006 0090     	 ret 
+ 610              	.LFE364:
+ 612              	 .global IfxPcieEp_clearIntrTriggerStatus_end
+ 613              	IfxPcieEp_clearIntrTriggerStatus_end:
+ 810              	.Letext0:
+ 811              	 .file 3 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 812              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 813              	 .file 5 "../Libraries/Infra/Sfr/TC4Dx/IfxPcie_dsp_regdef.h"
+ 814              	 .file 6 "../Libraries/Infra/Sfr/TC4Dx/IfxPcie_usp_regdef.h"
+ 815              	 .file 7 "../Libraries/iLLD/TC4xx/CpuGeneric/_Impl/TC4Dx/IfxAp_cfg_TC4Dx.h"
+ 816              	 .file 8 "../Libraries/iLLD/TC4xx/CpuGeneric/Ap/IfxProt_regdef.h"
+ 817              	 .file 9 "../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApProt.h"
+ 818              	 .file 10 "../Libraries/iLLD/TC4xx/CpuGeneric/Ap/IfxAccen_regdef.h"
+ 819              	 .file 11 "../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h"
+ 820              	 .file 12 "../Libraries/iLLD/TC4xx/CpuGeneric/Pcie/Std/IfxPcieEp.h"
+ 83763 0000 00000000 	 .word IfxPcieEp_initApConfig
+ 83764 0004 00000000 	 .word IfxPcieEp_initApConfig_end
+ 83765 0008 00001054 	 .word 0x54100000
+ 83766 000c 00001000 	 .word 0x00100000
+ 83767 0010 00000000 	 .word 0x00000000
+ 83768 0014 40000200 	 .word 0x00020040
+ 83769 0018 00000000 	 .word IfxPcieEp_initAp
+ 83770 001c 00000000 	 .word IfxPcieEp_initAp_end
+ 83771 0020 14013074 	 .word 0x74300114
+ 83772 0024 00003000 	 .word 0x00300000
+ 83773 0028 00000000 	 .word 0x00000000
+ 83774 002c 40000200 	 .word 0x00020040
+ 83775 0030 00000000 	 .word IfxPcieEp_setBarMask
+ 83776 0034 00000000 	 .word IfxPcieEp_setBarMask_end
+ 83777 0038 FD001C44 	 .word 0x441c00fd
+ 83778 003c F0001000 	 .word 0x001000f0
+ 83779 0040 04000000 	 .word 0x00000004
+ 83780 0044 C0000400 	 .word 0x000400c0
+ 83781 0048 00000000 	 .word IfxPcieEp_setBarParameters
+ 83782 004c 00000000 	 .word IfxPcieEp_setBarParameters_end
+ 83783 0050 FD001444 	 .word 0x441400fd
+ 83784 0054 70001000 	 .word 0x00100070
+ 83785 0058 00000000 	 .word 0x00000000
+ 83786 005c C0000000 	 .word 0x000000c0
+ 83787 0060 00000000 	 .word IfxPcieEp_resetLinkTraining
+ 83788 0064 00000000 	 .word IfxPcieEp_resetLinkTraining_end
+ 83789 0068 04001444 	 .word 0x44140004
+ 83790 006c 00001000 	 .word 0x00100000
+ 83791 0070 00000000 	 .word 0x00000000
+ 83792 0074 C0000000 	 .word 0x000000c0
+ 83793 0078 00000000 	 .word IfxPcieEp_isLinkUp
+ 83794 007c 00000000 	 .word IfxPcieEp_isLinkUp_end
+ 83795 0080 04001444 	 .word 0x44140004
+ 83796 0084 00001000 	 .word 0x00100000
+ 83797 0088 04000000 	 .word 0x00000004
+ 83798 008c C0000000 	 .word 0x000000c0
+ 83799 0090 00000000 	 .word IfxPcieEp_isLinkStateL0
+ 83800 0094 00000000 	 .word IfxPcieEp_isLinkStateL0_end
+ 83801 0098 04001444 	 .word 0x44140004
+ 83802 009c 00001000 	 .word 0x00100000
+ 83803 00a0 04000000 	 .word 0x00000004
+ 83804 00a4 C0000000 	 .word 0x000000c0
+ 83805 00a8 00000000 	 .word IfxPcieEp_enterLocalLoopback
+ 83806 00ac 00000000 	 .word IfxPcieEp_enterLocalLoopback_end
+ 83807 00b0 04001444 	 .word 0x44140004
+ 83808 00b4 00001000 	 .word 0x00100000
+ 83809 00b8 00000000 	 .word 0x00000000
+ 83810 00bc C0000000 	 .word 0x000000c0
+ 83811 00c0 00000000 	 .word IfxPcieEp_setSrisOperatingMode
+ 83812 00c4 00000000 	 .word IfxPcieEp_setSrisOperatingMode_end
+ 83813 00c8 04001444 	 .word 0x44140004
+ 83814 00cc 00001000 	 .word 0x00100000
+ 83815 00d0 00000000 	 .word 0x00000000
+ 83816 00d4 C0000000 	 .word 0x000000c0
+ 83817 00d8 00000000 	 .word IfxPcieEp_exitLocalLoopback
+ 83818 00dc 00000000 	 .word IfxPcieEp_exitLocalLoopback_end
+ 83819 00e0 04001444 	 .word 0x44140004
+ 83820 00e4 00001000 	 .word 0x00100000
+ 83821 00e8 00000000 	 .word 0x00000000
+ 83822 00ec C0000000 	 .word 0x000000c0
+ 83823 00f0 00000000 	 .word IfxPcieEp_setAckNackScheduler
+ 83824 00f4 00000000 	 .word IfxPcieEp_setAckNackScheduler_end
+ 83825 00f8 1C001444 	 .word 0x4414001c
+ 83826 00fc 10001000 	 .word 0x00100010
+ 83827 0100 00000000 	 .word 0x00000000
+ 83828 0104 C0800000 	 .word 0x000080c0
+ 83829 0108 00000000 	 .word IfxPcieEp_setReplayTimerLimit
+ 83830 010c 00000000 	 .word IfxPcieEp_setReplayTimerLimit_end
+ 83831 0110 1C001444 	 .word 0x4414001c
+ 83832 0114 10001000 	 .word 0x00100010
+ 83833 0118 00000000 	 .word 0x00000000
+ 83834 011c C0800000 	 .word 0x000080c0
+ 83835 0120 00000000 	 .word IfxPcieEp_setIntrTriggerMsk
+ 83836 0124 00000000 	 .word IfxPcieEp_setIntrTriggerMsk_end
+ 83837 0128 14001444 	 .word 0x44140014
+ 83838 012c 10001000 	 .word 0x00100010
+ 83839 0130 00000000 	 .word 0x00000000
+ 83840 0134 C0000000 	 .word 0x000000c0
+ 83841 0138 00000000 	 .word IfxPcieEp_getIntrTriggerStatus
+ 83842 013c 00000000 	 .word IfxPcieEp_getIntrTriggerStatus_end
+ 83843 0140 04001444 	 .word 0x44140004
+ 83844 0144 00001000 	 .word 0x00100000
+ 83845 0148 04000000 	 .word 0x00000004
+ 83846 014c C0000000 	 .word 0x000000c0
+ 83847 0150 00000000 	 .word IfxPcieEp_clearIntrTriggerStatus
+ 83848 0154 00000000 	 .word IfxPcieEp_clearIntrTriggerStatus_end
+ 83849 0158 14001444 	 .word 0x44140014
+ 83850 015c 10001000 	 .word 0x00100010
+ 83851 0160 00000000 	 .word 0x00000000
+ 83852 0164 C0000000 	 .word 0x000000c0
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxPcieEp.c
+                            *ABS*:00000000 IfxPcieEp.c
+    {standard input}:10     .text.IfxPcieEp_initApConfig:00000000 IfxPcieEp_initApConfig
+    {standard input}:34     .text.IfxPcieEp_initApConfig:0000001a IfxPcieEp_initApConfig_end
+    {standard input}:39     .text.IfxPcieEp_initAp:00000000 IfxPcieEp_initAp
+    {standard input}:81     .text.IfxPcieEp_initAp:0000003c IfxPcieEp_initAp_end
+    {standard input}:86     .text.IfxPcieEp_setBarMask:00000000 IfxPcieEp_setBarMask
+    {standard input}:202    .text.IfxPcieEp_setBarMask:00000094 IfxPcieEp_setBarMask_end
+    {standard input}:207    .text.IfxPcieEp_setBarParameters:00000000 IfxPcieEp_setBarParameters
+    {standard input}:261    .text.IfxPcieEp_setBarParameters:0000003c IfxPcieEp_setBarParameters_end
+    {standard input}:266    .text.IfxPcieEp_resetLinkTraining:00000000 IfxPcieEp_resetLinkTraining
+    {standard input}:283    .text.IfxPcieEp_resetLinkTraining:00000012 IfxPcieEp_resetLinkTraining_end
+    {standard input}:288    .text.IfxPcieEp_isLinkUp:00000000 IfxPcieEp_isLinkUp
+    {standard input}:303    .text.IfxPcieEp_isLinkUp:0000000c IfxPcieEp_isLinkUp_end
+    {standard input}:308    .text.IfxPcieEp_isLinkStateL0:00000000 IfxPcieEp_isLinkStateL0
+    {standard input}:325    .text.IfxPcieEp_isLinkStateL0:00000010 IfxPcieEp_isLinkStateL0_end
+    {standard input}:330    .text.IfxPcieEp_enterLocalLoopback:00000000 IfxPcieEp_enterLocalLoopback
+    {standard input}:392    .text.IfxPcieEp_enterLocalLoopback:00000058 IfxPcieEp_enterLocalLoopback_end
+    {standard input}:397    .text.IfxPcieEp_setSrisOperatingMode:00000000 IfxPcieEp_setSrisOperatingMode
+    {standard input}:452    .text.IfxPcieEp_setSrisOperatingMode:00000042 IfxPcieEp_setSrisOperatingMode_end
+    {standard input}:457    .text.IfxPcieEp_exitLocalLoopback:00000000 IfxPcieEp_exitLocalLoopback
+    {standard input}:480    .text.IfxPcieEp_exitLocalLoopback:00000020 IfxPcieEp_exitLocalLoopback_end
+    {standard input}:485    .text.IfxPcieEp_setAckNackScheduler:00000000 IfxPcieEp_setAckNackScheduler
+    {standard input}:522    .text.IfxPcieEp_setAckNackScheduler:00000040 IfxPcieEp_setAckNackScheduler_end
+    {standard input}:527    .text.IfxPcieEp_setReplayTimerLimit:00000000 IfxPcieEp_setReplayTimerLimit
+    {standard input}:556    .text.IfxPcieEp_setReplayTimerLimit:0000002e IfxPcieEp_setReplayTimerLimit_end
+    {standard input}:561    .text.IfxPcieEp_setIntrTriggerMsk:00000000 IfxPcieEp_setIntrTriggerMsk
+    {standard input}:575    .text.IfxPcieEp_setIntrTriggerMsk:00000008 IfxPcieEp_setIntrTriggerMsk_end
+    {standard input}:580    .text.IfxPcieEp_getIntrTriggerStatus:00000000 IfxPcieEp_getIntrTriggerStatus
+    {standard input}:594    .text.IfxPcieEp_getIntrTriggerStatus:00000008 IfxPcieEp_getIntrTriggerStatus_end
+    {standard input}:599    .text.IfxPcieEp_clearIntrTriggerStatus:00000000 IfxPcieEp_clearIntrTriggerStatus
+    {standard input}:613    .text.IfxPcieEp_clearIntrTriggerStatus:00000008 IfxPcieEp_clearIntrTriggerStatus_end
+
+UNDEFINED SYMBOLS
+IfxApProt_initConfig
+IfxApApu_initConfig
+IfxApProt_init
+IfxApProt_setState
+IfxApApu_init

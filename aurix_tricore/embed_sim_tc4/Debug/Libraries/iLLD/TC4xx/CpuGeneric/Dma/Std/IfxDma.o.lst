@@ -1,0 +1,239 @@
+   1              	
+   2              	 .file "IfxDma.c"
+   3              	 .file "IfxDma.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.IfxDma_getIndex,"ax",@progbits
+   7              	 .align 1
+   8              	 .global IfxDma_getIndex
+  10              	IfxDma_getIndex:
+  11              	.LFB375:
+  12              	 .file 1 "../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c"
+   1:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c **** /**
+   2:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****  * \file IfxDma.c
+   3:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****  * \brief DMA  basic functionality
+   4:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****  *
+   5:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****  *
+   8:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****  *
+   9:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****  *
+  10:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****  *                                 IMPORTANT NOTICE
+  11:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****  *
+  12:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****  * this file except in compliance with IFASLL.
+  15:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****  *
+  16:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****  *
+  26:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****  *
+  27:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****  */
+  28:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c **** 
+  29:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c **** /******************************************************************************/
+  30:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c **** /*----------------------------------Includes----------------------------------*/
+  31:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c **** /******************************************************************************/
+  32:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c **** 
+  33:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c **** #include "IfxDma.h"
+  34:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c **** 
+  35:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c **** /******************************************************************************/
+  36:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c **** /*-------------------------Function Implementations---------------------------*/
+  37:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c **** /******************************************************************************/
+  38:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c **** 
+  39:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c **** IfxDma_Index IfxDma_getIndex(Ifx_DMA *dma)
+  40:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c **** {
+  13              	 .loc 1 40 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  41:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****     uint32       index;
+  17              	 .loc 1 41 5
+  42:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****     IfxDma_Index result;
+  18              	 .loc 1 42 5
+  43:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c **** 
+  44:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****     result = IfxDma_Index_none;
+  19              	 .loc 1 44 5
+  20              	.LVL1:
+  45:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c **** 
+  46:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****     for (index = 0; index < IFXDMA_NUM_MODULES; index++)
+  21              	 .loc 1 46 5
+  22              	 .loc 1 46 16 is_stmt 0
+  23 0002 8202     	 mov %d2,0
+  24              	.LVL2:
+  25              	.L2:
+  26              	 .loc 1 46 27 is_stmt 1 discriminator 1
+  27 0004 FF220080 	 jge.u %d2,2,.L6
+  47:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****     {
+  48:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****         if (IfxDma_cfg_indexMap[index].module == dma)
+  28              	 .loc 1 48 9
+  29              	 .loc 1 48 39 is_stmt 0
+  30 0008 8F320030 	 sh %d3,%d2,3
+  31 000c 91000020 	 movh.a %a2,hi:IfxDma_cfg_indexMap
+  32 0010 D9220000 	 lea %a2,[%a2]lo:IfxDma_cfg_indexMap
+  33 0014 01230026 	 addsc.a %a2,%a2,%d3,0
+  34 0018 5423     	 ld.w %d3,[%a2]0
+  35              	 .loc 1 48 12
+  36 001a 8044     	 mov.d %d4,%a4
+  37 001c 5F430000 	 jeq %d3,%d4,.L7
+  38              	.LVL3:
+  46:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****     {
+  39              	 .loc 1 46 54 is_stmt 1 discriminator 2
+  40 0020 C212     	 add %d2,1
+  41              	.LVL4:
+  42 0022 1D000000 	 j .L2
+  43              	.L7:
+  49:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****         {
+  50:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****             result = (IfxDma_Index)IfxDma_cfg_indexMap[index].index;
+  44              	 .loc 1 50 13
+  45              	 .loc 1 50 20 is_stmt 0
+  46 0026 0632     	 sh %d2,3
+  47              	.LVL5:
+  48 0028 91000020 	 movh.a %a2,hi:IfxDma_cfg_indexMap
+  49 002c D9220000 	 lea %a2,[%a2]lo:IfxDma_cfg_indexMap
+  50 0030 01220026 	 addsc.a %a2,%a2,%d2,0
+  51 0034 19220400 	 ld.w %d2,[%a2]4
+  52              	.LVL6:
+  51:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****             break;
+  53              	 .loc 1 51 13 is_stmt 1
+  54 0038 0090     	 ret 
+  55              	.LVL7:
+  56              	.L6:
+  44:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c **** 
+  57              	 .loc 1 44 12 is_stmt 0
+  58 003a 82F2     	 mov %d2,-1
+  59              	.LVL8:
+  52:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****         }
+  53:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****     }
+  54:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c **** 
+  55:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****     return result;
+  60              	 .loc 1 55 5 is_stmt 1
+  56:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c **** }
+  61              	 .loc 1 56 1 is_stmt 0
+  62 003c 0090     	 ret 
+  63              	.LFE375:
+  65              	 .global IfxDma_getIndex_end
+  66              	IfxDma_getIndex_end:
+  67              	 .section .text.IfxDma_configureAccessToDmas,"ax",@progbits
+  68              	 .align 1
+  69              	 .global IfxDma_configureAccessToDmas
+  71              	IfxDma_configureAccessToDmas:
+  72              	.LFB376:
+  57:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c **** 
+  58:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c **** 
+  59:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c **** void IfxDma_configureAccessToDmas(IfxApApu_ApuConfig *apConfig)
+  60:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c **** {
+  73              	 .loc 1 60 1 is_stmt 1
+  74              	.LVL9:
+  75 0000 40AE     	 mov.aa %a14,%SP
+  76              	.LCFI1:
+  77 0002 8049     	 mov.d %d9,%a4
+  61:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****     for (uint8 i = 0; i < IFXDMA_NUM_RP; i++)
+  78              	 .loc 1 61 5
+  79              	.LBB2:
+  80              	 .loc 1 61 10
+  81              	.LVL10:
+  82              	 .loc 1 61 16 is_stmt 0
+  83 0004 8208     	 mov %d8,0
+  84              	 .loc 1 61 5
+  85 0006 1D000000 	 j .L9
+  86              	.LVL11:
+  87              	.L10:
+  62:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****     {
+  63:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****         /* Loop through all the Resource Partitions */
+  64:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****         IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_DMA0.RP[i].ACCEN, apConfig);
+  88              	 .loc 1 64 9 is_stmt 1 discriminator 3
+  89 000a 8F780020 	 sh %d2,%d8,7
+  90 000e 6095     	 mov.a %a5,%d9
+  91 0010 9110444F 	 movh.a %a4,62529
+  92 0014 D9440001 	 lea %a4,[%a4]4096
+  93 0018 01420046 	 addsc.a %a4,%a4,%d2,0
+  94 001c 6D000000 	 call IfxApApu_init
+  95              	.LVL12:
+  61:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****     for (uint8 i = 0; i < IFXDMA_NUM_RP; i++)
+  96              	 .loc 1 61 43 discriminator 3
+  97 0020 C218     	 add %d8,1
+  98              	.LVL13:
+  99 0022 8FF80F81 	 and %d8,%d8,255
+ 100              	.LVL14:
+ 101              	.L9:
+  61:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****     for (uint8 i = 0; i < IFXDMA_NUM_RP; i++)
+ 102              	 .loc 1 61 25 discriminator 1
+ 103 0026 3BF00020 	 mov %d2,15
+ 104 002a 7F820080 	 jge.u %d2,%d8,.L10
+ 105              	.LBE2:
+ 106              	.LBB3:
+  65:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****     }
+  66:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****     #if (IFXDMA_NUM_MODULES == 2)
+  67:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****     for (uint8 i = 0; i < IFXDMA_NUM_RP - 8U; i++)
+ 107              	 .loc 1 67 16 is_stmt 0
+ 108 002e 8208     	 mov %d8,0
+ 109              	.LVL15:
+ 110              	.L11:
+ 111              	 .loc 1 67 25 is_stmt 1 discriminator 1
+ 112 0030 FF880080 	 jge.u %d8,8,.L13
+  68:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****     {
+  69:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****         /* Loop through all the Resource Partitions */
+  70:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****         IfxApApu_init((Ifx_ACCEN_ACCEN *)&MODULE_DMA1.RP[i].ACCEN, apConfig);
+ 113              	 .loc 1 70 9 discriminator 3
+ 114 0034 8F780020 	 sh %d2,%d8,7
+ 115 0038 6095     	 mov.a %a5,%d9
+ 116 003a 9110444F 	 movh.a %a4,62529
+ 117 003e D9440005 	 lea %a4,[%a4]20480
+ 118 0042 01420046 	 addsc.a %a4,%a4,%d2,0
+ 119 0046 6D000000 	 call IfxApApu_init
+ 120              	.LVL16:
+  67:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****     {
+ 121              	 .loc 1 67 48 discriminator 3
+ 122 004a C218     	 add %d8,1
+ 123              	.LVL17:
+ 124 004c 8FF80F81 	 and %d8,%d8,255
+ 125              	.LVL18:
+ 126 0050 1D000000 	 j .L11
+ 127              	.L13:
+ 128              	.LBE3:
+  71:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****     }
+  72:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c ****     #endif	/* #if (IFXDMA_NUM_MODULES == 2) */
+  73:../Libraries/iLLD/TC4xx/CpuGeneric/Dma/Std/IfxDma.c **** }
+ 129              	 .loc 1 73 1 is_stmt 0
+ 130 0054 0090     	 ret 
+ 131              	.LFE376:
+ 133              	 .global IfxDma_configureAccessToDmas_end
+ 134              	IfxDma_configureAccessToDmas_end:
+ 175              	.Letext0:
+ 176              	 .file 2 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 177              	 .file 3 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+ 178              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 179              	 .file 5 "../Libraries/Infra/Sfr/TC4Dx/IfxDma_regdef.h"
+ 180              	 .file 6 "../Libraries/iLLD/TC4xx/CpuGeneric/_Impl/TC4Dx/IfxDma_cfg_TC4Dx.h"
+ 181              	 .file 7 "../Libraries/iLLD/TC4xx/CpuGeneric/Ap/IfxAccen_regdef.h"
+ 182              	 .file 8 "../Libraries/iLLD/TC4xx/CpuGeneric/Ap/Std/IfxApApu.h"
+ 10025 0000 00000000 	 .word IfxDma_getIndex
+ 10026 0004 00000000 	 .word IfxDma_getIndex_end
+ 10027 0008 1C001444 	 .word 0x4414001c
+ 10028 000c 00001000 	 .word 0x00100000
+ 10029 0010 04000000 	 .word 0x00000004
+ 10030 0014 C0000000 	 .word 0x000000c0
+ 10031 0018 00000000 	 .word IfxDma_configureAccessToDmas
+ 10032 001c 00000000 	 .word IfxDma_configureAccessToDmas_end
+ 10033 0020 04033044 	 .word 0x44300304
+ 10034 0024 00001000 	 .word 0x00100000
+ 10035 0028 00000000 	 .word 0x00000000
+ 10036 002c 40000200 	 .word 0x00020040
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxDma.c
+                            *ABS*:00000000 IfxDma.c
+    {standard input}:10     .text.IfxDma_getIndex:00000000 IfxDma_getIndex
+    {standard input}:66     .text.IfxDma_getIndex:0000003e IfxDma_getIndex_end
+    {standard input}:71     .text.IfxDma_configureAccessToDmas:00000000 IfxDma_configureAccessToDmas
+    {standard input}:134    .text.IfxDma_configureAccessToDmas:00000056 IfxDma_configureAccessToDmas_end
+
+UNDEFINED SYMBOLS
+IfxDma_cfg_indexMap
+IfxApApu_init

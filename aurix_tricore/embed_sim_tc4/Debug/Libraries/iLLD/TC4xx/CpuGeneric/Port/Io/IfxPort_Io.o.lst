@@ -1,0 +1,142 @@
+   1              	
+   2              	 .file "IfxPort_Io.c"
+   3              	 .file "IfxPort_Io.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.IfxPort_Io_initModule,"ax",@progbits
+   7              	 .align 1
+   8              	 .global IfxPort_Io_initModule
+  10              	IfxPort_Io_initModule:
+  11              	.LFB210:
+  12              	 .file 1 "../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c"
+   1:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c **** /**
+   2:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****  * \file IfxPort_Io.c
+   3:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****  * \brief PORT IO details
+   4:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****  *
+   5:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****  *
+   8:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****  *
+   9:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****  *
+  10:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****  *                                 IMPORTANT NOTICE
+  11:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****  *
+  12:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****  * this file except in compliance with IFASLL.
+  15:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****  *
+  16:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****  *
+  26:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****  *
+  27:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****  */
+  28:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c **** 
+  29:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c **** /******************************************************************************/
+  30:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c **** /*----------------------------------Includes----------------------------------*/
+  31:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c **** /******************************************************************************/
+  32:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c **** 
+  33:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c **** #include "IfxPort_Io.h"
+  34:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c **** 
+  35:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c **** /******************************************************************************/
+  36:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c **** /*-------------------------Function Implementations---------------------------*/
+  37:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c **** /******************************************************************************/
+  38:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c **** 
+  39:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c **** void IfxPort_Io_initModule(const IfxPort_Io_Config *config)
+  40:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c **** {
+  13              	 .loc 1 40 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  17 0002 404F     	 mov.aa %a15,%a4
+  41:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****     IfxPort_Io_ConfigPin *pinTable = (IfxPort_Io_ConfigPin *)&config->pinTable[0];
+  18              	 .loc 1 41 5
+  19              	 .loc 1 41 27 is_stmt 0
+  20 0004 994D0400 	 ld.a %a13,[%a4]4
+  21              	.LVL1:
+  42:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c **** 
+  43:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****     uint32                i;
+  22              	 .loc 1 43 5 is_stmt 1
+  44:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c **** 
+  45:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****     for (i = 0; i < config->size; i++, ++pinTable)
+  23              	 .loc 1 45 5
+  24              	 .loc 1 45 12 is_stmt 0
+  25 0008 8208     	 mov %d8,0
+  26              	 .loc 1 45 5
+  27 000a 1D000000 	 j .L2
+  28              	.LVL2:
+  29              	.L3:
+  30              	.LBB2:
+  46:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****     {
+  47:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****         IfxPort_Pin *pin = (IfxPort_Pin *)pinTable->pin;
+  31              	 .loc 1 47 9 is_stmt 1 discriminator 3
+  32              	 .loc 1 47 22 is_stmt 0 discriminator 3
+  33 000e D4DC     	 ld.a %a12,[%a13]0
+  34              	.LVL3:
+  48:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****         IfxPort_setPinMode(pin->port, pin->pinIndex, pinTable->mode);
+  35              	 .loc 1 48 9 is_stmt 1 discriminator 3
+  36 0010 19D50400 	 ld.w %d5,[%a13]4
+  37 0014 39C40400 	 ld.bu %d4,[%a12]4
+  38 0018 D4C4     	 ld.a %a4,[%a12]0
+  39 001a 6D000000 	 call IfxPort_setPinMode
+  40              	.LVL4:
+  49:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****         IfxPort_setPinPadDriver(pin->port, pin->pinIndex, pinTable->padDriver);
+  41              	 .loc 1 49 9 discriminator 3
+  42 001e 19D50800 	 ld.w %d5,[%a13]8
+  43 0022 39C40400 	 ld.bu %d4,[%a12]4
+  44 0026 D4C4     	 ld.a %a4,[%a12]0
+  45 0028 6D000000 	 call IfxPort_setPinPadDriver
+  46              	.LVL5:
+  47              	.LBE2:
+  45:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****     {
+  48              	 .loc 1 45 38 discriminator 3
+  45:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****     {
+  49              	 .loc 1 45 36 is_stmt 0 discriminator 3
+  50 002c C218     	 add %d8,1
+  51              	.LVL6:
+  45:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****     {
+  52              	 .loc 1 45 40 discriminator 3
+  53 002e D9DD0C00 	 lea %a13,[%a13]12
+  54              	.LVL7:
+  55              	.L2:
+  45:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****     {
+  56              	 .loc 1 45 19 is_stmt 1 discriminator 1
+  45:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****     {
+  57              	 .loc 1 45 27 is_stmt 0 discriminator 1
+  58 0032 4802     	 ld.w %d2,[%a15]0
+  45:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****     {
+  59              	 .loc 1 45 19 discriminator 1
+  60 0034 3F280080 	 jlt.u %d8,%d2,.L3
+  50:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c ****     }
+  51:../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.c **** }
+  61              	 .loc 1 51 1
+  62 0038 0090     	 ret 
+  63              	.LFE210:
+  65              	 .global IfxPort_Io_initModule_end
+  66              	IfxPort_Io_initModule_end:
+  95              	.Letext0:
+  96              	 .file 2 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+  97              	 .file 3 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+  98              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/IfxPort_regdef.h"
+  99              	 .file 5 "../Libraries/iLLD/TC4xx/CpuGeneric/Port/Std/IfxPort.h"
+ 100              	 .file 6 "../Libraries/iLLD/TC4xx/CpuGeneric/Port/Io/IfxPort_Io.h"
+ 7533 0000 00000000 	 .word IfxPort_Io_initModule
+ 7534 0004 00000000 	 .word IfxPort_Io_initModule_end
+ 7535 0008 340114F4 	 .word 0xf4140134
+ 7536 000c 00001000 	 .word 0x00100000
+ 7537 0010 00000000 	 .word 0x00000000
+ 7538 0014 40000200 	 .word 0x00020040
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxPort_Io.c
+                            *ABS*:00000000 IfxPort_Io.c
+    {standard input}:10     .text.IfxPort_Io_initModule:00000000 IfxPort_Io_initModule
+    {standard input}:66     .text.IfxPort_Io_initModule:0000003a IfxPort_Io_initModule_end
+
+UNDEFINED SYMBOLS
+IfxPort_setPinMode
+IfxPort_setPinPadDriver

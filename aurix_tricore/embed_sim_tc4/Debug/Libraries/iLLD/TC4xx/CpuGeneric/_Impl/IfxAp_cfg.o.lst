@@ -1,0 +1,121 @@
+   1              	
+   2              	 .file "IfxAp_cfg.c"
+   3              	 .file "IfxAp_cfg.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .global IfxAp_psprRegions
+   7              	 .section .rodata.IfxAp_psprRegions,"a"
+   8              	 .align 2
+  11              	IfxAp_psprRegions:
+  12 0000 000080F8 	 .word -125829120
+  13 0004 00001070 	 .word 1880096768
+  14 0008 00001170 	 .word 1880162304
+  15 000c 000084F8 	 .word -125566976
+  16 0010 00001060 	 .word 1611661312
+  17 0014 00001160 	 .word 1611726848
+  18 0018 000088F8 	 .word -125304832
+  19 001c 00001050 	 .word 1343225856
+  20 0020 00001150 	 .word 1343291392
+  21 0024 00008CF8 	 .word -125042688
+  22 0028 00001040 	 .word 1074790400
+  23 002c 00001140 	 .word 1074855936
+  24 0030 000090F8 	 .word -124780544
+  25 0034 00001030 	 .word 806354944
+  26 0038 00001130 	 .word 806420480
+  27 003c 000094F8 	 .word -124518400
+  28 0040 00001020 	 .word 537919488
+  29 0044 00001120 	 .word 537985024
+  30              	 .global IfxAp_lmuRegions
+  31              	 .section .rodata.IfxAp_lmuRegions,"a"
+  32              	 .align 2
+  35              	IfxAp_lmuRegions:
+  36 0000 000000FB 	 .word -83886080
+  37 0004 000040B0 	 .word -1337982976
+  38 0008 000048B0 	 .word -1337458688
+  39 000c 000001FB 	 .word -83820544
+  40 0010 000048B0 	 .word -1337458688
+  41 0014 000050B0 	 .word -1336934400
+  42 0018 000002FB 	 .word -83755008
+  43 001c 000050B0 	 .word -1336934400
+  44 0020 000058B0 	 .word -1336410112
+  45 0024 000003FB 	 .word -83689472
+  46 0028 000058B0 	 .word -1336410112
+  47 002c 000060B0 	 .word -1335885824
+  48 0030 000004FB 	 .word -83623936
+  49 0034 000060B0 	 .word -1335885824
+  50 0038 000068B0 	 .word -1335361536
+  51 003c 000005FB 	 .word -83558400
+  52 0040 000068B0 	 .word -1335361536
+  53 0044 000070B0 	 .word -1334837248
+  54 0048 000006FB 	 .word -83492864
+  55 004c 000070B0 	 .word -1334837248
+  56 0050 000078B0 	 .word -1334312960
+  57 0054 000007FB 	 .word -83427328
+  58 0058 000078B0 	 .word -1334312960
+  59 005c 000080B0 	 .word -1333788672
+  60 0060 000008FB 	 .word -83361792
+  61 0064 000080B0 	 .word -1333788672
+  62 0068 000088B0 	 .word -1333264384
+  63 006c 000009FB 	 .word -83296256
+  64 0070 000088B0 	 .word -1333264384
+  65 0074 000090B0 	 .word -1332740096
+  66              	 .global IfxAp_dsprRegions
+  67              	 .section .rodata.IfxAp_dsprRegions,"a"
+  68              	 .align 2
+  71              	IfxAp_dsprRegions:
+  72 0000 000080F8 	 .word -125829120
+  73 0004 00000070 	 .word 1879048192
+  74 0008 00C00370 	 .word 1879293952
+  75 000c 000084F8 	 .word -125566976
+  76 0010 00000060 	 .word 1610612736
+  77 0014 00C00360 	 .word 1610858496
+  78 0018 000088F8 	 .word -125304832
+  79 001c 00000050 	 .word 1342177280
+  80 0020 00C00350 	 .word 1342423040
+  81 0024 00008CF8 	 .word -125042688
+  82 0028 00000040 	 .word 1073741824
+  83 002c 00C00340 	 .word 1073987584
+  84 0030 000090F8 	 .word -124780544
+  85 0034 00000030 	 .word 805306368
+  86 0038 00C00330 	 .word 805552128
+  87 003c 000094F8 	 .word -124518400
+  88 0040 00000020 	 .word 536870912
+  89 0044 00C00320 	 .word 537116672
+  90              	 .global IfxAp_dlmuRegions
+  91              	 .section .rodata.IfxAp_dlmuRegions,"a"
+  92              	 .align 2
+  95              	IfxAp_dlmuRegions:
+  96 0000 000080F8 	 .word -125829120
+  97 0004 000000B0 	 .word -1342177280
+  98 0008 000008B0 	 .word -1341652992
+  99 000c 000084F8 	 .word -125566976
+ 100 0010 000008B0 	 .word -1341652992
+ 101 0014 000010B0 	 .word -1341128704
+ 102 0018 000088F8 	 .word -125304832
+ 103 001c 000010B0 	 .word -1341128704
+ 104 0020 000018B0 	 .word -1340604416
+ 105 0024 00008CF8 	 .word -125042688
+ 106 0028 000018B0 	 .word -1340604416
+ 107 002c 000020B0 	 .word -1340080128
+ 108 0030 000090F8 	 .word -124780544
+ 109 0034 000020B0 	 .word -1340080128
+ 110 0038 000028B0 	 .word -1339555840
+ 111 003c 000094F8 	 .word -124518400
+ 112 0040 000028B0 	 .word -1339555840
+ 113 0044 000030B0 	 .word -1339031552
+ 114              	.section .text,"ax",@progbits
+ 115              	.Letext0:
+ 116              	 .file 1 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 117              	 .file 2 "../Libraries/Infra/Sfr/TC4Dx/IfxCpu_regdef.h"
+ 118              	 .file 3 "../Libraries/Infra/Sfr/TC4Dx/IfxLmu_regdef.h"
+ 119              	 .file 4 "../Libraries/iLLD/TC4xx/CpuGeneric/_Impl/TC4Dx/IfxAp_cfg_TC4Dx.h"
+ 120              	 .file 5 "../Libraries/iLLD/TC4xx/CpuGeneric/_Impl/IfxAp_cfg.c"
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxAp_cfg.c
+                            *ABS*:00000000 IfxAp_cfg.c
+    {standard input}:11     .rodata.IfxAp_psprRegions:00000000 IfxAp_psprRegions
+    {standard input}:35     .rodata.IfxAp_lmuRegions:00000000 IfxAp_lmuRegions
+    {standard input}:71     .rodata.IfxAp_dsprRegions:00000000 IfxAp_dsprRegions
+    {standard input}:95     .rodata.IfxAp_dlmuRegions:00000000 IfxAp_dlmuRegions
+
+NO UNDEFINED SYMBOLS

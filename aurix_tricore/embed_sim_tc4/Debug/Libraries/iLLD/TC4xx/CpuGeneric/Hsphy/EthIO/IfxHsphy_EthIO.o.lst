@@ -1,0 +1,136 @@
+   1              	
+   2              	 .file "IfxHsphy_EthIO.c"
+   3              	 .file "IfxHsphy_EthIO.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.IfxHsphy_EthIO_interfaceSelect,"ax",@progbits
+   7              	 .align 1
+   8              	 .global IfxHsphy_EthIO_interfaceSelect
+  10              	IfxHsphy_EthIO_interfaceSelect:
+  11              	.LFB331:
+  12              	 .file 1 "../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c"
+   1:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c **** /**
+   2:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****  * \file IfxHsphy_EthIO.c
+   3:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****  * \brief HSPHY ETHIO details
+   4:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****  *
+   5:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****  *
+   8:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****  *
+   9:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****  *
+  10:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****  *                                 IMPORTANT NOTICE
+  11:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****  *
+  12:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****  * this file except in compliance with IFASLL.
+  15:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****  *
+  16:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****  *
+  26:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****  *
+  27:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****  */
+  28:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c **** 
+  29:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c **** /******************************************************************************/
+  30:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c **** /*----------------------------------Includes----------------------------------*/
+  31:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c **** /******************************************************************************/
+  32:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c **** 
+  33:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c **** #include "Ifx_Cfg.h"
+  34:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c **** #if defined (__TASKING__)
+  35:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c **** #pragma warning 508			/* To suppress empty file warning */
+  36:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c **** #endif
+  37:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c **** #if defined (__ghs__)
+  38:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c **** #pragma diag_suppress 96	/* To suppress empty file warning */
+  39:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c **** #endif
+  40:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c **** 
+  41:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c **** #if !defined(DEVICE_TC4EX)  && !defined(DEVICE_TC4PX)
+  42:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c **** #include "IfxHsphy_EthIO.h"
+  43:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****  
+  44:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c **** /******************************************************************************/
+  45:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c **** /*-------------------------Function Implementations---------------------------*/
+  46:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c **** /******************************************************************************/
+  47:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c **** 
+  48:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c **** #if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC4
+  49:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c **** void IfxHsphy_EthIO_interfaceSelect(Ifx_HSPHY *hsphySFR, IfxHsphy_EthIndex ethIndex, IfxHsphy_EthCt
+  50:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c **** {
+  13              	 .loc 1 50 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  51:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****     hsphySFR->ETH[ethIndex].B.EPR = ethCtrlExtPhySel;
+  17              	 .loc 1 51 5
+  18              	 .loc 1 51 35 is_stmt 0
+  19 0002 1B041820 	 addi %d2,%d4,384
+  20 0006 0622     	 sh %d2,2
+  21 0008 01420026 	 addsc.a %a2,%a4,%d2,0
+  22 000c 5422     	 ld.w %d2,[%a2]0
+  23 000e 3752032E 	 insert %d2,%d2,%d5,28,3
+  24 0012 7422     	 st.w [%a2]0,%d2
+  52:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c **** 
+  53:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****     if (((ethCtrlExtPhySel == IfxHsphy_EthCtrlExtPhySel_rmii) && (ethPort16 == TRUE)) || (ethCtrlEx
+  25              	 .loc 1 53 5 is_stmt 1
+  26              	 .loc 1 53 28 is_stmt 0
+  27 0014 8B250022 	 eq %d2,%d5,2
+  28              	 .loc 1 53 77
+  29 0018 8B160062 	 eq %d6,%d6,1
+  30              	.LVL1:
+  31              	 .loc 1 53 63
+  32 001c 2626     	 and %d6,%d2
+  33              	 .loc 1 53 8
+  34 001e DF060080 	 jnz %d6,.L2
+  35              	 .loc 1 53 87 discriminator 1
+  36 0022 DF150000 	 jeq %d5,1,.L2
+  54:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****     {
+  55:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****         hsphySFR->CMNCFG.B.FSR = 1;
+  56:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****     }
+  57:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****     else
+  58:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****     {
+  59:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****         hsphySFR->CMNCFG.B.FSR = 0;
+  37              	 .loc 1 59 9 is_stmt 1
+  38              	 .loc 1 59 32 is_stmt 0
+  39 0026 D9420080 	 lea %a2,[%a4]512
+  40 002a 19420080 	 ld.w %d2,[%a4]512
+  41 002e 8F02C121 	 andn %d2,%d2,~(-17)
+  42 0032 7422     	 st.w [%a2]0,%d2
+  60:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****     }
+  61:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c **** }
+  43              	 .loc 1 61 1
+  44 0034 0090     	 ret 
+  45              	.L2:
+  55:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****     }
+  46              	 .loc 1 55 9 is_stmt 1
+  55:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/EthIO/IfxHsphy_EthIO.c ****     }
+  47              	 .loc 1 55 32 is_stmt 0
+  48 0036 D9420080 	 lea %a2,[%a4]512
+  49 003a 19420080 	 ld.w %d2,[%a4]512
+  50 003e B7120122 	 insert %d2,%d2,1,4,1
+  51 0042 7422     	 st.w [%a2]0,%d2
+  52 0044 0090     	 ret 
+  53              	.LFE331:
+  55              	 .global IfxHsphy_EthIO_interfaceSelect_end
+  56              	IfxHsphy_EthIO_interfaceSelect_end:
+  85              	.Letext0:
+  86              	 .file 2 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+  87              	 .file 3 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+  88              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/IfxHsphy_regdef.h"
+  89              	 .file 5 "../Libraries/iLLD/TC4xx/CpuGeneric/_Impl/TC4Dx/IfxHsphy_cfg_TC4Dx.h"
+  90              	 .file 6 "../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Std/IfxHsphy.h"
+ 19888 0000 00000000 	 .word IfxHsphy_EthIO_interfaceSelect
+ 19889 0004 00000000 	 .word IfxHsphy_EthIO_interfaceSelect_end
+ 19890 0008 74001444 	 .word 0x44140074
+ 19891 000c 70001000 	 .word 0x00100070
+ 19892 0010 00000000 	 .word 0x00000000
+ 19893 0014 C0000000 	 .word 0x000000c0
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxHsphy_EthIO.c
+                            *ABS*:00000000 IfxHsphy_EthIO.c
+    {standard input}:10     .text.IfxHsphy_EthIO_interfaceSelect:00000000 IfxHsphy_EthIO_interfaceSelect
+    {standard input}:56     .text.IfxHsphy_EthIO_interfaceSelect:00000046 IfxHsphy_EthIO_interfaceSelect_end
+
+NO UNDEFINED SYMBOLS

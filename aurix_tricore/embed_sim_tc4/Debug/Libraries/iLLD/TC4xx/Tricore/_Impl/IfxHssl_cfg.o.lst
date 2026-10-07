@@ -1,0 +1,37 @@
+   1              	
+   2              	 .file "IfxHssl_cfg.c"
+   3              	 .file "IfxHssl_cfg.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .global IfxHssl_cfg_hsslIndexMap
+   7              	 .section .rodata.IfxHssl_cfg_hsslIndexMap,"a"
+   8              	 .align 2
+  11              	IfxHssl_cfg_hsslIndexMap:
+  12 0000 000048F4 	 .word -196608000
+  13 0004 00000000 	 .word 0
+  14 0008 00004AF4 	 .word -196476928
+  15 000c 01000000 	 .word 1
+  16              	 .global IfxHssl_cfg_hsctIndexMap
+  17              	 .section .rodata.IfxHssl_cfg_hsctIndexMap,"a"
+  18              	 .align 2
+  21              	IfxHssl_cfg_hsctIndexMap:
+  22 0000 000049F4 	 .word -196542464
+  23 0004 00000000 	 .word 0
+  24 0008 00004BF4 	 .word -196411392
+  25 000c 01000000 	 .word 1
+  26              	.section .text,"ax",@progbits
+  27              	.Letext0:
+  28              	 .file 1 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+  29              	 .file 2 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+  30              	 .file 3 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+  31              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/IfxHssl_regdef.h"
+  32              	 .file 5 "../Libraries/Infra/Sfr/TC4Dx/IfxHsct_regdef.h"
+  33              	 .file 6 "../Libraries/iLLD/TC4xx/Tricore/_Impl/TC4Dx/IfxHssl_cfg_TC4Dx.h"
+  34              	 .file 7 "../Libraries/iLLD/TC4xx/Tricore/_Impl/IfxHssl_cfg.c"
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxHssl_cfg.c
+                            *ABS*:00000000 IfxHssl_cfg.c
+    {standard input}:11     .rodata.IfxHssl_cfg_hsslIndexMap:00000000 IfxHssl_cfg_hsslIndexMap
+    {standard input}:21     .rodata.IfxHssl_cfg_hsctIndexMap:00000000 IfxHssl_cfg_hsctIndexMap
+
+NO UNDEFINED SYMBOLS

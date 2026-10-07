@@ -1,0 +1,80 @@
+   1              	
+   2              	 .file "IfxPms_PinMap_TC4Dx_BGA436_COM.c"
+   3              	 .file "IfxPms_PinMap_TC4Dx_BGA436_COM.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .global IfxPms_Rtcout_Out_pinTable
+   7              	 .section .data.IfxPms_Rtcout_Out_pinTable,"aw"
+   8              	 .align 2
+  11              	IfxPms_Rtcout_Out_pinTable:
+  12 0000 00000000 	 .word IfxPms_RTCOUT_P33_11_OUT
+  13              	 .global IfxPms_Pms_In_pinTable
+  14              	 .section .data.IfxPms_Pms_In_pinTable,"aw"
+  15              	 .align 2
+  18              	IfxPms_Pms_In_pinTable:
+  19 0000 00000000 	 .word IfxPms_PMS_TESTMUX_PAD_P02_1_IN
+  20              	 .global IfxPms_Dcdcsync_Out_pinTable
+  21              	 .section .data.IfxPms_Dcdcsync_Out_pinTable,"aw"
+  22              	 .align 2
+  25              	IfxPms_Dcdcsync_Out_pinTable:
+  26 0000 00000000 	 .word IfxPms_DCDCSYNC_P32_2_OUT
+  27 0004 00000000 	 .word IfxPms_DCDCSYNC_P32_4_OUT
+  28              	 .global IfxPms_RTCOUT_P33_11_OUT
+  29              	 .section .rodata.IfxPms_RTCOUT_P33_11_OUT,"a"
+  30              	 .align 2
+  33              	IfxPms_RTCOUT_P33_11_OUT:
+  34 0000 000024F0 	 .word -266076160
+  35 0004 002404F0 	 .word -268164096
+  36 0008 0B       	 .byte 11
+  37 0009 000000   	 .zero 3
+  38 000c C1000000 	 .word 193
+  39              	 .global IfxPms_PMS_TESTMUX_PAD_P02_1_IN
+  40              	 .section .rodata.IfxPms_PMS_TESTMUX_PAD_P02_1_IN,"a"
+  41              	 .align 2
+  44              	IfxPms_PMS_TESTMUX_PAD_P02_1_IN:
+  45 0000 000024F0 	 .word -266076160
+  46 0004 00A803F0 	 .word -268195840
+  47 0008 01       	 .byte 1
+  48 0009 000000   	 .zero 3
+  49 000c 00000000 	 .word 0
+  50              	 .global IfxPms_DCDCSYNC_P32_4_OUT
+  51              	 .section .rodata.IfxPms_DCDCSYNC_P32_4_OUT,"a"
+  52              	 .align 2
+  55              	IfxPms_DCDCSYNC_P32_4_OUT:
+  56 0000 000024F0 	 .word -266076160
+  57 0004 002004F0 	 .word -268165120
+  58 0008 04       	 .byte 4
+  59 0009 000000   	 .zero 3
+  60 000c 01000000 	 .word 1
+  61              	 .global IfxPms_DCDCSYNC_P32_2_OUT
+  62              	 .section .rodata.IfxPms_DCDCSYNC_P32_2_OUT,"a"
+  63              	 .align 2
+  66              	IfxPms_DCDCSYNC_P32_2_OUT:
+  67 0000 000024F0 	 .word -266076160
+  68 0004 002004F0 	 .word -268165120
+  69 0008 02       	 .byte 2
+  70 0009 000000   	 .zero 3
+  71 000c 61000000 	 .word 97
+  72              	.section .text,"ax",@progbits
+  73              	.Letext0:
+  74              	 .file 1 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+  75              	 .file 2 "../Libraries/Infra/Sfr/TC4Dx/IfxPms_regdef.h"
+  76              	 .file 3 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+  77              	 .file 4 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+  78              	 .file 5 "../Libraries/Infra/Sfr/TC4Dx/IfxPort_regdef.h"
+  79              	 .file 6 "../Libraries/iLLD/TC4xx/CpuGeneric/Port/Std/IfxPort.h"
+  80              	 .file 7 "../Libraries/iLLD/TC4xx/Tricore/_PinMap/IfxPms_PinMap.h"
+  81              	 .file 8 "../Libraries/iLLD/TC4xx/Tricore/_PinMap/TC4Dx/IfxPms_PinMap_TC4Dx_BGA436_COM.h"
+  82              	 .file 9 "../Libraries/iLLD/TC4xx/Tricore/_PinMap/TC4Dx/IfxPms_PinMap_TC4Dx_BGA436_COM.c"
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxPms_PinMap_TC4Dx_BGA436_COM.c
+                            *ABS*:00000000 IfxPms_PinMap_TC4Dx_BGA436_COM.c
+    {standard input}:11     .data.IfxPms_Rtcout_Out_pinTable:00000000 IfxPms_Rtcout_Out_pinTable
+    {standard input}:33     .rodata.IfxPms_RTCOUT_P33_11_OUT:00000000 IfxPms_RTCOUT_P33_11_OUT
+    {standard input}:18     .data.IfxPms_Pms_In_pinTable:00000000 IfxPms_Pms_In_pinTable
+    {standard input}:44     .rodata.IfxPms_PMS_TESTMUX_PAD_P02_1_IN:00000000 IfxPms_PMS_TESTMUX_PAD_P02_1_IN
+    {standard input}:25     .data.IfxPms_Dcdcsync_Out_pinTable:00000000 IfxPms_Dcdcsync_Out_pinTable
+    {standard input}:66     .rodata.IfxPms_DCDCSYNC_P32_2_OUT:00000000 IfxPms_DCDCSYNC_P32_2_OUT
+    {standard input}:55     .rodata.IfxPms_DCDCSYNC_P32_4_OUT:00000000 IfxPms_DCDCSYNC_P32_4_OUT
+
+NO UNDEFINED SYMBOLS

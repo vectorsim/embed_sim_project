@@ -1,0 +1,1005 @@
+   1              	
+   2              	 .file "Ifx_FftF32.c"
+   3              	 .file "Ifx_FftF32.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.Ifx_FftF32_generateTwiddleFactor,"ax",@progbits
+   7              	 .align 1
+   8              	 .global Ifx_FftF32_generateTwiddleFactor
+  10              	Ifx_FftF32_generateTwiddleFactor:
+  11              	.LFB178:
+  12              	 .file 1 "../Libraries/Service/Tricore/Math/Ifx_FftF32.c"
+   1:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** /**
+   2:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****  * \file Ifx_FftF32.c
+   3:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****  * \brief Floating-point Fast Fourier Transform
+   4:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****  *
+   5:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****  *
+   6:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****  * \version iLLD-TC4-v2.7.0
+   7:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   8:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****  *
+   9:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****  *
+  10:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****   *                                 IMPORTANT NOTICE
+  11:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****  *
+  12:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****  *
+  13:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  14:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  15:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****  * this file except in compliance with IFASLL.
+  16:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****  *
+  17:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  18:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  19:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  20:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  21:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  22:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  23:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****  * defects in the licensed items, or non-infringement of third parties'
+  24:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****  * intellectual property rights. See the full license text for the specific
+  25:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****  * language governing permissions and limitations under IFASLL.
+  26:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****  *
+  27:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****  */
+  28:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** 
+  29:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** #include "Ifx_FftF32.h"
+  30:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** #include <math.h>
+  31:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** 
+  32:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** //#include "Compiler.h"
+  33:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** 
+  34:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** cfloat32 *Ifx_FftF32_generateTwiddleFactor(cfloat32 *TF, short nX)
+  35:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** {
+  13              	 .loc 1 35 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  17 0002 804B     	 mov.d %d11,%a4
+  18 0004 37045090 	 extr %d9,%d4,0,16
+  36:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     int    i;
+  19              	 .loc 1 36 5
+  37:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     double Theta;
+  20              	 .loc 1 37 5
+  38:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** 
+  39:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     // prepare twiddle coefficients
+  40:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     for (i = 0; i < nX / 2; i++)
+  21              	 .loc 1 40 5
+  22              	.LVL1:
+  23              	 .loc 1 40 12 is_stmt 0
+  24 0008 8208     	 mov %d8,0
+  25              	 .loc 1 40 5
+  26 000a 1D000000 	 j .L2
+  27              	.LVL2:
+  28              	.L3:
+  41:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     {
+  42:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****         Theta      = 2 * IFX_PI * i / nX;
+  29              	 .loc 1 42 9 is_stmt 1 discriminator 3
+  30              	 .loc 1 42 33 is_stmt 0 discriminator 3
+  31 000e 4B084121 	 itof %d2,%d8
+  32 0012 7B900C34 	 movh %d3,16585
+  33 0016 1BB3FD30 	 addi %d3,%d3,4059
+  34 001a 4B324130 	 mul.f %d3,%d2,%d3
+  35              	 .loc 1 42 37 discriminator 3
+  36 001e 4B0941A1 	 itof %d10,%d9
+  37 0022 4BA351A0 	 div.f %d10,%d3,%d10
+  38              	.LVL3:
+  43:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** 
+  44:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****         TF[i].real = (float32)(cosf(Theta));
+  39              	 .loc 1 44 9 is_stmt 1 discriminator 3
+  40              	 .loc 1 44 11 is_stmt 0 discriminator 3
+  41 0026 8F380020 	 sh %d2,%d8,3
+  42 002a 60B2     	 mov.a %a2,%d11
+  43 002c 012200C6 	 addsc.a %a12,%a2,%d2,0
+  44              	 .loc 1 44 22 discriminator 3
+  45 0030 02A4     	 mov %d4,%d10
+  46 0032 6D000000 	 call cosf
+  47              	.LVL4:
+  48              	 .loc 1 44 20 discriminator 3
+  49 0036 74C2     	 st.w [%a12]0,%d2
+  45:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****         TF[i].imag = (float32)(-sinf(Theta));
+  50              	 .loc 1 45 9 is_stmt 1 discriminator 3
+  51              	 .loc 1 45 33 is_stmt 0 discriminator 3
+  52 0038 02A4     	 mov %d4,%d10
+  53 003a 6D000000 	 call sinf
+  54              	.LVL5:
+  55              	 .loc 1 45 22 discriminator 3
+  56 003e 4B021123 	 neg.f %d2,%d2
+  57              	 .loc 1 45 20 discriminator 3
+  58 0042 59C20400 	 st.w [%a12]4,%d2
+  40:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     {
+  59              	 .loc 1 40 30 is_stmt 1 discriminator 3
+  60 0046 C218     	 add %d8,1
+  61              	.LVL6:
+  62              	.L2:
+  40:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     {
+  63              	 .loc 1 40 19 discriminator 1
+  40:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     {
+  64              	 .loc 1 40 24 is_stmt 0 discriminator 1
+  65 0048 8F191E20 	 sh %d2,%d9,-31
+  66 004c 4292     	 add %d2,%d9
+  67 004e 86F2     	 sha %d2,-1
+  40:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     {
+  68              	 .loc 1 40 19 discriminator 1
+  69 0050 3F280000 	 jlt %d8,%d2,.L3
+  46:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     }
+  47:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** 
+  48:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     return TF;
+  70              	 .loc 1 48 5 is_stmt 1
+  49:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** }
+  71              	 .loc 1 49 1 is_stmt 0
+  72 0054 60B2     	 mov.a %a2,%d11
+  73 0056 0090     	 ret 
+  74              	.LFE178:
+  76              	 .global Ifx_FftF32_generateTwiddleFactor_end
+  77              	Ifx_FftF32_generateTwiddleFactor_end:
+  78              	 .section .text.Ifx_FftF32_reverseBits,"ax",@progbits
+  79              	 .align 1
+  80              	 .global Ifx_FftF32_reverseBits
+  82              	Ifx_FftF32_reverseBits:
+  83              	.LFB179:
+  50:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** 
+  51:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** 
+  52:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** /******************************************************************************/
+  53:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** unsigned short Ifx_FftF32_reverseBits(unsigned short n, unsigned bits)
+  54:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** {
+  84              	 .loc 1 54 1 is_stmt 1
+  85              	.LVL7:
+  86 0000 40AE     	 mov.aa %a14,%SP
+  87              	.LCFI1:
+  88 0002 37047020 	 extr.u %d2,%d4,0,16
+  55:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     /* This code is from:
+  56:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****      * http://graphics.stanford.edu/~seander/bithacks.html
+  57:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****      * */
+  58:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     unsigned long v = n; // 32-bit word to reverse bit order
+  89              	 .loc 1 58 5
+  90              	.LVL8:
+  59:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** 
+  60:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     // swap odd and even bits
+  61:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     v = ((v >> 1) & 0x55555555UL) | ((v & 0x55555555UL) << 1);
+  91              	 .loc 1 61 5
+  92              	 .loc 1 61 13 is_stmt 0
+  93 0006 3704EF30 	 extr.u %d3,%d4,1,15
+  94              	 .loc 1 61 19
+  95 000a 7B505545 	 movh %d4,21845
+  96              	.LVL9:
+  97 000e 1B545545 	 addi %d4,%d4,21845
+  98 0012 2643     	 and %d3,%d4
+  99              	 .loc 1 61 57
+ 100 0014 0612     	 sh %d2,1
+ 101              	.LVL10:
+ 102 0016 7BB0AA4A 	 movh %d4,43691
+ 103 001a 1BA4AA4A 	 addi %d4,%d4,-21846
+ 104 001e 2624     	 and %d4,%d2
+ 105              	 .loc 1 61 7
+ 106 0020 A634     	 or %d4,%d3
+ 107              	.LVL11:
+  62:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     // swap consecutive pairs
+  63:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     v = ((v >> 2) & 0x33333333UL) | ((v & 0x33333333UL) << 2);
+ 108              	 .loc 1 63 5 is_stmt 1
+ 109              	 .loc 1 63 13 is_stmt 0
+ 110 0022 8FE41F20 	 sh %d2,%d4,-2
+ 111              	 .loc 1 63 19
+ 112 0026 7B303333 	 movh %d3,13107
+ 113 002a 1B333333 	 addi %d3,%d3,13107
+ 114 002e 2623     	 and %d3,%d2
+ 115              	 .loc 1 63 57
+ 116 0030 8F240020 	 sh %d2,%d4,2
+ 117 0034 7BD0CC4C 	 movh %d4,52429
+ 118              	.LVL12:
+ 119 0038 1BC4CC4C 	 addi %d4,%d4,-13108
+ 120 003c 2642     	 and %d2,%d4
+ 121              	 .loc 1 63 7
+ 122 003e A632     	 or %d2,%d3
+ 123              	.LVL13:
+  64:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     // swap nibbles ...
+  65:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     v = ((v >> 4) & 0x0F0F0F0FUL) | ((v & 0x0F0F0F0FUL) << 4);
+ 124              	 .loc 1 65 5 is_stmt 1
+ 125              	 .loc 1 65 13 is_stmt 0
+ 126 0040 8FC21F30 	 sh %d3,%d2,-4
+ 127              	 .loc 1 65 19
+ 128 0044 7BF0F040 	 movh %d4,3855
+ 129 0048 1BF4F040 	 addi %d4,%d4,3855
+ 130 004c 2643     	 and %d3,%d4
+ 131              	 .loc 1 65 57
+ 132 004e 0642     	 sh %d2,4
+ 133              	.LVL14:
+ 134 0050 7B100F4F 	 movh %d4,61681
+ 135 0054 1B040F4F 	 addi %d4,%d4,-3856
+ 136 0058 2642     	 and %d2,%d4
+ 137              	 .loc 1 65 7
+ 138 005a A632     	 or %d2,%d3
+ 139              	.LVL15:
+  66:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     // swap bytes
+  67:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     v = ((v >> 8) & 0x00FF00FFUL) | ((v & 0x00FF00FFUL) << 8);
+ 140              	 .loc 1 67 5 is_stmt 1
+ 141              	 .loc 1 67 19 is_stmt 0
+ 142 005c 8F821F30 	 sh %d3,%d2,-8
+ 143              	 .loc 1 67 57
+ 144 0060 8F820020 	 sh %d2,%d2,8
+ 145              	.LVL16:
+ 146 0064 7B10F04F 	 movh %d4,65281
+ 147 0068 1B04F04F 	 addi %d4,%d4,-256
+ 148 006c 2642     	 and %d2,%d4
+ 149              	 .loc 1 67 7
+ 150 006e A623     	 or %d3,%d2
+ 151              	.LVL17:
+  68:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     // swap 2-byte long pairs
+  69:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     v = (v >> 16) | (v << 16);
+ 152              	 .loc 1 69 5 is_stmt 1
+ 153              	 .loc 1 69 7 is_stmt 0
+ 154 0070 77330038 	 dextr %d3,%d3,%d3,16
+ 155              	.LVL18:
+  70:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** 
+  71:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     v = v >> (32 - bits);
+ 156              	 .loc 1 71 5 is_stmt 1
+ 157              	 .loc 1 71 7 is_stmt 0
+ 158 0074 1B05FE2F 	 addi %d2,%d5,-32
+ 159 0078 0F230020 	 sh %d2,%d3,%d2
+ 160              	.LVL19:
+  72:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     return (unsigned short)v;
+ 161              	 .loc 1 72 5 is_stmt 1
+  73:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** }
+ 162              	 .loc 1 73 1 is_stmt 0
+ 163 007c 37027020 	 extr.u %d2,%d2,0,16
+ 164              	.LVL20:
+ 165 0080 0090     	 ret 
+ 166              	.LFE179:
+ 168              	 .global Ifx_FftF32_reverseBits_end
+ 169              	Ifx_FftF32_reverseBits_end:
+ 170              	 .section .text.Ifx_FftF32_radix2DecimationInTime,"ax",@progbits
+ 171              	 .align 1
+ 172              	 .global Ifx_FftF32_radix2DecimationInTime
+ 174              	Ifx_FftF32_radix2DecimationInTime:
+ 175              	.LFB180:
+  74:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** 
+  75:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** 
+  76:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** /******************************************************************************/
+  77:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** void Ifx_FftF32_radix2DecimationInTime(cfloat32 *R, unsigned long p)
+  78:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** {
+ 176              	 .loc 1 78 1 is_stmt 1
+ 177              	.LVL21:
+ 178 0000 40AE     	 mov.aa %a14,%SP
+ 179              	.LCFI2:
+ 180 0002 804A     	 mov.d %d10,%a4
+ 181 0004 024F     	 mov %d15,%d4
+  79:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     /* http://www.engineeringproductivitytools.com/stuff/T0001/PT04.HTM#Head317
+  80:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****      * */
+  81:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     /*Perform in place Ifx_FftF32_radix2DecimationInTime of 2^p points (=size of f)
+  82:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****      * N.B. The input array f is in bit reversed order! So all the
+  83:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****      * 'even' input samples are in the 'top' half, all the 'odd'
+  84:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****      * input samples are in the 'bottom' halR..etc (recursively).
+  85:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****      */
+  86:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     /*Ifx_FftF32_radix2DecimationInTime*/
+  87:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     unsigned long Bp, Np, Npx, P, b, k, BaseT, BaseB;
+ 182              	 .loc 1 87 5
+  88:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     cfloat32      top, bot;
+ 183              	 .loc 1 88 5
+  89:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     /*initialise pass parameters*/
+  90:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     Bp = 1 << (p - 1); /*No. of blocks*/
+ 184              	 .loc 1 90 5
+ 185              	 .loc 1 90 18 is_stmt 0
+ 186 0006 92F2     	 add %d2,%d15,-1
+ 187              	 .loc 1 90 12
+ 188 0008 821D     	 mov %d13,1
+ 189 000a 0F2D00D0 	 sh %d13,%d13,%d2
+ 190              	.LVL22:
+  91:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     Np = 2;            /*No. of points in each block*/
+ 191              	 .loc 1 91 5 is_stmt 1
+  92:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** 
+  93:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     /*perform p passes*/
+  94:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     for (P = 0; P < p; P++)
+ 192              	 .loc 1 94 5
+ 193              	 .loc 1 94 12 is_stmt 0
+ 194 000e 820E     	 mov %d14,0
+  91:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     Np = 2;            /*No. of points in each block*/
+ 195              	 .loc 1 91 8
+ 196 0010 8227     	 mov %d7,2
+ 197              	 .loc 1 94 5
+ 198 0012 1D000000 	 j .L6
+ 199              	.LVL23:
+ 200              	.L9:
+  95:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     {
+  96:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****         /*pass loop*/
+  97:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****         Npx   = Np >> 1; /*No. of butterflies*/
+  98:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****         BaseT = 0;       /*Reset even base index*/
+  99:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** 
+ 100:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****         for (b = 0; b < Bp; b++)
+ 101:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****         {
+ 102:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****             /*block loop*/
+ 103:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****             BaseB = BaseT + Npx; /*calc odd base index*/
+ 104:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** 
+ 105:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****             for (k = 0; k < Npx; k++)
+ 106:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****             {
+ 107:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****                 //printf("P = %d; b = %d; Np = %d; k = %d\n", P, b, Np, k);
+ 108:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****                 /*butterfly loop*/
+ 109:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****                 top          = Ifx_FftF32_lookUpTwiddleFactor(Np, k);
+ 201              	 .loc 1 109 17 is_stmt 1 discriminator 3
+ 202              	.LBB14:
+ 203              	.LBB15:
+ 204              	 .file 2 "../Libraries/Service/Tricore/Math/Ifx_FftF32.h"
+   1:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** /**
+   2:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  * \file Ifx_FftF32.h
+   3:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  * \brief Floating-point Fast Fourier Transform
+   4:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  * \ingroup library_srvsw_sysse_math_f32_fft
+   5:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  *
+   6:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  *
+   7:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  *
+   8:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  * \version iLLD-TC4-v2.7.0
+   9:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+  10:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  *
+  11:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  *
+  12:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****   *                                 IMPORTANT NOTICE
+  13:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  *
+  14:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  *
+  15:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  16:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  17:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  * this file except in compliance with IFASLL.
+  18:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  *
+  19:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  20:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  * Unless required by applicable law or agreed to in writing, software distributed
+  21:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  22:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  23:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  * whether express, implied, statutory or otherwise, including but not limited to
+  24:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  25:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  * defects in the licensed items, or non-infringement of third parties'
+  26:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  * intellectual property rights. See the full license text for the specific
+  27:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  * language governing permissions and limitations under IFASLL.
+  28:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  *
+  29:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  * \defgroup library_srvsw_sysse_math_f32_fft Floating-point FFT
+  30:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  * This module implements the Fast Fourier Transform in single precision floating-point
+  31:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  * \ingroup library_srvsw_sysse_math_f32
+  32:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  *
+  33:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  */
+  34:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** 
+  35:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** #ifndef IFX_FFTF32_H
+  36:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** #define IFX_FFTF32_H 1
+  37:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** 
+  38:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** #include "Ifx_Cf32.h"
+  39:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** 
+  40:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** /** \brief Maximum FFT resolution (bits).
+  41:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  * If redefined, then \ref Ifx_g_FftF32_bitReverseTable and \ref Ifx_g_FftF32_twiddleTable shall be
+  42:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** #define IFX_FFTF32_MAX_RESOLUTION (14)
+  43:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** 
+  44:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** /** \brief Maximum FFT length.
+  45:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  * If redefined, then \ref Ifx_g_FftF32_bitReverseTable and \ref Ifx_g_FftF32_twiddleTable shall be
+  46:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** #define IFX_FFTF32_MAX_LENGTH     (1U << IFX_FFTF32_MAX_RESOLUTION)
+  47:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** 
+  48:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** /** \brief Bit reversal table */
+  49:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** IFX_EXTERN IFX_CONST uint16   Ifx_g_FftF32_bitReverseTable[IFX_FFTF32_MAX_LENGTH];
+  50:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** 
+  51:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** /** \brief Twiddle factor table */
+  52:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** IFX_EXTERN IFX_CONST cfloat32 Ifx_g_FftF32_twiddleTable[IFX_FFTF32_MAX_LENGTH / 2];
+  53:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** 
+  54:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** //----------------------------------------------------------------------------------------
+  55:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** /** \addtogroup library_srvsw_sysse_math_f32_fft
+  56:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  * \{ */
+  57:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** 
+  58:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** /** \name Transform functions
+  59:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  * \{ */
+  60:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** 
+  61:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** /** \brief Twiddle factor generator */
+  62:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** IFX_EXTERN cfloat32 *Ifx_FftF32_generateTwiddleFactor(cfloat32 *TF, sint16 nX);
+  63:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** 
+  64:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** /** \brief Radix-2 Fast-Fourier Transform */
+  65:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** IFX_EXTERN cfloat32 *Ifx_FftF32_radix2(cfloat32 *R, const cfloat32 *X, uint16 nX);
+  66:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** 
+  67:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** /** \brief Radix-2 Inverse Fast-Fourier Transform */
+  68:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** IFX_EXTERN cfloat32 *Ifx_FftF32_radix2I(cfloat32 *R, const cfloat32 *X, uint16 nX);
+  69:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** 
+  70:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** /** \} */
+  71:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** //----------------------------------------------------------------------------------------
+  72:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** /** \name Utility functions
+  73:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****  * \{ */
+  74:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** 
+  75:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** /** \brief Lookup from \ref Ifx_g_FftF32_bitReverseTable the bit-reversed \<n\> with \<bits\> as nu
+  76:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** IFX_INLINE uint16 Ifx_FftF32_lookUpReversedBits(uint16 n, unsigned bits)
+  77:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** {
+  78:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****     unsigned shift = IFX_FFTF32_MAX_RESOLUTION - bits;
+  79:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****     uint16   index = Ifx_g_FftF32_bitReverseTable[n];
+  80:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****     return index >> shift;
+  81:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** }
+  82:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** 
+  83:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** 
+  84:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** /** \brief Lookup from \ref Ifx_g_FftF32_twiddleTable the twiddle factor for N, k */
+  85:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** IFX_INLINE cfloat32 Ifx_FftF32_lookUpTwiddleFactor(sint32 N, sint32 k)
+  86:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** {
+  87:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****     return Ifx_g_FftF32_twiddleTable[k * IFX_FFTF32_MAX_LENGTH / N];
+ 205              	 .loc 2 87 5 discriminator 3
+ 206              	 .loc 2 87 40 is_stmt 0 discriminator 3
+ 207 0016 8FE40020 	 sh %d2,%d4,14
+ 208              	 .loc 2 87 64 discriminator 3
+ 209 001a 4B721122 	 div.u %e2,%d2,%d7
+ 210              	 .loc 2 87 37 discriminator 3
+ 211 001e 0632     	 sh %d2,3
+ 212 0020 91000020 	 movh.a %a2,hi:Ifx_g_FftF32_twiddleTable
+ 213 0024 D9220000 	 lea %a2,[%a2]lo:Ifx_g_FftF32_twiddleTable
+ 214 0028 01220026 	 addsc.a %a2,%a2,%d2,0
+ 215 002c 5425     	 ld.w %d5,[%a2]0
+ 216              	.LVL24:
+ 217 002e 19220400 	 ld.w %d2,[%a2]4
+ 218              	.LVL25:
+ 219              	.LBE15:
+ 220              	.LBE14:
+ 110:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****                 bot          = IFX_Cf32_mul(&R[BaseB + k], &top); /*twiddle the odd n results*/
+ 221              	 .loc 1 110 17 is_stmt 1 discriminator 3
+ 222              	 .loc 1 110 54 is_stmt 0 discriminator 3
+ 223 0032 0BC40030 	 add %d3,%d4,%d12
+ 224              	 .loc 1 110 47 discriminator 3
+ 225 0036 0633     	 sh %d3,3
+ 226              	 .loc 1 110 45 discriminator 3
+ 227 0038 60A2     	 mov.a %a2,%d10
+ 228 003a 01230026 	 addsc.a %a2,%a2,%d3,0
+ 229              	.LVL26:
+ 230              	.LBB16:
+ 231              	.LBB17:
+ 232              	 .file 3 "../Libraries/Service/Tricore/Math/Ifx_Cf32.h"
+   1:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** /**
+   2:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****  * \file Ifx_Cf32.h
+   3:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****  * \brief Floating point signal, vector, and matrix library
+   4:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****  *
+   5:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****  *
+   6:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****  * \version iLLD-TC4-v2.7.0
+   7:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   8:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****  *
+   9:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****  *
+  10:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****   *                                 IMPORTANT NOTICE
+  11:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****  *
+  12:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****  *
+  13:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  14:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  15:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****  * this file except in compliance with IFASLL.
+  16:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****  *
+  17:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  18:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****  * Unless required by applicable law or agreed to in writing, software distributed
+  19:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  20:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  21:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****  * whether express, implied, statutory or otherwise, including but not limited to
+  22:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  23:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****  * defects in the licensed items, or non-infringement of third parties'
+  24:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****  * intellectual property rights. See the full license text for the specific
+  25:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****  * language governing permissions and limitations under IFASLL.
+  26:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****  *
+  27:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****  * \defgroup library_srvsw_sysse_math_cf32 Floating point signal, vector, and matrix library
+  28:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****  * \ingroup library_srvsw_sysse_math_f32
+  29:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****  */
+  30:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** 
+  31:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** #ifndef IFX_CF32_H
+  32:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** #define IFX_CF32_H 1
+  33:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** 
+  34:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** #if defined(IFX_ILLD_PPU_USAGE)
+  35:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** #include "Cpu/Std/IfxPpu_Intrinsics.h"
+  36:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** #else
+  37:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** #include "Cpu/Std/IfxCpu_Intrinsics.h"
+  38:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** #endif
+  39:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** #include <math.h>
+  40:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** 
+  41:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** #define _DATAF(val) ((float32)(val))
+  42:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** 
+  43:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** /* Complex Arithmetic --------------------------------------------------------*/
+  44:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** IFX_INLINE cfloat32 IFX_Cf32_exp(const cfloat32 *c)
+  45:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** {
+  46:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****     float32  f = (float32)expf(c->real);
+  47:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****     cfloat32 R;
+  48:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****     R.real = f * (float32)cosf(c->imag);
+  49:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****     R.imag = f * (float32)sinf(c->imag);
+  50:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****     return R;
+  51:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** }
+  52:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** 
+  53:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** 
+  54:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** IFX_INLINE cfloat32 IFX_Cf32_mul(const cfloat32 *a, const cfloat32 *b)
+  55:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** {
+  56:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****     cfloat32 R;
+ 233              	 .loc 3 56 5 is_stmt 1 discriminator 3
+  57:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****     R.real = (a->real * b->real) - (a->imag * b->imag);
+ 234              	 .loc 3 57 5 discriminator 3
+ 235              	 .loc 3 57 16 is_stmt 0 discriminator 3
+ 236 003e 5420     	 ld.w %d0,[%a2]0
+ 237              	 .loc 3 57 23 discriminator 3
+ 238 0040 4B504160 	 mul.f %d6,%d0,%d5
+ 239              	 .loc 3 57 38 discriminator 3
+ 240 0044 19210400 	 ld.w %d1,[%a2]4
+ 241              	 .loc 3 57 45 discriminator 3
+ 242 0048 4B214130 	 mul.f %d3,%d1,%d2
+ 243              	 .loc 3 57 34 discriminator 3
+ 244 004c 6B033136 	 sub.f %d3,%d6,%d3
+  58:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****     R.imag = (a->imag * b->real) + (a->real * b->imag);
+ 245              	 .loc 3 58 5 is_stmt 1 discriminator 3
+ 246              	 .loc 3 58 23 is_stmt 0 discriminator 3
+ 247 0050 4B514150 	 mul.f %d5,%d1,%d5
+ 248              	 .loc 3 58 45 discriminator 3
+ 249 0054 4B204120 	 mul.f %d2,%d0,%d2
+ 250              	 .loc 3 58 34 discriminator 3
+ 251 0058 6B022125 	 add.f %d2,%d5,%d2
+  59:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****     return R;
+ 252              	 .loc 3 59 5 is_stmt 1 discriminator 3
+ 253              	.LVL27:
+ 254              	.LBE17:
+ 255              	.LBE16:
+ 111:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****                 top          = R[BaseT + k];
+ 256              	 .loc 1 111 17 discriminator 3
+ 257              	 .loc 1 111 40 is_stmt 0 discriminator 3
+ 258 005c 0B940050 	 add %d5,%d4,%d9
+ 259              	 .loc 1 111 33 discriminator 3
+ 260 0060 0635     	 sh %d5,3
+ 261 0062 60A3     	 mov.a %a3,%d10
+ 262 0064 01350036 	 addsc.a %a3,%a3,%d5,0
+ 263              	 .loc 1 111 30 discriminator 3
+ 264 0068 5436     	 ld.w %d6,[%a3]0
+ 265 006a D9340400 	 lea %a4,[%a3]4
+ 266 006e 19350400 	 ld.w %d5,[%a3]4
+ 112:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****                 R[BaseT + k] = IFX_Cf32_add(&top, &bot);          /*top    subset*/
+ 267              	 .loc 1 112 17 is_stmt 1 discriminator 3
+ 268              	.LVL28:
+ 269              	.LBB18:
+ 270              	.LBB19:
+  60:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** }
+  61:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** 
+  62:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** 
+  63:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** IFX_INLINE cfloat32 IFX_Cf32_amp(const cfloat32 *a, float32 gain)
+  64:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** {
+  65:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****     cfloat32 R;
+  66:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****     R.real = a->real * gain;
+  67:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****     R.imag = a->imag * gain;
+  68:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****     return R;
+  69:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** }
+  70:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** 
+  71:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** 
+  72:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** IFX_INLINE float32 IFX_Cf32_dot(const cfloat32 *b)
+  73:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** {
+  74:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****     return (b->real * b->real) + (b->imag * b->imag);
+  75:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** }
+  76:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** 
+  77:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** 
+  78:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** IFX_INLINE float32 IFX_Cf32_mag(const cfloat32 *c)
+  79:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** {
+  80:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****     return (float32)sqrtf(IFX_Cf32_dot(c));
+  81:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** }
+  82:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** 
+  83:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** 
+  84:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** IFX_INLINE cfloat32 IFX_Cf32_div(const cfloat32 *a, const cfloat32 *b)
+  85:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** {
+  86:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****     float32  denom = IFX_Cf32_dot(b);
+  87:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****     cfloat32 R;
+  88:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****     R.real = ((a->real * b->real) + (a->imag * b->imag)) / denom;
+  89:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****     R.imag = ((a->imag * b->real) - (a->real * b->imag)) / denom;
+  90:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****     return R;
+  91:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** }
+  92:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** 
+  93:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** 
+  94:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** IFX_INLINE cfloat32 IFX_Cf32_add(const cfloat32 *a, const cfloat32 *b)
+  95:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** {
+  96:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****     cfloat32 R;
+ 271              	 .loc 3 96 5 discriminator 3
+  97:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****     R.real = (a->real + b->real);
+ 272              	 .loc 3 97 5 discriminator 3
+ 273              	 .loc 3 97 23 is_stmt 0 discriminator 3
+ 274 0072 6B062113 	 add.f %d1,%d3,%d6
+  98:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****     R.imag = (a->imag + b->imag);
+ 275              	 .loc 3 98 5 is_stmt 1 discriminator 3
+ 276              	.LVL29:
+ 277              	 .loc 3 98 23 is_stmt 0 discriminator 3
+ 278 0076 6B052102 	 add.f %d0,%d2,%d5
+  99:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****     return R;
+ 279              	 .loc 3 99 5 is_stmt 1 discriminator 3
+ 280              	.LVL30:
+ 281              	.LBE19:
+ 282              	.LBE18:
+ 283              	 .loc 1 112 32 is_stmt 0 discriminator 3
+ 284 007a 7431     	 st.w [%a3]0,%d1
+ 285 007c 7440     	 st.w [%a4]0,%d0
+ 113:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****                 R[BaseB + k] = IFX_Cf32_sub(&top, &bot);          /*bottom subset*/
+ 286              	 .loc 1 113 17 is_stmt 1 discriminator 3
+ 287              	.LVL31:
+ 288              	.LBB20:
+ 289              	.LBB21:
+ 100:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** }
+ 101:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** 
+ 102:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** 
+ 103:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** IFX_INLINE cfloat32 IFX_Cf32_sub(const cfloat32 *a, const cfloat32 *b)
+ 104:../Libraries/Service/Tricore/Math/Ifx_Cf32.h **** {
+ 105:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****     cfloat32 R;
+ 290              	 .loc 3 105 5 discriminator 3
+ 106:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****     R.real = (a->real - b->real);
+ 291              	 .loc 3 106 5 discriminator 3
+ 292              	 .loc 3 106 23 is_stmt 0 discriminator 3
+ 293 007e 6B033136 	 sub.f %d3,%d6,%d3
+ 107:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****     R.imag = (a->imag - b->imag);
+ 294              	 .loc 3 107 5 is_stmt 1 discriminator 3
+ 295              	 .loc 3 107 23 is_stmt 0 discriminator 3
+ 296 0082 6B023125 	 sub.f %d2,%d5,%d2
+ 108:../Libraries/Service/Tricore/Math/Ifx_Cf32.h ****     return R;
+ 297              	 .loc 3 108 5 is_stmt 1 discriminator 3
+ 298              	.LVL32:
+ 299              	.LBE21:
+ 300              	.LBE20:
+ 301              	 .loc 1 113 32 is_stmt 0 discriminator 3
+ 302 0086 7423     	 st.w [%a2]0,%d3
+ 303 0088 59220400 	 st.w [%a2]4,%d2
+ 105:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****             {
+ 304              	 .loc 1 105 35 is_stmt 1 discriminator 3
+ 305 008c C214     	 add %d4,1
+ 306              	.LVL33:
+ 307              	.L8:
+ 105:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****             {
+ 308              	 .loc 1 105 27 discriminator 1
+ 309 008e 3F840080 	 jlt.u %d4,%d8,.L9
+ 114:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****             } /*butterfly loop*/
+ 115:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** 
+ 116:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****             BaseT = BaseT + Np;                                   /*start of next block*/
+ 310              	 .loc 1 116 13 discriminator 2
+ 311              	 .loc 1 116 19 is_stmt 0 discriminator 2
+ 312 0092 4279     	 add %d9,%d7
+ 313              	.LVL34:
+ 100:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****         {
+ 314              	 .loc 1 100 30 is_stmt 1 discriminator 2
+ 315 0094 C21B     	 add %d11,1
+ 316              	.LVL35:
+ 317              	.L7:
+ 100:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****         {
+ 318              	 .loc 1 100 23 discriminator 1
+ 319 0096 7FDB0080 	 jge.u %d11,%d13,.L12
+ 103:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** 
+ 320              	 .loc 1 103 13
+ 103:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** 
+ 321              	 .loc 1 103 19 is_stmt 0
+ 322 009a 0B8900C0 	 add %d12,%d9,%d8
+ 323              	.LVL36:
+ 105:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****             {
+ 324              	 .loc 1 105 13 is_stmt 1
+ 105:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****             {
+ 325              	 .loc 1 105 20 is_stmt 0
+ 326 009e 8204     	 mov %d4,0
+ 105:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****             {
+ 327              	 .loc 1 105 13
+ 328 00a0 1D000000 	 j .L8
+ 329              	.LVL37:
+ 330              	.L12:
+ 117:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****         } /*block loop*/
+ 118:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** 
+ 119:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****         /*calc parameters for next pass*/
+ 120:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****         Bp = Bp >> 1; /*half as many blocks*/
+ 331              	 .loc 1 120 9 is_stmt 1 discriminator 2
+ 332              	 .loc 1 120 12 is_stmt 0 discriminator 2
+ 333 00a4 06FD     	 sh %d13,-1
+ 334              	.LVL38:
+ 121:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****         Np = Np << 1; /*twice as many points in each block*/
+ 335              	 .loc 1 121 9 is_stmt 1 discriminator 2
+ 336              	 .loc 1 121 12 is_stmt 0 discriminator 2
+ 337 00a6 0617     	 sh %d7,1
+ 338              	.LVL39:
+  94:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     {
+ 339              	 .loc 1 94 25 is_stmt 1 discriminator 2
+ 340 00a8 C21E     	 add %d14,1
+ 341              	.LVL40:
+ 342              	.L6:
+  94:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     {
+ 343              	 .loc 1 94 19 discriminator 1
+ 344 00aa 7FFE0080 	 jge.u %d14,%d15,.L13
+  97:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****         BaseT = 0;       /*Reset even base index*/
+ 345              	 .loc 1 97 9
+  97:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****         BaseT = 0;       /*Reset even base index*/
+ 346              	 .loc 1 97 15 is_stmt 0
+ 347 00ae 8FF71F80 	 sh %d8,%d7,-1
+ 348              	.LVL41:
+  98:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** 
+ 349              	 .loc 1 98 9 is_stmt 1
+ 100:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****         {
+ 350              	 .loc 1 100 9
+  98:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** 
+ 351              	 .loc 1 98 15 is_stmt 0
+ 352 00b2 8209     	 mov %d9,0
+ 100:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****         {
+ 353              	 .loc 1 100 16
+ 354 00b4 820B     	 mov %d11,0
+ 100:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****         {
+ 355              	 .loc 1 100 9
+ 356 00b6 1D000000 	 j .L7
+ 357              	.LVL42:
+ 358              	.L13:
+ 122:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     } /*pass loop*/
+ 123:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** } /*Ifx_FftF32_radix2DecimationInTime*/
+ 359              	 .loc 1 123 1
+ 360 00ba 0090     	 ret 
+ 361              	.LFE180:
+ 363              	 .global Ifx_FftF32_radix2DecimationInTime_end
+ 364              	Ifx_FftF32_radix2DecimationInTime_end:
+ 365              	 .section .text.Ifx_FftF32_radix2,"ax",@progbits
+ 366              	 .align 1
+ 367              	 .global Ifx_FftF32_radix2
+ 369              	Ifx_FftF32_radix2:
+ 370              	.LFB181:
+ 124:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** 
+ 125:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** 
+ 126:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** cfloat32 *Ifx_FftF32_radix2(cfloat32 *R, const cfloat32 *X, unsigned short nX)
+ 127:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** {
+ 371              	 .loc 1 127 1 is_stmt 1
+ 372              	.LVL43:
+ 373 0000 40AE     	 mov.aa %a14,%SP
+ 374              	.LCFI3:
+ 375 0002 8048     	 mov.d %d8,%a4
+ 376 0004 37047050 	 extr.u %d5,%d4,0,16
+ 128:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     unsigned int   logN = 31 - __clz(nX);
+ 377              	 .loc 1 128 5
+ 378              	 .loc 1 128 32 is_stmt 0
+ 379 0008 0F05B001 	 clz %d0,%d5
+ 380              	 .loc 1 128 30
+ 381 000c 8BF00141 	 rsub %d4,%d0,31
+ 382              	.LVL44:
+ 129:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     unsigned short n, k;
+ 383              	 .loc 1 129 5 is_stmt 1
+ 130:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** 
+ 131:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     /* Arrange in bit-reversed index */
+ 132:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     for (n = 0; n < nX; n++)
+ 384              	 .loc 1 132 5
+ 385              	 .loc 1 132 12 is_stmt 0
+ 386 0010 8202     	 mov %d2,0
+ 387              	 .loc 1 132 5
+ 388 0012 1D000000 	 j .L15
+ 389              	.LVL45:
+ 390              	.L16:
+ 133:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     {
+ 134:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****         //k = Ifx_FftF32_reverseBits(n, logN);
+ 135:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****         k    = Ifx_FftF32_lookUpReversedBits(n, logN);
+ 391              	 .loc 1 135 9 is_stmt 1 discriminator 3
+ 392              	.LBB22:
+ 393              	.LBB23:
+  78:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****     uint16   index = Ifx_g_FftF32_bitReverseTable[n];
+ 394              	 .loc 2 78 5 discriminator 3
+  78:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****     uint16   index = Ifx_g_FftF32_bitReverseTable[n];
+ 395              	 .loc 2 78 14 is_stmt 0 discriminator 3
+ 396 0016 1BF0FE6F 	 addi %d6,%d0,-17
+  79:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****     return index >> shift;
+ 397              	 .loc 2 79 5 is_stmt 1 discriminator 3
+  79:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****     return index >> shift;
+ 398              	 .loc 2 79 14 is_stmt 0 discriminator 3
+ 399 001a 8F120030 	 sh %d3,%d2,1
+ 400 001e 91000030 	 movh.a %a3,hi:Ifx_g_FftF32_bitReverseTable
+ 401 0022 D9330000 	 lea %a3,[%a3]lo:Ifx_g_FftF32_bitReverseTable
+ 402 0026 01330036 	 addsc.a %a3,%a3,%d3,0
+ 403 002a B9330000 	 ld.hu %d3,[%a3]0
+ 404              	.LVL46:
+  80:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** }
+ 405              	 .loc 2 80 5 is_stmt 1 discriminator 3
+  80:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** }
+ 406              	 .loc 2 80 18 is_stmt 0 discriminator 3
+ 407 002e 3256     	 rsub %d6
+ 408 0030 0F632060 	 shas %d6,%d3,%d6
+ 409              	.LVL47:
+ 410              	.LBE23:
+ 411              	.LBE22:
+ 136:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****         R[k] = X[n];
+ 412              	 .loc 1 136 9 is_stmt 1 discriminator 3
+ 413              	 .loc 1 136 17 is_stmt 0 discriminator 3
+ 414 0034 8F320030 	 sh %d3,%d2,3
+ 415 0038 01530036 	 addsc.a %a3,%a5,%d3,0
+ 416              	 .loc 1 136 10 discriminator 3
+ 417 003c 37067030 	 extr.u %d3,%d6,0,16
+ 418 0040 0633     	 sh %d3,3
+ 419 0042 6082     	 mov.a %a2,%d8
+ 420 0044 01230066 	 addsc.a %a6,%a2,%d3,0
+ 421              	 .loc 1 136 14 discriminator 3
+ 422 0048 09364009 	 ld.d %e6,[%a3]0
+ 423              	.LVL48:
+ 424 004c 89664009 	 st.d [%a6]0,%e6
+ 132:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     {
+ 425              	 .loc 1 132 26 is_stmt 1 discriminator 3
+ 426 0050 C212     	 add %d2,1
+ 427              	.LVL49:
+ 428 0052 37027020 	 extr.u %d2,%d2,0,16
+ 429              	.LVL50:
+ 430              	.L15:
+ 132:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     {
+ 431              	 .loc 1 132 19 discriminator 1
+ 432 0056 3F520080 	 jlt.u %d2,%d5,.L16
+ 137:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     }
+ 138:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** 
+ 139:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     Ifx_FftF32_radix2DecimationInTime(R, logN);
+ 433              	 .loc 1 139 5
+ 434 005a 6084     	 mov.a %a4,%d8
+ 435 005c 6D000000 	 call Ifx_FftF32_radix2DecimationInTime
+ 436              	.LVL51:
+ 140:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** 
+ 141:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     return R;
+ 437              	 .loc 1 141 5
+ 142:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** }
+ 438              	 .loc 1 142 1 is_stmt 0
+ 439 0060 6082     	 mov.a %a2,%d8
+ 440 0062 0090     	 ret 
+ 441              	.LFE181:
+ 443              	 .global Ifx_FftF32_radix2_end
+ 444              	Ifx_FftF32_radix2_end:
+ 445              	 .section .text.Ifx_FftF32_radix2I,"ax",@progbits
+ 446              	 .align 1
+ 447              	 .global Ifx_FftF32_radix2I
+ 449              	Ifx_FftF32_radix2I:
+ 450              	.LFB182:
+ 143:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** 
+ 144:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** 
+ 145:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** cfloat32 *Ifx_FftF32_radix2I(cfloat32 *R, const cfloat32 *X, unsigned short nX)
+ 146:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** {
+ 451              	 .loc 1 146 1 is_stmt 1
+ 452              	.LVL52:
+ 453 0000 40AE     	 mov.aa %a14,%SP
+ 454              	.LCFI4:
+ 455 0002 8049     	 mov.d %d9,%a4
+ 456 0004 37047080 	 extr.u %d8,%d4,0,16
+ 147:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     unsigned int   logN = 31 - __clz(nX);
+ 457              	 .loc 1 147 5
+ 458              	 .loc 1 147 32 is_stmt 0
+ 459 0008 0F08B071 	 clz %d7,%d8
+ 460              	 .loc 1 147 30
+ 461 000c 8BF70141 	 rsub %d4,%d7,31
+ 462              	.LVL53:
+ 148:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     unsigned short n, k = 0;
+ 463              	 .loc 1 148 5 is_stmt 1
+ 149:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** 
+ 150:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     /* Arrange in bit-reversed index, and conjugate the input */
+ 151:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     for (n = 0; n < nX; n++)
+ 464              	 .loc 1 151 5
+ 465              	 .loc 1 151 12 is_stmt 0
+ 466 0010 8202     	 mov %d2,0
+ 467              	 .loc 1 151 5
+ 468 0012 1D000000 	 j .L18
+ 469              	.LVL54:
+ 470              	.L19:
+ 152:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     {
+ 153:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****         //k = Ifx_FftF32_reverseBits(n, logN);
+ 154:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****         k         = Ifx_FftF32_lookUpReversedBits(n, logN);
+ 471              	 .loc 1 154 9 is_stmt 1 discriminator 3
+ 472              	.LBB24:
+ 473              	.LBB25:
+  78:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****     uint16   index = Ifx_g_FftF32_bitReverseTable[n];
+ 474              	 .loc 2 78 5 discriminator 3
+  78:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****     uint16   index = Ifx_g_FftF32_bitReverseTable[n];
+ 475              	 .loc 2 78 14 is_stmt 0 discriminator 3
+ 476 0016 1BF7FE5F 	 addi %d5,%d7,-17
+  79:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****     return index >> shift;
+ 477              	 .loc 2 79 5 is_stmt 1 discriminator 3
+  79:../Libraries/Service/Tricore/Math/Ifx_FftF32.h ****     return index >> shift;
+ 478              	 .loc 2 79 14 is_stmt 0 discriminator 3
+ 479 001a 8F120030 	 sh %d3,%d2,1
+ 480 001e 91000030 	 movh.a %a3,hi:Ifx_g_FftF32_bitReverseTable
+ 481 0022 D9330000 	 lea %a3,[%a3]lo:Ifx_g_FftF32_bitReverseTable
+ 482 0026 01330036 	 addsc.a %a3,%a3,%d3,0
+ 483 002a B9330000 	 ld.hu %d3,[%a3]0
+ 484              	.LVL55:
+  80:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** }
+ 485              	 .loc 2 80 5 is_stmt 1 discriminator 3
+  80:../Libraries/Service/Tricore/Math/Ifx_FftF32.h **** }
+ 486              	 .loc 2 80 18 is_stmt 0 discriminator 3
+ 487 002e 3255     	 rsub %d5
+ 488 0030 0F532050 	 shas %d5,%d3,%d5
+ 489              	.LVL56:
+ 490              	.LBE25:
+ 491              	.LBE24:
+ 155:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****         R[k].real = X[n].real;
+ 492              	 .loc 1 155 9 is_stmt 1 discriminator 3
+ 493              	 .loc 1 155 22 is_stmt 0 discriminator 3
+ 494 0034 8F320030 	 sh %d3,%d2,3
+ 495 0038 01530036 	 addsc.a %a3,%a5,%d3,0
+ 496              	 .loc 1 155 10 discriminator 3
+ 497 003c 37057030 	 extr.u %d3,%d5,0,16
+ 498 0040 0633     	 sh %d3,3
+ 499 0042 6092     	 mov.a %a2,%d9
+ 500 0044 01230066 	 addsc.a %a6,%a2,%d3,0
+ 501              	 .loc 1 155 25 discriminator 3
+ 502 0048 5433     	 ld.w %d3,[%a3]0
+ 503              	 .loc 1 155 19 discriminator 3
+ 504 004a 7463     	 st.w [%a6]0,%d3
+ 156:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****         R[k].imag = -X[n].imag;
+ 505              	 .loc 1 156 9 is_stmt 1 discriminator 3
+ 506              	 .loc 1 156 26 is_stmt 0 discriminator 3
+ 507 004c 19330400 	 ld.w %d3,[%a3]4
+ 508              	 .loc 1 156 21 discriminator 3
+ 509 0050 4B031133 	 neg.f %d3,%d3
+ 510              	 .loc 1 156 19 discriminator 3
+ 511 0054 59630400 	 st.w [%a6]4,%d3
+ 151:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     {
+ 512              	 .loc 1 151 26 is_stmt 1 discriminator 3
+ 513 0058 C212     	 add %d2,1
+ 514              	.LVL57:
+ 515 005a 37027020 	 extr.u %d2,%d2,0,16
+ 516              	.LVL58:
+ 517              	.L18:
+ 151:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     {
+ 518              	 .loc 1 151 19 discriminator 1
+ 519 005e 3F820080 	 jlt.u %d2,%d8,.L19
+ 157:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     }
+ 158:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** 
+ 159:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     Ifx_FftF32_radix2DecimationInTime(R, logN);
+ 520              	 .loc 1 159 5
+ 521 0062 6094     	 mov.a %a4,%d9
+ 522 0064 6D000000 	 call Ifx_FftF32_radix2DecimationInTime
+ 523              	.LVL59:
+ 160:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** 
+ 161:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     /* Conjugate the output */
+ 162:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     for (n = 0; n < nX; n++)
+ 524              	 .loc 1 162 5
+ 525              	 .loc 1 162 12 is_stmt 0
+ 526 0068 8202     	 mov %d2,0
+ 527              	 .loc 1 162 5
+ 528 006a 1D000000 	 j .L20
+ 529              	.LVL60:
+ 530              	.L21:
+ 163:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     {
+ 164:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****         R[n].imag = -R[n].imag;
+ 531              	 .loc 1 164 9 is_stmt 1 discriminator 3
+ 532              	 .loc 1 164 23 is_stmt 0 discriminator 3
+ 533 006e 8F320030 	 sh %d3,%d2,3
+ 534 0072 6092     	 mov.a %a2,%d9
+ 535 0074 01230036 	 addsc.a %a3,%a2,%d3,0
+ 536              	 .loc 1 164 26 discriminator 3
+ 537 0078 D9320400 	 lea %a2,[%a3]4
+ 538 007c 19330400 	 ld.w %d3,[%a3]4
+ 539              	 .loc 1 164 21 discriminator 3
+ 540 0080 4B031133 	 neg.f %d3,%d3
+ 541              	 .loc 1 164 19 discriminator 3
+ 542 0084 7423     	 st.w [%a2]0,%d3
+ 162:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     {
+ 543              	 .loc 1 162 26 is_stmt 1 discriminator 3
+ 544 0086 C212     	 add %d2,1
+ 545              	.LVL61:
+ 546 0088 37027020 	 extr.u %d2,%d2,0,16
+ 547              	.LVL62:
+ 548              	.L20:
+ 162:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     {
+ 549              	 .loc 1 162 19 discriminator 1
+ 550 008c 3F820080 	 jlt.u %d2,%d8,.L21
+ 165:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     }
+ 166:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** 
+ 167:../Libraries/Service/Tricore/Math/Ifx_FftF32.c ****     return R;
+ 551              	 .loc 1 167 5
+ 168:../Libraries/Service/Tricore/Math/Ifx_FftF32.c **** }
+ 552              	 .loc 1 168 1 is_stmt 0
+ 553 0090 6092     	 mov.a %a2,%d9
+ 554 0092 0090     	 ret 
+ 555              	.LFE182:
+ 557              	 .global Ifx_FftF32_radix2I_end
+ 558              	Ifx_FftF32_radix2I_end:
+ 635              	.Letext0:
+ 636              	 .file 4 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 637              	 .file 5 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+ 638              	 .file 6 "c:\\infineon\\aurix-configuration-studio-1.0.24\\eclipse\\tricore-gcc11\\tricore-elf\\include\\math.h"
+ 2537 0000 00000000 	 .word Ifx_FftF32_generateTwiddleFactor
+ 2538 0004 00000000 	 .word Ifx_FftF32_generateTwiddleFactor_end
+ 2539 0008 1C0F1454 	 .word 0x54140f1c
+ 2540 000c 10001000 	 .word 0x00100010
+ 2541 0010 00000400 	 .word 0x00040000
+ 2542 0014 40000200 	 .word 0x00020040
+ 2543 0018 00000000 	 .word Ifx_FftF32_reverseBits
+ 2544 001c 00000000 	 .word Ifx_FftF32_reverseBits_end
+ 2545 0020 3C000044 	 .word 0x4400003c
+ 2546 0024 30000000 	 .word 0x00000030
+ 2547 0028 04000000 	 .word 0x00000004
+ 2548 002c C0000000 	 .word 0x000000c0
+ 2549 0030 00000000 	 .word Ifx_FftF32_radix2DecimationInTime
+ 2550 0034 00000000 	 .word Ifx_FftF32_radix2DecimationInTime_end
+ 2551 0038 FFFF1C44 	 .word 0x441cffff
+ 2552 003c 10001000 	 .word 0x00100010
+ 2553 0040 00000000 	 .word 0x00000000
+ 2554 0044 C0000000 	 .word 0x000000c0
+ 2555 0048 00000000 	 .word Ifx_FftF32_radix2
+ 2556 004c 00000000 	 .word Ifx_FftF32_radix2_end
+ 2557 0050 FD017C44 	 .word 0x447c01fd
+ 2558 0054 10003000 	 .word 0x00300010
+ 2559 0058 00000400 	 .word 0x00040000
+ 2560 005c 40000200 	 .word 0x00020040
+ 2561 0060 00000000 	 .word Ifx_FftF32_radix2I
+ 2562 0064 00000000 	 .word Ifx_FftF32_radix2I_end
+ 2563 0068 FC037C44 	 .word 0x447c03fc
+ 2564 006c 10003000 	 .word 0x00300010
+ 2565 0070 00000400 	 .word 0x00040000
+ 2566 0074 40000200 	 .word 0x00020040
+DEFINED SYMBOLS
+                            *ABS*:00000000 Ifx_FftF32.c
+                            *ABS*:00000000 Ifx_FftF32.c
+    {standard input}:10     .text.Ifx_FftF32_generateTwiddleFactor:00000000 Ifx_FftF32_generateTwiddleFactor
+    {standard input}:77     .text.Ifx_FftF32_generateTwiddleFactor:00000058 Ifx_FftF32_generateTwiddleFactor_end
+    {standard input}:82     .text.Ifx_FftF32_reverseBits:00000000 Ifx_FftF32_reverseBits
+    {standard input}:169    .text.Ifx_FftF32_reverseBits:00000082 Ifx_FftF32_reverseBits_end
+    {standard input}:174    .text.Ifx_FftF32_radix2DecimationInTime:00000000 Ifx_FftF32_radix2DecimationInTime
+    {standard input}:364    .text.Ifx_FftF32_radix2DecimationInTime:000000bc Ifx_FftF32_radix2DecimationInTime_end
+    {standard input}:369    .text.Ifx_FftF32_radix2:00000000 Ifx_FftF32_radix2
+    {standard input}:444    .text.Ifx_FftF32_radix2:00000064 Ifx_FftF32_radix2_end
+    {standard input}:449    .text.Ifx_FftF32_radix2I:00000000 Ifx_FftF32_radix2I
+    {standard input}:558    .text.Ifx_FftF32_radix2I:00000094 Ifx_FftF32_radix2I_end
+
+UNDEFINED SYMBOLS
+cosf
+sinf
+Ifx_g_FftF32_twiddleTable
+Ifx_g_FftF32_bitReverseTable

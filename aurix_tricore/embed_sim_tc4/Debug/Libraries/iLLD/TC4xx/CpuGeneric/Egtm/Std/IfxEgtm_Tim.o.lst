@@ -1,0 +1,1186 @@
+   1              	
+   2              	 .file "IfxEgtm_Tim.c"
+   3              	 .file "IfxEgtm_Tim.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.IfxEgtm_Tim_Ch_getFilterClockFrequency,"ax",@progbits
+   7              	 .align 1
+   8              	 .global IfxEgtm_Tim_Ch_getFilterClockFrequency
+  10              	IfxEgtm_Tim_Ch_getFilterClockFrequency:
+  11              	.LFB387:
+  12              	 .file 1 "../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c"
+   1:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** /**
+   2:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****  * \file IfxEgtm_Tim.c
+   3:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****  * \brief EGTM  basic functionality
+   4:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****  *
+   5:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****  *
+   8:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****  *
+   9:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****  *
+  10:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****  *                                 IMPORTANT NOTICE
+  11:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****  *
+  12:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****  * this file except in compliance with IFASLL.
+  15:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****  *
+  16:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****  *
+  26:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****  *
+  27:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****  */
+  28:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** 
+  29:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** /******************************************************************************/
+  30:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** /*----------------------------------Includes----------------------------------*/
+  31:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** /******************************************************************************/
+  32:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** 
+  33:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** #include "Ifx_Cfg.h"
+  34:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** #if defined (__TASKING__)
+  35:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** #pragma warning 508 /* To suppress empty file warning */
+  36:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** #endif
+  37:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** #if defined (__ghs__)
+  38:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** #pragma diag_suppress 96 /* To suppress empty file warning */
+  39:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** #endif
+  40:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** 
+  41:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** #if !defined(DEVICE_TC45X)
+  42:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** #include "IfxEgtm_Tim.h"
+  43:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** 
+  44:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** /******************************************************************************/
+  45:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** /*-------------------------Function Implementations---------------------------*/
+  46:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** /******************************************************************************/
+  47:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** 
+  48:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** float32 IfxEgtm_Tim_Ch_getFilterClockFrequency(Ifx_EGTM *egtm, Ifx_EGTM_CLS_TIM_CH *channel)
+  49:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** {
+  13              	 .loc 1 49 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  50:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     IfxEgtm_Cmu_Tim_Filter_Clk filterClock;
+  17              	 .loc 1 50 5
+  51:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     IfxEgtm_Cmu_Clk            clk;
+  18              	 .loc 1 51 5
+  52:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** 
+  53:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     /* Gets the filter clock source for the timer channel */
+  54:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     filterClock = IfxEgtm_Tim_Ch_getFilterClockSource(channel);
+  19              	 .loc 1 54 5
+  20              	.LVL1:
+  21              	.LBB4:
+  22              	.LBB5:
+  23              	 .file 2 "../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h"
+   1:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /**
+   2:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \file IfxEgtm_Tim.h
+   3:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \brief EGTM  basic functionality
+   4:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \ingroup IfxLld_Egtm
+   5:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+   6:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \version iLLD-TC4-v2.7.0
+   7:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   8:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+   9:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+  10:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+  11:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                                 IMPORTANT NOTICE
+  12:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+  13:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  14:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  15:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * this file except in compliance with IFASLL.
+  16:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+  17:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  18:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * Unless required by applicable law or agreed to in writing, software distributed
+  19:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  20:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  21:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * whether express, implied, statutory or otherwise, including but not limited to
+  22:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  23:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * defects in the licensed items, or non-infringement of third parties'
+  24:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * intellectual property rights. See the full license text for the specific
+  25:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * language governing permissions and limitations under IFASLL.
+  26:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+  27:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+  28:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+  29:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+  30:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \defgroup IfxLld_Egtm_Std_Tim Tim Basic Functionality
+  31:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \ingroup IfxLld_Egtm_Std
+  32:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \defgroup IfxLld_Egtm_Std_Tim_Enumerations TIM Enumerations
+  33:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \ingroup IfxLld_Egtm_Std_Tim
+  34:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \defgroup IfxLld_Egtm_Std_Tim_Channel_Functions TIM Channel Functions
+  35:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \ingroup IfxLld_Egtm_Std_Tim
+  36:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \defgroup IfxLld_Egtm_Std_Tim_Structures TIM Structures
+  37:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \ingroup IfxLld_Egtm_Std_Tim
+  38:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+  39:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+  40:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** #ifndef IFXEGTM_TIM_H
+  41:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** #define IFXEGTM_TIM_H 1
+  42:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+  43:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /******************************************************************************/
+  44:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /*----------------------------------Includes----------------------------------*/
+  45:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /******************************************************************************/
+  46:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+  47:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** #include "_Impl/IfxEgtm_cfg.h"
+  48:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** #if !defined(IFX_ILLD_PPU_USAGE)
+  49:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** #include "Cpu/Std/IfxCpu_Intrinsics.h"
+  50:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** #endif
+  51:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** #if defined(IFX_ILLD_PPU_USAGE)
+  52:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** #include "Ppu/Std/IfxPpu_Intrinsics.h"
+  53:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** #endif
+  54:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** #include "IfxEgtm_bf.h"
+  55:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** #include "Src/Std/IfxSrc.h"
+  56:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** #include "IfxEgtm.h"
+  57:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** #include "IfxEgtm_Cmu.h"
+  58:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+  59:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /******************************************************************************/
+  60:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /*-----------------------------------Macros-----------------------------------*/
+  61:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /******************************************************************************/
+  62:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+  63:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief TIMINSEL.CHxSEL value to select ADC boundary flag input path for TIM channel */
+  64:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** #define IFX_EGTM_TIMINSEL_CHSEL_ADC_BOUNDARY_FLAG (0xCu)
+  65:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+  66:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /******************************************************************************/
+  67:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /*--------------------------------Enumerations--------------------------------*/
+  68:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /******************************************************************************/
+  69:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+  70:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \addtogroup IfxLld_Egtm_Std_Tim_Enumerations
+  71:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \{ */
+  72:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Enum Selection for CLSi_TIM_CHx_CNTS register
+  73:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * Definition in Ifx_EGTM_CLS_TIM_CH_CTRL.B.CNTS_SEL
+  74:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+  75:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** typedef enum
+  76:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** {
+  77:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_CntsSel_cntReg = 0,
+  78:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_CntsSel_tbuTs0
+  79:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** } IfxEgtm_Tim_CntsSel;
+  80:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+  81:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Enum for Filter counter
+  82:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+  83:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** typedef enum
+  84:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** {
+  85:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_FilterCounter_upDown = 0,
+  86:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_FilterCounter_hold
+  87:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** } IfxEgtm_Tim_FilterCounter;
+  88:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+  89:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Enum for Filter counter Frequency Selection
+  90:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * Definition in Ifx_EGTM_CLS_TIM_CH_CTRL.B.GPR0_SEL
+  91:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+  92:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** typedef enum
+  93:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** {
+  94:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_FilterCounterFreqSel_cmuClk0 = 0,  /**< \brief FLT_CNT counts with CMU_CLK0 */
+  95:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_FilterCounterFreqSel_cmuClk1 = 1,  /**< \brief FLT_CNT counts with CMU_CLK1 */
+  96:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_FilterCounterFreqSel_cmuClk6 = 2,  /**< \brief FLT_CNT counts with CMU_CLK6 */
+  97:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_FilterCounterFreqSel_cmuClk7 = 3   /**< \brief FLT_CNT counts with CMU_CLK7 */
+  98:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** } IfxEgtm_Tim_FilterCounterFreqSel;
+  99:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 100:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Enum for GprSel
+ 101:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 102:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** typedef enum
+ 103:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** {
+ 104:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_FilterMode_immediateEdgePropagation = 0,  /**< \brief Immediate edge Propagation mo
+ 105:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_FilterMode_individualDeglitchTime         /**< \brief Individual deglitch mode */
+ 106:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** } IfxEgtm_Tim_FilterMode;
+ 107:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 108:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Enum for Filter mode
+ 109:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * Definition in Ifx_EGTM_CLS_TIM_CH_CTRL.B.FLT_MODE_FE
+ 110:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 111:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** typedef enum
+ 112:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** {
+ 113:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_GprSel_tbuTs0 = 0,
+ 114:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_GprSel_tbuTs1,
+ 115:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_GprSel_tbuTs2,
+ 116:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_GprSel_cnts
+ 117:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** } IfxEgtm_Tim_GprSel;
+ 118:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 119:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Enum for input control
+ 120:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 121:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** typedef enum
+ 122:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** {
+ 123:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_Input_currentChannel = 0,
+ 124:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_Input_adjacentChannel
+ 125:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** } IfxEgtm_Tim_Input;
+ 126:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 127:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Enum for Irq mode
+ 128:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 129:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** typedef enum
+ 130:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** {
+ 131:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_IrqMode_level = 0,        /**< \brief Level Mode */
+ 132:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_IrqMode_pulse,            /**< \brief Pulse Mode */
+ 133:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_IrqMode_pulseNotify,      /**< \brief pulse notify Mode */
+ 134:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_IrqMode_singlePulseMode,  /**< \brief Single Pulse Mode */
+ 135:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_IrqMode_none = -1         /**< \brief none */
+ 136:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** } IfxEgtm_Tim_IrqMode;
+ 137:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 138:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Enum for Irq type
+ 139:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 140:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** typedef enum
+ 141:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** {
+ 142:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_IrqType_newVal        = 0,  /**< \brief New measurement value detected by SMU of ch
+ 143:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_IrqType_ecntOverflow  = 1,  /**< \brief ECNT counter overflow of channel */
+ 144:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_IrqType_cntOverflow   = 2,  /**< \brief CNT counter overflow of channel */
+ 145:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_IrqType_gprOverflow   = 3,  /**< \brief GPR0 and GPR1 data overflow */
+ 146:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_IrqType_timeoutDetect = 4,  /**< \brief Time out reached for input signal of channe
+ 147:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_IrqType_glitchDetect  = 5   /**< \brief A glitch was detected by the TIM filter of 
+ 148:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** } IfxEgtm_Tim_IrqType;
+ 149:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 150:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Enum for Mode control
+ 151:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 152:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** typedef enum
+ 153:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** {
+ 154:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_Mode_pwmMeasurement = 0,  /**< \brief TPWM */
+ 155:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_Mode_pulseIntegration,    /**< \brief TPIM */
+ 156:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_Mode_inputEvent,          /**< \brief TIEM */
+ 157:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_Mode_inputPrescaler,      /**< \brief TIPM */
+ 158:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_Mode_bitCompression,      /**< \brief TBCM */
+ 159:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_Mode_gatedPeriodic,       /**< \brief TGPS */
+ 160:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_Mode_serialShift          /**< \brief TSSM */
+ 161:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** } IfxEgtm_Tim_Mode;
+ 162:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 163:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Enum for Timeout control
+ 164:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 165:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** typedef enum
+ 166:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** {
+ 167:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_Timeout_disabled,     /**< \brief Timeout feature disabled */
+ 168:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_Timeout_risingEdge,   /**< \brief Timeout feature enabled for rising edge only */
+ 169:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_Timeout_fallingEdge,  /**< \brief Timeout feature enabled for falling edge only */
+ 170:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_Timeout_bothEdge      /**< \brief Timeout feature enabled for both edges */
+ 171:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** } IfxEgtm_Tim_Timeout;
+ 172:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 173:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Enum for Filter input by lookup table.
+ 174:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * Definition in Ifx_EGTM_CLS_TIM_CH_ECTRL.B.USE_LUT
+ 175:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 176:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** typedef enum
+ 177:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** {
+ 178:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_UseLut_none       = 0,  /**< \brief LUT not in use; LUT_IN0 used directly as filter
+ 179:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_UseLut_extCapture = 1,  /**< \brief Use 3-bit LUT index = TIM_EXT_CAPTURE & LUT_IN1
+ 180:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_UseLut_foutPrev   = 2,  /**< \brief Use 3-bit LUT index = FOUT_PREV & LUT_IN1 & LUT
+ 181:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_UseLut_tssmOut    = 3   /**< \brief Use 3-bit LUT index = TSSM_OUT & LUT_IN1 & LUT_
+ 182:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** } IfxEgtm_Tim_UseLut;
+ 183:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 184:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \} */
+ 185:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 186:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /******************************************************************************/
+ 187:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /*-----------------------------Data Structures--------------------------------*/
+ 188:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /******************************************************************************/
+ 189:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 190:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \addtogroup IfxLld_Egtm_Std_Tim_Structures
+ 191:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \{ */
+ 192:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Channel control
+ 193:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 194:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** typedef struct
+ 195:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** {
+ 196:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     boolean             enable;                                          /**< \brief TIM channel en
+ 197:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_Mode    mode;                                            /**< \brief TIM channel Mo
+ 198:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     boolean             enableOneShotMode;                               /**< \brief enable OneShot
+ 199:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     boolean             channelInputControl;                             /**< \brief 0- use signal 
+ 200:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****                                                                           * 1- use signal TIM_IN(x-
+ 201:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_GprSel  gpr0Sel;                                         /**< \brief Selection for 
+ 202:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_GprSel  gpr1Sel;                                         /**< \brief Selection for 
+ 203:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_CntsSel cntsSel;                                         /**< \brief Selection for 
+ 204:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     boolean             signalLevelControl;                              /**< \brief Signal level c
+ 205:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****                                                                           * 0- Measurement starts w
+ 206:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****                                                                           * 1- Measurement starts w
+ 207:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****                                                                           * In TIM_MODE=0b110 (TSSM
+ 208:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****                                                                           * 0- Shift left
+ 209:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****                                                                           * 1- Shift right */
+ 210:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     boolean ignoreSignalLevel;                                           /**< \brief ignore Signal 
+ 211:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****                                                                           * 0- use DSL bit for sele
+ 212:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****                                                                           * 1- ignore DSL and treat
+ 213:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     boolean enableCounterReset;                                          /**< \brief Enables resett
+ 214:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****                                                                           * 0- ECNT counter operati
+ 215:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****                                                                           * 1 - ECNT counter is res
+ 216:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****                                                                           * In TIM_MODE=0b110 (TSSM
+ 217:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     boolean                          enableFilter;                       /**< \brief enable Filter 
+ 218:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_FilterCounterFreqSel filterCounterFrequency;             /**< \brief Filter counter
+ 219:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     boolean                          enableExternalCaptureMode;          /**< \brief Enables extern
+ 220:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_FilterMode           filterModeRisingEdge;               /**< \brief Filter mode fo
+ 221:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_FilterCounter        filterCounterModeRisingEdge;        /**< \brief Filter counter
+ 222:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_FilterMode           filterModeFallingEdge;              /**< \brief Filter mode fo
+ 223:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_FilterCounter        filterCounterModeFallingEdge;       /**< \brief Filter counter
+ 224:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Cmu_Clk                  clkSel;                             /**< \brief CMU clock sour
+ 225:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     boolean                          extendEdgeCounterOverflow;          /**< \brief Extended Edge 
+ 226:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****                                                                           * 0- Overflow will be sig
+ 227:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****                                                                           * 1- Overflow will be sig
+ 228:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     boolean             egpr0Sel;                                        /**< \brief Extension of G
+ 229:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     boolean             egpr1Sel;                                        /**< \brief Extension of G
+ 230:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Tim_Timeout timeoutControl;                                  /**< \brief Timeout contro
+ 231:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** } IfxEgtm_Tim_ChannelControl;
+ 232:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 233:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** typedef struct
+ 234:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** {
+ 235:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     uint8 mode;        /**< \brief Input source to Channel. multi-core encoding in use (MODE_x(1) d
+ 236:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****                         * 00- State is 0 (ignore write access)
+ 237:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****                         * 01- Change state to 0
+ 238:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****                         * 10- Change state to 1
+ 239:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****                         * 11- State is 1 (ignore write access) */
+ 240:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     uint8 value;
+ 241:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** } IfxEgtm_Tim_InputSourceSelect;
+ 242:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 243:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \} */
+ 244:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 245:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \addtogroup IfxLld_Egtm_Std_Tim_Channel_Functions
+ 246:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \{ */
+ 247:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 248:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /******************************************************************************/
+ 249:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /*-------------------------Inline Function Prototypes-------------------------*/
+ 250:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /******************************************************************************/
+ 251:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 252:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief This function clears the Aux input Source selection for the  given channel
+ 253:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 254:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[inout] egtm     Pointer to EGTM module
+ 255:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    clsIndex TIM instance number
+ 256:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                        Range: \ref: IfxEgtm_Cluster
+ 257:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    channel  Channel index
+ 258:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                        Range: \ref: IfxEgtm_Tim_Ch
+ 259:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 260:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval None
+ 261:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 262:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Tim_Ch_clearAuxInputSourceSelection(Ifx_EGTM *egtm, IfxEgtm_Cluster clsInde
+ 263:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 264:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Clears the counter overflow flag
+ 265:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 266:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[inout] channel TIM channel pointer
+ 267:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 268:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval None
+ 269:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 270:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Tim_Ch_clearCntOverflowEvent(Ifx_EGTM_CLS_TIM_CH *channel);
+ 271:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 272:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Clears the data lost flag
+ 273:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 274:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[inout] channel TIM channel pointer
+ 275:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 276:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval None
+ 277:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 278:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Tim_Ch_clearDataLostEvent(Ifx_EGTM_CLS_TIM_CH *channel);
+ 279:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 280:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Clears the event counter overflow flag
+ 281:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 282:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[inout] channel TIM channel pointer
+ 283:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 284:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval None
+ 285:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 286:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Tim_Ch_clearEcntOverflowEvent(Ifx_EGTM_CLS_TIM_CH *channel);
+ 287:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 288:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Clears the glitch flag
+ 289:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 290:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[inout] channel TIM channel pointer
+ 291:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 292:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval None
+ 293:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 294:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Tim_Ch_clearGlitchEvent(Ifx_EGTM_CLS_TIM_CH *channel);
+ 295:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 296:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Clears the new value flag
+ 297:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 298:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[inout] channel TIM channel pointer
+ 299:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 300:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval None
+ 301:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 302:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Tim_Ch_clearNewValueEvent(Ifx_EGTM_CLS_TIM_CH *channel);
+ 303:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 304:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Clear the interrupt notification.
+ 305:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 306:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[inout] channel TIM channel pointer
+ 307:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    irqType Interrupt type
+ 308:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                       Range: \ref: IfxEgtm_Tim_IrqType
+ 309:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 310:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval None
+ 311:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 312:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Tim_Ch_clearNotification(Ifx_EGTM_CLS_TIM_CH *channel, IfxEgtm_Tim_IrqType 
+ 313:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 314:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Returns the Capture Clock Frequency
+ 315:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 316:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in] egtm    Pointer to EGTM module
+ 317:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in] channel Pointer to TIM channel base
+ 318:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                    Range: \ref: Ifx_EGTM_CLS_TIM_CH
+ 319:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 320:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval Capture clock frequency
+ 321:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 322:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE float32 IfxEgtm_Tim_Ch_getCaptureClockFrequency(Ifx_EGTM *egtm, Ifx_EGTM_CLS_TIM_CH *cha
+ 323:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 324:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Returns the capture clock source selected
+ 325:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 326:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in] channel TIM channel pointer
+ 327:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 328:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval capture clock source
+ 329:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * Range: \ref: IfxEgtm_Cmu_Clk
+ 330:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 331:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE IfxEgtm_Cmu_Clk IfxEgtm_Tim_Ch_getCaptureClockSource(Ifx_EGTM_CLS_TIM_CH *channel);
+ 332:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 333:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Returns the Filter clock source selected
+ 334:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 335:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in] channel TIM channel pointer
+ 336:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 337:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval Filter clock source
+ 338:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * Range: \ref: IfxEgtm_Cmu_Tim_Filter_Clk
+ 339:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 340:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE IfxEgtm_Cmu_Tim_Filter_Clk IfxEgtm_Tim_Ch_getFilterClockSource(Ifx_EGTM_CLS_TIM_CH *chan
+ 341:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 342:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Returns the status of channel  notification
+ 343:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 344:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in] channel TIM channel pointer
+ 345:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in] irqType Interrupt type
+ 346:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                    Range: \ref: IfxEgtm_Tim_IrqType
+ 347:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 348:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval Status of channel notification
+ 349:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * Range: TRUE if the notification is active.
+ 350:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * 		  FALSE otherwise
+ 351:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 352:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE boolean IfxEgtm_Tim_Ch_getNotification(Ifx_EGTM_CLS_TIM_CH *channel, IfxEgtm_Tim_IrqType
+ 353:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 354:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Returns a pointer to the TIM channel SRC
+ 355:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 356:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in] egtm    Pointer to EGTM module
+ 357:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in] tim     Specifies the tim module no
+ 358:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                    Range: \ref: IfxEgtm_Tim
+ 359:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in] channel Channel index
+ 360:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                    Range: \ref: IfxEgtm_Tim_Ch
+ 361:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 362:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval Pointer to the TIM channel SRC
+ 363:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 364:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE volatile Ifx_SRC_SRCR *IfxEgtm_Tim_Ch_getSrcPointer(Ifx_EGTM *egtm, IfxEgtm_Tim tim, Ifx
+ 365:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 366:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Returns the Timeout Clock Frequency
+ 367:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 368:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in] egtm    Pointer to EGTM module
+ 369:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in] channel Pointer to TIM channel base
+ 370:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 371:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval Timeout clock frequency
+ 372:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 373:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE float32 IfxEgtm_Tim_Ch_getTimeoutClockFrequency(Ifx_EGTM *egtm, Ifx_EGTM_CLS_TIM_CH *cha
+ 374:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 375:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Returns the Timeout clock source selected
+ 376:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 377:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in] channel TIM channel pointer
+ 378:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 379:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval Timeout clock source
+ 380:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * Range: \ref: IfxEgtm_Cmu_Clk
+ 381:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 382:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE IfxEgtm_Cmu_Clk IfxEgtm_Tim_Ch_getTimeoutClockSource(Ifx_EGTM_CLS_TIM_CH *channel);
+ 383:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 384:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Test the counter overflow flag
+ 385:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 386:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in] channel TIM channel pointer
+ 387:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 388:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval TRUE if the counter overflow flag is set,FALSE otherwise.
+ 389:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 390:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE boolean IfxEgtm_Tim_Ch_isCntOverflowEvent(Ifx_EGTM_CLS_TIM_CH *channel);
+ 391:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 392:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Test the data lost flag
+ 393:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 394:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in] channel TIM channel pointer
+ 395:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 396:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval TRUE If the data lost event flag is set.
+ 397:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *  	   FALSE If the data lost event flag is not set.
+ 398:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 399:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE boolean IfxEgtm_Tim_Ch_isDataLostEvent(Ifx_EGTM_CLS_TIM_CH *channel);
+ 400:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 401:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Test the event counter overflow flag
+ 402:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 403:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in] channel TIM channel pointer
+ 404:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 405:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval TRUE If the event counter overflow flag is set.
+ 406:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *         FALSE If the event counter overflow flag is not set.
+ 407:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 408:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE boolean IfxEgtm_Tim_Ch_isEcntOverflowEvent(Ifx_EGTM_CLS_TIM_CH *channel);
+ 409:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 410:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Test the glitch flag
+ 411:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 412:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in] channel TIM channel pointer
+ 413:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 414:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval TRUE If glitch flag is set.
+ 415:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *         FALSE If glitch flag is not set.
+ 416:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 417:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE boolean IfxEgtm_Tim_Ch_isGlitchEvent(Ifx_EGTM_CLS_TIM_CH *channel);
+ 418:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 419:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Test the new value flag
+ 420:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 421:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in] channel TIM channel pointer
+ 422:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 423:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval TRUE if the new value flag is set,FALSE otherwise.
+ 424:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 425:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE boolean IfxEgtm_Tim_Ch_isNewValueEvent(Ifx_EGTM_CLS_TIM_CH *channel);
+ 426:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 427:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief set the Auxiliary input source selection of a particular channel.
+ 428:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 429:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[inout] egtm     Pointer to EGTM module
+ 430:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    clsIndex TIM instance number
+ 431:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                        Range: \ref: IfxEgtm_Cluster
+ 432:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    channel  Channel index
+ 433:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                        Range: \ref: IfxEgtm_Tim_Ch
+ 434:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 435:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval None
+ 436:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 437:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Tim_Ch_setAuxInputSourceSelection(Ifx_EGTM *egtm, IfxEgtm_Cluster clsIndex,
+ 438:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 439:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Set the channel notification
+ 440:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 441:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[inout] channel           TIM channel pointer
+ 442:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    irqOnNewVal       If TRUE, the interrupt on new value is enabled
+ 443:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    irqOnCntOverflow  If TRUE, the interrupt on CNT overflow is enabled
+ 444:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    irqOnEcntOverflow If TRUE, the interrupt on ECNT overflow is enabled
+ 445:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    irqOnDatalost     If TRUE, the interrupt on data lost (GPR0, GPR1) is enabled
+ 446:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 447:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval None
+ 448:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 449:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Tim_Ch_setChannelNotification(Ifx_EGTM_CLS_TIM_CH *channel, boolean irqOnNe
+ 450:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 451:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Set the channel clock source
+ 452:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 453:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[inout] channel TIM channel pointer
+ 454:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    clk     Selected clock
+ 455:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                       Range: \ref: IfxEgtm_Cmu_Clk
+ 456:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 457:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval None
+ 458:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 459:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Tim_Ch_setClockSource(Ifx_EGTM_CLS_TIM_CH *channel, IfxEgtm_Cmu_Clk clk);
+ 460:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 461:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief This function configures the Falling edge Filter Parameter.
+ 462:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 463:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[inout] channel    TIM channel pointer
+ 464:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    filterTime Falling edge Filter Parameter.
+ 465:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                          Range: 0 tp 0x00FFFFFF
+ 466:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 467:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval None
+ 468:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 469:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Tim_Ch_setFallingEdgeFilterTime(Ifx_EGTM_CLS_TIM_CH *channel, uint32 filter
+ 470:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 471:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Set the filter notification
+ 472:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 473:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[inout] channel     TIM channel pointer
+ 474:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    irqOnGlitch If TRUE, the interrupt on glitch is enabled
+ 475:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 476:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval None
+ 477:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 478:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Tim_Ch_setFilterNotification(Ifx_EGTM_CLS_TIM_CH *channel, boolean irqOnGli
+ 479:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 480:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief This function configures the Input source selection register.
+ 481:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 482:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[inout] tim         TIM instance number
+ 483:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    channel     Channel index
+ 484:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                           Range: \ref: IfxEgtm_Tim_Ch
+ 485:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    inputSource Input source to Channel
+ 486:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                           Range: \ref: IfxEgtm_Tim_InputSourceSelect
+ 487:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 488:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval None
+ 489:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 490:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Tim_Ch_setInputSourceSelection(Ifx_EGTM_CLS_TIM *tim, IfxEgtm_Tim_Ch channe
+ 491:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 492:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief This function configures the TIM channel IRQ mode
+ 493:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 494:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[inout] channel TIM channel pointer
+ 495:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    mode    Notification Mode
+ 496:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                       Range: \ref: IfxEgtm_IrqMode
+ 497:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 498:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval None
+ 499:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 500:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Tim_Ch_setNotificationMode(Ifx_EGTM_CLS_TIM_CH *channel, IfxEgtm_IrqMode mo
+ 501:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 502:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief set the Interrupt Notification
+ 503:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 504:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[inout] channel TIM channel pointer
+ 505:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    irqType Interrupt type
+ 506:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                       Range: \ref: IfxEgtm_Tim_IrqType
+ 507:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 508:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval None
+ 509:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 510:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Tim_Ch_setNotification(Ifx_EGTM_CLS_TIM_CH *channel, IfxEgtm_Tim_IrqType ir
+ 511:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 512:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Sets the swap point of time of capturing CNTS and GPR1.
+ 513:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 514:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[inout] tim             Pointer to EGTM TIM instance.
+ 515:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    channel         Channel index.
+ 516:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                               Range: \ref IfxEgtm_Tim_Ch.
+ 517:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    swapTimeCapture Selection for swap point of time of capturing CNTS and GPR1.
+ 518:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                               Range:
+ 519:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                               - FALSE: Inactive edge captures data into CNTS; TIM_NEWVAL_IRQ eve
+ 520:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                               - TRUE:  Inactive edge captures data into GPR1; TIM_NEWVAL_IRQ eve
+ 521:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 522:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval None
+ 523:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 524:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Tim_Ch_setSwapCapture(Ifx_EGTM_CLS_TIM *tim, IfxEgtm_Tim_Ch channel, boolea
+ 525:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 526:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Sets immediate start of the measurement.
+ 527:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 528:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[inout] tim            Pointer to EGTM TIM instance.
+ 529:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    channel        Channel index.
+ 530:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                              Range: \ref IfxEgtm_Tim_Ch.
+ 531:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    startImmediate Start immediate selection. 
+ 532:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                              Range:
+ 533:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                              - TRUE: Start immediately after enabling (TIM_EN = 1).
+ 534:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                              - FALSE: Start with the first active edge of the measurement.
+ 535:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 536:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval None
+ 537:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 538:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Tim_Ch_setImmediateStart(Ifx_EGTM_CLS_TIM *tim, IfxEgtm_Tim_Ch channel, boo
+ 539:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 540:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Selects the input data source for EGTM TIM channel.
+ 541:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 542:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[inout] tim             Pointer to EGTM TIM instance.
+ 543:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    channel         Channel index.
+ 544:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                               Range: \ref IfxEgtm_Tim_Ch.
+ 545:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    inputDataSource Selection for input data source. 
+ 546:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                               Range:
+ 547:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                               - TRUE: Use input data of previous channel (after filter unit).
+ 548:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                               - FALSE: Use input data of local filter unit.
+ 549:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 550:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval None
+ 551:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 552:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Tim_Ch_setUsePrevChInput(Ifx_EGTM_CLS_TIM *tim, IfxEgtm_Tim_Ch channel, boo
+ 553:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 554:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Sets the extended filter counter mode for the rising edge.
+ 555:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 556:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[inout] tim                         Pointer to EGTM TIM instance.
+ 557:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    channel                     Channel index.
+ 558:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                                           Range: \ref IfxEgtm_Tim_Ch.
+ 559:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    filterCounterModeRisingEdge Extended filter counter mode for rising edge.
+ 560:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                                           Range: \ref IfxEgtm_Tim_FilterCounter.
+ 561:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 562:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval None
+ 563:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 564:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Tim_Ch_setExtendFilterCounterModeRisingEdge(Ifx_EGTM_CLS_TIM *tim, IfxEgtm_
+ 565:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 566:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Sets the extended filter counter mode for the falling edge.
+ 567:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 568:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[inout] tim                          Pointer to EGTM TIM instance.
+ 569:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    channel                      Channel index.
+ 570:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                                            Range: \ref IfxEgtm_Tim_Ch.
+ 571:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    filterCounterModeFallingEdge Extended filter counter mode for falling edge.
+ 572:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                                            Range: \ref IfxEgtm_Tim_FilterCounter.
+ 573:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 574:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval None
+ 575:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 576:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Tim_Ch_setExtendFilterCounterModeFallingEdge(Ifx_EGTM_CLS_TIM *tim, IfxEgtm
+ 577:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 578:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Configures the filter input by lookup table.
+ 579:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 580:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[inout] tim         Pointer to EGTM TIM instance.
+ 581:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    channel     Channel index.
+ 582:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                           Range: \ref IfxEgtm_Tim_Ch.
+ 583:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    lookUpTable Selection for filter input by lookup table.
+ 584:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                           Range: \ref IfxEgtm_Tim_UseLut.
+ 585:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 586:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval None
+ 587:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 588:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Tim_Ch_setUseLookUpTable(Ifx_EGTM_CLS_TIM *tim, IfxEgtm_Tim_Ch channel, Ifx
+ 589:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 590:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Configures the current timeout value slice 2 for channel.
+ 591:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 592:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[inout] tim     Pointer to EGTM TIM instance.
+ 593:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    channel Channel index.
+ 594:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                       Range: \ref IfxEgtm_Tim_Ch.
+ 595:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    timeout Timeout value for slice 2.
+ 596:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                       Range: 0 to 0xFF.
+ 597:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 598:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval None
+ 599:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 600:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Tim_Ch_setToCnt2(Ifx_EGTM_CLS_TIM *tim, IfxEgtm_Tim_Ch channel, uint8 timeo
+ 601:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 602:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Configures the auxiliary input source selection SRC_CHz of a particular channel.
+ 603:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 604:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[inout] egtm     Pointer to EGTM module.
+ 605:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    clsIndex Cluster index.
+ 606:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                        Range: \ref IfxEgtm_Cluster.
+ 607:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    channel  Channel index.
+ 608:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                        Range: \ref IfxEgtm_Tim_Ch.
+ 609:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 610:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval None
+ 611:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 612:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Ccm_Tim_setAuxInSourceSelectionSrcChz(Ifx_EGTM *egtm, IfxEgtm_Cluster clsIn
+ 613:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 614:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Configures the auxiliary input source selection SEL_OUT_N_CHz of a particular channel.
+ 615:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 616:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[inout] egtm     Pointer to EGTM module.
+ 617:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    clsIndex Cluster index.
+ 618:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                        Range: \ref IfxEgtm_Cluster.
+ 619:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    channel  Channel index.
+ 620:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                        Range: \ref IfxEgtm_Tim_Ch.
+ 621:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 622:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval None
+ 623:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 624:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Ccm_Tim_setAuxInSourceSelectionSelOutChz(Ifx_EGTM *egtm, IfxEgtm_Cluster cl
+ 625:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 626:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Set the timeout notification
+ 627:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 628:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[inout] channel      TIM channel pointer
+ 629:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    irqOnTimeout If TRUE, the interrupt on timeout is enabled
+ 630:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 631:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval None
+ 632:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 633:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Tim_Ch_setTimeoutNotification(Ifx_EGTM_CLS_TIM_CH *channel, boolean irqOnTi
+ 634:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 635:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief This function configures theRaising edge Filter Parameter.
+ 636:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 637:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[inout] channel    TIM channel pointer
+ 638:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    filterTime Raising edge Filter Parameter.
+ 639:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                          Range: 0 to 0x00FFFFFF
+ 640:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 641:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval None
+ 642:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 643:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Tim_Ch_setRisingEdgeFilterTime(Ifx_EGTM_CLS_TIM_CH *channel, uint32 filterT
+ 644:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 645:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief This function configures the Shadow counter register.
+ 646:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 647:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[inout] channel       TIM channel pointer
+ 648:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    shadowCounter Shadow counter value
+ 649:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                             Range: 0 to 0x00FFFFFF
+ 650:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 651:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval None
+ 652:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 653:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Tim_Ch_setShadowCounter(Ifx_EGTM_CLS_TIM_CH *channel, uint32 shadowCounter)
+ 654:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 655:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Returns the pointer to the TIM channel
+ 656:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 657:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in] tim     Pointer to Tim base
+ 658:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in] channel TIM channel
+ 659:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                    Range: \ref: IfxEgtm_Tim_Ch
+ 660:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 661:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval Pointer to TIM channel base
+ 662:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 663:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE volatile Ifx_EGTM_CLS_TIM_CH *IfxEgtm_Tim_getChannel(Ifx_EGTM_CLS_TIM *tim, IfxEgtm_Tim_
+ 664:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 665:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Reset the specified TIM channel
+ 666:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 667:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[inout] tim     Pointer to EGTM TIM instance
+ 668:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    channel Channel index
+ 669:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                       Range: \ref: IfxEgtm_Tim_Ch
+ 670:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 671:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval None
+ 672:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 673:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Tim_Ch_resetChannel(Ifx_EGTM_CLS_TIM *tim, IfxEgtm_Tim_Ch channel);
+ 674:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 675:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief sets the TIMINSEL register with the required mux setting
+ 676:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 677:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[inout] timIndex     Index of TIM module
+ 678:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    channelIndex Index of TIM channel
+ 679:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                            Range: \ref: IfxEgtm_Tim_Ch
+ 680:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    tinSel       MUX value selection
+ 681:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                            Range: 0 to 0xFFFFFFFF
+ 682:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 683:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 684:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval None
+ 685:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 686:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Tim_Ch_setTimTin(IfxEgtm_Tim timIndex, IfxEgtm_Tim_Ch channelIndex, uint32 
+ 687:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 688:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Connect TIM channel input to ADC boundary-flag path (Output from ADC Multiplexer).
+ 689:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 690:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * TIM channels are hardwired to the ADC Boundary Flag outputs as follows:
+ 691:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * - TIMx.CH0, TIMx.CH1 -> OUTSEL0
+ 692:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * - TIMx.CH2, TIMx.CH3 -> OUTSEL1
+ 693:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * - TIMx.CH4, TIMx.CH5 -> OUTSEL2
+ 694:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * - TIMx.CH6, TIMx.CH7 -> OUTSEL3
+ 695:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 696:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in] cluster    TIM cluster index
+ 697:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                       Range: \ref: IfxEgtm_Cluster
+ 698:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in] timChannel TIM channel index
+ 699:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                       Range: \ref: IfxEgtm_Tim_Ch
+ 700:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 701:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval None
+ 702:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 703:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Tim_selectAdcBoundaryFlag(IfxEgtm_Cluster cluster, IfxEgtm_Tim_Ch timChanne
+ 704:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 705:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Get count of TIM channel
+ 706:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 707:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in] channel Pointer to TIM channel base
+ 708:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 709:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval number of count
+ 710:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * Range: 0 to 0x00FFFFFF
+ 711:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 712:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE uint32 IfxEgtm_Tim_Ch_getCountValue(Ifx_EGTM_CLS_TIM_CH *channel);
+ 713:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 714:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Get shadow count of TIM channel
+ 715:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 716:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in] channel Pointer to TIM channel base
+ 717:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 718:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval number of shadow count
+ 719:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * Range: 0 to 0x00FFFFFF
+ 720:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 721:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE uint32 IfxEgtm_Tim_Ch_getShadowCountValue(Ifx_EGTM_CLS_TIM_CH *channel);
+ 722:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 723:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /* This API fetches the output status of the filter signal of a given TIM input channel.
+ 724:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 725:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in] cluster Cluster of EGTM which contains the trigger source Range: \ref: IfxEgtm_Cluste
+ 726:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in] channel Channel index. Range: \ref: IfxEgtm_Tim_Ch
+ 727:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 728:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval TRUE If the output filter source signal is high
+ 729:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *         FALSE If the output filter source signal is low
+ 730:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 731:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE boolean IfxEgtm_Tim_isFilterOutSignalHigh(IfxEgtm_Cluster cluster, IfxEgtm_Tim_Ch timCha
+ 732:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 733:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /* This API fetches the status of its filter input source of a given TIM input channel.
+ 734:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * Filter input is possible pre-processed signal by LUT block. The result provides the current stat
+ 735:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 736:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in] cluster Cluster of EGTM which contains the trigger source Range: \ref: IfxEgtm_Cluste
+ 737:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in] channel Channel index. Range: \ref: IfxEgtm_Tim_Ch
+ 738:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 739:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval TRUE If the input filter source signal is high
+ 740:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *         FALSE If the input filter source signal is low
+ 741:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 742:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE boolean IfxEgtm_Tim_isFilterInputSourceSignalHigh(IfxEgtm_Cluster cluster, IfxEgtm_Tim_C
+ 743:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 744:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /* This API fetches the status of its own input source of a given TIM input channel.
+ 745:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * In this case the result provides the current status, at immediate possible point in time when th
+ 746:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 747:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in] cluster Cluster of EGTM which contains the trigger source Range: \ref: IfxEgtm_Cluste
+ 748:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in] channel Channel index. Range: \ref: IfxEgtm_Tim_Ch
+ 749:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 750:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval TRUE If the input signal status is high
+ 751:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *         FALSE If the input signal status is low
+ 752:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 753:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE boolean IfxEgtm_Tim_isInputSignalHigh(IfxEgtm_Cluster cluster, IfxEgtm_Tim_Ch timChannel
+ 754:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 755:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /******************************************************************************/
+ 756:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /*-------------------------Global Function Prototypes-------------------------*/
+ 757:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /******************************************************************************/
+ 758:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 759:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief Returns the Filter Clock Frequency
+ 760:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 761:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in] egtm    Pointer to EGTM module
+ 762:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in] channel Pointer to TIM channel base
+ 763:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 764:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval Filter clock frequency
+ 765:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 766:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_EXTERN float32 IfxEgtm_Tim_Ch_getFilterClockFrequency(Ifx_EGTM *egtm, Ifx_EGTM_CLS_TIM_CH *chan
+ 767:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 768:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \brief This function configures the TIM channel Control register
+ 769:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 770:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[inout] channel TIM channel pointer
+ 771:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \param[in]    control Channel control configuration
+ 772:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *                       Range: \ref: IfxEgtm_Tim_ChannelControl
+ 773:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  *
+ 774:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  * \retval None
+ 775:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****  */
+ 776:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_EXTERN void IfxEgtm_Tim_Ch_setControl(Ifx_EGTM_CLS_TIM_CH *channel, IfxEgtm_Tim_ChannelControl 
+ 777:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 778:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /** \} */
+ 779:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 780:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /******************************************************************************/
+ 781:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /*---------------------Inline Function Implementations------------------------*/
+ 782:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** /******************************************************************************/
+ 783:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 784:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Tim_Ch_clearAuxInputSourceSelection(Ifx_EGTM *egtm, IfxEgtm_Cluster clsInde
+ 785:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** {
+ 786:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     Ifx_EGTM_CLS_CCM_TIM_AUX_IN_SRC src;
+ 787:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     src.U                                    = egtm->CLS[clsIndex].CCM.TIM_AUX_IN_SRC.U;
+ 788:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     src.U                                   &= (uint32)(~((uint32)1u << (uint8)channel));
+ 789:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     egtm->CLS[clsIndex].CCM.TIM_AUX_IN_SRC.U = src.U;
+ 790:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** }
+ 791:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 792:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 793:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Tim_Ch_clearCntOverflowEvent(Ifx_EGTM_CLS_TIM_CH *channel)
+ 794:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** {
+ 795:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     channel->IRQ_NOTIFY.U = 0x1u << IFX_EGTM_CLS_TIM_CH_IRQ_NOTIFY_CNTOFL_OFF;
+ 796:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** }
+ 797:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 798:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 799:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Tim_Ch_clearDataLostEvent(Ifx_EGTM_CLS_TIM_CH *channel)
+ 800:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** {
+ 801:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     channel->IRQ_NOTIFY.U = 0x1u << IFX_EGTM_CLS_TIM_CH_IRQ_NOTIFY_GPROFL_OFF;
+ 802:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** }
+ 803:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 804:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 805:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Tim_Ch_clearEcntOverflowEvent(Ifx_EGTM_CLS_TIM_CH *channel)
+ 806:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** {
+ 807:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     channel->IRQ_NOTIFY.U = 0x1u << IFX_EGTM_CLS_TIM_CH_IRQ_NOTIFY_ECNTOFL_OFF;
+ 808:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** }
+ 809:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 810:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 811:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Tim_Ch_clearGlitchEvent(Ifx_EGTM_CLS_TIM_CH *channel)
+ 812:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** {
+ 813:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     channel->IRQ_NOTIFY.U = 0x1u << IFX_EGTM_CLS_TIM_CH_IRQ_NOTIFY_GLITCHDET_OFF;
+ 814:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** }
+ 815:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 816:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 817:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Tim_Ch_clearNewValueEvent(Ifx_EGTM_CLS_TIM_CH *channel)
+ 818:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** {
+ 819:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     channel->IRQ_NOTIFY.U = 0x1u << IFX_EGTM_CLS_TIM_CH_IRQ_NOTIFY_NEWVAL_OFF;
+ 820:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** }
+ 821:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 822:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 823:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE void IfxEgtm_Tim_Ch_clearNotification(Ifx_EGTM_CLS_TIM_CH *channel, IfxEgtm_Tim_IrqType 
+ 824:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** {
+ 825:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     channel->IRQ_EN.U    &= (uint32)(~((uint32)1u << (uint8)irqType));
+ 826:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     channel->IRQ_NOTIFY.U = (uint32)((uint32)1u << (uint8)irqType);
+ 827:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** }
+ 828:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 829:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 830:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE float32 IfxEgtm_Tim_Ch_getCaptureClockFrequency(Ifx_EGTM *egtm, Ifx_EGTM_CLS_TIM_CH *cha
+ 831:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** {
+ 832:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     IfxEgtm_Cmu_Clk clk;
+ 833:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 834:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     clk = IfxEgtm_Tim_Ch_getCaptureClockSource(channel);
+ 835:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 836:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     return IfxEgtm_Cmu_getClkFrequency(egtm, clk, TRUE);
+ 837:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** }
+ 838:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 839:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 840:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE IfxEgtm_Cmu_Clk IfxEgtm_Tim_Ch_getCaptureClockSource(Ifx_EGTM_CLS_TIM_CH *channel)
+ 841:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** {
+ 842:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     return (IfxEgtm_Cmu_Clk)channel->CTRL.B.CLK_SEL;
+ 843:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** }
+ 844:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 845:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** 
+ 846:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** IFX_INLINE IfxEgtm_Cmu_Tim_Filter_Clk IfxEgtm_Tim_Ch_getFilterClockSource(Ifx_EGTM_CLS_TIM_CH *chan
+ 847:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h **** {
+ 848:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.h ****     return (IfxEgtm_Cmu_Tim_Filter_Clk)channel->CTRL.B.FLT_CNT_FRQ;
+  24              	 .loc 2 848 5
+  25              	 .loc 2 848 55 is_stmt 0
+  26 0002 19522400 	 ld.w %d2,[%a5]36
+  27 0006 3702E228 	 extr.u %d2,%d2,17,2
+  28              	.LVL2:
+  29              	.LBE5:
+  30              	.LBE4:
+  55:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** 
+  56:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     switch (filterClock)
+  31              	 .loc 1 56 5 is_stmt 1
+  32 000a DF120000 	 jeq %d2,1,.L3
+  33 000e DF220000 	 jeq %d2,2,.L4
+  34 0012 DF020000 	 jz %d2,.L6
+  57:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     {
+  58:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     case IfxEgtm_Cmu_Tim_Filter_Clk_0:
+  59:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     	/* Filters clock source 0 corresponds to CMU clock 0 */
+  60:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****         clk = IfxEgtm_Cmu_Clk_0;
+  61:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****         break;
+  62:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     case IfxEgtm_Cmu_Tim_Filter_Clk_1:
+  63:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     	/* Filtesr clock source 1 corresponds to CMU clock 1 */
+  64:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****         clk = IfxEgtm_Cmu_Clk_1;
+  65:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****         break;
+  66:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     case IfxEgtm_Cmu_Tim_Filter_Clk_6:
+  67:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     	/* Filters clock source 6 corresponds to CMU clock 6 */
+  68:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****         clk = IfxEgtm_Cmu_Clk_6;
+  69:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****         break;
+  70:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     case IfxEgtm_Cmu_Tim_Filter_Clk_7:
+  71:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     default:
+  72:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     	/* Filters clock source 7 (or any other value) corresponds to CMU clock 7 */
+  73:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****         clk = IfxEgtm_Cmu_Clk_7;
+  35              	 .loc 1 73 13 is_stmt 0
+  36 0016 8274     	 mov %d4,7
+  37              	.L2:
+  38              	.LVL3:
+  74:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****         break;
+  75:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     }
+  76:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** 
+  77:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     /* Get the frequency of the mapped CMU clock */
+  78:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     return IfxEgtm_Cmu_getClkFrequency(egtm, clk, TRUE);
+  39              	 .loc 1 78 5 is_stmt 1
+  40              	 .loc 1 78 12 is_stmt 0
+  41 0018 8215     	 mov %d5,1
+  42 001a 6D000000 	 call IfxEgtm_Cmu_getClkFrequency
+  43              	.LVL4:
+  79:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** }
+  44              	 .loc 1 79 1
+  45 001e 0090     	 ret 
+  46              	.LVL5:
+  47              	.L6:
+  56:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     {
+  48              	 .loc 1 56 5
+  49 0020 8204     	 mov %d4,0
+  50 0022 1D000000 	 j .L2
+  51              	.L3:
+  64:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****         break;
+  52              	 .loc 1 64 13
+  53 0026 8214     	 mov %d4,1
+  54 0028 1D000000 	 j .L2
+  55              	.L4:
+  68:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****         break;
+  56              	 .loc 1 68 13
+  57 002c 8264     	 mov %d4,6
+  58 002e 1D000000 	 j .L2
+  59              	.LFE387:
+  61              	 .global IfxEgtm_Tim_Ch_getFilterClockFrequency_end
+  62              	IfxEgtm_Tim_Ch_getFilterClockFrequency_end:
+  63              	 .section .text.IfxEgtm_Tim_Ch_setControl,"ax",@progbits
+  64              	 .align 1
+  65              	 .global IfxEgtm_Tim_Ch_setControl
+  67              	IfxEgtm_Tim_Ch_setControl:
+  68              	.LFB388:
+  80:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** 
+  81:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** 
+  82:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** void IfxEgtm_Tim_Ch_setControl(Ifx_EGTM_CLS_TIM_CH *channel, IfxEgtm_Tim_ChannelControl control)
+  83:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** {
+  69              	 .loc 1 83 1 is_stmt 1
+  70              	.LVL6:
+  71 0000 40AE     	 mov.aa %a14,%SP
+  72              	.LCFI1:
+  73 0002 2040     	 sub.a %SP,64
+  82:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** {
+  74              	 .loc 1 82 6 is_stmt 0
+  75 0004 D9E2C0FF 	 lea %a2,[%a14]-64
+  76              	 
+  77 0008 09545002 	 ld.dd %q4,[%a5+]16
+  78 000c 89245002 	 st.dd [%a2+]16,%q4
+  79 0010 09545002 	 ld.dd %q4,[%a5+]16
+  80 0014 89245002 	 st.dd [%a2+]16,%q4
+  81 0018 09545002 	 ld.dd %q4,[%a5+]16
+  82 001c 89245002 	 st.dd [%a2+]16,%q4
+  83 0020 09545002 	 ld.dd %q4,[%a5+]16
+  84 0024 89245002 	 st.dd [%a2+]16,%q4
+  84:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     Ifx_EGTM_CLS_TIM_CH_CTRL ctrl;
+  85              	 .loc 1 84 5 is_stmt 1
+  85:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     ctrl.U             = channel->CTRL.U;
+  86              	 .loc 1 85 5
+  87              	 .loc 1 85 39 is_stmt 0
+  88 0028 D9422400 	 lea %a2,[%a4]36
+  89 002c 19422400 	 ld.w %d2,[%a4]36
+  86:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     ctrl.B.TIM_EN      = control.enable;
+  90              	 .loc 1 86 5 is_stmt 1
+  91              	 .loc 1 86 33 is_stmt 0
+  92 0030 39E3C0FF 	 ld.bu %d3,[%a14]-64
+  93              	 .loc 1 86 24
+  94 0034 67320020 	 ins.t %d2,%d2,0,%d3,0
+  95              	.LVL7:
+  87:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     ctrl.B.TIM_MODE    = (uint8)control.mode;
+  96              	 .loc 1 87 5 is_stmt 1
+  97              	 .loc 1 87 24 is_stmt 0
+  98 0038 19E3C4FF 	 ld.w %d3,[%a14]-60
+  99 003c 37328320 	 insert %d2,%d2,%d3,1,3
+  88:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     ctrl.B.OSM         = control.enableOneShotMode;
+ 100              	 .loc 1 88 5 is_stmt 1
+ 101              	 .loc 1 88 33 is_stmt 0
+ 102 0040 39E3C8FF 	 ld.bu %d3,[%a14]-56
+ 103              	 .loc 1 88 24
+ 104 0044 67320420 	 ins.t %d2,%d2,4,%d3,0
+  89:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     ctrl.B.CICTRL      = control.channelInputControl;
+ 105              	 .loc 1 89 5 is_stmt 1
+ 106              	 .loc 1 89 33 is_stmt 0
+ 107 0048 39E3C9FF 	 ld.bu %d3,[%a14]-55
+ 108              	 .loc 1 89 24
+ 109 004c 67320620 	 ins.t %d2,%d2,6,%d3,0
+  90:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     ctrl.B.GPR0_SEL    = (uint8)control.gpr0Sel;
+ 110              	 .loc 1 90 5 is_stmt 1
+ 111              	 .loc 1 90 24 is_stmt 0
+ 112 0050 19E3CCFF 	 ld.w %d3,[%a14]-52
+ 113 0054 37320224 	 insert %d2,%d2,%d3,8,2
+  91:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     ctrl.B.GPR1_SEL    = (uint8)control.gpr1Sel;
+ 114              	 .loc 1 91 5 is_stmt 1
+ 115              	 .loc 1 91 24 is_stmt 0
+ 116 0058 19E3D0FF 	 ld.w %d3,[%a14]-48
+ 117 005c 37320225 	 insert %d2,%d2,%d3,10,2
+  92:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     ctrl.B.CNTS_SEL    = (uint8)control.cntsSel;
+ 118              	 .loc 1 92 5 is_stmt 1
+ 119              	 .loc 1 92 24 is_stmt 0
+ 120 0060 19E3D4FF 	 ld.w %d3,[%a14]-44
+ 121 0064 67320C20 	 ins.t %d2,%d2,12,%d3,0
+  93:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     ctrl.B.DSL         = control.signalLevelControl;
+ 122              	 .loc 1 93 5 is_stmt 1
+ 123              	 .loc 1 93 33 is_stmt 0
+ 124 0068 39E3D8FF 	 ld.bu %d3,[%a14]-40
+ 125              	 .loc 1 93 24
+ 126 006c 67320D20 	 ins.t %d2,%d2,13,%d3,0
+  94:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     ctrl.B.ISL         = control.ignoreSignalLevel;
+ 127              	 .loc 1 94 5 is_stmt 1
+ 128              	 .loc 1 94 33 is_stmt 0
+ 129 0070 39E3D9FF 	 ld.bu %d3,[%a14]-39
+ 130              	 .loc 1 94 24
+ 131 0074 67320E20 	 ins.t %d2,%d2,14,%d3,0
+  95:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     ctrl.B.ECNT_RESET  = control.enableCounterReset;
+ 132              	 .loc 1 95 5 is_stmt 1
+ 133              	 .loc 1 95 33 is_stmt 0
+ 134 0078 39E3DAFF 	 ld.bu %d3,[%a14]-38
+ 135              	 .loc 1 95 24
+ 136 007c 67320F20 	 ins.t %d2,%d2,15,%d3,0
+  96:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     ctrl.B.FLT_EN      = control.enableFilter;
+ 137              	 .loc 1 96 5 is_stmt 1
+ 138              	 .loc 1 96 33 is_stmt 0
+ 139 0080 39E3DBFF 	 ld.bu %d3,[%a14]-37
+ 140              	 .loc 1 96 24
+ 141 0084 67321020 	 ins.t %d2,%d2,16,%d3,0
+  97:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     ctrl.B.FLT_CNT_FRQ = (uint8)control.filterCounterFrequency;
+ 142              	 .loc 1 97 5 is_stmt 1
+ 143              	 .loc 1 97 24 is_stmt 0
+ 144 0088 19E3DCFF 	 ld.w %d3,[%a14]-36
+ 145 008c 37328228 	 insert %d2,%d2,%d3,17,2
+  98:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     ctrl.B.EXT_CAP_EN  = control.enableExternalCaptureMode;
+ 146              	 .loc 1 98 5 is_stmt 1
+ 147              	 .loc 1 98 33 is_stmt 0
+ 148 0090 39E3E0FF 	 ld.bu %d3,[%a14]-32
+ 149              	 .loc 1 98 24
+ 150 0094 67321320 	 ins.t %d2,%d2,19,%d3,0
+  99:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** 
+ 100:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     ctrl.B.FLT_MODE_RE = (uint8)control.filterModeRisingEdge;
+ 151              	 .loc 1 100 5 is_stmt 1
+ 152              	 .loc 1 100 24 is_stmt 0
+ 153 0098 19E3E4FF 	 ld.w %d3,[%a14]-28
+ 154 009c 67321420 	 ins.t %d2,%d2,20,%d3,0
+ 101:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     ctrl.B.FLT_CTR_RE  = (uint8)control.filterCounterModeRisingEdge;
+ 155              	 .loc 1 101 5 is_stmt 1
+ 156              	 .loc 1 101 24 is_stmt 0
+ 157 00a0 19E3E8FF 	 ld.w %d3,[%a14]-24
+ 158 00a4 67321520 	 ins.t %d2,%d2,21,%d3,0
+ 102:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     ctrl.B.FLT_MODE_FE = (uint8)control.filterModeFallingEdge;
+ 159              	 .loc 1 102 5 is_stmt 1
+ 160              	 .loc 1 102 24 is_stmt 0
+ 161 00a8 19E3ECFF 	 ld.w %d3,[%a14]-20
+ 162 00ac 67321620 	 ins.t %d2,%d2,22,%d3,0
+ 103:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     ctrl.B.FLT_CTR_FE  = (uint8)control.filterCounterModeFallingEdge;
+ 163              	 .loc 1 103 5 is_stmt 1
+ 164              	 .loc 1 103 24 is_stmt 0
+ 165 00b0 19E3F0FF 	 ld.w %d3,[%a14]-16
+ 166 00b4 67321720 	 ins.t %d2,%d2,23,%d3,0
+ 104:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     ctrl.B.CLK_SEL     = (uint8)control.clkSel;
+ 167              	 .loc 1 104 5 is_stmt 1
+ 168              	 .loc 1 104 24 is_stmt 0
+ 169 00b8 19E3F4FF 	 ld.w %d3,[%a14]-12
+ 170 00bc 3732032C 	 insert %d2,%d2,%d3,24,3
+ 105:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** 
+ 106:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     ctrl.B.FR_ECNT_OFL = control.extendEdgeCounterOverflow;
+ 171              	 .loc 1 106 5 is_stmt 1
+ 172              	 .loc 1 106 33 is_stmt 0
+ 173 00c0 39E3F8FF 	 ld.bu %d3,[%a14]-8
+ 174              	 .loc 1 106 24
+ 175 00c4 67321B20 	 ins.t %d2,%d2,27,%d3,0
+ 107:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     ctrl.B.EGPR0_SEL   = control.egpr0Sel;
+ 176              	 .loc 1 107 5 is_stmt 1
+ 177              	 .loc 1 107 33 is_stmt 0
+ 178 00c8 39E3F9FF 	 ld.bu %d3,[%a14]-7
+ 179              	 .loc 1 107 24
+ 180 00cc 67321C20 	 ins.t %d2,%d2,28,%d3,0
+ 108:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     ctrl.B.EGPR1_SEL   = control.egpr1Sel;
+ 181              	 .loc 1 108 5 is_stmt 1
+ 182              	 .loc 1 108 33 is_stmt 0
+ 183 00d0 39E3FAFF 	 ld.bu %d3,[%a14]-6
+ 184              	 .loc 1 108 24
+ 185 00d4 67321D20 	 ins.t %d2,%d2,29,%d3,0
+ 109:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     ctrl.B.TOCTRL      = (uint8)control.timeoutControl;
+ 186              	 .loc 1 109 5 is_stmt 1
+ 187              	 .loc 1 109 24 is_stmt 0
+ 188 00d8 19E3FCFF 	 ld.w %d3,[%a14]-4
+ 189 00dc 3732022F 	 insert %d2,%d2,%d3,30,2
+ 110:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** 
+ 111:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     /* Updates the control register with the new configuration */
+ 112:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c ****     channel->CTRL.U    = ctrl.U;
+ 190              	 .loc 1 112 5 is_stmt 1
+ 191              	 .loc 1 112 24 is_stmt 0
+ 192 00e0 7422     	 st.w [%a2]0,%d2
+ 113:../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Tim.c **** }
+ 193              	 .loc 1 113 1
+ 194 00e2 0090     	 ret 
+ 195              	.LFE388:
+ 197              	 .global IfxEgtm_Tim_Ch_setControl_end
+ 198              	IfxEgtm_Tim_Ch_setControl_end:
+ 239              	.Letext0:
+ 240              	 .file 3 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 241              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 242              	 .file 5 "../Libraries/Infra/Sfr/TC4Dx/IfxEgtm_regdef.h"
+ 243              	 .file 6 "../Libraries/iLLD/TC4xx/CpuGeneric/Egtm/Std/IfxEgtm_Cmu.h"
+ 32874 0000 00000000 	 .word IfxEgtm_Tim_Ch_getFilterClockFrequency
+ 32875 0004 00000000 	 .word IfxEgtm_Tim_Ch_getFilterClockFrequency_end
+ 32876 0008 34003444 	 .word 0x44340034
+ 32877 000c 00003000 	 .word 0x00300000
+ 32878 0010 04000000 	 .word 0x00000004
+ 32879 0014 40000200 	 .word 0x00020040
+ 32880 0018 00000000 	 .word IfxEgtm_Tim_Ch_setControl
+ 32881 001c 00000000 	 .word IfxEgtm_Tim_Ch_setControl_end
+ 32882 0020 FC007C44 	 .word 0x447c00fc
+ 32883 0024 00003000 	 .word 0x00300000
+ 32884 0028 00000000 	 .word 0x00000000
+ 32885 002c C0800000 	 .word 0x000080c0
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxEgtm_Tim.c
+                            *ABS*:00000000 IfxEgtm_Tim.c
+    {standard input}:10     .text.IfxEgtm_Tim_Ch_getFilterClockFrequency:00000000 IfxEgtm_Tim_Ch_getFilterClockFrequency
+    {standard input}:62     .text.IfxEgtm_Tim_Ch_getFilterClockFrequency:00000032 IfxEgtm_Tim_Ch_getFilterClockFrequency_end
+    {standard input}:67     .text.IfxEgtm_Tim_Ch_setControl:00000000 IfxEgtm_Tim_Ch_setControl
+    {standard input}:198    .text.IfxEgtm_Tim_Ch_setControl:000000e4 IfxEgtm_Tim_Ch_setControl_end
+
+UNDEFINED SYMBOLS
+IfxEgtm_Cmu_getClkFrequency

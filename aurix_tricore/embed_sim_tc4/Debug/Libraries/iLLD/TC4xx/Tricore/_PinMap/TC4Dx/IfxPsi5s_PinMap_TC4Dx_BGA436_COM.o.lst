@@ -1,0 +1,135 @@
+   1              	
+   2              	 .file "IfxPsi5s_PinMap_TC4Dx_BGA436_COM.c"
+   3              	 .file "IfxPsi5s_PinMap_TC4Dx_BGA436_COM.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .global IfxPsi5s_Tx_Out_pinTable
+   7              	 .section .data.IfxPsi5s_Tx_Out_pinTable,"aw"
+   8              	 .align 2
+  11              	IfxPsi5s_Tx_Out_pinTable:
+  12 0000 00000000 	 .word IfxPsi5s_TX_P00_4_OUT
+  13 0004 00000000 	 .word IfxPsi5s_TX_P02_6_OUT
+  14 0008 00000000 	 .word IfxPsi5s_TX_P33_6_OUT
+  15              	 .global IfxPsi5s_Rx_In_pinTable
+  16              	 .section .data.IfxPsi5s_Rx_In_pinTable,"aw"
+  17              	 .align 2
+  20              	IfxPsi5s_Rx_In_pinTable:
+  21 0000 00000000 	 .word IfxPsi5s_RXA_P00_3_IN
+  22 0004 00000000 	 .word IfxPsi5s_RXB_P02_5_IN
+  23 0008 00000000 	 .word IfxPsi5s_RXC_P33_5_IN
+  24 000c 00000000 	 .word IfxPsi5s_RXD_P33_7_IN
+  25              	 .global IfxPsi5s_Clk_Out_pinTable
+  26              	 .section .data.IfxPsi5s_Clk_Out_pinTable,"aw"
+  27              	 .align 2
+  30              	IfxPsi5s_Clk_Out_pinTable:
+  31 0000 00000000 	 .word IfxPsi5s_CLK_P02_4_OUT
+  32 0004 00000000 	 .word IfxPsi5s_CLK_P33_10_OUT
+  33              	 .global IfxPsi5s_TX_P33_6_OUT
+  34              	 .section .rodata.IfxPsi5s_TX_P33_6_OUT,"a"
+  35              	 .align 2
+  38              	IfxPsi5s_TX_P33_6_OUT:
+  39 0000 007040F4 	 .word -197103616
+  40 0004 002404F0 	 .word -268164096
+  41 0008 06       	 .byte 6
+  42 0009 000000   	 .zero 3
+  43 000c 71000000 	 .word 113
+  44              	 .global IfxPsi5s_TX_P02_6_OUT
+  45              	 .section .rodata.IfxPsi5s_TX_P02_6_OUT,"a"
+  46              	 .align 2
+  49              	IfxPsi5s_TX_P02_6_OUT:
+  50 0000 007040F4 	 .word -197103616
+  51 0004 00A803F0 	 .word -268195840
+  52 0008 06       	 .byte 6
+  53 0009 000000   	 .zero 3
+  54 000c 21000000 	 .word 33
+  55              	 .global IfxPsi5s_TX_P00_4_OUT
+  56              	 .section .rodata.IfxPsi5s_TX_P00_4_OUT,"a"
+  57              	 .align 2
+  60              	IfxPsi5s_TX_P00_4_OUT:
+  61 0000 007040F4 	 .word -197103616
+  62 0004 00A003F0 	 .word -268197888
+  63 0008 04       	 .byte 4
+  64 0009 000000   	 .zero 3
+  65 000c 21000000 	 .word 33
+  66              	 .global IfxPsi5s_RXD_P33_7_IN
+  67              	 .section .rodata.IfxPsi5s_RXD_P33_7_IN,"a"
+  68              	 .align 2
+  71              	IfxPsi5s_RXD_P33_7_IN:
+  72 0000 007040F4 	 .word -197103616
+  73 0004 002404F0 	 .word -268164096
+  74 0008 07       	 .byte 7
+  75 0009 000000   	 .zero 3
+  76 000c 03000000 	 .word 3
+  77              	 .global IfxPsi5s_RXC_P33_5_IN
+  78              	 .section .rodata.IfxPsi5s_RXC_P33_5_IN,"a"
+  79              	 .align 2
+  82              	IfxPsi5s_RXC_P33_5_IN:
+  83 0000 007040F4 	 .word -197103616
+  84 0004 002404F0 	 .word -268164096
+  85 0008 05       	 .byte 5
+  86 0009 000000   	 .zero 3
+  87 000c 02000000 	 .word 2
+  88              	 .global IfxPsi5s_RXB_P02_5_IN
+  89              	 .section .rodata.IfxPsi5s_RXB_P02_5_IN,"a"
+  90              	 .align 2
+  93              	IfxPsi5s_RXB_P02_5_IN:
+  94 0000 007040F4 	 .word -197103616
+  95 0004 00A803F0 	 .word -268195840
+  96 0008 05       	 .byte 5
+  97 0009 000000   	 .zero 3
+  98 000c 01000000 	 .word 1
+  99              	 .global IfxPsi5s_RXA_P00_3_IN
+ 100              	 .section .rodata.IfxPsi5s_RXA_P00_3_IN,"a"
+ 101              	 .align 2
+ 104              	IfxPsi5s_RXA_P00_3_IN:
+ 105 0000 007040F4 	 .word -197103616
+ 106 0004 00A003F0 	 .word -268197888
+ 107 0008 03       	 .byte 3
+ 108 0009 000000   	 .zero 3
+ 109 000c 00000000 	 .word 0
+ 110              	 .global IfxPsi5s_CLK_P33_10_OUT
+ 111              	 .section .rodata.IfxPsi5s_CLK_P33_10_OUT,"a"
+ 112              	 .align 2
+ 115              	IfxPsi5s_CLK_P33_10_OUT:
+ 116 0000 007040F4 	 .word -197103616
+ 117 0004 002404F0 	 .word -268164096
+ 118 0008 0A       	 .byte 10
+ 119 0009 000000   	 .zero 3
+ 120 000c 51000000 	 .word 81
+ 121              	 .global IfxPsi5s_CLK_P02_4_OUT
+ 122              	 .section .rodata.IfxPsi5s_CLK_P02_4_OUT,"a"
+ 123              	 .align 2
+ 126              	IfxPsi5s_CLK_P02_4_OUT:
+ 127 0000 007040F4 	 .word -197103616
+ 128 0004 00A803F0 	 .word -268195840
+ 129 0008 04       	 .byte 4
+ 130 0009 000000   	 .zero 3
+ 131 000c 41000000 	 .word 65
+ 132              	.section .text,"ax",@progbits
+ 133              	.Letext0:
+ 134              	 .file 1 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 135              	 .file 2 "../Libraries/Infra/Sfr/TC4Dx/IfxPsi5s_regdef.h"
+ 136              	 .file 3 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 137              	 .file 4 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+ 138              	 .file 5 "../Libraries/Infra/Sfr/TC4Dx/IfxPort_regdef.h"
+ 139              	 .file 6 "../Libraries/iLLD/TC4xx/CpuGeneric/Port/Std/IfxPort.h"
+ 140              	 .file 7 "../Libraries/iLLD/TC4xx/Tricore/_PinMap/IfxPsi5s_PinMap.h"
+ 141              	 .file 8 "../Libraries/iLLD/TC4xx/Tricore/_PinMap/TC4Dx/IfxPsi5s_PinMap_TC4Dx_BGA436_COM.h"
+ 142              	 .file 9 "../Libraries/iLLD/TC4xx/Tricore/_PinMap/TC4Dx/IfxPsi5s_PinMap_TC4Dx_BGA436_COM.c"
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxPsi5s_PinMap_TC4Dx_BGA436_COM.c
+                            *ABS*:00000000 IfxPsi5s_PinMap_TC4Dx_BGA436_COM.c
+    {standard input}:11     .data.IfxPsi5s_Tx_Out_pinTable:00000000 IfxPsi5s_Tx_Out_pinTable
+    {standard input}:60     .rodata.IfxPsi5s_TX_P00_4_OUT:00000000 IfxPsi5s_TX_P00_4_OUT
+    {standard input}:49     .rodata.IfxPsi5s_TX_P02_6_OUT:00000000 IfxPsi5s_TX_P02_6_OUT
+    {standard input}:38     .rodata.IfxPsi5s_TX_P33_6_OUT:00000000 IfxPsi5s_TX_P33_6_OUT
+    {standard input}:20     .data.IfxPsi5s_Rx_In_pinTable:00000000 IfxPsi5s_Rx_In_pinTable
+    {standard input}:104    .rodata.IfxPsi5s_RXA_P00_3_IN:00000000 IfxPsi5s_RXA_P00_3_IN
+    {standard input}:93     .rodata.IfxPsi5s_RXB_P02_5_IN:00000000 IfxPsi5s_RXB_P02_5_IN
+    {standard input}:82     .rodata.IfxPsi5s_RXC_P33_5_IN:00000000 IfxPsi5s_RXC_P33_5_IN
+    {standard input}:71     .rodata.IfxPsi5s_RXD_P33_7_IN:00000000 IfxPsi5s_RXD_P33_7_IN
+    {standard input}:30     .data.IfxPsi5s_Clk_Out_pinTable:00000000 IfxPsi5s_Clk_Out_pinTable
+    {standard input}:126    .rodata.IfxPsi5s_CLK_P02_4_OUT:00000000 IfxPsi5s_CLK_P02_4_OUT
+    {standard input}:115    .rodata.IfxPsi5s_CLK_P33_10_OUT:00000000 IfxPsi5s_CLK_P33_10_OUT
+
+NO UNDEFINED SYMBOLS

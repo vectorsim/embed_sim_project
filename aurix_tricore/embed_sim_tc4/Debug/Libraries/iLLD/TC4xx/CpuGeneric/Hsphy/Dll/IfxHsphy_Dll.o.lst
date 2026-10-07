@@ -1,0 +1,491 @@
+   1              	
+   2              	 .file "IfxHsphy_Dll.c"
+   3              	 .file "IfxHsphy_Dll.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .section .text.IfxHsphy_Dll_xspiInit,"ax",@progbits
+   7              	 .align 1
+   8              	 .global IfxHsphy_Dll_xspiInit
+  10              	IfxHsphy_Dll_xspiInit:
+  11              	.LFB331:
+  12              	 .file 1 "../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c"
+   1:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** /**
+   2:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****  * \file IfxHsphy_Dll.c
+   3:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****  * \brief HSPHY DLL details
+   4:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****  *
+   5:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****  * \version iLLD-TC4-v2.7.0
+   6:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****  * \copyright Copyright (c) 2026 Infineon Technologies AG. All rights reserved.
+   7:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****  *
+   8:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****  *
+   9:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****  *
+  10:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****  *                                 IMPORTANT NOTICE
+  11:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****  *
+  12:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****  * Infineon Technologies AG (Infineon) licenses this file to you under the
+  13:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****  * Infineon Automotive SW Lab License v2025-01 (IFASLL). You may not use
+  14:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****  * this file except in compliance with IFASLL.
+  15:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****  *
+  16:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****  * The full license text is contained in IFASLL202501.pdf delivered with this SW.
+  17:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****  * Unless required by applicable law or agreed to in writing, software distributed
+  18:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****  * under this license is distributed "AS IS" without any warranty or liability of any
+  19:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****  * kind and Infineon hereby expressly disclaims any warranties or representations,
+  20:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****  * whether express, implied, statutory or otherwise, including but not limited to
+  21:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****  * warranties of workmanship, merchantability, fitness for a particular purpose,
+  22:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****  * defects in the licensed items, or non-infringement of third parties'
+  23:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****  * intellectual property rights. See the full license text for the specific
+  24:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****  * language governing permissions and limitations under IFASLL.
+  25:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****  *
+  26:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****  *
+  27:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****  */
+  28:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** 
+  29:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** /******************************************************************************/
+  30:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** /*----------------------------------Includes----------------------------------*/
+  31:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** /******************************************************************************/
+  32:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** 
+  33:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** #include "Ifx_Cfg.h"
+  34:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** #if defined (__TASKING__)
+  35:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** #pragma warning 508			/* To suppress empty file warning */
+  36:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** #endif
+  37:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** #if defined (__ghs__)
+  38:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** #pragma diag_suppress 96	/* To suppress empty file warning */
+  39:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** #endif
+  40:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** 
+  41:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** #if defined(DEVICE_TC4DX) || defined(DEVICE_TC48XAA) || defined(DEVICE_TC48X) || defined(DEVICE_TC4
+  42:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** #include "IfxHsphy_Dll.h"
+  43:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** 
+  44:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** /******************************************************************************/
+  45:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** /*-------------------------Function Implementations---------------------------*/
+  46:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** /******************************************************************************/
+  47:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** 
+  48:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** boolean IfxHsphy_Dll_xspiInit(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_Xspi_XspiCfg *config)
+  49:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** {
+  13              	 .loc 1 49 1
+  14              	.LVL0:
+  15 0000 40AE     	 mov.aa %a14,%SP
+  16              	.LCFI0:
+  50:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     uint32 timeoutCycleCount = IFXHSPHY_MAX_TIMEOUT;
+  17              	 .loc 1 50 5
+  18              	.LVL1:
+  51:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     uint8  timeOutError      = 0U;
+  19              	 .loc 1 51 5
+  52:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     hsphyRegPtr->CMNCFG.B.FSR     = 0;
+  20              	 .loc 1 52 5
+  21              	 .loc 1 52 35 is_stmt 0
+  22 0002 D9420080 	 lea %a2,[%a4]512
+  23 0006 19420080 	 ld.w %d2,[%a4]512
+  24 000a 8F02C121 	 andn %d2,%d2,~(-17)
+  25 000e 7422     	 st.w [%a2]0,%d2
+  53:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     hsphyRegPtr->DLL.CFG.B.PEN3VX = config->dllCfg.dllOutputVolt;
+  26              	 .loc 1 53 5 is_stmt 1
+  27              	 .loc 1 53 51 is_stmt 0
+  28 0010 5453     	 ld.w %d3,[%a5]0
+  29              	 .loc 1 53 35
+  30 0012 D9426880 	 lea %a2,[%a4]1576
+  31 0016 19426880 	 ld.w %d2,[%a4]1576
+  32 001a 67321620 	 ins.t %d2,%d2,22,%d3,0
+  33 001e 7422     	 st.w [%a2]0,%d2
+  54:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** 
+  55:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     if (config->dllCfg.dllOutputVolt == IfxHsphy_DllOutputVoltage_1P8V)
+  34              	 .loc 1 55 5 is_stmt 1
+  35              	 .loc 1 55 23 is_stmt 0
+  36 0020 5452     	 ld.w %d2,[%a5]0
+  37              	 .loc 1 55 8
+  38 0022 DF020080 	 jnz %d2,.L2
+  56:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     {
+  57:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****         hsphyRegPtr->DLL.CFG.B.PMODE = config->dllCfg.dllCfgPmodeClock;
+  39              	 .loc 1 57 9 is_stmt 1
+  40              	 .loc 1 57 54 is_stmt 0
+  41 0026 19531800 	 ld.w %d3,[%a5]24
+  42              	 .loc 1 57 38
+  43 002a D9426880 	 lea %a2,[%a4]1576
+  44 002e 19426880 	 ld.w %d2,[%a4]1576
+  45 0032 67321720 	 ins.t %d2,%d2,23,%d3,0
+  46 0036 7422     	 st.w [%a2]0,%d2
+  47              	.L3:
+  58:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     }
+  59:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     else
+  60:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     {
+  61:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****         hsphyRegPtr->DLL.CFG.B.PMODE = config->dllCfg.dllCfgPmodePads;
+  62:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     }
+  63:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     /* PLL clock frequency */
+  64:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     hsphyRegPtr->DLL.CFG.B.REFCLKSE = 1; 
+  48              	 .loc 1 64 5 is_stmt 1
+  49              	 .loc 1 64 37 is_stmt 0
+  50 0038 D9426880 	 lea %a2,[%a4]1576
+  51 003c 19426880 	 ld.w %d2,[%a4]1576
+  52 0040 B712812A 	 insert %d2,%d2,1,21,1
+  53 0044 7422     	 st.w [%a2]0,%d2
+  65:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** 
+  66:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     /* Depending on the interface frequency update the FMODE */
+  67:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     hsphyRegPtr->DLL.CFG.B.FMODE = config->dllCfg.dllFreqMode;
+  54              	 .loc 1 67 5 is_stmt 1
+  55              	 .loc 1 67 50 is_stmt 0
+  56 0046 19530800 	 ld.w %d3,[%a5]8
+  57              	 .loc 1 67 34
+  58 004a D9426880 	 lea %a2,[%a4]1576
+  59 004e 19426880 	 ld.w %d2,[%a4]1576
+  60 0052 67321420 	 ins.t %d2,%d2,20,%d3,0
+  61 0056 7422     	 st.w [%a2]0,%d2
+  68:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** 
+  69:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     hsphyRegPtr->DLL.CFG.B.TXCFG = config->dllCfg.txClkSkew;
+  62              	 .loc 1 69 5 is_stmt 1
+  63              	 .loc 1 69 50 is_stmt 0
+  64 0058 19531000 	 ld.w %d3,[%a5]16
+  65              	 .loc 1 69 34
+  66 005c D9426880 	 lea %a2,[%a4]1576
+  67 0060 19426880 	 ld.w %d2,[%a4]1576
+  68 0064 37320520 	 insert %d2,%d2,%d3,0,5
+  69 0068 7422     	 st.w [%a2]0,%d2
+  70:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     hsphyRegPtr->DLL.CFG.B.RXCFG = config->dllCfg.rxClkSkew;
+  70              	 .loc 1 70 5 is_stmt 1
+  71              	 .loc 1 70 50 is_stmt 0
+  72 006a 19530C00 	 ld.w %d3,[%a5]12
+  73              	 .loc 1 70 34
+  74 006e D9426880 	 lea %a2,[%a4]1576
+  75 0072 19426880 	 ld.w %d2,[%a4]1576
+  76 0076 37320524 	 insert %d2,%d2,%d3,8,5
+  77 007a 7422     	 st.w [%a2]0,%d2
+  71:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     /* Switch on the DLL power    */
+  72:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     hsphyRegPtr->DLL.CFG.B.POWER = 1;            
+  78              	 .loc 1 72 5 is_stmt 1
+  79              	 .loc 1 72 34 is_stmt 0
+  80 007c 5422     	 ld.w %d2,[%a2]0
+  81 007e B712812F 	 insert %d2,%d2,1,31,1
+  82 0082 7422     	 st.w [%a2]0,%d2
+  73:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** 
+  74:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     /* Enables the TX clock */
+  75:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     hsphyRegPtr->DLL.CFG.B.TXEN  = 1;  
+  83              	 .loc 1 75 5 is_stmt 1
+  84              	 .loc 1 75 34 is_stmt 0
+  85 0084 5422     	 ld.w %d2,[%a2]0
+  86 0086 B7120128 	 insert %d2,%d2,1,16,1
+  87 008a 7422     	 st.w [%a2]0,%d2
+  76:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****      /* Enables the RX clock */          
+  77:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     hsphyRegPtr->DLL.CFG.B.RXEN  = 1;      
+  88              	 .loc 1 77 5 is_stmt 1
+  89              	 .loc 1 77 34 is_stmt 0
+  90 008c 5422     	 ld.w %d2,[%a2]0
+  91 008e B712012C 	 insert %d2,%d2,1,24,1
+  92 0092 7422     	 st.w [%a2]0,%d2
+  78:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** 
+  79:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     /* Poll until the LOCKSTAT is set */
+  80:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     while (hsphyRegPtr->DLL.CFG.B.LOCKSTAT != 1) 
+  93              	 .loc 1 80 5 is_stmt 1
+  50:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     uint8  timeOutError      = 0U;
+  94              	 .loc 1 50 12 is_stmt 0
+  95 0094 7BF00020 	 movh %d2,15
+  96 0098 1B022424 	 addi %d2,%d2,16960
+  97              	.LVL2:
+  98              	.L4:
+  81:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     {
+  82:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****         IFXHSPHY_LOOP_TIMEOUT_CHECK(timeoutCycleCount, timeOutError);
+  99              	 .loc 1 82 9 is_stmt 1 discriminator 2
+ 100              	 .loc 1 82 69 discriminator 2
+  80:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     {
+ 101              	 .loc 1 80 44 discriminator 2
+  80:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     {
+ 102              	 .loc 1 80 34 is_stmt 0 discriminator 2
+ 103 009c 19436880 	 ld.w %d3,[%a4]1576
+  80:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     {
+ 104              	 .loc 1 80 44 discriminator 2
+ 105 00a0 EFE30080 	 jnz.t %d3,30,.L8
+ 106              	 .loc 1 82 9 is_stmt 1
+ 107 00a4 C2F2     	 add %d2,-1
+ 108              	.LVL3:
+ 109 00a6 DF020080 	 jnz %d2,.L4
+ 110 00aa 8212     	 mov %d2,1
+ 111              	.LVL4:
+  83:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     }
+  84:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** 
+  85:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     return (boolean)timeOutError;
+ 112              	 .loc 1 85 5
+  86:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** }
+ 113              	 .loc 1 86 1 is_stmt 0
+ 114 00ac 0090     	 ret 
+ 115              	.LVL5:
+ 116              	.L2:
+  61:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     }
+ 117              	 .loc 1 61 9 is_stmt 1
+  61:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     }
+ 118              	 .loc 1 61 54 is_stmt 0
+ 119 00ae 19531400 	 ld.w %d3,[%a5]20
+  61:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     }
+ 120              	 .loc 1 61 38
+ 121 00b2 D9426880 	 lea %a2,[%a4]1576
+ 122 00b6 19426880 	 ld.w %d2,[%a4]1576
+ 123 00ba 67321720 	 ins.t %d2,%d2,23,%d3,0
+ 124 00be 7422     	 st.w [%a2]0,%d2
+ 125 00c0 1D000000 	 j .L3
+ 126              	.LVL6:
+ 127              	.L8:
+  51:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     hsphyRegPtr->CMNCFG.B.FSR     = 0;
+ 128              	 .loc 1 51 12
+ 129 00c4 8202     	 mov %d2,0
+ 130              	.LVL7:
+ 131 00c6 0090     	 ret 
+ 132              	.LFE331:
+ 134              	 .global IfxHsphy_Dll_xspiInit_end
+ 135              	IfxHsphy_Dll_xspiInit_end:
+ 136              	 .section .text.IfxHsphy_Dll_rgmiiInit,"ax",@progbits
+ 137              	 .align 1
+ 138              	 .global IfxHsphy_Dll_rgmiiInit
+ 140              	IfxHsphy_Dll_rgmiiInit:
+ 141              	.LFB332:
+  87:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** 
+  88:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** 
+  89:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** boolean IfxHsphy_Dll_rgmiiInit(Ifx_HSPHY *hsphyRegPtr, IfxHsphy_Geth_RgmiiCfg *config)
+  90:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** {
+ 142              	 .loc 1 90 1 is_stmt 1
+ 143              	.LVL8:
+ 144 0000 40AE     	 mov.aa %a14,%SP
+ 145              	.LCFI1:
+  91:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     /* Module is enabled in the IfxHsphy_enableModule() */
+  92:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     uint32 timeoutCycleCount = IFXHSPHY_MAX_TIMEOUT;
+ 146              	 .loc 1 92 5
+ 147              	.LVL9:
+  93:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     uint8  timeOutError      = 0U;
+ 148              	 .loc 1 93 5
+  94:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     hsphyRegPtr->CMNCFG.B.FSR     = 1;
+ 149              	 .loc 1 94 5
+ 150              	 .loc 1 94 35 is_stmt 0
+ 151 0002 D9420080 	 lea %a2,[%a4]512
+ 152 0006 19420080 	 ld.w %d2,[%a4]512
+ 153 000a B7120122 	 insert %d2,%d2,1,4,1
+ 154 000e 7422     	 st.w [%a2]0,%d2
+  95:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** 
+  96:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     /* Depending on the desired voltage of operation set 1 or 0 */
+  97:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     hsphyRegPtr->DLL.CFG.B.PEN3VX = config->dllCfg.dllOutputVolt; 
+ 155              	 .loc 1 97 5 is_stmt 1
+ 156              	 .loc 1 97 51 is_stmt 0
+ 157 0010 5453     	 ld.w %d3,[%a5]0
+ 158              	 .loc 1 97 35
+ 159 0012 D9426880 	 lea %a2,[%a4]1576
+ 160 0016 19426880 	 ld.w %d2,[%a4]1576
+ 161 001a 67321620 	 ins.t %d2,%d2,22,%d3,0
+ 162 001e 7422     	 st.w [%a2]0,%d2
+  98:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** 
+  99:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     if (config->dllCfg.dllOutputVolt == IfxHsphy_DllOutputVoltage_1P8V)
+ 163              	 .loc 1 99 5 is_stmt 1
+ 164              	 .loc 1 99 23 is_stmt 0
+ 165 0020 5452     	 ld.w %d2,[%a5]0
+ 166              	 .loc 1 99 8
+ 167 0022 DF020080 	 jnz %d2,.L10
+ 100:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     {
+ 101:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****         hsphyRegPtr->DLL.CFG.B.PMODE = config->dllCfg.dllCfgPmodeClock;
+ 168              	 .loc 1 101 9 is_stmt 1
+ 169              	 .loc 1 101 54 is_stmt 0
+ 170 0026 19531C00 	 ld.w %d3,[%a5]28
+ 171              	 .loc 1 101 38
+ 172 002a D9426880 	 lea %a2,[%a4]1576
+ 173 002e 19426880 	 ld.w %d2,[%a4]1576
+ 174 0032 67321720 	 ins.t %d2,%d2,23,%d3,0
+ 175 0036 7422     	 st.w [%a2]0,%d2
+ 176              	.L11:
+ 102:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     }
+ 103:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     else
+ 104:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     {
+ 105:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****         hsphyRegPtr->DLL.CFG.B.PMODE = config->dllCfg.dllCfgPmodePads;
+ 106:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     }
+ 107:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** 
+ 108:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     /* FMODE is set to 0 if output freqmax req is less than 166MHz freq allowed for RGMII is 125MHz
+ 109:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     hsphyRegPtr->DLL.CFG.B.FMODE    = 0;
+ 177              	 .loc 1 109 5 is_stmt 1
+ 178              	 .loc 1 109 37 is_stmt 0
+ 179 0038 D9426880 	 lea %a2,[%a4]1576
+ 180 003c 19426880 	 ld.w %d2,[%a4]1576
+ 181 0040 B702012A 	 insert %d2,%d2,0,20,1
+ 182 0044 7422     	 st.w [%a2]0,%d2
+ 110:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     hsphyRegPtr->DLL.CFG.B.REFCLKSE = config->dllCfg.dllRefClkSel;
+ 183              	 .loc 1 110 5 is_stmt 1
+ 184              	 .loc 1 110 53 is_stmt 0
+ 185 0046 19530400 	 ld.w %d3,[%a5]4
+ 186              	 .loc 1 110 37
+ 187 004a D9426880 	 lea %a2,[%a4]1576
+ 188 004e 19426880 	 ld.w %d2,[%a4]1576
+ 189 0052 67321520 	 ins.t %d2,%d2,21,%d3,0
+ 190 0056 7422     	 st.w [%a2]0,%d2
+ 111:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** 
+ 112:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     hsphyRegPtr->DLL.CFG.B.TXCFG    = config->dllCfg.txClkSkew;
+ 191              	 .loc 1 112 5 is_stmt 1
+ 192              	 .loc 1 112 53 is_stmt 0
+ 193 0058 19531400 	 ld.w %d3,[%a5]20
+ 194              	 .loc 1 112 37
+ 195 005c D9426880 	 lea %a2,[%a4]1576
+ 196 0060 19426880 	 ld.w %d2,[%a4]1576
+ 197 0064 37320520 	 insert %d2,%d2,%d3,0,5
+ 198 0068 7422     	 st.w [%a2]0,%d2
+ 113:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     hsphyRegPtr->DLL.CFG.B.RXCFG    = config->dllCfg.rxClkSkew;
+ 199              	 .loc 1 113 5 is_stmt 1
+ 200              	 .loc 1 113 53 is_stmt 0
+ 201 006a 19531000 	 ld.w %d3,[%a5]16
+ 202              	 .loc 1 113 37
+ 203 006e D9426880 	 lea %a2,[%a4]1576
+ 204 0072 19426880 	 ld.w %d2,[%a4]1576
+ 205 0076 37320524 	 insert %d2,%d2,%d3,8,5
+ 206 007a 7422     	 st.w [%a2]0,%d2
+ 114:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** 
+ 115:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     /* Switch on the DLL power */
+ 116:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     hsphyRegPtr->DLL.CFG.B.POWER    = 1;         
+ 207              	 .loc 1 116 5 is_stmt 1
+ 208              	 .loc 1 116 37 is_stmt 0
+ 209 007c 5422     	 ld.w %d2,[%a2]0
+ 210 007e B712812F 	 insert %d2,%d2,1,31,1
+ 211 0082 7422     	 st.w [%a2]0,%d2
+ 117:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** 
+ 118:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     /* To enable/disable TX clk */
+ 119:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     hsphyRegPtr->DLL.CFG.B.TXEN     = 1;  
+ 212              	 .loc 1 119 5 is_stmt 1
+ 213              	 .loc 1 119 37 is_stmt 0
+ 214 0084 5422     	 ld.w %d2,[%a2]0
+ 215 0086 B7120128 	 insert %d2,%d2,1,16,1
+ 216 008a 7422     	 st.w [%a2]0,%d2
+ 120:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** 
+ 121:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     /* To enable/disable RX clk  */
+ 122:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     hsphyRegPtr->DLL.CFG.B.RXEN     = 1;         
+ 217              	 .loc 1 122 5 is_stmt 1
+ 218              	 .loc 1 122 37 is_stmt 0
+ 219 008c 5422     	 ld.w %d2,[%a2]0
+ 220 008e B712012C 	 insert %d2,%d2,1,24,1
+ 221 0092 7422     	 st.w [%a2]0,%d2
+ 123:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** 
+ 124:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     /* Poll until the LOCKSTAT is set */
+ 125:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     while (hsphyRegPtr->DLL.CFG.B.LOCKSTAT != 1) 
+ 222              	 .loc 1 125 5 is_stmt 1
+  92:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     uint8  timeOutError      = 0U;
+ 223              	 .loc 1 92 12 is_stmt 0
+ 224 0094 7BF00020 	 movh %d2,15
+ 225 0098 1B022424 	 addi %d2,%d2,16960
+ 226              	.LVL10:
+ 227              	.L12:
+ 126:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     {
+ 127:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****         IFXHSPHY_LOOP_TIMEOUT_CHECK(timeoutCycleCount, timeOutError);
+ 228              	 .loc 1 127 9 is_stmt 1 discriminator 2
+ 229              	 .loc 1 127 69 discriminator 2
+ 125:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     {
+ 230              	 .loc 1 125 44 discriminator 2
+ 125:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     {
+ 231              	 .loc 1 125 34 is_stmt 0 discriminator 2
+ 232 009c 19436880 	 ld.w %d3,[%a4]1576
+ 125:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     {
+ 233              	 .loc 1 125 44 discriminator 2
+ 234 00a0 EFE30080 	 jnz.t %d3,30,.L16
+ 235              	 .loc 1 127 9 is_stmt 1
+ 236 00a4 C2F2     	 add %d2,-1
+ 237              	.LVL11:
+ 238 00a6 DF020080 	 jnz %d2,.L12
+ 239 00aa 8212     	 mov %d2,1
+ 240              	.LVL12:
+ 128:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     }
+ 129:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** 
+ 130:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     return (boolean)timeOutError;
+ 241              	 .loc 1 130 5
+ 131:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** }
+ 242              	 .loc 1 131 1 is_stmt 0
+ 243 00ac 0090     	 ret 
+ 244              	.LVL13:
+ 245              	.L10:
+ 105:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     }
+ 246              	 .loc 1 105 9 is_stmt 1
+ 105:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     }
+ 247              	 .loc 1 105 54 is_stmt 0
+ 248 00ae 19531800 	 ld.w %d3,[%a5]24
+ 105:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     }
+ 249              	 .loc 1 105 38
+ 250 00b2 D9426880 	 lea %a2,[%a4]1576
+ 251 00b6 19426880 	 ld.w %d2,[%a4]1576
+ 252 00ba 67321720 	 ins.t %d2,%d2,23,%d3,0
+ 253 00be 7422     	 st.w [%a2]0,%d2
+ 254 00c0 1D000000 	 j .L11
+ 255              	.LVL14:
+ 256              	.L16:
+  93:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     hsphyRegPtr->CMNCFG.B.FSR     = 1;
+ 257              	 .loc 1 93 12
+ 258 00c4 8202     	 mov %d2,0
+ 259              	.LVL15:
+ 260 00c6 0090     	 ret 
+ 261              	.LFE332:
+ 263              	 .global IfxHsphy_Dll_rgmiiInit_end
+ 264              	IfxHsphy_Dll_rgmiiInit_end:
+ 265              	 .section .text.IfxHsphy_Dll_xspiDeInit,"ax",@progbits
+ 266              	 .align 1
+ 267              	 .global IfxHsphy_Dll_xspiDeInit
+ 269              	IfxHsphy_Dll_xspiDeInit:
+ 270              	.LFB333:
+ 132:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** 
+ 133:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** 
+ 134:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** void IfxHsphy_Dll_xspiDeInit(Ifx_HSPHY *hsphyRegPtr)
+ 135:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** {
+ 271              	 .loc 1 135 1 is_stmt 1
+ 272              	.LVL16:
+ 273 0000 40AE     	 mov.aa %a14,%SP
+ 274              	.LCFI2:
+ 136:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     /* Disable the TX clock */
+ 137:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     hsphyRegPtr->DLL.CFG.B.TXEN  = 0;  
+ 275              	 .loc 1 137 5
+ 276              	 .loc 1 137 34 is_stmt 0
+ 277 0002 D9426880 	 lea %a2,[%a4]1576
+ 278 0006 19426880 	 ld.w %d2,[%a4]1576
+ 279 000a B7020128 	 insert %d2,%d2,0,16,1
+ 280 000e 7422     	 st.w [%a2]0,%d2
+ 138:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     /* Disable the RX clock */          
+ 139:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     hsphyRegPtr->DLL.CFG.B.RXEN  = 0;         
+ 281              	 .loc 1 139 5 is_stmt 1
+ 282              	 .loc 1 139 34 is_stmt 0
+ 283 0010 5422     	 ld.w %d2,[%a2]0
+ 284 0012 B702012C 	 insert %d2,%d2,0,24,1
+ 285 0016 7422     	 st.w [%a2]0,%d2
+ 140:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     /* Switch off the DLL power */   
+ 141:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c ****     hsphyRegPtr->DLL.CFG.B.POWER = 0;            
+ 286              	 .loc 1 141 5 is_stmt 1
+ 287              	 .loc 1 141 34 is_stmt 0
+ 288 0018 5422     	 ld.w %d2,[%a2]0
+ 289 001a B702812F 	 insert %d2,%d2,0,31,1
+ 290 001e 7422     	 st.w [%a2]0,%d2
+ 142:../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Dll/IfxHsphy_Dll.c **** }
+ 291              	 .loc 1 142 1
+ 292 0020 0090     	 ret 
+ 293              	.LFE333:
+ 295              	 .global IfxHsphy_Dll_xspiDeInit_end
+ 296              	IfxHsphy_Dll_xspiDeInit_end:
+ 349              	.Letext0:
+ 350              	 .file 2 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 351              	 .file 3 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+ 352              	 .file 4 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 353              	 .file 5 "../Libraries/Infra/Sfr/TC4Dx/IfxHsphy_regdef.h"
+ 354              	 .file 6 "../Libraries/iLLD/TC4xx/CpuGeneric/_Impl/TC4Dx/IfxHsphy_cfg_TC4Dx.h"
+ 355              	 .file 7 "../Libraries/Infra/Sfr/TC4Dx/IfxGeth_regdef.h"
+ 356              	 .file 8 "../Libraries/iLLD/TC4xx/CpuGeneric/Geth/Std/IfxGeth.h"
+ 357              	 .file 9 "../Libraries/Infra/Sfr/TC4Dx/IfxPort_regdef.h"
+ 358              	 .file 10 "../Libraries/iLLD/TC4xx/CpuGeneric/Port/Std/IfxPort.h"
+ 359              	 .file 11 "../Libraries/iLLD/TC4xx/CpuGeneric/_PinMap/IfxGeth_PinMap.h"
+ 360              	 .file 12 "../Libraries/Infra/Sfr/TC4Dx/IfxXspi_regdef.h"
+ 361              	 .file 13 "../Libraries/iLLD/TC4xx/CpuGeneric/_PinMap/IfxXspi_PinMap.h"
+ 362              	 .file 14 "../Libraries/iLLD/TC4xx/CpuGeneric/Hsphy/Std/IfxHsphy.h"
+ 112720 0000 00000000 	 .word IfxHsphy_Dll_xspiInit
+ 112721 0004 00000000 	 .word IfxHsphy_Dll_xspiInit_end
+ 112722 0008 0C003444 	 .word 0x4434000c
+ 112723 000c 00003000 	 .word 0x00300000
+ 112724 0010 04000000 	 .word 0x00000004
+ 112725 0014 C0000000 	 .word 0x000000c0
+ 112726 0018 00000000 	 .word IfxHsphy_Dll_rgmiiInit
+ 112727 001c 00000000 	 .word IfxHsphy_Dll_rgmiiInit_end
+ 112728 0020 0C003444 	 .word 0x4434000c
+ 112729 0024 00003000 	 .word 0x00300000
+ 112730 0028 04000000 	 .word 0x00000004
+ 112731 002c C0000000 	 .word 0x000000c0
+ 112732 0030 00000000 	 .word IfxHsphy_Dll_xspiDeInit
+ 112733 0034 00000000 	 .word IfxHsphy_Dll_xspiDeInit_end
+ 112734 0038 04001444 	 .word 0x44140004
+ 112735 003c 00001000 	 .word 0x00100000
+ 112736 0040 00000000 	 .word 0x00000000
+ 112737 0044 C0000000 	 .word 0x000000c0
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxHsphy_Dll.c
+                            *ABS*:00000000 IfxHsphy_Dll.c
+    {standard input}:10     .text.IfxHsphy_Dll_xspiInit:00000000 IfxHsphy_Dll_xspiInit
+    {standard input}:135    .text.IfxHsphy_Dll_xspiInit:000000c8 IfxHsphy_Dll_xspiInit_end
+    {standard input}:140    .text.IfxHsphy_Dll_rgmiiInit:00000000 IfxHsphy_Dll_rgmiiInit
+    {standard input}:264    .text.IfxHsphy_Dll_rgmiiInit:000000c8 IfxHsphy_Dll_rgmiiInit_end
+    {standard input}:269    .text.IfxHsphy_Dll_xspiDeInit:00000000 IfxHsphy_Dll_xspiDeInit
+    {standard input}:296    .text.IfxHsphy_Dll_xspiDeInit:00000022 IfxHsphy_Dll_xspiDeInit_end
+
+NO UNDEFINED SYMBOLS

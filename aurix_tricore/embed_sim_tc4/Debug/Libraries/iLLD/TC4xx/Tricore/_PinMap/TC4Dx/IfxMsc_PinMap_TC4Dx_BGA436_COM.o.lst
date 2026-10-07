@@ -1,0 +1,360 @@
+   1              	
+   2              	 .file "IfxMsc_PinMap_TC4Dx_BGA436_COM.c"
+   3              	 .file "IfxMsc_PinMap_TC4Dx_BGA436_COM.c"
+   4              	.section .text,"ax",@progbits
+   5              	.Ltext0:
+   6              	 .global IfxMsc_Sop_Out_pinTable
+   7              	 .section .data.IfxMsc_Sop_Out_pinTable,"aw"
+   8              	 .align 2
+  11              	IfxMsc_Sop_Out_pinTable:
+  12 0000 00000000 	 .word IfxMsc0_SOP_P13_3_OUT
+  13              	 .global IfxMsc_Son_Out_pinTable
+  14              	 .section .data.IfxMsc_Son_Out_pinTable,"aw"
+  15              	 .align 2
+  18              	IfxMsc_Son_Out_pinTable:
+  19 0000 00000000 	 .word IfxMsc0_SON_P13_2_OUT
+  20              	 .global IfxMsc_Sdi_In_pinTable
+  21              	 .section .data.IfxMsc_Sdi_In_pinTable,"aw"
+  22              	 .align 2
+  25              	IfxMsc_Sdi_In_pinTable:
+  26 0000 00000000 	 .word 0
+  27 0004 00000000 	 .word IfxMsc0_SDI1_P10_2_IN
+  28 0008 00000000 	 .word IfxMsc0_SDI2_P14_3_IN
+  29 000c 00000000 	 .word 0
+  30 0010 00000000 	 .word IfxMsc0_SDI4_P14_11_IN
+  31 0014 00000000 	 .word IfxMsc0_SDI5_P10_3_IN
+  32 0018 00000000 	 .word IfxMsc0_SDI6_P10_14_IN
+  33              	 .global IfxMsc_Inj_In_pinTable
+  34              	 .section .data.IfxMsc_Inj_In_pinTable,"aw"
+  35              	 .align 2
+  38              	IfxMsc_Inj_In_pinTable:
+  39 0000 00000000 	 .word IfxMsc0_INJ0_P00_0_IN
+  40 0004 00000000 	 .word IfxMsc0_INJ1_P10_5_IN
+  41              	 .global IfxMsc_Fclp_Out_pinTable
+  42              	 .section .data.IfxMsc_Fclp_Out_pinTable,"aw"
+  43              	 .align 2
+  46              	IfxMsc_Fclp_Out_pinTable:
+  47 0000 00000000 	 .word IfxMsc0_FCLP_P13_1_OUT
+  48 0004 00000000 	 .word IfxMsc0_FCLP_P13_2_OUT
+  49              	 .global IfxMsc_Fcln_Out_pinTable
+  50              	 .section .data.IfxMsc_Fcln_Out_pinTable,"aw"
+  51              	 .align 2
+  54              	IfxMsc_Fcln_Out_pinTable:
+  55 0000 00000000 	 .word IfxMsc0_FCLN_P13_0_OUT
+  56              	 .global IfxMsc_En_Out_pinTable
+  57              	 .section .data.IfxMsc_En_Out_pinTable,"aw"
+  58              	 .align 2
+  61              	IfxMsc_En_Out_pinTable:
+  62 0000 00000000 	 .word IfxMsc0_EN0_P10_2_OUT
+  63 0004 00000000 	 .word IfxMsc0_EN0_P10_3_OUT
+  64 0008 00000000 	 .word IfxMsc0_EN0_P10_4_OUT
+  65 000c 00000000 	 .word IfxMsc0_EN0_P10_10_OUT
+  66 0010 00000000 	 .word IfxMsc0_EN0_P14_10_OUT
+  67 0014 00000000 	 .word IfxMsc0_EN0_P14_14_OUT
+  68 0018 00000000 	 .word IfxMsc0_EN0_P15_5_OUT
+  69 001c 00000000 	 .word IfxMsc0_EN1_P10_1_OUT
+  70 0020 00000000 	 .word IfxMsc0_EN1_P10_9_OUT
+  71 0024 00000000 	 .word IfxMsc0_EN1_P13_0_OUT
+  72 0028 00000000 	 .word IfxMsc0_EN1_P14_9_OUT
+  73 002c 00000000 	 .word IfxMsc0_EN1_P14_13_OUT
+  74 0030 00000000 	 .word IfxMsc0_EN1_P15_3_OUT
+  75 0034 00000000 	 .word 0
+  76              	 .global IfxMsc0_SOP_P13_3_OUT
+  77              	 .section .rodata.IfxMsc0_SOP_P13_3_OUT,"a"
+  78              	 .align 2
+  81              	IfxMsc0_SOP_P13_3_OUT:
+  82 0000 000840F4 	 .word -197130240
+  83 0004 00D403F0 	 .word -268184576
+  84 0008 03       	 .byte 3
+  85 0009 000000   	 .zero 3
+  86 000c 51000000 	 .word 81
+  87              	 .global IfxMsc0_SON_P13_2_OUT
+  88              	 .section .rodata.IfxMsc0_SON_P13_2_OUT,"a"
+  89              	 .align 2
+  92              	IfxMsc0_SON_P13_2_OUT:
+  93 0000 000840F4 	 .word -197130240
+  94 0004 00D403F0 	 .word -268184576
+  95 0008 02       	 .byte 2
+  96 0009 000000   	 .zero 3
+  97 000c 51000000 	 .word 81
+  98              	 .global IfxMsc0_SDI6_P10_14_IN
+  99              	 .section .rodata.IfxMsc0_SDI6_P10_14_IN,"a"
+ 100              	 .align 2
+ 103              	IfxMsc0_SDI6_P10_14_IN:
+ 104 0000 000840F4 	 .word -197130240
+ 105 0004 00C803F0 	 .word -268187648
+ 106 0008 0E       	 .byte 14
+ 107 0009 000000   	 .zero 3
+ 108 000c 06000000 	 .word 6
+ 109              	 .global IfxMsc0_SDI5_P10_3_IN
+ 110              	 .section .rodata.IfxMsc0_SDI5_P10_3_IN,"a"
+ 111              	 .align 2
+ 114              	IfxMsc0_SDI5_P10_3_IN:
+ 115 0000 000840F4 	 .word -197130240
+ 116 0004 00C803F0 	 .word -268187648
+ 117 0008 03       	 .byte 3
+ 118 0009 000000   	 .zero 3
+ 119 000c 05000000 	 .word 5
+ 120              	 .global IfxMsc0_SDI4_P14_11_IN
+ 121              	 .section .rodata.IfxMsc0_SDI4_P14_11_IN,"a"
+ 122              	 .align 2
+ 125              	IfxMsc0_SDI4_P14_11_IN:
+ 126 0000 000840F4 	 .word -197130240
+ 127 0004 00D803F0 	 .word -268183552
+ 128 0008 0B       	 .byte 11
+ 129 0009 000000   	 .zero 3
+ 130 000c 04000000 	 .word 4
+ 131              	 .global IfxMsc0_SDI2_P14_3_IN
+ 132              	 .section .rodata.IfxMsc0_SDI2_P14_3_IN,"a"
+ 133              	 .align 2
+ 136              	IfxMsc0_SDI2_P14_3_IN:
+ 137 0000 000840F4 	 .word -197130240
+ 138 0004 00D803F0 	 .word -268183552
+ 139 0008 03       	 .byte 3
+ 140 0009 000000   	 .zero 3
+ 141 000c 02000000 	 .word 2
+ 142              	 .global IfxMsc0_SDI1_P10_2_IN
+ 143              	 .section .rodata.IfxMsc0_SDI1_P10_2_IN,"a"
+ 144              	 .align 2
+ 147              	IfxMsc0_SDI1_P10_2_IN:
+ 148 0000 000840F4 	 .word -197130240
+ 149 0004 00C803F0 	 .word -268187648
+ 150 0008 02       	 .byte 2
+ 151 0009 000000   	 .zero 3
+ 152 000c 01000000 	 .word 1
+ 153              	 .global IfxMsc0_INJ1_P10_5_IN
+ 154              	 .section .rodata.IfxMsc0_INJ1_P10_5_IN,"a"
+ 155              	 .align 2
+ 158              	IfxMsc0_INJ1_P10_5_IN:
+ 159 0000 000840F4 	 .word -197130240
+ 160 0004 00C803F0 	 .word -268187648
+ 161 0008 05       	 .byte 5
+ 162 0009 000000   	 .zero 3
+ 163 000c 01000000 	 .word 1
+ 164              	 .global IfxMsc0_INJ0_P00_0_IN
+ 165              	 .section .rodata.IfxMsc0_INJ0_P00_0_IN,"a"
+ 166              	 .align 2
+ 169              	IfxMsc0_INJ0_P00_0_IN:
+ 170 0000 000840F4 	 .word -197130240
+ 171 0004 00A003F0 	 .word -268197888
+ 172 0008 00       	 .byte 0
+ 173 0009 000000   	 .zero 3
+ 174 000c 00000000 	 .word 0
+ 175              	 .global IfxMsc0_FCLP_P13_2_OUT
+ 176              	 .section .rodata.IfxMsc0_FCLP_P13_2_OUT,"a"
+ 177              	 .align 2
+ 180              	IfxMsc0_FCLP_P13_2_OUT:
+ 181 0000 000840F4 	 .word -197130240
+ 182 0004 00D403F0 	 .word -268184576
+ 183 0008 02       	 .byte 2
+ 184 0009 000000   	 .zero 3
+ 185 000c 41000000 	 .word 65
+ 186              	 .global IfxMsc0_FCLP_P13_1_OUT
+ 187              	 .section .rodata.IfxMsc0_FCLP_P13_1_OUT,"a"
+ 188              	 .align 2
+ 191              	IfxMsc0_FCLP_P13_1_OUT:
+ 192 0000 000840F4 	 .word -197130240
+ 193 0004 00D403F0 	 .word -268184576
+ 194 0008 01       	 .byte 1
+ 195 0009 000000   	 .zero 3
+ 196 000c 51000000 	 .word 81
+ 197              	 .global IfxMsc0_FCLN_P13_0_OUT
+ 198              	 .section .rodata.IfxMsc0_FCLN_P13_0_OUT,"a"
+ 199              	 .align 2
+ 202              	IfxMsc0_FCLN_P13_0_OUT:
+ 203 0000 000840F4 	 .word -197130240
+ 204 0004 00D403F0 	 .word -268184576
+ 205 0008 00       	 .byte 0
+ 206 0009 000000   	 .zero 3
+ 207 000c 51000000 	 .word 81
+ 208              	 .global IfxMsc0_EN1_P15_3_OUT
+ 209              	 .section .rodata.IfxMsc0_EN1_P15_3_OUT,"a"
+ 210              	 .align 2
+ 213              	IfxMsc0_EN1_P15_3_OUT:
+ 214 0000 000840F4 	 .word -197130240
+ 215 0004 01       	 .byte 1
+ 216 0005 000000   	 .zero 3
+ 217 0008 00DC03F0 	 .word -268182528
+ 218 000c 03       	 .byte 3
+ 219 000d 000000   	 .zero 3
+ 220 0010 51000000 	 .word 81
+ 221              	 .global IfxMsc0_EN1_P14_9_OUT
+ 222              	 .section .rodata.IfxMsc0_EN1_P14_9_OUT,"a"
+ 223              	 .align 2
+ 226              	IfxMsc0_EN1_P14_9_OUT:
+ 227 0000 000840F4 	 .word -197130240
+ 228 0004 01       	 .byte 1
+ 229 0005 000000   	 .zero 3
+ 230 0008 00D803F0 	 .word -268183552
+ 231 000c 09       	 .byte 9
+ 232 000d 000000   	 .zero 3
+ 233 0010 31000000 	 .word 49
+ 234              	 .global IfxMsc0_EN1_P14_13_OUT
+ 235              	 .section .rodata.IfxMsc0_EN1_P14_13_OUT,"a"
+ 236              	 .align 2
+ 239              	IfxMsc0_EN1_P14_13_OUT:
+ 240 0000 000840F4 	 .word -197130240
+ 241 0004 01       	 .byte 1
+ 242 0005 000000   	 .zero 3
+ 243 0008 00D803F0 	 .word -268183552
+ 244 000c 0D       	 .byte 13
+ 245 000d 000000   	 .zero 3
+ 246 0010 E1000000 	 .word 225
+ 247              	 .global IfxMsc0_EN1_P13_0_OUT
+ 248              	 .section .rodata.IfxMsc0_EN1_P13_0_OUT,"a"
+ 249              	 .align 2
+ 252              	IfxMsc0_EN1_P13_0_OUT:
+ 253 0000 000840F4 	 .word -197130240
+ 254 0004 01       	 .byte 1
+ 255 0005 000000   	 .zero 3
+ 256 0008 00D403F0 	 .word -268184576
+ 257 000c 00       	 .byte 0
+ 258 000d 000000   	 .zero 3
+ 259 0010 41000000 	 .word 65
+ 260              	 .global IfxMsc0_EN1_P10_9_OUT
+ 261              	 .section .rodata.IfxMsc0_EN1_P10_9_OUT,"a"
+ 262              	 .align 2
+ 265              	IfxMsc0_EN1_P10_9_OUT:
+ 266 0000 000840F4 	 .word -197130240
+ 267 0004 01       	 .byte 1
+ 268 0005 000000   	 .zero 3
+ 269 0008 00C803F0 	 .word -268187648
+ 270 000c 09       	 .byte 9
+ 271 000d 000000   	 .zero 3
+ 272 0010 31000000 	 .word 49
+ 273              	 .global IfxMsc0_EN1_P10_1_OUT
+ 274              	 .section .rodata.IfxMsc0_EN1_P10_1_OUT,"a"
+ 275              	 .align 2
+ 278              	IfxMsc0_EN1_P10_1_OUT:
+ 279 0000 000840F4 	 .word -197130240
+ 280 0004 01       	 .byte 1
+ 281 0005 000000   	 .zero 3
+ 282 0008 00C803F0 	 .word -268187648
+ 283 000c 01       	 .byte 1
+ 284 000d 000000   	 .zero 3
+ 285 0010 41000000 	 .word 65
+ 286              	 .global IfxMsc0_EN0_P15_5_OUT
+ 287              	 .section .rodata.IfxMsc0_EN0_P15_5_OUT,"a"
+ 288              	 .align 2
+ 291              	IfxMsc0_EN0_P15_5_OUT:
+ 292 0000 000840F4 	 .word -197130240
+ 293 0004 00       	 .byte 0
+ 294 0005 000000   	 .zero 3
+ 295 0008 00DC03F0 	 .word -268182528
+ 296 000c 05       	 .byte 5
+ 297 000d 000000   	 .zero 3
+ 298 0010 51000000 	 .word 81
+ 299              	 .global IfxMsc0_EN0_P14_14_OUT
+ 300              	 .section .rodata.IfxMsc0_EN0_P14_14_OUT,"a"
+ 301              	 .align 2
+ 304              	IfxMsc0_EN0_P14_14_OUT:
+ 305 0000 000840F4 	 .word -197130240
+ 306 0004 00       	 .byte 0
+ 307 0005 000000   	 .zero 3
+ 308 0008 00D803F0 	 .word -268183552
+ 309 000c 0E       	 .byte 14
+ 310 000d 000000   	 .zero 3
+ 311 0010 E1000000 	 .word 225
+ 312              	 .global IfxMsc0_EN0_P14_10_OUT
+ 313              	 .section .rodata.IfxMsc0_EN0_P14_10_OUT,"a"
+ 314              	 .align 2
+ 317              	IfxMsc0_EN0_P14_10_OUT:
+ 318 0000 000840F4 	 .word -197130240
+ 319 0004 00       	 .byte 0
+ 320 0005 000000   	 .zero 3
+ 321 0008 00D803F0 	 .word -268183552
+ 322 000c 0A       	 .byte 10
+ 323 000d 000000   	 .zero 3
+ 324 0010 31000000 	 .word 49
+ 325              	 .global IfxMsc0_EN0_P10_4_OUT
+ 326              	 .section .rodata.IfxMsc0_EN0_P10_4_OUT,"a"
+ 327              	 .align 2
+ 330              	IfxMsc0_EN0_P10_4_OUT:
+ 331 0000 000840F4 	 .word -197130240
+ 332 0004 00       	 .byte 0
+ 333 0005 000000   	 .zero 3
+ 334 0008 00C803F0 	 .word -268187648
+ 335 000c 04       	 .byte 4
+ 336 000d 000000   	 .zero 3
+ 337 0010 51000000 	 .word 81
+ 338              	 .global IfxMsc0_EN0_P10_3_OUT
+ 339              	 .section .rodata.IfxMsc0_EN0_P10_3_OUT,"a"
+ 340              	 .align 2
+ 343              	IfxMsc0_EN0_P10_3_OUT:
+ 344 0000 000840F4 	 .word -197130240
+ 345 0004 00       	 .byte 0
+ 346 0005 000000   	 .zero 3
+ 347 0008 00C803F0 	 .word -268187648
+ 348 000c 03       	 .byte 3
+ 349 000d 000000   	 .zero 3
+ 350 0010 41000000 	 .word 65
+ 351              	 .global IfxMsc0_EN0_P10_2_OUT
+ 352              	 .section .rodata.IfxMsc0_EN0_P10_2_OUT,"a"
+ 353              	 .align 2
+ 356              	IfxMsc0_EN0_P10_2_OUT:
+ 357 0000 000840F4 	 .word -197130240
+ 358 0004 00       	 .byte 0
+ 359 0005 000000   	 .zero 3
+ 360 0008 00C803F0 	 .word -268187648
+ 361 000c 02       	 .byte 2
+ 362 000d 000000   	 .zero 3
+ 363 0010 41000000 	 .word 65
+ 364              	 .global IfxMsc0_EN0_P10_10_OUT
+ 365              	 .section .rodata.IfxMsc0_EN0_P10_10_OUT,"a"
+ 366              	 .align 2
+ 369              	IfxMsc0_EN0_P10_10_OUT:
+ 370 0000 000840F4 	 .word -197130240
+ 371 0004 00       	 .byte 0
+ 372 0005 000000   	 .zero 3
+ 373 0008 00C803F0 	 .word -268187648
+ 374 000c 0A       	 .byte 10
+ 375 000d 000000   	 .zero 3
+ 376 0010 31000000 	 .word 49
+ 377              	.section .text,"ax",@progbits
+ 378              	.Letext0:
+ 379              	 .file 1 "../Libraries/Infra/Sfr/TC4Dx/Ifx_TypesReg.h"
+ 380              	 .file 2 "../Libraries/Infra/Sfr/TC4Dx/IfxMsc_regdef.h"
+ 381              	 .file 3 "../Libraries/Infra/Platform/Compilers/Platform_Types.h"
+ 382              	 .file 4 "../Libraries/Infra/Platform/Compilers/Ifx_Types.h"
+ 383              	 .file 5 "../Libraries/Infra/Sfr/TC4Dx/IfxPort_regdef.h"
+ 384              	 .file 6 "../Libraries/iLLD/TC4xx/CpuGeneric/Port/Std/IfxPort.h"
+ 385              	 .file 7 "../Libraries/iLLD/TC4xx/Tricore/_PinMap/IfxMsc_PinMap.h"
+ 386              	 .file 8 "../Libraries/iLLD/TC4xx/Tricore/_PinMap/TC4Dx/IfxMsc_PinMap_TC4Dx_BGA436_COM.h"
+ 387              	 .file 9 "../Libraries/iLLD/TC4xx/Tricore/_PinMap/TC4Dx/IfxMsc_PinMap_TC4Dx_BGA436_COM.c"
+DEFINED SYMBOLS
+                            *ABS*:00000000 IfxMsc_PinMap_TC4Dx_BGA436_COM.c
+                            *ABS*:00000000 IfxMsc_PinMap_TC4Dx_BGA436_COM.c
+    {standard input}:11     .data.IfxMsc_Sop_Out_pinTable:00000000 IfxMsc_Sop_Out_pinTable
+    {standard input}:81     .rodata.IfxMsc0_SOP_P13_3_OUT:00000000 IfxMsc0_SOP_P13_3_OUT
+    {standard input}:18     .data.IfxMsc_Son_Out_pinTable:00000000 IfxMsc_Son_Out_pinTable
+    {standard input}:92     .rodata.IfxMsc0_SON_P13_2_OUT:00000000 IfxMsc0_SON_P13_2_OUT
+    {standard input}:25     .data.IfxMsc_Sdi_In_pinTable:00000000 IfxMsc_Sdi_In_pinTable
+    {standard input}:147    .rodata.IfxMsc0_SDI1_P10_2_IN:00000000 IfxMsc0_SDI1_P10_2_IN
+    {standard input}:136    .rodata.IfxMsc0_SDI2_P14_3_IN:00000000 IfxMsc0_SDI2_P14_3_IN
+    {standard input}:125    .rodata.IfxMsc0_SDI4_P14_11_IN:00000000 IfxMsc0_SDI4_P14_11_IN
+    {standard input}:114    .rodata.IfxMsc0_SDI5_P10_3_IN:00000000 IfxMsc0_SDI5_P10_3_IN
+    {standard input}:103    .rodata.IfxMsc0_SDI6_P10_14_IN:00000000 IfxMsc0_SDI6_P10_14_IN
+    {standard input}:38     .data.IfxMsc_Inj_In_pinTable:00000000 IfxMsc_Inj_In_pinTable
+    {standard input}:169    .rodata.IfxMsc0_INJ0_P00_0_IN:00000000 IfxMsc0_INJ0_P00_0_IN
+    {standard input}:158    .rodata.IfxMsc0_INJ1_P10_5_IN:00000000 IfxMsc0_INJ1_P10_5_IN
+    {standard input}:46     .data.IfxMsc_Fclp_Out_pinTable:00000000 IfxMsc_Fclp_Out_pinTable
+    {standard input}:191    .rodata.IfxMsc0_FCLP_P13_1_OUT:00000000 IfxMsc0_FCLP_P13_1_OUT
+    {standard input}:180    .rodata.IfxMsc0_FCLP_P13_2_OUT:00000000 IfxMsc0_FCLP_P13_2_OUT
+    {standard input}:54     .data.IfxMsc_Fcln_Out_pinTable:00000000 IfxMsc_Fcln_Out_pinTable
+    {standard input}:202    .rodata.IfxMsc0_FCLN_P13_0_OUT:00000000 IfxMsc0_FCLN_P13_0_OUT
+    {standard input}:61     .data.IfxMsc_En_Out_pinTable:00000000 IfxMsc_En_Out_pinTable
+    {standard input}:356    .rodata.IfxMsc0_EN0_P10_2_OUT:00000000 IfxMsc0_EN0_P10_2_OUT
+    {standard input}:343    .rodata.IfxMsc0_EN0_P10_3_OUT:00000000 IfxMsc0_EN0_P10_3_OUT
+    {standard input}:330    .rodata.IfxMsc0_EN0_P10_4_OUT:00000000 IfxMsc0_EN0_P10_4_OUT
+    {standard input}:369    .rodata.IfxMsc0_EN0_P10_10_OUT:00000000 IfxMsc0_EN0_P10_10_OUT
+    {standard input}:317    .rodata.IfxMsc0_EN0_P14_10_OUT:00000000 IfxMsc0_EN0_P14_10_OUT
+    {standard input}:304    .rodata.IfxMsc0_EN0_P14_14_OUT:00000000 IfxMsc0_EN0_P14_14_OUT
+    {standard input}:291    .rodata.IfxMsc0_EN0_P15_5_OUT:00000000 IfxMsc0_EN0_P15_5_OUT
+    {standard input}:278    .rodata.IfxMsc0_EN1_P10_1_OUT:00000000 IfxMsc0_EN1_P10_1_OUT
+    {standard input}:265    .rodata.IfxMsc0_EN1_P10_9_OUT:00000000 IfxMsc0_EN1_P10_9_OUT
+    {standard input}:252    .rodata.IfxMsc0_EN1_P13_0_OUT:00000000 IfxMsc0_EN1_P13_0_OUT
+    {standard input}:226    .rodata.IfxMsc0_EN1_P14_9_OUT:00000000 IfxMsc0_EN1_P14_9_OUT
+    {standard input}:239    .rodata.IfxMsc0_EN1_P14_13_OUT:00000000 IfxMsc0_EN1_P14_13_OUT
+    {standard input}:213    .rodata.IfxMsc0_EN1_P15_3_OUT:00000000 IfxMsc0_EN1_P15_3_OUT
+
+NO UNDEFINED SYMBOLS
