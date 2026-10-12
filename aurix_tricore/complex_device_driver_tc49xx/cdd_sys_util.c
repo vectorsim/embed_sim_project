@@ -82,8 +82,6 @@
 /*---------------------------------------------Function Implementations----------------------------------------------*/
 /*********************************************************************************************************************/
 
-
-
 void CddSys_Ldmst(P2VAR(volatile uint32_T, AUTOMATIC, CDD_APPL_DATA) AddressPtr, uint32_T Mask, uint32_T Value)
 {
     __extension__ uint64_T operand = ((uint64_T)Mask << 32) | (uint64_T)Value;

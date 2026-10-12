@@ -1,14 +1,12 @@
 /**********************************************************************************************************************
  * \file      cdd_app.h
- * \brief     Public interface for the CddSys low-level system utility module.
+ * \brief     Public interface for the CDD layer top-level init / start.
  *
- * \details   Declares the CddSys function API used across the CDD layer for
- *            TriCore-specific primitives:
- *              - Atomic bit-field load-modify-store (LDMST instruction).
- *              - Binary semaphore via compare-and-swap (CMPSWAP.W instruction).
- *              - Single and multi-instruction NOP delays.
- *              - Interrupt-enable intrinsic.
- *
+ * \details   Declares the two lifecycle entry points of the CDD layer
+ *            (Cdd_Init, Cdd_Start), the central runtime state structure
+ *            CddInverterCtrl_T, the ISR priority / TOS assignments, the
+ *            AdcPhaseValid bit-position macros, and the project-wide
+ *            PORT / PIN assignment map for the KIT_A3G_TC4D7_LITE target.
  *
  * \note      EmbedSim naming convention:
  *              - Functions      : Pascal_Snake_Case
@@ -18,6 +16,21 @@
  *              - Struct members : PascalCase
  *              - Macros         : UPPER_SNAKE_CASE
  *              - Typedefs       : Pascal_Snake_Case_T
+ *
+ * \note      MISRA C:2012 compliance notes for this module:
+ *              - Rule 8.4 / 8.5 / 8.6 : Cdd_Init, Cdd_Start and the extern
+ *                object Inv_G are declared in this header and defined in the
+ *                matching .c file. No object or function is defined here.
+ *              - Rule 19.2     : The include guard
+ *                COMPLEX_DEVICE_DRIVER_CDD_APP_H_ is used to prevent multiple
+ *                inclusion of the declarations below.
+ *              - Directive 4.9 : No function-like macros are exposed; the
+ *                priority / TOS / phase-valid macros are all object-like.
+ *              - Rule 8.14     : No restrict-qualification is assumed on any
+ *                pointer that reaches the ISR context.
+ *              - Rule 5.6      : All typedef and tag names used here
+ *                (CddInverterCtrl_T) carry the project-wide Pascal_Snake_Case_T
+ *                suffix to avoid collision with object-like identifiers.
  *
  * \version   1.0.1
  * \date      2026-10-12
@@ -137,35 +150,23 @@
  */
 typedef struct
 {
-    uint32_T   PeriodTicks;             /**< PWM period in eGTM CMU_CLK0 ticks.                */
-
-    uint32_T   DeadTimeTicks;           /**< Dead time for each complementary phase, in ticks. */
-
-    real32_T   CmuClk0Frequency;        /**< eGTM cluster-0 CMU clock 0 frequency in Hz.       */
-
-    real32_T   DutyCyclePhaseU;         /**< Phase U duty cycle [-1.0, +1.0].                  */
-
-    real32_T   DutyCyclePhaseV;         /**< Phase V duty cycle [-1.0, +1.0].                  */
-
-    real32_T   DutyCyclePhaseW;         /**< Phase W duty cycle [-1.0, +1.0].                  */
-
-    real32_T   DutyCycleAdcTr;          /**< ADC trigger duty cycle [0, +1.0].                 */
-
-    uint64_T   Counter;                 /**< Free-running PWM cycle counter.                   */
-
-    uint32_T   ShutOffState;            /**< Latched shut-off state (0 = running, 1 = shut).   */
-
-    uint32_T   ShutOffRstRequest;       /**< Application request to leave shut-off state.      */
-
-    uint32_T   FrequencyMode;           /**< 1 = 10 kHz, 2 = 20 kHz, 3 = 30 kHz.               */
-
-    uint32_T   FrequencyChangeRequest;  /**< Mid-run period reprogram request.                 */
-
-    uint32_T   AdcPhaseU;               /**< TMADC0.Ch1  (AN1)  raw 12-bit – Phase U.          */
-    uint32_T   AdcPhaseV;               /**< TMADC1.Ch4  (AN16) raw 12-bit – Phase V.          */
-    uint32_T   AdcPhaseW;               /**< TMADC2.Ch9  (P00.3) raw 12-bit – Phase W.         */
-    uint32_T   AdcVdc;
-    uint32_T   AdcPhaseValid;           /**< Bitmask: bit0=U, bit1=V, bit2=W, bit3=Vdc(1 = fresh).      */
+    uint32_T   PeriodTicks;             /**< PWM period in eGTM CMU_CLK0 ticks.                     */
+    uint32_T   DeadTimeTicks;           /**< Dead time for each complementary phase, in ticks.      */
+    real32_T   CmuClk0Frequency;        /**< eGTM cluster-0 CMU clock 0 frequency in Hz.            */
+    real32_T   DutyCyclePhaseU;         /**< Phase U duty cycle [0, +1.0].                          */
+    real32_T   DutyCyclePhaseV;         /**< Phase V duty cycle [0, +1.0].                          */
+    real32_T   DutyCyclePhaseW;         /**< Phase W duty cycle [0, +1.0].                          */
+    real32_T   DutyCycleAdcTr;          /**< ADC trigger duty cycle [0, +1.0].                      */
+    uint64_T   Counter;                 /**< Free-running PWM cycle counter.                        */
+    uint32_T   ShutOffState;            /**< Latched shut-off state (0 = running, 1 = shut).        */
+    uint32_T   ShutOffRstRequest;       /**< Application request to leave shut-off state.           */
+    uint32_T   FrequencyMode;           /**< 1 = 10 kHz, 2 = 20 kHz, 3 = 30 kHz.                    */
+    uint32_T   FrequencyChangeRequest;  /**< Mid-run period reprogram request.                      */
+    uint32_T   AdcPhaseU;               /**< TMADC0.Ch1  (AN1)  raw 12-bit – Phase U.               */
+    uint32_T   AdcPhaseV;               /**< TMADC1.Ch4  (AN16) raw 12-bit – Phase V.               */
+    uint32_T   AdcPhaseW;               /**< TMADC2.Ch9  (P00.3) raw 12-bit – Phase W.              */
+    uint32_T   AdcVdc;                  /**< TMADC0.Ch2  (AN2)  raw 12-bit – DC-link voltage.       */
+    uint32_T   AdcPhaseValid;           /**< Bitmask: bit0=U, bit1=V, bit2=W, bit3=Vdc(1 = fresh).  */
 } CddInverterCtrl_T;
 
 
