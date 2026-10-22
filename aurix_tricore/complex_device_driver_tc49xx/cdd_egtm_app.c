@@ -251,7 +251,11 @@ void TIM0_CH4_ISR(void)
 void ControlLoop_ISR(void)
 {
     Inv_G.Counter++;
+    /* Set Operator Frequency */
     CddEgtm_SetInverterFrequency();
+    /* Service Watchdog */
+    CddSys_ServiceCpuWdt();
+
 
     if(EGTM_CLS0_ATOM_CH0_IRQ_NOTIFY.B.CCU0TC != 0x0u)
     {
@@ -277,7 +281,7 @@ void ControlLoop_ISR(void)
         EGTM_CLS0_ATOM_CH7_SR0.B.SR0 = CAL_PHASE_PERIOD(Inv_G.PeriodTicks, Inv_G.DutyCyclePhaseW);
         EGTM_CLS0_ATOM_CH7_SR1.B.SR1 = CAL_PHASE_DUTY_CYCLE(Inv_G.PeriodTicks, Inv_G.DutyCyclePhaseW);
 
-        if(Inv_G.FrequencyChangeRequest==0x1U)
+        if(Inv_G.FrequencyChangeRequest == 0x1U)
         {
             EGTM_CLS0_ATOM_CH0_SR0.B.SR0 = Inv_G.PeriodTicks;
             EGTM_CLS0_ATOM_CH0_SR1.B.SR1 = Inv_G.PeriodTicks/2u;

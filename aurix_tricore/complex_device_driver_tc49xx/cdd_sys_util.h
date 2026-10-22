@@ -232,8 +232,6 @@ extern void CddSys_IsrEnable(void);
  */
 extern void CddSys_IsrDisable(void);
 
-
-
 /**
  * \brief   Returns 1 if CPU global interrupts are currently enabled, 0 otherwise.
  *
@@ -319,6 +317,35 @@ extern uint16_T CddSys_GetCpuWdtPwd(void);
  *
  */
 extern void CddSys_DisableCpuWdt(void);
+
+
+/**
+ * @brief  Enables the CPU Watchdog Timer for the current CPU core.
+ *
+ * The function accesses the CPU Watchdog Timer corresponding to the
+ * currently executing CPU core. If the Watchdog Timer Control Register A
+ * (CTRLA) is locked, the CPU Watchdog password is retrieved and used to
+ * unlock the register.
+ *
+ */
+extern void CddSys_EnableCpuWdt(void);
+
+
+/**
+ * @brief  Services (reloads) the CPU Watchdog Timer for the current CPU core.
+ *
+ * The function accesses the CPU Watchdog Timer corresponding to the
+ * currently executing CPU core. If the Watchdog Timer Control Register A
+ * (CTRLA) is locked, the CPU Watchdog password is retrieved and used to
+ * unlock the register.
+ *
+ * If the timer is counting (TC bit in STAT set), the inverted Timeout
+ * Interval (TIM) field of the STAT register is written to the TCVI field
+ * of CTRLA, reloading the watchdog counter. The LCK bit of CTRLA is then
+ * set again to protect the register.
+
+ */
+extern void CddSys_ServiceCpuWdt(void);
 
 /**
  * @brief  Gets the System Watchdog Timer password.

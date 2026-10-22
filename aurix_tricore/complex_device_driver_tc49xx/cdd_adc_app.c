@@ -5,7 +5,7 @@
  * \details
  *   Phase U : AN1   (X2.26)               -> TMADC0.Ch1 -> AW0_RES1
  *   Phase V : AN16  (Shield2Go #1 pin 2)  -> TMADC1.Ch4 -> AW0_RES4
- *   Phase W : P00.3 (Arduino A2 / X301.3) -> TMADC2.Ch9 -> AW0_RES9
+ *   Phase W : P00.3 (X301.3)              -> TMADC2.Ch9 -> AW0_RES9
  *   Vdc     : AN2   (X2.25)               -> TMADC0.Ch2 -> AW0_RES2
  *
  *   AN1, AN16 and AN2 are class-D dedicated analog inputs (no GPIO overlay).

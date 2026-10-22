@@ -224,12 +224,76 @@ void CddSys_DisableCpuWdt(void)
         wdtPtr->CTRLA.U = ctrlA.U;
     }
 
-    ctrlB.B.DR = 0x1U;
+    ctrlB.B.DR = 0x1U;  /* disable watchdog */
     wdtPtr->CTRLB.U = ctrlB.U;
 
     ctrlA.B.LCK = 0x1U;
     wdtPtr->CTRLA.U = ctrlA.U;
 }
+
+void CddSys_EnableCpuWdt(void)
+{
+    uint32_T        coreId;
+    uint16_T        password;
+    Ifx_WTU_WDTCPU* wdtPtr;
+    Ifx_WTU_CTRLA   ctrlA;
+    Ifx_WTU_CTRLB   ctrlB;
+
+    coreId   = CddSys_CpuCoreId();
+    password = CddSys_GetCpuWdtPwd();
+    wdtPtr = &MODULE_WTU.WDTCPU[coreId];
+    ctrlA.U = wdtPtr->CTRLA.U;
+    ctrlB.U = wdtPtr->CTRLB.U;
+
+    if(ctrlA.B.LCK == 0x1U)
+    {
+        ctrlA.B.LCK = 0x0U;
+        ctrlA.B.PW  = password;
+        wdtPtr->CTRLA.U = ctrlA.U;
+    }
+
+    ctrlB.B.DR = 0x0U; /*enable watchdog */
+    wdtPtr->CTRLB.U = ctrlB.U;
+
+    ctrlA.B.LCK = 0x1U;
+    wdtPtr->CTRLA.U = ctrlA.U;
+}
+
+void CddSys_ServiceCpuWdt(void)
+{
+    uint32_T        coreId;
+    uint16_T        password;
+    Ifx_WTU_WDTCPU* wdtPtr;
+    Ifx_WTU_CTRLA   ctrlA;
+
+    coreId   = CddSys_CpuCoreId();
+    password = CddSys_GetCpuWdtPwd();
+    wdtPtr   = &MODULE_WTU.WDTCPU[coreId];
+
+    /* Snapshot current CTRLA */
+    ctrlA.U = wdtPtr->CTRLA.U;
+
+    /* Unlock CTRLA if it is locked (password access) */
+    if (ctrlA.B.LCK == 0x1U)
+    {
+        ctrlA.B.LCK = 0x0U;
+        ctrlA.B.PW  = password;
+        wdtPtr->CTRLA.U = ctrlA.U;
+    }
+
+    /* Reload the watchdog timer: write inverted TIM field into TCVI */
+    if (wdtPtr->STAT.B.TC == 0x1U)
+    {
+        ctrlA.B.TCVI = (uint16_T)(~wdtPtr->STAT.B.TIM);
+        wdtPtr->CTRLA.U = ctrlA.U;
+    }
+
+    /* Re-lock CTRLA */
+    ctrlA.B.LCK = 0x1U;
+    wdtPtr->CTRLA.U = ctrlA.U;
+}
+
+
 
 
 uint16_T CddSys_GetSystemWdtPwd(void)
