@@ -261,14 +261,14 @@ void ControlLoop_ISR(void)
     {
         if((Inv_G.ShutOffState ==  0x1U)  && (Inv_G.ShutOffRstRequest == 0x1U))
         {
-            EGTM_CLS0_CDTM_DTM5_CTRL.B.SHUT_OFF_RST = 0x1u;
+            EGTM_CLS0_CDTM_DTM5_CTRL.B.SHUT_OFF_RST = 0x1U;
             Inv_G.ShutOffRstRequest = 0x0U;
             Inv_G.ShutOffState  = 0x0U;
         }
-        EGTM_CLS0_ATOM_CH0_IRQ_NOTIFY.B.CCU0TC = 0x1u;   /* clear the notification flag */
+        EGTM_CLS0_ATOM_CH0_IRQ_NOTIFY.B.CCU0TC = 0x1U;   /* clear the notification flag */
     }
 
-    if(EGTM_CLS0_ATOM_CH0_IRQ_NOTIFY.B.CCU1TC != 0x0u)
+    if(EGTM_CLS0_ATOM_CH0_IRQ_NOTIFY.B.CCU1TC != 0x0U)
     {
         CddAdc_ReadSensor(&Inv_G);
 
@@ -289,9 +289,8 @@ void ControlLoop_ISR(void)
             Inv_G.FrequencyChangeRequest = 0x0U;
         }
 
-        EGTM_CLS0_ATOM_CH0_IRQ_NOTIFY.B.CCU1TC = 0x1u;   /* clear the notification flag */
+        EGTM_CLS0_ATOM_CH0_IRQ_NOTIFY.B.CCU1TC = 0x1U;   /* clear the notification flag */
     }
-
 }
 
 /**

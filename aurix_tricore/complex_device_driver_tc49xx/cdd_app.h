@@ -53,11 +53,11 @@
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
 /*********************************************************************************************************************/
-#define CTRL_ISR_PRIORITY         (20U)    /* Inverter & Control Loop */
+#define CTRL_ISR_PRIORITY         (80U)    /* Inverter & Control Loop */
 #define CTRL_ISR_TOS              (0U)     /* CPU 0                   */
 #define TIM0CH4_ISR_PRIORITY      (25U)    /* Fast ShutOff            */
 #define TIM0CH4_ISR_TOS           (0U)     /* CPU 0                   */
-#define STM0_CMP0_IR_SRPN         (30U)
+#define STM0_CMP0_IR_SRPN         (20U)
 
 /* ADC phase-valid bit positions inside CddInverterCtrl_T.AdcPhaseValid.
  * The value is the shift amount (bit index), not a mask. */

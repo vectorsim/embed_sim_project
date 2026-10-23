@@ -23,6 +23,7 @@
 #include "cdd_gpio_app.h"
 #include "cdd_stm_app.h"
 #include "cdd_adc_app.h"
+#include "cdd_smu_app.h"
 
 /*********************************************************************************************************************/
 /*-------------------------------------------------Global variables--------------------------------------------------*/
@@ -41,15 +42,28 @@ void Cdd_Init(void)
     /* Initialize ADC Module */
     CddAdc_Init();
 
-    /* Initialize System Timer Module */
-    CddStm_Init();
-
     /* Initialize EGTM Module */
     CddEgtm_Init();
+
+    /* Initialize System Timer Module */
+    CddStm_Init();
 }
 
 
 void Cdd_Start(void)
 {
-    CddEgtm_Start();
+    uint32_T ok;
+
+    ok = CddSmu_InitialiseSafety(CDD_SMU_SAFE_0);
+
+    if (CDD_SMU_TRUE == ok)
+    {
+        ok = CddSmu_ForwardCpuWdt(CDD_SMU_ACTION_NMI0_REQ, CDD_SMU_SAFE_0, 0x00FFFFFFU);
+        if(CDD_SMU_TRUE == ok)
+        {
+            CddSys_EnableCpuWdt();
+            CddEgtm_Start();
+        }
+    }
+
 }
